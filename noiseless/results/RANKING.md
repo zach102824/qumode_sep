@@ -1,16 +1,27 @@
 # Noiseless SPSA ranking
 
-Updated: 2026-09-17 18:51 UTC
+Updated: 2026-09-17 21:04 UTC
 
 Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
 
 ## Headline result
 
-**Best overall:** `snap_b_pi` at **L\*=16**
-— success rate **1.000**, mean p(GS) **0.9174**
-(fleet7, 600 trials × 1200 SPSA steps, 20 Hamiltonians).
+**Best overall:** `identity` at **L\*=20**
+— success rate **1.000**, mean p(GS) **0.9482**
+(fleet8, 600 trials × 1200 SPSA steps, 20 Hamiltonians).
 
-Deeper ECD stacks with **SNAP / identity** buses raise mean ground probability at perfect/near-perfect bitstring success.
+Deeper ECD stacks with **identity / SNAP** buses continue to raise mean ground probability at perfect bitstring success (L=16→18→20).
+
+## Fleet8 (U=identity,snap_a_pi,snap_b_pi, L∈{18,20}, 30×1200)
+
+| Rank | U | L* | Success | Mean p(GS) | N |
+|-----:|---|---:|--------:|-----------:|--:|
+| 1 | `identity` | 20 | 1.000 | 0.9482 | 600 |
+| 2 | `snap_b_pi` | 20 | 1.000 | 0.9477 | 600 |
+| 3 | `snap_a_pi` | 20 | 1.000 | 0.9468 | 600 |
+| 4 | `identity` | 18 | 1.000 | 0.9361 | 600 |
+| 5 | `snap_a_pi` | 18 | 1.000 | 0.9358 | 600 |
+| 6 | `snap_b_pi` | 18 | 1.000 | 0.9347 | 600 |
 
 ## Fleet7 (U=identity,snap_a_pi,snap_b_pi, L∈{10,12,14,16}, 30×1200)
 
