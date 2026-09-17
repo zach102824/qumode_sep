@@ -1,57 +1,41 @@
 # Noiseless SPSA ranking
 
-Updated: 2026-09-17 10:24 UTC
+Updated: 2026-09-17 10:55 UTC
 
-Campaign constraints: random ECD init only; fixed U never trained; no joint prep; noiseless.
+Constraints: random ECD init; fixed U never trained; no joint prep; noiseless dim-256.
 
-## Fleet #1 — breadth (5 trials × 200 steps × L∈{2,3,4})
+## Headline
 
-| Rank | U | L* | Success | Mean p(GS) | N |
-|-----:|---|---:|--------:|-----------:|--:|
-| 1 | `bs_pi4` | 4 | 0.970 | 0.1595 | 100 |
-| 2 | `bs_pi2` | 4 | 0.930 | 0.1648 | 100 |
-| 3 | `identity` | 4 | 0.910 | 0.2622 | 100 |
-| 4 | `snap_b_pi` | 4 | 0.910 | 0.2553 | 100 |
-| 5 | `cz_nm` | 4 | 0.900 | 0.1566 | 100 |
-| 6 | `snap_a_pi` | 4 | 0.890 | 0.2835 | 100 |
-| 7 | `bs_pi2` | 3 | 0.820 | 0.1710 | 100 |
-| 8 | `snap_b_pi` | 3 | 0.780 | 0.1992 | 100 |
-| 9 | `bs_pi4` | 3 | 0.780 | 0.1326 | 100 |
-| 10 | `cz_nm` | 3 | 0.740 | 0.1633 | 100 |
-| 11 | `snap_a_pi` | 3 | 0.730 | 0.1926 | 100 |
-| 12 | `identity` | 3 | 0.690 | 0.1940 | 100 |
-| 13 | `bs_pi2` | 2 | 0.660 | 0.1460 | 100 |
-| 14 | `bs_pi4` | 2 | 0.620 | 0.1274 | 100 |
-| 15 | `cz_nm` | 2 | 0.500 | 0.1320 | 100 |
-| 16 | `snap_a_pi` | 2 | 0.450 | 0.1489 | 100 |
-| 17 | `identity` | 2 | 0.450 | 0.1464 | 100 |
-| 18 | `snap_b_pi` | 2 | 0.430 | 0.1363 | 100 |
+- **Best success rate:** `bs_pi4` at **L\*=6** — success=1.000, mean p(GS)=0.2062 (fleet3, 500 trials × 600 SPSA steps).
 
-## Fleet #2 — deeper (15 trials × 400 steps × L∈{3,4,5})
+### Fleet3 full table (top U only, L∈{4,5,6}, 25 trials × 600 steps)
 
 | Rank | U | L* | Success | Mean p(GS) | N |
 |-----:|---|---:|--------:|-----------:|--:|
-| 1 | `bs_pi4` | 5 | 0.990 | 0.1950 | 300 |
-| 2 | `identity` | 5 | 0.983 | 0.3937 | 300 |
-| 3 | `bs_pi2` | 5 | 0.983 | 0.2014 | 300 |
-| 4 | `cz_nm` | 5 | 0.980 | 0.2171 | 300 |
-| 5 | `snap_a_pi` | 5 | 0.977 | 0.4035 | 300 |
-| 6 | `bs_pi4` | 4 | 0.977 | 0.1862 | 300 |
-| 7 | `snap_b_pi` | 5 | 0.967 | 0.3995 | 300 |
-| 8 | `bs_pi2` | 4 | 0.950 | 0.2000 | 300 |
-| 9 | `cz_nm` | 4 | 0.937 | 0.2012 | 300 |
-| 10 | `snap_b_pi` | 4 | 0.923 | 0.3120 | 300 |
-| 11 | `identity` | 4 | 0.923 | 0.3072 | 300 |
-| 12 | `snap_a_pi` | 4 | 0.897 | 0.3122 | 300 |
-| 13 | `bs_pi2` | 3 | 0.843 | 0.1839 | 300 |
-| 14 | `bs_pi4` | 3 | 0.827 | 0.1589 | 300 |
-| 15 | `cz_nm` | 3 | 0.763 | 0.1837 | 300 |
-| 16 | `snap_b_pi` | 3 | 0.757 | 0.2324 | 300 |
-| 17 | `snap_a_pi` | 3 | 0.747 | 0.2285 | 300 |
-| 18 | `identity` | 3 | 0.720 | 0.2241 | 300 |
+| 1 | `bs_pi4` | 6 | 1.000 | 0.2062 | 500 |
+| 2 | `bs_pi2` | 6 | 0.998 | 0.2204 | 500 |
+| 3 | `identity` | 6 | 0.994 | 0.5160 | 500 |
+| 4 | `cz_nm` | 6 | 0.990 | 0.2370 | 500 |
+| 5 | `identity` | 5 | 0.988 | 0.4321 | 500 |
+| 6 | `bs_pi4` | 5 | 0.988 | 0.2177 | 500 |
+| 7 | `cz_nm` | 5 | 0.980 | 0.2413 | 500 |
+| 8 | `bs_pi2` | 5 | 0.978 | 0.2191 | 500 |
+| 9 | `bs_pi4` | 4 | 0.968 | 0.2054 | 500 |
+| 10 | `bs_pi2` | 4 | 0.952 | 0.2164 | 500 |
+| 11 | `cz_nm` | 4 | 0.938 | 0.2246 | 500 |
+| 12 | `identity` | 4 | 0.916 | 0.3351 | 500 |
 
-**Current best:** `bs_pi4` @ L*=5 (success=0.990, mean p(GS)=0.1950).
+### High mean-p(GS) (fleet2, includes SNAP)
 
-Sources:
-- `fleet2_20260917T102419Z_summary.json`
-- `fleet1_20260917T100720Z_summary.json`
+- `snap_a_pi` L*=5: mean p=0.4035, success=0.977
+- `snap_b_pi` L*=5: mean p=0.3995, success=0.967
+- `identity` L*=5: mean p=0.3937, success=0.983
+- `snap_a_pi` L*=4: mean p=0.3122, success=0.897
+- `snap_b_pi` L*=4: mean p=0.3120, success=0.923
+- `identity` L*=4: mean p=0.3072, success=0.923
+
+## Fleet history
+
+- Fleet1 breadth: `fleet1_*_summary.json`
+- Fleet2 deeper L=3..5: `fleet2_20260917T102419Z_summary.json`
+- Fleet3 winners L=4..6: `fleet3_20260917T105442Z_summary.json`
