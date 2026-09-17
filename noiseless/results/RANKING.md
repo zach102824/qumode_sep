@@ -1,14 +1,13 @@
 # Noiseless SPSA ranking
 
-Updated: 2026-09-17 10:09 UTC
+Updated: 2026-09-17 10:24 UTC
 
-## Fleet #1 (all 6 U × L*∈{2,3,4} × 20 H × 5 trials × 200 SPSA steps)
+Campaign constraints: random ECD init only; fixed U never trained; no joint prep; noiseless.
 
-Metric: ground-bitstring success (argmax bitstring == GS) and mean p(GS).
-No jointly trained prep; fixed U frozen; random ECD init.
+## Fleet #1 — breadth (5 trials × 200 steps × L∈{2,3,4})
 
-| Rank | U | L* | Success rate | Mean p(GS) | Trials |
-|-----:|---|---:|-------------:|-----------:|-------:|
+| Rank | U | L* | Success | Mean p(GS) | N |
+|-----:|---|---:|--------:|-----------:|--:|
 | 1 | `bs_pi4` | 4 | 0.970 | 0.1595 | 100 |
 | 2 | `bs_pi2` | 4 | 0.930 | 0.1648 | 100 |
 | 3 | `identity` | 4 | 0.910 | 0.2622 | 100 |
@@ -28,10 +27,31 @@ No jointly trained prep; fixed U frozen; random ECD init.
 | 17 | `identity` | 2 | 0.450 | 0.1464 | 100 |
 | 18 | `snap_b_pi` | 2 | 0.430 | 0.1363 | 100 |
 
-**Best so far:** `bs_pi4` at L*=4 (success=0.970, mean p(GS)=0.1595).
+## Fleet #2 — deeper (15 trials × 400 steps × L∈{3,4,5})
 
-Note: `identity` / SNAP at L*=4 have higher mean p(GS) but slightly lower success rate than `bs_pi4`.
+| Rank | U | L* | Success | Mean p(GS) | N |
+|-----:|---|---:|--------:|-----------:|--:|
+| 1 | `bs_pi4` | 5 | 0.990 | 0.1950 | 300 |
+| 2 | `identity` | 5 | 0.983 | 0.3937 | 300 |
+| 3 | `bs_pi2` | 5 | 0.983 | 0.2014 | 300 |
+| 4 | `cz_nm` | 5 | 0.980 | 0.2171 | 300 |
+| 5 | `snap_a_pi` | 5 | 0.977 | 0.4035 | 300 |
+| 6 | `bs_pi4` | 4 | 0.977 | 0.1862 | 300 |
+| 7 | `snap_b_pi` | 5 | 0.967 | 0.3995 | 300 |
+| 8 | `bs_pi2` | 4 | 0.950 | 0.2000 | 300 |
+| 9 | `cz_nm` | 4 | 0.937 | 0.2012 | 300 |
+| 10 | `snap_b_pi` | 4 | 0.923 | 0.3120 | 300 |
+| 11 | `identity` | 4 | 0.923 | 0.3072 | 300 |
+| 12 | `snap_a_pi` | 4 | 0.897 | 0.3122 | 300 |
+| 13 | `bs_pi2` | 3 | 0.843 | 0.1839 | 300 |
+| 14 | `bs_pi4` | 3 | 0.827 | 0.1589 | 300 |
+| 15 | `cz_nm` | 3 | 0.763 | 0.1837 | 300 |
+| 16 | `snap_b_pi` | 3 | 0.757 | 0.2324 | 300 |
+| 17 | `snap_a_pi` | 3 | 0.747 | 0.2285 | 300 |
+| 18 | `identity` | 3 | 0.720 | 0.2241 | 300 |
 
-Artifacts:
-- `noiseless/results/fleet1_20260917T100720Z.json`
-- `noiseless/results/fleet1_20260917T100720Z_summary.json`
+**Current best:** `bs_pi4` @ L*=5 (success=0.990, mean p(GS)=0.1950).
+
+Sources:
+- `fleet2_20260917T102419Z_summary.json`
+- `fleet1_20260917T100720Z_summary.json`
