@@ -1,14 +1,24 @@
 # Noiseless SPSA ranking
 
-Updated: 2026-09-17 10:55 UTC
+Updated: 2026-09-17 11:24 UTC
 
-Constraints: random ECD init; fixed U never trained; no joint prep; noiseless dim-256.
+Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
 
 ## Headline
 
-- **Best success rate:** `bs_pi4` at **L\*=6** — success=1.000, mean p(GS)=0.2062 (fleet3, 500 trials × 600 SPSA steps).
+- **Best bitstring success:** `bs_pi4` at **L*=6** — success=1.000, mean p(GS)=0.2196 (fleet4_bs, 800 trials × 800 steps).
+- **Best mean p(GS) in fleet3:** `identity` L*=6 — mean p=0.5160, success=0.994.
 
-### Fleet3 full table (top U only, L∈{4,5,6}, 25 trials × 600 steps)
+## Fleet4_bs (`bs_pi4` depth scan)
+
+| Rank | U | L* | Success | Mean p(GS) | N |
+|-----:|---|---:|--------:|-----------:|--:|
+| 1 | `bs_pi4` | 6 | 1.000 | 0.2196 | 800 |
+| 2 | `bs_pi4` | 8 | 1.000 | 0.2124 | 800 |
+| 3 | `bs_pi4` | 7 | 0.999 | 0.2142 | 800 |
+| 4 | `bs_pi4` | 5 | 0.991 | 0.2294 | 800 |
+
+## Fleet3 (winners L∈{4,5,6})
 
 | Rank | U | L* | Success | Mean p(GS) | N |
 |-----:|---|---:|--------:|-----------:|--:|
@@ -25,17 +35,3 @@ Constraints: random ECD init; fixed U never trained; no joint prep; noiseless di
 | 11 | `cz_nm` | 4 | 0.938 | 0.2246 | 500 |
 | 12 | `identity` | 4 | 0.916 | 0.3351 | 500 |
 
-### High mean-p(GS) (fleet2, includes SNAP)
-
-- `snap_a_pi` L*=5: mean p=0.4035, success=0.977
-- `snap_b_pi` L*=5: mean p=0.3995, success=0.967
-- `identity` L*=5: mean p=0.3937, success=0.983
-- `snap_a_pi` L*=4: mean p=0.3122, success=0.897
-- `snap_b_pi` L*=4: mean p=0.3120, success=0.923
-- `identity` L*=4: mean p=0.3072, success=0.923
-
-## Fleet history
-
-- Fleet1 breadth: `fleet1_*_summary.json`
-- Fleet2 deeper L=3..5: `fleet2_20260917T102419Z_summary.json`
-- Fleet3 winners L=4..6: `fleet3_20260917T105442Z_summary.json`

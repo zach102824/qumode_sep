@@ -1,15 +1,62 @@
 {
-  "updated_utc": "2026-09-17T10:55:07Z",
-  "best": {
+  "updated_utc": "2026-09-17T11:24:14Z",
+  "best_success": {
     "u_name": "bs_pi4",
     "n_layers": 6,
     "n_hamiltonians": 20,
-    "n_trials": 500,
-    "n_success": 500,
+    "n_trials": 800,
+    "n_success": 800,
     "success_rate": 1.0,
-    "mean_p_gs": 0.2062116216149371
+    "mean_p_gs": 0.21958073449887575
   },
-  "fleet3_ranking": [
+  "best_mean_p_fleet3": {
+    "u_name": "identity",
+    "n_layers": 6,
+    "n_hamiltonians": 20,
+    "n_trials": 500,
+    "n_success": 497,
+    "success_rate": 0.994,
+    "mean_p_gs": 0.5160417630364873
+  },
+  "fleet4_bs": [
+    {
+      "u_name": "bs_pi4",
+      "n_layers": 6,
+      "n_hamiltonians": 20,
+      "n_trials": 800,
+      "n_success": 800,
+      "success_rate": 1.0,
+      "mean_p_gs": 0.21958073449887575
+    },
+    {
+      "u_name": "bs_pi4",
+      "n_layers": 8,
+      "n_hamiltonians": 20,
+      "n_trials": 800,
+      "n_success": 800,
+      "success_rate": 1.0,
+      "mean_p_gs": 0.21239591226436333
+    },
+    {
+      "u_name": "bs_pi4",
+      "n_layers": 7,
+      "n_hamiltonians": 20,
+      "n_trials": 800,
+      "n_success": 799,
+      "success_rate": 0.99875,
+      "mean_p_gs": 0.21422871091253723
+    },
+    {
+      "u_name": "bs_pi4",
+      "n_layers": 5,
+      "n_hamiltonians": 20,
+      "n_trials": 800,
+      "n_success": 793,
+      "success_rate": 0.99125,
+      "mean_p_gs": 0.22940141191239796
+    }
+  ],
+  "fleet3": [
     {
       "u_name": "bs_pi4",
       "n_layers": 6,
@@ -118,83 +165,5 @@
       "success_rate": 0.916,
       "mean_p_gs": 0.33511759489743126
     }
-  ],
-  "fleet2_top_by_p": [
-    {
-      "u_name": "snap_a_pi",
-      "n_layers": 5,
-      "n_hamiltonians": 20,
-      "n_trials": 300,
-      "n_success": 293,
-      "success_rate": 0.9766666666666667,
-      "mean_p_gs": 0.40354893929113955
-    },
-    {
-      "u_name": "snap_b_pi",
-      "n_layers": 5,
-      "n_hamiltonians": 20,
-      "n_trials": 300,
-      "n_success": 290,
-      "success_rate": 0.9666666666666667,
-      "mean_p_gs": 0.3995068849414513
-    },
-    {
-      "u_name": "identity",
-      "n_layers": 5,
-      "n_hamiltonians": 20,
-      "n_trials": 300,
-      "n_success": 295,
-      "success_rate": 0.9833333333333333,
-      "mean_p_gs": 0.39366673371815336
-    },
-    {
-      "u_name": "snap_a_pi",
-      "n_layers": 4,
-      "n_hamiltonians": 20,
-      "n_trials": 300,
-      "n_success": 269,
-      "success_rate": 0.8966666666666666,
-      "mean_p_gs": 0.3122165277024018
-    },
-    {
-      "u_name": "snap_b_pi",
-      "n_layers": 4,
-      "n_hamiltonians": 20,
-      "n_trials": 300,
-      "n_success": 277,
-      "success_rate": 0.9233333333333333,
-      "mean_p_gs": 0.3119715171872493
-    },
-    {
-      "u_name": "identity",
-      "n_layers": 4,
-      "n_hamiltonians": 20,
-      "n_trials": 300,
-      "n_success": 277,
-      "success_rate": 0.9233333333333333,
-      "mean_p_gs": 0.3072477530543169
-    },
-    {
-      "u_name": "snap_b_pi",
-      "n_layers": 3,
-      "n_hamiltonians": 20,
-      "n_trials": 300,
-      "n_success": 227,
-      "success_rate": 0.7566666666666667,
-      "mean_p_gs": 0.2324008404446599
-    },
-    {
-      "u_name": "snap_a_pi",
-      "n_layers": 3,
-      "n_hamiltonians": 20,
-      "n_trials": 300,
-      "n_success": 224,
-      "success_rate": 0.7466666666666667,
-      "mean_p_gs": 0.22849683273429558
-    }
-  ],
-  "sources": {
-    "fleet2": "fleet2_20260917T102419Z_summary.json",
-    "fleet3": "fleet3_20260917T105442Z_summary.json"
-  }
+  ]
 }
