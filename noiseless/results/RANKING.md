@@ -1,43 +1,44 @@
 # Noiseless SPSA ranking
 
-Updated: 2026-09-17 14:04 UTC
+Updated: 2026-09-17 15:39 UTC
 
 Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
 
 ## Headline result
 
-**Best overall:** `identity` at **L\*=9**
-— success rate **1.000**, mean p(GS) **0.7354**
-(fleet5, 800 trials × 1000 SPSA steps, 20 Hamiltonians).
+**Best overall:** `snap_a_pi` at **L\*=12**
+— success rate **1.000**, mean p(GS) **0.8454**
+(fleet6, 600 trials × 1200 SPSA steps, 20 Hamiltonians).
 
-Deeper ECD stacks with an **identity** (or SNAP) bus dominate beamsplitter U on mean ground probability while keeping perfect/near-perfect bitstring success.
+Deeper ECD stacks with **SNAP / identity** buses continue to raise mean ground probability at perfect bitstring success; `snap_a_pi` now leads at L*=12.
 
-## Fleet5 (identity/SNAP, L∈{6,7,8,9}, 40×1000)
+## Fleet6 (identity/snap_a_pi, L∈{8,9,10,12}, 30×1200)
 
 | Rank | U | L* | Success | Mean p(GS) | N |
 |-----:|---|---:|--------:|-----------:|--:|
-| 1 | `identity` | 9 | 1.000 | 0.7354 | 800 |
-| 2 | `snap_a_pi` | 9 | 1.000 | 0.7304 | 800 |
-| 3 | `snap_b_pi` | 9 | 1.000 | 0.7289 | 800 |
-| 4 | `snap_a_pi` | 8 | 1.000 | 0.6916 | 800 |
-| 5 | `identity` | 8 | 1.000 | 0.6868 | 800 |
-| 6 | `snap_b_pi` | 8 | 1.000 | 0.6850 | 800 |
-| 7 | `snap_a_pi` | 7 | 1.000 | 0.6362 | 800 |
-| 8 | `identity` | 7 | 1.000 | 0.6356 | 800 |
-| 9 | `snap_b_pi` | 7 | 0.998 | 0.6284 | 800 |
-| 10 | `snap_b_pi` | 6 | 0.996 | 0.5610 | 800 |
-| 11 | `identity` | 6 | 0.995 | 0.5696 | 800 |
-| 12 | `snap_a_pi` | 6 | 0.995 | 0.5586 | 800 |
+| 1 | `snap_a_pi` | 12 | 1.000 | 0.8454 | 600 |
+| 2 | `identity` | 12 | 1.000 | 0.8428 | 600 |
+| 3 | `identity` | 10 | 1.000 | 0.7896 | 600 |
+| 4 | `snap_a_pi` | 10 | 1.000 | 0.7861 | 600 |
+| 5 | `identity` | 9 | 1.000 | 0.7569 | 600 |
+| 6 | `snap_a_pi` | 9 | 1.000 | 0.7521 | 600 |
+| 7 | `snap_a_pi` | 8 | 1.000 | 0.7121 | 600 |
+| 8 | `identity` | 8 | 1.000 | 0.7056 | 600 |
 
 ## Prior fleets (selected)
+
+### Fleet5
+- `identity` L=9: succ=1.000, mean_p=0.7354
+- `snap_a_pi` L=9: succ=1.000, mean_p=0.7304
+- `snap_b_pi` L=9: succ=1.000, mean_p=0.7289
+- `snap_a_pi` L=8: succ=1.000, mean_p=0.6916
+- `identity` L=8: succ=1.000, mean_p=0.6868
+- `snap_b_pi` L=8: succ=1.000, mean_p=0.6850
 
 ### Fleet4_p
 - `identity` L=7: succ=1.000, mean_p=0.6093
 - `snap_a_pi` L=7: succ=1.000, mean_p=0.6093
 - `snap_b_pi` L=7: succ=0.998, mean_p=0.6017
-- `identity` L=6: succ=0.998, mean_p=0.5456
-- `snap_b_pi` L=6: succ=0.998, mean_p=0.5390
-- `snap_a_pi` L=6: succ=0.993, mean_p=0.5351
 
 ### Fleet4_bs (`bs_pi4`)
 - L=6: succ=1.000, mean_p=0.2196
