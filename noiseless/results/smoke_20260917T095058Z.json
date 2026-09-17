@@ -1,0 +1,83 @@
+{
+  "created_utc": "2026-09-17T09:50:58Z",
+  "tag": "smoke",
+  "args": {
+    "ham_dir": "/workspace/qumode_sep/Hamiltonians/four_sat",
+    "u_names": "identity",
+    "layers": "2",
+    "trials": 1,
+    "steps": 8,
+    "workers": 4,
+    "seed": 20260917,
+    "max_h": 1
+  },
+  "n_jobs": 1,
+  "n_ok": 1,
+  "n_fail": 0,
+  "aggregate": {
+    "cells": [
+      {
+        "u_name": "identity",
+        "n_layers": 2,
+        "ham_file": "synthetic.npz",
+        "n_trials": 1,
+        "n_success": 0,
+        "success_rate": 0.0,
+        "mean_p_gs": 0.0003824532178241817,
+        "max_p_gs": 0.0003824532178241817,
+        "median_p_gs": 0.0003824532178241817
+      }
+    ],
+    "ranking": [
+      {
+        "u_name": "identity",
+        "n_layers": 2,
+        "n_hamiltonians": 1,
+        "n_trials": 1,
+        "n_success": 0,
+        "success_rate": 0.0,
+        "mean_p_gs": 0.0003824532178241817
+      }
+    ]
+  },
+  "records": [
+    {
+      "ok": true,
+      "ham_file": "synthetic.npz",
+      "u_name": "identity",
+      "n_layers": 2,
+      "trial": 0,
+      "seed": 20260917,
+      "success": false,
+      "p_gs": 0.0003824532178241817,
+      "most_likely_bitstring": "00000000",
+      "ground_bitstring": "01011010",
+      "fun": 4.590505406315733,
+      "eta": 4.628540013227303,
+      "energy_mean": 0.999617546782176,
+      "nfev": 17,
+      "nit": 8,
+      "spsa_a": 0.304138126514911,
+      "wall_s": 0.7112975500058383,
+      "x": [
+        1.7785205047901438,
+        -0.2118695404000481,
+        0.9623091678391061,
+        0.14327012504843237,
+        1.1917360878374086,
+        2.1553127926116074,
+        1.9482761388866185,
+        1.9078304773224453,
+        0.5086264745885815,
+        1.3941790367041405,
+        0.2689012769040947,
+        0.06471015789592152,
+        0.5029416637455072,
+        1.7156281150631605,
+        2.630999055478355,
+        2.9597583219221706
+      ],
+      "error": null
+    }
+  ]
+}
