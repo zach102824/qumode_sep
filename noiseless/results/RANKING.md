@@ -1,15 +1,33 @@
 # Noiseless SPSA ranking
 
-Updated: 2026-09-17 11:24 UTC
+Updated: 2026-09-17 12:08 UTC
 
-Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
+Constraints: random ECD init; fixed U never trained; no joint prep; noiseless 256-dim.
 
 ## Headline
 
-- **Best bitstring success:** `bs_pi4` at **L*=6** — success=1.000, mean p(GS)=0.2196 (fleet4_bs, 800 trials × 800 steps).
-- **Best mean p(GS) in fleet3:** `identity` L*=6 — mean p=0.5160, success=0.994.
+- **Overall best (success then mean p):** `identity` @ **L*=7**
+  — success=1.000, mean p(GS)=0.6093.
+- **Highest mean p(GS):** `identity` @ L*=7
+  — mean p=0.6093, success=1.000.
 
-## Fleet4_bs (`bs_pi4` depth scan)
+Interpretation: deeper ECD stacks with **identity** bus beat beamsplitter U on mean ground-state probability while matching perfect bitstring success.
+
+## Fleet4_p (identity / SNAP, L∈{5,6,7}, 30×800)
+
+| Rank | U | L* | Success | Mean p(GS) | N |
+|-----:|---|---:|--------:|-----------:|--:|
+| 1 | `identity` | 7 | 1.000 | 0.6093 | 600 |
+| 2 | `snap_a_pi` | 7 | 1.000 | 0.6093 | 600 |
+| 3 | `snap_b_pi` | 7 | 0.998 | 0.6017 | 600 |
+| 4 | `identity` | 6 | 0.998 | 0.5456 | 600 |
+| 5 | `snap_b_pi` | 6 | 0.998 | 0.5390 | 600 |
+| 6 | `snap_a_pi` | 6 | 0.993 | 0.5351 | 600 |
+| 7 | `identity` | 5 | 0.988 | 0.4547 | 600 |
+| 8 | `snap_a_pi` | 5 | 0.982 | 0.4590 | 600 |
+| 9 | `snap_b_pi` | 5 | 0.977 | 0.4603 | 600 |
+
+## Fleet4_bs (`bs_pi4` depth, 40×800)
 
 | Rank | U | L* | Success | Mean p(GS) | N |
 |-----:|---|---:|--------:|-----------:|--:|
@@ -18,7 +36,7 @@ Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
 | 3 | `bs_pi4` | 7 | 0.999 | 0.2142 | 800 |
 | 4 | `bs_pi4` | 5 | 0.991 | 0.2294 | 800 |
 
-## Fleet3 (winners L∈{4,5,6})
+## Fleet3 (mixed winners)
 
 | Rank | U | L* | Success | Mean p(GS) | N |
 |-----:|---|---:|--------:|-----------:|--:|
@@ -34,4 +52,3 @@ Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
 | 10 | `bs_pi2` | 4 | 0.952 | 0.2164 | 500 |
 | 11 | `cz_nm` | 4 | 0.938 | 0.2246 | 500 |
 | 12 | `identity` | 4 | 0.916 | 0.3351 | 500 |
-
