@@ -95,10 +95,10 @@ def _z_eigenvalue(bits: np.ndarray, sites: Sequence[int]) -> float:
 def energy_from_z_terms(
     bits: Sequence[int],
     terms: Sequence[tuple[tuple[int, ...], float]],
-    identity: float = 0.0,
+    identity_shift: float = 0.0,
 ) -> float:
     x = np.asarray(bits, dtype=int).reshape(N_QUBITS)
-    e = float(identity)
+    e = float(identity_shift)
     for sites, coeff in terms:
         e += float(coeff) * _z_eigenvalue(x, sites)
     return e
@@ -122,12 +122,14 @@ def z_terms_from_npz(path: Path | str) -> tuple[list[tuple[tuple[int, ...], floa
         order = int(orders[row])
         row_sites = tuple(int(v) for v in sites[row, :order])
         terms.append((row_sites, float(coeff)))
-    identity = float(np.asarray(data["identity"]).reshape(-1)[0]) if "identity" in data.files else 0.0
+    identity_shift = (
+        float(np.asarray(data["identity"]).reshape(-1)[0]) if "identity" in data.files else 0.0
+    )
     meta = {
         "file": path.name,
         "path": str(path),
         "num_spins": num_spins,
-        "identity": identity,
+        "identity": identity_shift,
         "n_terms": len(terms),
         "num_clauses": int(np.asarray(data["num_clauses"]).reshape(-1)[0])
         if "num_clauses" in data.files
@@ -138,7 +140,7 @@ def z_terms_from_npz(path: Path | str) -> tuple[list[tuple[tuple[int, ...], floa
 
 def energy_tensor_from_terms(
     terms: Sequence[tuple[tuple[int, ...], float]],
-    identity: float = 0.0,
+    identity_shift: float = 0.0,
     tilt: float = 0.0,
 ) -> np.ndarray:
     """Diagonal energies shaped (2, 2, 8, 8) for |d,e,n_A,n_B⟩."""
@@ -148,7 +150,7 @@ def energy_tensor_from_terms(
             for n_a in range(NFOCK):
                 for n_b in range(NFOCK):
                     bits = bits_from_denm(d, e, n_a, n_b)
-                    out[d, e, n_a, n_b] = energy_from_z_terms(bits, terms, identity)
+                    out[d, e, n_a, n_b] = energy_from_z_terms(bits, terms, identity_shift)
     if tilt:
         out = out + float(tilt) * np.arange(out.size, dtype=float).reshape(out.shape)
     return out
@@ -161,7 +163,6 @@ def load_four_sat_npz(path: Path | str, tilt: float = 0.0) -> dict:
     flat = tensor.reshape(-1)
     gmin = float(np.min(flat))
     ground_idx = int(np.argmin(flat))
-    # unique check on untilted energies
     untilted = energy_tensor_from_terms(terms, meta["identity"], tilt=0.0).reshape(-1)
     n_ground = int(np.count_nonzero(np.isclose(untilted, untilted.min(), atol=1e-12)))
     d, e, n_a, n_b = denm_from_flat(ground_idx)

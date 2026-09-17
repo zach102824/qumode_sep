@@ -1,29 +1,28 @@
-"""SPSA + sampled_tail Gibbs cost on the noiseless local-ECD circuit.
-
-Mirrors qumode HybridSimulator / optimize_gibbs style:
-  f = −ln ⟨e^{−η E}⟩ with η from probability-weighted 5%/25% energy quantiles
-  (no known E_min during optimization).
-"""
+"""SPSA + sampled_tail Gibbs cost on the noiseless local-ECD circuit."""
 
 from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Callable, Sequence
+from typing import Callable
 
 import numpy as np
 import qutip as qt
 
 from .circuit_local_ecd import (
-    apply_circuit,
-    born_probs,
+    apply_circuit_np,
+    born_probs_np,
+    extract_u_ab,
     n_parameters,
+    qobj_to_np,
     random_parameters,
 )
 from .encoding import (
     DIMS,
     bitstring_from_bits,
+    bits_from_bitstring,
     bits_from_denm,
+    denm_from_bits,
     denm_from_flat,
     flat_index,
 )
@@ -33,8 +32,6 @@ ETA_MAX = 50.0
 LN20 = math.log(20.0)
 EMA_ALPHA = 0.35
 DEFAULT_REFRESH_EVERY = 5
-
-# Baseline a≈0.2 at n_params=37 (old n=7 joint); scale ∝ 1/√n_params
 BASELINE_A = 0.2
 BASELINE_NPARAMS = 37
 
@@ -62,9 +59,7 @@ def robust_scale(values: np.ndarray, weights: np.ndarray) -> float:
     q05 = weighted_quantile(values, weights, 0.05)
     q25 = weighted_quantile(values, weights, 0.25)
     q75 = weighted_quantile(values, weights, 0.75)
-    iqr = max(q75 - q25, 0.0)
-    tail = max(q25 - q05, 0.0)
-    return max(tail, 0.25 * iqr, 1e-8)
+    return max(q25 - q05, 0.25 * max(q75 - q25, 0.0), 1e-8)
 
 
 def clamp_eta(eta: float) -> tuple[float, bool]:
@@ -112,18 +107,12 @@ class SampledTailEta:
         self.eta = float(eta)
         self.last_step_updated = int(step)
         self.history.append(
-            {
-                "step": int(step),
-                "eta": float(eta),
-                "fallback": fallback,
-                "clamped": bool(clamped),
-            }
+            {"step": int(step), "eta": float(eta), "fallback": fallback, "clamped": bool(clamped)}
         )
         return self.eta
 
 
 def gibbs_objective(probs: np.ndarray, energies: np.ndarray, eta: float) -> float:
-    """f = −ln ⟨e^{−ηE}⟩, shifted by min E for numerics (not used as known E_min)."""
     p = np.asarray(probs, dtype=float).reshape(-1)
     e = np.asarray(energies, dtype=float).reshape(-1)
     p = np.clip(p, 0.0, None)
@@ -152,9 +141,7 @@ class TrialResult:
 
 @dataclass
 class NoiselessSimulator:
-    """Cached U_fixed + energy tensor; ECD params only."""
-
-    u_fixed: qt.Qobj
+    u_fixed: qt.Qobj | np.ndarray
     energy_tensor: np.ndarray
     n_layers: int
     ground_bitstring: str
@@ -164,12 +151,17 @@ class NoiselessSimulator:
         self.energies_flat = np.asarray(self.energy_tensor, dtype=float).reshape(-1)
         if self.energies_flat.size != int(np.prod(DIMS)):
             raise ValueError("energy_tensor must match dims (2,2,8,8)")
+        if isinstance(self.u_fixed, qt.Qobj):
+            self.u_np = qobj_to_np(self.u_fixed)
+        else:
+            self.u_np = np.asarray(self.u_fixed, dtype=complex)
+        self.u_ab = extract_u_ab(self.u_np) if self.u_np.shape == (256, 256) else self.u_np
         self.eta_ctrl = SampledTailEta()
         self._current_eta = 1.0
 
     def probs_from_x(self, x: np.ndarray) -> np.ndarray:
-        ket = apply_circuit(x, self.n_layers, self.u_fixed)
-        return born_probs(ket)
+        ket = apply_circuit_np(x, self.n_layers, self.u_np, u_ab=self.u_ab)
+        return born_probs_np(ket)
 
     def cost(self, x: np.ndarray, eta: float | None = None) -> float:
         probs = self.probs_from_x(x)
@@ -187,13 +179,11 @@ class NoiselessSimulator:
         d, e, n_a, n_b = denm_from_flat(idx)
         bits = bits_from_denm(d, e, n_a, n_b)
         ml = bitstring_from_bits(bits)
-        p_gs = float(probs[self.ground_flat_index])
-        e_mean = float(np.dot(probs, self.energies_flat))
         return {
             "most_likely_bitstring": ml,
-            "p_gs": p_gs,
+            "p_gs": float(probs[self.ground_flat_index]),
             "success": ml == self.ground_bitstring,
-            "energy_mean": e_mean,
+            "energy_mean": float(np.dot(probs, self.energies_flat)),
             "probs": probs,
         }
 
@@ -213,21 +203,17 @@ def run_spsa(
 ) -> tuple[np.ndarray, float, int]:
     x = np.asarray(x0, dtype=float).copy()
     nfev = 0
-    last_fun = 0.0
     for k in range(1, int(maxiter) + 1):
         if on_before_step is not None:
             on_before_step(k, x)
         ak = a / (k + A) ** alpha
         ck = c / k**gamma
         delta = rng.choice([-1.0, 1.0], size=x.size)
-        xp = x + ck * delta
-        xm = x - ck * delta
-        yp = float(fun(xp))
-        ym = float(fun(xm))
+        yp = float(fun(x + ck * delta))
+        ym = float(fun(x - ck * delta))
         nfev += 2
         ghat = (yp - ym) / (2.0 * ck) * delta
         x = x - ak * ghat
-        last_fun = 0.5 * (yp + ym)
     return x, float(fun(x)), nfev + 1
 
 
@@ -243,23 +229,18 @@ def optimize_trial(
 ) -> TrialResult:
     rng = rng or np.random.default_rng()
     n_params = n_parameters(sim.n_layers)
-    if x0 is None:
-        x0 = random_parameters(sim.n_layers, rng)
-    else:
-        x0 = np.asarray(x0, dtype=float)
+    x0 = random_parameters(sim.n_layers, rng) if x0 is None else np.asarray(x0, dtype=float)
     if a is None:
         a = scale_spsa_a(n_params)
     sim.eta_ctrl = SampledTailEta()
     sim._current_eta = 1.0
 
     def on_before(step: int, x: np.ndarray) -> None:
-        sim.refresh_eta(x, step)
-
-    def fun(x: np.ndarray) -> float:
-        return sim.cost(x)
+        if (step - 1) % sim.eta_ctrl.refresh_every == 0:
+            sim.refresh_eta(x, step)
 
     x_final, fun_final, nfev = run_spsa(
-        fun,
+        sim.cost,
         x0,
         maxiter=maxiter,
         rng=rng,
@@ -284,7 +265,5 @@ def optimize_trial(
 
 
 def ground_flat_from_bitstring(bitstring: str) -> int:
-    from .encoding import bits_from_bitstring, denm_from_bits
-
     d, e, n_a, n_b = denm_from_bits(bits_from_bitstring(bitstring))
     return flat_index(d, e, n_a, n_b)

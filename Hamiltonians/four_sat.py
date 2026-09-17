@@ -1,4 +1,4 @@
-"""Generate a 7-qubit 4-SAT Hamiltonian with a nontrivial unique ground state.
+"""Generate an 8-qubit 4-SAT Hamiltonian with a nontrivial unique ground state.
 
 Each clause C contributes the diagonal projector onto the unique assignment
 that falsifies C,
@@ -8,11 +8,12 @@ that falsifies C,
 and H = sum_C H_C counts unsatisfied clauses. Computational bits use
 x = 0, 1 with Z|0> = +1 and Z|1> = -1.
 
-Random 4-CNF at 12–20 clauses on 7 variables is typically highly degenerate.
-This generator plants a locally rigid satisfying assignment, then greedily
-adds compatible 4-clauses until that assignment is the unique solution, so
-the ground-state bitstring is not a trivial pattern and is not found by
-greedy single-bit descent from most start states.
+Random 4-CNF at 14–23 clauses on 8 variables (same m/n band as the old
+7-qubit 12–20 set) is typically highly degenerate. This generator plants a
+locally rigid satisfying assignment, then greedily adds compatible 4-clauses
+until that assignment is the unique solution, so the ground-state bitstring
+is not a trivial pattern and is not found by greedy single-bit descent from
+most start states.
 
 Run this file directly after editing the hyperparameters below. The instance
 is written as a compressed ``.npz`` file in the ``four_sat/`` subdirectory.
@@ -32,25 +33,25 @@ import numpy as np
 # Hyperparameters
 # ---------------------------------------------------------------------------
 NUM_HAMILTONIANS = 20
-NUM_SPINS = 7
+NUM_SPINS = 8
 CLAUSE_WIDTH = 4
-MIN_CLAUSES = 12
-MAX_CLAUSES = 20
-TARGET_CLAUSES = 16
+MIN_CLAUSES = 14
+MAX_CLAUSES = 23
+TARGET_CLAUSES = 18
 SEARCH_TRIALS = 4000
 RANDOM_SEED = 11000
 OUTPUT_DIRECTORY = Path(__file__).resolve().parent / "four_sat"
 FILE_PREFIX = "four_sat"
 
 _TRIVIAL_BITSTRINGS = {
-    "0000000",
-    "1111111",
-    "0101010",
-    "1010101",
-    "0001111",
-    "1110000",
-    "0011100",
-    "1100011",
+    "00000000",
+    "11111111",
+    "01010101",
+    "10101010",
+    "00001111",
+    "11110000",
+    "00111100",
+    "11000011",
 }
 
 

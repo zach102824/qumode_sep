@@ -1,6 +1,6 @@
 """Fixed bus unitaries U on A⊗B (identity on transmons d, e).
 
-Names for CLI / results:
+CLI / results names (approved plan):
   identity, bs_pi4, bs_pi2, cz_nm, snap_a_pi, snap_b_pi
 """
 
@@ -9,7 +9,7 @@ from __future__ import annotations
 import numpy as np
 import qutip as qt
 
-from .encoding import DIMS, NFOCK, identity as full_identity
+from .encoding import NFOCK, identity as full_identity
 
 U_NAMES = (
     "identity",
@@ -22,7 +22,7 @@ U_NAMES = (
 
 
 def _embed_ab(u_ab: qt.Qobj) -> qt.Qobj:
-    """Embed a (NFOCK×NFOCK)⊗(NFOCK×NFOCK) operator as I_d ⊗ I_e ⊗ U_AB."""
+    """Embed (NFOCK×NFOCK)⊗(NFOCK×NFOCK) operator as I_d ⊗ I_e ⊗ U_AB."""
     return qt.tensor(qt.qeye(2), qt.qeye(2), u_ab)
 
 
@@ -30,15 +30,12 @@ def beamsplitter_ab(theta: float) -> qt.Qobj:
     """U_BS(θ) = exp(-i θ (a†b + ab†)) on A⊗B."""
     a = qt.destroy(NFOCK)
     b = qt.destroy(NFOCK)
-    adag_b = qt.tensor(a.dag(), b)
-    a_bdag = qt.tensor(a, b.dag())
-    gen = adag_b + a_bdag
-    u_ab = (-1j * float(theta) * gen).expm()
-    return _embed_ab(u_ab)
+    gen = qt.tensor(a.dag(), b) + qt.tensor(a, b.dag())
+    return _embed_ab((-1j * float(theta) * gen).expm())
 
 
 def cz_nm_ab() -> qt.Qobj:
-    """|n,m⟩ ↦ (-1)^{n m} |n,m⟩ on A⊗B."""
+    """|n,m⟩ ↦ (-1)^{n m} |n,m⟩."""
     diag = np.ones(NFOCK * NFOCK, dtype=complex)
     for n in range(NFOCK):
         for m in range(NFOCK):
@@ -88,5 +85,7 @@ def build_fixed_u(name: str) -> qt.Qobj:
 
 def ab_matrix_elements(u_full: qt.Qobj, n: int, m: int) -> complex:
     """⟨0,0,n,m| U |0,0,n,m⟩ for diagonal checks (d=e=0)."""
-    ket = qt.tensor(qt.basis(2, 0), qt.basis(2, 0), qt.basis(NFOCK, n), qt.basis(NFOCK, m))
+    ket = qt.tensor(
+        qt.basis(2, 0), qt.basis(2, 0), qt.basis(NFOCK, n), qt.basis(NFOCK, m)
+    )
     return complex((ket.dag() * u_full * ket))
