@@ -1,16 +1,22 @@
 # Noiseless SPSA ranking
 
-Updated: 2026-09-17 21:04 UTC
+Updated: 2026-09-17 21:22 UTC
 
 Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
 
 ## Headline result
 
-**Best overall:** `identity` at **L\*=20**
-— success rate **1.000**, mean p(GS) **0.9482**
-(fleet8, 600 trials × 1200 SPSA steps, 20 Hamiltonians).
+**Best overall:** `identity` at **L\*=22**
+— success rate **1.000**, mean p(GS) **0.9526**
+(fleet9 confirm, 400 trials × 1200 SPSA steps, 20 Hamiltonians).
 
-Deeper ECD stacks with **identity / SNAP** buses continue to raise mean ground probability at perfect bitstring success (L=16→18→20).
+Deeper ECD stacks with **identity / SNAP** buses raise mean ground probability at perfect bitstring success (L=16→18→20→22). Fleet9 is a cheap end-of-budget deepen confirming the L=20→22 gain.
+
+## Fleet9 confirm (U=identity, L=22, 20×1200)
+
+| Rank | U | L* | Success | Mean p(GS) | N |
+|-----:|---|---:|--------:|-----------:|--:|
+| 1 | `identity` | 22 | 1.000 | 0.9526 | 400 |
 
 ## Fleet8 (U=identity,snap_a_pi,snap_b_pi, L∈{18,20}, 30×1200)
 
