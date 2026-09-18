@@ -81,6 +81,34 @@ def test_u_actions():
             assert abs(ab_matrix_elements(ub, n, m) - ((-1.0) ** m)) < 1e-10
 
 
+def test_ck_phase_actions():
+    u2 = build_fixed_u("ck_pi2")
+    u4 = build_fixed_u("ck_pi4")
+    for n in range(5):
+        for m in range(5):
+            want2 = np.exp(-1j * (np.pi / 2.0) * n * m)
+            want4 = np.exp(-1j * (np.pi / 4.0) * n * m)
+            assert abs(ab_matrix_elements(u2, n, m) - want2) < 1e-10
+            assert abs(ab_matrix_elements(u4, n, m) - want4) < 1e-10
+    # Unitarity of Fock-diagonal CK family
+    assert abs((u2.dag() * u2 - identity()).norm()) < 1e-8
+    assert abs((u4.dag() * u4 - identity()).norm()) < 1e-8
+
+
+def test_cphase_nn_actions():
+    u = build_fixed_u("cphase_nn")
+    # Diagonal samples
+    assert abs(ab_matrix_elements(u, 0, 0) - 1.0) < 1e-10
+    assert abs(ab_matrix_elements(u, 1, 1) - (-1.0)) < 1e-10
+    assert abs(ab_matrix_elements(u, 2, 2) - (-1.0)) < 1e-10
+    assert abs(ab_matrix_elements(u, 3, 3) - (-1.0)) < 1e-10
+    assert abs(ab_matrix_elements(u, 1, 2) - 1.0) < 1e-10
+    assert abs(ab_matrix_elements(u, 2, 1) - 1.0) < 1e-10
+    assert abs(ab_matrix_elements(u, 0, 3) - 1.0) < 1e-10
+    assert abs(ab_matrix_elements(u, 4, 0) - 1.0) < 1e-10
+    assert abs((u.dag() * u - identity()).norm()) < 1e-8
+
+
 def test_beamsplitter_unitary():
     for name in ("bs_pi4", "bs_pi2"):
         u = build_fixed_u(name)

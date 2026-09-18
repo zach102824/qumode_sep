@@ -1,6 +1,6 @@
 # Noiseless SPSA ranking
 
-Updated: 2026-09-18 02:44 UTC
+Updated: 2026-09-18 03:54 UTC
 
 Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
 
@@ -64,6 +64,30 @@ Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
 | 46 | `snap_a_pi` | 2 | 0.450 | 0.1489 | 100 | `fleet1` |
 | 47 | `identity` | 2 | 0.450 | 0.1464 | 100 | `fleet1` |
 | 48 | `snap_b_pi` | 2 | 0.430 | 0.1363 | 100 | `fleet1` |
+
+
+## Phase bake-off (200 steps)
+
+Tag `fleet_phase_bakeoff`: U ∈ {`cz_nm`, `ck_pi2`, `ck_pi4`, `cphase_nn`, `bs_pi4`}, L* ∈ {3,4},
+25 trials × 200 SPSA steps × 20 Hamiltonians (N=500 per cell); random ECD init; no prep SPSA.
+
+### Phase gates ranked by L*=4 success, then mean p(GS)
+
+| Rank | U | L*=4 Success | L*=4 Mean p(GS) | L*=3 Success | L*=3 Mean p(GS) |
+|-----:|---|-------------:|----------------:|-------------:|----------------:|
+| 1 | `ck_pi2` | 0.958 | 0.1529 | 0.820 | 0.1473 |
+| 2 | `cphase_nn` | 0.950 | 0.1745 | 0.784 | 0.1524 |
+| 3 | `ck_pi4` | 0.940 | 0.1620 | 0.774 | 0.1525 |
+| 4 | `cz_nm` | 0.922 | 0.1663 | 0.760 | 0.1591 |
+
+### `bs_pi4` reference (same settings)
+
+| U | L* | Success | Mean p(GS) | N |
+|---|---:|--------:|-----------:|--:|
+| `bs_pi4` | 4 | 0.958 | 0.1563 | 500 |
+| `bs_pi4` | 3 | 0.828 | 0.1391 | 500 |
+
+**Phase winner:** `ck_pi2` at L*=4 (success **0.958**, mean p(GS) **0.1529**). Gap to `bs_pi4` under identical settings: success Δ=+0.000, mean p(GS) Δ=+0.0034.
 
 ## Notes
 

@@ -1,7 +1,8 @@
 """Fixed bus unitaries U on A⊗B (identity on transmons d, e).
 
 CLI / results names (approved plan):
-  identity, bs_pi4, bs_pi2, cz_nm, snap_a_pi, snap_b_pi
+  identity, bs_pi4, bs_pi2, cz_nm, snap_a_pi, snap_b_pi,
+  ck_pi2, ck_pi4, cphase_nn
 """
 
 from __future__ import annotations
@@ -18,6 +19,9 @@ U_NAMES = (
     "cz_nm",
     "snap_a_pi",
     "snap_b_pi",
+    "ck_pi2",
+    "ck_pi4",
+    "cphase_nn",
 )
 
 
@@ -41,6 +45,25 @@ def cz_nm_ab() -> qt.Qobj:
         for m in range(NFOCK):
             if (n * m) % 2 == 1:
                 diag[n * NFOCK + m] = -1.0
+    u_ab = qt.Qobj(np.diag(diag), dims=[[NFOCK, NFOCK], [NFOCK, NFOCK]])
+    return _embed_ab(u_ab)
+
+
+def ck_phase_ab(phi: float) -> qt.Qobj:
+    """|n,m⟩ ↦ exp(-i φ n m) |n,m⟩ (Fock-diagonal controlled-phase family)."""
+    diag = np.ones(NFOCK * NFOCK, dtype=complex)
+    for n in range(NFOCK):
+        for m in range(NFOCK):
+            diag[n * NFOCK + m] = np.exp(-1j * float(phi) * n * m)
+    u_ab = qt.Qobj(np.diag(diag), dims=[[NFOCK, NFOCK], [NFOCK, NFOCK]])
+    return _embed_ab(u_ab)
+
+
+def cphase_nn_ab() -> qt.Qobj:
+    """|n,n⟩ ↦ -|n,n⟩ for n≥1; |n,m⟩ unchanged if n≠m (and |0,0⟩ unchanged)."""
+    diag = np.ones(NFOCK * NFOCK, dtype=complex)
+    for n in range(1, NFOCK):
+        diag[n * NFOCK + n] = -1.0
     u_ab = qt.Qobj(np.diag(diag), dims=[[NFOCK, NFOCK], [NFOCK, NFOCK]])
     return _embed_ab(u_ab)
 
@@ -76,6 +99,12 @@ def build_fixed_u(name: str) -> qt.Qobj:
         return beamsplitter_ab(np.pi / 2.0)
     if key == "cz_nm":
         return cz_nm_ab()
+    if key == "ck_pi2":
+        return ck_phase_ab(np.pi / 2.0)
+    if key == "ck_pi4":
+        return ck_phase_ab(np.pi / 4.0)
+    if key == "cphase_nn":
+        return cphase_nn_ab()
     if key == "snap_a_pi":
         return snap_a_pi_ab()
     if key == "snap_b_pi":
