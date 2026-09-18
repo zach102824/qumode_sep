@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-09-18T06:01:38Z",
+  "updated_utc": "2026-09-18T07:02:03Z",
   "max_layers_kept": 5,
   "note": "Deep L*>5 fleets removed; ranking limited to L*<=5.",
   "best": {
@@ -987,6 +987,172 @@
       "mean_frac_coeff_l1_dropped": 0.7114677529403022,
       "min_frac_coeff_l1_dropped": 0.6415094339622641,
       "max_frac_coeff_l1_dropped": 0.8
+    }
+  },
+  "fleet_qaoa_full_800": {
+    "created_utc": "2026-09-18T07:00:23Z",
+    "summary": "fleet_qaoa_full_800_20260918T070023Z_summary.json",
+    "bestofn": "fleet_qaoa_full_800_20260918T070023Z_bestofn.json",
+    "n_jobs": 1500,
+    "n_ok": 1500,
+    "steps": 800,
+    "arms": [
+      "qaoa_full"
+    ],
+    "ranking": [
+      {
+        "arm": "qaoa_full",
+        "n_params": 16,
+        "depth": 8,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "n_success": 500,
+        "success_rate": 1.0,
+        "mean_p_gs": 0.15486028893461803
+      },
+      {
+        "arm": "qaoa_full",
+        "n_params": 24,
+        "depth": 12,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "n_success": 500,
+        "success_rate": 1.0,
+        "mean_p_gs": 0.2021770207402503
+      },
+      {
+        "arm": "qaoa_full",
+        "n_params": 32,
+        "depth": 16,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "n_success": 499,
+        "success_rate": 0.998,
+        "mean_p_gs": 0.20572439315394275
+      }
+    ],
+    "by_tier": {
+      "16": [
+        {
+          "arm": "qaoa_full",
+          "n_params": 16,
+          "depth": 8,
+          "n_hamiltonians": 20,
+          "n_trials": 500,
+          "n_success": 500,
+          "success_rate": 1.0,
+          "mean_p_gs": 0.15486028893461803
+        }
+      ],
+      "16_winner": "qaoa_full",
+      "24": [
+        {
+          "arm": "qaoa_full",
+          "n_params": 24,
+          "depth": 12,
+          "n_hamiltonians": 20,
+          "n_trials": 500,
+          "n_success": 500,
+          "success_rate": 1.0,
+          "mean_p_gs": 0.2021770207402503
+        }
+      ],
+      "24_winner": "qaoa_full",
+      "32": [
+        {
+          "arm": "qaoa_full",
+          "n_params": 32,
+          "depth": 16,
+          "n_hamiltonians": 20,
+          "n_trials": 500,
+          "n_success": 499,
+          "success_rate": 0.998,
+          "mean_p_gs": 0.20572439315394275
+        }
+      ],
+      "32_winner": "qaoa_full"
+    },
+    "bestofn_aggregates": [
+      {
+        "arm": "qaoa_full",
+        "n_params": 16,
+        "n_hamiltonians": 20,
+        "mean_p_gs": 0.15486028893461803,
+        "mean_best_of_25_p_gs": 0.26649780531059586,
+        "mean_top3_p_gs": 0.24110076023248514,
+        "mean_success": 1.0
+      },
+      {
+        "arm": "qaoa_full",
+        "n_params": 24,
+        "n_hamiltonians": 20,
+        "mean_p_gs": 0.20217702074025032,
+        "mean_best_of_25_p_gs": 0.3093885868945376,
+        "mean_top3_p_gs": 0.2890132195903473,
+        "mean_success": 1.0
+      },
+      {
+        "arm": "qaoa_full",
+        "n_params": 32,
+        "n_hamiltonians": 20,
+        "mean_p_gs": 0.2057243931539427,
+        "mean_best_of_25_p_gs": 0.32875693340389,
+        "mean_top3_p_gs": 0.29400371804128345,
+        "mean_success": 0.998
+      }
+    ],
+    "vs_qaoa200_and_ecd200": {
+      "16": {
+        "qaoa_full_800": {
+          "depth": 8,
+          "success_rate": 1.0,
+          "mean_p_gs": 0.15486028893461803
+        },
+        "qaoa_full_200": {
+          "succ": 0.708,
+          "mean_p": 0.0618,
+          "depth": 8
+        },
+        "ecd_200": {
+          "succ": 0.624,
+          "mean_p": 0.1245,
+          "depth": 2
+        }
+      },
+      "24": {
+        "qaoa_full_800": {
+          "depth": 12,
+          "success_rate": 1.0,
+          "mean_p_gs": 0.2021770207402503
+        },
+        "qaoa_full_200": {
+          "succ": 0.554,
+          "mean_p": 0.0526,
+          "depth": 12
+        },
+        "ecd_200": {
+          "succ": 0.866,
+          "mean_p": 0.1489,
+          "depth": 3
+        }
+      },
+      "32": {
+        "qaoa_full_800": {
+          "depth": 16,
+          "success_rate": 0.998,
+          "mean_p_gs": 0.20572439315394275
+        },
+        "qaoa_full_200": {
+          "succ": 0.452,
+          "mean_p": 0.0413,
+          "depth": 16
+        },
+        "ecd_200": {
+          "succ": 0.954,
+          "mean_p": 0.1554,
+          "depth": 4
+        }
+      }
     }
   }
 }

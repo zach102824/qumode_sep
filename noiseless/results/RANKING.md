@@ -1,6 +1,6 @@
 # Noiseless SPSA ranking
 
-Updated: 2026-09-18 06:01 UTC
+Updated: 2026-09-18 07:02 UTC
 
 Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
 
@@ -170,8 +170,37 @@ Across 20 Hamiltonians: mean fraction of terms dropped **0.764** (range 0.681–
 
 **Headline:** QAOA-full wins only at 16 params; ECD (`bs_pi4`) wins at 24 and 32. QAOA-NN never recovers the true GS (success 0.000 at all tiers) under heavy truncation.
 
+
+## QAOA-full @ 800 SPSA steps (flat budget)
+
+Tag `fleet_qaoa_full_800`: QAOA-full only, p ∈ {8,12,16} (16/24/32 params),
+25 trials × **800** SPSA steps × 20 Hamiltonians (N=500 per tier; 1500 jobs).
+Same hyperparameters as `fleet_ecd_vs_qaoa` except steps (Gibbs + SampledTailEta,
+Uniform[0,π) init, `spsa_a = 0.2·√(37/n)`). ECD and QAOA-NN not re-run.
+
+### vs QAOA-full@200 and ECD@200 at matched param tiers
+
+| Tier | Depth | QAOA-full@800 succ | QAOA@800 mean p(GS) | QAOA-full@200 succ | QAOA@200 mean p(GS) | ECD@200 succ | ECD@200 mean p(GS) |
+|-----:|------:|-------------------:|--------------------:|-------------------:|--------------------:|-------------:|-------------------:|
+| 16 | p=8 / L*=2 | 1.000 | 0.1549 | 0.708 | 0.0618 | 0.624 | 0.1245 |
+| 24 | p=12 / L*=3 | 1.000 | 0.2022 | 0.554 | 0.0526 | 0.866 | 0.1489 |
+| 32 | p=16 / L*=4 | 0.998 | 0.2057 | 0.452 | 0.0413 | 0.954 | 0.1554 |
+
+### Best-of-25 mean p(GS) (QAOA-full @ 800)
+
+| Tier | Depth | Mean p(GS) | Mean best-of-25 p(GS) | Mean top-3 p(GS) |
+|-----:|------:|-----------:|----------------------:|-----------------:|
+| 16 | p=8 | 0.1549 | 0.2665 | 0.2411 |
+| 24 | p=12 | 0.2022 | 0.3094 | 0.2890 |
+| 32 | p=16 | 0.2057 | 0.3288 | 0.2940 |
+
+**Depth trend @ 800 steps:** mean p(GS) **increases** with depth (0.1549 → 0.2022 → 0.2057), reversing the *decrease* seen at 200 steps (0.0618 → 0.0526 → 0.0413). Success saturates (~1.000 / 1.000 / 0.998).
+
+**vs ECD@200:** QAOA-full@800 beats ECD on success at every tier; beats ECD on mean p(GS) at 24 and 32 params (and at 16: 0.1549 vs ECD 0.1245).
+
 ## Notes
 
 - `bs_pi4` leads bitstring success at L*=4–5; identity/SNAP lead mean p(GS) at the same depths.
 - Among θ∈{π/6,π/4,π/3} at L*=4/200 steps, `bs_pi4` remains best (success-tied with π/6); best-of-25 lifts π/4 mean p(GS) by ~1.8×.
 - Identity is kept as a no-mixing baseline only.
+- Flat 800 SPSA steps flip the QAOA-full depth trend: deeper p now helps; QAOA-full@800 saturates success and surpasses ECD@200 mean p(GS) at 24/32.
