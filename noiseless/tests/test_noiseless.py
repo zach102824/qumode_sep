@@ -110,9 +110,23 @@ def test_cphase_nn_actions():
 
 
 def test_beamsplitter_unitary():
-    for name in ("bs_pi4", "bs_pi2"):
+    for name in ("bs_pi6", "bs_pi4", "bs_pi3", "bs_pi2"):
         u = build_fixed_u(name)
         assert abs((u.dag() * u - identity()).norm()) < 1e-8
+
+
+def test_beamsplitter_theta_aliases():
+    """bs_pi6 / bs_pi4 / bs_pi3 match beamsplitter_ab(π/6, π/4, π/3)."""
+    from noiseless.unitaries import beamsplitter_ab
+
+    for name, theta in (
+        ("bs_pi6", np.pi / 6.0),
+        ("bs_pi4", np.pi / 4.0),
+        ("bs_pi3", np.pi / 3.0),
+    ):
+        u = build_fixed_u(name)
+        want = beamsplitter_ab(theta)
+        assert abs((u - want).norm()) < 1e-10
 
 
 def test_ecd_shapes_params():

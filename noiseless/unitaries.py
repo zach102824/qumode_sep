@@ -1,7 +1,7 @@
 """Fixed bus unitaries U on A⊗B (identity on transmons d, e).
 
 CLI / results names (approved plan):
-  identity, bs_pi4, bs_pi2, cz_nm, snap_a_pi, snap_b_pi,
+  identity, bs_pi6, bs_pi4, bs_pi3, bs_pi2, cz_nm, snap_a_pi, snap_b_pi,
   ck_pi2, ck_pi4, cphase_nn
 """
 
@@ -22,6 +22,8 @@ U_NAMES = (
     "ck_pi2",
     "ck_pi4",
     "cphase_nn",
+    "bs_pi6",
+    "bs_pi3",
 )
 
 
@@ -93,8 +95,12 @@ def build_fixed_u(name: str) -> qt.Qobj:
     key = str(name).lower().strip()
     if key == "identity":
         return full_identity()
+    if key == "bs_pi6":
+        return beamsplitter_ab(np.pi / 6.0)
     if key == "bs_pi4":
         return beamsplitter_ab(np.pi / 4.0)
+    if key == "bs_pi3":
+        return beamsplitter_ab(np.pi / 3.0)
     if key == "bs_pi2":
         return beamsplitter_ab(np.pi / 2.0)
     if key == "cz_nm":

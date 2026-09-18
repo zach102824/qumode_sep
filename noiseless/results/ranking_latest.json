@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-09-18T03:54:23Z",
+  "updated_utc": "2026-09-18T04:16:30Z",
   "max_layers_kept": 5,
   "note": "Deep L*>5 fleets removed; ranking limited to L*<=5.",
   "best": {
@@ -695,5 +695,68 @@
       "mean_p_gs": 0.15910799746146517,
       "source": "fleet_phase_bakeoff"
     }
-  ]
+  ],
+  "theta_bakeoff": {
+    "tag": "fleet_bs_theta",
+    "source_summary": "fleet_bs_theta_20260918T041630Z_summary.json",
+    "source_bestofn": "fleet_bs_theta_20260918T041630Z_bestofn.json",
+    "layers": [
+      4
+    ],
+    "steps": 200,
+    "trials_per_H": 25,
+    "best_theta": "bs_pi4",
+    "aggregates": [
+      {
+        "u_name": "bs_pi6",
+        "n_layers": 4,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "success_rate": 0.958,
+        "mean_p_gs": 0.1552027627497672,
+        "mean_of_perH_best_p_gs": 0.2940502249740634,
+        "mean_of_perH_top3_p_gs": 0.2517062680345258,
+        "frac_H_any_success": 1.0,
+        "frac_H_best_trial_success": 1.0,
+        "best_of_N_lift_vs_mean_p_gs": 0.13884746222429623,
+        "best_of_N_lift_ratio": 1.8946197848820479
+      },
+      {
+        "u_name": "bs_pi4",
+        "n_layers": 4,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "success_rate": 0.958,
+        "mean_p_gs": 0.1563055283406744,
+        "mean_of_perH_best_p_gs": 0.2785237175817735,
+        "mean_of_perH_top3_p_gs": 0.25404812757962475,
+        "frac_H_any_success": 1.0,
+        "frac_H_best_trial_success": 1.0,
+        "best_of_N_lift_vs_mean_p_gs": 0.12221818924109912,
+        "best_of_N_lift_ratio": 1.7819185318558886
+      },
+      {
+        "u_name": "bs_pi3",
+        "n_layers": 4,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "success_rate": 0.956,
+        "mean_p_gs": 0.15430992292991175,
+        "mean_of_perH_best_p_gs": 0.2860492927130406,
+        "mean_of_perH_top3_p_gs": 0.25430809054779774,
+        "frac_H_any_success": 1.0,
+        "frac_H_best_trial_success": 1.0,
+        "best_of_N_lift_vs_mean_p_gs": 0.13173936978312883,
+        "best_of_N_lift_ratio": 1.8537323283024738
+      }
+    ],
+    "bs_pi4_bestofn_vs_mean": {
+      "mean_p_gs": 0.1563055283406744,
+      "mean_of_perH_best_p_gs": 0.2785237175817735,
+      "mean_of_perH_top3_p_gs": 0.25404812757962475,
+      "absolute_lift": 0.12221818924109912,
+      "ratio_lift": 1.7819185318558886
+    },
+    "note": "Does not change headline best (still bs_pi4 @ L*=5 from fleet4_bs)."
+  }
 }

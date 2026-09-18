@@ -1,6 +1,6 @@
 # Noiseless SPSA ranking
 
-Updated: 2026-09-18 03:54 UTC
+Updated: 2026-09-18 04:16 UTC
 
 Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
 
@@ -89,7 +89,27 @@ Tag `fleet_phase_bakeoff`: U ∈ {`cz_nm`, `ck_pi2`, `ck_pi4`, `cphase_nn`, `bs_
 
 **Phase winner:** `ck_pi2` at L*=4 (success **0.958**, mean p(GS) **0.1529**). Gap to `bs_pi4` under identical settings: success Δ=+0.000, mean p(GS) Δ=+0.0034.
 
+
+## θ bake-off — beamsplitter angle (200 steps, L*=4)
+
+Tag `fleet_bs_theta`: U ∈ {`bs_pi6` (θ=π/6), `bs_pi4` (θ=π/4), `bs_pi3` (θ=π/3)}, L*=4 only,
+25 trials × 200 SPSA steps × 20 Hamiltonians (N=500 per θ); random ECD init; Gibbs SPSA; no prep.
+
+### θ ranked by success, then mean p(GS)
+
+| Rank | U (θ) | Success | Mean p(GS) | Mean of per-H best-of-25 p(GS) | Mean of per-H top-3 p(GS) | N |
+|-----:|-------|--------:|-----------:|-------------------------------:|--------------------------:|--:|
+| 1 | `bs_pi4` (π/4) | 0.958 | 0.1563 | 0.2785 | 0.2540 | 500 |
+| 2 | `bs_pi6` (π/6) | 0.958 | 0.1552 | 0.2941 | 0.2517 | 500 |
+| 3 | `bs_pi3` (π/3) | 0.956 | 0.1543 | 0.2860 | 0.2543 | 500 |
+
+**θ winner:** `bs_pi4` (tied success with `bs_pi6`, higher mean p(GS) by Δ=+0.0011).
+
+**Best-of-N vs mean for `bs_pi4`:** mean p(GS) **0.1563** → mean of per-H best-of-25 **0.2785**
+(lift **+0.1222**, **1.78×**). Mean of per-H top-3 = **0.2540** (1.62× vs mean).
+
 ## Notes
 
 - `bs_pi4` leads bitstring success at L*=4–5; identity/SNAP lead mean p(GS) at the same depths.
+- Among θ∈{π/6,π/4,π/3} at L*=4/200 steps, `bs_pi4` remains best (success-tied with π/6); best-of-25 lifts π/4 mean p(GS) by ~1.8×.
 - Identity is kept as a no-mixing baseline only.
