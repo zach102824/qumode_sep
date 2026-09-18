@@ -1,6 +1,6 @@
 # Noiseless SPSA ranking
 
-Updated: 2026-09-18 04:16 UTC
+Updated: 2026-09-18 06:01 UTC
 
 Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
 
@@ -107,6 +107,68 @@ Tag `fleet_bs_theta`: U ∈ {`bs_pi6` (θ=π/6), `bs_pi4` (θ=π/4), `bs_pi3` (�
 
 **Best-of-N vs mean for `bs_pi4`:** mean p(GS) **0.1563** → mean of per-H best-of-25 **0.2785**
 (lift **+0.1222**, **1.78×**). Mean of per-H top-3 = **0.2540** (1.62× vs mean).
+
+
+## ECD vs QAOA bake-off (matched param count, 200 steps)
+
+Tag `fleet_ecd_vs_qaoa`: three arms × param tiers {16,24,32} × 25 trials × 200 SPSA steps × 20 Hamiltonians
+(N=500 per cell; 4500 jobs). Random init; Gibbs SPSA; no prep.
+
+- **ECD**: local ECD ‖ + fixed `bs_pi4`, L* ∈ {2,3,4}
+- **QAOA-full**: 8-qubit QAOA, p ∈ {8,12,16}, H_P = full 4-SAT diagonal; H_M = Σ X_j; start |+⟩^⊗8
+- **QAOA-NN**: same circuit; H_P = 1-local Z + ring-NN ZZ only (Gibbs on NN spectrum); score p(GS)/success on **true full** GS
+
+### By param tier (success, then mean p(GS))
+
+#### 16 parameters
+
+| Rank | Arm | Depth | Success | Mean p(GS) | N |
+|-----:|-----|------:|--------:|-----------:|--:|
+| 1 | QAOA-full | p=8 | 0.708 | 0.0618 | 500 |
+| 2 | ECD (`bs_pi4`) | L*=2 | 0.624 | 0.1245 | 500 |
+| 3 | QAOA-NN | p=8 | 0.000 | 0.0017 | 500 |
+
+**Winner @ 16:** `qaoa_full` (succ=0.708, mean p(GS)=0.0618).
+
+#### 24 parameters
+
+| Rank | Arm | Depth | Success | Mean p(GS) | N |
+|-----:|-----|------:|--------:|-----------:|--:|
+| 1 | ECD (`bs_pi4`) | L*=3 | 0.866 | 0.1489 | 500 |
+| 2 | QAOA-full | p=12 | 0.554 | 0.0526 | 500 |
+| 3 | QAOA-NN | p=12 | 0.000 | 0.0022 | 500 |
+
+**Winner @ 24:** `ecd` (succ=0.866, mean p(GS)=0.1489).
+
+#### 32 parameters
+
+| Rank | Arm | Depth | Success | Mean p(GS) | N |
+|-----:|-----|------:|--------:|-----------:|--:|
+| 1 | ECD (`bs_pi4`) | L*=4 | 0.954 | 0.1554 | 500 |
+| 2 | QAOA-full | p=16 | 0.452 | 0.0413 | 500 |
+| 3 | QAOA-NN | p=16 | 0.000 | 0.0022 | 500 |
+
+**Winner @ 32:** `ecd` (succ=0.954, mean p(GS)=0.1554).
+
+### Best-of-25 mean p(GS) (per-H max, then mean over H)
+
+| Tier | Arm | Mean p(GS) | Mean best-of-25 p(GS) | Mean top-3 p(GS) |
+|-----:|-----|-----------:|----------------------:|-----------------:|
+| 16 | ECD (`bs_pi4`) | 0.1245 | 0.2206 | 0.1986 |
+| 16 | QAOA-full | 0.0618 | 0.1546 | 0.1340 |
+| 16 | QAOA-NN | 0.0017 | 0.0100 | 0.0066 |
+| 24 | ECD (`bs_pi4`) | 0.1489 | 0.2886 | 0.2532 |
+| 24 | QAOA-full | 0.0526 | 0.1520 | 0.1275 |
+| 24 | QAOA-NN | 0.0022 | 0.0131 | 0.0082 |
+| 32 | ECD (`bs_pi4`) | 0.1554 | 0.2885 | 0.2493 |
+| 32 | QAOA-full | 0.0413 | 0.1281 | 0.1060 |
+| 32 | QAOA-NN | 0.0022 | 0.0143 | 0.0086 |
+
+### NN truncation stats (Pauli Z expansion → ring NN)
+
+Across 20 Hamiltonians: mean fraction of terms dropped **0.764** (range 0.681–0.837); mean fraction of |coeff| L1 dropped **0.711**. Kept: weight-1 Z + ring-NN ZZ; dropped: non-NN ZZ + weight≥3.
+
+**Headline:** QAOA-full wins only at 16 params; ECD (`bs_pi4`) wins at 24 and 32. QAOA-NN never recovers the true GS (success 0.000 at all tiers) under heavy truncation.
 
 ## Notes
 

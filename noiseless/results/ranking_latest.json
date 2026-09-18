@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-09-18T04:16:30Z",
+  "updated_utc": "2026-09-18T06:01:38Z",
   "max_layers_kept": 5,
   "note": "Deep L*>5 fleets removed; ranking limited to L*<=5.",
   "best": {
@@ -758,5 +758,235 @@
       "ratio_lift": 1.7819185318558886
     },
     "note": "Does not change headline best (still bs_pi4 @ L*=5 from fleet4_bs)."
+  },
+  "fleet_ecd_vs_qaoa": {
+    "created_utc": "2026-09-18T06:00:37Z",
+    "summary": "fleet_ecd_vs_qaoa_20260918T060037Z_summary.json",
+    "bestofn": "fleet_ecd_vs_qaoa_20260918T060037Z_bestofn.json",
+    "n_jobs": 4500,
+    "n_ok": 4500,
+    "by_tier": {
+      "16": [
+        {
+          "arm": "qaoa_full",
+          "n_params": 16,
+          "depth": 8,
+          "n_hamiltonians": 20,
+          "n_trials": 500,
+          "n_success": 354,
+          "success_rate": 0.708,
+          "mean_p_gs": 0.06178617156919386
+        },
+        {
+          "arm": "ecd",
+          "n_params": 16,
+          "depth": 2,
+          "n_hamiltonians": 20,
+          "n_trials": 500,
+          "n_success": 312,
+          "success_rate": 0.624,
+          "mean_p_gs": 0.12445865845711206
+        },
+        {
+          "arm": "qaoa_nn",
+          "n_params": 16,
+          "depth": 8,
+          "n_hamiltonians": 20,
+          "n_trials": 500,
+          "n_success": 0,
+          "success_rate": 0.0,
+          "mean_p_gs": 0.0017464468177916198
+        }
+      ],
+      "16_winner": "qaoa_full",
+      "24": [
+        {
+          "arm": "ecd",
+          "n_params": 24,
+          "depth": 3,
+          "n_hamiltonians": 20,
+          "n_trials": 500,
+          "n_success": 433,
+          "success_rate": 0.866,
+          "mean_p_gs": 0.14893436059311793
+        },
+        {
+          "arm": "qaoa_full",
+          "n_params": 24,
+          "depth": 12,
+          "n_hamiltonians": 20,
+          "n_trials": 500,
+          "n_success": 277,
+          "success_rate": 0.554,
+          "mean_p_gs": 0.052560603707935645
+        },
+        {
+          "arm": "qaoa_nn",
+          "n_params": 24,
+          "depth": 12,
+          "n_hamiltonians": 20,
+          "n_trials": 500,
+          "n_success": 0,
+          "success_rate": 0.0,
+          "mean_p_gs": 0.002153286904198672
+        }
+      ],
+      "24_winner": "ecd",
+      "32": [
+        {
+          "arm": "ecd",
+          "n_params": 32,
+          "depth": 4,
+          "n_hamiltonians": 20,
+          "n_trials": 500,
+          "n_success": 477,
+          "success_rate": 0.954,
+          "mean_p_gs": 0.15537563823169134
+        },
+        {
+          "arm": "qaoa_full",
+          "n_params": 32,
+          "depth": 16,
+          "n_hamiltonians": 20,
+          "n_trials": 500,
+          "n_success": 226,
+          "success_rate": 0.452,
+          "mean_p_gs": 0.04130793585478245
+        },
+        {
+          "arm": "qaoa_nn",
+          "n_params": 32,
+          "depth": 16,
+          "n_hamiltonians": 20,
+          "n_trials": 500,
+          "n_success": 0,
+          "success_rate": 0.0,
+          "mean_p_gs": 0.002165339596182366
+        }
+      ],
+      "32_winner": "ecd"
+    },
+    "ranking": [
+      {
+        "arm": "qaoa_full",
+        "n_params": 16,
+        "depth": 8,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "n_success": 354,
+        "success_rate": 0.708,
+        "mean_p_gs": 0.06178617156919386
+      },
+      {
+        "arm": "ecd",
+        "n_params": 16,
+        "depth": 2,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "n_success": 312,
+        "success_rate": 0.624,
+        "mean_p_gs": 0.12445865845711206
+      },
+      {
+        "arm": "qaoa_nn",
+        "n_params": 16,
+        "depth": 8,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "n_success": 0,
+        "success_rate": 0.0,
+        "mean_p_gs": 0.0017464468177916198
+      },
+      {
+        "arm": "ecd",
+        "n_params": 24,
+        "depth": 3,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "n_success": 433,
+        "success_rate": 0.866,
+        "mean_p_gs": 0.14893436059311793
+      },
+      {
+        "arm": "qaoa_full",
+        "n_params": 24,
+        "depth": 12,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "n_success": 277,
+        "success_rate": 0.554,
+        "mean_p_gs": 0.052560603707935645
+      },
+      {
+        "arm": "qaoa_nn",
+        "n_params": 24,
+        "depth": 12,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "n_success": 0,
+        "success_rate": 0.0,
+        "mean_p_gs": 0.002153286904198672
+      },
+      {
+        "arm": "ecd",
+        "n_params": 32,
+        "depth": 4,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "n_success": 477,
+        "success_rate": 0.954,
+        "mean_p_gs": 0.15537563823169134
+      },
+      {
+        "arm": "qaoa_full",
+        "n_params": 32,
+        "depth": 16,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "n_success": 226,
+        "success_rate": 0.452,
+        "mean_p_gs": 0.04130793585478245
+      },
+      {
+        "arm": "qaoa_nn",
+        "n_params": 32,
+        "depth": 16,
+        "n_hamiltonians": 20,
+        "n_trials": 500,
+        "n_success": 0,
+        "success_rate": 0.0,
+        "mean_p_gs": 0.002165339596182366
+      }
+    ],
+    "nn_truncation": {
+      "n_hamiltonians": 20,
+      "mean_n_terms_full": 43.9,
+      "min_n_terms_full": 39.0,
+      "max_n_terms_full": 55.0,
+      "mean_n_terms_kept": 10.4,
+      "min_n_terms_kept": 7.0,
+      "max_n_terms_kept": 15.0,
+      "mean_n_terms_dropped": 33.5,
+      "min_n_terms_dropped": 29.0,
+      "max_n_terms_dropped": 43.0,
+      "mean_n_weight1": 6.15,
+      "min_n_weight1": 4.0,
+      "max_n_weight1": 8.0,
+      "mean_n_weight2_nn": 4.25,
+      "min_n_weight2_nn": 2.0,
+      "max_n_weight2_nn": 7.0,
+      "mean_n_weight2_non_nn": 10.7,
+      "min_n_weight2_non_nn": 9.0,
+      "max_n_weight2_non_nn": 14.0,
+      "mean_n_weight_ge3": 22.8,
+      "min_n_weight_ge3": 19.0,
+      "max_n_weight_ge3": 31.0,
+      "mean_frac_terms_dropped": 0.764108938334362,
+      "min_frac_terms_dropped": 0.6808510638297872,
+      "max_frac_terms_dropped": 0.8372093023255814,
+      "mean_frac_coeff_l1_dropped": 0.7114677529403022,
+      "min_frac_coeff_l1_dropped": 0.6415094339622641,
+      "max_frac_coeff_l1_dropped": 0.8
+    }
   }
 }
