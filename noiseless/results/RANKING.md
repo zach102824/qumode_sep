@@ -1,6 +1,6 @@
 # Noiseless SPSA ranking
 
-Updated: 2026-09-18 17:02 Asia/Shanghai
+Updated: 2026-09-18 17:08 Asia/Shanghai
 
 Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
 
@@ -170,7 +170,7 @@ Across 20 Hamiltonians: mean fraction of terms dropped **0.764** (range 0.681–
 
 **Headline:** QAOA-full wins only at 16 params; ECD (`bs_pi4`) wins at 24 and 32. QAOA-NN never recovers the true GS (success 0.000 at all tiers) under heavy truncation.
 
-**Figure:** opposing depth trends at fixed 200 SPSA steps — [`figures/ecd_vs_qaoa_200_landscape.png`](figures/ecd_vs_qaoa_200_landscape.png) (ECD improves with L*; QAOA-full degrades with p).
+**Figure:** single-panel success-rate comparison at fixed 200 SPSA steps — [`figures/ecd_vs_qaoa_200_success.png`](figures/ecd_vs_qaoa_200_success.png) (ECD improves with L*; QAOA-full degrades with p).
 
 
 ## QAOA-full @ 800 SPSA steps (flat budget)
