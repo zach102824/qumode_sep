@@ -1,6 +1,6 @@
 # β-aware fleet summary (ck_pi4)
 
-Updated UTC: 2026-09-23T10:51:20Z
+Updated UTC: 2026-09-23T10:55:50Z
 
 Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 
@@ -9,11 +9,14 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 | tag | λ1 | λ3 | β_max | L* | success | mean p(GS) | mean\|β\| | median\|β\| | mean trial-max\|β\| | % over β_max | \|β\| cut vs baseline |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | `fleet_beta_aware_A0_ckpi4` | 0 | 0 | — | 4 | 0.940 | 0.1620 | 1.844 | 1.862 | 3.378 | 0.0% | -0.2% |
+| `fleet_beta_aware_A3g_l1_0p0_l3_0p0_bmax_none_steps400` | 0 | 0 | — | 4 | 0.948 | 0.1944 | 1.849 | 1.853 | 3.417 | 0.0% | -0.5% |
 | `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p0_L3` | 0 | 0.1 | 2 | 3 | 0.730 | 0.1414 | 1.818 | 1.813 | 2.978 | 44.8% | 1.2% |
 | `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p0` | 0 | 0.1 | 2 | 4 | 0.920 | 0.1569 | 1.747 | 1.775 | 2.992 | 40.8% | 5.0% |
 | `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p0_steps400` | 0 | 0.1 | 2 | 4 | 0.932 | 0.1861 | 1.735 | 1.745 | 2.945 | 41.2% | 5.7% |
 | `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p5` | 0 | 0.1 | 2.5 | 4 | 0.920 | 0.1577 | 1.803 | 1.824 | 3.142 | 26.2% | 2.0% |
 | `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_3p0` | 0 | 0.1 | 3 | 4 | 0.938 | 0.1621 | 1.824 | 1.839 | 3.259 | 14.2% | 0.9% |
+| `fleet_beta_aware_A3g_l1_0p0_l3_0p2_bmax_2p0_steps400` | 0 | 0.2 | 2 | 4 | 0.904 | 0.1769 | 1.669 | 1.679 | 2.681 | 40.8% | 9.3% |
+| `fleet_beta_aware_A3g_l1_0p0_l3_0p2_bmax_2p2_steps400` | 0 | 0.2 | 2.2 | 4 | 0.920 | 0.1800 | 1.709 | 1.716 | 2.774 | 34.6% | 7.1% |
 | `fleet_beta_aware_A2x_l1_0p0_l3_1p0_bmax_2p0` | 0 | 1 | 2 | 4 | 0.792 | 0.1331 | 1.560 | 1.573 | 2.196 | 34.8% | 15.2% |
 | `fleet_beta_aware_A2x_l1_0p0_l3_1p0_bmax_2p5` | 0 | 1 | 2.5 | 4 | 0.894 | 0.1418 | 1.695 | 1.707 | 2.597 | 20.7% | 7.9% |
 | `fleet_beta_aware_A3_f_l1_0p0_l3_1p0_bmax_2p5_steps400` | 0 | 1 | 2.5 | 4 | 0.910 | 0.1702 | 1.693 | 1.703 | 2.576 | 20.7% | 8.0% |
@@ -87,6 +90,9 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 - fleet_beta_aware_A3_f_l1_0p1_l3_0_steps800: success=0.870, mean|β|=1.585, cut=13.9%, mean_max=3.196.
 - fleet_beta_aware_A3_f_l1_0p15_l3_0_steps400: success=0.814, mean|β|=1.521, cut=17.3%, mean_max=3.088.
 - fleet_beta_aware_A3_f_l1_0p15_l3_0_steps800: success=0.810, mean|β|=1.462, cut=20.6%, mean_max=3.077.
+- fleet_beta_aware_A3g_l1_0p0_l3_0p0_bmax_none_steps400: success=0.948, mean|β|=1.849, cut=-0.5%.
+- fleet_beta_aware_A3g_l1_0p0_l3_0p2_bmax_2p0_steps400: success=0.904, mean|β|=1.669, cut=9.3%.
+- fleet_beta_aware_A3g_l1_0p0_l3_0p2_bmax_2p2_steps400: success=0.920, mean|β|=1.709, cut=7.1%.
 
 ## How to toggle
 
