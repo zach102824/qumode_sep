@@ -1,6 +1,6 @@
 # β-aware fleet summary (ck_pi4)
 
-Updated UTC: 2026-09-23T17:12:19Z
+Updated UTC: 2026-09-23T17:24:01Z
 
 Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 
@@ -14,6 +14,7 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 | `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p4_steps800` | 0 | 2 | 2.4 | 4 | 0.938 | 0.1924 | 1.653 | 1.686 | 2.412 | 16.9% | 10.1% |
 | `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_3p0` | 0 | 0.1 | 3 | 4 | 0.938 | 0.1621 | 1.824 | 1.839 | 3.259 | 14.2% | 0.9% |
 | `fleet_beta_aware_A1_l1_0p005` | 0.005 | 0 | — | 4 | 0.938 | 0.1622 | 1.831 | 1.842 | 3.342 | 0.0% | 0.5% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p2_steps1200` | 0 | 1 | 2.2 | 4 | 0.936 | 0.2060 | 1.612 | 1.635 | 2.308 | 28.5% | 12.4% |
 | `fleet_beta_aware_A3g_l1_0p03_l3_0p0_bmax_none_steps400` | 0.03 | 0 | — | 4 | 0.934 | 0.1973 | 1.779 | 1.788 | 3.329 | 0.0% | 3.3% |
 | `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p0_steps400` | 0 | 0.1 | 2 | 4 | 0.932 | 0.1861 | 1.735 | 1.745 | 2.945 | 41.2% | 5.7% |
 | `fleet_beta_aware_A1_l1_0p02` | 0.02 | 0 | — | 4 | 0.930 | 0.1651 | 1.799 | 1.824 | 3.312 | 0.0% | 2.3% |
@@ -35,6 +36,7 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 | `fleet_beta_aware_A4_l1_0p0_l3_3p0_bmax_2p4_steps800` | 0 | 3 | 2.4 | 4 | 0.916 | 0.1937 | 1.647 | 1.675 | 2.385 | 13.8% | 10.5% |
 | `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p4_steps800` | 0 | 1.5 | 2.4 | 4 | 0.916 | 0.1928 | 1.664 | 1.693 | 2.439 | 20.4% | 9.5% |
 | `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p4_steps800` | 0 | 0.75 | 2.4 | 4 | 0.916 | 0.1955 | 1.666 | 1.673 | 2.525 | 24.2% | 9.5% |
+| `fleet_beta_aware_A4_l1_0p05_l3_0p5_bmax_2p5_steps800` | 0.05 | 0.5 | 2.5 | 4 | 0.914 | 0.2064 | 1.591 | 1.596 | 2.619 | 20.2% | 13.5% |
 | `fleet_beta_aware_A3g_l1_0p05_l3_0p0_bmax_none_steps400` | 0.05 | 0 | — | 4 | 0.914 | 0.1966 | 1.739 | 1.744 | 3.277 | 0.0% | 5.5% |
 | `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p2_steps800` | 0 | 2 | 2.2 | 4 | 0.912 | 0.1900 | 1.572 | 1.581 | 2.235 | 22.0% | 14.6% |
 | `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p3_steps400` | 0 | 1 | 2.3 | 4 | 0.912 | 0.1654 | 1.637 | 1.651 | 2.408 | 25.3% | 11.0% |
@@ -92,6 +94,7 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 | `fleet_beta_aware_A4_l1_0p03_l3_1p5_bmax_2p1_steps800` | 0.03 | 1.5 | 2.1 | 4 | 0.888 | 0.1874 | 1.497 | 1.509 | 2.157 | 24.2% | 18.7% |
 | `fleet_beta_aware_A4_l1_0p05_l3_1p5_bmax_2p4_steps800` | 0.05 | 1.5 | 2.4 | 4 | 0.888 | 0.1902 | 1.549 | 1.558 | 2.393 | 16.1% | 15.8% |
 | `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p0_steps800` | 0 | 0.75 | 2 | 4 | 0.888 | 0.1870 | 1.550 | 1.577 | 2.185 | 35.4% | 15.8% |
+| `fleet_beta_aware_A4_l1_0p05_l3_3p0_bmax_2p4_steps400` | 0.05 | 3 | 2.4 | 4 | 0.888 | 0.1663 | 1.567 | 1.592 | 2.360 | 10.7% | 14.8% |
 | `fleet_beta_aware_A3g_l1_0p05_l3_0p2_bmax_2p0_steps400` | 0.05 | 0.2 | 2 | 4 | 0.888 | 0.1742 | 1.579 | 1.587 | 2.610 | 36.7% | 14.2% |
 | `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p2_steps400` | 0 | 1.5 | 2.2 | 4 | 0.888 | 0.1641 | 1.599 | 1.621 | 2.271 | 24.4% | 13.1% |
 | `fleet_beta_aware_A4_l1_0p03_l3_3p0_bmax_2p4_steps400` | 0.03 | 3 | 2.4 | 4 | 0.888 | 0.1648 | 1.602 | 1.630 | 2.374 | 11.8% | 12.9% |
@@ -106,6 +109,7 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 | `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p2_steps800` | 0 | 0.75 | 2.2 | 4 | 0.886 | 0.1898 | 1.610 | 1.623 | 2.353 | 29.0% | 12.5% |
 | `fleet_beta_aware_A4_l1_0p05_l3_1p0_bmax_2p3_steps800` | 0.05 | 1 | 2.3 | 4 | 0.884 | 0.1897 | 1.530 | 1.538 | 2.356 | 20.3% | 16.9% |
 | `fleet_beta_aware_A4_l1_0p03_l3_1p0_bmax_2p2_steps800` | 0.03 | 1 | 2.2 | 4 | 0.884 | 0.1904 | 1.547 | 1.557 | 2.288 | 25.1% | 15.9% |
+| `fleet_beta_aware_A4_l1_0p05_l3_3p0_bmax_2p4_steps800` | 0.05 | 3 | 2.4 | 4 | 0.884 | 0.1928 | 1.547 | 1.564 | 2.351 | 10.8% | 15.9% |
 | `fleet_beta_aware_A4_l1_0p05_l3_2p0_bmax_2p4_steps400` | 0.05 | 2 | 2.4 | 4 | 0.884 | 0.1632 | 1.574 | 1.593 | 2.393 | 15.2% | 14.5% |
 | `fleet_beta_aware_A4_l1_0p03_l3_0p75_bmax_2p3_steps400` | 0.03 | 0.75 | 2.3 | 4 | 0.884 | 0.1682 | 1.592 | 1.612 | 2.436 | 24.2% | 13.5% |
 | `fleet_beta_aware_A2x_l1_0p07_l3_1p0_bmax_3p0` | 0.07 | 1 | 3 | 4 | 0.884 | 0.1556 | 1.660 | 1.671 | 2.888 | 7.9% | 9.8% |
@@ -256,10 +260,6 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 
 ## Notes
 
-- fleet_beta_aware_A4_l1_0p03_l3_1p0_bmax_2p4_steps400: success=0.878, mean|β|=1.615, cut=12.3%, mean_max=2.472.
-- fleet_beta_aware_A4_l1_0p03_l3_1p0_bmax_2p4_steps800: success=0.898, mean|β|=1.600, cut=13.0%, mean_max=2.454.
-- fleet_beta_aware_A4_l1_0p03_l3_1p5_bmax_2p0_steps400: success=0.846, mean|β|=1.476, cut=19.8%, mean_max=2.076.
-- fleet_beta_aware_A4_l1_0p03_l3_1p5_bmax_2p0_steps800: success=0.878, mean|β|=1.463, cut=20.5%, mean_max=2.062.
 - fleet_beta_aware_A4_l1_0p03_l3_1p5_bmax_2p1_steps400: success=0.868, mean|β|=1.513, cut=17.8%, mean_max=2.169.
 - fleet_beta_aware_A4_l1_0p03_l3_1p5_bmax_2p1_steps800: success=0.888, mean|β|=1.497, cut=18.7%, mean_max=2.157.
 - fleet_beta_aware_A4_l1_0p03_l3_1p5_bmax_2p2_steps400: success=0.872, mean|β|=1.549, cut=15.8%, mean_max=2.255.
@@ -336,6 +336,10 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 - fleet_beta_aware_A4_l1_0p05_l3_3p0_bmax_2p2_steps800: success=0.888, mean|β|=1.481, cut=19.5%, mean_max=2.175.
 - fleet_beta_aware_A4_l1_0p05_l3_3p0_bmax_2p3_steps400: success=0.872, mean|β|=1.539, cut=16.4%, mean_max=2.272.
 - fleet_beta_aware_A4_l1_0p05_l3_3p0_bmax_2p3_steps800: success=0.892, mean|β|=1.516, cut=17.6%, mean_max=2.264.
+- fleet_beta_aware_A4_l1_0p05_l3_3p0_bmax_2p4_steps400: success=0.888, mean|β|=1.567, cut=14.8%, mean_max=2.360.
+- fleet_beta_aware_A4_l1_0p05_l3_3p0_bmax_2p4_steps800: success=0.884, mean|β|=1.547, cut=15.9%, mean_max=2.351.
+- fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p2_steps1200: success=0.936, mean|β|=1.612, cut=12.4%, mean_max=2.308.
+- fleet_beta_aware_A4_l1_0p05_l3_0p5_bmax_2p5_steps800: success=0.914, mean|β|=1.591, cut=13.5%, mean_max=2.619.
 
 ## How to toggle
 
