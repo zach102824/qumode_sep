@@ -1,6 +1,6 @@
 # β-aware fleet summary (ck_pi4)
 
-Updated UTC: 2026-09-23T11:26:24Z
+Updated UTC: 2026-09-23T11:30:47Z
 
 Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 
@@ -51,6 +51,9 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 | `fleet_beta_aware_A3g_l1_0p05_l3_0p2_bmax_2p0_steps400` | 0.05 | 0.2 | 2 | 4 | 0.888 | 0.1742 | 1.579 | 1.587 | 2.610 | 36.7% | 14.2% |
 | `fleet_beta_aware_A3g_l1_0p05_l3_0p2_bmax_2p2_steps400` | 0.05 | 0.2 | 2.2 | 4 | 0.870 | 0.1791 | 1.612 | 1.611 | 2.700 | 31.1% | 12.4% |
 | `fleet_beta_aware_A3g_l1_0p05_l3_0p2_bmax_2p5_steps400` | 0.05 | 0.2 | 2.5 | 4 | 0.896 | 0.1826 | 1.651 | 1.648 | 2.860 | 22.2% | 10.3% |
+| `fleet_beta_aware_A3g_l1_0p05_l3_0p5_bmax_2p0_steps400` | 0.05 | 0.5 | 2 | 4 | 0.818 | 0.1626 | 1.500 | 1.517 | 2.281 | 33.0% | 18.5% |
+| `fleet_beta_aware_A3g_l1_0p05_l3_0p5_bmax_2p2_steps400` | 0.05 | 0.5 | 2.2 | 4 | 0.856 | 0.1681 | 1.550 | 1.554 | 2.434 | 27.3% | 15.8% |
+| `fleet_beta_aware_A3g_l1_0p05_l3_0p5_bmax_2p5_steps400` | 0.05 | 0.5 | 2.5 | 4 | 0.906 | 0.1782 | 1.615 | 1.625 | 2.644 | 20.5% | 12.2% |
 | `fleet_beta_aware_A1x_l1_0p06_L3` | 0.06 | 0 | — | 3 | 0.708 | 0.1514 | 1.809 | 1.821 | 3.267 | 0.0% | 1.7% |
 | `fleet_beta_aware_A1x_l1_0p06` | 0.06 | 0 | — | 4 | 0.906 | 0.1618 | 1.727 | 1.743 | 3.242 | 0.0% | 6.2% |
 | `fleet_beta_aware_A1x_l1_0p06_steps400` | 0.06 | 0 | — | 4 | 0.902 | 0.1942 | 1.704 | 1.714 | 3.255 | 0.0% | 7.4% |
@@ -135,6 +138,9 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 - fleet_beta_aware_A3g_l1_0p05_l3_0p2_bmax_2p0_steps400: success=0.888, mean|β|=1.579, cut=14.2%.
 - fleet_beta_aware_A3g_l1_0p05_l3_0p2_bmax_2p2_steps400: success=0.870, mean|β|=1.612, cut=12.4%.
 - fleet_beta_aware_A3g_l1_0p05_l3_0p2_bmax_2p5_steps400: success=0.896, mean|β|=1.651, cut=10.3%.
+- fleet_beta_aware_A3g_l1_0p05_l3_0p5_bmax_2p0_steps400: success=0.818, mean|β|=1.500, cut=18.5%.
+- fleet_beta_aware_A3g_l1_0p05_l3_0p5_bmax_2p2_steps400: success=0.856, mean|β|=1.550, cut=15.8%.
+- fleet_beta_aware_A3g_l1_0p05_l3_0p5_bmax_2p5_steps400: success=0.906, mean|β|=1.615, cut=12.2%.
 
 ## How to toggle
 
