@@ -32,6 +32,8 @@ from noiseless.encoding import (
 )
 from noiseless.spsa_gibbs import (
     NoiselessSimulator,
+    beta_regularizer,
+    betas_from_x,
     gibbs_objective,
     ground_flat_from_bitstring,
     optimize_trial,
@@ -171,3 +173,54 @@ def test_short_spsa():
     )
     res = optimize_trial(sim, maxiter=3, rng=np.random.default_rng(1))
     assert res.nfev > 0 and np.isfinite(res.fun)
+
+
+def test_beta_regularizer_defaults():
+    """λ1=λ3=0 → regularizer is exactly 0; λ1>0 increases cost when |β| nonzero."""
+    x = np.zeros(16, dtype=float)
+    x[0], x[2] = 0.6, 0.8  # |β_d|=1.0 for layer 0
+    x[1], x[3] = 0.0, 0.0
+    betas = betas_from_x(x, 2)
+    assert abs(betas[0]) == pytest.approx(1.0)
+    assert beta_regularizer(betas, lambda1=0.0, lambda3=0.0) == 0.0
+    assert beta_regularizer(betas, lambda1=0.05, lambda3=0.0) == pytest.approx(0.05 * abs(betas).sum())
+    # soft cap: |β|=1, β_max=0.5 → excess^2 = 0.25
+    reg = beta_regularizer(betas, lambda1=0.0, lambda3=2.0, beta_max=0.5)
+    assert reg == pytest.approx(2.0 * 0.25)
+
+
+def test_cost_lambda0_matches_gibbs_only():
+    """Default λ path must match pure Gibbs on a fixed x (bitwise/numerically)."""
+    gs = "01011010"
+    d, e, na, nb = denm_from_bits(bits_from_bitstring(gs))
+    tensor = np.ones(DIMS, dtype=float)
+    tensor[d, e, na, nb] = 0.0
+    rng = np.random.default_rng(7)
+    x = random_parameters(2, rng)
+    sim0 = NoiselessSimulator(
+        u_fixed=build_fixed_u("identity"),
+        energy_tensor=tensor,
+        n_layers=2,
+        ground_bitstring=gs,
+        ground_flat_index=ground_flat_from_bitstring(gs),
+        lambda1=0.0,
+        lambda3=0.0,
+    )
+    sim0._current_eta = 1.25
+    # Pure Gibbs via objective + probs (same as pre-β-aware cost body)
+    probs = sim0.probs_from_x(x)
+    want = gibbs_objective(probs, sim0.energies_flat, 1.25)
+    got = sim0.cost(x, eta=1.25)
+    assert got == want  # exact equality when λ1=λ3=0
+    # λ1>0 must increase cost when |β| nonzero
+    sim1 = NoiselessSimulator(
+        u_fixed=build_fixed_u("identity"),
+        energy_tensor=tensor,
+        n_layers=2,
+        ground_bitstring=gs,
+        ground_flat_index=ground_flat_from_bitstring(gs),
+        lambda1=0.1,
+        lambda3=0.0,
+    )
+    sim1._current_eta = 1.25
+    assert sim1.cost(x, eta=1.25) > got

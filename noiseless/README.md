@@ -17,12 +17,38 @@ same frozen `U` and fresh ECD params each layer (`8 L*` Cartesian parameters).
 
 ## Fixed-U library
 
-`identity`, `bs_pi4`, `bs_pi2`, `cz_nm`, `snap_a_pi`, `snap_b_pi`
+`identity`, `bs_pi4`, `bs_pi2`, `cz_nm`, `snap_a_pi`, `snap_b_pi`, `ck_pi2`, `ck_pi4`, … (see `unitaries.U_NAMES`)
 
 ## Cost / optimizer
 
 Gibbs with `sampled_tail` η (no known `E_min` during opt). SPSA on ECD params
 only. Default 200 steps; `a ∝ 1/√n_params` (baseline `a≈0.2` at `n_params=37`).
+
+### Optional β-aware loss (opt-in)
+
+Default is **Gibbs-only** (`--lambda1 0 --lambda3 0`, no `--beta-max`): identical
+to the pre-β-aware cost path.
+
+When enabled:
+
+```
+L(x) = Gibbs(x; η) + λ1 Σ_i |β_i| + λ3 Σ_i max(|β_i| - β_max, 0)^2
+```
+
+β_i are the complex ECD displacements unpacked per layer (`β_d`, `β_e`).
+
+```bash
+# Gibbs-only (default)
+python -m noiseless.run_u_sweep --u-names ck_pi4 --layers 4 --tag fleet_beta_aware_A0_ckpi4
+
+# L1 on |β|
+python -m noiseless.run_u_sweep --u-names ck_pi4 --layers 4 \
+  --lambda1 0.05 --lambda3 0 --tag fleet_beta_aware_A1_l1_0p05
+
+# L1 + soft |β| cap
+python -m noiseless.run_u_sweep --u-names ck_pi4 --layers 4 \
+  --lambda1 0.05 --lambda3 1 --beta-max 2.5 --tag fleet_beta_aware_A2_...
+```
 
 ## CLI
 

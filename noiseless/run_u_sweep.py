@@ -46,12 +46,22 @@ def _worker(job: dict) -> dict:
     try:
         inst = load_four_sat_npz(job["ham_path"])
         u = build_fixed_u(job["u_name"])
+        lambda1 = float(job.get("lambda1", 0.0))
+        lambda3 = float(job.get("lambda3", 0.0))
+        beta_max = job.get("beta_max", None)
+        if beta_max is not None:
+            beta_max = float(beta_max)
+            if not np.isfinite(beta_max):
+                beta_max = None
         sim = NoiselessSimulator(
             u_fixed=u,
             energy_tensor=inst["energy_tensor"],
             n_layers=int(job["n_layers"]),
             ground_bitstring=inst["ground_bitstring"],
             ground_flat_index=ground_flat_from_bitstring(inst["ground_bitstring"]),
+            lambda1=lambda1,
+            lambda3=lambda3,
+            beta_max=beta_max,
         )
         rng = np.random.default_rng(int(job["seed"]))
         a = job.get("spsa_a")
@@ -79,6 +89,12 @@ def _worker(job: dict) -> dict:
             "fun": float(result.fun),
             "eta": float(result.eta),
             "energy_mean": float(result.energy_mean),
+            "mean_abs_beta": float(result.mean_abs_beta),
+            "max_abs_beta": float(result.max_abs_beta),
+            "frac_over_beta_max": float(result.frac_over_beta_max),
+            "lambda1": lambda1,
+            "lambda3": lambda3,
+            "beta_max": beta_max,
             "nfev": int(result.nfev),
             "nit": int(result.nit),
             "spsa_a": float(a),
@@ -112,6 +128,8 @@ def _aggregate(records: list[dict]) -> dict:
         n = len(trials)
         n_succ = sum(1 for t in trials if t["success"])
         pgs = [float(t["p_gs"]) for t in trials]
+        mabs = [float(t.get("mean_abs_beta", float("nan"))) for t in trials]
+        maxb = [float(t.get("max_abs_beta", float("nan"))) for t in trials]
         cells.append(
             {
                 "u_name": u_name,
@@ -123,6 +141,9 @@ def _aggregate(records: list[dict]) -> dict:
                 "mean_p_gs": float(np.mean(pgs)) if pgs else 0.0,
                 "max_p_gs": float(np.max(pgs)) if pgs else 0.0,
                 "median_p_gs": float(np.median(pgs)) if pgs else 0.0,
+                "mean_abs_beta": float(np.nanmean(mabs)) if mabs else 0.0,
+                "median_abs_beta": float(np.nanmedian(mabs)) if mabs else 0.0,
+                "mean_max_abs_beta": float(np.nanmean(maxb)) if maxb else 0.0,
             }
         )
     by_ul: dict[tuple, list[dict]] = {}
@@ -134,6 +155,9 @@ def _aggregate(records: list[dict]) -> dict:
         tot = sum(weights)
         succ = sum(g["n_success"] for g in group)
         mean_p = float(np.average([g["mean_p_gs"] for g in group], weights=weights)) if tot else 0.0
+        mean_b = float(np.average([g["mean_abs_beta"] for g in group], weights=weights)) if tot else 0.0
+        med_b = float(np.average([g["median_abs_beta"] for g in group], weights=weights)) if tot else 0.0
+        mean_max_b = float(np.average([g["mean_max_abs_beta"] for g in group], weights=weights)) if tot else 0.0
         ranking.append(
             {
                 "u_name": u_name,
@@ -143,6 +167,9 @@ def _aggregate(records: list[dict]) -> dict:
                 "n_success": succ,
                 "success_rate": succ / tot if tot else 0.0,
                 "mean_p_gs": mean_p,
+                "mean_abs_beta": mean_b,
+                "median_abs_beta": med_b,
+                "mean_max_abs_beta": mean_max_b,
             }
         )
     ranking.sort(key=lambda r: (r["success_rate"], r["mean_p_gs"]), reverse=True)
@@ -185,6 +212,9 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
                             "spsa_a": args.spsa_a,
                             "spsa_c": float(args.spsa_c),
                             "spsa_A": float(args.spsa_A),
+                            "lambda1": float(args.lambda1),
+                            "lambda3": float(args.lambda3),
+                            "beta_max": args.beta_max,
                         }
                     )
     return jobs
@@ -206,6 +236,24 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--outdir", type=str, default=str(_REPO / "noiseless" / "results"))
     p.add_argument("--tag", type=str, default="run")
     p.add_argument("--smoke", action="store_true")
+    p.add_argument(
+        "--lambda1",
+        type=float,
+        default=0.0,
+        help="L1 weight on sum_i |β_i| (default 0 = Gibbs-only)",
+    )
+    p.add_argument(
+        "--lambda3",
+        type=float,
+        default=0.0,
+        help="Quadratic soft-cap weight on sum_i max(|β_i|-β_max,0)^2 (default 0)",
+    )
+    p.add_argument(
+        "--beta-max",
+        type=float,
+        default=None,
+        help="Soft |β| cap; omit / None / inf = no cap term",
+    )
     args = p.parse_args(argv)
 
     outdir = Path(args.outdir)
@@ -221,7 +269,11 @@ def main(argv: list[str] | None = None) -> int:
             args.tag = "smoke"
 
     jobs = build_jobs(args)
-    print(f"[{_now()}] starting {len(jobs)} jobs workers={args.workers} steps={args.steps} tag={args.tag}", flush=True)
+    print(
+        f"[{_now()}] starting {len(jobs)} jobs workers={args.workers} steps={args.steps} "
+        f"tag={args.tag} lambda1={args.lambda1} lambda3={args.lambda3} beta_max={args.beta_max}",
+        flush=True,
+    )
     records: list[dict] = []
     if args.workers <= 1 or len(jobs) == 1:
         for i, job in enumerate(jobs):
@@ -264,6 +316,9 @@ def main(argv: list[str] | None = None) -> int:
             "workers": args.workers,
             "seed": args.seed,
             "max_h": args.max_h,
+            "lambda1": float(args.lambda1),
+            "lambda3": float(args.lambda3),
+            "beta_max": args.beta_max,
         },
         "n_jobs": len(records),
         "n_ok": sum(1 for r in records if r.get("ok")),
