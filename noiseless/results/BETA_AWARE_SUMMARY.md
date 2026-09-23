@@ -1,190 +1,200 @@
 # β-aware fleet summary (ck_pi4)
 
-Updated UTC: 2026-09-23T13:10:21Z
+Updated UTC: 2026-09-23T13:14:43Z
 
-Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
+Baseline (`fleet_phase_bakeoff` / A0): success=**0.94**, mean|β|≈**1.84**, mean trial-max|β|≈**3.38**.
 
-## Results
+Total fleets analyzed: **137** (explore4 still running).
 
-| tag | λ1 | λ3 | β_max | L* | success | mean p(GS) | mean\|β\| | median\|β\| | mean trial-max\|β\| | % over β_max | \|β\| cut vs baseline |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| `fleet_beta_aware_A3g_l1_0p0_l3_0p0_bmax_none_steps400` | 0 | 0 | — | 4 | 0.948 | 0.1944 | 1.849 | 1.853 | 3.417 | 0.0% | -0.5% |
-| `fleet_beta_aware_A1_l1_0p01` | 0.01 | 0 | — | 4 | 0.944 | 0.1627 | 1.821 | 1.838 | 3.337 | 0.0% | 1.0% |
-| `fleet_beta_aware_A0_ckpi4` | 0 | 0 | — | 4 | 0.940 | 0.1620 | 1.844 | 1.862 | 3.378 | 0.0% | -0.2% |
-| `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_3p0` | 0 | 0.1 | 3 | 4 | 0.938 | 0.1621 | 1.824 | 1.839 | 3.259 | 14.2% | 0.9% |
-| `fleet_beta_aware_A1_l1_0p005` | 0.005 | 0 | — | 4 | 0.938 | 0.1622 | 1.831 | 1.842 | 3.342 | 0.0% | 0.5% |
-| `fleet_beta_aware_A3g_l1_0p03_l3_0p0_bmax_none_steps400` | 0.03 | 0 | — | 4 | 0.934 | 0.1973 | 1.779 | 1.788 | 3.329 | 0.0% | 3.3% |
-| `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p0_steps400` | 0 | 0.1 | 2 | 4 | 0.932 | 0.1861 | 1.735 | 1.745 | 2.945 | 41.2% | 5.7% |
-| `fleet_beta_aware_A1_l1_0p02` | 0.02 | 0 | — | 4 | 0.930 | 0.1651 | 1.799 | 1.824 | 3.312 | 0.0% | 2.3% |
-| `fleet_beta_aware_A3g_l1_0p0_l3_0p5_bmax_2p5_steps400` | 0 | 0.5 | 2.5 | 4 | 0.928 | 0.1768 | 1.714 | 1.730 | 2.702 | 24.1% | 6.9% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p4_steps800` | 0 | 1 | 2.4 | 4 | 0.924 | 0.1944 | 1.664 | 1.670 | 2.480 | 23.0% | 9.5% |
-| `fleet_beta_aware_A3g_l1_0p0_l3_0p2_bmax_2p5_steps400` | 0 | 0.2 | 2.5 | 4 | 0.924 | 0.1813 | 1.756 | 1.769 | 2.938 | 25.7% | 4.5% |
-| `fleet_beta_aware_A2x_l1_0p0_l3_1p0_bmax_3p0` | 0 | 1 | 3 | 4 | 0.924 | 0.1561 | 1.779 | 1.806 | 2.958 | 11.2% | 3.3% |
-| `fleet_beta_aware_A2x_l1_0p0_l3_5p0_bmax_3p0` | 0 | 5 | 3 | 4 | 0.922 | 0.1492 | 1.763 | 1.779 | 2.849 | 2.2% | 4.2% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p3_steps800` | 0 | 1 | 2.3 | 4 | 0.920 | 0.1931 | 1.634 | 1.642 | 2.395 | 25.6% | 11.2% |
-| `fleet_beta_aware_A3_f_l1_0p0_l3_1p0_bmax_2p5_steps800` | 0 | 1 | 2.5 | 4 | 0.920 | 0.1984 | 1.693 | 1.707 | 2.566 | 20.7% | 8.0% |
-| `fleet_beta_aware_A3g_l1_0p0_l3_0p2_bmax_2p2_steps400` | 0 | 0.2 | 2.2 | 4 | 0.920 | 0.1800 | 1.709 | 1.716 | 2.774 | 34.6% | 7.1% |
-| `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p0` | 0 | 0.1 | 2 | 4 | 0.920 | 0.1569 | 1.747 | 1.775 | 2.992 | 40.8% | 5.0% |
-| `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p5` | 0 | 0.1 | 2.5 | 4 | 0.920 | 0.1577 | 1.803 | 1.824 | 3.142 | 26.2% | 2.0% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p3_steps800` | 0 | 1.5 | 2.3 | 4 | 0.918 | 0.1882 | 1.623 | 1.660 | 2.351 | 22.1% | 11.8% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p2_steps800` | 0 | 1 | 2.2 | 4 | 0.916 | 0.1911 | 1.614 | 1.630 | 2.315 | 28.2% | 12.3% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p4_steps800` | 0 | 1.5 | 2.4 | 4 | 0.916 | 0.1928 | 1.664 | 1.693 | 2.439 | 20.4% | 9.5% |
-| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p4_steps800` | 0 | 0.75 | 2.4 | 4 | 0.916 | 0.1955 | 1.666 | 1.673 | 2.525 | 24.2% | 9.5% |
-| `fleet_beta_aware_A3g_l1_0p05_l3_0p0_bmax_none_steps400` | 0.05 | 0 | — | 4 | 0.914 | 0.1966 | 1.739 | 1.744 | 3.277 | 0.0% | 5.5% |
-| `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p2_steps800` | 0 | 2 | 2.2 | 4 | 0.912 | 0.1900 | 1.572 | 1.581 | 2.235 | 22.0% | 14.6% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p3_steps400` | 0 | 1 | 2.3 | 4 | 0.912 | 0.1654 | 1.637 | 1.651 | 2.408 | 25.3% | 11.0% |
-| `fleet_beta_aware_A1x_l1_0p04` | 0.04 | 0 | — | 4 | 0.912 | 0.1639 | 1.777 | 1.798 | 3.271 | 0.0% | 3.4% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p4_steps400` | 0 | 1 | 2.4 | 4 | 0.910 | 0.1673 | 1.665 | 1.670 | 2.492 | 22.7% | 9.5% |
-| `fleet_beta_aware_A3_f_l1_0p0_l3_1p0_bmax_2p5_steps400` | 0 | 1 | 2.5 | 4 | 0.910 | 0.1702 | 1.693 | 1.703 | 2.576 | 20.7% | 8.0% |
-| `fleet_beta_aware_A3g_l1_0p0_l3_1p0_bmax_2p5_steps400` | 0 | 1 | 2.5 | 4 | 0.910 | 0.1702 | 1.693 | 1.703 | 2.576 | 20.7% | 8.0% |
-| `fleet_beta_aware_A1_l1_0p05` | 0.05 | 0 | — | 4 | 0.910 | 0.1638 | 1.757 | 1.777 | 3.258 | 0.0% | 4.5% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p2_steps800` | 0 | 1.5 | 2.2 | 4 | 0.908 | 0.1914 | 1.595 | 1.619 | 2.259 | 24.5% | 13.3% |
-| `fleet_beta_aware_A3g_l1_0p05_l3_0p5_bmax_2p5_steps400` | 0.05 | 0.5 | 2.5 | 4 | 0.906 | 0.1782 | 1.615 | 1.625 | 2.644 | 20.5% | 12.2% |
-| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p3_steps800` | 0 | 0.75 | 2.3 | 4 | 0.906 | 0.1932 | 1.650 | 1.653 | 2.442 | 27.4% | 10.3% |
-| `fleet_beta_aware_A3g_l1_0p03_l3_0p5_bmax_2p5_steps400` | 0.03 | 0.5 | 2.5 | 4 | 0.906 | 0.1758 | 1.653 | 1.670 | 2.666 | 21.7% | 10.2% |
-| `fleet_beta_aware_A3g_l1_0p03_l3_0p2_bmax_2p5_steps400` | 0.03 | 0.2 | 2.5 | 4 | 0.906 | 0.1812 | 1.699 | 1.721 | 2.893 | 23.6% | 7.7% |
-| `fleet_beta_aware_A1x_l1_0p06` | 0.06 | 0 | — | 4 | 0.906 | 0.1618 | 1.727 | 1.743 | 3.242 | 0.0% | 6.2% |
-| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p4_steps400` | 0 | 0.75 | 2.4 | 4 | 0.904 | 0.1685 | 1.668 | 1.680 | 2.541 | 23.9% | 9.4% |
-| `fleet_beta_aware_A3g_l1_0p0_l3_0p2_bmax_2p0_steps400` | 0 | 0.2 | 2 | 4 | 0.904 | 0.1769 | 1.669 | 1.679 | 2.681 | 40.8% | 9.3% |
-| `fleet_beta_aware_A1x_l1_0p06_steps400` | 0.06 | 0 | — | 4 | 0.902 | 0.1942 | 1.704 | 1.714 | 3.255 | 0.0% | 7.4% |
-| `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p1_steps800` | 0 | 2 | 2.1 | 4 | 0.900 | 0.1910 | 1.549 | 1.571 | 2.143 | 24.0% | 15.8% |
-| `fleet_beta_aware_A3g_l1_0p0_l3_1p0_bmax_2p2_steps400` | 0 | 1 | 2.2 | 4 | 0.900 | 0.1637 | 1.617 | 1.629 | 2.333 | 28.2% | 12.1% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p2_steps400` | 0 | 1 | 2.2 | 4 | 0.900 | 0.1637 | 1.617 | 1.629 | 2.333 | 28.2% | 12.1% |
-| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p3_steps400` | 0 | 0.75 | 2.3 | 4 | 0.900 | 0.1659 | 1.652 | 1.661 | 2.458 | 27.3% | 10.2% |
-| `fleet_beta_aware_A1x_l1_0p07` | 0.07 | 0 | — | 4 | 0.900 | 0.1626 | 1.717 | 1.729 | 3.237 | 0.0% | 6.7% |
-| `fleet_beta_aware_A3_f_l1_0p07_l3_5p0_bmax_3p0_steps800` | 0.07 | 5 | 3 | 4 | 0.898 | 0.2089 | 1.597 | 1.607 | 2.789 | 2.0% | 13.2% |
-| `fleet_beta_aware_A1x_l1_0p07_steps400` | 0.07 | 0 | — | 4 | 0.898 | 0.1944 | 1.692 | 1.692 | 3.251 | 0.0% | 8.0% |
-| `fleet_beta_aware_A3_f_l1_0p07_l3_5p0_bmax_3p0_steps400` | 0.07 | 5 | 3 | 4 | 0.896 | 0.1802 | 1.626 | 1.646 | 2.794 | 1.8% | 11.6% |
-| `fleet_beta_aware_A3g_l1_0p05_l3_0p2_bmax_2p5_steps400` | 0.05 | 0.2 | 2.5 | 4 | 0.896 | 0.1826 | 1.651 | 1.648 | 2.860 | 22.2% | 10.3% |
-| `fleet_beta_aware_A2x_l1_0p07_l3_5p0_bmax_3p0` | 0.07 | 5 | 3 | 4 | 0.896 | 0.1503 | 1.653 | 1.677 | 2.800 | 1.8% | 10.1% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p4_steps400` | 0 | 1.5 | 2.4 | 4 | 0.896 | 0.1662 | 1.665 | 1.686 | 2.447 | 20.6% | 9.5% |
-| `fleet_beta_aware_A3g_l1_0p0_l3_0p5_bmax_2p2_steps400` | 0 | 0.5 | 2.2 | 4 | 0.894 | 0.1664 | 1.646 | 1.652 | 2.471 | 31.9% | 10.5% |
-| `fleet_beta_aware_A2x_l1_0p0_l3_1p0_bmax_2p5` | 0 | 1 | 2.5 | 4 | 0.894 | 0.1418 | 1.695 | 1.707 | 2.597 | 20.7% | 7.9% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p1_steps800` | 0 | 1.5 | 2.1 | 4 | 0.892 | 0.1878 | 1.561 | 1.572 | 2.171 | 27.7% | 15.2% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p1_steps800` | 0 | 1 | 2.1 | 4 | 0.892 | 0.1907 | 1.574 | 1.601 | 2.224 | 31.4% | 14.5% |
-| `fleet_beta_aware_A2x_l1_0p07_l3_0p1_bmax_3p0` | 0.07 | 0.1 | 3 | 4 | 0.892 | 0.1598 | 1.699 | 1.724 | 3.156 | 11.7% | 7.7% |
-| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p1_steps800` | 0 | 0.75 | 2.1 | 4 | 0.890 | 0.1900 | 1.580 | 1.605 | 2.272 | 31.8% | 14.1% |
-| `fleet_beta_aware_A3g_l1_0p03_l3_0p2_bmax_2p2_steps400` | 0.03 | 0.2 | 2.2 | 4 | 0.890 | 0.1787 | 1.647 | 1.659 | 2.736 | 31.9% | 10.5% |
-| `fleet_beta_aware_A1x_l1_0p08` | 0.08 | 0 | — | 4 | 0.890 | 0.1604 | 1.694 | 1.702 | 3.205 | 0.0% | 7.9% |
-| `fleet_beta_aware_A2x_l1_0p0_l3_5p0_bmax_2p5` | 0 | 5 | 2.5 | 4 | 0.890 | 0.1395 | 2.057 | 1.704 | 3.263 | 6.8% | -11.8% |
-| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p0_steps800` | 0 | 0.75 | 2 | 4 | 0.888 | 0.1870 | 1.550 | 1.577 | 2.185 | 35.4% | 15.8% |
-| `fleet_beta_aware_A3g_l1_0p05_l3_0p2_bmax_2p0_steps400` | 0.05 | 0.2 | 2 | 4 | 0.888 | 0.1742 | 1.579 | 1.587 | 2.610 | 36.7% | 14.2% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p2_steps400` | 0 | 1.5 | 2.2 | 4 | 0.888 | 0.1641 | 1.599 | 1.621 | 2.271 | 24.4% | 13.1% |
-| `fleet_beta_aware_A3g_l1_0p03_l3_0p2_bmax_2p0_steps400` | 0.03 | 0.2 | 2 | 4 | 0.888 | 0.1743 | 1.610 | 1.615 | 2.640 | 38.1% | 12.5% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p3_steps400` | 0 | 1.5 | 2.3 | 4 | 0.888 | 0.1614 | 1.626 | 1.649 | 2.362 | 22.3% | 11.6% |
-| `fleet_beta_aware_A3g_l1_0p08_l3_0p0_bmax_none_steps400` | 0.08 | 0 | — | 4 | 0.888 | 0.1921 | 1.665 | 1.662 | 3.215 | 0.0% | 9.5% |
-| `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p0_steps800` | 0 | 2 | 2 | 4 | 0.886 | 0.1851 | 1.520 | 1.551 | 2.047 | 26.4% | 17.4% |
-| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p2_steps800` | 0 | 0.75 | 2.2 | 4 | 0.886 | 0.1898 | 1.610 | 1.623 | 2.353 | 29.0% | 12.5% |
-| `fleet_beta_aware_A2x_l1_0p07_l3_1p0_bmax_3p0` | 0.07 | 1 | 3 | 4 | 0.884 | 0.1556 | 1.660 | 1.671 | 2.888 | 7.9% | 9.8% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p0_steps800` | 0 | 1 | 2 | 4 | 0.882 | 0.1903 | 1.543 | 1.565 | 2.136 | 34.2% | 16.2% |
-| `fleet_beta_aware_A3g_l1_0p03_l3_1p0_bmax_2p5_steps400` | 0.03 | 1 | 2.5 | 4 | 0.882 | 0.1708 | 1.632 | 1.638 | 2.550 | 18.1% | 11.3% |
-| `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p1_steps400` | 0 | 2 | 2.1 | 4 | 0.880 | 0.1643 | 1.552 | 1.579 | 2.150 | 24.1% | 15.6% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p1_steps400` | 0 | 1.5 | 2.1 | 4 | 0.880 | 0.1601 | 1.565 | 1.574 | 2.185 | 27.6% | 14.9% |
-| `fleet_beta_aware_A2x_l1_0p07_l3_0p1_bmax_2p5` | 0.07 | 0.1 | 2.5 | 4 | 0.880 | 0.1560 | 1.677 | 1.686 | 3.027 | 22.4% | 8.9% |
-| `fleet_beta_aware_A3_f_l1_0p07_l3_1p0_bmax_2p5_steps800` | 0.07 | 1 | 2.5 | 4 | 0.876 | 0.1977 | 1.533 | 1.547 | 2.500 | 15.6% | 16.7% |
-| `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p2_steps400` | 0 | 2 | 2.2 | 4 | 0.876 | 0.1624 | 1.574 | 1.591 | 2.240 | 21.8% | 14.5% |
-| `fleet_beta_aware_A3g_l1_0p05_l3_1p0_bmax_2p5_steps400` | 0.05 | 1 | 2.5 | 4 | 0.876 | 0.1694 | 1.600 | 1.617 | 2.539 | 16.9% | 13.0% |
-| `fleet_beta_aware_A2x_l1_0p07_l3_5p0_bmax_2p5` | 0.07 | 5 | 2.5 | 4 | 0.874 | 0.1394 | 1.699 | 1.612 | 2.722 | 5.2% | 7.7% |
-| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p2_steps400` | 0 | 0.75 | 2.2 | 4 | 0.872 | 0.1635 | 1.614 | 1.624 | 2.373 | 29.1% | 12.3% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p1_steps400` | 0 | 1 | 2.1 | 4 | 0.870 | 0.1624 | 1.578 | 1.601 | 2.242 | 31.4% | 14.2% |
-| `fleet_beta_aware_A3g_l1_0p03_l3_0p5_bmax_2p2_steps400` | 0.03 | 0.5 | 2.2 | 4 | 0.870 | 0.1669 | 1.584 | 1.603 | 2.447 | 29.1% | 13.9% |
-| `fleet_beta_aware_A3_f_l1_0p1_l3_0_steps800` | 0.1 | 0 | — | 4 | 0.870 | 0.2175 | 1.585 | 1.569 | 3.196 | 0.0% | 13.9% |
-| `fleet_beta_aware_A3g_l1_0p08_l3_0p2_bmax_2p5_steps400` | 0.08 | 0.2 | 2.5 | 4 | 0.870 | 0.1817 | 1.594 | 1.592 | 2.822 | 20.7% | 13.4% |
-| `fleet_beta_aware_A3g_l1_0p05_l3_0p2_bmax_2p2_steps400` | 0.05 | 0.2 | 2.2 | 4 | 0.870 | 0.1791 | 1.612 | 1.611 | 2.700 | 31.1% | 12.4% |
-| `fleet_beta_aware_A1x_l1_0p09` | 0.09 | 0 | — | 4 | 0.868 | 0.1592 | 1.682 | 1.694 | 3.187 | 0.0% | 8.6% |
-| `fleet_beta_aware_A3g_l1_0p08_l3_0p5_bmax_2p5_steps400` | 0.08 | 0.5 | 2.5 | 4 | 0.866 | 0.1772 | 1.555 | 1.562 | 2.621 | 18.1% | 15.5% |
-| `fleet_beta_aware_A2x_l1_0p07_l3_0p1_bmax_2p0` | 0.07 | 0.1 | 2 | 4 | 0.866 | 0.1535 | 1.636 | 1.637 | 2.880 | 37.6% | 11.1% |
-| `fleet_beta_aware_A1_l1_0p1` | 0.1 | 0 | — | 4 | 0.866 | 0.1586 | 1.664 | 1.679 | 3.186 | 0.0% | 9.6% |
-| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p0_steps400` | 0 | 0.75 | 2 | 4 | 0.864 | 0.1596 | 1.556 | 1.584 | 2.213 | 35.4% | 15.5% |
-| `fleet_beta_aware_A3g_l1_0p03_l3_1p0_bmax_2p2_steps400` | 0.03 | 1 | 2.2 | 4 | 0.864 | 0.1639 | 1.561 | 1.568 | 2.308 | 25.1% | 15.1% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p0_steps800` | 0 | 1.5 | 2 | 4 | 0.862 | 0.1876 | 1.511 | 1.540 | 2.076 | 29.9% | 17.9% |
-| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p1_steps400` | 0 | 0.75 | 2.1 | 4 | 0.862 | 0.1630 | 1.586 | 1.605 | 2.296 | 32.1% | 13.8% |
-| `fleet_beta_aware_A3_f_l1_0p1_l3_0_steps400` | 0.1 | 0 | — | 4 | 0.862 | 0.1889 | 1.624 | 1.619 | 3.190 | 0.0% | 11.7% |
-| `fleet_beta_aware_A1x_l1_0p12` | 0.12 | 0 | — | 4 | 0.862 | 0.1597 | 1.633 | 1.641 | 3.140 | 0.0% | 11.3% |
-| `fleet_beta_aware_A2x_l1_0p12_l3_1p0_bmax_3p0` | 0.12 | 1 | 3 | 4 | 0.860 | 0.1514 | 1.591 | 1.604 | 2.838 | 6.7% | 13.5% |
-| `fleet_beta_aware_A3_f_l1_0p12_l3_1p0_bmax_3p0_steps400` | 0.12 | 1 | 3 | 4 | 0.858 | 0.1797 | 1.542 | 1.546 | 2.810 | 6.5% | 16.2% |
-| `fleet_beta_aware_A3_f_l1_0p07_l3_1p0_bmax_2p5_steps400` | 0.07 | 1 | 2.5 | 4 | 0.858 | 0.1699 | 1.563 | 1.585 | 2.523 | 15.7% | 15.0% |
-| `fleet_beta_aware_A3g_l1_0p0_l3_0p5_bmax_2p0_steps400` | 0 | 0.5 | 2 | 4 | 0.858 | 0.1618 | 1.580 | 1.594 | 2.324 | 37.5% | 14.1% |
-| `fleet_beta_aware_A3g_l1_0p05_l3_0p5_bmax_2p2_steps400` | 0.05 | 0.5 | 2.2 | 4 | 0.856 | 0.1681 | 1.550 | 1.554 | 2.434 | 27.3% | 15.8% |
-| `fleet_beta_aware_A2x_l1_0p12_l3_0p1_bmax_3p0` | 0.12 | 0.1 | 3 | 4 | 0.856 | 0.1575 | 1.620 | 1.635 | 3.067 | 9.8% | 12.0% |
-| `fleet_beta_aware_A3_f_l1_0p12_l3_0p1_bmax_2p0_steps400` | 0.12 | 0.1 | 2 | 4 | 0.854 | 0.1762 | 1.502 | 1.506 | 2.761 | 32.6% | 18.4% |
-| `fleet_beta_aware_A3g_l1_0p05_l3_1p0_bmax_2p2_steps400` | 0.05 | 1 | 2.2 | 4 | 0.854 | 0.1645 | 1.525 | 1.543 | 2.298 | 23.0% | 17.1% |
-| `fleet_beta_aware_A3g_l1_0p0_l3_1p0_bmax_2p0_steps400` | 0 | 1 | 2 | 4 | 0.854 | 0.1620 | 1.549 | 1.569 | 2.160 | 34.5% | 15.8% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p0_steps400` | 0 | 1 | 2 | 4 | 0.854 | 0.1620 | 1.549 | 1.569 | 2.160 | 34.5% | 15.8% |
-| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p0_steps400` | 0 | 1.5 | 2 | 4 | 0.852 | 0.1626 | 1.515 | 1.537 | 2.088 | 30.0% | 17.7% |
-| `fleet_beta_aware_A2x_l1_0p07_l3_1p0_bmax_2p5` | 0.07 | 1 | 2.5 | 4 | 0.852 | 0.1414 | 1.594 | 1.616 | 2.548 | 16.4% | 13.4% |
-| `fleet_beta_aware_A3g_l1_0p08_l3_1p0_bmax_2p5_steps400` | 0.08 | 1 | 2.5 | 4 | 0.850 | 0.1714 | 1.539 | 1.554 | 2.513 | 14.7% | 16.4% |
-| `fleet_beta_aware_A2x_l1_0p12_l3_0p1_bmax_2p0` | 0.12 | 0.1 | 2 | 4 | 0.850 | 0.1503 | 1.562 | 1.571 | 2.838 | 34.4% | 15.1% |
-| `fleet_beta_aware_A2x_l1_0p12_l3_0p1_bmax_2p5` | 0.12 | 0.1 | 2.5 | 4 | 0.850 | 0.1546 | 1.602 | 1.607 | 2.968 | 20.3% | 12.9% |
-| `fleet_beta_aware_A3_f_l1_0p12_l3_1p0_bmax_3p0_steps800` | 0.12 | 1 | 3 | 4 | 0.848 | 0.2074 | 1.493 | 1.493 | 2.787 | 6.3% | 18.8% |
-| `fleet_beta_aware_A3g_l1_0p08_l3_0p2_bmax_2p2_steps400` | 0.08 | 0.2 | 2.2 | 4 | 0.848 | 0.1760 | 1.555 | 1.553 | 2.676 | 28.3% | 15.5% |
-| `fleet_beta_aware_A2x_l1_0p12_l3_5p0_bmax_3p0` | 0.12 | 5 | 3 | 4 | 0.848 | 0.1501 | 1.586 | 1.594 | 2.757 | 1.4% | 13.8% |
-| `fleet_beta_aware_A3_f_l1_0p12_l3_0p1_bmax_2p0_steps800` | 0.12 | 0.1 | 2 | 4 | 0.846 | 0.2013 | 1.444 | 1.439 | 2.693 | 31.4% | 21.5% |
-| `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p0_steps400` | 0 | 2 | 2 | 4 | 0.844 | 0.1593 | 1.523 | 1.544 | 2.056 | 26.6% | 17.2% |
-| `fleet_beta_aware_A3g_l1_0p08_l3_1p0_bmax_2p2_steps400` | 0.08 | 1 | 2.2 | 4 | 0.838 | 0.1630 | 1.480 | 1.507 | 2.276 | 21.6% | 19.5% |
-| `fleet_beta_aware_A3g_l1_0p08_l3_0p5_bmax_2p2_steps400` | 0.08 | 0.5 | 2.2 | 4 | 0.836 | 0.1656 | 1.498 | 1.510 | 2.404 | 24.4% | 18.6% |
-| `fleet_beta_aware_A3g_l1_0p08_l3_0p2_bmax_2p0_steps400` | 0.08 | 0.2 | 2 | 4 | 0.834 | 0.1707 | 1.528 | 1.535 | 2.578 | 34.0% | 16.9% |
-| `fleet_beta_aware_A3g_l1_0p03_l3_0p5_bmax_2p0_steps400` | 0.03 | 0.5 | 2 | 4 | 0.832 | 0.1617 | 1.532 | 1.547 | 2.298 | 34.8% | 16.8% |
-| `fleet_beta_aware_A3g_l1_0p05_l3_0p5_bmax_2p0_steps400` | 0.05 | 0.5 | 2 | 4 | 0.818 | 0.1626 | 1.500 | 1.517 | 2.281 | 33.0% | 18.5% |
-| `fleet_beta_aware_A2x_l1_0p12_l3_5p0_bmax_2p5` | 0.12 | 5 | 2.5 | 4 | 0.818 | 0.1354 | 4.324 | 1.548 | 8.127 | 3.9% | -135.0% |
-| `fleet_beta_aware_A2x_l1_0p12_l3_1p0_bmax_2p5` | 0.12 | 1 | 2.5 | 4 | 0.816 | 0.1415 | 1.521 | 1.538 | 2.512 | 13.6% | 17.3% |
-| `fleet_beta_aware_A3_f_l1_0p15_l3_0_steps400` | 0.15 | 0 | — | 4 | 0.814 | 0.1847 | 1.521 | 1.512 | 3.088 | 0.0% | 17.3% |
-| `fleet_beta_aware_A3_f_l1_0p15_l3_0_steps800` | 0.15 | 0 | — | 4 | 0.810 | 0.2094 | 1.462 | 1.429 | 3.077 | 0.0% | 20.6% |
-| `fleet_beta_aware_A3g_l1_0p03_l3_1p0_bmax_2p0_steps400` | 0.03 | 1 | 2 | 4 | 0.810 | 0.1589 | 1.490 | 1.502 | 2.139 | 30.8% | 19.0% |
-| `fleet_beta_aware_A3g_l1_0p05_l3_1p0_bmax_2p0_steps400` | 0.05 | 1 | 2 | 4 | 0.798 | 0.1608 | 1.469 | 1.490 | 2.127 | 29.0% | 20.2% |
-| `fleet_beta_aware_A2x_l1_0p0_l3_1p0_bmax_2p0` | 0 | 1 | 2 | 4 | 0.792 | 0.1331 | 1.560 | 1.573 | 2.196 | 34.8% | 15.2% |
-| `fleet_beta_aware_A3g_l1_0p08_l3_1p0_bmax_2p0_steps400` | 0.08 | 1 | 2 | 4 | 0.788 | 0.1608 | 1.426 | 1.433 | 2.110 | 27.1% | 22.5% |
-| `fleet_beta_aware_A3g_l1_0p08_l3_0p5_bmax_2p0_steps400` | 0.08 | 0.5 | 2 | 4 | 0.786 | 0.1624 | 1.447 | 1.464 | 2.258 | 30.8% | 21.3% |
-| `fleet_beta_aware_A2x_l1_0p07_l3_1p0_bmax_2p0` | 0.07 | 1 | 2 | 4 | 0.786 | 0.1339 | 1.472 | 1.487 | 2.151 | 28.9% | 20.0% |
-| `fleet_beta_aware_A1_l1_0p2` | 0.2 | 0 | — | 4 | 0.774 | 0.1520 | 1.496 | 1.490 | 3.029 | 0.0% | 18.7% |
-| `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p0_L3` | 0 | 0.1 | 2 | 3 | 0.730 | 0.1414 | 1.818 | 1.813 | 2.978 | 44.8% | 1.2% |
-| `fleet_beta_aware_A1x_l1_0p06_L3` | 0.06 | 0 | — | 3 | 0.708 | 0.1514 | 1.809 | 1.821 | 3.267 | 0.0% | 1.7% |
-| `fleet_beta_aware_A2x_l1_0p12_l3_1p0_bmax_2p0` | 0.12 | 1 | 2 | 4 | 0.704 | 0.1327 | 1.409 | 1.432 | 2.128 | 25.2% | 23.4% |
-| `fleet_beta_aware_A1x_l1_0p07_L3` | 0.07 | 0 | — | 3 | 0.700 | 0.1509 | 1.792 | 1.810 | 3.239 | 0.0% | 2.6% |
+## Verdict
 
-## Notes
+**Partial target met (≥15%):** success≥0.90 and mean|β| cut≥15% (n=1). Best cut so far **15.8%**.
 
-- Explore4: soft-cap refinement aiming for success≥0.90 and |β| cut≥15%.
-- Prior best ~12% cut at success≥0.90 (soft-cap / mild L1+cap).
-- fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p0_steps400: success=0.864, mean|β|=1.556, cut=15.5%, mean_max=2.213.
-- fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p0_steps800: success=0.888, mean|β|=1.550, cut=15.8%, mean_max=2.185.
-- fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p1_steps400: success=0.862, mean|β|=1.586, cut=13.8%, mean_max=2.296.
-- fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p1_steps800: success=0.890, mean|β|=1.580, cut=14.1%, mean_max=2.272.
-- fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p2_steps400: success=0.872, mean|β|=1.614, cut=12.3%, mean_max=2.373.
-- fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p2_steps800: success=0.886, mean|β|=1.610, cut=12.5%, mean_max=2.353.
-- fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p3_steps400: success=0.900, mean|β|=1.652, cut=10.2%, mean_max=2.458.
-- fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p3_steps800: success=0.906, mean|β|=1.650, cut=10.3%, mean_max=2.442.
-- fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p4_steps400: success=0.904, mean|β|=1.668, cut=9.4%, mean_max=2.541.
-- fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p4_steps800: success=0.916, mean|β|=1.666, cut=9.5%, mean_max=2.525.
-- fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p0_steps400: success=0.854, mean|β|=1.549, cut=15.8%, mean_max=2.160.
-- fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p0_steps800: success=0.882, mean|β|=1.543, cut=16.2%, mean_max=2.136.
-- fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p1_steps400: success=0.870, mean|β|=1.578, cut=14.2%, mean_max=2.242.
-- fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p1_steps800: success=0.892, mean|β|=1.574, cut=14.5%, mean_max=2.224.
-- fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p2_steps400: success=0.900, mean|β|=1.617, cut=12.1%, mean_max=2.333.
-- fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p2_steps800: success=0.916, mean|β|=1.614, cut=12.3%, mean_max=2.315.
-- fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p3_steps400: success=0.912, mean|β|=1.637, cut=11.0%, mean_max=2.408.
-- fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p3_steps800: success=0.920, mean|β|=1.634, cut=11.2%, mean_max=2.395.
-- fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p4_steps400: success=0.910, mean|β|=1.665, cut=9.5%, mean_max=2.492.
-- fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p4_steps800: success=0.924, mean|β|=1.664, cut=9.5%, mean_max=2.480.
-- fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p0_steps400: success=0.852, mean|β|=1.515, cut=17.7%, mean_max=2.088.
-- fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p0_steps800: success=0.862, mean|β|=1.511, cut=17.9%, mean_max=2.076.
-- fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p1_steps400: success=0.880, mean|β|=1.565, cut=14.9%, mean_max=2.185.
-- fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p1_steps800: success=0.892, mean|β|=1.561, cut=15.2%, mean_max=2.171.
-- fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p2_steps400: success=0.888, mean|β|=1.599, cut=13.1%, mean_max=2.271.
-- fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p2_steps800: success=0.908, mean|β|=1.595, cut=13.3%, mean_max=2.259.
-- fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p3_steps400: success=0.888, mean|β|=1.626, cut=11.6%, mean_max=2.362.
-- fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p3_steps800: success=0.918, mean|β|=1.623, cut=11.8%, mean_max=2.351.
-- fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p4_steps400: success=0.896, mean|β|=1.665, cut=9.5%, mean_max=2.447.
-- fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p4_steps800: success=0.916, mean|β|=1.664, cut=9.5%, mean_max=2.439.
-- fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p0_steps400: success=0.844, mean|β|=1.523, cut=17.2%, mean_max=2.056.
-- fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p0_steps800: success=0.886, mean|β|=1.520, cut=17.4%, mean_max=2.047.
-- fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p1_steps400: success=0.880, mean|β|=1.552, cut=15.6%, mean_max=2.150.
-- fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p1_steps800: success=0.900, mean|β|=1.549, cut=15.8%, mean_max=2.143.
-- fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p2_steps400: success=0.876, mean|β|=1.574, cut=14.5%, mean_max=2.240.
-- fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p2_steps800: success=0.912, mean|β|=1.572, cut=14.6%, mean_max=2.235.
+- **Recommended:** `--lambda1 0 --lambda3 2 --beta-max 2.1` with `--steps 800`
+  (tag `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p1_steps800`): success=0.900, mean|β|=1.549, median|β|=1.571, mean trial-max|β|=2.143, cut=15.8%.
+
+### Best settings at success≥0.90
+
+| rank | λ1 | λ3 | β_max | steps | success | mean p(GS) | mean\|β\| | median\|β\| | mean trial-max\|β\| | % over β_max | \|β\| cut | tag |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| 1 | 0 | 2 | 2.1 | 800 | 0.900 | 0.1910 | 1.549 | 1.571 | 2.143 | 24.0% | 15.8% | `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p1_steps800` |
+| 2 | 0 | 2 | 2.2 | 800 | 0.912 | 0.1900 | 1.572 | 1.581 | 2.235 | 22.0% | 14.6% | `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p2_steps800` |
+| 3 | 0 | 1.5 | 2.2 | 800 | 0.908 | 0.1914 | 1.595 | 1.619 | 2.259 | 24.5% | 13.3% | `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p2_steps800` |
+| 4 | 0 | 1 | 2.2 | 800 | 0.916 | 0.1911 | 1.614 | 1.630 | 2.315 | 28.2% | 12.3% | `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p2_steps800` |
+| 5 | 0.05 | 0.5 | 2.5 | 400 | 0.906 | 0.1782 | 1.615 | 1.625 | 2.644 | 20.5% | 12.2% | `fleet_beta_aware_A3g_l1_0p05_l3_0p5_bmax_2p5_steps400` |
+| 6 | 0 | 1 | 2.2 | 400 | 0.900 | 0.1637 | 1.617 | 1.629 | 2.333 | 28.2% | 12.1% | `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p2_steps400` |
+| 7 | 0 | 1 | 2.2 | 400 | 0.900 | 0.1637 | 1.617 | 1.629 | 2.333 | 28.2% | 12.1% | `fleet_beta_aware_A3g_l1_0p0_l3_1p0_bmax_2p2_steps400` |
+| 8 | 0 | 1.5 | 2.3 | 800 | 0.918 | 0.1882 | 1.623 | 1.660 | 2.351 | 22.1% | 11.8% | `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p3_steps800` |
+| 9 | 0 | 1 | 2.3 | 800 | 0.920 | 0.1931 | 1.634 | 1.642 | 2.395 | 25.6% | 11.2% | `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p3_steps800` |
+| 10 | 0 | 1 | 2.3 | 400 | 0.912 | 0.1654 | 1.637 | 1.651 | 2.408 | 25.3% | 11.0% | `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p3_steps400` |
+| 11 | 0 | 0.75 | 2.3 | 800 | 0.906 | 0.1932 | 1.650 | 1.653 | 2.442 | 27.4% | 10.3% | `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p3_steps800` |
+| 12 | 0 | 0.75 | 2.3 | 400 | 0.900 | 0.1659 | 1.652 | 1.661 | 2.458 | 27.3% | 10.2% | `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p3_steps400` |
+| 13 | 0.03 | 0.5 | 2.5 | 400 | 0.906 | 0.1758 | 1.653 | 1.670 | 2.666 | 21.7% | 10.2% | `fleet_beta_aware_A3g_l1_0p03_l3_0p5_bmax_2p5_steps400` |
+| 14 | 0 | 1 | 2.4 | 800 | 0.924 | 0.1944 | 1.664 | 1.670 | 2.480 | 23.0% | 9.5% | `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p4_steps800` |
+| 15 | 0 | 1.5 | 2.4 | 800 | 0.916 | 0.1928 | 1.664 | 1.693 | 2.439 | 20.4% | 9.5% | `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p4_steps800` |
+
+## What worked
+
+- **A0 Gibbs-only** matches bakeoff (success 0.940, mean|β| 1.844) → defaults unchanged.
+- **Soft |β| cap with λ1=0** is the winning family: keeps success≥0.90 while cutting mean|β| and especially trial-max|β|.
+- **Hit ≥15% cut:** λ1=0, λ3=2, β_max=2.1, steps=800 → success 0.900, cut ≈15.8%, mean trial-max|β|≈2.14 (vs 3.38).
+- Nearby robust: λ1=0, λ3=2, β_max=2.2, steps=800 → success 0.912, cut ≈14.6%.
+- More SPSA steps (800) needed for soft-cap to bite without killing success.
+
+## What failed
+
+- **Pure L1:** cannot reach ≥15% cut without success <0.85–0.90 (λ1=0.2 → cut≈19%, success≈0.77).
+- **Tight caps + huge λ3 (e.g. λ3=5, β_max=2.0):** can destabilize SPSA (β explosion).
+- **≥20% mean|β| cut at success≥0.90:** not yet observed (explore4 continuing).
+- **L*=3** remains substantially worse than L*=4 for these U/settings.
 
 ## How to toggle
 
-Defaults (`--lambda1 0 --lambda3 0`, no `--beta-max`) preserve Gibbs-only cost.
-Enable β terms via CLI on `python -m noiseless.run_u_sweep`.
+Defaults (`--lambda1 0 --lambda3 0`, no `--beta-max`) = Gibbs-only (bitwise same cost path).
 
+```bash
+export PYTHONPATH=.
+# recommended soft-cap (≥15% |β| cut, success≥0.90)
+python -m noiseless.run_u_sweep --u-names ck_pi4 --layers 4 --trials 25 --steps 800 \
+  --lambda1 0 --lambda3 2 --beta-max 2.1 --workers 7 \
+  --tag fleet_beta_aware_softcap_rec
+```
+
+## Full results (non-exploded)
+
+| tag | λ1 | λ3 | β_max | L* | steps | success | mean p(GS) | mean\|β\| | median\|β\| | mean trial-max\|β\| | \|β\| cut |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `fleet_beta_aware_A2x_l1_0p12_l3_1p0_bmax_2p0` | 0.12 | 1 | 2 | 4 | 200 | 0.704 | 0.1327 | 1.409 | 1.432 | 2.128 | 23.4% |
+| `fleet_beta_aware_A3g_l1_0p08_l3_1p0_bmax_2p0_steps400` | 0.08 | 1 | 2 | 4 | 400 | 0.788 | 0.1608 | 1.426 | 1.433 | 2.110 | 22.5% |
+| `fleet_beta_aware_A3_f_l1_0p12_l3_0p1_bmax_2p0_steps800` | 0.12 | 0.1 | 2 | 4 | 800 | 0.846 | 0.2013 | 1.444 | 1.439 | 2.693 | 21.5% |
+| `fleet_beta_aware_A3g_l1_0p08_l3_0p5_bmax_2p0_steps400` | 0.08 | 0.5 | 2 | 4 | 400 | 0.786 | 0.1624 | 1.447 | 1.464 | 2.258 | 21.3% |
+| `fleet_beta_aware_A3_f_l1_0p15_l3_0_steps800` | 0.15 | 0 | — | 4 | 800 | 0.810 | 0.2094 | 1.462 | 1.429 | 3.077 | 20.6% |
+| `fleet_beta_aware_A3g_l1_0p05_l3_1p0_bmax_2p0_steps400` | 0.05 | 1 | 2 | 4 | 400 | 0.798 | 0.1608 | 1.469 | 1.490 | 2.127 | 20.2% |
+| `fleet_beta_aware_A2x_l1_0p07_l3_1p0_bmax_2p0` | 0.07 | 1 | 2 | 4 | 200 | 0.786 | 0.1339 | 1.472 | 1.487 | 2.151 | 20.0% |
+| `fleet_beta_aware_A3g_l1_0p08_l3_1p0_bmax_2p2_steps400` | 0.08 | 1 | 2.2 | 4 | 400 | 0.838 | 0.1630 | 1.480 | 1.507 | 2.276 | 19.5% |
+| `fleet_beta_aware_A3g_l1_0p03_l3_1p0_bmax_2p0_steps400` | 0.03 | 1 | 2 | 4 | 400 | 0.810 | 0.1589 | 1.490 | 1.502 | 2.139 | 19.0% |
+| `fleet_beta_aware_A3_f_l1_0p12_l3_1p0_bmax_3p0_steps800` | 0.12 | 1 | 3 | 4 | 800 | 0.848 | 0.2074 | 1.493 | 1.493 | 2.787 | 18.8% |
+| `fleet_beta_aware_A1_l1_0p2` | 0.2 | 0 | — | 4 | 200 | 0.774 | 0.1520 | 1.496 | 1.490 | 3.029 | 18.7% |
+| `fleet_beta_aware_A3g_l1_0p08_l3_0p5_bmax_2p2_steps400` | 0.08 | 0.5 | 2.2 | 4 | 400 | 0.836 | 0.1656 | 1.498 | 1.510 | 2.404 | 18.6% |
+| `fleet_beta_aware_A3g_l1_0p05_l3_0p5_bmax_2p0_steps400` | 0.05 | 0.5 | 2 | 4 | 400 | 0.818 | 0.1626 | 1.500 | 1.517 | 2.281 | 18.5% |
+| `fleet_beta_aware_A3_f_l1_0p12_l3_0p1_bmax_2p0_steps400` | 0.12 | 0.1 | 2 | 4 | 400 | 0.854 | 0.1762 | 1.502 | 1.506 | 2.761 | 18.4% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p0_steps800` | 0 | 1.5 | 2 | 4 | 800 | 0.862 | 0.1876 | 1.511 | 1.540 | 2.076 | 17.9% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p0_steps400` | 0 | 1.5 | 2 | 4 | 400 | 0.852 | 0.1626 | 1.515 | 1.537 | 2.088 | 17.7% |
+| `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p0_steps800` | 0 | 2 | 2 | 4 | 800 | 0.886 | 0.1851 | 1.520 | 1.551 | 2.047 | 17.4% |
+| `fleet_beta_aware_A2x_l1_0p12_l3_1p0_bmax_2p5` | 0.12 | 1 | 2.5 | 4 | 200 | 0.816 | 0.1415 | 1.521 | 1.538 | 2.512 | 17.3% |
+| `fleet_beta_aware_A3_f_l1_0p15_l3_0_steps400` | 0.15 | 0 | — | 4 | 400 | 0.814 | 0.1847 | 1.521 | 1.512 | 3.088 | 17.3% |
+| `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p0_steps400` | 0 | 2 | 2 | 4 | 400 | 0.844 | 0.1593 | 1.523 | 1.544 | 2.056 | 17.2% |
+| `fleet_beta_aware_A3g_l1_0p05_l3_1p0_bmax_2p2_steps400` | 0.05 | 1 | 2.2 | 4 | 400 | 0.854 | 0.1645 | 1.525 | 1.543 | 2.298 | 17.1% |
+| `fleet_beta_aware_A3g_l1_0p08_l3_0p2_bmax_2p0_steps400` | 0.08 | 0.2 | 2 | 4 | 400 | 0.834 | 0.1707 | 1.528 | 1.535 | 2.578 | 16.9% |
+| `fleet_beta_aware_A3g_l1_0p03_l3_0p5_bmax_2p0_steps400` | 0.03 | 0.5 | 2 | 4 | 400 | 0.832 | 0.1617 | 1.532 | 1.547 | 2.298 | 16.8% |
+| `fleet_beta_aware_A3_f_l1_0p07_l3_1p0_bmax_2p5_steps800` | 0.07 | 1 | 2.5 | 4 | 800 | 0.876 | 0.1977 | 1.533 | 1.547 | 2.500 | 16.7% |
+| `fleet_beta_aware_A3g_l1_0p08_l3_1p0_bmax_2p5_steps400` | 0.08 | 1 | 2.5 | 4 | 400 | 0.850 | 0.1714 | 1.539 | 1.554 | 2.513 | 16.4% |
+| `fleet_beta_aware_A3_f_l1_0p12_l3_1p0_bmax_3p0_steps400` | 0.12 | 1 | 3 | 4 | 400 | 0.858 | 0.1797 | 1.542 | 1.546 | 2.810 | 16.2% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p0_steps800` | 0 | 1 | 2 | 4 | 800 | 0.882 | 0.1903 | 1.543 | 1.565 | 2.136 | 16.2% |
+| `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p1_steps800` | 0 | 2 | 2.1 | 4 | 800 | 0.900 | 0.1910 | 1.549 | 1.571 | 2.143 | 15.8% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p0_steps400` | 0 | 1 | 2 | 4 | 400 | 0.854 | 0.1620 | 1.549 | 1.569 | 2.160 | 15.8% |
+| `fleet_beta_aware_A3g_l1_0p0_l3_1p0_bmax_2p0_steps400` | 0 | 1 | 2 | 4 | 400 | 0.854 | 0.1620 | 1.549 | 1.569 | 2.160 | 15.8% |
+| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p0_steps800` | 0 | 0.75 | 2 | 4 | 800 | 0.888 | 0.1870 | 1.550 | 1.577 | 2.185 | 15.8% |
+| `fleet_beta_aware_A3g_l1_0p05_l3_0p5_bmax_2p2_steps400` | 0.05 | 0.5 | 2.2 | 4 | 400 | 0.856 | 0.1681 | 1.550 | 1.554 | 2.434 | 15.8% |
+| `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p1_steps400` | 0 | 2 | 2.1 | 4 | 400 | 0.880 | 0.1643 | 1.552 | 1.579 | 2.150 | 15.6% |
+| `fleet_beta_aware_A3g_l1_0p08_l3_0p2_bmax_2p2_steps400` | 0.08 | 0.2 | 2.2 | 4 | 400 | 0.848 | 0.1760 | 1.555 | 1.553 | 2.676 | 15.5% |
+| `fleet_beta_aware_A3g_l1_0p08_l3_0p5_bmax_2p5_steps400` | 0.08 | 0.5 | 2.5 | 4 | 400 | 0.866 | 0.1772 | 1.555 | 1.562 | 2.621 | 15.5% |
+| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p0_steps400` | 0 | 0.75 | 2 | 4 | 400 | 0.864 | 0.1596 | 1.556 | 1.584 | 2.213 | 15.5% |
+| `fleet_beta_aware_A2x_l1_0p0_l3_1p0_bmax_2p0` | 0 | 1 | 2 | 4 | 200 | 0.792 | 0.1331 | 1.560 | 1.573 | 2.196 | 15.2% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p1_steps800` | 0 | 1.5 | 2.1 | 4 | 800 | 0.892 | 0.1878 | 1.561 | 1.572 | 2.171 | 15.2% |
+| `fleet_beta_aware_A3g_l1_0p03_l3_1p0_bmax_2p2_steps400` | 0.03 | 1 | 2.2 | 4 | 400 | 0.864 | 0.1639 | 1.561 | 1.568 | 2.308 | 15.1% |
+| `fleet_beta_aware_A2x_l1_0p12_l3_0p1_bmax_2p0` | 0.12 | 0.1 | 2 | 4 | 200 | 0.850 | 0.1503 | 1.562 | 1.571 | 2.838 | 15.1% |
+| `fleet_beta_aware_A3_f_l1_0p07_l3_1p0_bmax_2p5_steps400` | 0.07 | 1 | 2.5 | 4 | 400 | 0.858 | 0.1699 | 1.563 | 1.585 | 2.523 | 15.0% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p1_steps400` | 0 | 1.5 | 2.1 | 4 | 400 | 0.880 | 0.1601 | 1.565 | 1.574 | 2.185 | 14.9% |
+| `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p2_steps800` | 0 | 2 | 2.2 | 4 | 800 | 0.912 | 0.1900 | 1.572 | 1.581 | 2.235 | 14.6% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p1_steps800` | 0 | 1 | 2.1 | 4 | 800 | 0.892 | 0.1907 | 1.574 | 1.601 | 2.224 | 14.5% |
+| `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p2_steps400` | 0 | 2 | 2.2 | 4 | 400 | 0.876 | 0.1624 | 1.574 | 1.591 | 2.240 | 14.5% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p1_steps400` | 0 | 1 | 2.1 | 4 | 400 | 0.870 | 0.1624 | 1.578 | 1.601 | 2.242 | 14.2% |
+| `fleet_beta_aware_A3g_l1_0p05_l3_0p2_bmax_2p0_steps400` | 0.05 | 0.2 | 2 | 4 | 400 | 0.888 | 0.1742 | 1.579 | 1.587 | 2.610 | 14.2% |
+| `fleet_beta_aware_A3g_l1_0p0_l3_0p5_bmax_2p0_steps400` | 0 | 0.5 | 2 | 4 | 400 | 0.858 | 0.1618 | 1.580 | 1.594 | 2.324 | 14.1% |
+| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p1_steps800` | 0 | 0.75 | 2.1 | 4 | 800 | 0.890 | 0.1900 | 1.580 | 1.605 | 2.272 | 14.1% |
+| `fleet_beta_aware_A3g_l1_0p03_l3_0p5_bmax_2p2_steps400` | 0.03 | 0.5 | 2.2 | 4 | 400 | 0.870 | 0.1669 | 1.584 | 1.603 | 2.447 | 13.9% |
+| `fleet_beta_aware_A3_f_l1_0p1_l3_0_steps800` | 0.1 | 0 | — | 4 | 800 | 0.870 | 0.2175 | 1.585 | 1.569 | 3.196 | 13.9% |
+| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p1_steps400` | 0 | 0.75 | 2.1 | 4 | 400 | 0.862 | 0.1630 | 1.586 | 1.605 | 2.296 | 13.8% |
+| `fleet_beta_aware_A2x_l1_0p12_l3_5p0_bmax_3p0` | 0.12 | 5 | 3 | 4 | 200 | 0.848 | 0.1501 | 1.586 | 1.594 | 2.757 | 13.8% |
+| `fleet_beta_aware_A2x_l1_0p12_l3_1p0_bmax_3p0` | 0.12 | 1 | 3 | 4 | 200 | 0.860 | 0.1514 | 1.591 | 1.604 | 2.838 | 13.5% |
+| `fleet_beta_aware_A2x_l1_0p07_l3_1p0_bmax_2p5` | 0.07 | 1 | 2.5 | 4 | 200 | 0.852 | 0.1414 | 1.594 | 1.616 | 2.548 | 13.4% |
+| `fleet_beta_aware_A3g_l1_0p08_l3_0p2_bmax_2p5_steps400` | 0.08 | 0.2 | 2.5 | 4 | 400 | 0.870 | 0.1817 | 1.594 | 1.592 | 2.822 | 13.4% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p2_steps800` | 0 | 1.5 | 2.2 | 4 | 800 | 0.908 | 0.1914 | 1.595 | 1.619 | 2.259 | 13.3% |
+| `fleet_beta_aware_A3_f_l1_0p07_l3_5p0_bmax_3p0_steps800` | 0.07 | 5 | 3 | 4 | 800 | 0.898 | 0.2089 | 1.597 | 1.607 | 2.789 | 13.2% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p2_steps400` | 0 | 1.5 | 2.2 | 4 | 400 | 0.888 | 0.1641 | 1.599 | 1.621 | 2.271 | 13.1% |
+| `fleet_beta_aware_A3g_l1_0p05_l3_1p0_bmax_2p5_steps400` | 0.05 | 1 | 2.5 | 4 | 400 | 0.876 | 0.1694 | 1.600 | 1.617 | 2.539 | 13.0% |
+| `fleet_beta_aware_A2x_l1_0p12_l3_0p1_bmax_2p5` | 0.12 | 0.1 | 2.5 | 4 | 200 | 0.850 | 0.1546 | 1.602 | 1.607 | 2.968 | 12.9% |
+| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p2_steps800` | 0 | 0.75 | 2.2 | 4 | 800 | 0.886 | 0.1898 | 1.610 | 1.623 | 2.353 | 12.5% |
+| `fleet_beta_aware_A3g_l1_0p03_l3_0p2_bmax_2p0_steps400` | 0.03 | 0.2 | 2 | 4 | 400 | 0.888 | 0.1743 | 1.610 | 1.615 | 2.640 | 12.5% |
+| `fleet_beta_aware_A3g_l1_0p05_l3_0p2_bmax_2p2_steps400` | 0.05 | 0.2 | 2.2 | 4 | 400 | 0.870 | 0.1791 | 1.612 | 1.611 | 2.700 | 12.4% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p2_steps800` | 0 | 1 | 2.2 | 4 | 800 | 0.916 | 0.1911 | 1.614 | 1.630 | 2.315 | 12.3% |
+| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p2_steps400` | 0 | 0.75 | 2.2 | 4 | 400 | 0.872 | 0.1635 | 1.614 | 1.624 | 2.373 | 12.3% |
+| `fleet_beta_aware_A3g_l1_0p05_l3_0p5_bmax_2p5_steps400` | 0.05 | 0.5 | 2.5 | 4 | 400 | 0.906 | 0.1782 | 1.615 | 1.625 | 2.644 | 12.2% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p2_steps400` | 0 | 1 | 2.2 | 4 | 400 | 0.900 | 0.1637 | 1.617 | 1.629 | 2.333 | 12.1% |
+| `fleet_beta_aware_A3g_l1_0p0_l3_1p0_bmax_2p2_steps400` | 0 | 1 | 2.2 | 4 | 400 | 0.900 | 0.1637 | 1.617 | 1.629 | 2.333 | 12.1% |
+| `fleet_beta_aware_A2x_l1_0p12_l3_0p1_bmax_3p0` | 0.12 | 0.1 | 3 | 4 | 200 | 0.856 | 0.1575 | 1.620 | 1.635 | 3.067 | 12.0% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p3_steps800` | 0 | 1.5 | 2.3 | 4 | 800 | 0.918 | 0.1882 | 1.623 | 1.660 | 2.351 | 11.8% |
+| `fleet_beta_aware_A3_f_l1_0p1_l3_0_steps400` | 0.1 | 0 | — | 4 | 400 | 0.862 | 0.1889 | 1.624 | 1.619 | 3.190 | 11.7% |
+| `fleet_beta_aware_A3_f_l1_0p07_l3_5p0_bmax_3p0_steps400` | 0.07 | 5 | 3 | 4 | 400 | 0.896 | 0.1802 | 1.626 | 1.646 | 2.794 | 11.6% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p3_steps400` | 0 | 1.5 | 2.3 | 4 | 400 | 0.888 | 0.1614 | 1.626 | 1.649 | 2.362 | 11.6% |
+| `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p3_steps400` | 0 | 2 | 2.3 | 4 | 400 | 0.898 | 0.1607 | 1.627 | 1.653 | 2.336 | 11.5% |
+| `fleet_beta_aware_A3g_l1_0p03_l3_1p0_bmax_2p5_steps400` | 0.03 | 1 | 2.5 | 4 | 400 | 0.882 | 0.1708 | 1.632 | 1.638 | 2.550 | 11.3% |
+| `fleet_beta_aware_A1x_l1_0p12` | 0.12 | 0 | — | 4 | 200 | 0.862 | 0.1597 | 1.633 | 1.641 | 3.140 | 11.3% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p3_steps800` | 0 | 1 | 2.3 | 4 | 800 | 0.920 | 0.1931 | 1.634 | 1.642 | 2.395 | 11.2% |
+| `fleet_beta_aware_A2x_l1_0p07_l3_0p1_bmax_2p0` | 0.07 | 0.1 | 2 | 4 | 200 | 0.866 | 0.1535 | 1.636 | 1.637 | 2.880 | 11.1% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p3_steps400` | 0 | 1 | 2.3 | 4 | 400 | 0.912 | 0.1654 | 1.637 | 1.651 | 2.408 | 11.0% |
+| `fleet_beta_aware_A3g_l1_0p0_l3_0p5_bmax_2p2_steps400` | 0 | 0.5 | 2.2 | 4 | 400 | 0.894 | 0.1664 | 1.646 | 1.652 | 2.471 | 10.5% |
+| `fleet_beta_aware_A3g_l1_0p03_l3_0p2_bmax_2p2_steps400` | 0.03 | 0.2 | 2.2 | 4 | 400 | 0.890 | 0.1787 | 1.647 | 1.659 | 2.736 | 10.5% |
+| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p3_steps800` | 0 | 0.75 | 2.3 | 4 | 800 | 0.906 | 0.1932 | 1.650 | 1.653 | 2.442 | 10.3% |
+| `fleet_beta_aware_A3g_l1_0p05_l3_0p2_bmax_2p5_steps400` | 0.05 | 0.2 | 2.5 | 4 | 400 | 0.896 | 0.1826 | 1.651 | 1.648 | 2.860 | 10.3% |
+| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p3_steps400` | 0 | 0.75 | 2.3 | 4 | 400 | 0.900 | 0.1659 | 1.652 | 1.661 | 2.458 | 10.2% |
+| `fleet_beta_aware_A3g_l1_0p03_l3_0p5_bmax_2p5_steps400` | 0.03 | 0.5 | 2.5 | 4 | 400 | 0.906 | 0.1758 | 1.653 | 1.670 | 2.666 | 10.2% |
+| `fleet_beta_aware_A2x_l1_0p07_l3_5p0_bmax_3p0` | 0.07 | 5 | 3 | 4 | 200 | 0.896 | 0.1503 | 1.653 | 1.677 | 2.800 | 10.1% |
+| `fleet_beta_aware_A2x_l1_0p07_l3_1p0_bmax_3p0` | 0.07 | 1 | 3 | 4 | 200 | 0.884 | 0.1556 | 1.660 | 1.671 | 2.888 | 9.8% |
+| `fleet_beta_aware_A1_l1_0p1` | 0.1 | 0 | — | 4 | 200 | 0.866 | 0.1586 | 1.664 | 1.679 | 3.186 | 9.6% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p4_steps800` | 0 | 1 | 2.4 | 4 | 800 | 0.924 | 0.1944 | 1.664 | 1.670 | 2.480 | 9.5% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p4_steps800` | 0 | 1.5 | 2.4 | 4 | 800 | 0.916 | 0.1928 | 1.664 | 1.693 | 2.439 | 9.5% |
+| `fleet_beta_aware_A3g_l1_0p08_l3_0p0_bmax_none_steps400` | 0.08 | 0 | — | 4 | 400 | 0.888 | 0.1921 | 1.665 | 1.662 | 3.215 | 9.5% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p0_bmax_2p4_steps400` | 0 | 1 | 2.4 | 4 | 400 | 0.910 | 0.1673 | 1.665 | 1.670 | 2.492 | 9.5% |
+| `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p4_steps400` | 0 | 1.5 | 2.4 | 4 | 400 | 0.896 | 0.1662 | 1.665 | 1.686 | 2.447 | 9.5% |
+| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p4_steps800` | 0 | 0.75 | 2.4 | 4 | 800 | 0.916 | 0.1955 | 1.666 | 1.673 | 2.525 | 9.5% |
+| `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p4_steps400` | 0 | 0.75 | 2.4 | 4 | 400 | 0.904 | 0.1685 | 1.668 | 1.680 | 2.541 | 9.4% |
+| `fleet_beta_aware_A3g_l1_0p0_l3_0p2_bmax_2p0_steps400` | 0 | 0.2 | 2 | 4 | 400 | 0.904 | 0.1769 | 1.669 | 1.679 | 2.681 | 9.3% |
+| `fleet_beta_aware_A2x_l1_0p07_l3_0p1_bmax_2p5` | 0.07 | 0.1 | 2.5 | 4 | 200 | 0.880 | 0.1560 | 1.677 | 1.686 | 3.027 | 8.9% |
+| `fleet_beta_aware_A1x_l1_0p09` | 0.09 | 0 | — | 4 | 200 | 0.868 | 0.1592 | 1.682 | 1.694 | 3.187 | 8.6% |
+| `fleet_beta_aware_A1x_l1_0p07_steps400` | 0.07 | 0 | — | 4 | 400 | 0.898 | 0.1944 | 1.692 | 1.692 | 3.251 | 8.0% |
+| `fleet_beta_aware_A3_f_l1_0p0_l3_1p0_bmax_2p5_steps400` | 0 | 1 | 2.5 | 4 | 400 | 0.910 | 0.1702 | 1.693 | 1.703 | 2.576 | 8.0% |
+| `fleet_beta_aware_A3g_l1_0p0_l3_1p0_bmax_2p5_steps400` | 0 | 1 | 2.5 | 4 | 400 | 0.910 | 0.1702 | 1.693 | 1.703 | 2.576 | 8.0% |
+| `fleet_beta_aware_A3_f_l1_0p0_l3_1p0_bmax_2p5_steps800` | 0 | 1 | 2.5 | 4 | 800 | 0.920 | 0.1984 | 1.693 | 1.707 | 2.566 | 8.0% |
+| `fleet_beta_aware_A1x_l1_0p08` | 0.08 | 0 | — | 4 | 200 | 0.890 | 0.1604 | 1.694 | 1.702 | 3.205 | 7.9% |
+| `fleet_beta_aware_A2x_l1_0p0_l3_1p0_bmax_2p5` | 0 | 1 | 2.5 | 4 | 200 | 0.894 | 0.1418 | 1.695 | 1.707 | 2.597 | 7.9% |
+| `fleet_beta_aware_A2x_l1_0p07_l3_5p0_bmax_2p5` | 0.07 | 5 | 2.5 | 4 | 200 | 0.874 | 0.1394 | 1.699 | 1.612 | 2.722 | 7.7% |
+| `fleet_beta_aware_A2x_l1_0p07_l3_0p1_bmax_3p0` | 0.07 | 0.1 | 3 | 4 | 200 | 0.892 | 0.1598 | 1.699 | 1.724 | 3.156 | 7.7% |
+| `fleet_beta_aware_A3g_l1_0p03_l3_0p2_bmax_2p5_steps400` | 0.03 | 0.2 | 2.5 | 4 | 400 | 0.906 | 0.1812 | 1.699 | 1.721 | 2.893 | 7.7% |
+| `fleet_beta_aware_A1x_l1_0p06_steps400` | 0.06 | 0 | — | 4 | 400 | 0.902 | 0.1942 | 1.704 | 1.714 | 3.255 | 7.4% |
+| `fleet_beta_aware_A3g_l1_0p0_l3_0p2_bmax_2p2_steps400` | 0 | 0.2 | 2.2 | 4 | 400 | 0.920 | 0.1800 | 1.709 | 1.716 | 2.774 | 7.1% |
+| `fleet_beta_aware_A3g_l1_0p0_l3_0p5_bmax_2p5_steps400` | 0 | 0.5 | 2.5 | 4 | 400 | 0.928 | 0.1768 | 1.714 | 1.730 | 2.702 | 6.9% |
+| `fleet_beta_aware_A1x_l1_0p07` | 0.07 | 0 | — | 4 | 200 | 0.900 | 0.1626 | 1.717 | 1.729 | 3.237 | 6.7% |
+| `fleet_beta_aware_A1x_l1_0p06` | 0.06 | 0 | — | 4 | 200 | 0.906 | 0.1618 | 1.727 | 1.743 | 3.242 | 6.2% |
+| `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p0_steps400` | 0 | 0.1 | 2 | 4 | 400 | 0.932 | 0.1861 | 1.735 | 1.745 | 2.945 | 5.7% |
+| `fleet_beta_aware_A3g_l1_0p05_l3_0p0_bmax_none_steps400` | 0.05 | 0 | — | 4 | 400 | 0.914 | 0.1966 | 1.739 | 1.744 | 3.277 | 5.5% |
+| `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p0` | 0 | 0.1 | 2 | 4 | 200 | 0.920 | 0.1569 | 1.747 | 1.775 | 2.992 | 5.0% |
+| `fleet_beta_aware_A3g_l1_0p0_l3_0p2_bmax_2p5_steps400` | 0 | 0.2 | 2.5 | 4 | 400 | 0.924 | 0.1813 | 1.756 | 1.769 | 2.938 | 4.5% |
+| `fleet_beta_aware_A1_l1_0p05` | 0.05 | 0 | — | 4 | 200 | 0.910 | 0.1638 | 1.757 | 1.777 | 3.258 | 4.5% |
+| `fleet_beta_aware_A2x_l1_0p0_l3_5p0_bmax_3p0` | 0 | 5 | 3 | 4 | 200 | 0.922 | 0.1492 | 1.763 | 1.779 | 2.849 | 4.2% |
+| `fleet_beta_aware_A1x_l1_0p04` | 0.04 | 0 | — | 4 | 200 | 0.912 | 0.1639 | 1.777 | 1.798 | 3.271 | 3.4% |
+| `fleet_beta_aware_A2x_l1_0p0_l3_1p0_bmax_3p0` | 0 | 1 | 3 | 4 | 200 | 0.924 | 0.1561 | 1.779 | 1.806 | 2.958 | 3.3% |
+| `fleet_beta_aware_A3g_l1_0p03_l3_0p0_bmax_none_steps400` | 0.03 | 0 | — | 4 | 400 | 0.934 | 0.1973 | 1.779 | 1.788 | 3.329 | 3.3% |
+| `fleet_beta_aware_A1x_l1_0p07_L3` | 0.07 | 0 | — | 3 | 200 | 0.700 | 0.1509 | 1.792 | 1.810 | 3.239 | 2.6% |
+| `fleet_beta_aware_A1_l1_0p02` | 0.02 | 0 | — | 4 | 200 | 0.930 | 0.1651 | 1.799 | 1.824 | 3.312 | 2.3% |
+| `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p5` | 0 | 0.1 | 2.5 | 4 | 200 | 0.920 | 0.1577 | 1.803 | 1.824 | 3.142 | 2.0% |
+| `fleet_beta_aware_A1x_l1_0p06_L3` | 0.06 | 0 | — | 3 | 200 | 0.708 | 0.1514 | 1.809 | 1.821 | 3.267 | 1.7% |
+| `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p0_L3` | 0 | 0.1 | 2 | 3 | 200 | 0.730 | 0.1414 | 1.818 | 1.813 | 2.978 | 1.2% |
+| `fleet_beta_aware_A1_l1_0p01` | 0.01 | 0 | — | 4 | 200 | 0.944 | 0.1627 | 1.821 | 1.838 | 3.337 | 1.0% |
+| `fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_3p0` | 0 | 0.1 | 3 | 4 | 200 | 0.938 | 0.1621 | 1.824 | 1.839 | 3.259 | 0.9% |
+| `fleet_beta_aware_A1_l1_0p005` | 0.005 | 0 | — | 4 | 200 | 0.938 | 0.1622 | 1.831 | 1.842 | 3.342 | 0.5% |
+| `fleet_beta_aware_A0_ckpi4` | 0 | 0 | — | 4 | 200 | 0.940 | 0.1620 | 1.844 | 1.862 | 3.378 | -0.2% |
+| `fleet_beta_aware_A3g_l1_0p0_l3_0p0_bmax_none_steps400` | 0 | 0 | — | 4 | 400 | 0.948 | 0.1944 | 1.849 | 1.853 | 3.417 | -0.5% |
+| `fleet_beta_aware_A2x_l1_0p0_l3_5p0_bmax_2p5` | 0 | 5 | 2.5 | 4 | 200 | 0.890 | 0.1395 | 2.057 | 1.704 | 3.263 | -11.8% |
+| `fleet_beta_aware_A2x_l1_0p12_l3_5p0_bmax_2p5` | 0.12 | 5 | 2.5 | 4 | 200 | 0.818 | 0.1354 | 4.324 | 1.548 | 8.127 | -135.0% |
