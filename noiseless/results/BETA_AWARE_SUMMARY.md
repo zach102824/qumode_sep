@@ -1,6 +1,6 @@
 # β-aware fleet summary (ck_pi4)
 
-Updated UTC: 2026-09-23T09:39:49Z
+Updated UTC: 2026-09-23T09:40:34Z
 
 Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 
@@ -11,12 +11,14 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 | `fleet_beta_aware_A0_ckpi4` | 0 | 0 | — | 4 | 0.940 | 0.1620 | 1.844 | 1.862 | 3.378 | 0.0% | -0.2% |
 | `fleet_beta_aware_A1_l1_0p005` | 0.005 | 0 | — | 4 | 0.938 | 0.1622 | 1.831 | 1.842 | 3.342 | 0.0% | 0.5% |
 | `fleet_beta_aware_A1_l1_0p01` | 0.01 | 0 | — | 4 | 0.944 | 0.1627 | 1.821 | 1.838 | 3.337 | 0.0% | 1.0% |
+| `fleet_beta_aware_A1_l1_0p02` | 0.02 | 0 | — | 4 | 0.930 | 0.1651 | 1.799 | 1.824 | 3.312 | 0.0% | 2.3% |
 
 ## Notes
 
 - A0 sanity success=0.940 (baseline 0.94).
 - A1 λ1=0.005: success=0.938, mean|β|=1.831, cut=0.5%.
 - A1 λ1=0.01: success=0.944, mean|β|=1.821, cut=1.0%.
+- A1 λ1=0.02: success=0.930, mean|β|=1.799, cut=2.3%.
 
 ## How to toggle
 
