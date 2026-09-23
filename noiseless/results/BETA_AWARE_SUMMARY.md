@@ -1,6 +1,6 @@
 # β-aware fleet summary (ck_pi4)
 
-Updated UTC: 2026-09-23T10:16:17Z
+Updated UTC: 2026-09-23T10:16:19Z
 
 Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 
@@ -94,6 +94,8 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 - A2x λ1=0.12 λ3=5.0 βmax=2.5: success=0.818, mean|β|=4.324, mean_max|β|=8.127, cut=-135.0%.
 - A2x λ1=0.12 λ3=5.0 βmax=3.0: success=0.848, mean|β|=1.586, mean_max|β|=2.757, cut=13.8%.
 - Top candidates for follow-up: fleet_beta_aware_A1x_l1_0p07, fleet_beta_aware_A1x_l1_0p06, fleet_beta_aware_A2x_l1_0p0_l3_0p1_bmax_2p0
+- RECOMMEND: λ1=0.06, λ3=0.0, β_max=None (tag=fleet_beta_aware_A1x_l1_0p06_steps400) → success=0.902, mean|β|=1.704, cut=7.4%, mean_max|β|=3.255.
+- Lowest mean trial-max|β| at success≥0.90: fleet_beta_aware_A2x_l1_0p0_l3_5p0_bmax_3p0 → mean_max|β|=2.849 (baseline ~3.38).
 
 ## How to toggle
 
