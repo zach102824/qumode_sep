@@ -1,6 +1,6 @@
 # β-aware fleet summary (ck_pi4)
 
-Updated UTC: 2026-09-23T14:20:58Z
+Updated UTC: 2026-09-23T14:29:29Z
 
 Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 
@@ -62,6 +62,7 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 | `fleet_beta_aware_A4_l1_0p0_l3_0p75_bmax_2p3_steps400` | 0 | 0.75 | 2.3 | 4 | 0.900 | 0.1659 | 1.652 | 1.661 | 2.458 | 27.3% | 10.2% |
 | `fleet_beta_aware_A1x_l1_0p07` | 0.07 | 0 | — | 4 | 0.900 | 0.1626 | 1.717 | 1.729 | 3.237 | 0.0% | 6.7% |
 | `fleet_beta_aware_A3_f_l1_0p07_l3_5p0_bmax_3p0_steps800` | 0.07 | 5 | 3 | 4 | 0.898 | 0.2089 | 1.597 | 1.607 | 2.789 | 2.0% | 13.2% |
+| `fleet_beta_aware_A4_l1_0p03_l3_1p0_bmax_2p4_steps800` | 0.03 | 1 | 2.4 | 4 | 0.898 | 0.1951 | 1.600 | 1.600 | 2.454 | 20.8% | 13.0% |
 | `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p3_steps400` | 0 | 2 | 2.3 | 4 | 0.898 | 0.1607 | 1.627 | 1.653 | 2.336 | 20.6% | 11.5% |
 | `fleet_beta_aware_A1x_l1_0p07_steps400` | 0.07 | 0 | — | 4 | 0.898 | 0.1944 | 1.692 | 1.692 | 3.251 | 0.0% | 8.0% |
 | `fleet_beta_aware_A4_l1_0p03_l3_0p75_bmax_2p4_steps800` | 0.03 | 0.75 | 2.4 | 4 | 0.896 | 0.1986 | 1.607 | 1.606 | 2.494 | 21.3% | 12.7% |
@@ -98,6 +99,8 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 | `fleet_beta_aware_A4_l1_0p0_l3_1p5_bmax_2p1_steps400` | 0 | 1.5 | 2.1 | 4 | 0.880 | 0.1601 | 1.565 | 1.574 | 2.185 | 27.6% | 14.9% |
 | `fleet_beta_aware_A4_l1_0p0_l3_3p0_bmax_2p2_steps400` | 0 | 3 | 2.2 | 4 | 0.880 | 0.1614 | 1.584 | 1.610 | 2.206 | 17.2% | 13.9% |
 | `fleet_beta_aware_A2x_l1_0p07_l3_0p1_bmax_2p5` | 0.07 | 0.1 | 2.5 | 4 | 0.880 | 0.1560 | 1.677 | 1.686 | 3.027 | 22.4% | 8.9% |
+| `fleet_beta_aware_A4_l1_0p03_l3_1p5_bmax_2p0_steps800` | 0.03 | 1.5 | 2 | 4 | 0.878 | 0.1875 | 1.463 | 1.493 | 2.062 | 26.3% | 20.5% |
+| `fleet_beta_aware_A4_l1_0p03_l3_1p0_bmax_2p4_steps400` | 0.03 | 1 | 2.4 | 4 | 0.878 | 0.1674 | 1.615 | 1.620 | 2.472 | 20.8% | 12.3% |
 | `fleet_beta_aware_A4_l1_0p03_l3_0p75_bmax_2p1_steps800` | 0.03 | 0.75 | 2.1 | 4 | 0.876 | 0.1890 | 1.518 | 1.540 | 2.245 | 28.8% | 17.5% |
 | `fleet_beta_aware_A3_f_l1_0p07_l3_1p0_bmax_2p5_steps800` | 0.07 | 1 | 2.5 | 4 | 0.876 | 0.1977 | 1.533 | 1.547 | 2.500 | 15.6% | 16.7% |
 | `fleet_beta_aware_A4_l1_0p03_l3_0p75_bmax_2p2_steps800` | 0.03 | 0.75 | 2.2 | 4 | 0.876 | 0.1927 | 1.543 | 1.551 | 2.330 | 25.8% | 16.1% |
@@ -148,6 +151,7 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 | `fleet_beta_aware_A3g_l1_0p08_l3_0p2_bmax_2p2_steps400` | 0.08 | 0.2 | 2.2 | 4 | 0.848 | 0.1760 | 1.555 | 1.553 | 2.676 | 28.3% | 15.5% |
 | `fleet_beta_aware_A2x_l1_0p12_l3_5p0_bmax_3p0` | 0.12 | 5 | 3 | 4 | 0.848 | 0.1501 | 1.586 | 1.594 | 2.757 | 1.4% | 13.8% |
 | `fleet_beta_aware_A3_f_l1_0p12_l3_0p1_bmax_2p0_steps800` | 0.12 | 0.1 | 2 | 4 | 0.846 | 0.2013 | 1.444 | 1.439 | 2.693 | 31.4% | 21.5% |
+| `fleet_beta_aware_A4_l1_0p03_l3_1p5_bmax_2p0_steps400` | 0.03 | 1.5 | 2 | 4 | 0.846 | 0.1613 | 1.476 | 1.501 | 2.076 | 26.7% | 19.8% |
 | `fleet_beta_aware_A4_l1_0p0_l3_3p0_bmax_2p0_steps400` | 0 | 3 | 2 | 4 | 0.844 | 0.1524 | 1.517 | 1.546 | 2.022 | 20.6% | 17.6% |
 | `fleet_beta_aware_A4_l1_0p0_l3_2p0_bmax_2p0_steps400` | 0 | 2 | 2 | 4 | 0.844 | 0.1593 | 1.523 | 1.544 | 2.056 | 26.6% | 17.2% |
 | `fleet_beta_aware_A3g_l1_0p08_l3_1p0_bmax_2p2_steps400` | 0.08 | 1 | 2.2 | 4 | 0.838 | 0.1630 | 1.480 | 1.507 | 2.276 | 21.6% | 19.5% |
@@ -246,6 +250,10 @@ Baseline (`fleet_phase_bakeoff` ck_pi4 L*=4): success=0.94, mean|β|≈1.84.
 - fleet_beta_aware_A4_l1_0p03_l3_1p0_bmax_2p2_steps800: success=0.884, mean|β|=1.547, cut=15.9%, mean_max=2.288.
 - fleet_beta_aware_A4_l1_0p03_l3_1p0_bmax_2p3_steps400: success=0.864, mean|β|=1.585, cut=13.9%, mean_max=2.392.
 - fleet_beta_aware_A4_l1_0p03_l3_1p0_bmax_2p3_steps800: success=0.882, mean|β|=1.570, cut=14.7%, mean_max=2.374.
+- fleet_beta_aware_A4_l1_0p03_l3_1p0_bmax_2p4_steps400: success=0.878, mean|β|=1.615, cut=12.3%, mean_max=2.472.
+- fleet_beta_aware_A4_l1_0p03_l3_1p0_bmax_2p4_steps800: success=0.898, mean|β|=1.600, cut=13.0%, mean_max=2.454.
+- fleet_beta_aware_A4_l1_0p03_l3_1p5_bmax_2p0_steps400: success=0.846, mean|β|=1.476, cut=19.8%, mean_max=2.076.
+- fleet_beta_aware_A4_l1_0p03_l3_1p5_bmax_2p0_steps800: success=0.878, mean|β|=1.463, cut=20.5%, mean_max=2.062.
 
 ## How to toggle
 
