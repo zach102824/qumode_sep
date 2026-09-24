@@ -224,3 +224,84 @@ def test_cost_lambda0_matches_gibbs_only():
     )
     sim1._current_eta = 1.25
     assert sim1.cost(x, eta=1.25) > got
+
+
+def test_adapt_off_lam0_matches_gibbs_path():
+    """adapt_lambda=False and lam=0 must match pure Gibbs optimize path fields."""
+    gs = "01011010"
+    d, e, na, nb = denm_from_bits(bits_from_bitstring(gs))
+    tensor = np.ones(DIMS, dtype=float)
+    tensor[d, e, na, nb] = 0.0
+    u = build_fixed_u("identity")
+    rng = np.random.default_rng(11)
+    x0 = random_parameters(2, rng)
+    sim_g = NoiselessSimulator(
+        u_fixed=u,
+        energy_tensor=tensor,
+        n_layers=2,
+        ground_bitstring=gs,
+        ground_flat_index=ground_flat_from_bitstring(gs),
+        lambda1=0.0,
+        lam=0.0,
+    )
+    sim_a = NoiselessSimulator(
+        u_fixed=u,
+        energy_tensor=tensor,
+        n_layers=2,
+        ground_bitstring=gs,
+        ground_flat_index=ground_flat_from_bitstring(gs),
+        lambda1=0.0,
+        lam=0.0,
+    )
+    r0 = optimize_trial(sim_g, maxiter=6, rng=np.random.default_rng(11), x0=x0.copy(), adapt_lambda=False)
+    r1 = optimize_trial(sim_a, maxiter=6, rng=np.random.default_rng(11), x0=x0.copy(), adapt_lambda=False, lam=0.0)
+    assert r0.fun == r1.fun
+    assert np.allclose(r0.x, r1.x)
+    assert r1.final_lam == 0.0
+    assert r1.mean_lam_post_warmup == 0.0
+
+
+def test_adapt_lambda_raises_when_betas_large():
+    """Smoke: with tiny β_max and forced-large x0, adapt should raise lam above 0."""
+    gs = "01011010"
+    d, e, na, nb = denm_from_bits(bits_from_bitstring(gs))
+    tensor = np.ones(DIMS, dtype=float)
+    tensor[d, e, na, nb] = 0.0
+    # Large Cartesian β components so |β| >> β_max
+    x0 = np.full(n_parameters(2), 3.0, dtype=float)
+    sim = NoiselessSimulator(
+        u_fixed=build_fixed_u("identity"),
+        energy_tensor=tensor,
+        n_layers=2,
+        ground_bitstring=gs,
+        ground_flat_index=ground_flat_from_bitstring(gs),
+        lambda1=0.0,
+        lam=0.0,
+        beta_max=0.1,
+    )
+    # Short run but enough for warm-up end + at least one adapt tick
+    # maxiter=20 → warmup_end=5; adapt every=5 → checks at 10,15,20
+    res = optimize_trial(
+        sim,
+        maxiter=20,
+        rng=np.random.default_rng(0),
+        x0=x0,
+        adapt_lambda=True,
+        adapt_warmup_frac=0.25,
+        adapt_every=5,
+        adapt_f_hi=0.05,
+        adapt_f_lo=0.01,
+        adapt_lam_min=0.5,
+        adapt_lam_max=5.0,
+    )
+    assert res.final_lam > 0.0
+    assert res.mean_lam_post_warmup > 0.0
+
+
+def test_lambda_cli_alias_sets_lam():
+    """beta_regularizer: lam and legacy lambda3 both apply soft-cap."""
+    betas = np.array([1.0 + 0j, 0.0])
+    a = beta_regularizer(betas, lam=2.0, beta_max=0.5)
+    b = beta_regularizer(betas, lambda3=2.0, beta_max=0.5)
+    assert a == pytest.approx(b)
+    assert a == pytest.approx(2.0 * 0.25)

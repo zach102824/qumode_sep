@@ -149,12 +149,16 @@ def beta_regularizer(
     betas: np.ndarray,
     *,
     lambda1: float = 0.0,
-    lambda3: float = 0.0,
+    lam: float = 0.0,
+    lambda3: float | None = None,
     beta_max: float | None = None,
 ) -> float:
-    """λ1 * Σ|β_i| + λ3 * Σ max(|β_i|-β_max, 0)^2. Zero when λ1=λ3=0 (no extra work)."""
+    """λ1 * Σ|β_i| + λ * Σ max(|β_i|-β_max, 0)^2. Zero when λ1=λ=0 (no extra work).
+
+    ``lam`` is the soft-cap weight λ. Legacy ``lambda3`` overrides ``lam`` when not None.
+    """
     l1 = float(lambda1)
-    l3 = float(lambda3)
+    l3 = float(lambda3) if lambda3 is not None else float(lam)
     if l1 == 0.0 and l3 == 0.0:
         return 0.0
     abs_b = np.abs(np.asarray(betas, dtype=complex).reshape(-1))
@@ -198,6 +202,18 @@ class TrialResult:
     mean_abs_beta: float = 0.0
     max_abs_beta: float = 0.0
     frac_over_beta_max: float = 0.0
+    final_lam: float = 0.0
+    mean_lam_post_warmup: float = 0.0
+
+
+# Adaptive soft-cap λ defaults (opt-in via optimize_trial adapt_lambda=True)
+ADAPT_WARMUP_FRAC = 0.25
+ADAPT_EVERY = 25
+ADAPT_F_HI = 0.20
+ADAPT_F_LO = 0.05
+ADAPT_LAM_MIN = 0.5
+ADAPT_LAM_MAX = 5.0
+ADAPT_LAM_TINY = 1e-6
 
 
 @dataclass
@@ -208,8 +224,9 @@ class NoiselessSimulator:
     ground_bitstring: str
     ground_flat_index: int
     lambda1: float = 0.0
-    lambda3: float = 0.0
+    lam: float = 0.0  # soft-cap weight λ (preferred name)
     beta_max: float | None = None
+    lambda3: float = 0.0  # legacy alias of lam; kept in sync in __post_init__ / set_lam
 
     def __post_init__(self) -> None:
         self.energies_flat = np.asarray(self.energy_tensor, dtype=float).reshape(-1)
@@ -222,6 +239,20 @@ class NoiselessSimulator:
         self.u_ab = extract_u_ab(self.u_np) if self.u_np.shape == (256, 256) else self.u_np
         self.eta_ctrl = SampledTailEta()
         self._current_eta = 1.0
+        # Sync lam ↔ lambda3 (prefer non-zero lam; else adopt legacy lambda3).
+        if float(self.lam) != 0.0:
+            self.lambda3 = float(self.lam)
+        elif float(self.lambda3) != 0.0:
+            self.lam = float(self.lambda3)
+        else:
+            self.lam = 0.0
+            self.lambda3 = 0.0
+
+    def set_lam(self, value: float) -> None:
+        """Set soft-cap λ and keep legacy ``lambda3`` mirrored."""
+        v = float(value)
+        self.lam = v
+        self.lambda3 = v
 
     def probs_from_x(self, x: np.ndarray) -> np.ndarray:
         ket = apply_circuit_np(x, self.n_layers, self.u_np, u_ab=self.u_ab)
@@ -231,8 +262,8 @@ class NoiselessSimulator:
         probs = self.probs_from_x(x)
         use_eta = self._current_eta if eta is None else float(eta)
         gibbs = gibbs_objective(probs, self.energies_flat, use_eta)
-        # Default λ1=λ3=0: return Gibbs alone so the path matches pre-β-aware numerics exactly.
-        if float(self.lambda1) == 0.0 and float(self.lambda3) == 0.0:
+        # Default λ1=λ=0: return Gibbs alone so the path matches pre-β-aware numerics exactly.
+        if float(self.lambda1) == 0.0 and float(self.lam) == 0.0:
             return gibbs
         betas = betas_from_x(x, self.n_layers)
         return float(
@@ -240,7 +271,7 @@ class NoiselessSimulator:
             + beta_regularizer(
                 betas,
                 lambda1=self.lambda1,
-                lambda3=self.lambda3,
+                lam=self.lam,
                 beta_max=self.beta_max,
             )
         )
@@ -309,14 +340,26 @@ def optimize_trial(
     c: float = 0.15,
     A: float = 10.0,
     lambda1: float | None = None,
+    lam: float | None = None,
     lambda3: float | None = None,
     beta_max: float | None = None,
+    adapt_lambda: bool = False,
+    adapt_warmup_frac: float = ADAPT_WARMUP_FRAC,
+    adapt_every: int = ADAPT_EVERY,
+    adapt_f_hi: float = ADAPT_F_HI,
+    adapt_f_lo: float = ADAPT_F_LO,
+    adapt_lam_min: float = ADAPT_LAM_MIN,
+    adapt_lam_max: float = ADAPT_LAM_MAX,
 ) -> TrialResult:
-    """SPSA trial. Optional ``lambda1``/``lambda3``/``beta_max`` override ``sim`` fields.
+    """SPSA trial. Optional ``lambda1``/``lam``/``beta_max`` override ``sim`` fields.
 
-    When omitted, existing ``sim.lambda1`` / ``sim.lambda3`` / ``sim.beta_max`` are
-    used (defaults 0 / 0 / None → Gibbs-only cost, identical to pre-β-aware).
-    Pass ``beta_max=float('inf')`` (or None on the simulator) for no cap term.
+    Soft-cap weight is ``lam`` (CLI ``--lambda``). Legacy ``lambda3`` still works as an
+    alias when ``lam`` is omitted.
+
+    When ``adapt_lambda`` is False (default), behavior matches today's fixed
+    lambda1/lam/beta_max path exactly. When True:
+      - steps 1..floor(warmup_frac*maxiter): lam=0 (pure Gibbs warm-up)
+      - afterwards every ``adapt_every`` steps, raise/lower lam from frac(|β|>β_max)
     """
     rng = rng or np.random.default_rng()
     n_params = n_parameters(sim.n_layers)
@@ -325,16 +368,51 @@ def optimize_trial(
         a = scale_spsa_a(n_params)
     if lambda1 is not None:
         sim.lambda1 = float(lambda1)
-    if lambda3 is not None:
-        sim.lambda3 = float(lambda3)
+    if lam is not None:
+        sim.set_lam(lam)
+    elif lambda3 is not None:
+        sim.set_lam(lambda3)
     if beta_max is not None:
         sim.beta_max = _finite_beta_max(beta_max)
     sim.eta_ctrl = SampledTailEta()
     sim._current_eta = 1.0
 
+    warmup_end = int(math.floor(float(adapt_warmup_frac) * int(maxiter)))
+    every = max(int(adapt_every), 1)
+    f_hi = float(adapt_f_hi)
+    f_lo = float(adapt_f_lo)
+    lam_min = float(adapt_lam_min)
+    lam_max = float(adapt_lam_max)
+    lam_post: list[float] = []
+
     def on_before(step: int, x: np.ndarray) -> None:
         if (step - 1) % sim.eta_ctrl.refresh_every == 0:
             sim.refresh_eta(x, step)
+        if not adapt_lambda:
+            return
+        if step <= warmup_end:
+            sim.set_lam(0.0)
+            return
+        # Post warm-up: adapt every K steps (aligned to global step index).
+        if step % every == 0:
+            betas = betas_from_x(x, sim.n_layers)
+            abs_b = np.abs(np.asarray(betas, dtype=complex).reshape(-1))
+            bm = _finite_beta_max(sim.beta_max)
+            if bm is None or abs_b.size == 0:
+                frac = 0.0
+            else:
+                frac = float(np.mean(abs_b > bm))
+            cur = float(sim.lam)
+            if frac > f_hi:
+                if cur == 0.0:
+                    sim.set_lam(lam_min)
+                else:
+                    sim.set_lam(min(lam_max, cur * 1.5))
+            elif frac < f_lo:
+                nxt = cur / 1.5
+                sim.set_lam(0.0 if nxt < ADAPT_LAM_TINY else nxt)
+            # else hold
+        lam_post.append(float(sim.lam))
 
     x_final, fun_final, nfev = run_spsa(
         sim.cost,
@@ -347,6 +425,11 @@ def optimize_trial(
         on_before_step=on_before,
     )
     ev = sim.evaluate(x_final)
+    final_lam = float(sim.lam)
+    if adapt_lambda and lam_post:
+        mean_lam_pw = float(np.mean(lam_post))
+    else:
+        mean_lam_pw = final_lam
     return TrialResult(
         success=bool(ev["success"]),
         p_gs=float(ev["p_gs"]),
@@ -361,6 +444,8 @@ def optimize_trial(
         mean_abs_beta=float(ev["mean_abs_beta"]),
         max_abs_beta=float(ev["max_abs_beta"]),
         frac_over_beta_max=float(ev["frac_over_beta_max"]),
+        final_lam=final_lam,
+        mean_lam_post_warmup=mean_lam_pw,
     )
 
 

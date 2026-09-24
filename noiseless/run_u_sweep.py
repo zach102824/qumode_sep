@@ -47,12 +47,17 @@ def _worker(job: dict) -> dict:
         inst = load_four_sat_npz(job["ham_path"])
         u = build_fixed_u(job["u_name"])
         lambda1 = float(job.get("lambda1", 0.0))
-        lambda3 = float(job.get("lambda3", 0.0))
+        # Soft-cap λ: prefer "lam", fall back to legacy "lambda3"
+        if "lam" in job and job["lam"] is not None:
+            lam = float(job["lam"])
+        else:
+            lam = float(job.get("lambda3", 0.0))
         beta_max = job.get("beta_max", None)
         if beta_max is not None:
             beta_max = float(beta_max)
             if not np.isfinite(beta_max):
                 beta_max = None
+        adapt_lambda = bool(job.get("adapt_lambda", False))
         sim = NoiselessSimulator(
             u_fixed=u,
             energy_tensor=inst["energy_tensor"],
@@ -60,7 +65,7 @@ def _worker(job: dict) -> dict:
             ground_bitstring=inst["ground_bitstring"],
             ground_flat_index=ground_flat_from_bitstring(inst["ground_bitstring"]),
             lambda1=lambda1,
-            lambda3=lambda3,
+            lam=lam,
             beta_max=beta_max,
         )
         rng = np.random.default_rng(int(job["seed"]))
@@ -74,6 +79,13 @@ def _worker(job: dict) -> dict:
             a=float(a),
             c=float(job.get("spsa_c", 0.15)),
             A=float(job.get("spsa_A", 10.0)),
+            adapt_lambda=adapt_lambda,
+            adapt_warmup_frac=float(job.get("adapt_warmup_frac", 0.25)),
+            adapt_every=int(job.get("adapt_every", 25)),
+            adapt_f_hi=float(job.get("adapt_f_hi", 0.20)),
+            adapt_f_lo=float(job.get("adapt_f_lo", 0.05)),
+            adapt_lam_min=float(job.get("adapt_lam_min", 0.5)),
+            adapt_lam_max=float(job.get("adapt_lam_max", 5.0)),
         )
         return {
             "ok": True,
@@ -93,7 +105,11 @@ def _worker(job: dict) -> dict:
             "max_abs_beta": float(result.max_abs_beta),
             "frac_over_beta_max": float(result.frac_over_beta_max),
             "lambda1": lambda1,
-            "lambda3": lambda3,
+            "lam": float(result.final_lam) if adapt_lambda else lam,
+            "lambda3": float(result.final_lam) if adapt_lambda else lam,  # legacy mirror
+            "final_lam": float(result.final_lam),
+            "mean_lam_post_warmup": float(result.mean_lam_post_warmup),
+            "adapt_lambda": adapt_lambda,
             "beta_max": beta_max,
             "nfev": int(result.nfev),
             "nit": int(result.nit),
@@ -130,6 +146,8 @@ def _aggregate(records: list[dict]) -> dict:
         pgs = [float(t["p_gs"]) for t in trials]
         mabs = [float(t.get("mean_abs_beta", float("nan"))) for t in trials]
         maxb = [float(t.get("max_abs_beta", float("nan"))) for t in trials]
+        flams = [float(t.get("final_lam", t.get("lam", float("nan")))) for t in trials]
+        mlams = [float(t.get("mean_lam_post_warmup", float("nan"))) for t in trials]
         cells.append(
             {
                 "u_name": u_name,
@@ -144,6 +162,9 @@ def _aggregate(records: list[dict]) -> dict:
                 "mean_abs_beta": float(np.nanmean(mabs)) if mabs else 0.0,
                 "median_abs_beta": float(np.nanmedian(mabs)) if mabs else 0.0,
                 "mean_max_abs_beta": float(np.nanmean(maxb)) if maxb else 0.0,
+                "mean_final_lam": float(np.nanmean(flams)) if flams else 0.0,
+                "median_final_lam": float(np.nanmedian(flams)) if flams else 0.0,
+                "mean_lam_post_warmup": float(np.nanmean(mlams)) if mlams else 0.0,
             }
         )
     by_ul: dict[tuple, list[dict]] = {}
@@ -158,6 +179,9 @@ def _aggregate(records: list[dict]) -> dict:
         mean_b = float(np.average([g["mean_abs_beta"] for g in group], weights=weights)) if tot else 0.0
         med_b = float(np.average([g["median_abs_beta"] for g in group], weights=weights)) if tot else 0.0
         mean_max_b = float(np.average([g["mean_max_abs_beta"] for g in group], weights=weights)) if tot else 0.0
+        mean_flam = float(np.average([g.get("mean_final_lam", 0.0) for g in group], weights=weights)) if tot else 0.0
+        med_flam = float(np.average([g.get("median_final_lam", 0.0) for g in group], weights=weights)) if tot else 0.0
+        mean_lpw = float(np.average([g.get("mean_lam_post_warmup", 0.0) for g in group], weights=weights)) if tot else 0.0
         ranking.append(
             {
                 "u_name": u_name,
@@ -170,6 +194,9 @@ def _aggregate(records: list[dict]) -> dict:
                 "mean_abs_beta": mean_b,
                 "median_abs_beta": med_b,
                 "mean_max_abs_beta": mean_max_b,
+                "mean_final_lam": mean_flam,
+                "median_final_lam": med_flam,
+                "mean_lam_post_warmup": mean_lpw,
             }
         )
     ranking.sort(key=lambda r: (r["success_rate"], r["mean_p_gs"]), reverse=True)
@@ -213,8 +240,16 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
                             "spsa_c": float(args.spsa_c),
                             "spsa_A": float(args.spsa_A),
                             "lambda1": float(args.lambda1),
-                            "lambda3": float(args.lambda3),
+                            "lam": float(args.lam),
+                            "lambda3": float(args.lam),  # legacy alias in job payload
                             "beta_max": args.beta_max,
+                            "adapt_lambda": bool(args.adapt_lambda),
+                            "adapt_warmup_frac": float(args.adapt_warmup_frac),
+                            "adapt_every": int(args.adapt_every),
+                            "adapt_f_hi": float(args.adapt_f_hi),
+                            "adapt_f_lo": float(args.adapt_f_lo),
+                            "adapt_lam_min": float(args.adapt_lam_min),
+                            "adapt_lam_max": float(args.adapt_lam_max),
                         }
                     )
     return jobs
@@ -243,10 +278,17 @@ def main(argv: list[str] | None = None) -> int:
         help="L1 weight on sum_i |β_i| (default 0 = Gibbs-only)",
     )
     p.add_argument(
+        "--lambda",
+        dest="lam_flag",
+        type=float,
+        default=None,
+        help="Soft-cap weight λ on sum_i max(|β_i|-β_max,0)^2 (default 0)",
+    )
+    p.add_argument(
         "--lambda3",
         type=float,
-        default=0.0,
-        help="Quadratic soft-cap weight on sum_i max(|β_i|-β_max,0)^2 (default 0)",
+        default=None,
+        help="Alias for --lambda (legacy soft-cap weight)",
     )
     p.add_argument(
         "--beta-max",
@@ -254,7 +296,26 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="Soft |β| cap; omit / None / inf = no cap term",
     )
+    p.add_argument(
+        "--adapt-lambda",
+        action="store_true",
+        help="Opt-in adaptive soft-cap λ (warm-up then raise/lower from frac over β_max)",
+    )
+    p.add_argument("--adapt-warmup-frac", type=float, default=0.25)
+    p.add_argument("--adapt-every", type=int, default=25)
+    p.add_argument("--adapt-f-hi", type=float, default=0.20)
+    p.add_argument("--adapt-f-lo", type=float, default=0.05)
+    p.add_argument("--adapt-lam-min", type=float, default=0.5)
+    p.add_argument("--adapt-lam-max", type=float, default=5.0)
     args = p.parse_args(argv)
+    # Resolve soft-cap λ: --lambda wins over --lambda3; default 0
+    if args.lam_flag is not None:
+        args.lam = float(args.lam_flag)
+    elif args.lambda3 is not None:
+        args.lam = float(args.lambda3)
+    else:
+        args.lam = 0.0
+    args.lambda3 = float(args.lam)  # keep attribute for logging / old code
 
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
@@ -271,7 +332,8 @@ def main(argv: list[str] | None = None) -> int:
     jobs = build_jobs(args)
     print(
         f"[{_now()}] starting {len(jobs)} jobs workers={args.workers} steps={args.steps} "
-        f"tag={args.tag} lambda1={args.lambda1} lambda3={args.lambda3} beta_max={args.beta_max}",
+        f"tag={args.tag} lambda1={args.lambda1} lam={args.lam} beta_max={args.beta_max} "
+        f"adapt_lambda={args.adapt_lambda}",
         flush=True,
     )
     records: list[dict] = []
@@ -317,8 +379,16 @@ def main(argv: list[str] | None = None) -> int:
             "seed": args.seed,
             "max_h": args.max_h,
             "lambda1": float(args.lambda1),
-            "lambda3": float(args.lambda3),
+            "lam": float(args.lam),
+            "lambda3": float(args.lam),
             "beta_max": args.beta_max,
+            "adapt_lambda": bool(args.adapt_lambda),
+            "adapt_warmup_frac": float(args.adapt_warmup_frac),
+            "adapt_every": int(args.adapt_every),
+            "adapt_f_hi": float(args.adapt_f_hi),
+            "adapt_f_lo": float(args.adapt_f_lo),
+            "adapt_lam_min": float(args.adapt_lam_min),
+            "adapt_lam_max": float(args.adapt_lam_max),
         },
         "n_jobs": len(records),
         "n_ok": sum(1 for r in records if r.get("ok")),

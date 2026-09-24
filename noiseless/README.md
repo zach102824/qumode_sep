@@ -26,16 +26,17 @@ only. Default 200 steps; `a ∝ 1/√n_params` (baseline `a≈0.2` at `n_params=
 
 ### Optional β-aware loss (opt-in)
 
-Default is **Gibbs-only** (`--lambda1 0 --lambda3 0`, no `--beta-max`): identical
+Default is **Gibbs-only** (`--lambda1 0 --lambda 0`, no `--beta-max`): identical
 to the pre-β-aware cost path.
 
 When enabled:
 
 ```
-L(x) = Gibbs(x; η) + λ1 Σ_i |β_i| + λ3 Σ_i max(|β_i| - β_max, 0)^2
+L(x) = Gibbs(x; η) + λ1 Σ_i |β_i| + λ Σ_i max(|β_i| - β_max, 0)^2
 ```
 
 β_i are the complex ECD displacements unpacked per layer (`β_d`, `β_e`).
+Soft-cap weight is **λ** (`--lambda`; Python field `lam`). Legacy `--lambda3` is an alias.
 
 ```bash
 # Gibbs-only (default)
@@ -43,11 +44,17 @@ python -m noiseless.run_u_sweep --u-names ck_pi4 --layers 4 --tag fleet_beta_awa
 
 # L1 on |β|
 python -m noiseless.run_u_sweep --u-names ck_pi4 --layers 4 \
-  --lambda1 0.05 --lambda3 0 --tag fleet_beta_aware_A1_l1_0p05
+  --lambda1 0.05 --lambda 0 --tag fleet_beta_aware_A1_l1_0p05
 
-# L1 + soft |β| cap
+# Fixed soft |β| cap
 python -m noiseless.run_u_sweep --u-names ck_pi4 --layers 4 \
-  --lambda1 0.05 --lambda3 1 --beta-max 2.5 --tag fleet_beta_aware_A2_...
+  --lambda 3 --beta-max 2.1 --tag fleet_adapt_B1_fixed_l3
+
+# Adaptive soft-cap λ (opt-in; default OFF)
+# Warm-up 25% of steps with λ=0, then every 25 steps raise/lower λ from
+# frac(|β_i|>β_max) vs thresholds f_hi=0.20 / f_lo=0.05 (λ∈[0, lam_max]).
+python -m noiseless.run_u_sweep --u-names ck_pi4 --layers 4 \
+  --adapt-lambda --beta-max 2.1 --tag fleet_adapt_B2_adaptive
 ```
 
 ## CLI
