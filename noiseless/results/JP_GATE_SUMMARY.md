@@ -1,6 +1,7 @@
 # Joint-parity gate (`jp`) fleets at 200 SPSA steps
 
-Updated Asia/Shanghai: 2026-09-28 12:30 CST (run artifacts created 04:17–04:26 UTC).
+Updated Asia/Shanghai: 2026-09-28 13:25 CST (λ=0/3 artifacts created 04:17–04:26 UTC;
+λ=1/2 follow-up artifacts created 05:10–05:19 UTC).
 
 ## Gate definition
 
@@ -100,7 +101,80 @@ cz_nm and ck_pi4 rows are recomputed from the existing summary JSONs
 - λ=3: jp better / equal / worse on 4 / 5 / 11 instances; the worst jp
   instance is `four_sat_000` (9/25, vs 16/25 for cz_nm).
 
-## Interpretation
+## λ scan for jp (λ = 0, 1, 2, 3; β_max = 2.1)
+
+Follow-up: two more `jp` fleets with settings identical to `jp_lam3` except λ
+(500/500 OK, zero failures each):
+
+```bash
+python noiseless/run_u_sweep.py --u-names jp --layers 4 --trials 25 --steps 200 \
+  --workers 1 --seed 20260917 --lambda1 0 --lambda 1 --beta-max 2.1 --tag jp_lam1
+python noiseless/run_u_sweep.py --u-names jp --layers 4 --trials 25 --steps 200 \
+  --workers 1 --seed 20260917 --lambda1 0 --lambda 2 --beta-max 2.1 --tag jp_lam2
+```
+
+`cz_nm` and `ck_pi4` rows are taken from existing summary JSONs at the λ
+values they have (0, 2, 3); the args (gate, L*=4, 25 trials, 200 steps, seed,
+λ, β_max) were checked programmatically for every row. λ=0 means Gibbs-only
+(no cap term).
+
+| gate | λ | success | mean p(GS) | mean\|β\| | mean trial-max\|β\| | per-H success min / median / max | #H at 100% | source |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| **jp** | 0 | 0.932 (466/500) | 0.1717 | 1.8475 | 3.3882 | 0.84 / 0.92 / 1.00 | 5/20 | `jp_B0_20260928T042134Z_summary.json` |
+| **jp** | 1 | 0.788 (394/500) | 0.1222 | 1.5729 | 2.2849 | 0.52 / 0.80 / 1.00 | 3/20 | `jp_lam1_20260928T051459Z_summary.json` |
+| **jp** | 2 | 0.774 (387/500) | 0.1174 | 1.5696 | 2.1705 | 0.52 / 0.76 / 1.00 | 4/20 | `jp_lam2_20260928T051924Z_summary.json` |
+| **jp** | 3 | 0.736 (368/500) | 0.1163 | 1.5593 | 2.1277 | 0.36 / 0.76 / 1.00 | 2/20 | `jp_lam3_20260928T042559Z_summary.json` |
+| cz_nm | 0 | 0.922 (461/500) | 0.1663 | 1.8517 | 3.3913 | 0.72 / 0.96 / 1.00 | 8/20 | `fleet_cznm_B0_gibbs_steps200_20260924T062202Z_summary.json` |
+| cz_nm | 2 | 0.758 (379/500) | 0.1208 | 1.5575 | 2.1616 | 0.56 / 0.74 / 1.00 | 1/20 | `fleet_cznm_F2_lam2_bmax2p1_steps200_20260924T062631Z_summary.json` |
+| cz_nm | 3 | 0.790 (395/500) | 0.1221 | 1.5467 | 2.1245 | 0.56 / 0.80 / 1.00 | 2/20 | `fleet_cznm_F3_lam3_bmax2p1_steps200_20260924T063050Z_summary.json` |
+| ck_pi4 | 0 | 0.940 (470/500) | 0.1620 | 1.8441 | 3.3780 | 0.80 / 0.96 / 1.00 | 5/20 | `fleet_adapt_B0_gibbs_20260924T032122Z_summary.json` |
+| ck_pi4 | 2 | 0.834 (417/500) | 0.1352 | 1.5583 | 2.1653 | 0.60 / 0.84 / 1.00 | 2/20 | `fleet_fixed_lam2_bmax2p1_steps200_20260924T033612Z_summary.json` |
+| ck_pi4 | 3 | 0.810 (405/500) | 0.1315 | 1.5509 | 2.1229 | 0.56 / 0.80 / 1.00 | 2/20 | `fleet_fixed_lam3_bmax2p1_steps200_20260924T033612Z_summary.json` |
+
+Amplitude cut for jp relative to jp λ=0 (mean\|β\| / mean trial-max\|β\|):
+λ=1 −14.9% / −32.6%, λ=2 −15.0% / −35.9%, λ=3 −15.6% / −37.2%. Tail of the
+per-trial max\|β\| from the full dumps (box only): fraction of trials with
+max\|β\| > 2.1 is 0.96 / 0.90 / 0.85 / 0.79 and the worst trial-max is
+6.10 / 2.85 / 2.76 / 2.39 for λ = 0 / 1 / 2 / 3.
+
+### Per-instance successes for jp (out of 25), four_sat_000 … four_sat_019
+
+| λ | per-H n_success |
+|---:|---|
+| 0 | 23 24 25 22 22 25 23 25 25 23 21 24 23 23 22 21 23 23 24 25 |
+| 1 | 13 21 20 16 15 23 17 25 25 22 19 22 19 20 20 22 14 18 18 25 |
+| 2 | 14 21 22 15 13 25 17 25 25 21 18 20 19 16 19 23 15 16 18 25 |
+| 3 | 9 22 21 12 15 22 18 25 25 20 13 21 18 20 19 19 12 15 18 24 |
+| cz_nm λ=2 | 15 24 21 18 14 22 19 24 25 20 14 18 18 20 18 21 14 15 15 24 |
+
+- The same instances are hard at every λ > 0: `four_sat_000`, `003`, `004`,
+  `016` (and `006`); `007`, `008`, `019` stay at or near 25/25.
+- λ=3's extra losses are concentrated on `000` (9 vs 13–14 at λ=1/2), `003`,
+  `010` and `016`; its per-instance floor (0.36) is well below λ=1/2 (0.52).
+- jp λ=2 vs cz_nm λ=2: jp better / equal / worse on 13 / 1 / 6 instances.
+
+### λ-scan interpretation
+
+- **Does λ=1 keep more success while still cutting |β|?** Yes, modestly.
+  λ=1 has the highest capped-arm success (0.788) and p(GS) (0.122), and gets
+  essentially the same mean\|β\| cut as λ=2/3 (−14.9% vs −15.0/−15.6%). What
+  it gives up is the tail: mean trial-max 2.28 (vs 2.17 / 2.13) and more
+  trials overshooting 2.1 (90% vs 85% / 79%). The λ=1 vs λ=2 success gap
+  (+1.4 pp) is within noise (≈0.5σ); λ=1 vs λ=3 (+5.2 pp) is ≈1.9σ.
+- **Best trade-off for jp: λ=1–2, with λ=2 the balanced choice.** λ=2 keeps
+  success statistically tied with λ=1 (0.774) while holding trial-max close
+  to the cap (2.17). Choose λ=1 if mean\|β\| is what matters, and λ=3 only if
+  the hard tail matters: it is the only arm with trial-max ≈ 2.13, and it
+  costs another ~4–5 pp of success plus a weaker worst instance.
+- **Versus the other gates:** jp's success falls with λ (0.788 → 0.774 →
+  0.736), unlike cz_nm (0.758 at λ=2 < 0.790 at λ=3). At λ=2 jp slightly
+  beats cz_nm (+1.6 pp, ≈0.6σ, 13/20 instances better). jp λ=1 matches
+  cz_nm's best capped arm (λ=3, 0.790). ck_pi4 is still the best
+  capped gate: jp λ=2 is −6.0 pp below ck_pi4 λ=2 (≈2.4σ), and jp λ=1 is
+  −4.6 pp below it (≈1.9σ). With the cap on, all three gates reach the same
+  mean\|β\| ≈ 1.55–1.57 at a given λ.
+
+## Interpretation (λ = 0 vs 3, original runs)
 
 - **Gibbs-only:** `jp` is statistically indistinguishable from `cz_nm`
   (0.932 vs 0.922, Δ = +1.0 pp, ≈0.6σ) and from `ck_pi4` (0.940), with the
@@ -124,7 +198,8 @@ cz_nm and ck_pi4 rows are recomputed from the existing summary JSONs
 
 - `jp_B0_20260928T042134Z_summary.json`
 - `jp_lam3_20260928T042559Z_summary.json`
-- full dumps `jp_B0_20260928T042134Z.json`, `jp_lam3_20260928T042559Z.json`
-  (gitignored, on the box only); logs `logs/jp_B0.log`, `logs/jp_lam3.log`
-  (untracked)
+- `jp_lam1_20260928T051459Z_summary.json`
+- `jp_lam2_20260928T051924Z_summary.json`
+- full dumps `jp_{B0,lam1,lam2,lam3}_*.json` (gitignored, on the box only);
+  logs `logs/jp_{B0,lam1,lam2,lam3}.log` (untracked)
 - `JP_GATE_SUMMARY.md`
