@@ -17,7 +17,7 @@ same frozen `U` and fresh ECD params each layer (`8 L*` Cartesian parameters).
 
 ## Fixed-U library
 
-`identity`, `bs_pi4`, `bs_pi2`, `cz_nm`, `snap_a_pi`, `snap_b_pi`, `ck_pi2`, `ck_pi4`, … (see `unitaries.U_NAMES`)
+`identity`, `bs_pi4`, `bs_pi2`, `cz_nm`, `snap_a_pi`, `snap_b_pi`, `ck_pi2`, `ck_pi4`, `jp`, … (see `unitaries.U_NAMES`)
 
 ## Cost / optimizer
 

@@ -2,7 +2,7 @@
 
 CLI / results names (approved plan):
   identity, bs_pi6, bs_pi4, bs_pi3, bs_pi2, cz_nm, snap_a_pi, snap_b_pi,
-  ck_pi2, ck_pi4, cphase_nn
+  ck_pi2, ck_pi4, cphase_nn, jp
 """
 
 from __future__ import annotations
@@ -24,6 +24,7 @@ U_NAMES = (
     "cphase_nn",
     "bs_pi6",
     "bs_pi3",
+    "jp",  # appended last so existing per-trial seeds (index-based) are unchanged
 )
 
 
@@ -47,6 +48,21 @@ def cz_nm_ab() -> qt.Qobj:
         for m in range(NFOCK):
             if (n * m) % 2 == 1:
                 diag[n * NFOCK + m] = -1.0
+    u_ab = qt.Qobj(np.diag(diag), dims=[[NFOCK, NFOCK], [NFOCK, NFOCK]])
+    return _embed_ab(u_ab)
+
+
+def joint_parity_ab() -> qt.Qobj:
+    """|n,m⟩ ↦ (-i)^{(n+m) mod 2} |n,m⟩ (joint-parity ZZ(π/2) gate; locally equivalent to cz_nm).
+
+    With L = diag(i^{n mod 2}) on each cavity, (L_A ⊗ L_B) · jp = cz_nm, since
+    i^{p_n + p_m} (-i)^{(p_n + p_m) mod 2} = (-1)^{p_n p_m} for parities p ∈ {0, 1}.
+    """
+    diag = np.ones(NFOCK * NFOCK, dtype=complex)
+    for n in range(NFOCK):
+        for m in range(NFOCK):
+            if (n + m) % 2 == 1:
+                diag[n * NFOCK + m] = -1j
     u_ab = qt.Qobj(np.diag(diag), dims=[[NFOCK, NFOCK], [NFOCK, NFOCK]])
     return _embed_ab(u_ab)
 
@@ -105,6 +121,8 @@ def build_fixed_u(name: str) -> qt.Qobj:
         return beamsplitter_ab(np.pi / 2.0)
     if key == "cz_nm":
         return cz_nm_ab()
+    if key == "jp":
+        return joint_parity_ab()
     if key == "ck_pi2":
         return ck_phase_ab(np.pi / 2.0)
     if key == "ck_pi4":

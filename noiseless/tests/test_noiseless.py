@@ -83,6 +83,23 @@ def test_u_actions():
             assert abs(ab_matrix_elements(ub, n, m) - ((-1.0) ** m)) < 1e-10
 
 
+def test_joint_parity_actions():
+    from noiseless.encoding import NFOCK
+    from noiseless.unitaries import cz_nm_ab, joint_parity_ab
+
+    u = build_fixed_u("jp")
+    for n in range(5):
+        for m in range(5):
+            want = (-1j) ** ((n + m) % 2)
+            assert abs(ab_matrix_elements(u, n, m) - want) < 1e-10
+    # Local equivalence: (L_A ⊗ L_B) jp = cz_nm with L = diag(i^{n mod 2})
+    L = np.diag([1j ** (n % 2) for n in range(NFOCK)])
+    jp_ab = np.diag(np.diag(joint_parity_ab().full())[: NFOCK * NFOCK])
+    cz_ab = np.diag(np.diag(cz_nm_ab().full())[: NFOCK * NFOCK])
+    assert np.max(np.abs(np.kron(L, L) @ jp_ab - cz_ab)) < 1e-12
+    assert abs((u.dag() * u - identity()).norm()) < 1e-8
+
+
 def test_ck_phase_actions():
     u2 = build_fixed_u("ck_pi2")
     u4 = build_fixed_u("ck_pi4")
