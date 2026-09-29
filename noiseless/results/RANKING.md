@@ -193,6 +193,19 @@ HEA extra stats (N=500 per tier): median p(GS) 0.9465 / 0.8962 / 0.8492; mean be
 (16 / 24 / 32). HEA wins every tier on success and p(GS); caveat: the 4-SAT GS is a product (basis) state that the final
 RY layer alone can prepare exactly, so HEA is effectively a classical-relaxation baseline here.
 
+**Product-state control `hea_ry0`** (added 2026-09-29; single RY layer on |0⟩^⊗8, no CZ, **8 params**; same runner/Gibbs/SPSA
+200 steps/20 H × 25 trials/seed 20260917; `fleet_hea_ry0_20260929T094333Z`, see `HEA_SUMMARY.md`):
+
+| Arm | Params | Success | Mean p(GS) | Median p(GS) | Frac p(GS)>0.5 | Per-H mean p(GS) min / max |
+|-----|-------:|--------:|-----------:|-------------:|---------------:|---------------------------:|
+| hea_ry0 (no CZ) | 8 | 0.992 | 0.9808 | 0.9909 | 0.992 | 0.9457 / 0.9913 |
+| HEA L=1 | 16 | 0.992 | 0.9335 | 0.9465 | 0.992 | 0.8715 / 0.9480 |
+| HEA L=2 | 24 | 1.000 | 0.8889 | 0.8962 | 0.998 | 0.8485 / 0.9056 |
+| HEA L=3 | 32 | 1.000 | 0.8344 | 0.8492 | 0.994 | 0.8105 / 0.8617 |
+
+With half the parameters and zero entanglement, the product ansatz beats every HEA depth on p(GS) and matches L=1 success:
+HEA's dominance here is a classical-relaxation effect.
+
 `jp` rows, extra stats (median over all 500 runs; best-of-25 = per-H max over 25 trials, then mean over 20 H):
 
 | Params | L* | Success | Mean p(GS) | Median p(GS) | Mean best-of-25 p(GS) | old `bs_pi4` best-of-25 | N |

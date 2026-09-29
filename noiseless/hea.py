@@ -18,6 +18,8 @@ Circuit (RY only, no RZ):
       CZ sublayer B: (2,3)(4,5)(6,7)
       CZ sublayer C (rungs): (1,8)(2,7)(3,6)
   final RY layer on all 8 qubits
+L = 0 ("hea_ry0" arm) is the product-state ansatz: a single RY layer on
+|0⟩^⊗8, no CZ, 8 params.
 n_params = 8 (L + 1).  Parameter layout: x.reshape(L+1, 8), row l = RY layer l,
 column k = qubit q_{k+1}.
 
@@ -106,8 +108,8 @@ def zero_state(n: int = N) -> np.ndarray:
 
 def hea_state(params: np.ndarray, n: int = N) -> np.ndarray:
     x = np.asarray(params, dtype=float).reshape(-1)
-    if x.size % N or x.size < 2 * N:
-        raise ValueError(f"HEA parameter length must be 8(L+1) with L>=1, got {x.size}")
+    if x.size % N or x.size < N:
+        raise ValueError(f"HEA parameter length must be 8(L+1) with L>=0, got {x.size}")
     rows = x.reshape(-1, N)
     n_layers = rows.shape[0] - 1
     psi = zero_state(n)

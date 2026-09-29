@@ -96,3 +96,58 @@ def test_short_hea_spsa():
     assert res.x.shape == (16,)
     assert 0.0 <= res.p_gs <= 1.0
     assert res.ground_bitstring == gs
+
+
+# --- hea_ry0: L = 0 product-state variant (single RY layer, no CZ, 8 params) ---
+
+
+def _ry_ket(theta: float) -> np.ndarray:
+    return np.array([np.cos(theta / 2), np.sin(theta / 2)])
+
+
+def test_ry0_param_count():
+    assert n_hea_parameters(0) == 8
+    assert hea_layers_for_params(8) == 0
+    assert random_hea_params(0, np.random.default_rng(0)).shape == (8,)
+
+
+def test_ry0_state_is_product_of_ry_kets():
+    rng = np.random.default_rng(7)
+    for _ in range(5):
+        th = rng.uniform(-4, 4, 8)
+        expected = np.array([1.0])
+        for q in range(8):  # q=0 (q1) is the MSB -> leftmost kron factor
+            expected = np.kron(expected, _ry_ket(th[q]))
+        assert np.allclose(hea_state(th), expected, atol=1e-12)
+
+
+@pytest.mark.parametrize("bits", ["00000000", "10000000", "00000001", "10110010", "01011101", "11111111"])
+def test_ry0_pi_on_qubit_set_gives_bitstring(bits):
+    th = np.array([np.pi if b == "1" else 0.0 for b in bits])
+    psi = hea_state(th)
+    idx = index_from_bitstring(bits)
+    assert np.isclose(abs(psi[idx]) ** 2, 1.0)
+    assert np.isclose(np.sum(np.abs(psi) ** 2), 1.0)
+
+
+def test_ry0_rejects_bad_length():
+    with pytest.raises(ValueError):
+        hea_state(np.zeros(7))
+
+
+def test_ry0_arm_in_runner():
+    from noiseless.run_ecd_vs_qaoa import ARMS, _depth_for_arm
+
+    assert ARMS[:4] == ("ecd", "qaoa_full", "qaoa_nn", "hea")  # old seed arm codes unchanged
+    assert ARMS[4] == "hea_ry0"
+    assert _depth_for_arm("hea_ry0", 8) == 0
+
+
+def test_short_ry0_spsa():
+    rng = np.random.default_rng(1)
+    energies = rng.normal(size=256)
+    gs = format(int(np.argmin(energies)), "08b")
+    sim = HEASimulator(energies=energies, ground_bitstring=gs)
+    res = optimize_hea_trial(sim, 0, maxiter=5, rng=np.random.default_rng(2))
+    assert res.x.shape == (8,)
+    assert 0.0 <= res.p_gs <= 1.0

@@ -5,10 +5,12 @@ Param tiers: 16 / 24 / 32
   ECD:       L* ∈ {2, 3, 4}  (8 params/layer)
   QAOA:      p  ∈ {8,12,16}  (2 params/layer)
   HEA:       L  ∈ {1, 2, 3}  (8(L+1) params; RY + 2×4-lattice CZ, see noiseless/hea.py)
+  hea_ry0:   L = 0, tier 8 only (single RY layer on |0⟩^⊗8, no CZ: product state)
 
 The ``hea`` arm is opt-in (not in the default --arms) and uses the same Gibbs cost on
 the full four_sat spectrum, SampledTailEta cadence, SPSA gains and Uniform[0,π) init
 as the QAOA arms. It is appended to ARMS so existing arms' seeds are unchanged.
+``hea_ry0`` (opt-in, ``--arms hea_ry0 --param-tiers 8``) is the same code path with L=0.
 
 Tag default: fleet_ecd_vs_qaoa
 """
@@ -64,7 +66,7 @@ from noiseless.spsa_gibbs import (
 )
 from noiseless.unitaries import build_fixed_u
 
-ARMS = ("ecd", "qaoa_full", "qaoa_nn", "hea")
+ARMS = ("ecd", "qaoa_full", "qaoa_nn", "hea", "hea_ry0")
 ECD_LAYERS = (2, 3, 4)
 QAOA_P = (8, 12, 16)
 PARAM_TIERS = (16, 24, 32)
@@ -79,6 +81,8 @@ def _depth_for_arm(arm: str, n_params: int) -> int:
         return {16: 2, 24: 3, 32: 4}[int(n_params)]
     if arm == "hea":
         return {16: 1, 24: 2, 32: 3}[int(n_params)]
+    if arm == "hea_ry0":
+        return {8: 0}[int(n_params)]
     return {16: 8, 24: 12, 32: 16}[int(n_params)]
 
 
@@ -146,7 +150,7 @@ def _worker(job: dict) -> dict:
                 "error": None,
             }
 
-        if arm == "hea":
+        if arm in ("hea", "hea_ry0"):
             assert n_hea_parameters(depth) == n_params
             sim = HEASimulator(energies=full_e, ground_bitstring=gs)
             result = optimize_hea_trial(
@@ -300,7 +304,7 @@ def _aggregate(records: list[dict]) -> dict:
         )
     ranking.sort(key=lambda r: (r["n_params"], -r["success_rate"], -r["mean_p_gs"]))
     by_tier = {}
-    for tier in PARAM_TIERS:
+    for tier in sorted(set(PARAM_TIERS) | {int(r["n_params"]) for r in ranking}):
         rows = [r for r in ranking if r["n_params"] == tier]
         rows.sort(key=lambda r: (r["success_rate"], r["mean_p_gs"]), reverse=True)
         by_tier[str(tier)] = rows
@@ -589,7 +593,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"[{_now()}] wrote {out_path}", flush=True)
     print(f"[{_now()}] summary {summary_path}", flush=True)
     print(f"[{_now()}] bestofn {bestofn_path}", flush=True)
-    for tier in PARAM_TIERS:
+    for tier in sorted(set(PARAM_TIERS) | {int(r["n_params"]) for r in agg["ranking"]}):
         rows = agg["by_tier"].get(str(tier), [])
         if not rows:
             continue

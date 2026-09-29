@@ -65,3 +65,40 @@ ECD 0.27–0.49 s and QAOA-full 0.33–0.63 s (different run, 6 workers).
 - Seed differs from the original bake-off (20260917 vs 20260918).
 - Existing arms verified unchanged: 6 trials re-run from `fleet_ecd_vs_qaoa_20260918T060037Z` (ecd, qaoa_full, qaoa_nn at
   16 params, H 000/010) reproduce p(GS) and final `x` bit-for-bit (`hea` was appended to `ARMS`, so seed arm codes are unchanged).
+
+## Product-state control: `hea_ry0` (L = 0, 8 params)
+
+Added 2026-09-29. Arm `hea_ry0` = the same `hea` code path with L = 0: a **single RY(θ_i) layer on each of the 8 qubits
+from |0⟩^⊗8, no CZ**, 8 params (state = ⊗_i RY(θ_i)|0⟩, exactly a product state). Code change: `hea_state` accepts
+L = 0 (length 8), `hea_ry0` appended to `ARMS` (tier 8 → L = 0), `by_tier` / printout also list tiers outside 16/24/32.
+Tests in `test_hea.py`: state equals the Kronecker product of RY kets; θ = π on a qubit set gives that bitstring.
+
+Source: `fleet_hea_ry0_20260929T094333Z` (full JSON gitignored). Settings identical to the HEA fleet: same runner, Gibbs
+cost on full spectrum (no L1 / λ = 0), `SampledTailEta`, SPSA 200 steps, c = 0.15, A = 10, a = `scale_spsa_a(8)` = 0.4301
+(same scaling rule, so a larger gain at n = 8), Uniform[0, π) init, 20 four_sat H × 25 trials, `--seed 20260917`, 8 workers.
+Fleet wall ≈ 5 s for 500 jobs.
+
+```
+python noiseless/run_ecd_vs_qaoa.py --arms hea_ry0 --param-tiers 8 --trials 25 --steps 200 \
+    --seed 20260917 --workers 8 --tag fleet_hea_ry0
+```
+
+| Arm | Params | Success | Mean p(GS) | Median p(GS) | Frac p(GS)>0.5 | Mean best-of-25 | Per-H mean p(GS) min / max | Worst per-H success | Wall / trial | N |
+|-----|-------:|--------:|-----------:|-------------:|---------------:|----------------:|---------------------------:|--------------------:|-------------:|--:|
+| **hea_ry0 (L=0, no CZ)** | 8 | 0.992 | **0.9808** | **0.9909** | 0.992 | **0.9978** | 0.9457 (003) / 0.9913 (001) | 0.96 | 0.067 s | 500 |
+| hea L=1 | 16 | 0.992 | 0.9335 | 0.9465 | 0.992 | 0.9849 | 0.8715 (003) / 0.9480 (017) | 0.92 | 0.116 s | 500 |
+| hea L=2 | 24 | 1.000 | 0.8889 | 0.8962 | 0.998 | 0.9608 | 0.8485 (002) / 0.9056 (006) | 1.00 | 0.156 s | 500 |
+| hea L=3 | 32 | 1.000 | 0.8344 | 0.8492 | 0.994 | 0.9364 | 0.8105 (011) / 0.8617 (003) | 1.00 | 0.199 s | 500 |
+
+(HEA 16/24/32 frac>0.5 and per-H min/max computed from the existing `fleet_hea_20260929T073413Z` full JSON.)
+The 4 `hea_ry0` failures (000 t9, 003 t4, 011 t19, 018 t17) are, like HEA-16's, trials stuck in another product state with
+p(GS) ≈ 0 (e.g. 00000000 / 00000100 instead of the GS).
+
+**Read:** the no-entanglement product ansatz is the best HEA variant on p(GS) (0.981 vs 0.934 / 0.889 / 0.834) with the same
+success as L = 1 — confirming the caveat above: on these diagonal 4-SAT instances the GS is a basis (product) state and the CZ
+layers only add parameters/entanglement that SPSA must undo. Monotone trend: fewer layers → higher p(GS). HEA's lead over
+ECD/QAOA is therefore a classical-relaxation effect, not an entanglement effect. Caveat: `a` differs by tier (scaling rule).
+
+Old arms verified unchanged after the change: the full `hea` 16/24/32 fleet (1500 trials) and 6 trials of ecd / qaoa_full /
+qaoa_nn at 16 params (H 000, seed 20260918, vs `fleet_ecd_vs_qaoa_20260918T060037Z`) reproduce p(GS), success and final `x`
+bit-for-bit.
