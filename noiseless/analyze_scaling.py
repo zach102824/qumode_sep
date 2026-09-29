@@ -82,17 +82,34 @@ def main(argv=None):
                                         "walksat_median_first_hit": float(np.median(hits)) if hits else None}
             md.append(f"| {n} | {len(r)} | " + " | ".join(f"{ws[b]:.3f}" for b in budgets) + " | " + " | ".join(f"{sa[b]:.3f}" for b in budgets) + " |")
         md.append("")
-    # fits
+    # fits: headline RY-only series = per-state exact (n <= 20) + factorized exact (n >= 24)
+    series = {}
+    for arm in ["ry0", "hea1", "hea2"]:
+        series[arm if arm != "ry0" else "ry0_exact"] = {}
+        for (ar, n) in cells:
+            if ar == arm and not (arm == "ry0" and n > 20):
+                series[arm if arm != "ry0" else "ry0_exact"][n] = out["quantum"][f"{arm}_n{n:02d}"]
+    for (ar, n) in cells:
+        if ar == "ry0_split" and n > 20:
+            series["ry0_exact"][n] = out["quantum"][f"ry0_split_n{n:02d}"]
+    series["ry0_sampled_cost"] = {n: out["quantum"][f"ry0_n{n:02d}"] for (ar, n) in cells if ar == "ry0" and n > 20}
+    for (ar, n) in cells:
+        if ar == "ry0_sampled":
+            series["ry0_sampled_cost"][n] = out["quantum"][f"ry0_sampled_n{n:02d}"]
     md.append("| series | n range | slope log10/qubit | c (per-qubit factor) |")
     md.append("|---|---|---|---|")
-    for arm in ["ry0", "hea1", "hea2"]:
-        ks = sorted(n for (ar, n) in cells if ar == arm)
-        for stat in ("mean_p_gs", "median_p_gs", "success"):
-            ys = [out["quantum"][f"{arm}_n{n:02d}"][stat] for n in ks]
-            f = fit_log(ks, ys)
-            if f:
-                out["fits"][f"{arm}:{stat}"] = f
-                md.append(f"| {arm} {stat} | {f['n_used'][0]}-{f['n_used'][-1]} ({len(f['n_used'])} pts) | {f['slope_log10_per_qubit']:.4f} | {f['c']:.4f} |")
+    seen = set()
+    for name, ser in series.items():
+        for lo, hi in ((8, 28), (8, 20), (12, 20), (16, 28)):
+            ks = sorted(n for n in ser if lo <= n <= hi)
+            if len(ks) < 2 or (name, tuple(ks)) in seen:
+                continue
+            seen.add((name, tuple(ks)))
+            for stat in ("mean_p_gs", "median_p_gs", "success"):
+                f = fit_log(ks, [ser[n][stat] for n in ks])
+                if f:
+                    out["fits"][f"{name}:{stat}:{lo}-{hi}"] = f
+                    md.append(f"| {name} {stat} | {f['n_used'][0]}-{f['n_used'][-1]} ({len(f['n_used'])} pts) | {f['slope_log10_per_qubit']:.4f} | {f['c']:.4f} |")
     if cl:
         for alg in ("walksat", "sa"):
             for b in budgets:
@@ -103,27 +120,29 @@ def main(argv=None):
                     out["fits"][f"{alg}@{b}:success"] = f
                     md.append(f"| {alg} success @{b} | {f['n_used'][0]}-{f['n_used'][-1]} ({len(f['n_used'])} pts) | {f['slope_log10_per_qubit']:.4f} | {f['c']:.4f} |")
     md.append("")
-    # validation: paired exact vs sampled
-    md.append("| n | trials | exact success | sampled success | exact mean p(GS) | sampled mean p(GS) | exact median | sampled median | same final ML bitstring | Pearson r(log10 p) |")
-    md.append("|---|---|---|---|---|---|---|---|---|---|")
-    for n in sorted(n for (ar, n) in cells if ar == "ry0_sampled"):
-        if ("ry0", n) not in cells:
-            continue
-        ex = {(x["inst"], x["trial"]): x for x in cells[("ry0", n)]}
-        sa = {(x["inst"], x["trial"]): x for x in cells[("ry0_sampled", n)]}
-        keys = sorted(set(ex) & set(sa))
-        pe = np.array([ex[k]["p_gs"] for k in keys]); ps = np.array([sa[k]["p_gs"] for k in keys])
-        v = {
-            "trials": len(keys),
-            "exact_success": float(np.mean([ex[k]["success"] for k in keys])),
-            "sampled_success": float(np.mean([sa[k]["success"] for k in keys])),
-            "exact_mean_p_gs": float(pe.mean()), "sampled_mean_p_gs": float(ps.mean()),
-            "exact_median_p_gs": float(np.median(pe)), "sampled_median_p_gs": float(np.median(ps)),
-            "same_ml_frac": float(np.mean([ex[k]["most_likely_bitstring"] == sa[k]["most_likely_bitstring"] for k in keys])),
-            "pearson_log10": float(np.corrcoef(np.log10(np.maximum(pe, 1e-300)), np.log10(np.maximum(ps, 1e-300)))[0, 1]),
-        }
-        out["validation"][str(n)] = v
-        md.append(f"| {n} | {v['trials']} | {v['exact_success']:.3f} | {v['sampled_success']:.3f} | {v['exact_mean_p_gs']:.3g} | {v['sampled_mean_p_gs']:.3g} | {v['exact_median_p_gs']:.3g} | {v['sampled_median_p_gs']:.3g} | {v['same_ml_frac']:.3f} | {v['pearson_log10']:.3f} |")
+    # validation: paired (same seeds, same x0 and SPSA deltas) reference vs test cost path
+    md.append("| test path | n | trials | exact success | test success | exact mean p(GS) | test mean p(GS) | exact median | test median | same final ML bitstring | Pearson r(log10 p) |")
+    md.append("|---|---|---|---|---|---|---|---|---|---|---|")
+    for test in ("ry0_sampled", "ry0_split"):
+        for n in sorted(n for (ar, n) in cells if ar == test and n <= 20):
+            if ("ry0", n) not in cells:
+                continue
+            ex = {(x["inst"], x["trial"]): x for x in cells[("ry0", n)]}
+            sa = {(x["inst"], x["trial"]): x for x in cells[(test, n)]}
+            keys = sorted(set(ex) & set(sa))
+            pe = np.array([ex[k]["p_gs"] for k in keys]); ps = np.array([sa[k]["p_gs"] for k in keys])
+            v = {
+                "trials": len(keys),
+                "exact_success": float(np.mean([ex[k]["success"] for k in keys])),
+                "test_success": float(np.mean([sa[k]["success"] for k in keys])),
+                "exact_mean_p_gs": float(pe.mean()), "test_mean_p_gs": float(ps.mean()),
+                "exact_median_p_gs": float(np.median(pe)), "test_median_p_gs": float(np.median(ps)),
+                "same_ml_frac": float(np.mean([ex[k]["most_likely_bitstring"] == sa[k]["most_likely_bitstring"] for k in keys])),
+                "pearson_log10": float(np.corrcoef(np.log10(np.maximum(pe, 1e-300)), np.log10(np.maximum(ps, 1e-300)))[0, 1]),
+                "max_abs_dp": float(np.max(np.abs(pe - ps))),
+            }
+            out["validation"][f"{test}_n{n}"] = v
+            md.append(f"| {test} | {n} | {v['trials']} | {v['exact_success']:.3f} | {v['test_success']:.3f} | {v['exact_mean_p_gs']:.3g} | {v['test_mean_p_gs']:.3g} | {v['exact_median_p_gs']:.3g} | {v['test_median_p_gs']:.3g} | {v['same_ml_frac']:.3f} | {v['pearson_log10']:.3f} |")
     (REPO / "noiseless" / "results" / f"scaling_{a.tag}_analysis_summary.json").write_text(json.dumps(out, indent=1) + "\n")
     print("\n".join(md))
 
