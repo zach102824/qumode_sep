@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""Three-arm bake-off: ECD(bs_pi4) vs QAOA-full vs QAOA-NN at matched param counts.
+"""Bake-off: ECD(bs_pi4) vs QAOA-full vs QAOA-NN (+ optional HEA) at matched param counts.
 
 Param tiers: 16 / 24 / 32
   ECD:       L* ∈ {2, 3, 4}  (8 params/layer)
   QAOA:      p  ∈ {8,12,16}  (2 params/layer)
+  HEA:       L  ∈ {1, 2, 3}  (8(L+1) params; RY + 2×4-lattice CZ, see noiseless/hea.py)
+
+The ``hea`` arm is opt-in (not in the default --arms) and uses the same Gibbs cost on
+the full four_sat spectrum, SampledTailEta cadence, SPSA gains and Uniform[0,π) init
+as the QAOA arms. It is appended to ARMS so existing arms' seeds are unchanged.
 
 Tag default: fleet_ecd_vs_qaoa
 """
@@ -39,6 +44,11 @@ from noiseless.encoding import (
     load_four_sat_npz,
     z_terms_from_npz,
 )
+from noiseless.hea import (
+    HEASimulator,
+    n_hea_parameters,
+    optimize_hea_trial,
+)
 from noiseless.qaoa import (
     QAOASimulator,
     diagonal_spectrum_from_terms,
@@ -54,7 +64,7 @@ from noiseless.spsa_gibbs import (
 )
 from noiseless.unitaries import build_fixed_u
 
-ARMS = ("ecd", "qaoa_full", "qaoa_nn")
+ARMS = ("ecd", "qaoa_full", "qaoa_nn", "hea")
 ECD_LAYERS = (2, 3, 4)
 QAOA_P = (8, 12, 16)
 PARAM_TIERS = (16, 24, 32)
@@ -67,6 +77,8 @@ def _now() -> str:
 def _depth_for_arm(arm: str, n_params: int) -> int:
     if arm == "ecd":
         return {16: 2, 24: 3, 32: 4}[int(n_params)]
+    if arm == "hea":
+        return {16: 1, 24: 2, 32: 3}[int(n_params)]
     return {16: 8, 24: 12, 32: 16}[int(n_params)]
 
 
@@ -102,6 +114,44 @@ def _worker(job: dict) -> dict:
             )
             result = optimize_trial(
                 sim,
+                maxiter=int(job["steps"]),
+                rng=rng,
+                a=a,
+                c=float(job.get("spsa_c", 0.15)),
+                A=float(job.get("spsa_A", 10.0)),
+            )
+            return {
+                "ok": True,
+                "arm": arm,
+                "ham_file": job["ham_file"],
+                "n_params": n_params,
+                "depth": depth,
+                "n_layers": depth,
+                "p_layers": None,
+                "trial": int(job["trial"]),
+                "seed": int(job["seed"]),
+                "success": bool(result.success),
+                "p_gs": float(result.p_gs),
+                "most_likely_bitstring": result.most_likely_bitstring,
+                "ground_bitstring": result.ground_bitstring,
+                "fun": float(result.fun),
+                "eta": float(result.eta),
+                "energy_mean": float(result.energy_mean),
+                "nfev": int(result.nfev),
+                "nit": int(result.nit),
+                "spsa_a": a,
+                "wall_s": float(time.perf_counter() - t0),
+                "nn_trunc": trunc,
+                "x": result.x.tolist(),
+                "error": None,
+            }
+
+        if arm == "hea":
+            assert n_hea_parameters(depth) == n_params
+            sim = HEASimulator(energies=full_e, ground_bitstring=gs)
+            result = optimize_hea_trial(
+                sim,
+                depth,
                 maxiter=int(job["steps"]),
                 rng=rng,
                 a=a,

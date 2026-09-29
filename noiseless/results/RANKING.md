@@ -180,12 +180,18 @@ Sources: `jp_L2_20260929T041311Z` (L*=2), `jp_L3_20260929T041643Z` (L*=3), `jp_B
 Param counts confirmed from record `x`: 16 / 24 / 32.
 
 Cells are **success / mean p(GS)**. `bs_pi4`, QAOA-full and QAOA-NN columns are copied from the bake-off tables above.
+HEA column (added 2026-09-29): 8-qubit RY + CZ on the 2×4 lattice, L = 1/2/3, Uniform[0,π) init, same Gibbs/η/SPSA as QAOA-full,
+seed 20260917 (`fleet_hea_20260929T073413Z`; see `HEA_SUMMARY.md`).
 
-| Params | ECD `jp` (SPSA) | old ECD `bs_pi4` | QAOA-full | QAOA-NN |
-|-------:|----------------:|-----------------:|----------:|--------:|
-| 16 (L*=2 / p=8) | 0.456 / 0.1297 | 0.624 / 0.1245 | 0.708 / 0.0618 | 0.000 / 0.0017 |
-| 24 (L*=3 / p=12) | 0.774 / 0.1581 | 0.866 / 0.1489 | 0.554 / 0.0526 | 0.000 / 0.0022 |
-| 32 (L*=4 / p=16) | 0.932 / 0.1717 | 0.954 / 0.1554 | 0.452 / 0.0413 | 0.000 / 0.0022 |
+| Params | ECD `jp` (SPSA) | HEA (lattice RY) | old ECD `bs_pi4` | QAOA-full | QAOA-NN |
+|-------:|----------------:|-----------------:|-----------------:|----------:|--------:|
+| 16 (L*=2 / L=1 / p=8) | 0.456 / 0.1297 | 0.992 / 0.9335 | 0.624 / 0.1245 | 0.708 / 0.0618 | 0.000 / 0.0017 |
+| 24 (L*=3 / L=2 / p=12) | 0.774 / 0.1581 | 1.000 / 0.8889 | 0.866 / 0.1489 | 0.554 / 0.0526 | 0.000 / 0.0022 |
+| 32 (L*=4 / L=3 / p=16) | 0.932 / 0.1717 | 1.000 / 0.8344 | 0.954 / 0.1554 | 0.452 / 0.0413 | 0.000 / 0.0022 |
+
+HEA extra stats (N=500 per tier): median p(GS) 0.9465 / 0.8962 / 0.8492; mean best-of-25 p(GS) 0.9849 / 0.9608 / 0.9364
+(16 / 24 / 32). HEA wins every tier on success and p(GS); caveat: the 4-SAT GS is a product (basis) state that the final
+RY layer alone can prepare exactly, so HEA is effectively a classical-relaxation baseline here.
 
 `jp` rows, extra stats (median over all 500 runs; best-of-25 = per-H max over 25 trials, then mean over 20 H):
 
