@@ -91,6 +91,10 @@ def _worker(job: dict) -> dict:
                 optimizer=str(job.get("optimizer", "spsa")),
                 steps_per_stage=job.get("grow_steps_per_stage"),
                 adam_lr=float(job.get("adam_lr", ADAM_LR)),
+                steps_schedule=job.get("grow_steps_schedule"),
+                lr_schedule=job.get("grow_lr_schedule"),
+                eta_scale_schedule=job.get("grow_eta_scale"),
+                c_schedule=job.get("grow_c_schedule"),
             )
             a = result.stages[-1]["spsa_a"]
         else:
@@ -290,6 +294,10 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
                             "grow_start": int(args.grow_start),
                             "grow_kick_sigma": float(args.grow_kick_sigma),
                             "grow_steps_per_stage": args.grow_steps_per_stage,
+                            "grow_steps_schedule": args.grow_steps_schedule,
+                            "grow_lr_schedule": args.grow_lr_schedule,
+                            "grow_eta_scale": args.grow_eta_scale,
+                            "grow_c_schedule": args.grow_c_schedule,
                         }
                     )
     return jobs
@@ -381,7 +389,48 @@ def main(argv: list[str] | None = None) -> int:
         help="With --grow: SPSA steps for EVERY stage (generous budget, total = S x n_stages). "
         "Omit for equal-total budget (--steps split evenly over stages).",
     )
+    p.add_argument(
+        "--grow-steps-schedule",
+        type=str,
+        default=None,
+        help='With --grow: comma list of SPSA steps per stage, e.g. "100,150,250,300" '
+        "(one entry per stage; overrides --steps / --grow-steps-per-stage)",
+    )
+    p.add_argument(
+        "--grow-lr-schedule",
+        type=str,
+        default=None,
+        help='With --grow + spsa_adam: Adam lr per stage, e.g. "0.1,0.1,0.1,0.03"',
+    )
+    p.add_argument(
+        "--grow-eta-scale",
+        type=str,
+        default=None,
+        help="With --grow: per-stage multiplier on the sampled-tail η (η = inverse "
+        'temperature: <1 hotter, >1 colder), e.g. "0.5,0.7,1,1"',
+    )
+    p.add_argument(
+        "--grow-c-schedule",
+        type=str,
+        default=None,
+        help='With --grow: SPSA perturbation c per stage, e.g. "0.15,0.15,0.15,0.05"',
+    )
     args = p.parse_args(argv)
+    for name, cast in (("grow_steps_schedule", int), ("grow_lr_schedule", float),
+                       ("grow_eta_scale", float), ("grow_c_schedule", float)):
+        raw = getattr(args, name)
+        if raw is None:
+            continue
+        if not args.grow:
+            p.error(f"--{name.replace('_', '-')} requires --grow")
+        vals = [cast(v) for v in raw.split(",") if v.strip()]
+        layers = [int(x) for x in args.layers.split(",") if x.strip()]
+        for L in layers:
+            n_st = L - int(args.grow_start) + 1
+            if len(vals) != n_st:
+                p.error(f"--{name.replace('_', '-')} has {len(vals)} entries; L={L} from "
+                        f"--grow-start {args.grow_start} has {n_st} stages")
+        setattr(args, name, vals)
     if args.grow and args.adapt_lambda:
         p.error("--adapt-lambda is not supported with --grow")
     if args.optimizer == "bfgs" and args.adapt_lambda:
@@ -476,6 +525,10 @@ def main(argv: list[str] | None = None) -> int:
             "grow_start": int(args.grow_start),
             "grow_kick_sigma": float(args.grow_kick_sigma),
             "grow_steps_per_stage": args.grow_steps_per_stage,
+            "grow_steps_schedule": args.grow_steps_schedule,
+            "grow_lr_schedule": args.grow_lr_schedule,
+            "grow_eta_scale": args.grow_eta_scale,
+            "grow_c_schedule": args.grow_c_schedule,
         },
         "n_jobs": len(records),
         "n_ok": sum(1 for r in records if r.get("ok")),

@@ -232,6 +232,10 @@ class NoiselessSimulator:
     beta_max: float | None = None
     lambda3: float = 0.0  # legacy alias of lam; kept in sync in __post_init__ / set_lam
     encoding: str = "binary"  # physical Fock → logical bit map used to decode argmax
+    # Multiplier on the controller's η when it is refreshed (η_used = eta_scale · η_ctrl).
+    # η is an INVERSE temperature in gibbs_objective: smaller = hotter (→ η·<E>, mean
+    # energy), larger = colder (→ emphasizes -log p(GS)). 1.0 = legacy (x*1.0 == x exactly).
+    eta_scale: float = 1.0
 
     def __post_init__(self) -> None:
         self.energies_flat = np.asarray(self.energy_tensor, dtype=float).reshape(-1)
@@ -283,7 +287,8 @@ class NoiselessSimulator:
 
     def refresh_eta(self, x: np.ndarray, step: int) -> float:
         probs = self.probs_from_x(x)
-        self._current_eta = self.eta_ctrl.update(self.energies_flat, probs, step)
+        eta = self.eta_ctrl.update(self.energies_flat, probs, step)
+        self._current_eta = eta * float(self.eta_scale)
         return self._current_eta
 
     def evaluate(self, x: np.ndarray) -> dict:
@@ -637,6 +642,10 @@ def grow_trial(
     optimizer: str = "spsa",
     steps_per_stage: int | None = None,
     adam_lr: float = ADAM_LR,
+    steps_schedule: list[int] | None = None,
+    lr_schedule: list[float] | None = None,
+    eta_scale_schedule: list[float] | None = None,
+    c_schedule: list[float] | None = None,
 ) -> TrialResult:
     """Layer-growth trial: train L=start_layers from random init, then repeatedly append a
     transparent LAST layer (+ Gaussian kick σ on its 8 params) and retrain, up to
@@ -652,6 +661,16 @@ def grow_trial(
     With ``optimizer="spsa_adam"`` each stage starts a FRESH Adam state (m=v=0, bias
     correction restarts at k=1), consistent with the η controller restart; the appended
     layer's params have no history, and the old moments would be mis-scaled anyway.
+
+    Optional per-stage schedules (length must equal the number of stages,
+    ``final_layers - start_layers + 1``; None = legacy behaviour, bit-for-bit):
+      - ``steps_schedule``: SPSA steps per stage (overrides ``total_steps`` /
+        ``steps_per_stage``);
+      - ``lr_schedule``: Adam lr per stage (overrides ``adam_lr``);
+      - ``eta_scale_schedule``: multiplier on the η controller output per stage
+        (``sim.eta_scale``; η is an inverse temperature, so <1 = hotter, >1 = colder).
+        ``sim.eta_scale`` is restored afterwards;
+      - ``c_schedule``: SPSA perturbation c per stage (overrides ``c``).
     """
     rng = rng or np.random.default_rng()
     final_layers = int(final_layers)
@@ -659,16 +678,37 @@ def grow_trial(
     if final_layers < start_layers:
         raise ValueError("final_layers must be >= start_layers")
     layer_seq = list(range(start_layers, final_layers + 1))
-    if steps_per_stage is None:
-        steps_seq = split_steps(total_steps, len(layer_seq))
+    n_st = len(layer_seq)
+
+    def _sched(name: str, vals, default, cast):
+        if vals is None:
+            return [default] * n_st
+        vals = [cast(v) for v in vals]
+        if len(vals) != n_st:
+            raise ValueError(
+                f"{name} has {len(vals)} entries but growth {start_layers}->{final_layers} "
+                f"has {n_st} stages"
+            )
+        return vals
+
+    if steps_schedule is not None:
+        steps_seq = _sched("steps_schedule", steps_schedule, None, int)
+    elif steps_per_stage is None:
+        steps_seq = split_steps(total_steps, n_st)
     else:
-        steps_seq = [int(steps_per_stage)] * len(layer_seq)
+        steps_seq = [int(steps_per_stage)] * n_st
+    lr_seq = _sched("lr_schedule", lr_schedule, adam_lr, float)
+    eta_seq = _sched("eta_scale_schedule", eta_scale_schedule, None, float)
+    c_seq = _sched("c_schedule", c_schedule, c, float)
+    eta_scale0 = sim.eta_scale
     stages: list[dict] = []
     x = None
     total_nfev = 0
     result: TrialResult | None = None
     for si, (L, steps) in enumerate(zip(layer_seq, steps_seq)):
         sim.n_layers = int(L)
+        if eta_seq[si] is not None:
+            sim.eta_scale = float(eta_seq[si])
         insert_info: dict = {}
         if x is None:
             x0 = random_parameters(L, rng)
@@ -690,10 +730,10 @@ def grow_trial(
             rng=rng,
             x0=x0,
             a=stage_a,
-            c=c,
+            c=c_seq[si],
             A=A,
             optimizer=optimizer,
-            adam_lr=adam_lr,
+            adam_lr=lr_seq[si],
         )
         total_nfev += int(result.nfev)
         x = np.asarray(result.x, dtype=float)
@@ -704,6 +744,9 @@ def grow_trial(
                 "n_params": int(x.size),
                 "steps": int(steps),
                 "spsa_a": float(stage_a),
+                "spsa_c": float(c_seq[si]),
+                "adam_lr": float(lr_seq[si]),
+                "eta_scale": float(sim.eta_scale),
                 "success": bool(result.success),
                 "p_gs": float(result.p_gs),
                 "fun": float(result.fun),
@@ -716,6 +759,7 @@ def grow_trial(
                 **insert_info,
             }
         )
+    sim.eta_scale = eta_scale0
     assert result is not None
     result.stages = stages
     result.nfev = total_nfev

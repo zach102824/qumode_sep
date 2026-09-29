@@ -277,3 +277,19 @@ stage (802/1203/1604 evals); fresh Adam state per stage. Full details: `ADAM_SUM
 - Same cost, free win: Adam keeps random-init success and adds +0.03–0.04 mean p(GS) at L3/L4; with growth it lifts
   success at L3 to random-init level (0.772) and at L4 to 0.852 while keeping growth's p(GS) edge. Remaining growth
   failures still lock onto the first-excited level (97%).
+
+## jp: grow + SPSA-Adam hyper-parameter tuning (final L=4, 800 SPSA steps = 1604 evals; seed 20260917)
+
+Screen: four_sat_000..004 × 10 trials, one knob at a time (Adam lr / per-stage lr schedule, step split, kick σ, η scale
+schedule, SPSA c, start depth), then combos; full: 20 four_sat × 25 trials. Full details: `GROW_ADAM_TUNING_SUMMARY.md`.
+
+| arm (L=4, 1604 evals) | success | mean p(GS) | median | frac>0.5 |
+|---|---|---|---|---|
+| C_adam (lr 0.05, 200×4) | 0.852 | 0.397 | 0.396 | 0.288 |
+| lr schedule 0.5,0.2,0.05,0.02 | 0.978 | 0.542 | 0.518 | 0.594 |
+| + η 0.5,0.7,1.5,2 + c 0.1 (screen combo) | 0.974 | 0.537 | 0.518 | 0.568 |
+| **+ steps 100/150/250/300** | **0.982** | **0.547** | **0.519** | **0.608** |
+
+- Decaying per-stage Adam lr (big early, small late) is the whole effect (+0.145 paired p(GS), 69 vs 6 success flips);
+  split / η / c are within noise on top, large kicks are redundant with it. Tuned growth now beats random-init L4
+  success (0.93). Remaining failures are first-excited near-ties with p(GS) ≈ 0.24 (not collapsed).
