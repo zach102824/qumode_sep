@@ -172,3 +172,19 @@ def test_classical_baselines_small():
         assert h == -1 or 1 <= h <= 401
         h = sa_run(s, 12, cl, pa, ptr, lst, 4010, 2.0, 0.05)
         assert h == -1 or 1 <= h <= 4010
+
+
+def test_ry0_split_exact_cost_matches_enumeration():
+    from noiseless.scaling_ansatz import ProductRYSplitSimulator
+
+    inst = gen.generate_instance(12, 4)
+    e = spectrum(inst["clauses"], inst["polarities"], 12)
+    ex = ProductRYSimulator(inst["clauses"], inst["polarities"], inst["ground_bitstring"], 12, energies=e)
+    sp = ProductRYSplitSimulator(inst["clauses"], inst["polarities"], inst["ground_bitstring"], 12)
+    assert np.array_equal(sp.E.reshape(-1), e.astype(np.uint8))
+    x = np.random.default_rng(9).uniform(0, np.pi, 12)
+    for eta in (0.2, 2.0, 30.0):
+        assert np.isclose(sp.cost(x, eta), ex.cost(x, eta), rtol=1e-10, atol=1e-12)
+    p = ex.probs_from_x(x)
+    assert np.allclose(sp.level_probs(x), np.bincount(e.astype(int), weights=p, minlength=sp.nlev))
+    assert sp.evaluate(x) == ex.evaluate(x)

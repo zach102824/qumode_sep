@@ -5,6 +5,8 @@ Arms
                sampled (N_s samples/eval, CRN) for n >= 24
   ry0_exact    RY-only with exact enumerated Gibbs cost (forced)
   ry0_sampled  RY-only with sampled Gibbs cost (forced)
+  ry0_split    RY-only with EXACT Gibbs cost via the hi/lo product factorization
+               (numba, uint8 spectrum; used for n = 24, 28; validated vs ry0 at n = 16, 20)
   hea1, hea2   HEA L=1,2 (2 n / 3 n params) on the 2 x n/2 snake lattice, statevector
   classical    WalkSAT + SA, 25 runs/instance at budgets B0 x {1,10,100,1000}, B0=401
 
@@ -47,7 +49,7 @@ from noiseless.scaling_ansatz import (  # noqa: E402
     spectrum,
 )
 
-ARM_CODE = {"ry0": 0, "ry0_exact": 0, "ry0_sampled": 0, "hea1": 1, "hea2": 2, "classical": 3}
+ARM_CODE = {"ry0": 0, "ry0_exact": 0, "ry0_sampled": 0, "ry0_split": 0, "hea1": 1, "hea2": 2, "classical": 3}
 EXACT_MAX_N = 20
 RUN_ROOT = _REPO / "noiseless" / "results" / "scaling_runs"
 
@@ -55,6 +57,14 @@ RUN_ROOT = _REPO / "noiseless" / "results" / "scaling_runs"
 @lru_cache(maxsize=4)
 def _inst(path: str):
     return load_instance(path)
+
+
+@lru_cache(maxsize=1)
+def _split_spec(path: str) -> np.ndarray:
+    from noiseless.scaling_ansatz import split_spectrum
+
+    d = _inst(path)
+    return split_spectrum(d["clauses"], d["polarities"], d["n"])
 
 
 @lru_cache(maxsize=2)
@@ -82,7 +92,15 @@ def worker(job: dict) -> dict:
         rec["wall_s"] = time.perf_counter() - t0
         return rec
     rng = np.random.default_rng(job["seed"])
-    if arm.startswith("ry0"):
+    if arm == "ry0_split":
+        from noiseless.scaling_ansatz import ProductRYSplitSimulator
+
+        sim = ProductRYSplitSimulator(d["clauses"], d["polarities"], gs, n, E_split=_split_spec(path))
+        npar = n
+        srng = None
+        rec["cost_mode"] = "exact_split"
+        rec["n_samples"] = None
+    elif arm.startswith("ry0"):
         mode = {"ry0_exact": "exact", "ry0_sampled": "sampled"}.get(arm, "exact" if n <= EXACT_MAX_N else "sampled")
         sim = ProductRYSimulator(
             d["clauses"], d["polarities"], gs, n, cost_mode=mode, n_samples=job["n_samples"],

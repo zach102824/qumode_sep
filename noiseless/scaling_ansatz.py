@@ -327,3 +327,128 @@ def optimize_trial(sim, n_par: int, *, maxiter=200, rng=None, sample_rng=None, x
     ev = sim.evaluate(xf)
     return TrialOut(bool(ev["success"]), float(ev["p_gs"]), float(ev["energy_mean"]), ev["most_likely_bitstring"],
                     float(fun), float(sim._current_eta), int(nfev), xf)
+
+
+# ---------------------------------------------------------------------------
+# RY-only exact Gibbs cost for n = 24, 28 without a 2^n probability vector:
+# energies stored once as uint8 E[h, l] (h = first n//2 bits, l = rest); the product
+# distribution factorizes p(x) = p_hi[h] p_lo[l], so
+#   Σ_x p(x) e^{-η E(x)} = Σ_h p_hi[h] Σ_l p_lo[l] w[E[h,l]],  w[k] = e^{-η k}.
+# η refresh uses the exact energy-LEVEL distribution P(E = k) (same pass structure);
+# its quantile is the first level with CDF >= q (the per-state weighted_quantile
+# differs only by interpolation across a single state's weight at a level boundary).
+# ---------------------------------------------------------------------------
+try:
+    from numba import njit as _njit
+except Exception:  # pragma: no cover
+    _njit = None
+
+if _njit is not None:
+
+    @_njit(cache=True)
+    def _split_spectrum(n, hi, masks, vals):  # pragma: no cover - numba
+        H = 1 << hi
+        Lo = 1 << (n - hi)
+        E = np.zeros((H, Lo), dtype=np.uint8)
+        nc = masks.shape[0]
+        for h in range(H):
+            base = h << (n - hi)
+            for l in range(Lo):
+                x = base | l
+                k = 0
+                for c in range(nc):
+                    if (x & masks[c]) == vals[c]:
+                        k += 1
+                E[h, l] = k
+        return E
+
+    @_njit(cache=True)
+    def _split_weighted_sum(E, phi, plo, w):  # pragma: no cover
+        tot = 0.0
+        for h in range(E.shape[0]):
+            ph = phi[h]
+            if ph == 0.0:
+                continue
+            s = 0.0
+            for l in range(E.shape[1]):
+                s += plo[l] * w[E[h, l]]
+            tot += ph * s
+        return tot
+
+    @_njit(cache=True)
+    def _split_level_hist(E, phi, plo, nlev):  # pragma: no cover
+        out = np.zeros(nlev)
+        tmp = np.zeros(nlev)
+        for h in range(E.shape[0]):
+            ph = phi[h]
+            if ph == 0.0:
+                continue
+            tmp[:] = 0.0
+            for l in range(E.shape[1]):
+                tmp[E[h, l]] += plo[l]
+            out += ph * tmp
+        return out
+
+
+def _product_vec(p1: np.ndarray) -> np.ndarray:
+    p = np.ones(1)
+    for v in p1:
+        p = np.outer(p, (1.0 - v, v)).reshape(-1)
+    return p
+
+
+def eta_update_levels(ctrl: SampledTailEta, level_probs: np.ndarray, step: int) -> float:
+    if step - ctrl.last_step_updated < ctrl.refresh_every and ctrl.history:
+        return ctrl.eta
+    P = np.clip(np.asarray(level_probs, dtype=float), 0.0, None)
+    cdf = np.clip(np.cumsum(P / P.sum()), 0.0, 1.0)
+    cdf[-1] = 1.0
+    q05, q25, q75 = (float(np.searchsorted(cdf, q)) for q in (0.05, 0.25, 0.75))
+    floor = max(q25 - q05, 0.25 * max(q75 - q25, 0.0), 1e-8)
+    target, fallback = eta_from_tail(q05, q25, floor)
+    if ctrl.history:
+        target = (1.0 - ctrl.ema) * ctrl.eta + ctrl.ema * target
+    eta, clamped = clamp_eta(target)
+    ctrl.eta = float(eta)
+    ctrl.last_step_updated = int(step)
+    ctrl.history.append({"step": int(step), "eta": float(eta), "fallback": fallback, "clamped": bool(clamped)})
+    return ctrl.eta
+
+
+class ProductRYSplitSimulator(ProductRYSimulator):
+    """RY-only with EXACT Gibbs cost via the hi/lo factorization (numba); any n <= 28."""
+
+    def __init__(self, clauses, polarities, ground_bitstring, n, E_split=None):
+        super().__init__(clauses, polarities, ground_bitstring, n, cost_mode="sampled")
+        self.cost_mode = "exact_split"
+        self.hi = n // 2
+        self.E = E_split if E_split is not None else split_spectrum(clauses, polarities, n)
+        self.nlev = int(len(self.clauses)) + 1
+
+    def _parts(self, x):
+        p1 = self.p1(x)
+        return _product_vec(p1[: self.hi]), _product_vec(p1[self.hi:])
+
+    def cost(self, x, eta=None):
+        eta = self._current_eta if eta is None else float(eta)
+        phi, plo = self._parts(x)
+        w = np.exp(-eta * np.arange(self.nlev, dtype=float))
+        return float(-np.log(max(_split_weighted_sum(self.E, phi, plo, w), 1e-300)))
+
+    def level_probs(self, x):
+        phi, plo = self._parts(x)
+        return _split_level_hist(self.E, phi, plo, self.nlev)
+
+    def refresh_eta(self, x, step):
+        self._current_eta = eta_update_levels(self.eta_ctrl, self.level_probs(x), step)
+        return self._current_eta
+
+    def resample(self, rng):  # not used
+        pass
+
+
+def split_spectrum(clauses, polarities, n) -> np.ndarray:
+    masks, vals = clause_masks(clauses, polarities, n)
+    if len(masks) > 255:
+        raise ValueError("uint8 energies need m <= 255")
+    return _split_spectrum(int(n), int(n // 2), masks, vals)
