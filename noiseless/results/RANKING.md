@@ -246,3 +246,19 @@ Uniform[0,π) init, `spsa_a = 0.2·√(37/n)`). ECD and QAOA-NN not re-run.
 - Among θ∈{π/6,π/4,π/3} at L*=4/200 steps, `bs_pi4` remains best (success-tied with π/6); best-of-25 lifts π/4 mean p(GS) by ~1.8×.
 - Identity is kept as a no-mixing baseline only.
 - Flat 800 SPSA steps flip the QAOA-full depth trend: deeper p now helps; QAOA-full@800 saturates success and surpasses ECD@200 mean p(GS) at 24/32.
+
+## jp: Gray encoding and layer growth (seed 20260917, Gibbs-only SPSA)
+
+20 four_sat × 25 trials per cell. A = binary random init (existing); B = Gray encoding, random init, 200 steps;
+C/D = layer growth from L=1 (transparent appended last layer β=0, θ=π, φ=0 + σ=0.05 kick) with **200 SPSA steps per
+stage** (total 400/600/800 for L=2/3/4), binary / Gray. Full details: `ENCODING_GROW_SUMMARY.md`.
+
+| L | A@200 succ / p̄ | A@400 | A@800 | B gray@200 | C grow (binary) | D grow (gray) |
+|---|---|---|---|---|---|---|
+| 2 | 0.456 / 0.130 | 0.486 / 0.149 | 0.462 / 0.162 | **0.538** / 0.143 | 0.486 / **0.205** (400) | 0.438 / 0.201 (400) |
+| 3 | 0.774 / 0.158 | 0.804 / 0.190 | **0.820** / 0.221 | 0.762 / 0.169 | 0.602 / **0.305** (600) | 0.564 / 0.288 (600) |
+| 4 | 0.932 / 0.172 | 0.946 / 0.213 | **0.950** / 0.256 | 0.908 / 0.178 | 0.752 / **0.382** (800) | 0.762 / 0.375 (800) |
+
+- Growth gives +40–50% mean p(GS) over random init at matched total steps (L4@800: 0.382 vs 0.256; frac p(GS)>0.5 0.354 vs
+  0.072) but loses success at L≥3: failures lock onto the first-excited level. Gray alone is a wash (L2 success +0.08,
+  L3/L4 −0.01/−0.02).

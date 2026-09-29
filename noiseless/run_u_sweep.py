@@ -30,7 +30,9 @@ from noiseless.circuit_local_ecd import n_parameters
 from noiseless.encoding import list_four_sat_npz, load_four_sat_npz
 from noiseless.spsa_gibbs import (
     NoiselessSimulator,
+    GROW_KICK_SIGMA,
     ground_flat_from_bitstring,
+    grow_trial,
     optimize_trial,
     scale_spsa_a,
 )
@@ -44,7 +46,9 @@ def _now() -> str:
 def _worker(job: dict) -> dict:
     t0 = time.perf_counter()
     try:
-        inst = load_four_sat_npz(job["ham_path"])
+        encoding = str(job.get("encoding", "binary"))
+        grow = bool(job.get("grow", False))
+        inst = load_four_sat_npz(job["ham_path"], encoding=encoding)
         u = build_fixed_u(job["u_name"])
         lambda1 = float(job.get("lambda1", 0.0))
         # Soft-cap λ: prefer "lam", fall back to legacy "lambda3"
@@ -63,31 +67,49 @@ def _worker(job: dict) -> dict:
             energy_tensor=inst["energy_tensor"],
             n_layers=int(job["n_layers"]),
             ground_bitstring=inst["ground_bitstring"],
-            ground_flat_index=ground_flat_from_bitstring(inst["ground_bitstring"]),
+            ground_flat_index=ground_flat_from_bitstring(inst["ground_bitstring"], encoding),
             lambda1=lambda1,
             lam=lam,
             beta_max=beta_max,
+            encoding=encoding,
         )
         rng = np.random.default_rng(int(job["seed"]))
         a = job.get("spsa_a")
-        if a is None:
-            a = scale_spsa_a(n_parameters(int(job["n_layers"])))
-        result = optimize_trial(
-            sim,
-            maxiter=int(job["steps"]),
-            rng=rng,
-            a=float(a),
-            c=float(job.get("spsa_c", 0.15)),
-            A=float(job.get("spsa_A", 10.0)),
-            adapt_lambda=adapt_lambda,
-            adapt_warmup_frac=float(job.get("adapt_warmup_frac", 0.25)),
-            adapt_every=int(job.get("adapt_every", 25)),
-            adapt_f_hi=float(job.get("adapt_f_hi", 0.20)),
-            adapt_f_lo=float(job.get("adapt_f_lo", 0.05)),
-            adapt_lam_min=float(job.get("adapt_lam_min", 0.5)),
-            adapt_lam_max=float(job.get("adapt_lam_max", 5.0)),
-            optimizer=str(job.get("optimizer", "spsa")),
-        )
+        if grow:
+            # a=None → per-stage scaling by that stage's n_params.
+            result = grow_trial(
+                sim,
+                final_layers=int(job["n_layers"]),
+                total_steps=int(job["steps"]),
+                rng=rng,
+                start_layers=int(job.get("grow_start", 1)),
+                kick_sigma=float(job.get("grow_kick_sigma", GROW_KICK_SIGMA)),
+                a=None if a is None else float(a),
+                c=float(job.get("spsa_c", 0.15)),
+                A=float(job.get("spsa_A", 10.0)),
+                optimizer=str(job.get("optimizer", "spsa")),
+                steps_per_stage=job.get("grow_steps_per_stage"),
+            )
+            a = result.stages[-1]["spsa_a"]
+        else:
+            if a is None:
+                a = scale_spsa_a(n_parameters(int(job["n_layers"])))
+            result = optimize_trial(
+                sim,
+                maxiter=int(job["steps"]),
+                rng=rng,
+                a=float(a),
+                c=float(job.get("spsa_c", 0.15)),
+                A=float(job.get("spsa_A", 10.0)),
+                adapt_lambda=adapt_lambda,
+                adapt_warmup_frac=float(job.get("adapt_warmup_frac", 0.25)),
+                adapt_every=int(job.get("adapt_every", 25)),
+                adapt_f_hi=float(job.get("adapt_f_hi", 0.20)),
+                adapt_f_lo=float(job.get("adapt_f_lo", 0.05)),
+                adapt_lam_min=float(job.get("adapt_lam_min", 0.5)),
+                adapt_lam_max=float(job.get("adapt_lam_max", 5.0)),
+                optimizer=str(job.get("optimizer", "spsa")),
+            )
         return {
             "ok": True,
             "ham_file": job["ham_file"],
@@ -120,6 +142,9 @@ def _worker(job: dict) -> dict:
             "spsa_a": float(a),
             "wall_s": float(time.perf_counter() - t0),
             "x": result.x.tolist(),
+            "encoding": encoding,
+            "grow": grow,
+            "stages": result.stages,
             "error": None,
         }
     except Exception as exc:  # noqa: BLE001
@@ -214,7 +239,7 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
     if not paths:
         raise SystemExit(f"No four_sat_*.npz under {args.ham_dir}")
     for p in paths:
-        inst = load_four_sat_npz(p)
+        inst = load_four_sat_npz(p, encoding=args.encoding)
         if inst["num_spins"] != 8:
             raise SystemExit(f"{p.name} has num_spins={inst['num_spins']}, need 8")
         if inst["n_ground"] != 1:
@@ -255,6 +280,11 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
                             "adapt_lam_min": float(args.adapt_lam_min),
                             "adapt_lam_max": float(args.adapt_lam_max),
                             "optimizer": str(args.optimizer),
+                            "encoding": str(args.encoding),
+                            "grow": bool(args.grow),
+                            "grow_start": int(args.grow_start),
+                            "grow_kick_sigma": float(args.grow_kick_sigma),
+                            "grow_steps_per_stage": args.grow_steps_per_stage,
                         }
                     )
     return jobs
@@ -318,7 +348,30 @@ def main(argv: list[str] | None = None) -> int:
         default="spsa",
         help="spsa (default) or bfgs (scipy BFGS, finite-difference gradient; same x0)",
     )
+    p.add_argument(
+        "--encoding",
+        choices=("binary", "gray"),
+        default="binary",
+        help="Fock→logical bit map for the two cavities (default binary = legacy results)",
+    )
+    p.add_argument(
+        "--grow",
+        action="store_true",
+        help="Layer growth: train L=--grow-start, append transparent last layer + kick, "
+        "retrain, ... up to each --layers value; --steps is the TOTAL budget split evenly",
+    )
+    p.add_argument("--grow-start", type=int, default=1)
+    p.add_argument("--grow-kick-sigma", type=float, default=GROW_KICK_SIGMA)
+    p.add_argument(
+        "--grow-steps-per-stage",
+        type=int,
+        default=None,
+        help="With --grow: SPSA steps for EVERY stage (generous budget, total = S x n_stages). "
+        "Omit for equal-total budget (--steps split evenly over stages).",
+    )
     args = p.parse_args(argv)
+    if args.grow and args.adapt_lambda:
+        p.error("--adapt-lambda is not supported with --grow")
     if args.optimizer == "bfgs" and args.adapt_lambda:
         p.error("--adapt-lambda is not supported with --optimizer bfgs")
     # Resolve soft-cap λ: --lambda wins over --lambda3; default 0
@@ -346,7 +399,9 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"[{_now()}] starting {len(jobs)} jobs workers={args.workers} steps={args.steps} "
         f"tag={args.tag} lambda1={args.lambda1} lam={args.lam} beta_max={args.beta_max} "
-        f"adapt_lambda={args.adapt_lambda} optimizer={args.optimizer}",
+        f"adapt_lambda={args.adapt_lambda} optimizer={args.optimizer} "
+        f"encoding={args.encoding} grow={args.grow} "
+        f"grow_steps_per_stage={args.grow_steps_per_stage}",
         flush=True,
     )
     records: list[dict] = []
@@ -403,6 +458,11 @@ def main(argv: list[str] | None = None) -> int:
             "adapt_lam_min": float(args.adapt_lam_min),
             "adapt_lam_max": float(args.adapt_lam_max),
             "optimizer": str(args.optimizer),
+            "encoding": str(args.encoding),
+            "grow": bool(args.grow),
+            "grow_start": int(args.grow_start),
+            "grow_kick_sigma": float(args.grow_kick_sigma),
+            "grow_steps_per_stage": args.grow_steps_per_stage,
         },
         "n_jobs": len(records),
         "n_ok": sum(1 for r in records if r.get("ok")),
@@ -417,6 +477,8 @@ def main(argv: list[str] | None = None) -> int:
                 "created_utc": payload["created_utc"],
                 "tag": args.tag,
                 "optimizer": str(args.optimizer),
+                "encoding": str(args.encoding),
+                "grow": bool(args.grow),
                 "args": payload["args"],
                 "n_jobs": payload["n_jobs"],
                 "n_ok": payload["n_ok"],

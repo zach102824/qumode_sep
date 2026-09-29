@@ -73,6 +73,29 @@ python -m noiseless.run_u_sweep --u-names jp --layers 4 --trials 25 --steps 200 
   --workers 1 --lambda1 0 --optimizer bfgs --tag jp_bfgs_B0
 ```
 
+### Cavity encoding (`--encoding`) and layer growth (`--grow`)
+
+`--encoding binary` (default; old runs reproduce bit-for-bit) maps Fock n → the 3 cavity
+bits as plain binary. `--encoding gray` uses the Gray code g = n ^ (n>>1) (transmon bits
+unchanged); the logical Hamiltonian is unchanged, so the physical energy tensor is a
+permutation of the binary one and the logical GS bitstring is identical. Records and
+summaries carry `encoding`.
+
+`--grow` trains L=`--grow-start` (default 1) from the usual random init, then appends a
+probability-transparent LAST layer (β=0, θ=π, φ=0 for d and e: ECD(0)·R(π,0) = −i·I per
+transmon, and a diagonal U such as `jp` preserves probabilities) plus a Gaussian kick
+σ=`--grow-kick-sigma` (0.05) on the new layer's 8 params, retrains, and repeats up to each
+`--layers` value. Each stage is a fresh SPSA run (gain `a` rescaled to the stage's
+n_params, η controller restarted). Budget: `--steps` is the TOTAL split evenly over stages
+(200 → 100/100, 67/67/66, 50×4) unless `--grow-steps-per-stage S` is given (S per stage,
+total S×n_stages). Records carry per-stage metrics in `stages`.
+
+```bash
+python -m noiseless.run_u_sweep --u-names jp --layers 2,3,4 --trials 25 --steps 200 \
+  --workers 8 --seed 20260917 --lambda1 0 --encoding gray --grow --grow-steps-per-stage 200 \
+  --tag jp_enc_D_gray_grow_ps200
+```
+
 ## CLI
 
 ```bash

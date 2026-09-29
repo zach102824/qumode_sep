@@ -207,6 +207,7 @@ class TrialResult:
     optimizer: str = "spsa"
     opt_status: int | None = None  # scipy status (BFGS only)
     opt_message: str | None = None  # scipy message (BFGS only)
+    stages: list[dict] | None = None  # per-stage metrics (grow_trial only)
 
 
 # Adaptive soft-cap λ defaults (opt-in via optimize_trial adapt_lambda=True)
@@ -230,6 +231,7 @@ class NoiselessSimulator:
     lam: float = 0.0  # soft-cap weight λ (preferred name)
     beta_max: float | None = None
     lambda3: float = 0.0  # legacy alias of lam; kept in sync in __post_init__ / set_lam
+    encoding: str = "binary"  # physical Fock → logical bit map used to decode argmax
 
     def __post_init__(self) -> None:
         self.energies_flat = np.asarray(self.energy_tensor, dtype=float).reshape(-1)
@@ -288,7 +290,7 @@ class NoiselessSimulator:
         probs = self.probs_from_x(x)
         idx = int(np.argmax(probs))
         d, e, n_a, n_b = denm_from_flat(idx)
-        bits = bits_from_denm(d, e, n_a, n_b)
+        bits = bits_from_denm(d, e, n_a, n_b, self.encoding)
         ml = bitstring_from_bits(bits)
         betas = betas_from_x(x, self.n_layers)
         mean_abs, max_abs, frac = beta_abs_stats(betas, self.beta_max)
@@ -515,9 +517,133 @@ def _optimize_trial_bfgs(sim: NoiselessSimulator, x0: np.ndarray, *, maxiter: in
     )
 
 
-def ground_flat_from_bitstring(bitstring: str) -> int:
-    d, e, n_a, n_b = denm_from_bits(bits_from_bitstring(bitstring))
+def ground_flat_from_bitstring(bitstring: str, encoding: str = "binary") -> int:
+    """Physical flat index of a LOGICAL bitstring under ``encoding``."""
+    d, e, n_a, n_b = denm_from_bits(bits_from_bitstring(bitstring), encoding)
     return flat_index(d, e, n_a, n_b)
+
+
+# ---------------------------------------------------------------------------
+# Layer growth (append a probability-transparent last layer, kick, retrain)
+# ---------------------------------------------------------------------------
+
+GROW_KICK_SIGMA = 0.05
+
+
+def transparent_layer_params() -> np.ndarray:
+    """8 params of a layer that leaves Born probabilities unchanged when appended last.
+
+    β_d = β_e = 0, θ_d = θ_e = π, φ_d = φ_e = 0. With this code's conventions
+    R(π, 0) = exp(-i π/2 σx) = -i σx and ECD(0) = σ⁻ ⊗ I + σ⁺ ⊗ I = σx ⊗ I, so
+    ECD(0)·R(π,0) = -i · I per transmon (global phase), and the fixed U (jp) is
+    diagonal in the Fock basis, hence probability-preserving. (For a non-diagonal U
+    the appended layer is NOT transparent.)
+    """
+    return np.array([0.0, 0.0, 0.0, 0.0, np.pi, np.pi, 0.0, 0.0], dtype=float)
+
+
+def split_steps(total_steps: int, n_stages: int) -> list[int]:
+    """Split ``total_steps`` evenly over stages; remainder goes to the earliest stages.
+
+    200 over 2 → [100, 100]; over 3 → [67, 67, 66]; over 4 → [50, 50, 50, 50].
+    """
+    n = max(int(n_stages), 1)
+    base, rem = divmod(int(total_steps), n)
+    return [base + (1 if i < rem else 0) for i in range(n)]
+
+
+def grow_trial(
+    sim: NoiselessSimulator,
+    *,
+    final_layers: int,
+    total_steps: int = 200,
+    rng: np.random.Generator | None = None,
+    start_layers: int = 1,
+    kick_sigma: float = GROW_KICK_SIGMA,
+    a: float | None = None,
+    c: float = 0.15,
+    A: float = 10.0,
+    optimizer: str = "spsa",
+    steps_per_stage: int | None = None,
+) -> TrialResult:
+    """Layer-growth trial: train L=start_layers from random init, then repeatedly append a
+    transparent LAST layer (+ Gaussian kick σ on its 8 params) and retrain, up to
+    ``final_layers``. The total budget ``total_steps`` is split evenly over the stages
+    (:func:`split_steps`), unless ``steps_per_stage`` is given, in which case every stage
+    gets that many steps (generous budget; ``total_steps`` is then ignored). Each stage is a fresh :func:`optimize_trial` call, so SPSA gain
+    ``a`` is rescaled for the stage's parameter count (unless ``a`` is given) and the η
+    controller restarts. ``sim.n_layers`` is set per stage and ends at ``final_layers``.
+
+    RNG draw order: x0 = random_parameters(start_layers, rng); stage-1 SPSA; kick
+    (rng.normal, 8 draws); stage-2 SPSA; ...
+    """
+    rng = rng or np.random.default_rng()
+    final_layers = int(final_layers)
+    start_layers = int(start_layers)
+    if final_layers < start_layers:
+        raise ValueError("final_layers must be >= start_layers")
+    layer_seq = list(range(start_layers, final_layers + 1))
+    if steps_per_stage is None:
+        steps_seq = split_steps(total_steps, len(layer_seq))
+    else:
+        steps_seq = [int(steps_per_stage)] * len(layer_seq)
+    stages: list[dict] = []
+    x = None
+    total_nfev = 0
+    result: TrialResult | None = None
+    for si, (L, steps) in enumerate(zip(layer_seq, steps_seq)):
+        sim.n_layers = int(L)
+        insert_info: dict = {}
+        if x is None:
+            x0 = random_parameters(L, rng)
+        else:
+            x_tr = np.concatenate([np.asarray(x, dtype=float), transparent_layer_params()])
+            ev_tr = sim.evaluate(x_tr)
+            kick = rng.normal(0.0, float(kick_sigma), size=8)
+            x0 = x_tr.copy()
+            x0[-8:] += kick
+            ev_k = sim.evaluate(x0)
+            insert_info = {
+                "p_gs_after_insert": float(ev_tr["p_gs"]),
+                "p_gs_after_kick": float(ev_k["p_gs"]),
+            }
+        stage_a = scale_spsa_a(n_parameters(L)) if a is None else float(a)
+        result = optimize_trial(
+            sim,
+            maxiter=int(steps),
+            rng=rng,
+            x0=x0,
+            a=stage_a,
+            c=c,
+            A=A,
+            optimizer=optimizer,
+        )
+        total_nfev += int(result.nfev)
+        x = np.asarray(result.x, dtype=float)
+        stages.append(
+            {
+                "stage": si,
+                "n_layers": int(L),
+                "n_params": int(x.size),
+                "steps": int(steps),
+                "spsa_a": float(stage_a),
+                "success": bool(result.success),
+                "p_gs": float(result.p_gs),
+                "fun": float(result.fun),
+                "eta": float(result.eta),
+                "energy_mean": float(result.energy_mean),
+                "mean_abs_beta": float(result.mean_abs_beta),
+                "max_abs_beta": float(result.max_abs_beta),
+                "most_likely_bitstring": result.most_likely_bitstring,
+                "nfev": int(result.nfev),
+                **insert_info,
+            }
+        )
+    assert result is not None
+    result.stages = stages
+    result.nfev = total_nfev
+    result.nit = int(sum(steps_seq))
+    return result
 
 
 LocalEcdGibbsSim = NoiselessSimulator

@@ -18,6 +18,38 @@ DIMS = (2, 2, NFOCK, NFOCK)  # d, e, A, B
 HILBERT_DIM = 2 * 2 * NFOCK * NFOCK  # 256
 N_A_BITS = 3
 N_B_BITS = 3
+ENCODINGS = ("binary", "gray")
+
+
+def _check_encoding(encoding: str) -> str:
+    enc = str(encoding).lower().strip()
+    if enc not in ENCODINGS:
+        raise ValueError(f"unknown encoding {encoding!r}; choose from {ENCODINGS}")
+    return enc
+
+
+def gray_encode(n: int) -> int:
+    """Binary-reflected Gray code of a Fock number: g = n ^ (n >> 1)."""
+    n = int(n)
+    return n ^ (n >> 1)
+
+
+def gray_decode(g: int) -> int:
+    """Inverse of :func:`gray_encode` (prefix XOR)."""
+    g = int(g)
+    n = 0
+    while g:
+        n ^= g
+        g >>= 1
+    return n
+
+
+def _cavity_code(n: int, encoding: str) -> int:
+    return gray_encode(n) if encoding == "gray" else int(n)
+
+
+def _cavity_decode(v: int, encoding: str) -> int:
+    return gray_decode(v) if encoding == "gray" else int(v)
 
 
 def vacuum() -> qt.Qobj:
@@ -34,8 +66,17 @@ def identity() -> qt.Qobj:
     return qt.tensor(qt.qeye(2), qt.qeye(2), qt.qeye(NFOCK), qt.qeye(NFOCK))
 
 
-def bits_from_denm(d: int, e: int, n_a: int, n_b: int) -> np.ndarray:
-    """MSB-first 8 bits from (d, e, n_A, n_B)."""
+def bits_from_denm(
+    d: int, e: int, n_a: int, n_b: int, encoding: str = "binary"
+) -> np.ndarray:
+    """MSB-first 8 bits from (d, e, n_A, n_B).
+
+    ``encoding="binary"`` (default): cavity bits are the binary digits of n.
+    ``encoding="gray"``: cavity bits are the digits of n ^ (n >> 1). Transmon bits unchanged.
+    """
+    enc = _check_encoding(encoding)
+    n_a = _cavity_code(n_a, enc)
+    n_b = _cavity_code(n_b, enc)
     bits = np.zeros(N_QUBITS, dtype=int)
     bits[0] = int(d) & 1
     bits[1] = int(e) & 1
@@ -46,7 +87,10 @@ def bits_from_denm(d: int, e: int, n_a: int, n_b: int) -> np.ndarray:
     return bits
 
 
-def denm_from_bits(bits: Sequence[int]) -> tuple[int, int, int, int]:
+def denm_from_bits(
+    bits: Sequence[int], encoding: str = "binary"
+) -> tuple[int, int, int, int]:
+    enc = _check_encoding(encoding)
     x = np.asarray(bits, dtype=int).reshape(-1)
     if x.size != N_QUBITS:
         raise ValueError(f"Expected {N_QUBITS} bits, got {x.size}")
@@ -57,7 +101,7 @@ def denm_from_bits(bits: Sequence[int]) -> tuple[int, int, int, int]:
     n_b = 0
     for b in x[2 + N_A_BITS :]:
         n_b = (n_b << 1) | int(b)
-    return d, e, n_a, n_b
+    return d, e, _cavity_decode(n_a, enc), _cavity_decode(n_b, enc)
 
 
 def bitstring_from_bits(bits: Sequence[int]) -> str:
@@ -142,33 +186,50 @@ def energy_tensor_from_terms(
     terms: Sequence[tuple[tuple[int, ...], float]],
     identity_shift: float = 0.0,
     tilt: float = 0.0,
+    encoding: str = "binary",
 ) -> np.ndarray:
-    """Diagonal energies shaped (2, 2, 8, 8) for |d,e,n_A,n_B⟩."""
+    """Diagonal energies shaped (2, 2, 8, 8) for |d,e,n_A,n_B⟩ (physical Fock basis).
+
+    The Hamiltonian is defined on logical bits; ``encoding`` fixes the map
+    physical (d, e, n_A, n_B) → logical bits.
+    """
+    enc = _check_encoding(encoding)
     out = np.empty(DIMS, dtype=float)
     for d in range(2):
         for e in range(2):
             for n_a in range(NFOCK):
                 for n_b in range(NFOCK):
-                    bits = bits_from_denm(d, e, n_a, n_b)
+                    bits = bits_from_denm(d, e, n_a, n_b, enc)
                     out[d, e, n_a, n_b] = energy_from_z_terms(bits, terms, identity_shift)
     if tilt:
         out = out + float(tilt) * np.arange(out.size, dtype=float).reshape(out.shape)
     return out
 
 
-def load_four_sat_npz(path: Path | str, tilt: float = 0.0) -> dict:
-    """Load one 8-qubit four_sat NPZ into energy tensor + ground-state info."""
+def load_four_sat_npz(
+    path: Path | str, tilt: float = 0.0, encoding: str = "binary"
+) -> dict:
+    """Load one 8-qubit four_sat NPZ into energy tensor + ground-state info.
+
+    ``ground_bitstring`` is always the LOGICAL bitstring (encoding-independent);
+    ``ground_denm`` / ``ground_flat_index`` are the physical Fock-basis location.
+    """
+    enc = _check_encoding(encoding)
     terms, meta = z_terms_from_npz(path)
-    tensor = energy_tensor_from_terms(terms, meta["identity"], tilt=tilt)
+    tensor = energy_tensor_from_terms(terms, meta["identity"], tilt=tilt, encoding=enc)
     flat = tensor.reshape(-1)
     gmin = float(np.min(flat))
     ground_idx = int(np.argmin(flat))
-    untilted = energy_tensor_from_terms(terms, meta["identity"], tilt=0.0).reshape(-1)
+    untilted = energy_tensor_from_terms(
+        terms, meta["identity"], tilt=0.0, encoding=enc
+    ).reshape(-1)
     n_ground = int(np.count_nonzero(np.isclose(untilted, untilted.min(), atol=1e-12)))
     d, e, n_a, n_b = denm_from_flat(ground_idx)
-    bits = bits_from_denm(d, e, n_a, n_b)
+    bits = bits_from_denm(d, e, n_a, n_b, enc)
     return {
         **meta,
+        "encoding": enc,
+        "ground_flat_index": ground_idx,
         "terms": terms,
         "energy_tensor": tensor,
         "energies_flat": flat,
