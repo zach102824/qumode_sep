@@ -86,6 +86,7 @@ def _worker(job: dict) -> dict:
             adapt_f_lo=float(job.get("adapt_f_lo", 0.05)),
             adapt_lam_min=float(job.get("adapt_lam_min", 0.5)),
             adapt_lam_max=float(job.get("adapt_lam_max", 5.0)),
+            optimizer=str(job.get("optimizer", "spsa")),
         )
         return {
             "ok": True,
@@ -113,6 +114,9 @@ def _worker(job: dict) -> dict:
             "beta_max": beta_max,
             "nfev": int(result.nfev),
             "nit": int(result.nit),
+            "optimizer": result.optimizer,
+            "opt_status": result.opt_status,
+            "opt_message": result.opt_message,
             "spsa_a": float(a),
             "wall_s": float(time.perf_counter() - t0),
             "x": result.x.tolist(),
@@ -250,6 +254,7 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
                             "adapt_f_lo": float(args.adapt_f_lo),
                             "adapt_lam_min": float(args.adapt_lam_min),
                             "adapt_lam_max": float(args.adapt_lam_max),
+                            "optimizer": str(args.optimizer),
                         }
                     )
     return jobs
@@ -307,7 +312,15 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--adapt-f-lo", type=float, default=0.05)
     p.add_argument("--adapt-lam-min", type=float, default=0.5)
     p.add_argument("--adapt-lam-max", type=float, default=5.0)
+    p.add_argument(
+        "--optimizer",
+        choices=("spsa", "bfgs"),
+        default="spsa",
+        help="spsa (default) or bfgs (scipy BFGS, finite-difference gradient; same x0)",
+    )
     args = p.parse_args(argv)
+    if args.optimizer == "bfgs" and args.adapt_lambda:
+        p.error("--adapt-lambda is not supported with --optimizer bfgs")
     # Resolve soft-cap λ: --lambda wins over --lambda3; default 0
     if args.lam_flag is not None:
         args.lam = float(args.lam_flag)
@@ -333,7 +346,7 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"[{_now()}] starting {len(jobs)} jobs workers={args.workers} steps={args.steps} "
         f"tag={args.tag} lambda1={args.lambda1} lam={args.lam} beta_max={args.beta_max} "
-        f"adapt_lambda={args.adapt_lambda}",
+        f"adapt_lambda={args.adapt_lambda} optimizer={args.optimizer}",
         flush=True,
     )
     records: list[dict] = []
@@ -389,6 +402,7 @@ def main(argv: list[str] | None = None) -> int:
             "adapt_f_lo": float(args.adapt_f_lo),
             "adapt_lam_min": float(args.adapt_lam_min),
             "adapt_lam_max": float(args.adapt_lam_max),
+            "optimizer": str(args.optimizer),
         },
         "n_jobs": len(records),
         "n_ok": sum(1 for r in records if r.get("ok")),
@@ -402,6 +416,7 @@ def main(argv: list[str] | None = None) -> int:
             {
                 "created_utc": payload["created_utc"],
                 "tag": args.tag,
+                "optimizer": str(args.optimizer),
                 "args": payload["args"],
                 "n_jobs": payload["n_jobs"],
                 "n_ok": payload["n_ok"],

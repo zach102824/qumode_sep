@@ -57,6 +57,22 @@ python -m noiseless.run_u_sweep --u-names ck_pi4 --layers 4 \
   --adapt-lambda --beta-max 2.1 --tag fleet_adapt_B2_adaptive
 ```
 
+### Optimizer choice (`--optimizer`)
+
+`--optimizer spsa` (default) is the SPSA loop above; old runs reproduce exactly.
+`--optimizer bfgs` runs `scipy.optimize.minimize(method="BFGS")` with default
+settings (finite-difference gradient, `maxiter=--steps`) from the same random x0
+(drawn from the trial seed exactly as for SPSA) on the same cost (Gibbs + optional
+λ terms). η is refreshed at the start and then after every 5th BFGS iteration
+(same cadence as SPSA steps 1, 6, 11, ...). Records carry `optimizer`, true cost
+evaluation count `nfev`, BFGS `nit`, `opt_status` and `opt_message`.
+`--adapt-lambda` is not supported with BFGS.
+
+```bash
+python -m noiseless.run_u_sweep --u-names jp --layers 4 --trials 25 --steps 200 \
+  --workers 1 --lambda1 0 --optimizer bfgs --tag jp_bfgs_B0
+```
+
 ## CLI
 
 ```bash

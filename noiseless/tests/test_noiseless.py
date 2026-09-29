@@ -322,3 +322,46 @@ def test_lambda_cli_alias_sets_lam():
     b = beta_regularizer(betas, lambda3=2.0, beta_max=0.5)
     assert a == pytest.approx(b)
     assert a == pytest.approx(2.0 * 0.25)
+
+
+def _tiny_sim(n_layers: int = 2) -> NoiselessSimulator:
+    gs = "01011010"
+    d, e, na, nb = denm_from_bits(bits_from_bitstring(gs))
+    tensor = np.ones(DIMS, dtype=float)
+    tensor[d, e, na, nb] = 0.0
+    return NoiselessSimulator(
+        u_fixed=build_fixed_u("jp"),
+        energy_tensor=tensor,
+        n_layers=n_layers,
+        ground_bitstring=gs,
+        ground_flat_index=ground_flat_from_bitstring(gs),
+    )
+
+
+def test_spsa_default_matches_explicit_optimizer():
+    """Default optimizer path is SPSA and identical to optimizer='spsa'."""
+    r0 = optimize_trial(_tiny_sim(), maxiter=6, rng=np.random.default_rng(5))
+    r1 = optimize_trial(_tiny_sim(), maxiter=6, rng=np.random.default_rng(5), optimizer="spsa")
+    assert r0.optimizer == r1.optimizer == "spsa"
+    assert r0.fun == r1.fun
+    assert np.array_equal(r0.x, r1.x)
+    assert r0.nfev == r1.nfev == 13
+    assert r0.opt_status is None
+
+
+def test_bfgs_short_run():
+    """BFGS returns a valid TrialResult from the same x0 SPSA would draw."""
+    sim = _tiny_sim()
+    res = optimize_trial(sim, maxiter=3, rng=np.random.default_rng(5), optimizer="bfgs")
+    assert res.optimizer == "bfgs"
+    assert 1 <= res.nit <= 3
+    assert res.nfev > res.nit
+    # finite-difference gradient: at least n_params+1 evals per iteration
+    assert res.nfev >= res.nit * (n_parameters(2) + 1)
+    assert np.isfinite(res.fun) and 0.0 <= res.p_gs <= 1.0
+    assert res.opt_status is not None and isinstance(res.opt_message, str)
+    assert sim.eta_ctrl.history and sim.eta_ctrl.history[0]["step"] == 1
+    x0 = random_parameters(2, np.random.default_rng(5))
+    assert not np.array_equal(res.x, x0)
+    with pytest.raises(ValueError):
+        optimize_trial(_tiny_sim(), maxiter=3, rng=np.random.default_rng(5), optimizer="bfgs", adapt_lambda=True)

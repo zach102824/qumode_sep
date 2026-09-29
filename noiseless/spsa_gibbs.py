@@ -204,6 +204,9 @@ class TrialResult:
     frac_over_beta_max: float = 0.0
     final_lam: float = 0.0
     mean_lam_post_warmup: float = 0.0
+    optimizer: str = "spsa"
+    opt_status: int | None = None  # scipy status (BFGS only)
+    opt_message: str | None = None  # scipy message (BFGS only)
 
 
 # Adaptive soft-cap λ defaults (opt-in via optimize_trial adapt_lambda=True)
@@ -350,8 +353,9 @@ def optimize_trial(
     adapt_f_lo: float = ADAPT_F_LO,
     adapt_lam_min: float = ADAPT_LAM_MIN,
     adapt_lam_max: float = ADAPT_LAM_MAX,
+    optimizer: str = "spsa",
 ) -> TrialResult:
-    """SPSA trial. Optional ``lambda1``/``lam``/``beta_max`` override ``sim`` fields.
+    """SPSA (default) or BFGS trial. Optional ``lambda1``/``lam``/``beta_max`` override ``sim`` fields.
 
     Soft-cap weight is ``lam`` (CLI ``--lambda``). Legacy ``lambda3`` still works as an
     alias when ``lam`` is omitted.
@@ -360,7 +364,17 @@ def optimize_trial(
     lambda1/lam/beta_max path exactly. When True:
       - steps 1..floor(warmup_frac*maxiter): lam=0 (pure Gibbs warm-up)
       - afterwards every ``adapt_every`` steps, raise/lower lam from frac(|β|>β_max)
+
+    ``optimizer="bfgs"`` uses scipy BFGS (finite-difference gradient) from the same
+    x0 (drawn from ``rng`` exactly as for SPSA), refreshing η at iteration 1 and then
+    after every 5th iteration (mirrors SPSA refreshes at steps 1, 6, 11, ...).
+    ``nfev`` counts true cost evaluations. Adaptive λ is not supported for BFGS.
     """
+    optimizer = str(optimizer).lower()
+    if optimizer not in ("spsa", "bfgs"):
+        raise ValueError(f"unknown optimizer {optimizer!r} (expected 'spsa' or 'bfgs')")
+    if optimizer == "bfgs" and adapt_lambda:
+        raise ValueError("adapt_lambda is not supported with optimizer='bfgs'")
     rng = rng or np.random.default_rng()
     n_params = n_parameters(sim.n_layers)
     x0 = random_parameters(sim.n_layers, rng) if x0 is None else np.asarray(x0, dtype=float)
@@ -414,6 +428,9 @@ def optimize_trial(
             # else hold
         lam_post.append(float(sim.lam))
 
+    if optimizer == "bfgs":
+        return _optimize_trial_bfgs(sim, x0, maxiter=int(maxiter))
+
     x_final, fun_final, nfev = run_spsa(
         sim.cost,
         x0,
@@ -446,6 +463,55 @@ def optimize_trial(
         frac_over_beta_max=float(ev["frac_over_beta_max"]),
         final_lam=final_lam,
         mean_lam_post_warmup=mean_lam_pw,
+    )
+
+
+def _optimize_trial_bfgs(sim: NoiselessSimulator, x0: np.ndarray, *, maxiter: int) -> TrialResult:
+    """BFGS path of ``optimize_trial`` (sim already reset: fresh eta_ctrl, η=1)."""
+    from scipy.optimize import minimize
+
+    x0 = np.asarray(x0, dtype=float).copy()
+    counter = {"nfev": 0}
+
+    def fun(x: np.ndarray) -> float:
+        counter["nfev"] += 1
+        return float(sim.cost(x))
+
+    # Same as SPSA step 1: refresh η from x0 before any cost evaluation.
+    sim.refresh_eta(x0, 1)
+    state = {"k": 0}
+    refresh_every = int(sim.eta_ctrl.refresh_every)
+
+    def callback(xk: np.ndarray) -> None:
+        state["k"] += 1
+        k = state["k"]
+        if k % refresh_every == 0:
+            sim.refresh_eta(np.asarray(xk, dtype=float), k + 1)
+
+    res = minimize(fun, x0, method="BFGS", options={"maxiter": int(maxiter)}, callback=callback)
+    x_final = np.asarray(res.x, dtype=float)
+    fun_final = fun(x_final)
+    ev = sim.evaluate(x_final)
+    final_lam = float(sim.lam)
+    return TrialResult(
+        success=bool(ev["success"]),
+        p_gs=float(ev["p_gs"]),
+        most_likely_bitstring=str(ev["most_likely_bitstring"]),
+        ground_bitstring=sim.ground_bitstring,
+        fun=float(fun_final),
+        eta=float(sim._current_eta),
+        nfev=int(counter["nfev"]),
+        nit=int(res.nit),
+        x=x_final,
+        energy_mean=float(ev["energy_mean"]),
+        mean_abs_beta=float(ev["mean_abs_beta"]),
+        max_abs_beta=float(ev["max_abs_beta"]),
+        frac_over_beta_max=float(ev["frac_over_beta_max"]),
+        final_lam=final_lam,
+        mean_lam_post_warmup=final_lam,
+        optimizer="bfgs",
+        opt_status=int(res.status),
+        opt_message=str(res.message),
     )
 
 
