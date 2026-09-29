@@ -1,6 +1,6 @@
 # Noiseless SPSA ranking
 
-Updated: 2026-09-18 17:08 Asia/Shanghai
+Updated: 2026-09-29 12:20 Asia/Shanghai
 
 Constraints: random ECD init; fixed U never trained; no joint prep; noiseless.
 
@@ -171,6 +171,40 @@ Across 20 Hamiltonians: mean fraction of terms dropped **0.764** (range 0.681–
 **Headline:** QAOA-full wins only at 16 params; ECD (`bs_pi4`) wins at 24 and 32. QAOA-NN never recovers the true GS (success 0.000 at all tiers) under heavy truncation.
 
 **Figure:** single-panel success-rate comparison at fixed 200 SPSA steps — [`figures/ecd_vs_qaoa_200_success.png`](figures/ecd_vs_qaoa_200_success.png) (ECD improves with L*; QAOA-full degrades with p).
+
+### Update: local ECD + jp (joint-parity) coupling
+
+Added 2026-09-29. Fixed U = `jp` (joint-parity coupling) replaces `bs_pi4`; everything else as the ECD arm above:
+local ECD, random init, Gibbs-only SPSA (no L1, no β cap), 200 steps, 25 trials × 20 Hamiltonians (N=500 per row).
+Sources: `jp_L2_20260929T041311Z` (L*=2), `jp_L3_20260929T041643Z` (L*=3), `jp_B0_20260928T042134Z` (L*=4).
+Param counts confirmed from record `x`: 16 / 24 / 32.
+
+Cells are **success / mean p(GS)**. `bs_pi4`, QAOA-full and QAOA-NN columns are copied from the bake-off tables above.
+
+| Params | ECD `jp` (SPSA) | old ECD `bs_pi4` | QAOA-full | QAOA-NN |
+|-------:|----------------:|-----------------:|----------:|--------:|
+| 16 (L*=2 / p=8) | 0.456 / 0.1297 | 0.624 / 0.1245 | 0.708 / 0.0618 | 0.000 / 0.0017 |
+| 24 (L*=3 / p=12) | 0.774 / 0.1581 | 0.866 / 0.1489 | 0.554 / 0.0526 | 0.000 / 0.0022 |
+| 32 (L*=4 / p=16) | 0.932 / 0.1717 | 0.954 / 0.1554 | 0.452 / 0.0413 | 0.000 / 0.0022 |
+
+`jp` rows, extra stats (median over all 500 runs; best-of-25 = per-H max over 25 trials, then mean over 20 H):
+
+| Params | L* | Success | Mean p(GS) | Median p(GS) | Mean best-of-25 p(GS) | old `bs_pi4` best-of-25 | N |
+|-------:|---:|--------:|-----------:|-------------:|----------------------:|------------------------:|--:|
+| 16 | 2 | 0.456 | 0.1297 | 0.0833 | 0.3061 | 0.2206 | 500 |
+| 24 | 3 | 0.774 | 0.1581 | 0.1270 | 0.3646 | 0.2886 | 500 |
+| 32 | 4 | 0.932 | 0.1717 | 0.1434 | 0.3631 | 0.2885 | 500 |
+
+**Read:** `jp` beats `bs_pi4` on mean p(GS) and best-of-25 at every tier, but trails it on bitstring success
+(−0.168 / −0.092 / −0.022 at 16 / 24 / 32). At 16 params QAOA-full still wins on success; `jp` wins on success at 24 and 32
+and on mean p(GS) at all tiers vs QAOA-full@200.
+
+**Caveats:**
+- Seed differs: `jp` fleets use `--seed 20260917`; the bake-off above used seed 20260918. Hamiltonian set, steps and SPSA
+  hyperparameters otherwise match.
+- With BFGS (scipy, finite-difference gradient, same x0) `jp` L*=4 reaches **0.976 / 0.520**
+  (`jp_bfgs_B0_20260929T021402Z`), at ~6× the cost-function evaluations of 200-step SPSA (mean nfev ≈2557 vs 401).
+  See `BFGS_VS_SPSA_JP_SUMMARY.md`.
 
 
 ## QAOA-full @ 800 SPSA steps (flat budget)
