@@ -67,6 +67,10 @@ settings (finite-difference gradient, `maxiter=--steps`) from the same random x0
 (same cadence as SPSA steps 1, 6, 11, ...). Records carry `optimizer`, true cost
 evaluation count `nfev`, BFGS `nit`, `opt_status` and `opt_message`.
 `--adapt-lambda` is not supported with BFGS.
+`--optimizer spsa_adam` keeps the SPSA step (same η refresh, c_k, Rademacher rng draws,
+2 evals/step + 1 final, so identical `nfev`) but replaces x -= a_k ĝ with a bias-corrected
+Adam update (`--adam-lr`, default 0.05; β1 0.9, β2 0.999, eps 1e-8). Works with `--grow`
+(fresh Adam state per stage). See `results/ADAM_SUMMARY.md`.
 
 ```bash
 python -m noiseless.run_u_sweep --u-names jp --layers 4 --trials 25 --steps 200 \

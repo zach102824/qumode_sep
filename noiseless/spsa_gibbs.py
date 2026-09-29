@@ -335,6 +335,57 @@ def run_spsa(
     return x, float(fun(x)), nfev + 1
 
 
+ADAM_LR = 0.05
+ADAM_BETA1 = 0.9
+ADAM_BETA2 = 0.999
+ADAM_EPS = 1e-8
+
+
+def run_spsa_adam(
+    fun: Callable[[np.ndarray], float],
+    x0: np.ndarray,
+    *,
+    maxiter: int,
+    rng: np.random.Generator,
+    lr: float = ADAM_LR,
+    beta1: float = ADAM_BETA1,
+    beta2: float = ADAM_BETA2,
+    eps: float = ADAM_EPS,
+    c: float = 0.15,
+    gamma: float = 0.101,
+    on_before_step: Callable[[int, np.ndarray], None] | None = None,
+) -> tuple[np.ndarray, float, int]:
+    """SPSA gradient estimate + Adam update.
+
+    Identical to :func:`run_spsa` in everything except the parameter update: same
+    ``on_before_step`` hook (η refresh), same c_k = c / k**gamma, same Rademacher draw
+    ``rng.choice([-1, 1], size=n)`` per step (so the rng stream is consumed identically),
+    2 cost evals per step + 1 final eval. Update: Adam with bias correction,
+    x -= lr * m_hat / (sqrt(v_hat) + eps). The SPSA gain a_k (a, A, alpha) is unused.
+    """
+    x = np.asarray(x0, dtype=float).copy()
+    m = np.zeros_like(x)
+    v = np.zeros_like(x)
+    b1 = float(beta1)
+    b2 = float(beta2)
+    nfev = 0
+    for k in range(1, int(maxiter) + 1):
+        if on_before_step is not None:
+            on_before_step(k, x)
+        ck = c / k**gamma
+        delta = rng.choice([-1.0, 1.0], size=x.size)
+        yp = float(fun(x + ck * delta))
+        ym = float(fun(x - ck * delta))
+        nfev += 2
+        ghat = (yp - ym) / (2.0 * ck) * delta
+        m = b1 * m + (1.0 - b1) * ghat
+        v = b2 * v + (1.0 - b2) * ghat * ghat
+        m_hat = m / (1.0 - b1**k)
+        v_hat = v / (1.0 - b2**k)
+        x = x - float(lr) * m_hat / (np.sqrt(v_hat) + float(eps))
+    return x, float(fun(x)), nfev + 1
+
+
 def optimize_trial(
     sim: NoiselessSimulator,
     *,
@@ -356,8 +407,9 @@ def optimize_trial(
     adapt_lam_min: float = ADAPT_LAM_MIN,
     adapt_lam_max: float = ADAPT_LAM_MAX,
     optimizer: str = "spsa",
+    adam_lr: float = ADAM_LR,
 ) -> TrialResult:
-    """SPSA (default) or BFGS trial. Optional ``lambda1``/``lam``/``beta_max`` override ``sim`` fields.
+    """SPSA (default), SPSA-Adam or BFGS trial. Optional ``lambda1``/``lam``/``beta_max`` override ``sim`` fields.
 
     Soft-cap weight is ``lam`` (CLI ``--lambda``). Legacy ``lambda3`` still works as an
     alias when ``lam`` is omitted.
@@ -371,10 +423,17 @@ def optimize_trial(
     x0 (drawn from ``rng`` exactly as for SPSA), refreshing η at iteration 1 and then
     after every 5th iteration (mirrors SPSA refreshes at steps 1, 6, 11, ...).
     ``nfev`` counts true cost evaluations. Adaptive λ is not supported for BFGS.
+
+    ``optimizer="spsa_adam"`` (:func:`run_spsa_adam`) uses the same x0, the same SPSA
+    two-point gradient (same c_k, same Rademacher rng draws, same η refresh hook) and the
+    same number of cost evaluations (2·maxiter + 1) as SPSA, but updates with Adam
+    (lr=``adam_lr``, β1=0.9, β2=0.999, eps=1e-8, bias-corrected). ``a``/``A`` are ignored.
     """
     optimizer = str(optimizer).lower()
-    if optimizer not in ("spsa", "bfgs"):
-        raise ValueError(f"unknown optimizer {optimizer!r} (expected 'spsa' or 'bfgs')")
+    if optimizer not in ("spsa", "bfgs", "spsa_adam"):
+        raise ValueError(
+            f"unknown optimizer {optimizer!r} (expected 'spsa', 'spsa_adam' or 'bfgs')"
+        )
     if optimizer == "bfgs" and adapt_lambda:
         raise ValueError("adapt_lambda is not supported with optimizer='bfgs'")
     rng = rng or np.random.default_rng()
@@ -433,16 +492,27 @@ def optimize_trial(
     if optimizer == "bfgs":
         return _optimize_trial_bfgs(sim, x0, maxiter=int(maxiter))
 
-    x_final, fun_final, nfev = run_spsa(
-        sim.cost,
-        x0,
-        maxiter=maxiter,
-        rng=rng,
-        a=float(a),
-        c=c,
-        A=A,
-        on_before_step=on_before,
-    )
+    if optimizer == "spsa_adam":
+        x_final, fun_final, nfev = run_spsa_adam(
+            sim.cost,
+            x0,
+            maxiter=maxiter,
+            rng=rng,
+            lr=float(adam_lr),
+            c=c,
+            on_before_step=on_before,
+        )
+    else:
+        x_final, fun_final, nfev = run_spsa(
+            sim.cost,
+            x0,
+            maxiter=maxiter,
+            rng=rng,
+            a=float(a),
+            c=c,
+            A=A,
+            on_before_step=on_before,
+        )
     ev = sim.evaluate(x_final)
     final_lam = float(sim.lam)
     if adapt_lambda and lam_post:
@@ -465,6 +535,7 @@ def optimize_trial(
         frac_over_beta_max=float(ev["frac_over_beta_max"]),
         final_lam=final_lam,
         mean_lam_post_warmup=mean_lam_pw,
+        optimizer=optimizer,
     )
 
 
@@ -565,6 +636,7 @@ def grow_trial(
     A: float = 10.0,
     optimizer: str = "spsa",
     steps_per_stage: int | None = None,
+    adam_lr: float = ADAM_LR,
 ) -> TrialResult:
     """Layer-growth trial: train L=start_layers from random init, then repeatedly append a
     transparent LAST layer (+ Gaussian kick σ on its 8 params) and retrain, up to
@@ -576,6 +648,10 @@ def grow_trial(
 
     RNG draw order: x0 = random_parameters(start_layers, rng); stage-1 SPSA; kick
     (rng.normal, 8 draws); stage-2 SPSA; ...
+
+    With ``optimizer="spsa_adam"`` each stage starts a FRESH Adam state (m=v=0, bias
+    correction restarts at k=1), consistent with the η controller restart; the appended
+    layer's params have no history, and the old moments would be mis-scaled anyway.
     """
     rng = rng or np.random.default_rng()
     final_layers = int(final_layers)
@@ -617,6 +693,7 @@ def grow_trial(
             c=c,
             A=A,
             optimizer=optimizer,
+            adam_lr=adam_lr,
         )
         total_nfev += int(result.nfev)
         x = np.asarray(result.x, dtype=float)

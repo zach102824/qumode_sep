@@ -262,3 +262,18 @@ stage** (total 400/600/800 for L=2/3/4), binary / Gray. Full details: `ENCODING_
 - Growth gives +40–50% mean p(GS) over random init at matched total steps (L4@800: 0.382 vs 0.256; frac p(GS)>0.5 0.354 vs
   0.072) but loses success at L≥3: failures lock onto the first-excited level. Gray alone is a wash (L2 success +0.08,
   L3/L4 −0.01/−0.02).
+
+## jp: SPSA-Adam (same SPSA gradient + eval count, Adam update lr 0.05; seed 20260917)
+
+20 four_sat × 25 trials, binary, λ=0 Gibbs. A = random init 200 steps (401 evals); C = growth from L=1, 200 steps per
+stage (802/1203/1604 evals); fresh Adam state per stage. Full details: `ADAM_SUMMARY.md`.
+
+| L | A SPSA succ / p̄ | A Adam | C SPSA grow | C Adam grow |
+|---|---|---|---|---|
+| 2 | 0.456 / 0.130 | 0.462 / 0.138 | 0.486 / 0.205 | **0.510** / **0.222** |
+| 3 | 0.774 / 0.158 | 0.760 / 0.184 | 0.602 / 0.305 | **0.772** / **0.341** |
+| 4 | **0.932** / 0.172 | 0.930 / 0.208 | 0.752 / 0.382 | 0.852 / **0.397** |
+
+- Same cost, free win: Adam keeps random-init success and adds +0.03–0.04 mean p(GS) at L3/L4; with growth it lifts
+  success at L3 to random-init level (0.772) and at L4 to 0.852 while keeping growth's p(GS) edge. Remaining growth
+  failures still lock onto the first-excited level (97%).

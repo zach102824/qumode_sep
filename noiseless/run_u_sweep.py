@@ -29,6 +29,7 @@ if str(_REPO) not in sys.path:
 from noiseless.circuit_local_ecd import n_parameters
 from noiseless.encoding import list_four_sat_npz, load_four_sat_npz
 from noiseless.spsa_gibbs import (
+    ADAM_LR,
     NoiselessSimulator,
     GROW_KICK_SIGMA,
     ground_flat_from_bitstring,
@@ -89,6 +90,7 @@ def _worker(job: dict) -> dict:
                 A=float(job.get("spsa_A", 10.0)),
                 optimizer=str(job.get("optimizer", "spsa")),
                 steps_per_stage=job.get("grow_steps_per_stage"),
+                adam_lr=float(job.get("adam_lr", ADAM_LR)),
             )
             a = result.stages[-1]["spsa_a"]
         else:
@@ -109,6 +111,7 @@ def _worker(job: dict) -> dict:
                 adapt_lam_min=float(job.get("adapt_lam_min", 0.5)),
                 adapt_lam_max=float(job.get("adapt_lam_max", 5.0)),
                 optimizer=str(job.get("optimizer", "spsa")),
+                adam_lr=float(job.get("adam_lr", ADAM_LR)),
             )
         return {
             "ok": True,
@@ -140,6 +143,7 @@ def _worker(job: dict) -> dict:
             "opt_status": result.opt_status,
             "opt_message": result.opt_message,
             "spsa_a": float(a),
+            "adam_lr": float(job.get("adam_lr", ADAM_LR)) if result.optimizer == "spsa_adam" else None,
             "wall_s": float(time.perf_counter() - t0),
             "x": result.x.tolist(),
             "encoding": encoding,
@@ -280,6 +284,7 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
                             "adapt_lam_min": float(args.adapt_lam_min),
                             "adapt_lam_max": float(args.adapt_lam_max),
                             "optimizer": str(args.optimizer),
+                            "adam_lr": float(args.adam_lr),
                             "encoding": str(args.encoding),
                             "grow": bool(args.grow),
                             "grow_start": int(args.grow_start),
@@ -344,9 +349,16 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--adapt-lam-max", type=float, default=5.0)
     p.add_argument(
         "--optimizer",
-        choices=("spsa", "bfgs"),
+        choices=("spsa", "bfgs", "spsa_adam"),
         default="spsa",
-        help="spsa (default) or bfgs (scipy BFGS, finite-difference gradient; same x0)",
+        help="spsa (default), spsa_adam (same SPSA gradient estimate + Adam update, "
+        "same eval count) or bfgs (scipy BFGS, finite-difference gradient; same x0)",
+    )
+    p.add_argument(
+        "--adam-lr",
+        type=float,
+        default=ADAM_LR,
+        help="Adam learning rate for --optimizer spsa_adam (default 0.05)",
     )
     p.add_argument(
         "--encoding",
@@ -399,7 +411,7 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"[{_now()}] starting {len(jobs)} jobs workers={args.workers} steps={args.steps} "
         f"tag={args.tag} lambda1={args.lambda1} lam={args.lam} beta_max={args.beta_max} "
-        f"adapt_lambda={args.adapt_lambda} optimizer={args.optimizer} "
+        f"adapt_lambda={args.adapt_lambda} optimizer={args.optimizer} adam_lr={args.adam_lr} "
         f"encoding={args.encoding} grow={args.grow} "
         f"grow_steps_per_stage={args.grow_steps_per_stage}",
         flush=True,
@@ -458,6 +470,7 @@ def main(argv: list[str] | None = None) -> int:
             "adapt_lam_min": float(args.adapt_lam_min),
             "adapt_lam_max": float(args.adapt_lam_max),
             "optimizer": str(args.optimizer),
+            "adam_lr": float(args.adam_lr),
             "encoding": str(args.encoding),
             "grow": bool(args.grow),
             "grow_start": int(args.grow_start),
