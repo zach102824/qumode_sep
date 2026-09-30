@@ -95,6 +95,7 @@ def _worker(job: dict) -> dict:
                 lr_schedule=job.get("grow_lr_schedule"),
                 eta_scale_schedule=job.get("grow_eta_scale"),
                 c_schedule=job.get("grow_c_schedule"),
+                bfgs_eta_mode=str(job.get("bfgs_eta_mode", "callback")),
             )
             a = result.stages[-1]["spsa_a"]
         else:
@@ -116,6 +117,7 @@ def _worker(job: dict) -> dict:
                 adapt_lam_max=float(job.get("adapt_lam_max", 5.0)),
                 optimizer=str(job.get("optimizer", "spsa")),
                 adam_lr=float(job.get("adam_lr", ADAM_LR)),
+                bfgs_eta_mode=str(job.get("bfgs_eta_mode", "callback")),
             )
         return {
             "ok": True,
@@ -153,6 +155,8 @@ def _worker(job: dict) -> dict:
             "encoding": encoding,
             "grow": grow,
             "stages": result.stages,
+            "bfgs_eta_mode": str(job.get("bfgs_eta_mode", "callback")) if result.optimizer == "bfgs" else None,
+            "opt_info": result.opt_info,
             "error": None,
         }
     except Exception as exc:  # noqa: BLE001
@@ -298,6 +302,7 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
                             "grow_lr_schedule": args.grow_lr_schedule,
                             "grow_eta_scale": args.grow_eta_scale,
                             "grow_c_schedule": args.grow_c_schedule,
+                            "bfgs_eta_mode": str(args.bfgs_eta_mode),
                         }
                     )
     return jobs
@@ -375,6 +380,16 @@ def main(argv: list[str] | None = None) -> int:
         help="Fock→logical bit map for the two cavities (default binary = legacy results)",
     )
     p.add_argument(
+        "--bfgs-eta-mode",
+        choices=("callback", "fixed", "restart"),
+        default="callback",
+        help="With --optimizer bfgs: η handling. callback (legacy default) = refresh every 5 "
+        "BFGS iterations inside the run; fixed = refresh once at x0 then hold; restart = BFGS "
+        "to convergence at fixed η, refresh, restart (inverse Hessian carried) until η is "
+        "stationary (1%% rel.), a restart makes no iteration, or the iteration budget is used. With --grow the per-stage "
+        "BFGS maxiter is the stage step count (e.g. --grow-steps-per-stage 500)",
+    )
+    p.add_argument(
         "--grow",
         action="store_true",
         help="Layer growth: train L=--grow-start, append transparent last layer + kick, "
@@ -433,6 +448,8 @@ def main(argv: list[str] | None = None) -> int:
         setattr(args, name, vals)
     if args.grow and args.adapt_lambda:
         p.error("--adapt-lambda is not supported with --grow")
+    if args.bfgs_eta_mode != "callback" and args.optimizer != "bfgs":
+        p.error("--bfgs-eta-mode requires --optimizer bfgs")
     if args.optimizer == "bfgs" and args.adapt_lambda:
         p.error("--adapt-lambda is not supported with --optimizer bfgs")
     # Resolve soft-cap λ: --lambda wins over --lambda3; default 0
@@ -529,6 +546,7 @@ def main(argv: list[str] | None = None) -> int:
             "grow_lr_schedule": args.grow_lr_schedule,
             "grow_eta_scale": args.grow_eta_scale,
             "grow_c_schedule": args.grow_c_schedule,
+            "bfgs_eta_mode": str(args.bfgs_eta_mode),
         },
         "n_jobs": len(records),
         "n_ok": sum(1 for r in records if r.get("ok")),

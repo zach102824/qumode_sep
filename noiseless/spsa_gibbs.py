@@ -208,6 +208,7 @@ class TrialResult:
     opt_status: int | None = None  # scipy status (BFGS only)
     opt_message: str | None = None  # scipy message (BFGS only)
     stages: list[dict] | None = None  # per-stage metrics (grow_trial only)
+    opt_info: dict | None = None  # BFGS eta_mode details (non-legacy BFGS modes only)
 
 
 # Adaptive soft-cap λ defaults (opt-in via optimize_trial adapt_lambda=True)
@@ -413,6 +414,7 @@ def optimize_trial(
     adapt_lam_max: float = ADAPT_LAM_MAX,
     optimizer: str = "spsa",
     adam_lr: float = ADAM_LR,
+    bfgs_eta_mode: str = "callback",
 ) -> TrialResult:
     """SPSA (default), SPSA-Adam or BFGS trial. Optional ``lambda1``/``lam``/``beta_max`` override ``sim`` fields.
 
@@ -428,6 +430,8 @@ def optimize_trial(
     x0 (drawn from ``rng`` exactly as for SPSA), refreshing η at iteration 1 and then
     after every 5th iteration (mirrors SPSA refreshes at steps 1, 6, 11, ...).
     ``nfev`` counts true cost evaluations. Adaptive λ is not supported for BFGS.
+    ``bfgs_eta_mode`` selects how η is handled during BFGS (see :data:`BFGS_ETA_MODES`
+    and :func:`_optimize_trial_bfgs`); the default ``"callback"`` is the legacy behaviour.
 
     ``optimizer="spsa_adam"`` (:func:`run_spsa_adam`) uses the same x0, the same SPSA
     two-point gradient (same c_k, same Rademacher rng draws, same η refresh hook) and the
@@ -495,7 +499,7 @@ def optimize_trial(
         lam_post.append(float(sim.lam))
 
     if optimizer == "bfgs":
-        return _optimize_trial_bfgs(sim, x0, maxiter=int(maxiter))
+        return _optimize_trial_bfgs(sim, x0, maxiter=int(maxiter), eta_mode=bfgs_eta_mode)
 
     if optimizer == "spsa_adam":
         x_final, fun_final, nfev = run_spsa_adam(
@@ -544,16 +548,57 @@ def optimize_trial(
     )
 
 
-def _optimize_trial_bfgs(sim: NoiselessSimulator, x0: np.ndarray, *, maxiter: int) -> TrialResult:
-    """BFGS path of ``optimize_trial`` (sim already reset: fresh eta_ctrl, η=1)."""
+BFGS_ETA_MODES = ("callback", "fixed", "restart")
+BFGS_RESTART_ETA_RTOL = 1e-2
+BFGS_RESTART_MAX = 50
+
+
+def _optimize_trial_bfgs(
+    sim: NoiselessSimulator,
+    x0: np.ndarray,
+    *,
+    maxiter: int,
+    eta_mode: str = "callback",
+    eta_rtol: float = BFGS_RESTART_ETA_RTOL,
+    max_restarts: int = BFGS_RESTART_MAX,
+) -> TrialResult:
+    """BFGS path of ``optimize_trial`` (sim already reset: fresh eta_ctrl, η=1).
+
+    η handling (``eta_mode``):
+      - ``"callback"`` (legacy, default): η refreshed from x0, then inside the BFGS
+        callback after every 5th iteration. BFGS's stored f / gradient / line search then
+        refer to a stale objective, which caused the multiple-of-5 "precision loss" stops.
+      - ``"fixed"``: η refreshed once from x0, then held fixed for the whole run (a clean,
+        stationary objective).
+      - ``"restart"``: η refreshed from x0; run BFGS with η fixed to convergence; refresh η
+        at the result (sampled-tail controller, same EMA); if η moved by more than
+        ``eta_rtol`` (relative), restart BFGS from the result with the new η, warm-starting
+        the inverse Hessian from the previous run scaled by η_old/η_new (identity if it is
+        not positive definite). Stops when η is
+        stationary (``eta_converged``), when a restarted run makes no BFGS iteration (x is
+        already stationary to gtol under the new η: ``x_stationary``), when the total iteration budget ``maxiter`` is used
+        (``maxiter``) or after ``max_restarts`` restarts (``max_restarts``). ``maxiter``
+        counts BFGS iterations summed over all restarts. The final cost / η reported are
+        at the last refreshed η (within ``eta_rtol`` of the η BFGS last optimized with).
+    η refreshes are not counted in ``nfev`` (same as SPSA).
+    """
     from scipy.optimize import minimize
 
+    eta_mode = str(eta_mode).lower()
+    if eta_mode not in BFGS_ETA_MODES:
+        raise ValueError(f"unknown bfgs eta_mode {eta_mode!r} (expected one of {BFGS_ETA_MODES})")
     x0 = np.asarray(x0, dtype=float).copy()
     counter = {"nfev": 0}
 
     def fun(x: np.ndarray) -> float:
         counter["nfev"] += 1
         return float(sim.cost(x))
+
+    if eta_mode != "callback":
+        return _bfgs_fixed_or_restart(
+            sim, x0, fun, counter, maxiter=int(maxiter), eta_mode=eta_mode,
+            eta_rtol=float(eta_rtol), max_restarts=int(max_restarts),
+        )
 
     # Same as SPSA step 1: refresh η from x0 before any cost evaluation.
     sim.refresh_eta(x0, 1)
@@ -590,6 +635,107 @@ def _optimize_trial_bfgs(sim: NoiselessSimulator, x0: np.ndarray, *, maxiter: in
         optimizer="bfgs",
         opt_status=int(res.status),
         opt_message=str(res.message),
+    )
+
+
+def _pd_or_none(h: np.ndarray) -> np.ndarray | None:
+    """Symmetrized ``h`` if it is finite and positive definite (Cholesky), else None (→ identity)."""
+    h = 0.5 * (h + h.T)
+    if not np.all(np.isfinite(h)):
+        return None
+    try:
+        np.linalg.cholesky(h)
+    except np.linalg.LinAlgError:
+        return None
+    return h
+
+
+def _bfgs_fixed_or_restart(
+    sim: NoiselessSimulator,
+    x0: np.ndarray,
+    fun: Callable[[np.ndarray], float],
+    counter: dict,
+    *,
+    maxiter: int,
+    eta_mode: str,
+    eta_rtol: float,
+    max_restarts: int,
+) -> TrialResult:
+    from scipy.optimize import minimize
+
+    refresh_every = int(sim.eta_ctrl.refresh_every)
+    eta = sim.refresh_eta(x0, 1)
+    x = x0
+    hess_inv = None
+    k_total = 0
+    runs: list[dict] = []
+    etas = [float(eta)]
+    n_restarts = 0
+    reason = None
+    res = None
+    while True:
+        remaining = int(maxiter) - k_total
+        if remaining <= 0:
+            reason = "maxiter"
+            break
+        opts: dict = {"maxiter": remaining}
+        if hess_inv is not None:
+            opts["hess_inv0"] = hess_inv
+        nfev0 = counter["nfev"]
+        res = minimize(fun, x, method="BFGS", options=opts)
+        x = np.asarray(res.x, dtype=float)
+        k_total += int(res.nit)
+        runs.append({"eta": float(eta), "nit": int(res.nit), "nfev": counter["nfev"] - nfev0,
+                     "status": int(res.status), "message": str(res.message)})
+        if eta_mode == "fixed":
+            reason = "maxiter" if int(res.status) == 1 else "bfgs_stop"
+            break
+        if n_restarts > 0 and int(res.nit) == 0:
+            # x already stationary (to gtol) under the refreshed η: further η refreshes only
+            # replay the controller's EMA at a fixed x; stop instead of spending n+1 evals each.
+            reason = "x_stationary"
+            break
+        if n_restarts >= int(max_restarts):
+            reason = "max_restarts"
+            break
+        eta_old = float(eta)
+        eta = sim.refresh_eta(x, 1 + (n_restarts + 1) * refresh_every)
+        etas.append(float(eta))
+        if abs(eta - eta_old) <= float(eta_rtol) * abs(eta_old):
+            reason = "eta_converged"
+            break
+        if k_total >= int(maxiter):
+            reason = "maxiter"
+            break
+        n_restarts += 1
+        hess_inv = _pd_or_none(np.asarray(res.hess_inv, dtype=float) * (eta_old / float(eta)))
+        runs[-1]["hess_inv_carried"] = hess_inv is not None
+    x_final = np.asarray(x, dtype=float)
+    fun_final = fun(x_final)
+    ev = sim.evaluate(x_final)
+    final_lam = float(sim.lam)
+    last = runs[-1] if runs else {"status": None, "message": None}
+    return TrialResult(
+        success=bool(ev["success"]),
+        p_gs=float(ev["p_gs"]),
+        most_likely_bitstring=str(ev["most_likely_bitstring"]),
+        ground_bitstring=sim.ground_bitstring,
+        fun=float(fun_final),
+        eta=float(sim._current_eta),
+        nfev=int(counter["nfev"]),
+        nit=int(k_total),
+        x=x_final,
+        energy_mean=float(ev["energy_mean"]),
+        mean_abs_beta=float(ev["mean_abs_beta"]),
+        max_abs_beta=float(ev["max_abs_beta"]),
+        frac_over_beta_max=float(ev["frac_over_beta_max"]),
+        final_lam=final_lam,
+        mean_lam_post_warmup=final_lam,
+        optimizer="bfgs",
+        opt_status=last["status"],
+        opt_message=f"{reason}: {last['message']}",
+        opt_info={"eta_mode": eta_mode, "termination": reason, "n_restarts": int(n_restarts),
+                  "etas": etas, "runs": runs},
     )
 
 
@@ -646,6 +792,7 @@ def grow_trial(
     lr_schedule: list[float] | None = None,
     eta_scale_schedule: list[float] | None = None,
     c_schedule: list[float] | None = None,
+    bfgs_eta_mode: str = "callback",
 ) -> TrialResult:
     """Layer-growth trial: train L=start_layers from random init, then repeatedly append a
     transparent LAST layer (+ Gaussian kick σ on its 8 params) and retrain, up to
@@ -671,7 +818,18 @@ def grow_trial(
         (``sim.eta_scale``; η is an inverse temperature, so <1 = hotter, >1 = colder).
         ``sim.eta_scale`` is restored afterwards;
       - ``c_schedule``: SPSA perturbation c per stage (overrides ``c``).
+
+    With ``optimizer="bfgs"`` the per-stage "steps" are the BFGS ``maxiter`` of that stage
+    (e.g. ``steps_per_stage=500``: every stage runs BFGS to convergence, capped at 500
+    iterations), warm-started from the previous stage's x plus the transparent+kicked new
+    layer, with η handled per ``bfgs_eta_mode`` (see :func:`_optimize_trial_bfgs`; the η
+    controller restarts each stage, so η is always re-derived between stages). BFGS stage
+    records additionally carry ``nit``, ``opt_status``, ``opt_message``, ``wall_s`` and,
+    for non-legacy η modes, ``termination`` / ``n_restarts`` / ``etas``; for non-legacy
+    η modes the trial ``nit`` is the actual BFGS iteration total.
     """
+    import time as _time
+
     rng = rng or np.random.default_rng()
     final_layers = int(final_layers)
     start_layers = int(start_layers)
@@ -704,6 +862,7 @@ def grow_trial(
     stages: list[dict] = []
     x = None
     total_nfev = 0
+    nit_actual = 0
     result: TrialResult | None = None
     for si, (L, steps) in enumerate(zip(layer_seq, steps_seq)):
         sim.n_layers = int(L)
@@ -724,6 +883,7 @@ def grow_trial(
                 "p_gs_after_kick": float(ev_k["p_gs"]),
             }
         stage_a = scale_spsa_a(n_parameters(L)) if a is None else float(a)
+        t_stage = _time.perf_counter()
         result = optimize_trial(
             sim,
             maxiter=int(steps),
@@ -734,7 +894,9 @@ def grow_trial(
             A=A,
             optimizer=optimizer,
             adam_lr=lr_seq[si],
+            bfgs_eta_mode=bfgs_eta_mode,
         )
+        stage_wall = _time.perf_counter() - t_stage
         total_nfev += int(result.nfev)
         x = np.asarray(result.x, dtype=float)
         stages.append(
@@ -759,11 +921,22 @@ def grow_trial(
                 **insert_info,
             }
         )
+        if result.optimizer == "bfgs":
+            stages[-1].update({"nit": int(result.nit), "opt_status": result.opt_status,
+                               "opt_message": result.opt_message, "wall_s": float(stage_wall)})
+            if result.opt_info is not None:
+                stages[-1].update({"termination": result.opt_info["termination"],
+                                   "n_restarts": result.opt_info["n_restarts"],
+                                   "etas": result.opt_info["etas"]})
+        nit_actual += int(result.nit)
     sim.eta_scale = eta_scale0
     assert result is not None
     result.stages = stages
     result.nfev = total_nfev
-    result.nit = int(sum(steps_seq))
+    if optimizer == "bfgs" and str(bfgs_eta_mode).lower() != "callback":
+        result.nit = nit_actual
+    else:
+        result.nit = int(sum(steps_seq))
     return result
 
 

@@ -100,6 +100,34 @@ python -m noiseless.run_u_sweep --u-names jp --layers 2,3,4 --trials 25 --steps 
   --tag jp_enc_D_gray_grow_ps200
 ```
 
+#### Growth + BFGS (`--optimizer bfgs --grow`, `--bfgs-eta-mode`)
+
+With `--optimizer bfgs --grow` each stage is a BFGS run (finite-difference gradient,
+gtol 1e-5) warm-started from the previous stage's x plus the transparent + kicked new layer;
+the stage step count is the BFGS `maxiter` (use `--grow-steps-per-stage 500`). The η
+controller restarts every stage, so η is always re-derived between stages.
+`--bfgs-eta-mode` (BFGS only) picks how η is treated *within* a run:
+
+- `callback` (default, legacy numerics): refresh every 5 BFGS iterations inside the run.
+  BFGS's stored f/gradient then refer to a stale objective → the multiple-of-5
+  "precision loss" stops seen in `results/BFGS_VS_SPSA_JP_SUMMARY.md`.
+- `fixed`: refresh once from the stage's x0, then hold η (stationary objective).
+- `restart`: BFGS to convergence at fixed η → refresh η (same sampled-tail controller /
+  EMA) → if η moved > 1 % (rel.) restart BFGS from the result with the inverse Hessian
+  carried over (scaled by η_old/η_new; identity if not positive definite). Stops on
+  `eta_converged`, `x_stationary` (a restart made no iteration), `maxiter` (total BFGS
+  iterations over all restarts), or 50 restarts. This is the recommended mode: it follows
+  the η schedule without breaking BFGS's fixed-objective assumption.
+
+BFGS stage records add `nit`, `opt_status`, `opt_message`, `wall_s` and (non-legacy modes)
+`termination`, `n_restarts`, `etas`; records add `bfgs_eta_mode` and `opt_info`.
+
+```bash
+python -m noiseless.run_u_sweep --u-names jp --layers 4 --trials 25 --workers 8 \
+  --seed 20260917 --lambda1 0 --encoding binary --optimizer bfgs --grow \
+  --grow-steps-per-stage 500 --bfgs-eta-mode restart --tag jp_grow_bfgs_restart
+```
+
 ## CLI
 
 ```bash
