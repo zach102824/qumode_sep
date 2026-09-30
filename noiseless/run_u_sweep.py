@@ -308,13 +308,71 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
     return jobs
 
 
+TUNED_GROW_LR_SCHEDULE = "0.5,0.2,0.05,0.02"
+TUNED_STEPS_PER_STAGE = 200
+PRESETS = {
+    # Tuned growth + SPSA-Adam (GROW_ADAM_TUNING_SUMMARY.md, arm lr_sched): 1604 evals/trial.
+    "tuned": {"u_names": "jp", "layers": "4", "optimizer": "spsa_adam", "grow": True},
+    # Defaults before 2026-09-30 (reproduces every older run_u_sweep command bit-for-bit).
+    "legacy": {"u_names": "all", "layers": "2,3,4", "optimizer": "spsa", "grow": False},
+}
+
+
+def _apply_preset(args: argparse.Namespace, p: argparse.ArgumentParser) -> None:
+    """Fill flags left at None from the preset (tuned; legacy under --smoke). Explicit flags win.
+
+    Tuned-only extras, applied only when the user did not set them (or a conflicting flag):
+      - growth budget: 200 SPSA steps per stage unless --steps / --grow-steps-per-stage /
+        --grow-steps-schedule is given;
+      - Adam lr schedule 0.5,0.2,0.05,0.02 when growth + spsa_adam, every requested depth has
+        exactly 4 stages, and neither --grow-lr-schedule nor --adam-lr is given.
+    """
+    if args.preset is None:
+        args.preset = "legacy" if args.smoke else "tuned"
+    steps_given = args.steps is not None
+    adam_lr_given = args.adam_lr is not None
+    for k, v in PRESETS[args.preset].items():
+        if getattr(args, k) is None:
+            setattr(args, k, v)
+    if args.steps is None:
+        args.steps = 200
+    if args.adam_lr is None:
+        args.adam_lr = ADAM_LR
+    if args.preset != "tuned" or not args.grow:
+        return
+    if (not steps_given and args.grow_steps_per_stage is None
+            and args.grow_steps_schedule is None):
+        args.grow_steps_per_stage = TUNED_STEPS_PER_STAGE
+    layers = [int(x) for x in args.layers.split(",") if x.strip()]
+    four_stages = all(L - int(args.grow_start) + 1 == 4 for L in layers)
+    if (args.optimizer == "spsa_adam" and args.grow_lr_schedule is None and not adam_lr_given
+            and four_stages):
+        args.grow_lr_schedule = TUNED_GROW_LR_SCHEDULE
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--ham-dir", type=str, default=str(_REPO / "Hamiltonians" / "four_sat"))
-    p.add_argument("--u-names", type=str, default="all")
-    p.add_argument("--layers", type=str, default="2,3,4")
+    p.add_argument(
+        "--preset",
+        choices=tuple(PRESETS),
+        default=None,
+        help="Default bundle for flags you do not pass. tuned (default; legacy under --smoke): "
+        "jp, --layers 4, spsa_adam, --grow L1->4, --grow-lr-schedule 0.5,0.2,0.05,0.02, "
+        "200 steps/stage (1604 evals/trial). legacy: the pre-2026-09-30 defaults "
+        "(--u-names all --layers 2,3,4 --optimizer spsa, no growth, --steps 200). "
+        "Explicit flags always win.",
+    )
+    p.add_argument("--u-names", type=str, default=None, help="default: jp (tuned) / all (legacy)")
+    p.add_argument("--layers", type=str, default=None, help="default: 4 (tuned) / 2,3,4 (legacy)")
     p.add_argument("--trials", type=int, default=5)
-    p.add_argument("--steps", type=int, default=200)
+    p.add_argument(
+        "--steps",
+        type=int,
+        default=None,
+        help="SPSA steps (default 200). With --grow: TOTAL budget split evenly over stages; the "
+        "tuned preset instead uses 200 steps per stage unless --steps or a --grow-steps-* is given",
+    )
     p.add_argument("--workers", type=int, default=max(1, min(4, os.cpu_count() or 1)))
     p.add_argument("--seed", type=int, default=20260917)
     p.add_argument("--max-h", type=int, default=None)
@@ -363,14 +421,14 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument(
         "--optimizer",
         choices=("spsa", "bfgs", "spsa_adam"),
-        default="spsa",
-        help="spsa (default), spsa_adam (same SPSA gradient estimate + Adam update, "
+        default=None,
+        help="spsa_adam (tuned default) / spsa (legacy default), spsa_adam (same SPSA gradient estimate + Adam update, "
         "same eval count) or bfgs (scipy BFGS, finite-difference gradient; same x0)",
     )
     p.add_argument(
         "--adam-lr",
         type=float,
-        default=ADAM_LR,
+        default=None,
         help="Adam learning rate for --optimizer spsa_adam (default 0.05)",
     )
     p.add_argument(
@@ -391,8 +449,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     p.add_argument(
         "--grow",
-        action="store_true",
-        help="Layer growth: train L=--grow-start, append transparent last layer + kick, "
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="(tuned default: on; legacy: off; --no-grow disables) Layer growth: train L=--grow-start, append transparent last layer + kick, "
         "retrain, ... up to each --layers value; --steps is the TOTAL budget split evenly",
     )
     p.add_argument("--grow-start", type=int, default=1)
@@ -431,6 +490,15 @@ def main(argv: list[str] | None = None) -> int:
         help='With --grow: SPSA perturbation c per stage, e.g. "0.15,0.15,0.15,0.05"',
     )
     args = p.parse_args(argv)
+    if args.smoke:
+        args.u_names = "identity"
+        args.layers = "2"
+        args.trials = 1
+        args.steps = 8
+        args.max_h = 1
+        if args.tag == "run":
+            args.tag = "smoke"
+    _apply_preset(args, p)
     for name, cast in (("grow_steps_schedule", int), ("grow_lr_schedule", float),
                        ("grow_eta_scale", float), ("grow_c_schedule", float)):
         raw = getattr(args, name)
@@ -464,18 +532,9 @@ def main(argv: list[str] | None = None) -> int:
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
 
-    if args.smoke:
-        args.u_names = "identity"
-        args.layers = "2"
-        args.trials = 1
-        args.steps = 8
-        args.max_h = 1
-        if args.tag == "run":
-            args.tag = "smoke"
-
     jobs = build_jobs(args)
     print(
-        f"[{_now()}] starting {len(jobs)} jobs workers={args.workers} steps={args.steps} "
+        f"[{_now()}] starting {len(jobs)} jobs preset={args.preset} workers={args.workers} steps={args.steps} "
         f"tag={args.tag} lambda1={args.lambda1} lam={args.lam} beta_max={args.beta_max} "
         f"adapt_lambda={args.adapt_lambda} optimizer={args.optimizer} adam_lr={args.adam_lr} "
         f"encoding={args.encoding} grow={args.grow} "
@@ -547,6 +606,7 @@ def main(argv: list[str] | None = None) -> int:
             "grow_eta_scale": args.grow_eta_scale,
             "grow_c_schedule": args.grow_c_schedule,
             "bfgs_eta_mode": str(args.bfgs_eta_mode),
+            "preset": args.preset,
         },
         "n_jobs": len(records),
         "n_ok": sum(1 for r in records if r.get("ok")),

@@ -6,7 +6,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 PY=${PY:-/workspace/venv-qumode/bin/python}
 export PYTHONPATH=$PWD OMP_NUM_THREADS=1
-COMMON=(--u-names jp --layers 4 --trials ${TRIALS:-10} --steps 800 --max-h ${MAXH:-5} --workers 8
+COMMON=(--preset legacy --u-names jp --layers 4 --trials ${TRIALS:-10} --steps 800 --max-h ${MAXH:-5} --workers 8
         --seed 20260917 --lambda1 0 --encoding binary --optimizer spsa_adam --grow)
 run() { local name=$1; shift; echo "== $name $*"; local t0=$SECONDS
         "$PY" noiseless/run_u_sweep.py "${COMMON[@]}" --tag "${PREFIX:-grow_tune_S}_$name" "$@" | tail -1

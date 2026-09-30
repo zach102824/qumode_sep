@@ -46,7 +46,7 @@ def log(msg: str) -> None:
 def run_fleet(tag: str, *, lambda1: float = 0.0, lambda3: float = 0.0, beta_max: float | None = None,
               layers: str = LAYERS, steps: int = STEPS) -> Path | None:
     cmd = [
-        _PY, "-m", "noiseless.run_u_sweep",
+        _PY, "-m", "noiseless.run_u_sweep", "--preset", "legacy",
         "--ham-dir", HAM,
         "--u-names", U,
         "--layers", layers,

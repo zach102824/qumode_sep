@@ -184,7 +184,7 @@ def test_runner_worker_and_cli_spsa_adam(tmp_path):
     rg = _worker(dict(base, optimizer="spsa_adam", grow=True, grow_steps_per_stage=3))
     assert rg["ok"], rg.get("traceback")
     assert rg["nfev"] == 14 and [s["steps"] for s in rg["stages"]] == [3, 3]
-    rc = main(["--u-names", "jp", "--layers", "2", "--trials", "1", "--steps", "3",
+    rc = main(["--preset", "legacy", "--u-names", "jp", "--layers", "2", "--trials", "1", "--steps", "3",
                "--max-h", "1", "--workers", "1", "--optimizer", "spsa_adam",
                "--adam-lr", "0.1", "--outdir", str(tmp_path), "--tag", "t"])
     assert rc == 0

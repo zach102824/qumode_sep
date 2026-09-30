@@ -146,5 +146,5 @@ def test_runner_cli_schedules(tmp_path):
         main(["--u-names", "jp", "--layers", "4", "--grow", "--grow-steps-schedule", "1,2",
               "--outdir", str(tmp_path)])
     with pytest.raises(SystemExit):
-        main(["--u-names", "jp", "--layers", "4", "--grow-c-schedule", "0.1,0.1,0.1,0.1",
+        main(["--preset", "legacy", "--u-names", "jp", "--layers", "4", "--grow-c-schedule", "0.1,0.1,0.1,0.1",
               "--outdir", str(tmp_path)])
