@@ -188,3 +188,26 @@ def test_ry0_split_exact_cost_matches_enumeration():
     p = ex.probs_from_x(x)
     assert np.allclose(sp.level_probs(x), np.bincount(e.astype(int), weights=p, minlength=sp.nlev))
     assert sp.evaluate(x) == ex.evaluate(x)
+
+
+def test_run_scaling_steps_option(tmp_path, monkeypatch):
+    """--steps reaches the SPSA loop; seeds (hence x0 / SPSA Δ stream) do not depend on steps."""
+    from noiseless import run_scaling as rs
+
+    monkeypatch.setattr(rs, "RUN_ROOT", tmp_path)
+    jobs = {}
+    for s in (7, 13):
+        ns = rs.argparse.Namespace(arms="ry0,hea1", n="8", max_h=20, instances="0", trials=2, trial_offset=0,
+                                   steps=s, n_samples=4096, seed=20260917, tag="t")
+        jobs[s] = rs.build_jobs(ns)
+        assert all(j["steps"] == s for j in jobs[s])
+    key = lambda j: (j["arm"], j["inst"], j["trial"])
+    assert {key(j): j["seed"] for j in jobs[7]} == {key(j): j["seed"] for j in jobs[13]}
+    r7 = rs.worker(sorted(jobs[7], key=key)[0])
+    r13 = rs.worker(sorted(jobs[13], key=key)[0])
+    assert r7["nfev"] == 2 * 7 + 1 and r13["nfev"] == 2 * 13 + 1
+    assert r7["seed"] == r13["seed"]
+    # x0 is the first draw of default_rng(seed) in optimize_trial -> identical for any steps
+    j = dict(sorted(jobs[7], key=key)[0], steps=0)
+    x0 = np.random.default_rng(j["seed"]).random(8 if j["arm"].startswith("ry0") else 16) * np.pi
+    assert np.allclose(rs.worker(j)["x"], x0)
