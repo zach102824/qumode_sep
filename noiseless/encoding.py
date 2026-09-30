@@ -6,8 +6,10 @@ Physical middle bus qubit is omitted; the bus is an ideal unitary on A⊗B.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+from itertools import permutations
 from pathlib import Path
-from typing import Sequence
+from typing import Sequence, Union
 
 import numpy as np
 import qutip as qt
@@ -21,7 +23,135 @@ N_B_BITS = 3
 ENCODINGS = ("binary", "gray")
 
 
-def _check_encoding(encoding: str) -> str:
+# ---------------------------------------------------------------------------
+# General encoding spec: logical variable → physical bit slot (+ per-cavity codeword → Fock)
+# ---------------------------------------------------------------------------
+
+# Physical bit slots, in the MSB-first order of the legacy 8-bit vector (q_d, q_e | n_A | n_B).
+# Cavity bit k = bit k of the cavity's 3-bit codeword, bit 0 = LSB.
+SLOT_NAMES = ("d", "e", "A2", "A1", "A0", "B2", "B1", "B0")
+# The ansatz symmetry: swap (transmon d, cavity A) ↔ (transmon e, cavity B), slot j → SWAP[j].
+SWAP_DE_AB = (1, 0, 5, 6, 7, 2, 3, 4)
+IDENTITY_PERM = tuple(range(N_QUBITS))
+BINARY_CAVITY_MAP = tuple(range(NFOCK))
+
+
+@dataclass(frozen=True)
+class EncodingSpec:
+    """How the 8 logical Hamiltonian variables Z1..Z8 sit on the chip.
+
+    ``perm[i]`` = physical slot (index into :data:`SLOT_NAMES`) carrying logical variable i
+    (Z_{i+1}; logical bit i is position i of the MSB-first logical bitstring). The identity
+    perm is the legacy layout (Z1→d, Z2→e, Z3→A2, Z4→A1, Z5→A0, Z6→B2, Z7→B1, Z8→B0).
+
+    ``cavity_a`` / ``cavity_b``: codeword → Fock level map per cavity; entry c is the Fock
+    level holding the 3-bit codeword c (c read MSB-first from slots A2 A1 A0). Identity =
+    binary; ``tuple(gray_decode(c) for c in range(8))`` = Gray (legacy ``encoding="gray"``).
+    Designed so codewords can later live on Fock levels 0..15 with a larger truncation
+    (entries must then be distinct levels < nfock, with unused levels = leakage); only the
+    nfock=8 bijection is implemented today.
+    """
+
+    perm: tuple[int, ...] = IDENTITY_PERM
+    cavity_a: tuple[int, ...] = BINARY_CAVITY_MAP
+    cavity_b: tuple[int, ...] = BINARY_CAVITY_MAP
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "perm", tuple(int(v) for v in self.perm))
+        object.__setattr__(self, "cavity_a", tuple(int(v) for v in self.cavity_a))
+        object.__setattr__(self, "cavity_b", tuple(int(v) for v in self.cavity_b))
+        if sorted(self.perm) != list(range(N_QUBITS)):
+            raise ValueError(f"perm must be a permutation of 0..7, got {self.perm}")
+        for name, cm in (("cavity_a", self.cavity_a), ("cavity_b", self.cavity_b)):
+            if len(cm) != 2**N_A_BITS or len(set(cm)) != len(cm):
+                raise ValueError(f"{name} must map the 8 codewords to distinct Fock levels")
+            if sorted(cm) != list(range(NFOCK)):
+                raise NotImplementedError(
+                    f"{name}={cm}: codewords outside Fock 0..{NFOCK - 1} need a larger truncation"
+                )
+
+    @classmethod
+    def from_name(cls, name: str) -> "EncodingSpec":
+        enc = str(name).lower().strip()
+        if enc == "binary":
+            return cls()
+        if enc == "gray":
+            g = tuple(gray_decode(c) for c in range(NFOCK))
+            return cls(cavity_a=g, cavity_b=g)
+        raise ValueError(f"unknown encoding {name!r}")
+
+    def swapped(self) -> "EncodingSpec":
+        """Image under the (d,A)↔(e,B) ansatz symmetry."""
+        return EncodingSpec(tuple(SWAP_DE_AB[j] for j in self.perm), self.cavity_b, self.cavity_a)
+
+    def label(self) -> str:
+        out = "perm=" + "".join(str(v) for v in self.perm)
+        if self.cavity_a != BINARY_CAVITY_MAP or self.cavity_b != BINARY_CAVITY_MAP:
+            out += ",A=" + "".join(map(str, self.cavity_a)) + ",B=" + "".join(map(str, self.cavity_b))
+        return out
+
+    def __str__(self) -> str:  # records store str(encoding)
+        return self.label()
+
+    def slot_of_variable(self) -> dict[str, str]:
+        return {f"Z{i + 1}": SLOT_NAMES[j] for i, j in enumerate(self.perm)}
+
+
+Encoding = Union[str, EncodingSpec]
+
+
+def _spec_phys_bits(d: int, e: int, n_a: int, n_b: int, spec: EncodingSpec) -> np.ndarray:
+    p = np.zeros(N_QUBITS, dtype=int)
+    p[0], p[1] = int(d) & 1, int(e) & 1
+    ca = spec.cavity_a.index(int(n_a))
+    cb = spec.cavity_b.index(int(n_b))
+    for k in range(N_A_BITS):
+        p[2 + k] = (ca >> (N_A_BITS - 1 - k)) & 1
+        p[2 + N_A_BITS + k] = (cb >> (N_B_BITS - 1 - k)) & 1
+    return p
+
+
+def canonical_perm(perm: Sequence[int]) -> tuple[int, ...]:
+    """Lexicographically smaller of perm and its (d,A)↔(e,B) image (class representative)."""
+    a = tuple(int(v) for v in perm)
+    b = tuple(SWAP_DE_AB[j] for j in a)
+    return min(a, b)
+
+
+def distinct_assignments() -> list[tuple[int, ...]]:
+    """All 8!/2 = 20160 symmetry classes of variable→slot assignments, as sorted canonical
+    perms. Index 0 is the identity (legacy layout)."""
+    return [q for q in permutations(range(N_QUBITS)) if q <= tuple(SWAP_DE_AB[j] for j in q)]
+
+
+def logical_index_of_flat(spec: EncodingSpec) -> np.ndarray:
+    """int array (256,): logical bitstring (as MSB-first integer) of each physical flat index."""
+    out = np.empty(HILBERT_DIM, dtype=np.int64)
+    for idx in range(HILBERT_DIM):
+        x = bits_from_denm(*denm_from_flat(idx), spec)
+        out[idx] = int("".join(map(str, x)), 2)
+    return out
+
+
+def logical_energies_from_terms(terms, identity_shift: float = 0.0) -> np.ndarray:
+    """Energy of every logical bitstring (index = MSB-first integer), same arithmetic as
+    :func:`energy_from_z_terms`."""
+    out = np.empty(2**N_QUBITS, dtype=float)
+    for v in range(2**N_QUBITS):
+        bits = np.array([(v >> (N_QUBITS - 1 - k)) & 1 for k in range(N_QUBITS)], dtype=int)
+        out[v] = energy_from_z_terms(bits, terms, identity_shift)
+    return out
+
+
+def energy_tensor_for_spec(logical_energies: np.ndarray, spec: EncodingSpec) -> np.ndarray:
+    """Physical (2,2,8,8) energy tensor for ``spec`` from the 256 logical energies (fast path;
+    identical values to :func:`energy_tensor_from_terms` with ``encoding=spec``)."""
+    return np.asarray(logical_energies, dtype=float)[logical_index_of_flat(spec)].reshape(DIMS)
+
+
+def _check_encoding(encoding: Encoding):
+    if isinstance(encoding, EncodingSpec):
+        return encoding
     enc = str(encoding).lower().strip()
     if enc not in ENCODINGS:
         raise ValueError(f"unknown encoding {encoding!r}; choose from {ENCODINGS}")
@@ -75,6 +205,8 @@ def bits_from_denm(
     ``encoding="gray"``: cavity bits are the digits of n ^ (n >> 1). Transmon bits unchanged.
     """
     enc = _check_encoding(encoding)
+    if isinstance(enc, EncodingSpec):
+        return _spec_phys_bits(d, e, n_a, n_b, enc)[list(enc.perm)]
     n_a = _cavity_code(n_a, enc)
     n_b = _cavity_code(n_b, enc)
     bits = np.zeros(N_QUBITS, dtype=int)
@@ -94,6 +226,12 @@ def denm_from_bits(
     x = np.asarray(bits, dtype=int).reshape(-1)
     if x.size != N_QUBITS:
         raise ValueError(f"Expected {N_QUBITS} bits, got {x.size}")
+    if isinstance(enc, EncodingSpec):
+        p = np.zeros(N_QUBITS, dtype=int)
+        p[list(enc.perm)] = x
+        ca = int("".join(map(str, p[2 : 2 + N_A_BITS])), 2)
+        cb = int("".join(map(str, p[2 + N_A_BITS :])), 2)
+        return int(p[0]), int(p[1]), enc.cavity_a[ca], enc.cavity_b[cb]
     d, e = int(x[0]), int(x[1])
     n_a = 0
     for b in x[2 : 2 + N_A_BITS]:

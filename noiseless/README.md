@@ -4,11 +4,49 @@ Noiseless SPSA campaign: local ECD on diagonal pairs `(d–A)` / `(e–B)` plus 
 **frozen** bus unitary `U` on `A⊗B`. Prep is not trained; `U` is never trained;
 ECD parameters are randomly initialized each trial.
 
+## Defaults (`run_u_sweep --preset`, since 2026-09-30)
+
+`python noiseless/run_u_sweep.py` with no flags now runs **tuned growth + SPSA-Adam**
+(`--preset tuned`, the default): jp, `--layers 4`, `--optimizer spsa_adam`, `--grow` L=1→4,
+`--grow-lr-schedule 0.5,0.2,0.05,0.02`, 200 SPSA steps per stage (1604 evals/trial), kick
+0.05, c 0.15, infinite-shot Gibbs cost with the sampled-tail η controller, binary encoding
+(arm `lr_sched` of `results/GROW_ADAM_TUNING_SUMMARY.md`; reproduces its records bit-for-bit).
+Explicit flags always win; `--no-grow` disables growth. The lr schedule is only defaulted when
+every depth has 4 stages and neither `--adam-lr` nor `--grow-lr-schedule` is given; the
+200-steps/stage budget only when none of `--steps` / `--grow-steps-*` is given.
+
+**`--preset legacy` restores the old defaults** (`--u-names all --layers 2,3,4 --optimizer
+spsa`, no growth, `--steps 200`): prefix it to any older command line (all commands quoted in
+`results/*.md` before 2026-09-30) to reproduce it exactly. `--smoke` uses legacy.
+Library defaults (`optimize_trial`, `grow_trial`) are unchanged.
+
 ## Encoding
 
 `|d⟩ ⊗ |e⟩ ⊗ |A⟩ ⊗ |B⟩`, Fock cutoff 8 → dim `2×2×8×8 = 256` (exact 8 bits).
 
 Bit map (MSB-first): `(q_d, q_e | n_A[2:0] | n_B[2:0])`.
+
+### General encoding spec (`encoding.EncodingSpec`)
+
+Physical slots `d, e, A2, A1, A0, B2, B1, B0` (cavity bit 0 = LSB of the codeword).
+`EncodingSpec(perm, cavity_a, cavity_b)`: `perm[i]` = slot of logical variable Z_{i+1}
+(identity = legacy layout); `cavity_a/b[c]` = Fock level holding 3-bit codeword c (identity =
+binary; `EncodingSpec.from_name("gray")` = legacy Gray). Implemented by remapping the cost
+diagonal / argmax decoding (`bits_from_denm`, `denm_from_bits` accept a spec anywhere an
+encoding string is accepted); the logical GS bitstring is encoding-free. Codeword maps onto
+Fock 0–15 (larger truncation, leakage levels) are anticipated but not implemented yet.
+
+Symmetry: the circuit is invariant under swapping (d, A) ↔ (e, B) together (identical ECD
+structure per pair, independent iid-initialised params, jp phase depends on n+m only), so an
+assignment and its image under slot map `SWAP_DE_AB` are equivalent. Swapping only d↔e or only
+A↔B is not a symmetry (d couples to A). No slot permutation fixes an assignment, so there are
+exactly **8!/2 = 20160** classes (`distinct_assignments()`, sorted canonical reps, index 0 =
+identity); verified numerically in `tests/test_encoding_spec.py`.
+
+`noiseless/run_encoding_screen.py`: one Hamiltonian × assignment list × K paired inits (seeds
+= run_u_sweep jp L=4 seeds, so class 0 reproduces the tuned default), tuned growth + Adam,
+8 workers, resumable JSONL under `results/encoding_screen/<tag>/` (gitignored) + per-assignment
+summary. Smoke: `--ham 0 --assignments smoke --n-random 99 --inits 3 --tag smoke`.
 
 ## Ansatz
 
@@ -59,7 +97,8 @@ python -m noiseless.run_u_sweep --u-names ck_pi4 --layers 4 \
 
 ### Optimizer choice (`--optimizer`)
 
-`--optimizer spsa` (default) is the SPSA loop above; old runs reproduce exactly.
+(Examples in this section predate the tuned default: add `--preset legacy`.)
+`--optimizer spsa` (legacy default) is the SPSA loop above; old runs reproduce exactly.
 `--optimizer bfgs` runs `scipy.optimize.minimize(method="BFGS")` with default
 settings (finite-difference gradient, `maxiter=--steps`) from the same random x0
 (drawn from the trial seed exactly as for SPSA) on the same cost (Gibbs + optional
@@ -136,8 +175,9 @@ export PYTHONPATH=.
 
 python -m pytest noiseless/tests tests/test_four_sat.py -q
 python -m noiseless.run_u_sweep --smoke
-python -m noiseless.run_u_sweep --ham-dir Hamiltonians/four_sat \
+python -m noiseless.run_u_sweep --preset legacy --ham-dir Hamiltonians/four_sat \
   --u-names all --layers 2,3,4 --trials 5 --steps 200 --workers 4 --tag fleet1
+python -m noiseless.run_u_sweep --trials 25 --workers 8 --tag tuned   # tuned default
 ```
 
 Results: `noiseless/results/`. Hamiltonians: `Hamiltonians/four_sat/` (8-qubit).
