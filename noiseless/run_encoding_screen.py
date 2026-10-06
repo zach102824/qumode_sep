@@ -110,6 +110,7 @@ def run_trial(job: dict) -> dict:
         "ground_bitstring": res.ground_bitstring, "ground_energy": h["ground_energy"],
         "stage_p_gs": [float(s["p_gs"]) for s in res.stages],
         "wall_s": float(time.perf_counter() - t0),
+        "t_done": float(time.time()),  # unix time (status script throughput / ETA)
     }
 
 
@@ -228,11 +229,12 @@ def main(argv: list[str] | None = None) -> int:
                     fh.flush()
             else:
                 with ProcessPoolExecutor(max_workers=int(args.workers)) as ex:
-                    futs = [ex.submit(run_trial, j) for j in jobs]
+                    futs = {ex.submit(run_trial, j) for j in jobs}
                     for k, fut in enumerate(as_completed(futs), 1):
                         fh.write(json.dumps(fut.result()) + "\n")
                         fh.flush()
-                        if k % 100 == 0 or k == len(jobs):
+                        futs.discard(fut)  # do not retain finished results (60k jobs/H)
+                        if k % 1000 == 0 or k == len(jobs):
                             print(f"  [{k}/{len(jobs)}] {time.perf_counter() - t_start:.1f}s", flush=True)
     wall = time.perf_counter() - t_start
     wanted = set(todo_classes)
