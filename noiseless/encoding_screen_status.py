@@ -47,6 +47,26 @@ def _tail_times(p: Path, nbytes: int = 4 << 20) -> list[float]:
     return out
 
 
+def _headline(sp: Path, cache: dict) -> dict | None:
+    """Small headline of a (13 MB) summary JSON, cached by (size, mtime_ns) in .status_cache.json."""
+    try:
+        st = sp.stat()
+    except OSError:
+        return None
+    key = f"{st.st_size}:{st.st_mtime_ns}"
+    hit = cache.get(sp.name)
+    if hit and hit.get("key") == key:
+        return hit["head"]
+    try:
+        s = json.loads(sp.read_text())
+    except (OSError, json.JSONDecodeError):
+        return None
+    head = {k: s.get(k) for k in ("n_trials", "n_assignments", "identity", "spread_mean_p_gs")}
+    head["best"] = s["ranking"][0] if s.get("ranking") else None
+    cache[sp.name] = {"key": key, "head": head}
+    return head
+
+
 def _alive(pidfile: Path) -> tuple[bool, int | None]:
     try:
         pid = int(pidfile.read_text().strip())
@@ -75,24 +95,33 @@ def main(argv: list[str] | None = None) -> int:
     print(f"driver: {'ALIVE' if alive else 'NOT running'} (pid {pid})")
     done_total, times = 0, []
     rows = []
+    cache_path = d / ".status_cache.json"
+    try:
+        cache = json.loads(cache_path.read_text())
+    except (OSError, json.JSONDecodeError):
+        cache = {}
     for h in range(args.n_ham):
         f = d / f"four_sat_{h:03d}.jsonl"
-        n = _count_lines(f) if f.exists() else 0
+        sp = d / f"four_sat_{h:03d}_summary.json"
+        summ = _headline(sp, cache) if sp.exists() else None
+        if summ and (summ.get("n_trials") or 0) >= per_h:
+            n = int(summ["n_trials"])  # finished: no need to scan the 30 MB JSONL
+        else:
+            summ = None
+            n = _count_lines(f) if f.exists() else 0
         done_total += min(n, per_h)
         if f.exists() and now - f.stat().st_mtime < args.window + 60:
             times += _tail_times(f)
-        summ = None
-        sp = d / f"four_sat_{h:03d}_summary.json"
-        if n >= per_h and sp.exists():
-            s = json.loads(sp.read_text())
-            if s.get("n_trials", 0) >= per_h:
-                summ = s
         rows.append((h, n, summ))
+    try:
+        cache_path.write_text(json.dumps(cache))
+    except OSError:
+        pass
     print(f"\n{'H':>4} {'trials':>13} {'%':>6}  identity rank / mean p   best class (mean p)   spread min / median / max")
     for h, n, s in rows:
         line = f"{h:>4} {n:>6}/{per_h:<6} {100 * n / per_h:>5.1f}%"
         if s:
-            idn, best, spr = s["identity"], s["ranking"][0], s["spread_mean_p_gs"]
+            idn, best, spr = s["identity"], s["best"], s["spread_mean_p_gs"]
             line += (f"  {idn['rank']:>5}/{s['n_assignments']} {idn['mean_p_gs']:.4f}"
                      f"   {best['class_idx']:>5} ({best['mean_p_gs']:.4f})"
                      f"      {spr['min']:.4f} / {spr['median']:.4f} / {spr['max']:.4f}")

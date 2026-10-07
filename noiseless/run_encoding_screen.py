@@ -214,6 +214,15 @@ def main(argv: list[str] | None = None) -> int:
                          "class_idx": int(c), "perm": list(classes[c]), "init": t,
                          "seed": init_seed(args.seed, hi, t)})
     stamp = lambda: datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")  # noqa: E731
+    if not args.summarize and not jobs and summ_path.exists():
+        try:
+            prev = json.loads(summ_path.read_text())
+        except (OSError, json.JSONDecodeError):
+            prev = {}
+        if prev.get("n_trials") == len(todo_classes) * int(args.inits):
+            # resume of a finished Hamiltonian: keep the existing summary (and its wall-time metadata)
+            print(f"[{stamp()}] {ham_path.name}: complete ({len(done_keys)} trials), summary kept", flush=True)
+            return 0
     t_start = time.perf_counter()
     if not args.summarize and jobs:
         print(f"[{stamp()}] {ham_path.name}: {len(todo_classes)} assignments x {args.inits} inits, "
