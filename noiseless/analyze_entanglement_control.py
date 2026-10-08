@@ -184,6 +184,74 @@ def layout_effect(recs: list[dict], protocol: str) -> list[dict]:
     return out
 
 
+def _pdelta(idx: dict, lay: str, a: str, b: str) -> dict | None:
+    d, sg, sl, perh = [], 0, 0, {}
+    for (l2, a2, h, t), r in idx.items():
+        if l2 == lay and a2 == a and (lay, b, h, t) in idx:
+            c = idx[(lay, b, h, t)]
+            d.append(r["p_gs"] - c["p_gs"])
+            perh.setdefault(h, []).append(d[-1])
+            sg += int(r["success"] and not c["success"])
+            sl += int(c["success"] and not r["success"])
+    if not d:
+        return None
+    d = np.array(d)
+    w, l = int((d > 1e-12).sum()), int((d < -1e-12).sum())
+    hm = np.array([np.mean(v) for v in perh.values()])
+    return {"layout": lay, "a": a, "b": b, "n": int(d.size), "mean_delta_p_gs": float(d.mean()),
+            "win_tie_loss": [w, int(d.size - w - l), l], "wilcoxon_p": wil(d), "sign_p": btest(w, l),
+            "success_gained_lost": [sg, sl], "mcnemar_p": btest(sg, sl),
+            "h_level_win_loss": [int((hm > 0).sum()), int((hm < 0).sum())]}
+
+
+def followup(recs: list[dict], proto: str) -> dict:
+    """2×2 factorial {I, L⊗L} × {I, ZZ(π/4)} and dose curves (merged main + follow-up records)."""
+    idx = index(recs)
+    out = {"protocol": proto, "factorial": [], "effects": [], "dose_ent_on_local": [],
+           "dose_local": []}
+
+    def cell(lay, arm):
+        R = [r for r in recs if r["layout"] == lay and r["arm"] == arm]
+        if not R:
+            return None
+        return {"layout": lay, "arm": arm, "n": len(R),
+                "success_rate": float(np.mean([r["success"] for r in R])),
+                "mean_p_gs": float(np.mean([r["p_gs"] for r in R])),
+                "mean_peak_entropy_effective": float(np.mean([r["peak_entropy_effective"] for r in R]))}
+
+    for lay in LAYOUTS:
+        for arm in ("identity", "jp_local", "jp", "cz_nm"):
+            c = cell(lay, arm)
+            if c:
+                out["factorial"].append(c)
+        for lab, a, b in (("entangler | no local phase  (jp - identity)", "jp", "identity"),
+                          ("entangler | local phase L⊗L (cz_nm - jp_local)", "cz_nm", "jp_local"),
+                          ("entangler cz_nm on L⊗L      (jp - jp_local)", "jp", "jp_local"),
+                          ("local phase | no entangler  (jp_local - identity)", "jp_local", "identity"),
+                          ("local phase | entangler     (cz_nm - jp)", "cz_nm", "jp"),
+                          ("entangler, no local phase   (cz_nm - identity)", "cz_nm", "identity")):
+            r = _pdelta(idx, lay, a, b)
+            if r:
+                r["effect"] = lab
+                out["effects"].append(r)
+        for x, arm in ((0.0, "jp_local"), (0.0625, "jl_g0.0625"), (0.125, "jl_g0.125"),
+                       (0.1875, "jl_g0.1875"), (0.25, "cz_nm")):
+            c = cell(lay, arm)
+            if c:
+                c["x"] = x
+                pr = _pdelta(idx, lay, arm, "jp_local") if arm != "jp_local" else None
+                c["vs_jp_local"] = pr
+                out["dose_ent_on_local"].append(c)
+        for x, arm in ((0.0, "identity"), (0.0625, "lp0.0625"), (0.125, "lp0.125"),
+                       (0.1875, "lp0.1875"), (0.25, "jp_local")):
+            c = cell(lay, arm)
+            if c:
+                c["x"] = x
+                c["vs_identity"] = _pdelta(idx, lay, arm, "identity") if arm != "identity" else None
+                out["dose_local"].append(c)
+    return out
+
+
 def main() -> int:
     extra = sys.argv[1:]
     out: dict = {"arms": [], "paired": [], "paired_stages": [], "controls": [], "layout_effect": []}
@@ -212,6 +280,23 @@ def main() -> int:
                             "success_by_L": [float(np.mean([r["stages"][k]["success"] for r in S])) for k in range(4)],
                             "peak_eff_entropy_by_L": [float(np.mean([r["stages"][k]["peak_entropy_effective"] for r in S])) for k in range(4)],
                         })
+    out["followup"] = []
+    for base, fu, proto in (("ent_tuned", "ent_tuned_fu", "tuned"), ("ent_legacy", "ent_legacy_fu", "legacy")):
+        F = load(fu)
+        if F is None or proto not in data:
+            continue
+        merged = data[proto] + F
+        fo = followup(merged, proto)
+        fo["arms_fu"] = arm_rows(F, proto + "_fu")
+        out["followup"].append(fo)
+        data[proto + "_merged"] = merged
+        for c in fo["factorial"]:
+            print(f"FACT {proto} {c['layout']:>9} {c['arm']:>8} succ={c['success_rate']:.3f} p={c['mean_p_gs']:.3f} S={c['mean_peak_entropy_effective']:.2f}")
+        for e in fo["effects"]:
+            print(f"EFF {proto} {e['layout']:>9} {e['effect']}: d={e['mean_delta_p_gs']:+.3f} W/T/L={e['win_tie_loss']} "
+                  f"wil={e['wilcoxon_p']} succ+/-={e['success_gained_lost']} H={e['h_level_win_loss']}")
+        for c in fo["dose_ent_on_local"] + fo["dose_local"]:
+            print(f"DOSE {proto} {c['layout']:>9} {c['arm']:>10} x={c['x']} succ={c['success_rate']:.3f} p={c['mean_p_gs']:.3f} S={c['mean_peak_entropy_effective']:.2f}")
     OUT_JSON.write_text(json.dumps(out, indent=2))
     for r in out["arms"]:
         print(f"{r['protocol']:>7} {r['layout']:>9} {r['arm']:>8} succ={r['success_rate']:.3f} p={r['mean_p_gs']:.3f} "
@@ -254,6 +339,20 @@ def main() -> int:
             axes[0].legend(fontsize=7, markerscale=3)
             fig.tight_layout()
             fig.savefig(FIG_DIR / "entropy_vs_pgs_tuned.png", dpi=110)
+        if out["followup"]:
+            fig, axes = plt.subplots(1, len(out["followup"]), figsize=(6 * len(out["followup"]), 4.2), squeeze=False)
+            for ax, fo in zip(axes[0], out["followup"]):
+                for lay, col in zip(LAYOUTS, ("C0", "C1", "C2")):
+                    de = [c for c in fo["dose_ent_on_local"] if c["layout"] == lay]
+                    dl = [c for c in fo["dose_local"] if c["layout"] == lay]
+                    ax.plot([c["x"] for c in de], [c["mean_p_gs"] for c in de], "-o", color=col, label=f"{lay}: jp_local + ZZ dose")
+                    ax.plot([c["x"] for c in dl], [c["mean_p_gs"] for c in dl], "--s", color=col, alpha=0.6, label=f"{lay}: local phase dose (product)")
+                ax.set_xlabel("x  (ZZ: exp(iπx Π_AΠ_B) on top of jp_local;  local: exp(iπx Π) per cavity)")
+                ax.set_ylabel("mean p(GS)")
+                ax.set_title(f"{fo['protocol']}: entanglement vs local-phase dose")
+                ax.legend(fontsize=6)
+            fig.tight_layout()
+            fig.savefig(FIG_DIR / "factorial_dose.png", dpi=130)
         print("figs in", FIG_DIR)
     except Exception as exc:  # noqa: BLE001
         print("figure failed:", exc)
