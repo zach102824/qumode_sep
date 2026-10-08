@@ -157,18 +157,24 @@ def main() -> int:
         if F1:
             F1_10 = [r for r in F1 if r["ham_file"] in {x["ham_file"] for x in F2}]
             rows.append(method_row("F1 restricted to H0-H9", F1_10))
+    EG = load("rl_EG_g200_e200")
+    if EG:
+        row = method_row("EG rule + regrow (g200 e200)", EG)
+        row["stop_fixed_point"] = float(np.mean([r["relayout_stop"] == "fixed_point" for r in EG]))
+        row["final_below_round0"] = float(np.mean([r["p_gs"] < r["rounds"][0]["p_gs"] - 1e-12 for r in EG]))
+        rows.append(row)
     out["methods"] = rows
     pv = []
     if srcB:
         pv.append(paired("B vs A (success only)", srcB, refA,
                          p_of=lambda r: r["rounds"][0]["p_gs"],
                          s_of=lambda r: r["rounds"][0]["polished_is_ground"]))
-    for name, R in (("C", C), ("D", D), ("E", E), ("F1", F1), ("F2", F2)):
+    for name, R in (("C", C), ("D", D), ("E", E), ("EG", EG), ("F1", F1), ("F2", F2)):
         if R:
             pv.append(paired(name, R, refA))
     out["paired_vs_A"] = pv
     # per-H
-    for name, R in (("A", A), ("D", D), ("E", E), ("F1", F1), ("F2", F2), ("C", C)):
+    for name, R in (("A", A), ("D", D), ("E", E), ("EG", EG), ("F1", F1), ("F2", F2), ("C", C)):
         if not R:
             continue
         ph = {}
@@ -223,6 +229,66 @@ def main() -> int:
     out["budget_refs"] = refs
     for r in refs:
         print(f"{r['method']:>10} evals={r['mean_evals']:7.0f} succ={r['success_rate']:.3f} p={r['mean_p_gs']:.3f}")
+
+    # jp_local product-gate combinations (same layouts/methods, U = jp_local instead of jp)
+    jl_tags = [
+        ("A_jl", "rl_A_jl"),
+        ("F1_jl", "rl_F1_jl"),
+        ("D_jl g25 e25", "rl_D_jl_g25_e25"),
+        ("D_jl g50 e50", "rl_D_jl_g50_e50"),
+        ("D_jl g50 e100", "rl_D_jl_g50_e100"),
+        ("D_jl g200 e200", "rl_D_jl_g200_e200"),
+        ("EG_jl g200 e200", "rl_EG_jl_g200_e200"),
+    ]
+    jl_loaded: dict[str, list] = {}
+    jl_rows = []
+    for lab, tag in jl_tags:
+        R = load(tag)
+        if not R:
+            continue
+        jl_loaded[lab] = R
+        row = method_row(lab, R)
+        if lab.startswith("D_jl") or lab.startswith("EG_jl"):
+            row["stop_fixed_point"] = float(np.mean([r["relayout_stop"] == "fixed_point" for r in R]))
+            row["round0_success"] = float(np.mean([r["rounds"][0]["success"] for r in R]))
+            row["round0_mean_p_gs"] = float(np.mean([r["rounds"][0]["p_gs"] for r in R]))
+            row["B_polished_is_ground"] = float(np.mean([r["rounds"][0]["polished_is_ground"] for r in R]))
+        jl_rows.append(row)
+        print(f"JL {lab:>16} evals={row['mean_evals']:7.0f} succ={row['success_rate']:.3f} p={row['mean_p_gs']:.3f}")
+    out["jp_local_combos"] = {"methods": jl_rows, "paired": []}
+    refA_jl = {key(r): r for r in jl_loaded["A_jl"]} if "A_jl" in jl_loaded else {}
+    jl_pairs = []
+    # A_jl vs A (jp baseline identity layout)
+    if "A_jl" in jl_loaded:
+        jl_pairs.append(paired("A_jl vs A", jl_loaded["A_jl"], refA))
+    # F1_jl vs F1 and vs A_jl
+    if "F1_jl" in jl_loaded and F1:
+        jl_pairs.append(paired("F1_jl vs F1", jl_loaded["F1_jl"], {key(r): r for r in F1}))
+    if "F1_jl" in jl_loaded and refA_jl:
+        jl_pairs.append(paired("F1_jl vs A_jl", jl_loaded["F1_jl"], refA_jl))
+    # D_jl vs A_jl and vs matching D (jp); EG_jl vs A_jl / EG
+    d_pairs = [
+        ("D_jl g25 e25", "D g25 e25", load("rl_sweepD_g25_e25")),
+        ("D_jl g50 e50", "D g50 e50", load("rl_sweepD_g50_e50")),
+        ("D_jl g50 e100", "D g50 e100", load("rl_sweepD_g50_e100")),
+        ("D_jl g200 e200", "D g200 e200", D),
+    ]
+    for jplab, jplab_jp, Rjp in d_pairs:
+        if jplab not in jl_loaded:
+            continue
+        if refA_jl:
+            jl_pairs.append(paired(f"{jplab} vs A_jl", jl_loaded[jplab], refA_jl))
+        if Rjp:
+            jl_pairs.append(paired(f"{jplab} vs {jplab_jp}", jl_loaded[jplab], {key(r): r for r in Rjp}))
+    if "EG_jl g200 e200" in jl_loaded and refA_jl:
+        jl_pairs.append(paired("EG_jl vs A_jl", jl_loaded["EG_jl g200 e200"], refA_jl))
+    if "EG_jl g200 e200" in jl_loaded and EG:
+        jl_pairs.append(paired("EG_jl vs EG", jl_loaded["EG_jl g200 e200"], {key(r): r for r in EG}))
+    out["jp_local_combos"]["paired"] = jl_pairs
+    for p in jl_pairs:
+        print(f"JLPAIR {p['method']}: d={p['mean_delta_p_gs']} wil={p['wilcoxon_p']} "
+              f"succ+/-={p['success_gained_lost']} n={p['n_pairs']}")
+
     a_row = rows[0]
     beat = [r for r in sw if r["success_rate"] >= a_row["success_rate"] and r["mean_p_gs"] > a_row["mean_p_gs"]
             and (r["vs_A_wilcoxon_p"] or 1) < 0.05]

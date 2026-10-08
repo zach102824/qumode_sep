@@ -1,8 +1,8 @@
-# Does entanglement help? Controlled bus-gate comparison (n=8) — DRAFT, 2026-10-09 00:30 CST
+# Does entanglement help? Controlled bus-gate comparison (n=8) — FINAL, 2026-10-09 03:52 CST
 
-**Status: DRAFT.** The two main fleets (legacy and tuned, 7 arms × 3 layouts × 20 H × 25 trials = 10,500 trials each)
-are complete. The 2×2 factorial / dose follow-up (`ent_tuned_fu`, `ent_legacy_fu`) is pending; see
-[Pending](#pending-runs). Code: `noiseless/run_entanglement_control.py`. Analysis:
+**Status: FINAL.** All planned runs complete: two main fleets (legacy and tuned, 7 arms × 3 layouts ×
+20 H × 25 trials = 10,500 trials each) plus the 2×2 factorial / dose follow-up (`ent_tuned_fu`,
+`ent_legacy_fu`). Code: `noiseless/run_entanglement_control.py`. Analysis:
 `noiseless/analyze_entanglement_control.py` → `entanglement_control_analysis_summary.json` and
 `ent_control_figs/`. Per-trial dumps stay on the box (`noiseless/results/ent_control_runs/`, gitignored).
 
@@ -20,6 +20,9 @@ are complete. The 2×2 factorial / dose follow-up (`ent_tuned_fu`, `ent_legacy_f
 | g0.5 | exp(iπ/2·Π_AΠ_B) = i·Π_A⊗Π_B | no (product; Π is gauge-absorbable, since Π·ECD(β)·Π = ECD(−β)) |
 | g0.0625, g0.125, g0.1875 | exp(iγΠ_AΠ_B), γ/π = 1/16, 1/8, 3/16 | yes, increasing |
 | jp | diag((−i)^{(n+m) mod 2}) = e^{−iπ/4}·exp(iπ/4·Π_AΠ_B) | yes (maximal in this family) |
+| cz_nm (follow-up) | CZ(π/4) ≡ exp(iπ/4·(I−Π_A)(I−Π_B)/4) up to local phases; jp = jp_local·cz_nm | yes |
+| jl_g\<x\> (follow-up) | jp_local · exp(iπx Π_AΠ_B) | yes (entanglement dose on the product winner) |
+| lp\<x\> (follow-up) | exp(iπx Π)⊗exp(iπx Π); lp0.25 = jp_local | no (product local-phase dose) |
 
 - **Protocols.**
   - legacy: fixed L=4, plain SPSA, 200 steps, random init, 401 evals.
@@ -118,7 +121,75 @@ The tuned optimizer keeps entanglement low: peak 0.3–0.9 bits, against 1.6–1
 
 ![entropy](ent_control_figs/entropy_vs_pgs_tuned.png)
 
-## Conclusions (plain words)
+## Follow-up: 2×2 factorial {I, L⊗L} × {I, ZZ(π/4)} and dose curves
+
+jp = jp_local · cz_nm exactly. cz_nm is the "entangler with no extra local phase" cell when composed onto L⊗L;
+jl_g\<x\> adds a ZZ dose on top of jp_local; lp\<x\> is a pure product local-phase dose (lp0.25 = jp_local).
+
+### Factorial cells (success / mean p(GS) / peak S)
+
+**tuned**
+
+| arm | identity layout | rule_best | rule_bad |
+|---|---|---|---|
+| identity | 0.692 / 0.384 / 0 | 0.974 / 0.769 / 0 | 0.952 / 0.251 / 0 |
+| jp_local | **0.998 / 0.642 / 0** | **0.970 / 0.878 / 0** | **1.000 / 0.348 / 0** |
+| jp | 0.990 / 0.543 / 0.40 | 0.970 / 0.793 / 0.30 | 0.982 / 0.278 / 0.89 |
+| cz_nm | 0.834 / 0.386 / 0.86 | 0.972 / 0.609 / 0.34 | 1.000 / 0.223 / 1.22 |
+
+**legacy**
+
+| arm | identity layout | rule_best | rule_bad |
+|---|---|---|---|
+| identity | 0.878 / 0.257 / 0 | 0.974 / 0.445 / 0 | 0.922 / 0.140 / 0 |
+| jp_local | **0.948 / 0.316 / 0** | 0.954 / 0.354 / 0 | **0.976 / 0.263 / 0** |
+| jp | 0.902 / 0.175 / 1.59 | 0.948 / 0.210 / 1.61 | 0.942 / 0.119 / 1.70 |
+| cz_nm | 0.904 / 0.163 / 1.65 | 0.938 / 0.221 / 1.59 | 0.910 / 0.096 / 1.76 |
+
+### Factorial effect deltas (mean Δp(GS); Wilcoxon; H wins out of 20)
+
+| protocol | layout | effect | Δp | wilcoxon | H win/loss |
+|---|---|---|---|---|---|
+| tuned | identity | local phase \| no entangler (jp_local − I) | **+0.258** | 5e−78 | 20/0 |
+| tuned | identity | entangler \| no local phase (jp − I) | +0.159 | 2e−54 | 19/1 |
+| tuned | identity | entangler \| local phase (cz_nm − jp_local) | **−0.256** | 4e−80 | 0/20 |
+| tuned | identity | entangler on L⊗L (jp − jp_local) | −0.098 | 1e−49 | 1/19 |
+| tuned | identity | local phase \| entangler (cz_nm − jp) | −0.158 | 3e−58 | 0/20 |
+| tuned | identity | cz_nm − I | +0.002 | 0.65 | 11/9 |
+| tuned | rule_best | jp_local − I | +0.109 | 2e−60 | 20/0 |
+| tuned | rule_best | cz_nm − jp_local | **−0.269** | 9e−76 | 0/20 |
+| tuned | rule_best | jp − jp_local | −0.085 | 3e−42 | 2/18 |
+| tuned | rule_bad | jp_local − I | +0.097 | 2e−42 | 20/0 |
+| tuned | rule_bad | cz_nm − jp_local | −0.125 | 2e−74 | 0/20 |
+| legacy | identity | jp_local − I | +0.059 | 6e−17 | 18/2 |
+| legacy | identity | cz_nm − jp_local | −0.153 | 1e−68 | 0/20 |
+| legacy | identity | jp − I | −0.082 | 2e−36 | 1/19 |
+| legacy | rule_best | jp_local − I | −0.091 | 5e−23 | 1/19 |
+| legacy | rule_best | cz_nm − jp_local | −0.132 | 3e−44 | 0/20 |
+| legacy | rule_bad | jp_local − I | +0.123 | 2e−66 | 20/0 |
+| legacy | rule_bad | cz_nm − jp_local | −0.167 | 4e−82 | 0/20 |
+
+**Punchline.** Adding ZZ(π/4) on top of jp_local **hurts** on every layout under tuned (−0.256 / −0.269 / −0.125;
+0/20 Hamiltonians). cz_nm alone is statistically indistinguishable from identity on the identity layout
+(+0.002, p=0.65) and worse than identity on rule_best (−0.160). So the "entanglement without local phase"
+cell does nothing useful, and the "entanglement on top of the product winner" cell actively destroys the win.
+jp beats identity only because it carries the local phase; once that phase is already present (jp_local),
+extra entanglement is pure loss.
+
+### Dose curves
+
+**Entanglement on top of jp_local (jl_g\<x\> → cz_nm at x=0.25).** Mean p(GS) falls monotonically with x
+on all three layouts under both protocols. Tuned, identity layout: 0.642 → 0.611 → 0.546 → 0.456 → 0.386
+(Δ vs jp_local: 0, −0.031, −0.095, −0.186, −0.256). Peak S rises 0 → 0.22 → 0.51 → 0.77 → 0.86.
+
+**Product local-phase dose (lp\<x\> → jp_local at x=0.25).** Mean p(GS) *rises* with x under tuned on identity
+(0.384 → 0.456 → 0.557 → 0.615 → 0.642) and rule_bad (0.251 → 0.261 → 0.303 → 0.326 → 0.348). On rule_best
+the curve is non-monotonic at small x (0.769 → 0.735 → 0.792 → 0.842 → 0.878) but still ends highest at
+jp_local. Success on the identity layout jumps from 0.692 (I) to 0.974 already at lp0.0625.
+
+![factorial dose](ent_control_figs/factorial_dose.png)
+
+## What this means (plain words)
 1. **Entanglement as such does not help here.** The strongest arm in every tuned cell is the **product** gate jp_local,
    and it beats the maximal entangler jp on all 3 layouts (−0.098, −0.085, −0.069; 18–20 of 20 Hamiltonians each).
    Under legacy SPSA, every entangling gate is worse than the identity control, and the more entangling, the worse.
@@ -127,23 +198,17 @@ The tuned optimizer keeps entanglement low: peak 0.3–0.9 bits, against 1.6–1
    what helps. Removing the entanglement but keeping the phase (jp_local) helps more. A Π-only product
    gate (g0.5, gauge-equivalent to identity) gives nothing. So the useful ingredient is a non-Gaussian local parity
    phase, which the local ECD layer cannot make itself.
-3. **The target needs no entanglement.** The GS is a product basis state, and states with more cut entanglement
+3. **The factorial / dose follow-up confirms point 2 directly.** cz_nm − jp_local = −0.256 on the identity layout
+   (0/20 H); jl_g dose falls monotonically; lp dose rises toward jp_local. Entanglement on top of the product
+   winner hurts; more local phase helps.
+4. **The target needs no entanglement.** The GS is a product basis state, and states with more cut entanglement
    have lower p(GS) inside every arm.
-4. **Layout matters more than the gate, and the effects add.** rule_best minus identity layout is +0.39 (identity gate, tuned) and
+5. **Layout matters more than the gate, and the effects add.** rule_best minus identity layout is +0.39 (identity gate, tuned) and
    +0.24 (jp_local). The best tuned combination is rule_best + jp_local: 0.970 / 0.878.
-5. Caveat: this is n=8 with diagonal bus gates only, noiseless, with one ansatz family. "Entanglement does not
+6. Caveat: this is n=8 with diagonal bus gates only, noiseless, with one ansatz family. "Entanglement does not
    help" here means *Fock-diagonal entangling bus gates don't beat the best product gate of the same form*.
 
-## Pending runs
-Logged in `logs/run_followup2.out`.
-- `ent_tuned_fu` / `ent_legacy_fu` cover the 2×2 factorial {I, L⊗L} × {I, ZZ(π/4)}:
-  - jp = jp_local·cz_nm exactly.
-  - cz_nm ≡ jp_local·jp up to the absorbable Π⊗Π gauge.
-- The new arms in those runs:
-  - cz_nm (the "local phase + entangler" cell).
-  - jl_g<x> = jp_local·exp(iπx Π_AΠ_B), an entanglement dose on top of the product winner.
-  - lp<x> = exp(iπxΠ)⊗exp(iπxΠ), a product local-phase dose; lp0.25 = jp_local.
-- These test points 1–2 directly. Point 2 is currently an interpretation.
+All planned follow-ups are complete.
 
 ## Commands
 ```bash
@@ -152,5 +217,6 @@ python -m noiseless.run_entanglement_control --protocol legacy --layouts identit
   --trials 25 --workers 8 --outdir $E --tag ent_legacy
 python -m noiseless.run_entanglement_control --protocol tuned --layouts identity,rule_best,rule_bad \
   --trials 25 --workers 8 --outdir $E --tag ent_tuned
+# follow-up arms: --arms cz_nm,jl_g0.0625,jl_g0.125,jl_g0.1875,lp0.0625,lp0.125,lp0.1875 --tag ent_*_fu
 python noiseless/analyze_entanglement_control.py
 ```
