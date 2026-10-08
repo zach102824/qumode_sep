@@ -224,3 +224,40 @@ def test_tuned_protocol_worker_logs_stage_entropies():
     gs = load_four_sat_npz(job["ham_path"])["ground_bitstring"]
     _, _, na, nb = denm_from_bits(bits_from_bitstring(gs), EncodingSpec(tuple(job["layout_perm"])))
     assert na in (0, 7) and nb in (0, 7)
+
+
+def test_factorial_gate_identities():
+    """jp = jp_local·cz_nm exactly; cz_nm = (L⊗L)(Π⊗Π)·jp; jl_g0 = jp_local; lp0 = I."""
+    from noiseless.run_entanglement_control import cz_nm_gate_ab, local_parity_phase_ab
+
+    L = jp_local_gate_ab()
+    cz = cz_nm_gate_ab()
+    jp = jp_gate_ab()
+    par = np.diag(np.array([(-1.0) ** n for n in range(NFOCK)], dtype=complex))
+    pp = np.kron(par, par)
+    assert np.max(np.abs(L @ cz - jp)) < 1e-12
+    assert np.max(np.abs(L @ pp @ jp - cz)) < 1e-12
+    assert np.max(np.abs(build_arm_u("jl_g0") - build_arm_u("jp_local"))) < 1e-12
+    assert np.max(np.abs(build_arm_u("lp0") - build_arm_u("identity"))) < 1e-12
+    # jl_g0.25 = jp_local·e^{iπ/4}·jp-ish: equals e^{iπ/4}·(L⊗L)·jp, i.e. cz_nm up to Π⊗Π gauge
+    u = build_arm_u("jl_g0.25")[:64, :64]
+    assert np.max(np.abs(u - np.exp(1j * np.pi / 4) * (L @ jp))) < 1e-12
+    # lp0.25 = e^{-iπ/4}... local phase: exp(iπ/4 Π) = e^{iπ/4}·L·(gauge-free) on each cavity
+    lp = local_parity_phase_ab(np.pi / 4)
+    assert np.max(np.abs(lp - np.exp(1j * np.pi / 2) * L)) < 1e-12
+    assert parse_arm("cz_nm") == ("cz_nm", None)
+    assert parse_arm("jl_g0.125") == ("jl_g0.125", 0.125)
+    assert parse_arm("lp0.0625") == ("lp0.0625", 0.0625)
+    with pytest.raises(ValueError):
+        parse_arm("jl_g0.3")
+    # entangling power: jl_g/cz_nm entangle, lp does not
+    plus = np.zeros(NFOCK, dtype=complex)
+    plus[0] = plus[1] = 1.0 / np.sqrt(2.0)
+    psi0 = _state_dAeB(plus, plus)
+    assert entropy_dA_eB(build_arm_u("cz_nm") @ psi0) > 0.9
+    assert entropy_dA_eB(build_arm_u("lp0.125") @ psi0) < 1e-10
+
+
+def test_unitaries_jp_local_matches_runner():
+    u = np.asarray(build_fixed_u("jp_local").full(), dtype=complex)
+    assert np.max(np.abs(u - build_arm_u("jp_local"))) < 1e-12

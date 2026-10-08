@@ -23,6 +23,15 @@ seed is arm-independent, so x0 AND the SPSA perturbation stream are paired acros
               g0.5 = exp(iπ/2 Π_AΠ_B) = i·Π_A⊗Π_B is a PRODUCT gate (second product
               control: local parity flips, same "angle family" as jp, zero entangling power).
   jp          jp|n,m⟩ = (-i)^{(n+m) mod 2}|n,m⟩ (same as unitaries.joint_parity_ab).
+  cz_nm       |n,m⟩ ↦ (-1)^{nm}|n,m⟩ (= unitaries.cz_nm_ab). jp = jp_local · cz_nm exactly, and
+              cz_nm = (L⊗L)(Π⊗Π)·jp; Π⊗Π is gauge-absorbable (Π ECD(β) Π = ECD(-β), Π commutes
+              with transmon rotations and diagonal gates), so cz_nm ≡ jp_local·jp: the
+              "local phase + entangler" cell of the 2×2 factorial {I, L⊗L} × {I, ZZ(π/4)}.
+  jl_g<x>     jp_local · exp(+iπx Π_AΠ_B), x ∈ [0, 0.25]: entanglement dose on top of the
+              local phase (x=0 → jp_local, x=0.25 ≡ cz_nm up to global phase and Π⊗Π gauge).
+  lp<x>       exp(+iπx Π_A) ⊗ exp(+iπx Π_B), x ∈ [0, 0.5]: product local parity-phase dose
+              (x=0 → identity, x=0.25 = jp_local up to a global phase, x=0.5 = -Π⊗Π
+              ≡ identity by gauge).
 
 Each record also carries the entanglement-entropy profile of the optimized circuit:
 the von Neumann entropy (bits) across the (d,A)|(e,B) cut after every layer, the entropy
@@ -139,8 +148,28 @@ def jp_local_gate_ab() -> np.ndarray:
     return np.kron(local, local)
 
 
+def cz_nm_gate_ab() -> np.ndarray:
+    """|n,m⟩ ↦ (-1)^{nm}|n,m⟩ (−1 iff both n and m odd)."""
+    diag = np.ones(NFOCK_SQ, dtype=complex)
+    for n in range(NFOCK):
+        for m in range(NFOCK):
+            if (n * m) % 2 == 1:
+                diag[n * NFOCK + m] = -1.0
+    return np.diag(diag)
+
+
+def local_parity_phase_ab(theta: float) -> np.ndarray:
+    """exp(+iθΠ_A) ⊗ exp(+iθΠ_B), Π = (-1)^n̂."""
+    loc = np.diag(np.array([np.exp(1j * float(theta) * (-1.0) ** n) for n in range(NFOCK)],
+                           dtype=complex))
+    return np.kron(loc, loc)
+
+
 def parse_arm(token: str) -> tuple[str, float | None]:
-    """Return (canonical arm name, γ/π or None)."""
+    """Return (canonical arm name, γ/π or None).
+
+    For jl_g<x> and lp<x> the returned number is x (the dose).
+    """
     t = token.strip().lower()
     if t == "identity":
         return "identity", 0.0
@@ -148,12 +177,25 @@ def parse_arm(token: str) -> tuple[str, float | None]:
         return "jp", 0.25
     if t == "jp_local":
         return "jp_local", None
+    if t == "cz_nm":
+        return "cz_nm", None
+    if t.startswith("jl_g"):
+        frac = float(t[4:])
+        if not 0.0 <= frac <= 0.25:
+            raise ValueError(f"x = {frac} outside [0, 0.25] in arm {token!r}")
+        return f"jl_g{frac:g}", frac
+    if t.startswith("lp"):
+        frac = float(t[2:])
+        if not 0.0 <= frac <= 0.5:
+            raise ValueError(f"x = {frac} outside [0, 0.5] in arm {token!r}")
+        return f"lp{frac:g}", frac
     if t.startswith("g"):
         frac = float(t[1:])
         if not 0.0 <= frac <= 0.5:
             raise ValueError(f"γ/π = {frac} outside [0, 0.5] in arm {token!r}")
         return f"g{frac:g}", frac
-    raise ValueError(f"Unknown arm {token!r}; use identity, jp, jp_local, or g<γ/π>")
+    raise ValueError(f"Unknown arm {token!r}; use identity, jp, jp_local, cz_nm, g<γ/π>, "
+                     "jl_g<x> or lp<x>")
 
 
 def build_arm_u(arm: str) -> np.ndarray:
@@ -165,6 +207,12 @@ def build_arm_u(arm: str) -> np.ndarray:
         return _embed_ab_np(jp_gate_ab())
     if name == "jp_local":
         return _embed_ab_np(jp_local_gate_ab())
+    if name == "cz_nm":
+        return _embed_ab_np(cz_nm_gate_ab())
+    if name.startswith("jl_g"):
+        return _embed_ab_np(jp_local_gate_ab() @ gamma_gate_ab(frac * np.pi))
+    if name.startswith("lp"):
+        return _embed_ab_np(local_parity_phase_ab(frac * np.pi))
     return _embed_ab_np(gamma_gate_ab(frac * np.pi))
 
 

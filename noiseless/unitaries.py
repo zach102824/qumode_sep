@@ -25,6 +25,7 @@ U_NAMES = (
     "bs_pi6",
     "bs_pi3",
     "jp",  # appended last so existing per-trial seeds (index-based) are unchanged
+    "jp_local",  # product control L⊗L, L = diag((-i)^(n mod 2)); appended 2026-10-09
 )
 
 
@@ -107,6 +108,17 @@ def snap_b_pi_ab() -> qt.Qobj:
     return _embed_ab(u_ab)
 
 
+def jp_local_ab() -> qt.Qobj:
+    """L_A ⊗ L_B, L = diag((-i)^(n mod 2)): jp's local phase factor (jp = jp_local · cz_nm).
+
+    Product gate (zero entangling power); unlike Π it is not gauge-absorbable into the ECD
+    displacement signs.
+    """
+    loc = np.array([(-1j) ** (n % 2) for n in range(NFOCK)], dtype=complex)
+    u_ab = qt.Qobj(np.diag(np.kron(loc, loc)), dims=[[NFOCK, NFOCK], [NFOCK, NFOCK]])
+    return _embed_ab(u_ab)
+
+
 def build_fixed_u(name: str) -> qt.Qobj:
     key = str(name).lower().strip()
     if key == "identity":
@@ -123,6 +135,8 @@ def build_fixed_u(name: str) -> qt.Qobj:
         return cz_nm_ab()
     if key == "jp":
         return joint_parity_ab()
+    if key == "jp_local":
+        return jp_local_ab()
     if key == "ck_pi2":
         return ck_phase_ab(np.pi / 2.0)
     if key == "ck_pi4":
