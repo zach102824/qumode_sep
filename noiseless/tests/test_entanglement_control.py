@@ -58,7 +58,7 @@ def test_parse_arm_validation():
     assert parse_arm("g0.125") == ("g0.125", 0.125)
     assert parse_arm("jp_local")[1] is None
     with pytest.raises(ValueError):
-        parse_arm("g0.3")  # outside [0, 0.25]
+        parse_arm("g0.6")  # outside [0, 0.5]
     with pytest.raises(ValueError):
         parse_arm("bogus")
 
@@ -133,3 +133,94 @@ def test_seeds_are_paired_across_arms():
     x_a = random_parameters(4, np.random.default_rng(all_seeds[0]))
     x_b = random_parameters(4, np.random.default_rng(all_seeds[0]))
     assert np.array_equal(x_a, x_b)
+
+
+# --------------------------------------------------------------------------- 2026-10-08 additions
+
+
+def test_g_half_is_product_i_parity_parity():
+    """g0.5 = exp(iπ/2 Π_AΠ_B) = i·Π_A⊗Π_B: a product gate (second product control)."""
+    par = np.diag(np.array([(-1.0) ** n for n in range(NFOCK)], dtype=complex))
+    u = gamma_gate_ab(np.pi / 2.0)
+    assert np.max(np.abs(u - 1j * np.kron(par, par))) < 1e-12
+    assert parse_arm("g0.5") == ("g0.5", 0.5)
+    plus = np.zeros(NFOCK, dtype=complex)
+    plus[0] = plus[1] = 1.0 / np.sqrt(2.0)
+    psi0 = _state_dAeB(plus, plus)
+    assert entropy_dA_eB(build_arm_u("g0.5") @ psi0) < 1e-10
+
+
+def test_pre_u_entropy_equals_previous_layer_and_peak_excludes_final_gate():
+    from noiseless.circuit_local_ecd import extract_u_ab
+    from noiseless.run_entanglement_control import entropy_profiles, entropy_summary
+
+    rng = np.random.default_rng(3)
+    L = 4
+    x = rng.normal(size=8 * L)
+    u_ab = extract_u_ab(build_arm_u("jp"))
+    post, pre = entropy_profiles(x, L, u_ab)
+    assert pre[0] < 1e-10  # vacuum + local gates: product
+    for k in range(1, L):
+        assert abs(pre[k] - post[k - 1]) < 1e-9  # local gates leave the cut entropy unchanged
+    summ = entropy_summary(x, L, u_ab)
+    assert abs(summ["final_entropy_pre_u"] - post[L - 2]) < 1e-9
+    assert abs(summ["peak_entropy_effective"] - max(post[: L - 1])) < 1e-9
+    assert summ["final_entropy"] >= 0.0 and min(summ["entropy_profile"]) >= 0.0
+
+
+def test_final_bus_gate_does_not_change_probabilities():
+    """The last U is diagonal in the measured basis: p(x) identical with or without it."""
+    from noiseless.circuit_local_ecd import apply_layer_factored, extract_u_ab, unpack_params, vacuum_np
+
+    rng = np.random.default_rng(5)
+    L = 3
+    x = rng.normal(size=8 * L)
+    u_ab = extract_u_ab(build_arm_u("jp"))
+    eye = np.eye(NFOCK * NFOCK, dtype=complex)
+    layers = unpack_params(x, L)
+    ket_a = vacuum_np()
+    ket_b = vacuum_np()
+    for k, ly in enumerate(layers):
+        args = (ly["beta_d"], ly["beta_e"], ly["theta_d"], ly["theta_e"], ly["phi_d"], ly["phi_e"])
+        ket_a = apply_layer_factored(ket_a, *args, u_ab)
+        ket_b = apply_layer_factored(ket_b, *args, u_ab if k < L - 1 else eye)
+    assert np.max(np.abs(np.abs(ket_a) ** 2 - np.abs(ket_b) ** 2)) < 1e-12
+
+
+def test_seeds_paired_across_layouts_and_layout_perms_recorded():
+    args = argparse.Namespace(
+        ham_dir="Hamiltonians/four_sat", arms="identity,jp", layers="4", trials=2, steps=8,
+        spsa_a=None, spsa_c=0.15, spsa_A=10.0, optimizer="spsa", adam_lr=0.05,
+        encoding="binary", seed=20260917, max_h=1, layouts="identity,rule_best,rule_bad",
+        protocol="tuned",
+    )
+    jobs = build_jobs(args)
+    assert len(jobs) == 1 * 2 * 3 * 2
+    by_trial: dict[int, set] = {}
+    for j in jobs:
+        by_trial.setdefault(j["trial"], set()).add(j["seed"])
+        assert j["protocol"] == "tuned"
+        assert (j["layout_perm"] is None) == (j["layout"] == "identity")
+    assert all(len(s) == 1 for s in by_trial.values())
+
+
+def test_tuned_protocol_worker_logs_stage_entropies():
+    from noiseless.encoding import EncodingSpec, bits_from_bitstring, denm_from_bits, load_four_sat_npz
+    from noiseless.run_entanglement_control import _worker
+
+    args = argparse.Namespace(
+        ham_dir="Hamiltonians/four_sat", arms="jp", layers="4", trials=1, steps=8,
+        spsa_a=None, spsa_c=0.15, spsa_A=10.0, optimizer="spsa", adam_lr=0.05,
+        encoding="binary", seed=20260917, max_h=1, layouts="rule_best", protocol="tuned",
+    )
+    job = build_jobs(args)[0]
+    job["steps_per_stage"] = 3
+    rec = _worker(job)
+    assert rec["ok"], rec.get("traceback")
+    assert rec["protocol"] == "tuned" and rec["nfev"] == 4 * (2 * 3 + 1)
+    assert [s["n_layers"] for s in rec["stages"]] == [1, 2, 3, 4]
+    for s in rec["stages"]:
+        assert "x" not in s and len(s["entropy_profile"]) == s["n_layers"]
+    gs = load_four_sat_npz(job["ham_path"])["ground_bitstring"]
+    _, _, na, nb = denm_from_bits(bits_from_bitstring(gs), EncodingSpec(tuple(job["layout_perm"])))
+    assert na in (0, 7) and nb in (0, 7)

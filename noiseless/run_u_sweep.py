@@ -28,6 +28,7 @@ if str(_REPO) not in sys.path:
 
 from noiseless.circuit_local_ecd import n_parameters
 from noiseless.encoding import (
+    EncodingSpec,
     list_four_sat_npz,
     load_four_sat_npz,
     logical_energies_from_terms,
@@ -36,6 +37,9 @@ from noiseless.spsa_gibbs import (
     ADAM_LR,
     DEFAULT_POLISH_RADIUS,
     DEFAULT_RELAYOUT_ROUNDS,
+    RELAYOUT_INITS,
+    RELAYOUT_RETURNS,
+    RELAYOUT_TARGETS,
     NoiselessSimulator,
     GROW_KICK_SIGMA,
     ground_flat_from_bitstring,
@@ -44,6 +48,7 @@ from noiseless.spsa_gibbs import (
     relayout_trial,
     scale_spsa_a,
 )
+from noiseless.layouts import LAYOUTS, layout_spec
 from noiseless.unitaries import U_NAMES, build_fixed_u
 
 
@@ -57,6 +62,15 @@ def _worker(job: dict) -> dict:
         encoding = str(job.get("encoding", "binary"))
         grow = bool(job.get("grow", False))
         relayout = bool(job.get("relayout", False))
+        layout = str(job.get("layout", "identity"))
+        if layout != "identity":
+            if encoding != "binary":
+                raise ValueError("--layout other than identity requires --encoding binary")
+            if job.get("layout_perm") is not None:
+                encoding = EncodingSpec(tuple(int(v) for v in job["layout_perm"]))
+            else:
+                gs_true = load_four_sat_npz(job["ham_path"])["ground_bitstring"]
+                encoding = layout_spec(layout, gs_true, job["ham_file"])
         inst = load_four_sat_npz(job["ham_path"], encoding=encoding)
         u = build_fixed_u(job["u_name"])
         lambda1 = float(job.get("lambda1", 0.0))
@@ -105,6 +119,9 @@ def _worker(job: dict) -> dict:
                 beta_max=beta_max,
                 relayout_steps=job.get("relayout_steps"),
                 relayout_lr=job.get("relayout_lr"),
+                relayout_init=str(job.get("relayout_init", "random")),
+                relayout_return=str(job.get("relayout_return", "last")),
+                relayout_target=str(job.get("relayout_target", "xor_vacuum")),
                 **grow_kw,
             )
             a = (
@@ -165,6 +182,9 @@ def _worker(job: dict) -> dict:
                 adam_lr=float(job.get("adam_lr", ADAM_LR)),
                 bfgs_eta_mode=str(job.get("bfgs_eta_mode", "callback")),
             )
+        sel_round = None
+        if relayout and result.rounds:
+            sel_round = next((r for r in result.rounds if r.get("selected")), result.rounds[-1])
         return {
             "ok": True,
             "ham_file": job["ham_file"],
@@ -198,19 +218,19 @@ def _worker(job: dict) -> dict:
             "adam_lr": float(job.get("adam_lr", ADAM_LR)) if result.optimizer == "spsa_adam" else None,
             "wall_s": float(time.perf_counter() - t0),
             "x": result.x.tolist(),
-            "encoding": (
-                result.rounds[-1]["encoding"] if relayout and result.rounds else encoding
-            ),
-            "encoding_base": encoding,
+            "encoding": sel_round["encoding"] if sel_round is not None else str(encoding),
+            "encoding_base": str(encoding),
+            "layout": layout,
             "grow": grow,
             "relayout": relayout,
             "relayout_stop": result.relayout_stop,
             "relayout_rounds": int(job.get("relayout_rounds", DEFAULT_RELAYOUT_ROUNDS)) if relayout else 0,
             "polish_radius": int(job.get("polish_radius", DEFAULT_POLISH_RADIUS)) if relayout else 0,
             "rounds": result.rounds,
-            "polished_candidate": (
-                result.rounds[-1]["polished_candidate"] if relayout and result.rounds else None
-            ),
+            "polished_candidate": sel_round["polished_candidate"] if sel_round is not None else None,
+            "relayout_init": str(job.get("relayout_init", "random")) if relayout else None,
+            "relayout_return": str(job.get("relayout_return", "last")) if relayout else None,
+            "relayout_target": str(job.get("relayout_target", "xor_vacuum")) if relayout else None,
             "stages": result.stages,
             "bfgs_eta_mode": str(job.get("bfgs_eta_mode", "callback")) if result.optimizer == "bfgs" else None,
             "opt_info": result.opt_info,
@@ -320,6 +340,13 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
     layers = [int(x) for x in args.layers.split(",") if x.strip()]
     jobs = []
     seed0 = int(args.seed)
+    layout_perms: dict[str, list[int] | None] = {}
+    for path in paths:
+        if args.layout == "identity":
+            layout_perms[path.name] = None
+        else:
+            gs = load_four_sat_npz(path)["ground_bitstring"]
+            layout_perms[path.name] = list(layout_spec(args.layout, gs, path.name).perm)
     for hi, path in enumerate(paths):
         for u_name in u_names:
             for L in layers:
@@ -365,6 +392,11 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
                             "polish_radius": int(args.polish_radius),
                             "relayout_steps": args.relayout_steps,
                             "relayout_lr": args.relayout_lr,
+                            "relayout_init": str(args.relayout_init),
+                            "relayout_return": str(args.relayout_return),
+                            "relayout_target": str(args.relayout_target),
+                            "layout": str(args.layout),
+                            "layout_perm": layout_perms[path.name],
                         }
                     )
     return jobs
@@ -589,6 +621,18 @@ def main(argv: list[str] | None = None) -> int:
         help="Adam lr for extra L* rounds (default: first-stage / random-init lr, e.g. 0.5 "
         "under the tuned schedule — not the last-stage fine-tune lr)",
     )
+    p.add_argument("--relayout-init", choices=RELAYOUT_INITS, default="random",
+                   help="x0 of extra relayout rounds: random (|β|~U(0,3), default), small "
+                   "(|β|~U(0,0.1)), warm (previous round's x)")
+    p.add_argument("--relayout-return", choices=RELAYOUT_RETURNS, default="last",
+                   help="official trial result: last round (default) or best = lowest Gibbs "
+                   "cost at a common η over rounds (no GS knowledge)")
+    p.add_argument("--relayout-target", choices=RELAYOUT_TARGETS, default="xor_vacuum",
+                   help="xor_vacuum (default): XOR cavity maps so the candidate sits at Fock "
+                   "(0,0); rule: permutation-only tier-rule layout for the candidate")
+    p.add_argument("--layout", choices=LAYOUTS, default="identity",
+                   help="variable→slot layout (binary code). rule_best / rule_bad / screen_best "
+                   "use the TRUE GS or the screen data (oracles); see noiseless/layouts.py")
     args = p.parse_args(argv)
     if args.smoke:
         args.u_names = "identity"
@@ -624,6 +668,11 @@ def main(argv: list[str] | None = None) -> int:
         p.error("--polish-radius must be >= 0")
     if (args.relayout_steps is not None or args.relayout_lr is not None) and not args.relayout:
         p.error("--relayout-steps / --relayout-lr require --relayout")
+    if not args.relayout and (args.relayout_init != "random" or args.relayout_return != "last"
+                              or args.relayout_target != "xor_vacuum"):
+        p.error("--relayout-init / --relayout-return / --relayout-target require --relayout")
+    if args.layout != "identity" and args.encoding != "binary":
+        p.error("--layout other than identity requires --encoding binary")
     if args.bfgs_eta_mode != "callback" and args.optimizer != "bfgs":
         p.error("--bfgs-eta-mode requires --optimizer bfgs")
     if args.optimizer == "bfgs" and args.adapt_lambda:
@@ -720,6 +769,10 @@ def main(argv: list[str] | None = None) -> int:
             "polish_radius": int(args.polish_radius),
             "relayout_steps": args.relayout_steps,
             "relayout_lr": args.relayout_lr,
+            "relayout_init": str(args.relayout_init),
+            "relayout_return": str(args.relayout_return),
+            "relayout_target": str(args.relayout_target),
+            "layout": str(args.layout),
             "preset": args.preset,
         },
         "n_jobs": len(records),

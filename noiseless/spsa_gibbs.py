@@ -26,6 +26,7 @@ from .encoding import (
     bits_from_denm,
     corner_spec_for_bitstring,
     denm_from_bits,
+    rule_layout_for_bitstring,
     denm_from_flat,
     energy_tensor_for_spec,
     flat_index,
@@ -799,6 +800,7 @@ def grow_trial(
     eta_scale_schedule: list[float] | None = None,
     c_schedule: list[float] | None = None,
     bfgs_eta_mode: str = "callback",
+    record_x: bool = False,
 ) -> TrialResult:
     """Layer-growth trial: train L=start_layers from random init, then repeatedly append a
     transparent LAST layer (+ Gaussian kick σ on its 8 params) and retrain, up to
@@ -927,6 +929,9 @@ def grow_trial(
                 **insert_info,
             }
         )
+        if record_x:
+            # Opt-in (default off keeps stage records unchanged): end-of-stage parameters.
+            stages[-1]["x"] = [float(v) for v in x]
         if result.optimizer == "bfgs":
             stages[-1].update({"nit": int(result.nit), "opt_status": result.opt_status,
                                "opt_message": result.opt_message, "wall_s": float(stage_wall)})
@@ -952,6 +957,34 @@ def grow_trial(
 
 DEFAULT_RELAYOUT_ROUNDS = 2
 DEFAULT_POLISH_RADIUS = 1
+RELAYOUT_INITS = ("random", "small", "warm")
+RELAYOUT_RETURNS = ("last", "best")
+RELAYOUT_TARGETS = ("xor_vacuum", "rule")
+SMALL_INIT_BETA_MAX = 0.1  # relayout_init="small": |β| ~ U(0, 0.1)
+
+
+def small_beta_parameters(n_layers: int, rng: np.random.Generator,
+                          beta_max: float = SMALL_INIT_BETA_MAX) -> np.ndarray:
+    """:func:`random_parameters` with every |β| rescaled from U(0, 3) to U(0, ``beta_max``).
+
+    Same rng draws as a random init (stream-compatible); θ, φ and arg(β) stay random.
+    """
+    x = random_parameters(int(n_layers), rng)
+    scale = float(beta_max) / 3.0
+    for ell in range(int(n_layers)):
+        base = 8 * ell
+        x[base : base + 4] *= scale
+    return x
+
+
+def relayout_next_spec(polished: str, spec: EncodingSpec, target: str) -> EncodingSpec:
+    """Encoding for the next relayout round from the polished candidate."""
+    t = str(target).lower()
+    if t == "xor_vacuum":
+        return corner_spec_for_bitstring(polished, spec)
+    if t == "rule":
+        return rule_layout_for_bitstring(polished, "best")
+    raise ValueError(f"relayout_target must be one of {RELAYOUT_TARGETS}, got {target!r}")
 
 
 def _relayout_stage_hparams(
@@ -1028,8 +1061,23 @@ def relayout_trial(
     beta_max: float | None = None,
     relayout_steps: int | None = None,
     relayout_lr: float | None = None,
+    relayout_init: str = "random",
+    relayout_return: str = "last",
+    relayout_target: str = "xor_vacuum",
 ) -> TrialResult:
     """Grow L=start→final on the baseline layout, then relayout at L=final.
+
+    Options added 2026-10-08 (defaults reproduce the original protocol bit-for-bit):
+      - ``relayout_init``: extra-round x0 = ``"random"`` (random_parameters, |β|~U(0,3)),
+        ``"small"`` (:func:`small_beta_parameters`, |β|~U(0,0.1); same rng draws), or
+        ``"warm"`` (previous round's final x; no rng draws).
+      - ``relayout_return``: ``"last"`` round, or ``"best"`` = the round with the lowest
+        Gibbs cost re-evaluated at a COMMON η (the largest end-of-round η over rounds). The
+        Gibbs cost needs only the energies of sampled strings, no GS knowledge; it is
+        encoding-independent because it depends on the logical distribution only.
+      - ``relayout_target``: ``"xor_vacuum"`` (cavity XOR relabel → candidate at Fock (0,0))
+        or ``"rule"`` (permutation-only binary layout from the tier rule applied to the
+        candidate, :func:`noiseless.encoding.rule_layout_for_bitstring`).
 
     Protocol (results/LAYOUT_PATTERNS.md: a layout is good iff the GS sits at both
     cavity Fock-ladder ends; the most-likely bitstring is within Hamming 1 of the
@@ -1058,6 +1106,12 @@ def relayout_trial(
     metrics, including raw/polished candidates and the encoding label) and
     ``nfev`` summed over all rounds. ``adapt_lambda`` is not supported.
     """
+    if relayout_init not in RELAYOUT_INITS:
+        raise ValueError(f"relayout_init must be one of {RELAYOUT_INITS}")
+    if relayout_return not in RELAYOUT_RETURNS:
+        raise ValueError(f"relayout_return must be one of {RELAYOUT_RETURNS}")
+    if relayout_target not in RELAYOUT_TARGETS:
+        raise ValueError(f"relayout_target must be one of {RELAYOUT_TARGETS}")
     rng = rng or np.random.default_rng()
     spec = (
         base_encoding
@@ -1083,8 +1137,11 @@ def relayout_trial(
         scale_spsa_a(n_parameters(int(final_layers))) if a is None else float(a)
     )
     rounds: list[dict] = []
+    round_results: list[TrialResult] = []
+    round_sims: list[NoiselessSimulator] = []
     total_nfev = 0
     result: TrialResult | None = None
+    x_prev: np.ndarray | None = None
     stop = "max_rounds"
     for rnd in range(int(relayout_rounds) + 1):
         sim = NoiselessSimulator(
@@ -1119,10 +1176,16 @@ def relayout_trial(
                 bfgs_eta_mode=bfgs_eta_mode,
             )
         else:
+            x0_extra = None
+            if rnd > 0 and relayout_init == "small":
+                x0_extra = small_beta_parameters(int(final_layers), rng)
+            elif rnd > 0 and relayout_init == "warm":
+                x0_extra = np.asarray(x_prev, dtype=float).copy()
             result = optimize_trial(
                 sim,
                 maxiter=int(total_steps) if rnd == 0 else int(extra_steps),
                 rng=rng,
+                x0=x0_extra,
                 a=None if rnd == 0 else extra_a,
                 c=c if rnd == 0 else extra_c,
                 A=A,
@@ -1131,17 +1194,23 @@ def relayout_trial(
                 bfgs_eta_mode=bfgs_eta_mode,
             )
         total_nfev += int(result.nfev)
+        x_prev = np.asarray(result.x, dtype=float)
+        round_results.append(result)
+        round_sims.append(sim)
         candidate = result.most_likely_bitstring
         polished = (
             polish_bitstring(candidate, logical_energies, radius=int(polish_radius))
             if int(polish_radius) > 0
             else candidate
         )
-        next_spec = corner_spec_for_bitstring(polished, spec)
+        next_spec = relayout_next_spec(polished, spec, relayout_target)
         rounds.append(
             {
                 "round": rnd,
                 "encoding": str(spec),
+                "candidate_is_ground": candidate == ground_bitstring,
+                "init": "grow" if (rnd == 0 and grow) else (
+                    "random" if rnd == 0 else relayout_init),
                 "n_layers": int(sim.n_layers),
                 "success": bool(result.success),
                 "p_gs": float(result.p_gs),
@@ -1166,6 +1235,19 @@ def relayout_trial(
             break
         spec = next_spec
     assert result is not None
+    # Common-η Gibbs cost per round (no GS knowledge) → "best" round selection.
+    eta_ref = max(float(r.eta) for r in round_results)
+    for k, (rr, ss) in enumerate(zip(round_results, round_sims)):
+        rounds[k]["fun_common_eta"] = float(
+            gibbs_objective(ss.probs_from_x(rr.x), ss.energies_flat, eta_ref))
+        rounds[k]["eta_common"] = eta_ref
+    if relayout_return == "best":
+        sel = min(range(len(rounds)), key=lambda k: (rounds[k]["fun_common_eta"], k))
+    else:
+        sel = len(rounds) - 1
+    result = round_results[sel]
+    for k in range(len(rounds)):
+        rounds[k]["selected"] = k == sel
     result.rounds = rounds
     result.relayout_stop = stop
     result.nfev = total_nfev

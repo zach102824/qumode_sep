@@ -197,6 +197,67 @@ def corner_spec_for_bitstring(bitstring: str, base: EncodingSpec = EncodingSpec(
     )
 
 
+RULE_LAYOUT_KINDS = ("best", "bad")
+_ALL_PERMS: list[tuple[int, ...]] | None = None
+
+
+def _all_perms() -> list[tuple[int, ...]]:
+    global _ALL_PERMS
+    if _ALL_PERMS is None:
+        _ALL_PERMS = list(permutations(range(N_QUBITS)))
+    return _ALL_PERMS
+
+
+def gs_location_binary(bitstring: str, perm: Sequence[int]) -> tuple[int, int, int, int]:
+    """(d, e, n_A, n_B) of ``bitstring`` under ``EncodingSpec(perm)`` (binary cavity code)."""
+    x = bits_from_bitstring(bitstring)
+    p = np.zeros(N_QUBITS, dtype=int)
+    p[list(perm)] = x
+    n_a = int(p[2]) * 4 + int(p[3]) * 2 + int(p[4])
+    n_b = int(p[5]) * 4 + int(p[6]) * 2 + int(p[7])
+    return int(p[0]), int(p[1]), n_a, n_b
+
+
+def _edge(n: int) -> int:
+    """Distance of Fock level n from the nearer ladder end (0 or NFOCK-1)."""
+    return min(int(n), NFOCK - 1 - int(n))
+
+
+def rule_layout_for_bitstring(bitstring: str, kind: str = "best") -> EncodingSpec:
+    """Permutation-only layout (binary cavity code, no XOR) chosen by the LAYOUT_PATTERNS.md
+    tier rule applied to ``bitstring`` (normally the GS or a GS guess).
+
+    ``kind="best"`` (prefer rule): minimise the summed distance of the bitstring's two cavity
+    Fock levels from the ladder ends (tier 0 = codeword 000 or 111, i.e. Fock 0 or 7), then the
+    larger of the two, then n_A + n_B (closer to the vacuum), then the lexicographically
+    smallest perm (deterministic). For every 8-bit string a tier-0/0 layout exists (each cavity
+    000 or 111), so the result always puts both cavities at a ladder end.
+
+    ``kind="bad"`` (avoid-rule violator): require both cavity Fock levels in {2,3,4,5}
+    (codeword bit2 != bit1), maximise the summed edge distance (Fock 3/4 preferred), then the
+    smallest perm. Raises ValueError if no such layout exists (needs >=2 zeros and >=2 ones).
+    """
+    kind = str(kind).lower()
+    if kind not in RULE_LAYOUT_KINDS:
+        raise ValueError(f"kind must be one of {RULE_LAYOUT_KINDS}, got {kind!r}")
+    best_key = None
+    best_perm = None
+    for perm in _all_perms():
+        _, _, n_a, n_b = gs_location_binary(bitstring, perm)
+        ea, eb = _edge(n_a), _edge(n_b)
+        if kind == "best":
+            key = (ea + eb, max(ea, eb), n_a + n_b, perm)
+        else:
+            if not (2 <= n_a <= 5 and 2 <= n_b <= 5):
+                continue
+            key = (-(ea + eb), -min(ea, eb), perm)
+        if best_key is None or key < best_key:
+            best_key, best_perm = key, perm
+    if best_perm is None:
+        raise ValueError(f"no {kind!r} rule layout exists for {bitstring}")
+    return EncodingSpec(tuple(best_perm))
+
+
 def _check_encoding(encoding: Encoding):
     if isinstance(encoding, EncodingSpec):
         return encoding

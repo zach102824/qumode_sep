@@ -19,11 +19,26 @@ seed is arm-independent, so x0 AND the SPSA perturbation stream are paired acros
   g<x>        U(γ) = exp(+i γ Π_A Π_B) with γ = x·π, Π = (-1)^n̂ (joint-parity ZZ(2γ)
               dose–response; entangling power increases monotonically on γ ∈ [0, π/4]).
               g0 ≡ identity; g0.25 ≡ jp up to the global phase e^{-iπ/4} (identical
-              probabilities, cost and optimizer trajectory).
+              probabilities, cost and optimizer trajectory). x ∈ [0, 0.5]:
+              g0.5 = exp(iπ/2 Π_AΠ_B) = i·Π_A⊗Π_B is a PRODUCT gate (second product
+              control: local parity flips, same "angle family" as jp, zero entangling power).
   jp          jp|n,m⟩ = (-i)^{(n+m) mod 2}|n,m⟩ (same as unitaries.joint_parity_ab).
 
 Each record also carries the entanglement-entropy profile of the optimized circuit:
-the von Neumann entropy (bits) across the (d,A)|(e,B) cut after every layer. The
+the von Neumann entropy (bits) across the (d,A)|(e,B) cut after every layer, the entropy
+just BEFORE the final bus gate (the final U is diagonal in the measured basis, so it cannot
+change p(x) or the cost; local gates do not change the cut entropy, so this equals the
+entropy after layer L-1), and the "effective peak" = max entropy over all states that can
+still influence the output (all layers except the final U).
+
+Protocols (--protocol): ``legacy`` = fixed L, plain SPSA (or --optimizer), --steps steps,
+random init (401 evals at 200 steps); ``tuned`` = the run_u_sweep tuned default: growth
+L=1→L (warm start, transparent new layer + kick σ=0.05), SPSA-Adam, lr 0.5/0.2/0.05/0.02,
+200 steps per stage (1604 evals at L=4); per-stage p(GS) and entropies are logged.
+
+Layouts (--layouts, comma list): identity (legacy class 0), rule_best, rule_bad (tier rule
+on the TRUE GS; see noiseless/layouts.py). Seeds are shared across arms AND layouts AND
+protocols, so every comparison is paired at the (H, L, trial) level. The
 summary adds, per arm: success, p(GS) stats, entropy stats, the within-arm Pearson
 correlation of final-layer entropy with p(GS), and paired per-trial deltas against the
 reference arm (default: identity).
@@ -69,16 +84,24 @@ from noiseless.circuit_local_ecd import (
     unpack_params,
     vacuum_np,
 )
-from noiseless.encoding import NFOCK, list_four_sat_npz, load_four_sat_npz
+from noiseless.encoding import EncodingSpec, NFOCK, list_four_sat_npz, load_four_sat_npz
+from noiseless.layouts import layout_spec
 from noiseless.spsa_gibbs import (
     ADAM_LR,
+    GROW_KICK_SIGMA,
     NoiselessSimulator,
     ground_flat_from_bitstring,
+    grow_trial,
     optimize_trial,
     scale_spsa_a,
 )
 
-DEFAULT_ARMS = "identity,jp_local,g0.0625,g0.125,g0.1875,jp"
+DEFAULT_ARMS = "identity,jp_local,g0.5,g0.0625,g0.125,g0.1875,jp"
+PRODUCT_ARMS = ("identity", "jp_local", "g0.5")
+PROTOCOLS = ("legacy", "tuned")
+ENT_LAYOUTS = ("identity", "rule_best", "rule_bad")
+TUNED_LR_SCHEDULE = (0.5, 0.2, 0.05, 0.02)
+TUNED_STEPS_PER_STAGE = 200
 NFOCK_SQ = NFOCK * NFOCK
 
 
@@ -127,8 +150,8 @@ def parse_arm(token: str) -> tuple[str, float | None]:
         return "jp_local", None
     if t.startswith("g"):
         frac = float(t[1:])
-        if not 0.0 <= frac <= 0.25:
-            raise ValueError(f"γ/π = {frac} outside [0, 0.25] in arm {token!r}")
+        if not 0.0 <= frac <= 0.5:
+            raise ValueError(f"γ/π = {frac} outside [0, 0.5] in arm {token!r}")
         return f"g{frac:g}", frac
     raise ValueError(f"Unknown arm {token!r}; use identity, jp, jp_local, or g<γ/π>")
 
@@ -164,10 +187,20 @@ def entropy_dA_eB(psi_flat: np.ndarray) -> float:
 
 def entropy_profile(x: np.ndarray, n_layers: int, u_ab: np.ndarray) -> list[float]:
     """Entropy across (d,A)|(e,B) after each layer of the circuit defined by x."""
+    return entropy_profiles(x, n_layers, u_ab)[0]
+
+
+def entropy_profiles(x: np.ndarray, n_layers: int, u_ab: np.ndarray) -> tuple[list[float], list[float]]:
+    """(post-U, pre-U) entropy across (d,A)|(e,B) for each layer.
+
+    pre-U[k] is the entropy after layer k's local gates (R, ECD) but before its bus gate;
+    local gates cannot change the cut entropy, so pre-U[k] == post-U[k-1] (0 for k=0).
+    """
     ket = vacuum_np()
-    out = []
+    eye = np.eye(NFOCK_SQ, dtype=complex)
+    post, pre = [], []
     for layer in unpack_params(np.asarray(x, dtype=float), n_layers):
-        ket = apply_layer_factored(
+        loc = apply_layer_factored(
             ket,
             layer["beta_d"],
             layer["beta_e"],
@@ -175,10 +208,28 @@ def entropy_profile(x: np.ndarray, n_layers: int, u_ab: np.ndarray) -> list[floa
             layer["theta_e"],
             layer["phi_d"],
             layer["phi_e"],
-            u_ab,
+            eye,
         )
-        out.append(entropy_dA_eB(ket))
-    return out
+        pre.append(entropy_dA_eB(loc))
+        ket = np.einsum("ij,dej->dei", u_ab, loc.reshape(2, 2, NFOCK_SQ)).reshape(-1)
+        post.append(entropy_dA_eB(ket))
+    return post, pre
+
+
+def entropy_summary(x: np.ndarray, n_layers: int, u_ab: np.ndarray) -> dict:
+    """Entropy fields for a record (bits, clipped at 0 to drop -0.0 noise)."""
+    post, pre = entropy_profiles(x, n_layers, u_ab)
+    post = [max(0.0, float(v)) for v in post]
+    pre = [max(0.0, float(v)) for v in pre]
+    eff = pre + post[:-1]  # every state that can still influence the measured distribution
+    return {
+        "entropy_profile": post,
+        "entropy_pre_u_profile": pre,
+        "final_entropy": post[-1] if post else 0.0,
+        "max_entropy": max(post) if post else 0.0,
+        "final_entropy_pre_u": pre[-1] if pre else 0.0,
+        "peak_entropy_effective": max(eff) if eff else 0.0,
+    }
 
 
 # ------------------------------------------------------------------------ worker
@@ -193,6 +244,9 @@ def _worker(job: dict) -> dict:
     t0 = time.perf_counter()
     try:
         encoding = str(job.get("encoding", "binary"))
+        layout = str(job.get("layout", "identity"))
+        if job.get("layout_perm") is not None:
+            encoding = EncodingSpec(tuple(int(v) for v in job["layout_perm"]))
         inst = load_four_sat_npz(job["ham_path"], encoding=encoding)
         u_full = build_arm_u(job["arm"])
         sim = NoiselessSimulator(
@@ -204,21 +258,47 @@ def _worker(job: dict) -> dict:
             encoding=encoding,
         )
         rng = np.random.default_rng(int(job["seed"]))
+        protocol = str(job.get("protocol", "legacy"))
         a = job.get("spsa_a")
-        if a is None:
-            a = scale_spsa_a(n_parameters(int(job["n_layers"])))
-        result = optimize_trial(
-            sim,
-            maxiter=int(job["steps"]),
-            rng=rng,
-            a=float(a),
-            c=float(job.get("spsa_c", 0.15)),
-            A=float(job.get("spsa_A", 10.0)),
-            optimizer=str(job.get("optimizer", "spsa")),
-            adam_lr=float(job.get("adam_lr", ADAM_LR)),
-        )
         u_ab = extract_u_ab(u_full)
-        profile = entropy_profile(result.x, int(job["n_layers"]), u_ab)
+        stage_recs = None
+        if protocol == "tuned":
+            n_st = int(job["n_layers"])
+            lr_sched = list(TUNED_LR_SCHEDULE) if n_st == 4 else None
+            result = grow_trial(
+                sim,
+                final_layers=int(job["n_layers"]),
+                rng=rng,
+                start_layers=1,
+                kick_sigma=float(job.get("grow_kick_sigma", GROW_KICK_SIGMA)),
+                a=None if a is None else float(a),
+                c=float(job.get("spsa_c", 0.15)),
+                A=float(job.get("spsa_A", 10.0)),
+                optimizer="spsa_adam",
+                steps_per_stage=int(job.get("steps_per_stage", TUNED_STEPS_PER_STAGE)),
+                adam_lr=float(job.get("adam_lr", ADAM_LR)),
+                lr_schedule=lr_sched,
+                record_x=True,
+            )
+            stage_recs = []
+            for st in result.stages:
+                xs = np.asarray(st.pop("x"), dtype=float)
+                stage_recs.append({**st, **entropy_summary(xs, int(st["n_layers"]), u_ab)})
+            a = None
+        else:
+            if a is None:
+                a = scale_spsa_a(n_parameters(int(job["n_layers"])))
+            result = optimize_trial(
+                sim,
+                maxiter=int(job["steps"]),
+                rng=rng,
+                a=float(a),
+                c=float(job.get("spsa_c", 0.15)),
+                A=float(job.get("spsa_A", 10.0)),
+                optimizer=str(job.get("optimizer", "spsa")),
+                adam_lr=float(job.get("adam_lr", ADAM_LR)),
+            )
+        ent = entropy_summary(result.x, int(job["n_layers"]), u_ab)
         name, gamma_over_pi = parse_arm(job["arm"])
         return {
             "ok": True,
@@ -239,11 +319,13 @@ def _worker(job: dict) -> dict:
             "max_abs_beta": float(result.max_abs_beta),
             "nfev": int(result.nfev),
             "optimizer": result.optimizer,
-            "spsa_a": float(a),
-            "entropy_profile": [float(v) for v in profile],
-            "final_entropy": float(profile[-1]) if profile else 0.0,
-            "max_entropy": float(max(profile)) if profile else 0.0,
-            "encoding": encoding,
+            "protocol": protocol,
+            "spsa_a": None if a is None else float(a),
+            **ent,
+            "stages": stage_recs,
+            "layout": layout,
+            "layout_perm": job.get("layout_perm"),
+            "encoding": str(encoding),
             "x": result.x.tolist(),
             "wall_s": float(time.perf_counter() - t0),
             "error": None,
@@ -275,16 +357,19 @@ def aggregate(records: list[dict], reference_arm: str) -> dict:
     ok = [r for r in records if r.get("ok")]
     by_arm: dict[tuple, list[dict]] = {}
     for r in ok:
-        by_arm.setdefault((r["arm"], int(r["n_layers"])), []).append(r)
+        by_arm.setdefault((r.get("layout", "identity"), r["arm"], int(r["n_layers"])), []).append(r)
 
     arms = []
-    for (arm, L), recs in sorted(by_arm.items()):
+    for (layout, arm, L), recs in sorted(by_arm.items()):
         pgs = [float(r["p_gs"]) for r in recs]
         fent = [float(r["final_entropy"]) for r in recs]
         ment = [float(r["max_entropy"]) for r in recs]
+        pent = [float(r.get("final_entropy_pre_u", 0.0)) for r in recs]
+        peff = [float(r.get("peak_entropy_effective", 0.0)) for r in recs]
         gamma = recs[0].get("gamma_over_pi")
         arms.append(
             {
+                "layout": layout,
                 "arm": arm,
                 "gamma_over_pi": gamma,
                 "n_layers": L,
@@ -295,22 +380,25 @@ def aggregate(records: list[dict], reference_arm: str) -> dict:
                 "median_p_gs": float(np.median(pgs)),
                 "mean_final_entropy": float(np.mean(fent)),
                 "mean_max_entropy": float(np.mean(ment)),
+                "mean_final_entropy_pre_u": float(np.mean(pent)),
+                "mean_peak_entropy_effective": float(np.mean(peff)),
                 "corr_final_entropy_p_gs": _pearson(fent, pgs),
                 "corr_max_entropy_p_gs": _pearson(ment, pgs),
+                "corr_peak_entropy_effective_p_gs": _pearson(peff, pgs),
             }
         )
-    arms.sort(key=lambda r: (r["n_layers"], -(r["success_rate"]), -(r["mean_p_gs"])))
+    arms.sort(key=lambda r: (r["layout"], r["n_layers"], -(r["success_rate"]), -(r["mean_p_gs"])))
 
-    # Paired per-(H, L, trial) deltas vs the reference arm.
-    ref = {(r["ham_file"], int(r["n_layers"]), int(r["trial"])): r
+    # Paired per-(layout, H, L, trial) deltas vs the reference arm.
+    ref = {(r.get("layout", "identity"), r["ham_file"], int(r["n_layers"]), int(r["trial"])): r
            for r in ok if r["arm"] == reference_arm}
     paired = []
-    for (arm, L), recs in sorted(by_arm.items()):
+    for (layout, arm, L), recs in sorted(by_arm.items()):
         if arm == reference_arm or not ref:
             continue
         d_pgs, d_succ, win, tie, loss = [], [], 0, 0, 0
         for r in recs:
-            key = (r["ham_file"], int(r["n_layers"]), int(r["trial"]))
+            key = (layout, r["ham_file"], int(r["n_layers"]), int(r["trial"]))
             if key not in ref:
                 continue
             rr = ref[key]
@@ -324,6 +412,7 @@ def aggregate(records: list[dict], reference_arm: str) -> dict:
             continue
         paired.append(
             {
+                "layout": layout,
                 "arm": arm,
                 "n_layers": L,
                 "reference": reference_arm,
@@ -350,14 +439,29 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
     for arm in arms:
         parse_arm(arm)  # validate early
     layers = [int(x) for x in args.layers.split(",") if x.strip()]
+    layouts = [s.strip() for s in str(getattr(args, "layouts", "identity")).split(",") if s.strip()]
+    protocol = str(getattr(args, "protocol", "legacy"))
+    for lay in layouts:
+        if lay not in ENT_LAYOUTS:
+            raise SystemExit(f"unknown layout {lay!r}; choose from {ENT_LAYOUTS}")
+        if lay != "identity" and args.encoding != "binary":
+            raise SystemExit("layouts other than identity require --encoding binary")
     jobs = []
     for hi, path in enumerate(paths):
+        gs = load_four_sat_npz(path)["ground_bitstring"] if any(
+            lay != "identity" for lay in layouts) else None
+        perms = {lay: (None if lay == "identity" else list(layout_spec(lay, gs, path.name).perm))
+                 for lay in layouts}
         for L in layers:
             for t in range(int(args.trials)):
                 seed = trial_seed(args.seed, hi, L, t)
-                for arm in arms:  # same seed for every arm: paired trials
+                for lay, arm in [(lay, arm) for lay in layouts for arm in arms]:
+                    # same seed for every arm and layout: paired trials
                     jobs.append(
                         {
+                            "layout": lay,
+                            "layout_perm": perms[lay],
+                            "protocol": protocol,
                             "ham_path": str(path.resolve()),
                             "ham_file": path.name,
                             "arm": arm,
@@ -397,6 +501,11 @@ def main(argv: list[str] | None = None) -> int:
         help="Arm used for the paired per-trial deltas in the summary (default identity)",
     )
     p.add_argument("--layers", type=str, default="4")
+    p.add_argument("--protocol", choices=PROTOCOLS, default="legacy",
+                   help="legacy (default): fixed L, --optimizer, --steps; tuned: growth L=1→L, "
+                   "SPSA-Adam lr 0.5/0.2/0.05/0.02, 200 steps/stage (1604 evals at L=4)")
+    p.add_argument("--layouts", type=str, default="identity",
+                   help="comma list of identity, rule_best, rule_bad (true-GS tier rule)")
     p.add_argument("--trials", type=int, default=25)
     p.add_argument("--steps", type=int, default=200)
     p.add_argument("--workers", type=int, default=max(1, min(4, os.cpu_count() or 1)))
@@ -430,6 +539,7 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"[{_now()}] starting {len(jobs)} jobs arms={args.arms} layers={args.layers} "
         f"trials={args.trials} steps={args.steps} optimizer={args.optimizer} "
+        f"protocol={args.protocol} layouts={args.layouts} "
         f"seed={args.seed} (arm-independent → paired) tag={args.tag}",
         flush=True,
     )
@@ -481,7 +591,9 @@ def main(argv: list[str] | None = None) -> int:
         "optimizer": str(args.optimizer),
         "adam_lr": float(args.adam_lr),
         "encoding": str(args.encoding),
-        "seed_scheme": "seed0 + 1e6*ham_index + 1e3*L + trial (arm-independent)",
+        "protocol": str(args.protocol),
+        "layouts": str(args.layouts),
+        "seed_scheme": "seed0 + 1e6*ham_index + 1e3*L + trial (arm- and layout-independent)",
     }
     payload = {
         "created_utc": _now(),
@@ -513,7 +625,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"[{_now()}] summary {summary_path}", flush=True)
     for row in agg["arms"]:
         print(
-            f"  ARM {row['arm']:>9} L*={row['n_layers']} "
+            f"  {row['layout']:>9} ARM {row['arm']:>9} L*={row['n_layers']} "
             f"success={row['success_rate']:.3f} mean_p_gs={row['mean_p_gs']:.4f} "
             f"S_final={row['mean_final_entropy']:.3f} S_max={row['mean_max_entropy']:.3f}",
             flush=True,
