@@ -20,12 +20,16 @@ from .circuit_local_ecd import (
 )
 from .encoding import (
     DIMS,
+    EncodingSpec,
     bitstring_from_bits,
     bits_from_bitstring,
     bits_from_denm,
+    corner_spec_for_bitstring,
     denm_from_bits,
     denm_from_flat,
+    energy_tensor_for_spec,
     flat_index,
+    polish_bitstring,
 )
 
 ETA_MIN = 1e-4
@@ -209,6 +213,8 @@ class TrialResult:
     opt_message: str | None = None  # scipy message (BFGS only)
     stages: list[dict] | None = None  # per-stage metrics (grow_trial only)
     opt_info: dict | None = None  # BFGS eta_mode details (non-legacy BFGS modes only)
+    rounds: list[dict] | None = None  # per-round metrics (relayout_trial only)
+    relayout_stop: str | None = None  # "fixed_point" / "max_rounds" (relayout_trial only)
 
 
 # Adaptive soft-cap λ defaults (opt-in via optimize_trial adapt_lambda=True)
@@ -937,6 +943,235 @@ def grow_trial(
         result.nit = nit_actual
     else:
         result.nit = int(sum(steps_seq))
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Adaptive relayout (re-encode the polished most-likely bitstring to the Fock corner)
+# ---------------------------------------------------------------------------
+
+DEFAULT_RELAYOUT_ROUNDS = 2
+DEFAULT_POLISH_RADIUS = 1
+
+
+def _relayout_stage_hparams(
+    *,
+    grow: bool,
+    final_layers: int,
+    start_layers: int,
+    total_steps: int,
+    steps_per_stage: int | None,
+    steps_schedule: list[int] | None,
+    lr_schedule: list[float] | None,
+    adam_lr: float,
+    c_schedule: list[float] | None,
+    c: float,
+    relayout_steps: int | None,
+    relayout_lr: float | None,
+) -> tuple[int, float, float]:
+    """Budget for post-growth L=final relayout rounds.
+
+    Extra rounds start from a fresh random init at ``final_layers``, so they use the
+    *first*-stage (random-init) Adam lr / SPSA c, not the last-stage fine-tune lr.
+    Step count defaults to one growth stage (last-stage length, which equals the
+    first-stage length under a uniform per-stage budget).
+    """
+    if not grow:
+        steps = int(total_steps) if relayout_steps is None else int(relayout_steps)
+        lr = float(adam_lr) if relayout_lr is None else float(relayout_lr)
+        return steps, lr, float(c)
+    n_st = int(final_layers) - int(start_layers) + 1
+    if steps_schedule is not None:
+        stage_steps = int(steps_schedule[-1])
+    elif steps_per_stage is not None:
+        stage_steps = int(steps_per_stage)
+    else:
+        stage_steps = split_steps(int(total_steps), n_st)[-1]
+    steps = stage_steps if relayout_steps is None else int(relayout_steps)
+    if relayout_lr is not None:
+        lr = float(relayout_lr)
+    elif lr_schedule is not None:
+        lr = float(lr_schedule[0])
+    else:
+        lr = float(adam_lr)
+    cc = float(c_schedule[0]) if c_schedule is not None else float(c)
+    return int(steps), float(lr), cc
+
+
+def relayout_trial(
+    u_fixed: qt.Qobj | np.ndarray,
+    logical_energies: np.ndarray,
+    ground_bitstring: str,
+    *,
+    final_layers: int,
+    rng: np.random.Generator | None = None,
+    base_encoding: str | EncodingSpec = "binary",
+    relayout_rounds: int = DEFAULT_RELAYOUT_ROUNDS,
+    polish_radius: int = DEFAULT_POLISH_RADIUS,
+    grow: bool = True,
+    total_steps: int = 200,
+    start_layers: int = 1,
+    kick_sigma: float = GROW_KICK_SIGMA,
+    a: float | None = None,
+    c: float = 0.15,
+    A: float = 10.0,
+    optimizer: str = "spsa",
+    steps_per_stage: int | None = None,
+    adam_lr: float = ADAM_LR,
+    steps_schedule: list[int] | None = None,
+    lr_schedule: list[float] | None = None,
+    eta_scale_schedule: list[float] | None = None,
+    c_schedule: list[float] | None = None,
+    bfgs_eta_mode: str = "callback",
+    lambda1: float = 0.0,
+    lam: float = 0.0,
+    beta_max: float | None = None,
+    relayout_steps: int | None = None,
+    relayout_lr: float | None = None,
+) -> TrialResult:
+    """Grow L=start→final on the baseline layout, then relayout at L=final.
+
+    Protocol (results/LAYOUT_PATTERNS.md: a layout is good iff the GS sits at both
+    cavity Fock-ladder ends; the most-likely bitstring is within Hamming 1 of the
+    GS in 98.4 % of H0–H7 screen trials, so a radius-1 polish is a near-perfect
+    GS oracle on this family):
+
+    1. **Round 0** runs under ``base_encoding`` exactly like :func:`grow_trial`
+       (``grow=True``: random init at L=``start_layers``, warm-started growth to
+       ``final_layers``) or :func:`optimize_trial` (``grow=False``) — bit-for-bit
+       identical for the same ``rng``.
+    2. The round's most-likely bitstring is polished classically: replaced by the
+       lowest-energy bitstring within Hamming ``polish_radius``
+       (:func:`noiseless.encoding.polish_bitstring`; 0 = off).
+    3. The cavity codeword→Fock maps are XOR-relabelled so the polished candidate
+       sits at Fock (0, 0) (:func:`noiseless.encoding.corner_spec_for_bitstring`;
+       the variable→slot perm is unchanged).
+    4. **Extra rounds stay at L=``final_layers``**: a fresh random init is trained
+       with :func:`optimize_trial` (not re-grown from L=1). Parameters are not
+       carried across encodings: the old circuit concentrates amplitude on a
+       physical state that no longer decodes to the candidate. Extra-round Adam
+       lr is the *first*-stage (random-init) lr, not the last-stage fine-tune lr.
+    5. Steps 2–4 repeat until the encoding stops changing (``relayout_stop =
+       "fixed_point"``) or ``relayout_rounds`` extra rounds ran (``"max_rounds"``).
+
+    Returns the LAST round's :class:`TrialResult` with ``rounds`` (per-round
+    metrics, including raw/polished candidates and the encoding label) and
+    ``nfev`` summed over all rounds. ``adapt_lambda`` is not supported.
+    """
+    rng = rng or np.random.default_rng()
+    spec = (
+        base_encoding
+        if isinstance(base_encoding, EncodingSpec)
+        else EncodingSpec.from_name(base_encoding)
+    )
+    logical_energies = np.asarray(logical_energies, dtype=float).reshape(-1)
+    extra_steps, extra_lr, extra_c = _relayout_stage_hparams(
+        grow=grow,
+        final_layers=int(final_layers),
+        start_layers=int(start_layers),
+        total_steps=int(total_steps),
+        steps_per_stage=steps_per_stage,
+        steps_schedule=steps_schedule,
+        lr_schedule=lr_schedule,
+        adam_lr=adam_lr,
+        c_schedule=c_schedule,
+        c=c,
+        relayout_steps=relayout_steps,
+        relayout_lr=relayout_lr,
+    )
+    extra_a = (
+        scale_spsa_a(n_parameters(int(final_layers))) if a is None else float(a)
+    )
+    rounds: list[dict] = []
+    total_nfev = 0
+    result: TrialResult | None = None
+    stop = "max_rounds"
+    for rnd in range(int(relayout_rounds) + 1):
+        sim = NoiselessSimulator(
+            u_fixed=u_fixed,
+            energy_tensor=energy_tensor_for_spec(logical_energies, spec),
+            n_layers=int(final_layers),
+            ground_bitstring=ground_bitstring,
+            ground_flat_index=ground_flat_from_bitstring(ground_bitstring, spec),
+            lambda1=float(lambda1),
+            lam=float(lam),
+            beta_max=beta_max,
+            encoding=spec,
+        )
+        if rnd == 0 and grow:
+            result = grow_trial(
+                sim,
+                final_layers=int(final_layers),
+                total_steps=int(total_steps),
+                rng=rng,
+                start_layers=int(start_layers),
+                kick_sigma=float(kick_sigma),
+                a=a,
+                c=c,
+                A=A,
+                optimizer=optimizer,
+                steps_per_stage=steps_per_stage,
+                adam_lr=adam_lr,
+                steps_schedule=steps_schedule,
+                lr_schedule=lr_schedule,
+                eta_scale_schedule=eta_scale_schedule,
+                c_schedule=c_schedule,
+                bfgs_eta_mode=bfgs_eta_mode,
+            )
+        else:
+            result = optimize_trial(
+                sim,
+                maxiter=int(total_steps) if rnd == 0 else int(extra_steps),
+                rng=rng,
+                a=None if rnd == 0 else extra_a,
+                c=c if rnd == 0 else extra_c,
+                A=A,
+                optimizer=optimizer,
+                adam_lr=adam_lr if rnd == 0 else extra_lr,
+                bfgs_eta_mode=bfgs_eta_mode,
+            )
+        total_nfev += int(result.nfev)
+        candidate = result.most_likely_bitstring
+        polished = (
+            polish_bitstring(candidate, logical_energies, radius=int(polish_radius))
+            if int(polish_radius) > 0
+            else candidate
+        )
+        next_spec = corner_spec_for_bitstring(polished, spec)
+        rounds.append(
+            {
+                "round": rnd,
+                "encoding": str(spec),
+                "n_layers": int(sim.n_layers),
+                "success": bool(result.success),
+                "p_gs": float(result.p_gs),
+                "most_likely_bitstring": candidate,
+                "polished_candidate": polished,
+                "polished_is_ground": polished == ground_bitstring,
+                "fun": float(result.fun),
+                "eta": float(result.eta),
+                "energy_mean": float(result.energy_mean),
+                "mean_abs_beta": float(result.mean_abs_beta),
+                "max_abs_beta": float(result.max_abs_beta),
+                "nfev": int(result.nfev),
+                "nit": int(result.nit),
+                "adam_lr": None if (rnd == 0 and result.stages) else (
+                    float(extra_lr) if rnd > 0 else float(adam_lr)
+                ),
+                "stages": result.stages,
+            }
+        )
+        if next_spec == spec:
+            stop = "fixed_point"
+            break
+        spec = next_spec
+    assert result is not None
+    result.rounds = rounds
+    result.relayout_stop = stop
+    result.nfev = total_nfev
+    # Keep the L=1→L* growth record on the trial even after extra L* rounds.
+    if rounds and rounds[0].get("stages"):
+        result.stages = rounds[0]["stages"]
     return result
 
 

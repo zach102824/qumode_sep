@@ -172,58 +172,13 @@ Across 20 Hamiltonians: mean fraction of terms dropped **0.764** (range 0.681–
 
 **Figure:** single-panel success-rate comparison at fixed 200 SPSA steps — [`figures/ecd_vs_qaoa_200_success.png`](figures/ecd_vs_qaoa_200_success.png) (ECD improves with L*; QAOA-full degrades with p).
 
-### Update: local ECD + jp (joint-parity) coupling
+### jp vs separable baselines: removed (2026-10-08)
 
-Added 2026-09-29. Fixed U = `jp` (joint-parity coupling) replaces `bs_pi4`; everything else as the ECD arm above:
-local ECD, random init, Gibbs-only SPSA (no L1, no β cap), 200 steps, 25 trials × 20 Hamiltonians (N=500 per row).
-Sources: `jp_L2_20260929T041311Z` (L*=2), `jp_L3_20260929T041643Z` (L*=3), `jp_B0_20260928T042134Z` (L*=4).
-Param counts confirmed from record `x`: 16 / 24 / 32.
-
-Cells are **success / mean p(GS)**. `bs_pi4`, QAOA-full and QAOA-NN columns are copied from the bake-off tables above.
-HEA column (added 2026-09-29): 8-qubit RY + CZ on the 2×4 lattice, L = 1/2/3, Uniform[0,π) init, same Gibbs/η/SPSA as QAOA-full,
-seed 20260917 (`fleet_hea_20260929T073413Z`; see `HEA_SUMMARY.md`).
-
-| Params | ECD `jp` (SPSA) | HEA (lattice RY) | old ECD `bs_pi4` | QAOA-full | QAOA-NN |
-|-------:|----------------:|-----------------:|-----------------:|----------:|--------:|
-| 16 (L*=2 / L=1 / p=8) | 0.456 / 0.1297 | 0.992 / 0.9335 | 0.624 / 0.1245 | 0.708 / 0.0618 | 0.000 / 0.0017 |
-| 24 (L*=3 / L=2 / p=12) | 0.774 / 0.1581 | 1.000 / 0.8889 | 0.866 / 0.1489 | 0.554 / 0.0526 | 0.000 / 0.0022 |
-| 32 (L*=4 / L=3 / p=16) | 0.932 / 0.1717 | 1.000 / 0.8344 | 0.954 / 0.1554 | 0.452 / 0.0413 | 0.000 / 0.0022 |
-
-HEA extra stats (N=500 per tier): median p(GS) 0.9465 / 0.8962 / 0.8492; mean best-of-25 p(GS) 0.9849 / 0.9608 / 0.9364
-(16 / 24 / 32). HEA wins every tier on success and p(GS); caveat: the 4-SAT GS is a product (basis) state that the final
-RY layer alone can prepare exactly, so HEA is effectively a classical-relaxation baseline here.
-
-**Product-state control `hea_ry0`** (added 2026-09-29; single RY layer on |0⟩^⊗8, no CZ, **8 params**; same runner/Gibbs/SPSA
-200 steps/20 H × 25 trials/seed 20260917; `fleet_hea_ry0_20260929T094333Z`, see `HEA_SUMMARY.md`):
-
-| Arm | Params | Success | Mean p(GS) | Median p(GS) | Frac p(GS)>0.5 | Per-H mean p(GS) min / max |
-|-----|-------:|--------:|-----------:|-------------:|---------------:|---------------------------:|
-| hea_ry0 (no CZ) | 8 | 0.992 | 0.9808 | 0.9909 | 0.992 | 0.9457 / 0.9913 |
-| HEA L=1 | 16 | 0.992 | 0.9335 | 0.9465 | 0.992 | 0.8715 / 0.9480 |
-| HEA L=2 | 24 | 1.000 | 0.8889 | 0.8962 | 0.998 | 0.8485 / 0.9056 |
-| HEA L=3 | 32 | 1.000 | 0.8344 | 0.8492 | 0.994 | 0.8105 / 0.8617 |
-
-With half the parameters and zero entanglement, the product ansatz beats every HEA depth on p(GS) and matches L=1 success:
-HEA's dominance here is a classical-relaxation effect.
-
-`jp` rows, extra stats (median over all 500 runs; best-of-25 = per-H max over 25 trials, then mean over 20 H):
-
-| Params | L* | Success | Mean p(GS) | Median p(GS) | Mean best-of-25 p(GS) | old `bs_pi4` best-of-25 | N |
-|-------:|---:|--------:|-----------:|-------------:|----------------------:|------------------------:|--:|
-| 16 | 2 | 0.456 | 0.1297 | 0.0833 | 0.3061 | 0.2206 | 500 |
-| 24 | 3 | 0.774 | 0.1581 | 0.1270 | 0.3646 | 0.2886 | 500 |
-| 32 | 4 | 0.932 | 0.1717 | 0.1434 | 0.3631 | 0.2885 | 500 |
-
-**Read:** `jp` beats `bs_pi4` on mean p(GS) and best-of-25 at every tier, but trails it on bitstring success
-(−0.168 / −0.092 / −0.022 at 16 / 24 / 32). At 16 params QAOA-full still wins on success; `jp` wins on success at 24 and 32
-and on mean p(GS) at all tiers vs QAOA-full@200.
-
-**Caveats:**
-- Seed differs: `jp` fleets use `--seed 20260917`; the bake-off above used seed 20260918. Hamiltonian set, steps and SPSA
-  hyperparameters otherwise match.
-- With BFGS (scipy, finite-difference gradient, same x0) `jp` L*=4 reaches **0.976 / 0.520**
-  (`jp_bfgs_B0_20260929T021402Z`), at ~6× the cost-function evaluations of 200-step SPSA (mean nfev ≈2557 vs 401).
-  See `BFGS_VS_SPSA_JP_SUMMARY.md`.
+The uncontrolled jp-vs-identity/HEA comparison that lived here (sources `jp_L2_20260929T041311Z`,
+`jp_L3_20260929T041643Z`, `jp_B0_20260928T042134Z`, `JP_GATE_SUMMARY.md`) was removed: arms differed
+in seeds/inits and budgets, so the mixed result (jp ahead on success, identity ahead on p(GS)) was not
+interpretable. The controlled replacement is `noiseless/run_entanglement_control.py` (paired seeds across
+arms, γ dose–response sweep, product-gate control, per-layer entanglement logging). Old data is in git history.
 
 
 ## QAOA-full @ 800 SPSA steps (flat budget)

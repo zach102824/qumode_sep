@@ -20,6 +20,10 @@ spsa`, no growth, `--steps 200`): prefix it to any older command line (all comma
 `results/*.md` before 2026-09-30) to reproduce it exactly. `--smoke` uses legacy.
 Library defaults (`optimize_trial`, `grow_trial`) are unchanged.
 
+**Recommended experiment now:** the same tuned growth, then `--relayout` (see
+[Adaptive relayout](#adaptive-relayout-after-l4) below). Tuned-without-relayout
+stays bit-for-bit with older fleets (`1604` evals/trial).
+
 ## Encoding
 
 `|d⟩ ⊗ |e⟩ ⊗ |A⟩ ⊗ |B⟩`, Fock cutoff 8 → dim `2×2×8×8 = 256` (exact 8 bits).
@@ -139,6 +143,50 @@ python -m noiseless.run_u_sweep --u-names jp --layers 2,3,4 --trials 25 --steps 
   --tag jp_enc_D_gray_grow_ps200
 ```
 
+### Adaptive relayout after L=4
+
+The encoding screen (`results/LAYOUT_PATTERNS.md`) found that a layout is good when the
+**ground-state codeword sits at both cavities' Fock-ladder ends** (n = 0 or 7; mean
+p(GS) ≈ 0.82 vs ≈ 0.51 for a random layout). The most-likely bitstring after a tuned
+growth trial is within Hamming 1 of the true GS in **98.4 %** of H0–H7 trials, so a
+free classical polish of that string is a near-perfect GS candidate. `--relayout`
+turns that into the run protocol:
+
+1. **L=1** random init, train (same as `--grow`).
+2. **L=2,3,4** warm-start: append a transparent last layer + kick, retrain
+   (same as `--grow`; round 0 is bit-for-bit `grow_trial`).
+3. Take the L=4 most-likely bitstring, replace it by the lowest-energy string
+   within Hamming `--polish-radius` (default 1; table lookup, no circuit run).
+4. Re-encode: XOR the two cavity codeword→Fock maps so that candidate sits at
+   Fock (0, 0). Variable→slot perm is unchanged.
+5. **Stay at L=4**: fresh random init, train one stage (default 200 steps, Adam
+   lr = the *first*-stage / random-init lr 0.5, not the L=4 fine-tune lr 0.02).
+   Old parameters are not reused — they concentrate on a physical state that no
+   longer decodes to the candidate.
+6. Repeat 3–5 up to `--relayout-rounds` extra times (default 2), or stop when
+   the encoding stops changing (`relayout_stop=fixed_point`).
+
+The official trial result is the **last** round (`p_gs`, `most_likely_bitstring`,
+`encoding`). Round-0 growth stays in `stages`; every round (candidate, polish,
+encoding, p_gs) is in `rounds`. `--no-relayout` (the tuned default) reproduces
+older 1604-eval fleets.
+
+This is **not** a promise of 98 % p(GS): 98 % is the polish hit rate. The screen's
+tier-0/0 mean p(GS) is ~0.82 when the *true* GS is at the corners; this experiment
+asks whether iterating on a single trial's candidate can lift p(GS) toward that.
+
+```bash
+# recommended: tuned L=1→4 growth, then two L=4 relayout rounds
+python -m noiseless.run_u_sweep --relayout --trials 25 --workers 8 --tag relayout_A
+
+# grow only (old tuned fleet)
+python -m noiseless.run_u_sweep --trials 25 --workers 8 --tag tuned
+
+# one extra L=4 round, no classical polish
+python -m noiseless.run_u_sweep --relayout --relayout-rounds 1 --polish-radius 0 \
+  --tag relayout_nopolish
+```
+
 #### Growth + BFGS (`--optimizer bfgs --grow`, `--bfgs-eta-mode`)
 
 With `--optimizer bfgs --grow` each stage is a BFGS run (finite-difference gradient,
@@ -167,6 +215,26 @@ python -m noiseless.run_u_sweep --u-names jp --layers 4 --trials 25 --workers 8 
   --grow-steps-per-stage 500 --bfgs-eta-mode restart --tag jp_grow_bfgs_restart
 ```
 
+## Controlled entanglement comparison (`run_entanglement_control.py`)
+
+Replaces the retired, uncontrolled jp-vs-identity comparison (`results/JP_GATE_SUMMARY.md`
+and the jp section of `results/RANKING.md`, removed 2026-10-08; old data in git history).
+Arms differ ONLY in the frozen bus U: `identity`, `jp_local` (best product approximation of
+jp: L⊗L with L = diag((-i)^(n mod 2)) — jp's phases without its entanglement), `g<γ/π>`
+(U(γ) = exp(+iγ Π_A Π_B) dose–response; g0.25 ≡ jp up to global phase), `jp`. The
+per-(H, L, trial) seed is arm-independent, so x0 and the SPSA perturbation stream are
+paired across arms. Each record carries the entanglement-entropy profile (bits) across the
+(d,A)|(e,B) cut after every layer of the optimized circuit; the summary adds per-arm
+entropy stats, within-arm entropy–p(GS) correlations, and paired per-trial deltas vs
+`--reference-arm` (default `identity`). Tests: `noiseless/tests/test_entanglement_control.py`.
+
+```bash
+python -m noiseless.run_entanglement_control --smoke
+python -m noiseless.run_entanglement_control --trials 25 --workers 8 \
+  --arms identity,jp_local,g0.0625,g0.125,g0.1875,jp --layers 4 --steps 200 \
+  --tag ent_control_A
+```
+
 ## CLI
 
 ```bash
@@ -177,7 +245,8 @@ python -m pytest noiseless/tests tests/test_four_sat.py -q
 python -m noiseless.run_u_sweep --smoke
 python -m noiseless.run_u_sweep --preset legacy --ham-dir Hamiltonians/four_sat \
   --u-names all --layers 2,3,4 --trials 5 --steps 200 --workers 4 --tag fleet1
-python -m noiseless.run_u_sweep --trials 25 --workers 8 --tag tuned   # tuned default
+python -m noiseless.run_u_sweep --trials 25 --workers 8 --tag tuned   # tuned default (no relayout)
+python -m noiseless.run_u_sweep --relayout --trials 25 --workers 8 --tag relayout_A
 ```
 
 Results: `noiseless/results/`. Hamiltonians: `Hamiltonians/four_sat/` (8-qubit).

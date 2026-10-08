@@ -7,7 +7,7 @@ Physical middle bus qubit is omitted; the bus is an ideal unitary on A⊗B.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from itertools import permutations
+from itertools import combinations, permutations
 from pathlib import Path
 from typing import Sequence, Union
 
@@ -147,6 +147,54 @@ def energy_tensor_for_spec(logical_energies: np.ndarray, spec: EncodingSpec) -> 
     """Physical (2,2,8,8) energy tensor for ``spec`` from the 256 logical energies (fast path;
     identical values to :func:`energy_tensor_from_terms` with ``encoding=spec``)."""
     return np.asarray(logical_energies, dtype=float)[logical_index_of_flat(spec)].reshape(DIMS)
+
+
+def polish_bitstring(bitstring: str, logical_energies: np.ndarray, radius: int = 1) -> str:
+    """Lowest-energy logical bitstring within Hamming ``radius`` of ``bitstring``.
+
+    Free classical post-processing (table lookups into the 256 logical energies, no
+    circuit runs). On the H0–H7 encoding screen the final most-likely bitstring is within
+    Hamming 1 of the GS in 98.4 % of trials (results/LAYOUT_PATTERNS.md §5), so the
+    default ``radius=1`` turns almost every near-miss into the exact GS. ``radius=0`` is
+    a no-op. Energy ties keep the smaller bitstring integer (deterministic).
+    """
+    e = np.asarray(logical_energies, dtype=float).reshape(-1)
+    if e.size != 2**N_QUBITS:
+        raise ValueError(f"logical_energies must have {2**N_QUBITS} entries, got {e.size}")
+    v0 = int(str(bitstring), 2)
+    best = v0
+    for r in range(1, int(radius) + 1):
+        for pos in combinations(range(N_QUBITS), r):
+            v = v0
+            for k in pos:
+                v ^= 1 << (N_QUBITS - 1 - k)
+            if (e[v], v) < (e[best], best):
+                best = v
+    return format(best, f"0{N_QUBITS}b")
+
+
+def corner_spec_for_bitstring(bitstring: str, base: EncodingSpec = EncodingSpec()) -> EncodingSpec:
+    """EncodingSpec with ``base.perm`` whose cavity maps put ``bitstring`` at Fock (0, 0).
+
+    XOR-relabels each cavity's codeword→Fock map by the bitstring's codeword on that
+    cavity, so the bitstring's physical state has n_A = n_B = 0 — both cavities at a
+    Fock-ladder end, the tier-0 geometry that the encoding screen found optimal
+    (results/LAYOUT_PATTERNS.md: tier-0/0 mean p(GS) ≈ 0.82 vs 0.51 for a random
+    layout). Its Hamming-1 cavity neighbours land on Fock 1, 2 and 4, the same geometry
+    as a binary-code GS at codeword 000. Only ``base.perm`` is read (``base``'s cavity
+    maps are replaced), so the map is idempotent: re-deriving from the same bitstring
+    returns an equal spec.
+    """
+    x = bits_from_bitstring(bitstring)
+    p = np.zeros(N_QUBITS, dtype=int)
+    p[list(base.perm)] = x
+    ca = int("".join(map(str, p[2 : 2 + N_A_BITS])), 2)
+    cb = int("".join(map(str, p[2 + N_A_BITS :])), 2)
+    return EncodingSpec(
+        base.perm,
+        tuple(c ^ ca for c in range(NFOCK)),
+        tuple(c ^ cb for c in range(NFOCK)),
+    )
 
 
 def _check_encoding(encoding: Encoding):

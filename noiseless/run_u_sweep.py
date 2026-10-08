@@ -27,14 +27,21 @@ if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
 from noiseless.circuit_local_ecd import n_parameters
-from noiseless.encoding import list_four_sat_npz, load_four_sat_npz
+from noiseless.encoding import (
+    list_four_sat_npz,
+    load_four_sat_npz,
+    logical_energies_from_terms,
+)
 from noiseless.spsa_gibbs import (
     ADAM_LR,
+    DEFAULT_POLISH_RADIUS,
+    DEFAULT_RELAYOUT_ROUNDS,
     NoiselessSimulator,
     GROW_KICK_SIGMA,
     ground_flat_from_bitstring,
     grow_trial,
     optimize_trial,
+    relayout_trial,
     scale_spsa_a,
 )
 from noiseless.unitaries import U_NAMES, build_fixed_u
@@ -49,6 +56,7 @@ def _worker(job: dict) -> dict:
     try:
         encoding = str(job.get("encoding", "binary"))
         grow = bool(job.get("grow", False))
+        relayout = bool(job.get("relayout", False))
         inst = load_four_sat_npz(job["ham_path"], encoding=encoding)
         u = build_fixed_u(job["u_name"])
         lambda1 = float(job.get("lambda1", 0.0))
@@ -63,42 +71,80 @@ def _worker(job: dict) -> dict:
             if not np.isfinite(beta_max):
                 beta_max = None
         adapt_lambda = bool(job.get("adapt_lambda", False))
-        sim = NoiselessSimulator(
-            u_fixed=u,
-            energy_tensor=inst["energy_tensor"],
-            n_layers=int(job["n_layers"]),
-            ground_bitstring=inst["ground_bitstring"],
-            ground_flat_index=ground_flat_from_bitstring(inst["ground_bitstring"], encoding),
-            lambda1=lambda1,
-            lam=lam,
-            beta_max=beta_max,
-            encoding=encoding,
-        )
         rng = np.random.default_rng(int(job["seed"]))
         a = job.get("spsa_a")
-        if grow:
+        grow_kw = dict(
+            start_layers=int(job.get("grow_start", 1)),
+            kick_sigma=float(job.get("grow_kick_sigma", GROW_KICK_SIGMA)),
+            a=None if a is None else float(a),
+            c=float(job.get("spsa_c", 0.15)),
+            A=float(job.get("spsa_A", 10.0)),
+            optimizer=str(job.get("optimizer", "spsa")),
+            steps_per_stage=job.get("grow_steps_per_stage"),
+            adam_lr=float(job.get("adam_lr", ADAM_LR)),
+            steps_schedule=job.get("grow_steps_schedule"),
+            lr_schedule=job.get("grow_lr_schedule"),
+            eta_scale_schedule=job.get("grow_eta_scale"),
+            c_schedule=job.get("grow_c_schedule"),
+            bfgs_eta_mode=str(job.get("bfgs_eta_mode", "callback")),
+        )
+        if relayout:
+            result = relayout_trial(
+                u,
+                logical_energies_from_terms(inst["terms"], inst["identity"]),
+                inst["ground_bitstring"],
+                final_layers=int(job["n_layers"]),
+                rng=rng,
+                base_encoding=encoding,
+                relayout_rounds=int(job.get("relayout_rounds", DEFAULT_RELAYOUT_ROUNDS)),
+                polish_radius=int(job.get("polish_radius", DEFAULT_POLISH_RADIUS)),
+                grow=grow,
+                total_steps=int(job["steps"]),
+                lambda1=lambda1,
+                lam=lam,
+                beta_max=beta_max,
+                relayout_steps=job.get("relayout_steps"),
+                relayout_lr=job.get("relayout_lr"),
+                **grow_kw,
+            )
+            a = (
+                result.stages[-1]["spsa_a"]
+                if result.stages
+                else scale_spsa_a(n_parameters(int(job["n_layers"])))
+            )
+        elif grow:
             # a=None → per-stage scaling by that stage's n_params.
+            sim = NoiselessSimulator(
+                u_fixed=u,
+                energy_tensor=inst["energy_tensor"],
+                n_layers=int(job["n_layers"]),
+                ground_bitstring=inst["ground_bitstring"],
+                ground_flat_index=ground_flat_from_bitstring(inst["ground_bitstring"], encoding),
+                lambda1=lambda1,
+                lam=lam,
+                beta_max=beta_max,
+                encoding=encoding,
+            )
             result = grow_trial(
                 sim,
                 final_layers=int(job["n_layers"]),
                 total_steps=int(job["steps"]),
                 rng=rng,
-                start_layers=int(job.get("grow_start", 1)),
-                kick_sigma=float(job.get("grow_kick_sigma", GROW_KICK_SIGMA)),
-                a=None if a is None else float(a),
-                c=float(job.get("spsa_c", 0.15)),
-                A=float(job.get("spsa_A", 10.0)),
-                optimizer=str(job.get("optimizer", "spsa")),
-                steps_per_stage=job.get("grow_steps_per_stage"),
-                adam_lr=float(job.get("adam_lr", ADAM_LR)),
-                steps_schedule=job.get("grow_steps_schedule"),
-                lr_schedule=job.get("grow_lr_schedule"),
-                eta_scale_schedule=job.get("grow_eta_scale"),
-                c_schedule=job.get("grow_c_schedule"),
-                bfgs_eta_mode=str(job.get("bfgs_eta_mode", "callback")),
+                **grow_kw,
             )
             a = result.stages[-1]["spsa_a"]
         else:
+            sim = NoiselessSimulator(
+                u_fixed=u,
+                energy_tensor=inst["energy_tensor"],
+                n_layers=int(job["n_layers"]),
+                ground_bitstring=inst["ground_bitstring"],
+                ground_flat_index=ground_flat_from_bitstring(inst["ground_bitstring"], encoding),
+                lambda1=lambda1,
+                lam=lam,
+                beta_max=beta_max,
+                encoding=encoding,
+            )
             if a is None:
                 a = scale_spsa_a(n_parameters(int(job["n_layers"])))
             result = optimize_trial(
@@ -152,8 +198,19 @@ def _worker(job: dict) -> dict:
             "adam_lr": float(job.get("adam_lr", ADAM_LR)) if result.optimizer == "spsa_adam" else None,
             "wall_s": float(time.perf_counter() - t0),
             "x": result.x.tolist(),
-            "encoding": encoding,
+            "encoding": (
+                result.rounds[-1]["encoding"] if relayout and result.rounds else encoding
+            ),
+            "encoding_base": encoding,
             "grow": grow,
+            "relayout": relayout,
+            "relayout_stop": result.relayout_stop,
+            "relayout_rounds": int(job.get("relayout_rounds", DEFAULT_RELAYOUT_ROUNDS)) if relayout else 0,
+            "polish_radius": int(job.get("polish_radius", DEFAULT_POLISH_RADIUS)) if relayout else 0,
+            "rounds": result.rounds,
+            "polished_candidate": (
+                result.rounds[-1]["polished_candidate"] if relayout and result.rounds else None
+            ),
             "stages": result.stages,
             "bfgs_eta_mode": str(job.get("bfgs_eta_mode", "callback")) if result.optimizer == "bfgs" else None,
             "opt_info": result.opt_info,
@@ -303,6 +360,11 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
                             "grow_eta_scale": args.grow_eta_scale,
                             "grow_c_schedule": args.grow_c_schedule,
                             "bfgs_eta_mode": str(args.bfgs_eta_mode),
+                            "relayout": bool(args.relayout),
+                            "relayout_rounds": int(args.relayout_rounds),
+                            "polish_radius": int(args.polish_radius),
+                            "relayout_steps": args.relayout_steps,
+                            "relayout_lr": args.relayout_lr,
                         }
                     )
     return jobs
@@ -489,6 +551,44 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help='With --grow: SPSA perturbation c per stage, e.g. "0.15,0.15,0.15,0.05"',
     )
+    p.add_argument(
+        "--relayout",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="After the usual L=1→L* growth on the baseline layout, polish the most-likely "
+        "bitstring (Hamming-1 energy lookup), re-encode it to both-cavity Fock 0, and retrain "
+        "at L* from a fresh random init. Repeat --relayout-rounds times or until the encoding "
+        "stops changing. Off by default so tuned/legacy fleets stay bit-for-bit; this is the "
+        "recommended experiment (see noiseless/README.md).",
+    )
+    p.add_argument(
+        "--relayout-rounds",
+        type=int,
+        default=DEFAULT_RELAYOUT_ROUNDS,
+        help="Extra L* retrains after round-0 growth (default 2). 0 = grow only, still records "
+        "the polished candidate / would-be next encoding",
+    )
+    p.add_argument(
+        "--polish-radius",
+        type=int,
+        default=DEFAULT_POLISH_RADIUS,
+        help="Hamming radius of the classical polish of the most-likely bitstring (default 1; "
+        "0 = use the raw most-likely string). Free; no extra circuit runs",
+    )
+    p.add_argument(
+        "--relayout-steps",
+        type=int,
+        default=None,
+        help="SPSA steps for each extra L* round (default: one growth stage, e.g. 200 under "
+        "the tuned preset)",
+    )
+    p.add_argument(
+        "--relayout-lr",
+        type=float,
+        default=None,
+        help="Adam lr for extra L* rounds (default: first-stage / random-init lr, e.g. 0.5 "
+        "under the tuned schedule — not the last-stage fine-tune lr)",
+    )
     args = p.parse_args(argv)
     if args.smoke:
         args.u_names = "identity"
@@ -516,6 +616,14 @@ def main(argv: list[str] | None = None) -> int:
         setattr(args, name, vals)
     if args.grow and args.adapt_lambda:
         p.error("--adapt-lambda is not supported with --grow")
+    if args.relayout and args.adapt_lambda:
+        p.error("--adapt-lambda is not supported with --relayout")
+    if args.relayout_rounds < 0:
+        p.error("--relayout-rounds must be >= 0")
+    if args.polish_radius < 0:
+        p.error("--polish-radius must be >= 0")
+    if (args.relayout_steps is not None or args.relayout_lr is not None) and not args.relayout:
+        p.error("--relayout-steps / --relayout-lr require --relayout")
     if args.bfgs_eta_mode != "callback" and args.optimizer != "bfgs":
         p.error("--bfgs-eta-mode requires --optimizer bfgs")
     if args.optimizer == "bfgs" and args.adapt_lambda:
@@ -538,7 +646,8 @@ def main(argv: list[str] | None = None) -> int:
         f"tag={args.tag} lambda1={args.lambda1} lam={args.lam} beta_max={args.beta_max} "
         f"adapt_lambda={args.adapt_lambda} optimizer={args.optimizer} adam_lr={args.adam_lr} "
         f"encoding={args.encoding} grow={args.grow} "
-        f"grow_steps_per_stage={args.grow_steps_per_stage}",
+        f"grow_steps_per_stage={args.grow_steps_per_stage} "
+        f"relayout={args.relayout} relayout_rounds={args.relayout_rounds}",
         flush=True,
     )
     records: list[dict] = []
@@ -606,6 +715,11 @@ def main(argv: list[str] | None = None) -> int:
             "grow_eta_scale": args.grow_eta_scale,
             "grow_c_schedule": args.grow_c_schedule,
             "bfgs_eta_mode": str(args.bfgs_eta_mode),
+            "relayout": bool(args.relayout),
+            "relayout_rounds": int(args.relayout_rounds),
+            "polish_radius": int(args.polish_radius),
+            "relayout_steps": args.relayout_steps,
+            "relayout_lr": args.relayout_lr,
             "preset": args.preset,
         },
         "n_jobs": len(records),
@@ -623,6 +737,7 @@ def main(argv: list[str] | None = None) -> int:
                 "optimizer": str(args.optimizer),
                 "encoding": str(args.encoding),
                 "grow": bool(args.grow),
+                "relayout": bool(args.relayout),
                 "args": payload["args"],
                 "n_jobs": payload["n_jobs"],
                 "n_ok": payload["n_ok"],

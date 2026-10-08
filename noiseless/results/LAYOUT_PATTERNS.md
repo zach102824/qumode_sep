@@ -145,12 +145,15 @@ one state has E = 0 and the rest have E = 2–4. No failure ends on a strict loc
 
 Every predictive feature depends on the GS bitstring, which is the answer the circuit is meant to find.
 The clause-only features that need no GS knowledge are useless (|ρ| ≤ 0.05). So "pick the layout from the
-clause structure" isn't supported. A practical a-priori layout chooser would need a GS estimate, for example:
-- iterate: run, take the best candidate bitstring, re-layout so that candidate sits at Fock corners, rerun;
-- use a cheap classical guess, such as the majority value or a local-search solution.
+clause structure" isn't supported. A practical a-priori layout chooser would need a GS estimate. The implemented protocol
+(`--relayout` on `run_u_sweep`; `relayout_trial` in `spsa_gibbs.py`) is the iterate-on-the-
+trial option: grow L=1→4 on the baseline layout, Hamming-1 polish the most-likely bitstring
+(98.4 % recovery of the true GS on H0–H7), re-encode that candidate to both-cavity Fock 0,
+and retrain at L=4. See `noiseless/README.md` (Adaptive relayout after L=4).
 
 What the screen does show is that, if the GS were known, placing it at the Fock corners would raise p(GS) from about
-0.5 (random layout) to about 0.8 (tier 0/0). How robust that is to an imperfect GS guess hasn't been tested.
+0.5 (random layout) to about 0.8 (tier 0/0). How much a single-trial iterate recovers of that
+lift is what `--relayout` measures; it is not assumed.
 
 ## 8. Pre-registration (step 5)
 
