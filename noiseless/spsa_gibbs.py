@@ -957,7 +957,7 @@ def grow_trial(
 
 DEFAULT_RELAYOUT_ROUNDS = 2
 DEFAULT_POLISH_RADIUS = 1
-RELAYOUT_INITS = ("random", "small", "warm")
+RELAYOUT_INITS = ("random", "small", "warm", "grow")
 RELAYOUT_RETURNS = ("last", "best")
 RELAYOUT_TARGETS = ("xor_vacuum", "rule")
 SMALL_INIT_BETA_MAX = 0.1  # relayout_init="small": |β| ~ U(0, 0.1)
@@ -1070,7 +1070,10 @@ def relayout_trial(
     Options added 2026-10-08 (defaults reproduce the original protocol bit-for-bit):
       - ``relayout_init``: extra-round x0 = ``"random"`` (random_parameters, |β|~U(0,3)),
         ``"small"`` (:func:`small_beta_parameters`, |β|~U(0,0.1); same rng draws), or
-        ``"warm"`` (previous round's final x; no rng draws).
+        ``"warm"`` (previous round's final x; no rng draws), or ``"grow"`` (re-run the
+        L=start→final growth in the new encoding with the round-0 growth settings, each
+        stage ``relayout_steps`` steps — default one growth stage — and the round-0 lr
+        schedule; ``relayout_lr`` is ignored).
       - ``relayout_return``: ``"last"`` round, or ``"best"`` = the round with the lowest
         Gibbs cost re-evaluated at a COMMON η (the largest end-of-round η over rounds). The
         Gibbs cost needs only the energies of sampled strings, no GS knowledge; it is
@@ -1155,7 +1158,26 @@ def relayout_trial(
             beta_max=beta_max,
             encoding=spec,
         )
-        if rnd == 0 and grow:
+        if rnd > 0 and relayout_init == "grow":
+            result = grow_trial(
+                sim,
+                final_layers=int(final_layers),
+                total_steps=int(total_steps),
+                rng=rng,
+                start_layers=int(start_layers),
+                kick_sigma=float(kick_sigma),
+                a=a,
+                c=c,
+                A=A,
+                optimizer=optimizer,
+                steps_per_stage=int(extra_steps),
+                adam_lr=adam_lr,
+                lr_schedule=lr_schedule,
+                eta_scale_schedule=eta_scale_schedule,
+                c_schedule=c_schedule,
+                bfgs_eta_mode=bfgs_eta_mode,
+            )
+        elif rnd == 0 and grow:
             result = grow_trial(
                 sim,
                 final_layers=int(final_layers),
@@ -1224,7 +1246,7 @@ def relayout_trial(
                 "max_abs_beta": float(result.max_abs_beta),
                 "nfev": int(result.nfev),
                 "nit": int(result.nit),
-                "adam_lr": None if (rnd == 0 and result.stages) else (
+                "adam_lr": None if result.stages else (
                     float(extra_lr) if rnd > 0 else float(adam_lr)
                 ),
                 "stages": result.stages,

@@ -208,7 +208,7 @@ def test_small_beta_parameters_same_rng_stream_and_small_beta():
 
 
 @needs_hams
-@pytest.mark.parametrize("init", ["random", "small", "warm"])
+@pytest.mark.parametrize("init", ["random", "small", "warm", "grow"])
 @pytest.mark.parametrize("target", ["xor_vacuum", "rule"])
 def test_relayout_options_run_and_round0_unchanged(init, target):
     inst = load_four_sat_npz(_HAMS[0])
@@ -250,3 +250,18 @@ def test_layout_spec_names():
     assert (na, nb) == (7, 7)
     _, _, na, nb = gs_location_binary(g, layout_spec("rule_bad", g).perm)
     assert 2 <= na <= 5 and 2 <= nb <= 5
+
+
+@needs_hams
+def test_relayout_grow_init_regrows_from_L1():
+    inst = load_four_sat_npz(_HAMS[0])
+    le = logical_energies_from_terms(inst["terms"], inst["identity"])
+    res = relayout_trial(_U, le, inst["ground_bitstring"], rng=np.random.default_rng(4),
+                         final_layers=3, grow=True, optimizer="spsa_adam", steps_per_stage=3,
+                         relayout_rounds=1, relayout_steps=2, relayout_init="grow",
+                         relayout_target="rule", lr_schedule=[0.5, 0.2, 0.05])
+    if len(res.rounds) > 1:
+        r1 = res.rounds[1]
+        assert [st["n_layers"] for st in r1["stages"]] == [1, 2, 3]
+        assert r1["nfev"] == 3 * (2 * 2 + 1)
+        assert [st["adam_lr"] for st in r1["stages"]] == [0.5, 0.2, 0.05]

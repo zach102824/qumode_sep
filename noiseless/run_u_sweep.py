@@ -623,7 +623,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     p.add_argument("--relayout-init", choices=RELAYOUT_INITS, default="random",
                    help="x0 of extra relayout rounds: random (|β|~U(0,3), default), small "
-                   "(|β|~U(0,0.1)), warm (previous round's x)")
+                   "(|β|~U(0,0.1)), warm (previous round's x), grow (re-run L=1→L* growth in the "
+                   "new layout, --relayout-steps per stage, round-0 lr schedule)")
     p.add_argument("--relayout-return", choices=RELAYOUT_RETURNS, default="last",
                    help="official trial result: last round (default) or best = lowest Gibbs "
                    "cost at a common η over rounds (no GS knowledge)")
