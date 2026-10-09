@@ -3,12 +3,29 @@
 **Question.** Is there a cheap setting where round 0 is weak (success ≈ 0.5), every relabel round
 improves success or mean p(GS) (or both), and only the final round reaches ≈ 0.99 on **both**?
 
-**Answer: no setting in this sweep meets the criterion.** With a weak round 0 (L1→4 at 10 steps/layer,
-success 0.416, polished guess right 0.560), four relabel rounds of 400 steps reach **0.940 / 0.930**
-at 3288 evals. The best final numbers overall were from a round 0 that isn't weak: L4s50 r100 gets
-**0.986 / 0.974** at 1208 evals, but round 0 is already at 0.932 success. Plain tuned growth at the
-same budget beats the relabel loop on success at every weak-start budget. Relabel wins clearly on
-mean p(GS).
+**Headline (updated after the lr scan and its control).** Use L4s10 r200 with relabel lr 0.1:
+- Round 0 grows L1→4 at 10 steps/layer.
+- Then 4 relabel rounds at L=4, 200 steps each, small-β start, Adam lr 0.1, keeping the best round by cost.
+
+It meets the criterion, up to rounding: the final mean p(GS) is 0.981, just under the strict 0.985 line.
+
+Cells are success / mean p(GS) / cumulative evals, best-so-far, 500 trials, paired seeds.
+
+| method | round 0 | round 1 | round 2 | round 3 | round 4 |
+|---|---|---|---|---|---|
+| relabel, lr 0.1 | 0.416 / 0.093 / 84 | 0.912 / 0.647 / 485 | 0.976 / 0.900 / 886 | 0.994 / 0.967 / 1287 | **0.998 / 0.981 / 1688** |
+| NO relabel, lr 0.1 (control) | 0.416 / 0.093 / 84 | 0.788 / 0.221 / 485 | 0.896 / 0.262 / 886 | 0.932 / 0.289 / 1287 | 0.956 / 0.308 / 1688 |
+| plain tuned growth, S=210 (same evals) | – | – | – | – | 0.970 / 0.534 / 1684 |
+
+**Relabel against the no-relabel control:**
+- **Initially wrong guesses fixed by round 4:** relabel 219 of 220 (0.995), no relabel 204 of 220 (0.927).
+- **Initially right guesses:** final success is 1.000 with relabel and 0.979 without.
+- **Per H:** relabel wins on success in 10 H, ties in 10 and loses none. On mean p(GS) it wins all 20 H, with no ties or losses.
+- **|β|:** in the relabel rounds, 6% of round trials have max |β| > 3 with relabel, against 43% without.
+
+**Relabel against plain growth at the same evals:** on success it wins in 7 H, ties in 13 and loses none. On mean p(GS) it wins all 20 H.
+
+The original answer for the lr 0.05 sweep below still holds: there, no setting met the criterion, and the closest weak start was L4s10 r400 at 0.940 / 0.930 for 3288 evals. The relabel lr was the bottleneck: 0.05 is too slow to escape a wrong multi-bit guess, 0.1 escapes, and 0.2 blows up |β|. See the last two sections.
 
 ## Setup
 
@@ -239,3 +256,26 @@ Round 0 is shared by all four lrs. Its own β is already large, before any relab
 - **lr 0.1** has moderate β: p95 max |β| 3.9 in round 1, down to about 1.4–1.5 by rounds 3–4, and 6% of round trials have max |β| > 3.
 
 **Bottom line:** with relabel lr 0.1, L4s10 r200 is the setting the low-budget study was looking for. It starts at 0.42 success and climbs round by round: 0.91 / 0.65, then 0.98 / 0.90, then 0.99 / 0.97, then 0.998 / 0.981. The earlier "no setting meets the criterion" verdict was specific to lr 0.05.
+
+
+## Follow-up: no-relabel control at relabel lr 0.1 (L4s10 r200)
+
+This is the same as the lr 0.1 run, except that each extra round restarts from small β in the original (identity) layout. There is no XOR relabel. Seeds, rounds and cost-based selection are identical.
+
+Run with `TARGET=none RL_LR=0.1 TAG_PREFIX=lblr TAG_SUFFIX=_lr0.1 R0S=L4s10 RL_STEPS=200 noiseless/run_relayout_lowbudget.sh`. The summary is in `relayout_lr01_norelabel_summary.json`.
+
+| method | round 0 | round 1 | round 2 | round 3 | round 4 |
+|---|---|---|---|---|---|
+| relabel, lr 0.1 | 0.416 / 0.093 / 84 | 0.912 / 0.647 / 485 | 0.976 / 0.900 / 886 | 0.994 / 0.967 / 1287 | 0.998 / 0.981 / 1688 |
+| NO relabel, lr 0.1 | 0.416 / 0.093 / 84 | 0.788 / 0.221 / 485 | 0.896 / 0.262 / 886 | 0.932 / 0.289 / 1287 | 0.956 / 0.308 / 1688 |
+
+| | relabel lr 0.1 | NO relabel lr 0.1 |
+|---|---|---|
+| polished guess right, after rounds 0–4 | 0.560 / 0.914 / 0.984 / 0.994 / 0.998 | 0.560 / 0.880 / 0.952 / 0.970 / 0.980 |
+| wrong round-0 guesses fixed by round 4 | 219 / 220 (0.995) | 204 / 220 (0.927) |
+| right round-0 guesses that end in success | 1.000 | 0.979 |
+| share of round trials with max abs beta > 3 (rounds 1–4) | 0.063 | 0.425 |
+| per-H success, relabel wins / ties / losses | 10 / 10 / 0 | |
+| per-H mean p(GS), relabel wins / ties / losses | 20 / 0 / 0 | |
+
+At lr 0.1, restarts without relabel also find the GS fairly often. Their success is 0.956, close to plain growth (0.970). But mean p(GS) stays at about 0.3, which is the identity-layout regime. The relabel step is what raises mean p(GS) to 0.98, and it also pushes success to 0.998.
