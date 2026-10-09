@@ -152,3 +152,17 @@ def test_explore_exploit_smoke_n8():
     ex = rec["rounds"][2]
     g = int(rec["rounds"][1]["next_guess"], 2)
     assert (ex["xa"], ex["xb"]) == ((g >> 3) & 7, g & 7)
+
+
+def test_explore_exploit_cool_counts_evals():
+    import numpy as np
+    from noiseless.relayout_kbit import explore_exploit_trial_kbit
+    from noiseless.run_relayout_kbit import energies_for, ham_paths
+
+    E, gs = energies_for(str(ham_paths(8, "scaling")[0]), 8, "scaling")
+    rec = explore_exploit_trial_kbit(E, gs, k=3, nf=24, final_layers=2, rng=np.random.default_rng(2),
+                                     explore_rounds=2, topk=1, explore_mask="perm", relayout_rounds=1,
+                                     relayout_steps=5, steps_per_stage=3, lr_schedule=[0.5, 0.2],
+                                     cool_steps=4, explore_eta_scale=16.0, exploit_eta_scale=2.0)
+    assert rec["nfev"] == 2 * (2 * (2 * 3 + 1) + (2 * 4 + 1)) + (2 * 5 + 1)
+    assert rec["rounds"][1]["perm"] and not rec["rounds"][2]["perm"]

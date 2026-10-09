@@ -277,6 +277,9 @@ def explore_exploit_trial_kbit(
     exploit_eta_scale: float = 1.0,
     explore_layers: int | None = None,
     explore_steps: int | None = None,
+    cool_steps: int = 0,
+    cool_eta_scale: float = 64.0,
+    cool_lr: float = 0.05,
 ) -> dict:
     """Explore-then-exploit relayout (n = 10 cost fix, RELAYOUT_N10_COST_DIAGNOSIS.md).
 
@@ -296,6 +299,9 @@ def explore_exploit_trial_kbit(
       explore growth stages / exploit rounds (η is an inverse temperature; > 1 = colder, weights the
       low-energy tail more). ``explore_layers`` (default L) and ``explore_steps`` (default s) set the
       explore growth target depth and steps per stage independently of the exploit depth L.
+    * ``cool_steps`` > 0: after each explore growth, a cold "concentration" stage of that many SPSA-Adam
+      steps from the grown parameters at η × ``cool_eta_scale`` and lr ``cool_lr``; the explore candidate
+      is the top-K of the cooled state (counted in evals).
     """
     n = 2 + 2 * int(k)
     E = np.asarray(energies_logical, dtype=float).reshape(-1)
@@ -346,6 +352,13 @@ def explore_exploit_trial_kbit(
                              kick_sigma=float(kick_sigma), c=float(c), A=float(A), optimizer="spsa_adam",
                              steps_per_stage=sx, adam_lr=float(adam_lr), lr_schedule=lr_x,
                              eta_scale_schedule=[float(explore_eta_scale)] * len(lr_x))
+            if int(cool_steps) > 0:
+                sim.eta_scale = float(cool_eta_scale)
+                res_c = optimize_trial(sim, maxiter=int(cool_steps), rng=rng, x0=np.asarray(res.x, dtype=float),
+                                       a=scale_spsa_a(n_parameters(Lx)), c=float(c), A=float(A),
+                                       optimizer="spsa_adam", adam_lr=float(cool_lr))
+                res_c.nfev = int(res_c.nfev) + int(res.nfev)
+                res = res_c
         else:
             sim.eta_scale = float(exploit_eta_scale)
             x0 = small_beta_parameters(L, rng)
