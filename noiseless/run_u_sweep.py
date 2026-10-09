@@ -40,6 +40,7 @@ from noiseless.spsa_gibbs import (
     RELAYOUT_INITS,
     RELAYOUT_RETURNS,
     RELAYOUT_TARGETS,
+    RELAYOUT_GUESSES,
     NoiselessSimulator,
     GROW_KICK_SIGMA,
     ground_flat_from_bitstring,
@@ -122,6 +123,9 @@ def _worker(job: dict) -> dict:
                 relayout_init=str(job.get("relayout_init", "random")),
                 relayout_return=str(job.get("relayout_return", "last")),
                 relayout_target=str(job.get("relayout_target", "xor_vacuum")),
+                relayout_layers=job.get("relayout_layers"),
+                relayout_guess=str(job.get("relayout_guess", "last")),
+                relayout_fixed_stop=bool(job.get("relayout_fixed_stop", True)),
                 **grow_kw,
             )
             a = (
@@ -231,6 +235,9 @@ def _worker(job: dict) -> dict:
             "relayout_init": str(job.get("relayout_init", "random")) if relayout else None,
             "relayout_return": str(job.get("relayout_return", "last")) if relayout else None,
             "relayout_target": str(job.get("relayout_target", "xor_vacuum")) if relayout else None,
+            "relayout_layers": job.get("relayout_layers") if relayout else None,
+            "relayout_guess": str(job.get("relayout_guess", "last")) if relayout else None,
+            "relayout_fixed_stop": bool(job.get("relayout_fixed_stop", True)) if relayout else None,
             "stages": result.stages,
             "bfgs_eta_mode": str(job.get("bfgs_eta_mode", "callback")) if result.optimizer == "bfgs" else None,
             "opt_info": result.opt_info,
@@ -351,7 +358,8 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
         for u_name in u_names:
             for L in layers:
                 for t in range(int(args.trials)):
-                    seed = seed0 + 100_000 * hi + 1_000 * list(U_NAMES).index(u_name) + 10 * L + t
+                    Ls = L if args.seed_layers is None else int(args.seed_layers)
+                    seed = seed0 + 100_000 * hi + 1_000 * list(U_NAMES).index(u_name) + 10 * Ls + t
                     jobs.append(
                         {
                             "ham_path": str(path.resolve()),
@@ -395,6 +403,9 @@ def build_jobs(args: argparse.Namespace) -> list[dict]:
                             "relayout_init": str(args.relayout_init),
                             "relayout_return": str(args.relayout_return),
                             "relayout_target": str(args.relayout_target),
+                            "relayout_layers": args.relayout_layers,
+                            "relayout_guess": str(args.relayout_guess),
+                            "relayout_fixed_stop": not bool(args.no_relayout_fixed_stop),
                             "layout": str(args.layout),
                             "layout_perm": layout_perms[path.name],
                         }
@@ -631,6 +642,18 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--relayout-target", choices=RELAYOUT_TARGETS, default="xor_vacuum",
                    help="xor_vacuum (default): XOR cavity maps so the candidate sits at Fock "
                    "(0,0); rule: permutation-only tier-rule layout for the candidate")
+    p.add_argument("--relayout-layers", type=int, default=None,
+                   help="depth of the extra relayout rounds (default: --layers). Lets round-0 "
+                   "growth stop early (e.g. --layers 2) while extra rounds run at L=4; needs "
+                   "--relayout-init small/random")
+    p.add_argument("--relayout-guess", choices=RELAYOUT_GUESSES, default="last",
+                   help="next round's candidate from the last round (default) or the best-so-far "
+                   "round by common-η Gibbs cost")
+    p.add_argument("--no-relayout-fixed-stop", action="store_true",
+                   help="always run --relayout-rounds extra rounds (no fixed-point stop)")
+    p.add_argument("--seed-layers", type=int, default=None,
+                   help="use this L in the per-trial seed formula instead of the job's L (pairs "
+                   "seeds across runs with different round-0 depths)")
     p.add_argument("--layout", choices=LAYOUTS, default="identity",
                    help="variable→slot layout (binary code). rule_best / rule_bad / screen_best "
                    "use the TRUE GS or the screen data (oracles); see noiseless/layouts.py")
@@ -672,6 +695,9 @@ def main(argv: list[str] | None = None) -> int:
     if not args.relayout and (args.relayout_init != "random" or args.relayout_return != "last"
                               or args.relayout_target != "xor_vacuum"):
         p.error("--relayout-init / --relayout-return / --relayout-target require --relayout")
+    if (args.relayout_layers is not None or args.relayout_guess != "last"
+            or args.no_relayout_fixed_stop) and not args.relayout:
+        p.error("--relayout-layers / --relayout-guess / --no-relayout-fixed-stop require --relayout")
     if args.layout != "identity" and args.encoding != "binary":
         p.error("--layout other than identity requires --encoding binary")
     if args.bfgs_eta_mode != "callback" and args.optimizer != "bfgs":
@@ -773,6 +799,10 @@ def main(argv: list[str] | None = None) -> int:
             "relayout_init": str(args.relayout_init),
             "relayout_return": str(args.relayout_return),
             "relayout_target": str(args.relayout_target),
+            "relayout_layers": args.relayout_layers,
+            "relayout_guess": str(args.relayout_guess),
+            "relayout_fixed_stop": not bool(args.no_relayout_fixed_stop),
+            "seed_layers": args.seed_layers,
             "layout": str(args.layout),
             "preset": args.preset,
         },

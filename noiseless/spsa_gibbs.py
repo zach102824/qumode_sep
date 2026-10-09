@@ -959,7 +959,8 @@ DEFAULT_RELAYOUT_ROUNDS = 2
 DEFAULT_POLISH_RADIUS = 1
 RELAYOUT_INITS = ("random", "small", "warm", "grow")
 RELAYOUT_RETURNS = ("last", "best")
-RELAYOUT_TARGETS = ("xor_vacuum", "rule")
+RELAYOUT_TARGETS = ("xor_vacuum", "rule", "none")
+RELAYOUT_GUESSES = ("last", "best")
 SMALL_INIT_BETA_MAX = 0.1  # relayout_init="small": |β| ~ U(0, 0.1)
 
 
@@ -984,6 +985,8 @@ def relayout_next_spec(polished: str, spec: EncodingSpec, target: str) -> Encodi
         return corner_spec_for_bitstring(polished, spec)
     if t == "rule":
         return rule_layout_for_bitstring(polished, "best")
+    if t == "none":  # no-relabel control: keep the current (original) layout
+        return spec
     raise ValueError(f"relayout_target must be one of {RELAYOUT_TARGETS}, got {target!r}")
 
 
@@ -1064,8 +1067,26 @@ def relayout_trial(
     relayout_init: str = "random",
     relayout_return: str = "last",
     relayout_target: str = "xor_vacuum",
+    relayout_layers: int | None = None,
+    relayout_guess: str = "last",
+    relayout_fixed_stop: bool = True,
 ) -> TrialResult:
     """Grow L=start→final on the baseline layout, then relayout at L=final.
+
+    Options added 2026-10-09 (low-budget multi-round study; defaults reproduce the
+    previous behaviour):
+      - ``relayout_layers``: depth of the extra rounds (default ``final_layers``). Round 0
+        grows L=start→``final_layers`` (can stop early, e.g. at L=2) while extra rounds
+        run at ``relayout_layers`` (e.g. 4). Only valid with init small/random.
+      - ``relayout_guess``: the next round's candidate comes from the ``"last"`` round or
+        from the ``"best"``-so-far round (lowest Gibbs cost at the common η = largest
+        end-of-round η among rounds so far; no GS knowledge).
+      - ``relayout_fixed_stop``: stop when the encoding stops changing (default True).
+        False always runs ``relayout_rounds`` extra rounds (truncating at the first
+        fixed point afterwards reproduces the stopped run exactly: same rng stream).
+      - ``relayout_target="none"``: no-relabel control; extra rounds restart in the
+        original layout (implies no fixed-point stop).
+      Each round record also carries ``cum_nfev`` and best-so-far fields ``bsf_*``.
 
     Options added 2026-10-08 (defaults reproduce the original protocol bit-for-bit):
       - ``relayout_init``: extra-round x0 = ``"random"`` (random_parameters, |β|~U(0,3)),
@@ -1115,6 +1136,13 @@ def relayout_trial(
         raise ValueError(f"relayout_return must be one of {RELAYOUT_RETURNS}")
     if relayout_target not in RELAYOUT_TARGETS:
         raise ValueError(f"relayout_target must be one of {RELAYOUT_TARGETS}")
+    if relayout_guess not in RELAYOUT_GUESSES:
+        raise ValueError(f"relayout_guess must be one of {RELAYOUT_GUESSES}")
+    extra_layers = int(final_layers) if relayout_layers is None else int(relayout_layers)
+    if extra_layers != int(final_layers) and relayout_init not in ("small", "random"):
+        raise ValueError("relayout_layers != final_layers requires relayout_init small/random")
+    if relayout_target == "none":
+        relayout_fixed_stop = False
     rng = rng or np.random.default_rng()
     spec = (
         base_encoding
@@ -1137,9 +1165,11 @@ def relayout_trial(
         relayout_lr=relayout_lr,
     )
     extra_a = (
-        scale_spsa_a(n_parameters(int(final_layers))) if a is None else float(a)
+        scale_spsa_a(n_parameters(extra_layers)) if a is None else float(a)
     )
     rounds: list[dict] = []
+    round_probs: list[np.ndarray] = []
+    round_energies: list[np.ndarray] = []
     round_results: list[TrialResult] = []
     round_sims: list[NoiselessSimulator] = []
     total_nfev = 0
@@ -1150,7 +1180,7 @@ def relayout_trial(
         sim = NoiselessSimulator(
             u_fixed=u_fixed,
             energy_tensor=energy_tensor_for_spec(logical_energies, spec),
-            n_layers=int(final_layers),
+            n_layers=int(final_layers) if rnd == 0 else extra_layers,
             ground_bitstring=ground_bitstring,
             ground_flat_index=ground_flat_from_bitstring(ground_bitstring, spec),
             lambda1=float(lambda1),
@@ -1200,7 +1230,7 @@ def relayout_trial(
         else:
             x0_extra = None
             if rnd > 0 and relayout_init == "small":
-                x0_extra = small_beta_parameters(int(final_layers), rng)
+                x0_extra = small_beta_parameters(extra_layers, rng)
             elif rnd > 0 and relayout_init == "warm":
                 x0_extra = np.asarray(x_prev, dtype=float).copy()
             result = optimize_trial(
@@ -1219,13 +1249,23 @@ def relayout_trial(
         x_prev = np.asarray(result.x, dtype=float)
         round_results.append(result)
         round_sims.append(sim)
+        round_probs.append(np.asarray(sim.probs_from_x(result.x), dtype=float))
+        round_energies.append(np.asarray(sim.energies_flat, dtype=float))
+        # Best-so-far (common η over rounds so far; Gibbs cost needs no GS knowledge).
+        eta_now = max(float(r.eta) for r in round_results)
+        funs_now = [float(gibbs_objective(pp, ee, eta_now))
+                    for pp, ee in zip(round_probs, round_energies)]
+        bsf = min(range(len(funs_now)), key=lambda k: (funs_now[k], k))
+
+        def _polish(bs: str) -> str:
+            return (polish_bitstring(bs, logical_energies, radius=int(polish_radius))
+                    if int(polish_radius) > 0 else bs)
+
         candidate = result.most_likely_bitstring
-        polished = (
-            polish_bitstring(candidate, logical_energies, radius=int(polish_radius))
-            if int(polish_radius) > 0
-            else candidate
-        )
-        next_spec = relayout_next_spec(polished, spec, relayout_target)
+        polished = _polish(candidate)
+        guess_src = round_results[bsf] if relayout_guess == "best" else result
+        guess = polished if guess_src is result else _polish(guess_src.most_likely_bitstring)
+        next_spec = relayout_next_spec(guess, spec, relayout_target)
         rounds.append(
             {
                 "round": rnd,
@@ -1250,9 +1290,16 @@ def relayout_trial(
                     float(extra_lr) if rnd > 0 else float(adam_lr)
                 ),
                 "stages": result.stages,
+                "cum_nfev": int(total_nfev),
+                "next_guess": guess,
+                "next_guess_is_ground": guess == ground_bitstring,
+                "bsf_round": int(bsf),
+                "bsf_success": bool(round_results[bsf].success),
+                "bsf_p_gs": float(round_results[bsf].p_gs),
+                "bsf_fun_common_eta": float(funs_now[bsf]),
             }
         )
-        if next_spec == spec:
+        if relayout_fixed_stop and next_spec == spec:
             stop = "fixed_point"
             break
         spec = next_spec

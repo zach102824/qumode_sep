@@ -265,3 +265,65 @@ def test_relayout_grow_init_regrows_from_L1():
         assert [st["n_layers"] for st in r1["stages"]] == [1, 2, 3]
         assert r1["nfev"] == 3 * (2 * 2 + 1)
         assert [st["adam_lr"] for st in r1["stages"]] == [0.5, 0.2, 0.05]
+
+
+@needs_hams
+def test_lowbudget_multiround_relayout_layers_and_bsf():
+    """Round 0 grows L=1→2; extra rounds at L=4 small-β; best-so-far guess; no fixed stop."""
+    inst = load_four_sat_npz(_HAMS[0])
+    le = logical_energies_from_terms(inst["terms"], inst["identity"])
+    res = relayout_trial(
+        _U, le, inst["ground_bitstring"], final_layers=2, rng=np.random.default_rng(3),
+        relayout_rounds=3, grow=True, optimizer="spsa_adam", steps_per_stage=3,
+        lr_schedule=[0.5, 0.2], relayout_steps=4, relayout_lr=0.05, relayout_init="small",
+        relayout_return="best", relayout_layers=4, relayout_guess="best",
+        relayout_fixed_stop=False,
+    )
+    rs = res.rounds
+    assert len(rs) == 4
+    assert [r["n_layers"] for r in rs] == [2, 4, 4, 4]
+    assert rs[0]["nfev"] == 2 * (2 * 3 + 1)
+    assert all(r["nfev"] == 2 * 4 + 1 for r in rs[1:])
+    assert [r["cum_nfev"] for r in rs] == list(np.cumsum([r["nfev"] for r in rs]))
+    assert res.nfev == rs[-1]["cum_nfev"]
+    # final selection == last best-so-far round
+    sel = next(k for k, r in enumerate(rs) if r["selected"])
+    assert sel == rs[-1]["bsf_round"]
+    assert rs[-1]["bsf_p_gs"] == pytest.approx(res.p_gs)
+    for r in rs:
+        assert r["next_guess"] == polish_bitstring(
+            rs[r["bsf_round"]]["most_likely_bitstring"], le, radius=1)
+    # each extra round's encoding = corner spec of previous round's guess
+    for k in range(1, 4):
+        assert rs[k]["encoding"] == str(corner_spec_for_bitstring(rs[k - 1]["next_guess"]))
+
+
+@needs_hams
+def test_norelabel_control_keeps_original_layout():
+    inst = load_four_sat_npz(_HAMS[0])
+    le = logical_energies_from_terms(inst["terms"], inst["identity"])
+    res = relayout_trial(
+        _U, le, inst["ground_bitstring"], final_layers=2, rng=np.random.default_rng(3),
+        relayout_rounds=2, grow=True, optimizer="spsa_adam", steps_per_stage=3,
+        lr_schedule=[0.5, 0.2], relayout_steps=4, relayout_lr=0.05, relayout_init="small",
+        relayout_return="best", relayout_layers=4, relayout_guess="best",
+        relayout_target="none",
+    )
+    assert len(res.rounds) == 3
+    assert len({r["encoding"] for r in res.rounds}) == 1
+
+
+@needs_hams
+def test_lowbudget_cli_smoke(tmp_path):
+    from noiseless.run_u_sweep import main
+    rc = main(["--max-h", "1", "--trials", "1", "--workers", "1", "--layers", "2",
+               "--grow-steps-per-stage", "2", "--grow-lr-schedule", "0.5,0.2",
+               "--relayout", "--relayout-rounds", "2", "--relayout-steps", "2",
+               "--relayout-lr", "0.05", "--relayout-init", "small", "--relayout-return", "best",
+               "--relayout-layers", "4", "--relayout-guess", "best", "--no-relayout-fixed-stop",
+               "--seed-layers", "4", "--outdir", str(tmp_path), "--tag", "t"])
+    assert rc == 0
+    out = [p for p in tmp_path.glob("t_*.json") if not p.name.endswith("_summary.json")][0]
+    rec = json.loads(out.read_text())["records"][0]
+    assert [r["n_layers"] for r in rec["rounds"]] == [2, 4, 4]
+    assert (rec["seed"] - 20260917) % 1000 == 40  # seed uses L=4, not round-0 L=2
