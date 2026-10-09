@@ -279,3 +279,33 @@ Run with `TARGET=none RL_LR=0.1 TAG_PREFIX=lblr TAG_SUFFIX=_lr0.1 R0S=L4s10 RL_S
 | per-H mean p(GS), relabel wins / ties / losses | 20 / 0 / 0 | |
 
 At lr 0.1, restarts without relabel also find the GS fairly often. Their success is 0.956, close to plain growth (0.970). But mean p(GS) stays at about 0.3, which is the identity-layout regime. The relabel step is what raises mean p(GS) to 0.98, and it also pushes success to 0.998.
+
+## Follow-up: XOR mask also on the transmon bits (L4s10 r200, relabel lr 0.1)
+
+**What changed.** Only the relabel changes, via the new target `--relayout-target xor_all`. The cavity XOR is as before. Each transmon bit is also XORed, so the full 8-bit guess is the circuit's initial state |g, g, 0, 0>.
+- Code convention: logical bit on slot d = transmon level d. Ground |g> = level 0 = bit 0, and the initial ket `vacuum_np()` is flat index 0 = (d, e, n_A, n_B) = (0, 0, 0, 0).
+- With `xor_all`, `EncodingSpec.transmon_xor = (guess_d, guess_e)` and bit = level XOR mask. The default (0, 0) leaves every earlier run unchanged.
+- Everything else is identical to the headline run, including the paired seeds.
+
+The run command is `TARGET=xor_all RL_LR=0.1 TAG_PREFIX=lblr TAG_SUFFIX=_lr0.1 R0S=L4s10 RL_STEPS=200 noiseless/run_relayout_lowbudget.sh`. The summary is in `relayout_xor_all_summary.json`.
+
+| relabel mask | round 0 | round 1 | round 2 | round 3 | round 4 |
+|---|---|---|---|---|---|
+| cavities only (headline) | 0.416 / 0.093 / 84 | 0.912 / 0.647 / 485 | 0.976 / 0.900 / 886 | 0.994 / 0.967 / 1287 | 0.998 / 0.981 / 1688 |
+| cavities + transmons d, e | 0.416 / 0.093 / 84 | 0.920 / 0.642 / 485 | 0.970 / 0.889 / 886 | 0.990 / 0.955 / 1287 | 0.998 / 0.973 / 1688 |
+
+| | cavities only | cavities + transmons |
+|---|---|---|
+| polished guess right, after rounds 0–4 | 0.560 / 0.914 / 0.984 / 0.994 / 0.998 | 0.560 / 0.924 / 0.980 / 0.990 / 0.998 |
+| wrong round-0 guesses fixed by round 4 | 219 / 220 | 219 / 220 |
+| slot d: missed / fixed | 191 / 190 | 191 / 190 |
+| slot e: missed / fixed | 111 / 110 | 111 / 110 |
+| share of round trials with max abs beta > 3 (rounds 1–4) | 0.063 | 0.065 |
+
+Per H, cavities + transmons against cavities only:
+- **Success:** 0 wins, 20 ties, 0 losses.
+- **Mean p(GS):** 4 wins, 0 ties, 16 losses.
+
+**Reading.** The transmon mask gives no gain, and mean p(GS) is slightly lower in every round from round 2 on.
+
+This is expected from the circuit. Small-β init keeps θ and φ random, so the transmons do not start parked at |g> in any useful sense; each layer's rotation moves them freely. Putting the guess's transmon bits at ground therefore buys nothing. Only the cavity Fock geometry matters, which is the earlier layout rule. The remaining wrong guess, the same trial in both runs, misses d and e as well as cavity bits.
