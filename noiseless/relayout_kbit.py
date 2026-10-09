@@ -228,6 +228,27 @@ def relayout_trial_kbit(
     return out
 
 
+def growth_lr_schedule(L: int) -> list[float]:
+    """Same as run_relayout_kbit.lr_schedule_for: 0.5/0.2/0.05/0.02 at L = 4, log-linear otherwise."""
+    head = (0.5, 0.2, 0.05, 0.02)
+    L = int(L)
+    if L == 4:
+        return list(head)
+    if L == 1:
+        return [head[0]]
+    pos = np.linspace(0.0, 3.0, L)
+    return [float(np.exp(np.interp(p, np.arange(4), np.log(head)))) for p in pos]
+
+
+def bit_perm_map(perm, n: int) -> np.ndarray:
+    """Pm[v'] = logical index whose bit perm[i] equals bit i of v' (MSB-first positions)."""
+    idx = np.arange(1 << n, dtype=np.int64)
+    out = np.zeros_like(idx)
+    for i in range(n):
+        out |= ((idx >> (n - 1 - i)) & 1) << (n - 1 - int(perm[i]))
+    return out
+
+
 def explore_exploit_trial_kbit(
     energies_logical: np.ndarray,
     ground_bitstring: str,
@@ -252,19 +273,29 @@ def explore_exploit_trial_kbit(
     polish_radius: int = 1,
     method: str = "fast",
     u_name: str = "jp",
+    explore_eta_scale: float = 1.0,
+    exploit_eta_scale: float = 1.0,
+    explore_layers: int | None = None,
+    explore_steps: int | None = None,
 ) -> dict:
     """Explore-then-exploit relayout (n = 10 cost fix, RELAYOUT_N10_COST_DIAGNOSIS.md).
 
     * Explore: ``explore_rounds`` independent layer-growth runs (L = 1 -> L_max, s steps per stage,
       the round-0 recipe). Run 0 uses mask (0, 0); later runs use a fresh uniformly random cavity XOR
       mask (``explore_mask='random'``; ``'zero'`` keeps (0, 0)), which changes which Fock states the
-      circuit is biased toward. After every round (explore or exploit) the ``topk`` most probable
+      circuit is biased toward. ``explore_mask='perm'``: random mask plus a uniformly random permutation
+      of the n logical bits over the physical slots (transmons d, e and the cavity Fock digits), i.e. a
+      fresh qubit-to-hardware assignment per explore run. After every round (explore or exploit) the ``topk`` most probable
       code states are polished (radius 1) and added to a candidate pool.
     * Guess = lowest classical energy in the pool (ties -> smaller index); ``topk * (n + 1)`` classical
       lookups per round, no GS knowledge.
     * Exploit: ``relayout_rounds`` rounds of ``relayout_steps`` SPSA-Adam steps from small beta with the
       cavity masks set to the current guess (guess at Fock (0, 0)), exactly the old relabel round.
     * Returned round: lowest Gibbs cost at the common eta over all rounds (same rule as before).
+    * ``explore_eta_scale`` / ``exploit_eta_scale``: multiplier on the sampled-tail η controller in the
+      explore growth stages / exploit rounds (η is an inverse temperature; > 1 = colder, weights the
+      low-energy tail more). ``explore_layers`` (default L) and ``explore_steps`` (default s) set the
+      explore growth target depth and steps per stage independently of the exploit depth L.
     """
     n = 2 + 2 * int(k)
     E = np.asarray(energies_logical, dtype=float).reshape(-1)
@@ -274,6 +305,12 @@ def explore_exploit_trial_kbit(
     if lr_schedule is None:
         lr_schedule = [0.5, 0.2, 0.05, 0.02] if n_st == 4 else None
     extra_a = scale_spsa_a(n_parameters(L))
+    Lx = int(explore_layers) if explore_layers else L
+    sx = int(explore_steps) if explore_steps else int(steps_per_stage)
+    if Lx == L:
+        lr_x = list(lr_schedule)
+    else:
+        lr_x = growth_lr_schedule(Lx)
     gl = int(ground_bitstring, 2)
     flat0 = layout.flat_of_logical()
     pool: set[int] = set()
@@ -282,24 +319,35 @@ def explore_exploit_trial_kbit(
     total_nfev = 0
     guess = None
     n_lookups = 0
+    seen: set[int] = set()  # distinct energy-table entries read (cache)
     n_total = int(explore_rounds) + int(relayout_rounds)
     for rnd in range(n_total):
         exploring = rnd < int(explore_rounds)
+        Pm = None
         if exploring:
             if rnd == 0 or explore_mask == "zero":
                 xa = xb = 0
-            elif explore_mask == "random":
+            elif explore_mask in ("random", "perm"):
                 xa, xb = int(rng.integers(1 << k)), int(rng.integers(1 << k))
+                if explore_mask == "perm":
+                    Pm = bit_perm_map(rng.permutation(n), n)
             else:
                 raise ValueError(f"unknown explore_mask {explore_mask!r}")
         else:
             xa, xb = cavity_masks_for(guess, int(k)) if guess is not None else (0, 0)
-        sim = XorKbitSim(layout, E, L, ground_bitstring, u_name=u_name, method=method, xa=xa, xb=xb)
-        if exploring:
-            res = grow_trial(sim, final_layers=L, rng=rng, start_layers=int(start_layers),
-                             kick_sigma=float(kick_sigma), c=float(c), A=float(A), optimizer="spsa_adam",
-                             steps_per_stage=int(steps_per_stage), adam_lr=float(adam_lr), lr_schedule=lr_schedule)
+        Lr = Lx if exploring else L
+        if Pm is None:
+            sim = XorKbitSim(layout, E, Lr, ground_bitstring, u_name=u_name, method=method, xa=xa, xb=xb)
         else:
+            gs_p = bitstring_from_logical(int(np.flatnonzero(Pm == gl)[0]), n)
+            sim = XorKbitSim(layout, E[Pm], Lr, gs_p, u_name=u_name, method=method, xa=xa, xb=xb)
+        if exploring:
+            res = grow_trial(sim, final_layers=Lx, rng=rng, start_layers=int(start_layers),
+                             kick_sigma=float(kick_sigma), c=float(c), A=float(A), optimizer="spsa_adam",
+                             steps_per_stage=sx, adam_lr=float(adam_lr), lr_schedule=lr_x,
+                             eta_scale_schedule=[float(explore_eta_scale)] * len(lr_x))
+        else:
+            sim.eta_scale = float(exploit_eta_scale)
             x0 = small_beta_parameters(L, rng)
             res = optimize_trial(sim, maxiter=int(relayout_steps), rng=rng, x0=x0, a=extra_a, c=float(c),
                                  A=float(A), optimizer="spsa_adam", adam_lr=float(relayout_lr))
@@ -312,15 +360,21 @@ def explore_exploit_trial_kbit(
         mask = (int(xa) << k) | int(xb)
         pl = probs[flat0]  # pl[j] = prob of logical j ^ mask
         top = np.argsort(-pl, kind="stable")[: max(1, int(topk))]
-        new = [polish_logical(int(j) ^ mask, E, n, polish_radius) for j in top]
+        raw = [int(j) ^ mask for j in top]
+        if Pm is not None:
+            raw = [int(Pm[v]) for v in raw]
+        new = [polish_logical(v, E, n, polish_radius) for v in raw]
         n_lookups += len(new) * (n + 1)
+        for v in raw:
+            seen.add(v)
+            seen.update(v ^ (1 << b) for b in range(n))
         pool.update(new)
         guess = min(pool, key=lambda v: (E[v], v))
         eta_now = max(float(r.eta) for r in res_list)
         funs = [float(gibbs_objective(pp, ss.energies_flat, eta_now)) for pp, ss in zip(prob_list, sim_list)]
         bsf = min(range(len(funs)), key=lambda j: (funs[j], j))
         rounds.append({
-            "round": rnd, "phase": "explore" if exploring else "exploit",
+            "round": rnd, "phase": "explore" if exploring else "exploit", "perm": Pm is not None,
             "xa": int(xa), "xb": int(xb), "n_layers": L,
             "success": bool(res.success), "p_gs": float(res.p_gs),
             "most_likely_bitstring": res.most_likely_bitstring,
@@ -343,6 +397,7 @@ def explore_exploit_trial_kbit(
         "success": bool(best.success), "p_gs": float(best.p_gs),
         "most_likely_bitstring": best.most_likely_bitstring, "ground_bitstring": ground_bitstring,
         "selected_round": int(sel), "nfev": int(total_nfev), "n_lookups": int(n_lookups),
+        "n_lookups_distinct": int(len(seen)),
         "leakage": float(rounds[sel]["leakage"]),
         "x": np.asarray(best.x, dtype=float).tolist(),
         "sel_xa": int(rounds[sel]["xa"]), "sel_xb": int(rounds[sel]["xb"]),

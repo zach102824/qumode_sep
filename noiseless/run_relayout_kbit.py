@@ -83,10 +83,18 @@ def trial_seed(seed0: int, inst: int, trial: int) -> int:
 
 
 def config_tag(n, L, s, r, R, lr=0.1, nf=None, ham_set="scaling", method="fast", explore=1, topk=1,
-               explore_mask="random") -> str:
+               explore_mask="random", xeta=1.0, reta=1.0, xL=None, xs=None) -> str:
     t = f"n{n:02d}_L{L}s{s}_r{r}_R{R}"
     if int(explore) > 1 or int(topk) > 1:
         t += f"_E{int(explore)}K{int(topk)}" + ("" if explore_mask == "random" else f"{explore_mask}")
+        if xeta and float(xeta) != 1.0:
+            t += f"_xeta{float(xeta):g}"
+        if reta and float(reta) != 1.0:
+            t += f"_reta{float(reta):g}"
+        if xL:
+            t += f"_xL{int(xL)}"
+        if xs:
+            t += f"_xs{int(xs)}"
     if abs(float(lr) - 0.1) > 1e-12:
         t += f"_lr{lr:g}"
     if nf is not None and nf != default_nf((n - 2) // 2):
@@ -110,6 +118,8 @@ def worker(job: dict) -> dict:
         rec = explore_exploit_trial_kbit(
             E, gs, k=k, nf=int(job["nf"]), final_layers=int(job["L"]), rng=rng, explore_rounds=M,
             explore_mask=job.get("explore_mask") or "random", topk=K,
+            explore_eta_scale=float(job.get("xeta") or 1.0), exploit_eta_scale=float(job.get("reta") or 1.0),
+            explore_layers=job.get("xL"), explore_steps=job.get("xs"),
             relayout_rounds=int(job["R"]), relayout_steps=int(job["r"]), relayout_lr=float(job["lr"]),
             steps_per_stage=int(job["s"]), lr_schedule=lr_schedule_for(int(job["L"])), method=job["method"],
         )
@@ -120,7 +130,8 @@ def worker(job: dict) -> dict:
             steps_per_stage=int(job["s"]), lr_schedule=lr_schedule_for(int(job["L"])), method=job["method"],
         )
     rec.update({kk: job[kk] for kk in ("n", "L", "s", "r", "R", "lr", "nf", "inst", "trial", "seed", "ham_set", "method")})
-    rec.update(explore=M, topk=K, explore_mask=job.get("explore_mask") or "random")
+    rec.update(explore=M, topk=K, explore_mask=job.get("explore_mask") or "random",
+               xeta=job.get("xeta"), reta=job.get("reta"), xL=job.get("xL"), xs=job.get("xs"))
     rec["file"] = Path(job["path"]).name
     nfc = int(job.get("nf_check") or 0)
     if nfc:
@@ -172,7 +183,8 @@ def load_records(path: Path, trials: int | None = None) -> list[dict]:
 
 def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_set="scaling", method="fast",
                workers=8, seed0=20260917, outdir: Path = RUN_ROOT, nf_check=None, max_h=None, log=None,
-               tag=None, explore=1, topk=1, explore_mask="random") -> tuple[str, list[dict]]:
+               tag=None, explore=1, topk=1, explore_mask="random", xeta=1.0, reta=1.0, xL=None,
+               xs=None) -> tuple[str, list[dict]]:
     if log is None:
         def log(msg):
             print(msg, flush=True)
@@ -180,7 +192,7 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
     nf = default_nf(k) if nf is None else int(nf)
     if nf_check is None:
         nf_check = 0 if nf == (1 << k) else nf + max(16, (1 << k) // 4)
-    tag = tag or config_tag(n, L, s, r, R, lr, nf, ham_set, method, explore, topk, explore_mask)
+    tag = tag or config_tag(n, L, s, r, R, lr, nf, ham_set, method, explore, topk, explore_mask, xeta, reta, xL, xs)
     outdir.mkdir(parents=True, exist_ok=True)
     path = ckpt(outdir, tag)
     paths = ham_paths(n, ham_set)
@@ -194,7 +206,8 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
                 continue
             jobs.append(dict(n=n, L=L, s=s, r=r, R=R, lr=lr, nf=nf, inst=i, trial=t, seed=trial_seed(seed0, i, t),
                              path=str(p), ham_set=ham_set, method=method, nf_check=nf_check,
-                             explore=explore, topk=topk, explore_mask=explore_mask))
+                             explore=explore, topk=topk, explore_mask=explore_mask, xeta=xeta, reta=reta,
+                             xL=xL, xs=xs))
     log(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {tag}: {len(jobs)} jobs ({len(done)} done)")
     t0 = time.time()
     if jobs:
@@ -282,12 +295,17 @@ def main(argv=None) -> int:
     p.add_argument("--tag", default=None)
     p.add_argument("--explore", type=int, default=1, help="explore growth runs (1 = old relayout protocol)")
     p.add_argument("--topk", type=int, default=1, help="top-K code states per round added to the candidate pool")
-    p.add_argument("--explore-mask", choices=("random", "zero"), default="random")
+    p.add_argument("--explore-mask", choices=("random", "zero", "perm"), default="random")
+    p.add_argument("--xeta", type=float, default=1.0, help="eta-controller multiplier in explore growth")
+    p.add_argument("--reta", type=float, default=1.0, help="eta-controller multiplier in exploit rounds")
+    p.add_argument("--xL", type=int, default=None, help="explore growth depth (default L)")
+    p.add_argument("--xs", type=int, default=None, help="explore steps per stage (default s)")
     a = p.parse_args(argv)
     tag, recs = run_config(n=a.n, L=a.L, s=a.s, r=a.r, R=a.R, lr=a.lr, nf=a.nf, trials=a.trials,
                            trial_offset=a.trial_offset, ham_set=a.ham_set, method=a.method, workers=a.workers,
                            seed0=a.seed, outdir=Path(a.outdir), nf_check=a.nf_check, max_h=a.max_h, tag=a.tag,
-                           explore=a.explore, topk=a.topk, explore_mask=a.explore_mask)
+                           explore=a.explore, topk=a.topk, explore_mask=a.explore_mask, xeta=a.xeta, reta=a.reta,
+                           xL=a.xL, xs=a.xs)
     sm = summarize(recs)
     sm.pop("per_h", None)
     print(json.dumps({"tag": tag, **sm}, indent=1))
