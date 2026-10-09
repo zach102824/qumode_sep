@@ -1,16 +1,25 @@
-## Best K=1 settings per n so far (~0.99 / ~0.99)
+## Recommended K=1 recipe and per-n best (100 trials, 20 H × 5 seeds)
 
-| n | setting | success | mean p(GS) | evals | distinct lookups | lookups/2^n |
-|---|---|---|---|---|---|---|
-| 8 | L4s50_r200_R4_E2K1perm_xeta16 | 1.000 | 0.989 | 2412 | 10 | 0.040 |
-| 10 | L4s50_r200_R4_E3K1perm_xeta16 | 1.000 | 0.988 | 2816 | 20 | 0.020 |
-| 12 | L4s50_r200_R4_E5K1perm_xeta16_reta2 | 1.000 | 0.989 | 3624 | 46 | 0.011 |
+Recipe: L4, s=50, `--explore-mask perm --xeta 16 --reta 2`, exploit R=4 × r=200, top-1 candidate per round,
+Hamming-1 fix-up. Only E grows with n.
 
-Trend so far: exploit cost fixed (R=4 × r=200 = 1604 evals); explore runs E ≈ 2, 3, 4–5 at n = 8, 10, 12 (≈ +1 run per +2 qubits,
-404 evals each), total evals 2412 → 2816 → 3220–3624, i.e. ≈ 1.08–1.1^n.
+| n | E | success | mean p(GS) | leakage | evals | distinct lookups | lookups/2^n |
+|---|---|---|---|---|---|---|---|
+| 8 | 2 | 1.000 | 0.991 | 0.0000 | 2412 | 10 | 0.040 |
+| 10 | 3 | 1.000 | 0.990 | 0.0000 | 2816 | 20 | 0.020 |
+| 12 | 5 | 1.000 | 0.989 | 0.0000 | 3624 | 46 | 0.011 |
+
+Evals = 404·E + 1604. E = 2, 3, 5 at n = 8, 10, 12 gives 2412 → 2816 → 3624, i.e. ×1.17 and ×1.29 per +2 qubits
+(≈ 1.08^n to 1.14^n). Distinct lookups ≈ 10 → 20 → 46 (≈ 1–4% of 2^n, falling with n).
+At n = 14 the discovery rate per run drops sharply (see finding 3), so the n=14 E is still being scanned (E = 10, 13).
 
 ## Status / next steps (for resuming)
 
-- Driver scripts in `logs/queue_*.sh` (detached, resumable: finished trials are skipped).
-- Next: exploit η scale (reta 2–8), cheaper exploit (r=150, R=3), n=14 (E5–7, xeta16), possibly n=16;
-  then fit E(n), η(n) and refresh the per-n best table with distinct lookup fractions.
+- Detached drivers (resumable; finished trials are skipped): `logs/queue_m.sh` (n=14 E10/E13 K1, E6K4, E8K2;
+  n12 E4K2, n10 E2K2), then `logs/queue_n.sh` (minimal E per n incl. n8 E1 / n10 E2 / n12 E6; cheaper explore
+  steps xs=35; exploit shape r250R3 / r150R5 / lr 0.07, 0.15; xeta 24/32; random vs perm at η×16; a second
+  seed block (trials 5–9, tag suffix `_seedB`) for the recommended n = 8/10/12 settings; n=16 probe with E8).
+  `logs/disc_l.sh`: η anneal schedules per growth stage (4,16,64,64 and 16,16,16,64) at n = 12/14.
+- Rebuild this file with `noiseless/results/build_explore_md.sh` (hand-written head/tail + generated table).
+- Open ideas: a cold final "concentration" stage so top-1 catches the GS at n ≥ 14 (GS often rank 2–8);
+  fit E(n) once n = 14 numbers are in.

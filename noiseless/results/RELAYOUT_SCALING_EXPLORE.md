@@ -48,13 +48,24 @@ fraction of 2^n; rows marked "(lookups w/ repeats)" predate the cache counter an
    (no change). The default η controller (ln 20 / (q25 − q05) of the sampled energy tail) is too hot for search at
    larger n; a colder explore (η×8–16) is the single biggest lever.
 
+3. **n = 14 discovery (beyond the n = 8–12 brief, to see the trend).** Same recipe, η×16, top-1 / top-8 hit after
+   1 / 2 / 4 / 6 / 8 / 10 runs: 0.26 / 0.43 / 0.59 / 0.80 / 0.89 / 0.92 and 0.52 / 0.75 / 0.90 / 0.99 / 1.00 / 1.00.
+   Run-0 p(GS) drops to 0.015 (0.08–0.10 at n = 12), and the GS is often 2nd–8th most probable, so top-1 needs
+   ~E = 12–14 at n = 14. Variants at n = 14: η×4 worse (0.63 at E10), η×64 worse (0.83), s = 100 worse per eval
+   (0.91 at E8 = 6432 explore evals), L = 6 worse (0.76 at E8). n=14 full run with E5: 0.730 / 0.723 at 3624 evals
+   (guess hit 0.71 after explore; given the right guess, p(GS) = 0.987).
+4. **Exploit η.** η×2 in the exploit rounds lifts mean p(GS) from 0.987 to 0.989–0.991 at no cost (n = 8, 10, 12);
+   η×4/×8 the same as ×2, η×0.5 worse (0.981). R=3 or r=150 lose ~0.005–0.01 in mean p(GS).
+
 ## All full runs (100 trials each, sorted by evals)
 
 ### n = 8 (2^n = 256)
 
 | setting | success | mean p(GS) | leakage | evals | lookups | lookups/2^n | trials |
 |---|---|---|---|---|---|---|---|
+| L4s50_r200_R3_E2K1perm_xeta16_reta2 | 1.000 | 0.986 | 0.0000 | 2011 | 10 | 0.040 | 100 |
 | L4s50_r200_R4_E2K1perm_xeta16 | 1.000 | 0.989 | 0.0000 | 2412 | 10 | 0.040 | 100 |
+| L4s50_r200_R4_E2K1perm_xeta16_reta2 | 1.000 | 0.991 | 0.0000 | 2412 | 10 | 0.040 | 100 |
 | L4s50_r200_R4_E2K1perm_xeta4 | 1.000 | 0.989 | 0.0000 | 2412 | 10 | 0.040 | 100 |
 | L4s50_r200_R4_E3K1perm (lookups w/ repeats) | 1.000 | 0.988 | 0.0000 | 2816 | 63 | 0.246 | 100 |
 | L4s50_r200_R4_E3K1perm_xeta16 | 1.000 | 0.988 | 0.0000 | 2816 | 12 | 0.045 | 100 |
@@ -68,7 +79,9 @@ fraction of 2^n; rows marked "(lookups w/ repeats)" predate the cache counter an
 
 | setting | success | mean p(GS) | leakage | evals | lookups | lookups/2^n | trials |
 |---|---|---|---|---|---|---|---|
+| L4s50_r200_R3_E3K1perm_xeta16_reta2 | 1.000 | 0.985 | 0.0000 | 2415 | 20 | 0.020 | 100 |
 | L4s50_r200_R4_E3K1perm_xeta16 | 1.000 | 0.988 | 0.0000 | 2816 | 20 | 0.020 | 100 |
+| L4s50_r200_R4_E3K1perm_xeta16_reta2 | 1.000 | 0.990 | 0.0000 | 2816 | 20 | 0.020 | 100 |
 | L4s50_r200_R4_E3K1perm_xeta8 | 1.000 | 0.987 | 0.0000 | 2816 | 20 | 0.020 | 100 |
 | L4s25_r200_R4_E6K4 (lookups w/ repeats) | 0.960 | 0.947 | 0.0024 | 2828 | 440 | 0.430 | 100 |
 | L4s50_r200_R4_E4K1perm_xeta16 | 1.000 | 0.986 | 0.0000 | 3220 | 22 | 0.022 | 100 |
@@ -99,11 +112,16 @@ fraction of 2^n; rows marked "(lookups w/ repeats)" predate the cache counter an
 | setting | success | mean p(GS) | leakage | evals | lookups | lookups/2^n | trials |
 |---|---|---|---|---|---|---|---|
 | L4s50_r200_R4_E4K1perm_xeta16 | 0.990 | 0.978 | 0.0000 | 3220 | 40 | 0.010 | 100 |
+| L4s50_r200_R4_E4K1perm_xeta16_reta2 | 0.990 | 0.979 | 0.0000 | 3220 | 40 | 0.010 | 100 |
 | L4s50_r200_R4_E4K1perm_xeta32 | 0.970 | 0.959 | 0.0048 | 3220 | 40 | 0.010 | 100 |
 | L4s50_r200_R4_E4K1perm_xeta8 | 0.980 | 0.968 | 0.0026 | 3220 | 42 | 0.010 | 100 |
+| L4s50_r150_R4_E5K1perm_xeta16_reta2 | 1.000 | 0.980 | 0.0000 | 3224 | 46 | 0.011 | 100 |
+| L4s50_r200_R4_E8K1perm_xeta16_reta2_xs25 | 0.980 | 0.969 | 0.0000 | 3236 | 87 | 0.021 | 100 |
 | L4s50_r200_R4_E5K1perm_xeta16 | 1.000 | 0.987 | 0.0000 | 3624 | 46 | 0.011 | 100 |
 | L4s50_r200_R4_E5K1perm_xeta16_reta0.5 | 1.000 | 0.981 | 0.0000 | 3624 | 46 | 0.011 | 100 |
 | L4s50_r200_R4_E5K1perm_xeta16_reta2 | 1.000 | 0.989 | 0.0000 | 3624 | 46 | 0.011 | 100 |
+| L4s50_r200_R4_E5K1perm_xeta16_reta4 | 1.000 | 0.989 | 0.0000 | 3624 | 46 | 0.011 | 100 |
+| L4s50_r200_R4_E5K1perm_xeta16_reta8 | 1.000 | 0.989 | 0.0000 | 3624 | 46 | 0.011 | 100 |
 | L4s50_r200_R4_E5K1perm_xeta32 | 0.990 | 0.978 | 0.0042 | 3624 | 46 | 0.011 | 100 |
 | L4s50_r200_R4_E5K1perm_xeta8 | 0.990 | 0.977 | 0.0016 | 3624 | 49 | 0.012 | 100 |
 | L4s50_r200_R4_E5K4 (lookups w/ repeats) | 0.680 | 0.673 | 0.0043 | 3624 | 468 | 0.114 | 100 |
@@ -111,19 +129,34 @@ fraction of 2^n; rows marked "(lookups w/ repeats)" predate the cache counter an
 | L4s50_r200_R5_E5K1perm_xeta16 | 1.000 | 0.989 | 0.0000 | 4025 | 46 | 0.011 | 100 |
 | L4s50_r200_R4_E12K1perm (lookups w/ repeats) | 0.920 | 0.910 | 0.0009 | 6452 | 208 | 0.051 | 100 |
 
-## Best K=1 settings per n so far (~0.99 / ~0.99)
+### n = 14 (2^n = 16384)
 
-| n | setting | success | mean p(GS) | evals | distinct lookups | lookups/2^n |
-|---|---|---|---|---|---|---|
-| 8 | L4s50_r200_R4_E2K1perm_xeta16 | 1.000 | 0.989 | 2412 | 10 | 0.040 |
-| 10 | L4s50_r200_R4_E3K1perm_xeta16 | 1.000 | 0.988 | 2816 | 20 | 0.020 |
-| 12 | L4s50_r200_R4_E5K1perm_xeta16_reta2 | 1.000 | 0.989 | 3624 | 46 | 0.011 |
+| setting | success | mean p(GS) | leakage | evals | lookups | lookups/2^n | trials |
+|---|---|---|---|---|---|---|---|
+| L4s50_r200_R4_E5K1perm_xeta16 | 0.730 | 0.723 | 0.0052 | 3624 | 84 | 0.005 | 100 |
 
-Trend so far: exploit cost fixed (R=4 × r=200 = 1604 evals); explore runs E ≈ 2, 3, 4–5 at n = 8, 10, 12 (≈ +1 run per +2 qubits,
-404 evals each), total evals 2412 → 2816 → 3220–3624, i.e. ≈ 1.08–1.1^n.
+## Recommended K=1 recipe and per-n best (100 trials, 20 H × 5 seeds)
+
+Recipe: L4, s=50, `--explore-mask perm --xeta 16 --reta 2`, exploit R=4 × r=200, top-1 candidate per round,
+Hamming-1 fix-up. Only E grows with n.
+
+| n | E | success | mean p(GS) | leakage | evals | distinct lookups | lookups/2^n |
+|---|---|---|---|---|---|---|---|
+| 8 | 2 | 1.000 | 0.991 | 0.0000 | 2412 | 10 | 0.040 |
+| 10 | 3 | 1.000 | 0.990 | 0.0000 | 2816 | 20 | 0.020 |
+| 12 | 5 | 1.000 | 0.989 | 0.0000 | 3624 | 46 | 0.011 |
+
+Evals = 404·E + 1604. E = 2, 3, 5 at n = 8, 10, 12 gives 2412 → 2816 → 3624, i.e. ×1.17 and ×1.29 per +2 qubits
+(≈ 1.08^n to 1.14^n). Distinct lookups ≈ 10 → 20 → 46 (≈ 1–4% of 2^n, falling with n).
+At n = 14 the discovery rate per run drops sharply (see finding 3), so the n=14 E is still being scanned (E = 10, 13).
 
 ## Status / next steps (for resuming)
 
-- Driver scripts in `logs/queue_*.sh` (detached, resumable: finished trials are skipped).
-- Next: exploit η scale (reta 2–8), cheaper exploit (r=150, R=3), n=14 (E5–7, xeta16), possibly n=16;
-  then fit E(n), η(n) and refresh the per-n best table with distinct lookup fractions.
+- Detached drivers (resumable; finished trials are skipped): `logs/queue_m.sh` (n=14 E10/E13 K1, E6K4, E8K2;
+  n12 E4K2, n10 E2K2), then `logs/queue_n.sh` (minimal E per n incl. n8 E1 / n10 E2 / n12 E6; cheaper explore
+  steps xs=35; exploit shape r250R3 / r150R5 / lr 0.07, 0.15; xeta 24/32; random vs perm at η×16; a second
+  seed block (trials 5–9, tag suffix `_seedB`) for the recommended n = 8/10/12 settings; n=16 probe with E8).
+  `logs/disc_l.sh`: η anneal schedules per growth stage (4,16,64,64 and 16,16,16,64) at n = 12/14.
+- Rebuild this file with `noiseless/results/build_explore_md.sh` (hand-written head/tail + generated table).
+- Open ideas: a cold final "concentration" stage so top-1 catches the GS at n ≥ 14 (GS often rank 2–8);
+  fit E(n) once n = 14 numbers are in.

@@ -7,7 +7,7 @@ from noiseless.run_relayout_kbit import RUN_ROOT, load_records
 REF = {8: ["n08_L4s50_r400_R8"], 10: ["n10_L4s50_r400_R8", "n10_L4s100_r800_R8"], 12: []}
 rows = {}
 for p in sorted(RUN_ROOT.glob("n*_E*K*.jsonl")) + [RUN_ROOT / f"{t}.jsonl" for v in REF.values() for t in v]:
-    r = load_records(p, 5)
+    r = load_records(p, None if 'seedB' in p.stem else 5)
     if len(r) < 100:
         continue
     n = r[0]["n"]

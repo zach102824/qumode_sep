@@ -85,7 +85,7 @@ def trial_seed(seed0: int, inst: int, trial: int) -> int:
 def config_tag(n, L, s, r, R, lr=0.1, nf=None, ham_set="scaling", method="fast", explore=1, topk=1,
                explore_mask="random", xeta=1.0, reta=1.0, xL=None, xs=None) -> str:
     t = f"n{n:02d}_L{L}s{s}_r{r}_R{R}"
-    if int(explore) > 1 or int(topk) > 1:
+    if int(explore) > 1 or int(topk) > 1 or float(xeta or 1) != 1.0 or float(reta or 1) != 1.0 or xL or xs:
         t += f"_E{int(explore)}K{int(topk)}" + ("" if explore_mask == "random" else f"{explore_mask}")
         if xeta and float(xeta) != 1.0:
             t += f"_xeta{float(xeta):g}"
@@ -114,7 +114,9 @@ def worker(job: dict) -> dict:
     rng = np.random.default_rng(int(job["seed"]))
     M = int(job.get("explore") or 1)
     K = int(job.get("topk") or 1)
-    if M > 1 or K > 1:
+    ee = M > 1 or K > 1 or float(job.get("xeta") or 1.0) != 1.0 or float(job.get("reta") or 1.0) != 1.0 \
+        or job.get("xL") or job.get("xs")
+    if ee:
         rec = explore_exploit_trial_kbit(
             E, gs, k=k, nf=int(job["nf"]), final_layers=int(job["L"]), rng=rng, explore_rounds=M,
             explore_mask=job.get("explore_mask") or "random", topk=K,

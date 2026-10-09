@@ -73,7 +73,7 @@ def job(a):
             sim = XorKbitSim(lay, Es, L, gs_s, xa=xa, xb=xb)
         sched = lr_schedule_for(L)[L - (L - start + 1):] if start > 1 else lr_schedule_for(L)
         sched = [lrs * v for v in sched]
-        res = grow_trial(sim, final_layers=L, rng=rng, start_layers=start, c=cc, eta_scale_schedule=[etas] * len(sched), A=10.0, optimizer="spsa_adam",
+        res = grow_trial(sim, final_layers=L, rng=rng, start_layers=start, c=cc, eta_scale_schedule=(list(etas) if isinstance(etas, (list, tuple)) else [etas] * len(sched)), A=10.0, optimizer="spsa_adam",
                          steps_per_stage=s, lr_schedule=sched)
         probs = sim.probs_from_x(res.x)
         pl = probs[f0]
@@ -109,15 +109,17 @@ def main():
     p.add_argument("--lr-scale", type=float, default=1.0)
     p.add_argument("--eta-scale", type=float, default=1.0)
     p.add_argument("--c", type=float, default=0.15)
+    p.add_argument("--eta-sched", default=None, help="comma list of per-stage eta multipliers (overrides --eta-scale)")
     a = p.parse_args()
-    jobs = [(a.n, a.L, a.s, a.E, a.K, a.mask, i, t, a.nf_extra, a.encoding, a.start_layers, a.lr_scale, a.eta_scale, a.c) for i in range(len(ham_paths(a.n, "scaling"))) for t in range(a.trials)]
+    jobs = [(a.n, a.L, a.s, a.E, a.K, a.mask, i, t, a.nf_extra, a.encoding, a.start_layers, a.lr_scale, (tuple(float(v) for v in a.eta_sched.split(',')) if a.eta_sched else a.eta_scale), a.c) for i in range(len(ham_paths(a.n, "scaling"))) for t in range(a.trials)]
     t0 = time.time()
     with ProcessPoolExecutor(a.workers) as ex:
         res = list(ex.map(job, jobs))
     tag = f"n{a.n:02d}_L{a.L}s{a.s}_E{a.E}K{a.K}_{a.mask}" + (f"_nfx{a.nf_extra}" if a.nf_extra is not None else "") \
         + ("" if a.encoding == "binary" else f"_{a.encoding}") + ("" if a.start_layers == 1 else f"_st{a.start_layers}") \
         + ("" if a.lr_scale == 1.0 else f"_lrx{a.lr_scale:g}") \
-        + ("" if a.eta_scale == 1.0 else f"_etax{a.eta_scale:g}") + ("" if a.c == 0.15 else f"_c{a.c:g}")
+        + ("" if a.eta_scale == 1.0 else f"_etax{a.eta_scale:g}") + ("" if a.c == 0.15 else f"_c{a.c:g}") \
+        + ("" if not a.eta_sched else "_etas" + a.eta_sched.replace(",", "-"))
     ev = (a.L - a.start_layers + 1) * (2 * a.s + 1)
     out = {"tag": tag, "evals_per_run": ev, "trials": len(res), "wall_s": time.time() - t0,
            "hit": {K: np.mean([r["hit"][K] for r in res], axis=0).round(3).tolist() for K in res[0]["hit"]},
