@@ -55,11 +55,17 @@ class EncodingSpec:
     perm: tuple[int, ...] = IDENTITY_PERM
     cavity_a: tuple[int, ...] = BINARY_CAVITY_MAP
     cavity_b: tuple[int, ...] = BINARY_CAVITY_MAP
+    # Transmon relabel (2026-10-09): logical bit on slot d (e) = transmon level d ^ transmon_xor[0]
+    # (e ^ transmon_xor[1]). Default (0, 0) = legacy (bit = transmon level, ground |g>=0 = bit 0).
+    transmon_xor: tuple[int, int] = (0, 0)
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "perm", tuple(int(v) for v in self.perm))
         object.__setattr__(self, "cavity_a", tuple(int(v) for v in self.cavity_a))
         object.__setattr__(self, "cavity_b", tuple(int(v) for v in self.cavity_b))
+        object.__setattr__(self, "transmon_xor", tuple(int(v) & 1 for v in self.transmon_xor))
+        if len(self.transmon_xor) != 2:
+            raise ValueError("transmon_xor must have 2 entries (d, e)")
         if sorted(self.perm) != list(range(N_QUBITS)):
             raise ValueError(f"perm must be a permutation of 0..7, got {self.perm}")
         for name, cm in (("cavity_a", self.cavity_a), ("cavity_b", self.cavity_b)):
@@ -82,12 +88,15 @@ class EncodingSpec:
 
     def swapped(self) -> "EncodingSpec":
         """Image under the (d,A)↔(e,B) ansatz symmetry."""
-        return EncodingSpec(tuple(SWAP_DE_AB[j] for j in self.perm), self.cavity_b, self.cavity_a)
+        return EncodingSpec(tuple(SWAP_DE_AB[j] for j in self.perm), self.cavity_b, self.cavity_a,
+                            (self.transmon_xor[1], self.transmon_xor[0]))
 
     def label(self) -> str:
         out = "perm=" + "".join(str(v) for v in self.perm)
         if self.cavity_a != BINARY_CAVITY_MAP or self.cavity_b != BINARY_CAVITY_MAP:
             out += ",A=" + "".join(map(str, self.cavity_a)) + ",B=" + "".join(map(str, self.cavity_b))
+        if self.transmon_xor != (0, 0):
+            out += ",T=" + "".join(map(str, self.transmon_xor))
         return out
 
     def __str__(self) -> str:  # records store str(encoding)
@@ -102,7 +111,8 @@ Encoding = Union[str, EncodingSpec]
 
 def _spec_phys_bits(d: int, e: int, n_a: int, n_b: int, spec: EncodingSpec) -> np.ndarray:
     p = np.zeros(N_QUBITS, dtype=int)
-    p[0], p[1] = int(d) & 1, int(e) & 1
+    p[0] = (int(d) & 1) ^ spec.transmon_xor[0]
+    p[1] = (int(e) & 1) ^ spec.transmon_xor[1]
     ca = spec.cavity_a.index(int(n_a))
     cb = spec.cavity_b.index(int(n_b))
     for k in range(N_A_BITS):
@@ -173,7 +183,8 @@ def polish_bitstring(bitstring: str, logical_energies: np.ndarray, radius: int =
     return format(best, f"0{N_QUBITS}b")
 
 
-def corner_spec_for_bitstring(bitstring: str, base: EncodingSpec = EncodingSpec()) -> EncodingSpec:
+def corner_spec_for_bitstring(bitstring: str, base: EncodingSpec = EncodingSpec(),
+                              transmons: bool = False) -> EncodingSpec:
     """EncodingSpec with ``base.perm`` whose cavity maps put ``bitstring`` at Fock (0, 0).
 
     XOR-relabels each cavity's codeword→Fock map by the bitstring's codeword on that
@@ -190,10 +201,13 @@ def corner_spec_for_bitstring(bitstring: str, base: EncodingSpec = EncodingSpec(
     p[list(base.perm)] = x
     ca = int("".join(map(str, p[2 : 2 + N_A_BITS])), 2)
     cb = int("".join(map(str, p[2 + N_A_BITS :])), 2)
+    # transmons=True also XORs the transmon bits so the whole guess sits at the circuit's
+    # initial state |g, g, 0, 0> (flat index 0 = vacuum_np()); default keeps transmon bit = level.
     return EncodingSpec(
         base.perm,
         tuple(c ^ ca for c in range(NFOCK)),
         tuple(c ^ cb for c in range(NFOCK)),
+        (int(p[0]), int(p[1])) if transmons else (0, 0),
     )
 
 
@@ -340,7 +354,8 @@ def denm_from_bits(
         p[list(enc.perm)] = x
         ca = int("".join(map(str, p[2 : 2 + N_A_BITS])), 2)
         cb = int("".join(map(str, p[2 + N_A_BITS :])), 2)
-        return int(p[0]), int(p[1]), enc.cavity_a[ca], enc.cavity_b[cb]
+        return (int(p[0]) ^ enc.transmon_xor[0], int(p[1]) ^ enc.transmon_xor[1],
+                enc.cavity_a[ca], enc.cavity_b[cb])
     d, e = int(x[0]), int(x[1])
     n_a = 0
     for b in x[2 : 2 + N_A_BITS]:

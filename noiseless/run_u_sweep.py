@@ -641,7 +641,8 @@ def main(argv: list[str] | None = None) -> int:
                    "cost at a common η over rounds (no GS knowledge)")
     p.add_argument("--relayout-target", choices=RELAYOUT_TARGETS, default="xor_vacuum",
                    help="xor_vacuum (default): XOR cavity maps so the candidate sits at Fock "
-                   "(0,0); rule: permutation-only tier-rule layout for the candidate")
+                   "(0,0); xor_all: also XOR the transmon bits so the full candidate is the initial state "
+                   "|g,g,0,0>; rule: permutation-only tier-rule layout; none: no relabel (control)")
     p.add_argument("--relayout-layers", type=int, default=None,
                    help="depth of the extra relayout rounds (default: --layers). Lets round-0 "
                    "growth stop early (e.g. --layers 2) while extra rounds run at L=4; needs "

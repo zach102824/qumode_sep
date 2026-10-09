@@ -327,3 +327,43 @@ def test_lowbudget_cli_smoke(tmp_path):
     rec = json.loads(out.read_text())["records"][0]
     assert [r["n_layers"] for r in rec["rounds"]] == [2, 4, 4]
     assert (rec["seed"] - 20260917) % 1000 == 40  # seed uses L=4, not round-0 L=2
+
+
+def test_corner_spec_transmons_puts_full_guess_at_initial_state():
+    from noiseless.circuit_local_ecd import vacuum_np
+    from noiseless.encoding import energy_tensor_for_spec, flat_index
+    from noiseless.spsa_gibbs import ground_flat_from_bitstring
+    bits = "10101110"
+    spec = corner_spec_for_bitstring(bits, transmons=True)
+    assert spec.transmon_xor == (1, 0)
+    assert denm_from_bits(bits_from_bitstring(bits), spec) == (0, 0, 0, 0)
+    assert ground_flat_from_bitstring(bits, spec) == int(np.argmax(np.abs(vacuum_np())))
+    assert corner_spec_for_bitstring(bits, spec, transmons=True) == spec  # idempotent
+    # default (cavity-only) unchanged: transmon bits stay = levels
+    d0 = corner_spec_for_bitstring(bits)
+    assert d0.transmon_xor == (0, 0)
+    assert denm_from_bits(bits_from_bitstring(bits), d0) == (1, 0, 0, 0)
+    # energy tensor is a relabelling: physical vacuum carries the guess's energy
+    le = np.arange(256, dtype=float)
+    et = energy_tensor_for_spec(le, spec).reshape(-1)
+    assert et[flat_index(0, 0, 0, 0)] == int(bits, 2)
+    assert sorted(et) == sorted(le)
+    # swapped() swaps transmon xor with (d,A)<->(e,B)
+    assert spec.swapped().transmon_xor == (0, 1)
+    assert "T=10" in str(spec)
+
+
+@needs_hams
+def test_relayout_xor_all_target():
+    inst = load_four_sat_npz(_HAMS[0])
+    le = logical_energies_from_terms(inst["terms"], inst["identity"])
+    res = relayout_trial(
+        _U, le, inst["ground_bitstring"], final_layers=2, rng=np.random.default_rng(5),
+        relayout_rounds=2, grow=True, optimizer="spsa_adam", steps_per_stage=3,
+        lr_schedule=[0.5, 0.2], relayout_steps=4, relayout_lr=0.1, relayout_init="small",
+        relayout_return="best", relayout_layers=4, relayout_guess="best",
+        relayout_fixed_stop=False, relayout_target="xor_all",
+    )
+    for k in range(1, 3):
+        assert res.rounds[k]["encoding"] == str(
+            corner_spec_for_bitstring(res.rounds[k - 1]["next_guess"], transmons=True))

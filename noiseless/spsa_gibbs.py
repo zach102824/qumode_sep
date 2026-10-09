@@ -959,7 +959,7 @@ DEFAULT_RELAYOUT_ROUNDS = 2
 DEFAULT_POLISH_RADIUS = 1
 RELAYOUT_INITS = ("random", "small", "warm", "grow")
 RELAYOUT_RETURNS = ("last", "best")
-RELAYOUT_TARGETS = ("xor_vacuum", "rule", "none")
+RELAYOUT_TARGETS = ("xor_vacuum", "xor_all", "rule", "none")
 RELAYOUT_GUESSES = ("last", "best")
 SMALL_INIT_BETA_MAX = 0.1  # relayout_init="small": |β| ~ U(0, 0.1)
 
@@ -983,6 +983,8 @@ def relayout_next_spec(polished: str, spec: EncodingSpec, target: str) -> Encodi
     t = str(target).lower()
     if t == "xor_vacuum":
         return corner_spec_for_bitstring(polished, spec)
+    if t == "xor_all":  # cavities AND transmons: full guess -> |g, g, 0, 0>
+        return corner_spec_for_bitstring(polished, spec, transmons=True)
     if t == "rule":
         return rule_layout_for_bitstring(polished, "best")
     if t == "none":  # no-relabel control: keep the current (original) layout
