@@ -204,6 +204,10 @@ round, Hamming-1 fix-up. Only E grows with n. evals = 404·E + 1604.
 
 Second seed block (trials 5–9) for the lr 0.1 recipe reproduces n=8/10/12: 1.000/0.991, 1.000/0.988, 1.000/0.988.
 
+Interim (83/100 trials, 01:55 CST): the first cold stage (n=14 E8, cool 50 steps, η×64, lr 0.05) does **not**
+help top-1 discovery: guess hit 0.23 / 0.35 / 0.48 / 0.52 / 0.60 / 0.65 / 0.71 / 0.75 after runs 1–8 (no-cool
+discovery scan: 0.26 / 0.43 / 0.52 / 0.59 / 0.71 / 0.80 / 0.83 / 0.89); success 0.77 so far.
+
 ## Status / next steps (for resuming)
 
 - Running detached (resumable): `logs/queue_o.sh` — cold concentration stage after each explore growth
