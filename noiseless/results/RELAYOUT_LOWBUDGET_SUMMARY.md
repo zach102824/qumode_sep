@@ -183,3 +183,59 @@ the share of those that end in final success.
 - The 100-step column was not dropped. 200 and 400 steps were added because runs were fast
   (~1 s per trial) and 100 steps was far from 0.99. L4s50 r50/r100 was added as a strong-start
   reference.
+
+
+## Follow-up: relabel-round learning-rate scan (L4s10 r200), 2026-10-09 PM
+
+Same setting as above:
+- Round 0 is L1→4 growth at 10 steps/layer.
+- Then 4 relabel rounds of 200 steps each, from a small-β start, keeping the best round by cost.
+- Same 20 H × 25 trials and paired seeds. Only the Adam lr of the relabel rounds changes.
+- lr 0.05 is the main-sweep run (identical seeds and settings).
+- Run with `RL_LR=<lr> TAG_PREFIX=lblr TAG_SUFFIX=_lr<lr> R0S=L4s10 RL_STEPS=200 noiseless/run_relayout_lowbudget.sh`.
+- Analysis: `noiseless/analyze_relayout_lrscan.py`, written to `relayout_lrscan_summary.json`.
+
+Table cells are success / mean p(GS) / cumulative evals, best-so-far, absolute values.
+
+| relabel lr | round 0 | round 1 | round 2 | round 3 | round 4 |
+|---|---|---|---|---|---|
+| 0.02 | 0.416 / 0.093 / 84 | 0.600 / 0.580 / 485 | 0.618 / 0.622 / 886 | 0.628 / 0.637 / 1287 | 0.632 / 0.641 / 1688 |
+| 0.05 | 0.416 / 0.093 / 84 | 0.732 / 0.626 / 485 | 0.808 / 0.759 / 886 | 0.834 / 0.821 / 1287 | 0.858 / 0.846 / 1688 |
+| 0.1 | 0.416 / 0.093 / 84 | 0.912 / 0.647 / 485 | 0.976 / 0.900 / 886 | 0.994 / 0.967 / 1287 | 0.998 / 0.981 / 1688 |
+| 0.2 | 0.416 / 0.093 / 84 | 0.874 / 0.337 / 485 | 0.968 / 0.514 / 886 | 0.988 / 0.621 / 1287 | 0.996 / 0.689 / 1688 |
+
+| relabel lr | wrong guesses fixed by round 4 | right guesses -> final success | guess hit r0..r4 |
+|---|---|---|---|
+| 0.02 | 0.164 (36/220) | 1.000 | 0.560 / 0.606 / 0.624 / 0.628 / 0.632 |
+| 0.05 | 0.677 (149/220) | 1.000 | 0.560 / 0.738 / 0.810 / 0.838 / 0.858 |
+| 0.1 | 0.995 (219/220) | 1.000 | 0.560 / 0.914 / 0.984 / 0.994 / 0.998 |
+| 0.2 | 0.991 (218/220) | 1.000 | 0.560 / 0.904 / 0.980 / 0.988 / 0.996 |
+
+| relabel lr | mean abs beta (rounds 1-4) | median max abs beta (r1-4) | p95 max abs beta (r1-4) | largest max abs beta | share of round trials with max abs beta > 3 |
+|---|---|---|---|---|---|
+| 0.02 | 0.26 / 0.24 / 0.24 / 0.24 | 0.31 / 0.30 / 0.29 / 0.30 | 1.50 / 1.44 / 1.36 / 1.41 | 2.64 | 0.000 |
+| 0.05 | 0.49 / 0.41 / 0.35 / 0.34 | 0.55 / 0.47 / 0.45 / 0.45 | 2.68 / 2.48 / 2.27 / 2.04 | 4.13 | 0.015 |
+| 0.1 | 0.81 / 0.48 / 0.42 / 0.40 | 1.13 / 0.72 / 0.73 / 0.73 | 3.90 / 2.98 / 1.53 / 1.42 | 5.49 | 0.063 |
+| 0.2 | 1.85 / 1.48 / 1.45 / 1.44 | 3.56 / 2.63 / 2.58 / 2.48 | 7.02 / 6.53 / 6.11 / 6.22 | 10.87 | 0.458 |
+
+
+Round 0 is shared by all four lrs. Its own β is already large, before any relabel round: median max |β| 4.51, 83% of trials have max |β| > 3.
+
+**Results:**
+- **lr 0.1 is the best**, reaching 0.998 / 0.981 at 1688 evals:
+  - Round 0 is weak (0.416).
+  - Each round improves both success and mean p(GS).
+  - Only round 4 is near 0.99 on both. Round 3 is 0.994 / 0.967.
+  - Strictly, mean p(GS) 0.981 is just under the 0.985 line I used in the criterion check, so this is "≈0.99", not ≥0.985.
+- **Wrong guesses fixed by round 4:**
+  - lr 0.1 fixes 219 of the 220 initially wrong guesses (0.995).
+  - lr 0.05 fixes 0.677 and lr 0.02 fixes 0.164.
+- **Against plain tuned growth at the same evals** (S=210, 1684 evals, 0.970 / 0.534), lr 0.1 wins on success in 7 H, ties in 13 and loses none. On mean p(GS) it wins all 20 H. Its worst H is 0.96 success and 0.949 mean p(GS).
+- **lr 0.2** fixes guesses just as well (0.991; success 0.996) but blows up |β|:
+  - Median max |β| 2.5–3.6, p95 6–7, largest 10.9.
+  - 46% of relabel-round trials have max |β| > 3.
+  - Mean p(GS) drops to 0.689.
+- **lr 0.02 is too slow:** 0.632 / 0.641.
+- **lr 0.1** has moderate β: p95 max |β| 3.9 in round 1, down to about 1.4–1.5 by rounds 3–4, and 6% of round trials have max |β| > 3.
+
+**Bottom line:** with relabel lr 0.1, L4s10 r200 is the setting the low-budget study was looking for. It starts at 0.42 success and climbs round by round: 0.91 / 0.65, then 0.98 / 0.90, then 0.99 / 0.97, then 0.998 / 0.981. The earlier "no setting meets the criterion" verdict was specific to lr 0.05.

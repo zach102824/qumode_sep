@@ -18,10 +18,10 @@ for r0 in $R0S; do
   L=${r0:1:1}; S=${r0#*s}
   if [ "$L" = 2 ]; then LR=0.5,0.2; else LR=0.5,0.2,0.05,0.02; fi
   for rs in $RL_STEPS; do
-    tag="lb_${TARGET}_${r0}_r${rs}"
+    tag="${TAG_PREFIX:-lb}_${TARGET}_${r0}_r${rs}${TAG_SUFFIX:-}"
     $PY -m noiseless.run_u_sweep --u-names jp --layers "$L" --trials 25 --workers "$WORKERS" \
       --optimizer spsa_adam --grow --grow-steps-per-stage "$S" --grow-lr-schedule "$LR" \
-      --relayout --relayout-rounds 4 --relayout-steps "$rs" --relayout-lr 0.05 \
+      --relayout --relayout-rounds 4 --relayout-steps "$rs" --relayout-lr "${RL_LR:-0.05}" \
       --relayout-init small --relayout-return best --relayout-layers 4 --relayout-guess best \
       --no-relayout-fixed-stop --relayout-target "$TARGET" --seed-layers 4 \
       --outdir "$OUT" --tag "$tag" | grep -v '^  \['
