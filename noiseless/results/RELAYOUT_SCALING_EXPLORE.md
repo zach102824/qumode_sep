@@ -82,10 +82,13 @@ limit, not the exploit. The cold concentration stage (queued) is the first attem
 | setting | success | mean p(GS) | leakage | evals | lookups | lookups/2^n | trials |
 |---|---|---|---|---|---|---|---|
 | L4s50_r200_R4_E1K1perm_xeta16_reta2 | 1.000 | 0.989 | 0.0000 | 2008 | 10 | 0.038 | 100 |
+| L4s50_r200_R4_E1K1perm_xeta16_reta2_lr0.05 | 0.980 | 0.978 | 0.0038 | 2008 | 10 | 0.039 | 100 |
 | L4s50_r200_R4_E1K1perm_xeta16_reta2_lr0.07 | 0.980 | 0.967 | 0.0055 | 2008 | 10 | 0.041 | 100 |
 | L4s50_r200_R3_E2K1perm_xeta16_reta2 | 1.000 | 0.986 | 0.0000 | 2011 | 10 | 0.040 | 100 |
 | L4s50_r200_R4_E2K1perm_xeta16 | 1.000 | 0.989 | 0.0000 | 2412 | 10 | 0.040 | 100 |
 | L4s50_r200_R4_E2K1perm_xeta16_reta2 | 1.000 | 0.991 | 0.0000 | 2412 | 10 | 0.040 | 100 |
+| L4s50_r200_R4_E2K1perm_xeta16_reta2_lr0.05 | 1.000 | 0.997 | 0.0000 | 2412 | 10 | 0.040 | 100 |
+| L4s50_r200_R4_E2K1perm_xeta16_reta2_lr0.05_seedB | 1.000 | 0.997 | 0.0000 | 2412 | 10 | 0.039 | 100 |
 | L4s50_r200_R4_E2K1perm_xeta16_reta2_lr0.07 | 1.000 | 0.995 | 0.0000 | 2412 | 10 | 0.040 | 100 |
 | L4s50_r200_R4_E2K1perm_xeta16_reta2_seedB | 1.000 | 0.991 | 0.0000 | 2412 | 10 | 0.039 | 100 |
 | L4s50_r200_R4_E2K1perm_xeta4 | 1.000 | 0.989 | 0.0000 | 2412 | 10 | 0.040 | 100 |
@@ -102,13 +105,17 @@ limit, not the exploit. The cold concentration stage (queued) is the first attem
 | setting | success | mean p(GS) | leakage | evals | lookups | lookups/2^n | trials |
 |---|---|---|---|---|---|---|---|
 | L4s50_r200_R4_E2K1perm_xeta16_reta2 | 0.980 | 0.970 | 0.0041 | 2412 | 18 | 0.017 | 100 |
+| L4s50_r200_R4_E2K1perm_xeta16_reta2_lr0.05 | 0.950 | 0.950 | 0.0024 | 2412 | 18 | 0.018 | 100 |
 | L4s50_r200_R4_E2K2perm_xeta16_reta2 | 1.000 | 0.989 | 0.0000 | 2412 | 57 | 0.056 | 100 |
 | L4s50_r200_R3_E3K1perm_xeta16_reta2 | 1.000 | 0.985 | 0.0000 | 2415 | 20 | 0.020 | 100 |
+| L4s50_r200_R3_E3K1perm_xeta16_reta2_lr0.05 | 1.000 | 0.997 | 0.0000 | 2415 | 20 | 0.020 | 100 |
 | L4s50_r150_R4_E3K1perm_xeta16_reta4 | 1.000 | 0.982 | 0.0000 | 2416 | 20 | 0.020 | 100 |
 | L4s50_r200_R4_E3K1perm_xeta16_reta2_xs35 | 1.000 | 0.988 | 0.0000 | 2456 | 23 | 0.023 | 100 |
 | L4s50_r200_R4_E3K1perm_xeta16 | 1.000 | 0.988 | 0.0000 | 2816 | 20 | 0.020 | 100 |
 | L4s50_r200_R4_E3K1perm_xeta16_reta2 | 1.000 | 0.990 | 0.0000 | 2816 | 20 | 0.020 | 100 |
+| L4s50_r200_R4_E3K1perm_xeta16_reta2_lr0.03 | 1.000 | 0.998 | 0.0000 | 2816 | 20 | 0.020 | 100 |
 | L4s50_r200_R4_E3K1perm_xeta16_reta2_lr0.05 | 1.000 | 0.997 | 0.0000 | 2816 | 20 | 0.020 | 100 |
+| L4s50_r200_R4_E3K1perm_xeta16_reta2_lr0.05_seedB | 0.990 | 0.988 | 0.0001 | 2816 | 22 | 0.021 | 100 |
 | L4s50_r200_R4_E3K1perm_xeta16_reta2_lr0.07 | 1.000 | 0.995 | 0.0000 | 2816 | 20 | 0.020 | 100 |
 | L4s50_r200_R4_E3K1perm_xeta16_reta2_seedB | 1.000 | 0.988 | 0.0000 | 2816 | 21 | 0.021 | 100 |
 | L4s50_r200_R4_E3K1perm_xeta32_reta2 | 1.000 | 0.989 | 0.0000 | 2816 | 21 | 0.020 | 100 |
@@ -142,22 +149,29 @@ limit, not the exploit. The cold concentration stage (queued) is the first attem
 | setting | success | mean p(GS) | leakage | evals | lookups | lookups/2^n | trials |
 |---|---|---|---|---|---|---|---|
 | L4s50_r200_R4_E5K1perm_xeta16_reta2_xs35 | 0.970 | 0.960 | 0.0061 | 3024 | 54 | 0.013 | 100 |
+| L4s50_r200_R4_E3K1perm_xeta16_reta2_cool50e64lr0.05_lr0.07 | 0.900 | 0.897 | 0.0172 | 3119 | 40 | 0.010 | 100 |
 | L4s50_r200_R4_E4K1perm_xeta16 | 0.990 | 0.978 | 0.0000 | 3220 | 40 | 0.010 | 100 |
 | L4s50_r200_R4_E4K1perm_xeta16_reta2 | 0.990 | 0.979 | 0.0000 | 3220 | 40 | 0.010 | 100 |
+| L4s50_r200_R4_E4K1perm_xeta16_reta2_lr0.05 | 0.990 | 0.988 | 0.0000 | 3220 | 40 | 0.010 | 100 |
 | L4s50_r200_R4_E4K1perm_xeta16_reta2_lr0.07 | 0.990 | 0.986 | 0.0000 | 3220 | 40 | 0.010 | 100 |
 | L4s50_r200_R4_E4K1perm_xeta32 | 0.970 | 0.959 | 0.0048 | 3220 | 40 | 0.010 | 100 |
 | L4s50_r200_R4_E4K1perm_xeta8 | 0.980 | 0.968 | 0.0026 | 3220 | 42 | 0.010 | 100 |
 | L4s50_r200_R4_E4K2perm_xeta16_reta2 | 0.990 | 0.979 | 0.0000 | 3220 | 105 | 0.026 | 100 |
+| L4s50_r200_R3_E5K1perm_xeta16_reta2_lr0.05 | 1.000 | 0.997 | 0.0000 | 3223 | 46 | 0.011 | 100 |
 | L4s50_r150_R4_E5K1perm_xeta16_reta2 | 1.000 | 0.980 | 0.0000 | 3224 | 46 | 0.011 | 100 |
+| L4s50_r150_R4_E5K1perm_xeta16_reta2_lr0.05 | 1.000 | 0.995 | 0.0000 | 3224 | 46 | 0.011 | 100 |
 | L4s50_r200_R4_E8K1perm_xeta16_reta2_xs25 | 0.980 | 0.969 | 0.0000 | 3236 | 87 | 0.021 | 100 |
 | L4s50_r200_R4_E6K1perm_xeta16_reta2_xs35 | 0.970 | 0.960 | 0.0061 | 3308 | 62 | 0.015 | 100 |
 | L4s50_r250_R3_E5K1perm_xeta16_reta2 | 1.000 | 0.986 | 0.0000 | 3523 | 46 | 0.011 | 100 |
 | L4s50_r150_R5_E5K1perm_xeta16_reta2 | 1.000 | 0.982 | 0.0000 | 3525 | 46 | 0.011 | 100 |
+| L4s50_r200_R4_E4K1perm_xeta16_reta2_cool50e64lr0.05_lr0.07 | 0.960 | 0.956 | 0.0009 | 3624 | 48 | 0.012 | 100 |
 | L4s50_r200_R4_E5K1_xeta16_reta2 | 1.000 | 0.989 | 0.0000 | 3624 | 45 | 0.011 | 100 |
 | L4s50_r200_R4_E5K1perm_xeta16 | 1.000 | 0.987 | 0.0000 | 3624 | 46 | 0.011 | 100 |
 | L4s50_r200_R4_E5K1perm_xeta16_reta0.5 | 1.000 | 0.981 | 0.0000 | 3624 | 46 | 0.011 | 100 |
 | L4s50_r200_R4_E5K1perm_xeta16_reta2 | 1.000 | 0.989 | 0.0000 | 3624 | 46 | 0.011 | 100 |
+| L4s50_r200_R4_E5K1perm_xeta16_reta2_lr0.03 | 1.000 | 0.998 | 0.0000 | 3624 | 46 | 0.011 | 100 |
 | L4s50_r200_R4_E5K1perm_xeta16_reta2_lr0.05 | 1.000 | 0.997 | 0.0000 | 3624 | 46 | 0.011 | 100 |
+| L4s50_r200_R4_E5K1perm_xeta16_reta2_lr0.05_seedB | 0.990 | 0.987 | 0.0000 | 3624 | 50 | 0.012 | 100 |
 | L4s50_r200_R4_E5K1perm_xeta16_reta2_lr0.07 | 1.000 | 0.995 | 0.0000 | 3624 | 46 | 0.011 | 100 |
 | L4s50_r200_R4_E5K1perm_xeta16_reta2_lr0.15 | 1.000 | 0.946 | 0.0000 | 3624 | 47 | 0.012 | 100 |
 | L4s50_r200_R4_E5K1perm_xeta16_reta2_seedB | 1.000 | 0.988 | 0.0000 | 3624 | 50 | 0.012 | 100 |
@@ -178,8 +192,14 @@ limit, not the exploit. The cold concentration stage (queued) is the first attem
 |---|---|---|---|---|---|---|---|
 | L4s50_r200_R4_E5K1perm_xeta16 | 0.730 | 0.723 | 0.0052 | 3624 | 84 | 0.005 | 100 |
 | L4s50_r200_R4_E6K4perm_xeta16_reta2 | 0.940 | 0.932 | 0.0000 | 4028 | 378 | 0.023 | 100 |
+| L4s50_r200_R4_E8K1perm_xeta16_reta2_lr0.07 | 0.900 | 0.897 | 0.0037 | 4836 | 119 | 0.007 | 100 |
 | L4s50_r200_R4_E8K2perm_xeta16_reta2 | 0.950 | 0.940 | 0.0021 | 4836 | 251 | 0.015 | 100 |
 | L4s50_r200_R4_E10K1perm_xeta16_reta2 | 0.920 | 0.912 | 0.0036 | 5644 | 144 | 0.009 | 100 |
+| L4s50_r200_R4_E8K1perm_xeta16_reta2_cool50e16lr0.1_lr0.07 | 0.480 | 0.481 | 0.0264 | 5644 | 141 | 0.009 | 100 |
+| L4s50_r200_R4_E8K1perm_xeta16_reta2_cool50e256lr0.05_lr0.07 | 0.780 | 0.780 | 0.0039 | 5644 | 126 | 0.008 | 100 |
+| L4s50_r200_R4_E8K1perm_xeta16_reta2_cool50e64lr0.05_lr0.07 | 0.780 | 0.780 | 0.0039 | 5644 | 126 | 0.008 | 100 |
+| L4s50_r200_R4_E8K1perm_xeta16_reta2_cool50e64lr0.1_lr0.07 | 0.480 | 0.481 | 0.0264 | 5644 | 140 | 0.009 | 100 |
+| L4s50_r200_R4_E8K1perm_xeta16_reta2_cool100e64lr0.05_lr0.07 | 0.780 | 0.779 | 0.0067 | 6444 | 122 | 0.007 | 100 |
 | L4s50_r200_R4_E13K1perm_xeta16_reta2 | 0.940 | 0.929 | 0.0027 | 6856 | 181 | 0.011 | 100 |
 
 ### n = 16 (2^n = 65536)
@@ -204,9 +224,19 @@ round, Hamming-1 fix-up. Only E grows with n. evals = 404·E + 1604.
 
 Second seed block (trials 5–9) for the lr 0.1 recipe reproduces n=8/10/12: 1.000/0.991, 1.000/0.988, 1.000/0.988.
 
-Interim (83/100 trials, 01:55 CST): the first cold stage (n=14 E8, cool 50 steps, η×64, lr 0.05) does **not**
-help top-1 discovery: guess hit 0.23 / 0.35 / 0.48 / 0.52 / 0.60 / 0.65 / 0.71 / 0.75 after runs 1–8 (no-cool
-discovery scan: 0.26 / 0.43 / 0.52 / 0.59 / 0.71 / 0.80 / 0.83 / 0.89); success 0.77 so far.
+Cold concentration stage at n=14 (E8 top-1, lr 0.07 exploit; queue_o, final): without cool 0.900 / 0.897 (4836 evals);
+cool 50 steps η×64 lr 0.05: 0.780 / 0.780; cool 50 η×256: 0.780 / 0.780; cool 100 η×64: 0.780 / 0.779 (6444 evals);
+cool 50 η×64 lr 0.1: 0.480 / 0.481; cool 50 η×16 lr 0.1: 0.480 / 0.481. At n=12 cool 50 η×64 lr 0.05 also hurts
+(E3 0.900 / 0.897, E4 0.960 / 0.956 vs no-cool E4 0.990 / 0.986). Conclusion: the cold concentration stage does not
+raise top-1 discovery; it is dropped.
+
+Exploit lr (queue_o/p, 100 trials): mean p(GS) at lr 0.1 / 0.07 / 0.05 / 0.03: n=8 E2 0.991 / 0.995 / 0.997 / –;
+n=10 E3 0.990 / 0.995 / 0.997 / 0.998; n=12 E5 0.989 / 0.995 / 0.997 / 0.998 (success 1.000 each). lr 0.05 on E1
+at n=8 (0.980 / 0.978) is worse than lr 0.1 (1.000 / 0.989): small lr needs enough explore. Second seed block
+(trials 5–9) for the lr 0.05 recipe: n=8 1.000 / 0.997, n=10 0.990 / 0.988, n=12 0.990 / 0.987 — so the honest
+10-seed average of the lr 0.05 recipe is ≈ 0.995 / 0.992 / 0.992 (success 1.000 / 0.995 / 0.995).
+R3 or r150 with lr 0.05 keeps the gain and is cheaper: n=10 E3 R3 1.000 / 0.997 at 2415 evals; n=12 E5 R3
+1.000 / 0.997 at 3223 evals; n=12 E5 r150 1.000 / 0.995 at 3224 evals (R3×r200 + lr 0.05 is the new cheapest recipe).
 
 ## Status / next steps (for resuming)
 

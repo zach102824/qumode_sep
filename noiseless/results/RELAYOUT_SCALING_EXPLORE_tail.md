@@ -14,9 +14,19 @@ round, Hamming-1 fix-up. Only E grows with n. evals = 404·E + 1604.
 
 Second seed block (trials 5–9) for the lr 0.1 recipe reproduces n=8/10/12: 1.000/0.991, 1.000/0.988, 1.000/0.988.
 
-Interim (83/100 trials, 01:55 CST): the first cold stage (n=14 E8, cool 50 steps, η×64, lr 0.05) does **not**
-help top-1 discovery: guess hit 0.23 / 0.35 / 0.48 / 0.52 / 0.60 / 0.65 / 0.71 / 0.75 after runs 1–8 (no-cool
-discovery scan: 0.26 / 0.43 / 0.52 / 0.59 / 0.71 / 0.80 / 0.83 / 0.89); success 0.77 so far.
+Cold concentration stage at n=14 (E8 top-1, lr 0.07 exploit; queue_o, final): without cool 0.900 / 0.897 (4836 evals);
+cool 50 steps η×64 lr 0.05: 0.780 / 0.780; cool 50 η×256: 0.780 / 0.780; cool 100 η×64: 0.780 / 0.779 (6444 evals);
+cool 50 η×64 lr 0.1: 0.480 / 0.481; cool 50 η×16 lr 0.1: 0.480 / 0.481. At n=12 cool 50 η×64 lr 0.05 also hurts
+(E3 0.900 / 0.897, E4 0.960 / 0.956 vs no-cool E4 0.990 / 0.986). Conclusion: the cold concentration stage does not
+raise top-1 discovery; it is dropped.
+
+Exploit lr (queue_o/p, 100 trials): mean p(GS) at lr 0.1 / 0.07 / 0.05 / 0.03: n=8 E2 0.991 / 0.995 / 0.997 / –;
+n=10 E3 0.990 / 0.995 / 0.997 / 0.998; n=12 E5 0.989 / 0.995 / 0.997 / 0.998 (success 1.000 each). lr 0.05 on E1
+at n=8 (0.980 / 0.978) is worse than lr 0.1 (1.000 / 0.989): small lr needs enough explore. Second seed block
+(trials 5–9) for the lr 0.05 recipe: n=8 1.000 / 0.997, n=10 0.990 / 0.988, n=12 0.990 / 0.987 — so the honest
+10-seed average of the lr 0.05 recipe is ≈ 0.995 / 0.992 / 0.992 (success 1.000 / 0.995 / 0.995).
+R3 or r150 with lr 0.05 keeps the gain and is cheaper: n=10 E3 R3 1.000 / 0.997 at 2415 evals; n=12 E5 R3
+1.000 / 0.997 at 3223 evals; n=12 E5 r150 1.000 / 0.995 at 3224 evals (R3×r200 + lr 0.05 is the new cheapest recipe).
 
 ## Status / next steps (for resuming)
 
