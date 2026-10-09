@@ -226,3 +226,125 @@ def relayout_trial_kbit(
         out["_probs"] = prob_list
         out["_results"] = res_list
     return out
+
+
+def explore_exploit_trial_kbit(
+    energies_logical: np.ndarray,
+    ground_bitstring: str,
+    *,
+    k: int,
+    nf: int,
+    final_layers: int,
+    rng: np.random.Generator,
+    explore_rounds: int = 5,
+    explore_mask: str = "random",
+    topk: int = 4,
+    relayout_rounds: int = 4,
+    relayout_steps: int = 200,
+    relayout_lr: float = 0.1,
+    steps_per_stage: int = 50,
+    lr_schedule: list[float] | None = None,
+    start_layers: int = 1,
+    kick_sigma: float = GROW_KICK_SIGMA,
+    c: float = 0.15,
+    A: float = 10.0,
+    adam_lr: float = ADAM_LR,
+    polish_radius: int = 1,
+    method: str = "fast",
+    u_name: str = "jp",
+) -> dict:
+    """Explore-then-exploit relayout (n = 10 cost fix, RELAYOUT_N10_COST_DIAGNOSIS.md).
+
+    * Explore: ``explore_rounds`` independent layer-growth runs (L = 1 -> L_max, s steps per stage,
+      the round-0 recipe). Run 0 uses mask (0, 0); later runs use a fresh uniformly random cavity XOR
+      mask (``explore_mask='random'``; ``'zero'`` keeps (0, 0)), which changes which Fock states the
+      circuit is biased toward. After every round (explore or exploit) the ``topk`` most probable
+      code states are polished (radius 1) and added to a candidate pool.
+    * Guess = lowest classical energy in the pool (ties -> smaller index); ``topk * (n + 1)`` classical
+      lookups per round, no GS knowledge.
+    * Exploit: ``relayout_rounds`` rounds of ``relayout_steps`` SPSA-Adam steps from small beta with the
+      cavity masks set to the current guess (guess at Fock (0, 0)), exactly the old relabel round.
+    * Returned round: lowest Gibbs cost at the common eta over all rounds (same rule as before).
+    """
+    n = 2 + 2 * int(k)
+    E = np.asarray(energies_logical, dtype=float).reshape(-1)
+    layout = KbitLayout(int(k), int(nf))
+    L = int(final_layers)
+    n_st = L - int(start_layers) + 1
+    if lr_schedule is None:
+        lr_schedule = [0.5, 0.2, 0.05, 0.02] if n_st == 4 else None
+    extra_a = scale_spsa_a(n_parameters(L))
+    gl = int(ground_bitstring, 2)
+    flat0 = layout.flat_of_logical()
+    pool: set[int] = set()
+    rounds: list[dict] = []
+    res_list, sim_list, prob_list = [], [], []
+    total_nfev = 0
+    guess = None
+    n_lookups = 0
+    n_total = int(explore_rounds) + int(relayout_rounds)
+    for rnd in range(n_total):
+        exploring = rnd < int(explore_rounds)
+        if exploring:
+            if rnd == 0 or explore_mask == "zero":
+                xa = xb = 0
+            elif explore_mask == "random":
+                xa, xb = int(rng.integers(1 << k)), int(rng.integers(1 << k))
+            else:
+                raise ValueError(f"unknown explore_mask {explore_mask!r}")
+        else:
+            xa, xb = cavity_masks_for(guess, int(k)) if guess is not None else (0, 0)
+        sim = XorKbitSim(layout, E, L, ground_bitstring, u_name=u_name, method=method, xa=xa, xb=xb)
+        if exploring:
+            res = grow_trial(sim, final_layers=L, rng=rng, start_layers=int(start_layers),
+                             kick_sigma=float(kick_sigma), c=float(c), A=float(A), optimizer="spsa_adam",
+                             steps_per_stage=int(steps_per_stage), adam_lr=float(adam_lr), lr_schedule=lr_schedule)
+        else:
+            x0 = small_beta_parameters(L, rng)
+            res = optimize_trial(sim, maxiter=int(relayout_steps), rng=rng, x0=x0, a=extra_a, c=float(c),
+                                 A=float(A), optimizer="spsa_adam", adam_lr=float(relayout_lr))
+        total_nfev += int(res.nfev)
+        ev = sim.evaluate(res.x)
+        probs = np.asarray(ev["probs"], dtype=float)
+        res_list.append(res)
+        sim_list.append(sim)
+        prob_list.append(probs)
+        mask = (int(xa) << k) | int(xb)
+        pl = probs[flat0]  # pl[j] = prob of logical j ^ mask
+        top = np.argsort(-pl, kind="stable")[: max(1, int(topk))]
+        new = [polish_logical(int(j) ^ mask, E, n, polish_radius) for j in top]
+        n_lookups += len(new) * (n + 1)
+        pool.update(new)
+        guess = min(pool, key=lambda v: (E[v], v))
+        eta_now = max(float(r.eta) for r in res_list)
+        funs = [float(gibbs_objective(pp, ss.energies_flat, eta_now)) for pp, ss in zip(prob_list, sim_list)]
+        bsf = min(range(len(funs)), key=lambda j: (funs[j], j))
+        rounds.append({
+            "round": rnd, "phase": "explore" if exploring else "exploit",
+            "xa": int(xa), "xb": int(xb), "n_layers": L,
+            "success": bool(res.success), "p_gs": float(res.p_gs),
+            "most_likely_bitstring": res.most_likely_bitstring,
+            "polished_is_ground": gl in new,
+            "eta": float(res.eta), "energy_mean": float(ev["energy_mean"]),
+            "leakage": float(ev["leakage"]), "max_abs_beta": float(res.max_abs_beta),
+            "nfev": int(res.nfev), "cum_nfev": int(total_nfev),
+            "next_guess": bitstring_from_logical(guess, n), "next_guess_is_ground": guess == gl,
+            "next_guess_energy": float(E[guess]),
+            "bsf_round": int(bsf), "bsf_success": bool(res_list[bsf].success), "bsf_p_gs": float(res_list[bsf].p_gs),
+        })
+    eta_ref = max(float(r.eta) for r in res_list)
+    for j, (pp, ss) in enumerate(zip(prob_list, sim_list)):
+        rounds[j]["fun_common_eta"] = float(gibbs_objective(pp, ss.energies_flat, eta_ref))
+    sel = min(range(len(rounds)), key=lambda j: (rounds[j]["fun_common_eta"], j))
+    for j in range(len(rounds)):
+        rounds[j]["selected"] = j == sel
+    best = res_list[sel]
+    return {
+        "success": bool(best.success), "p_gs": float(best.p_gs),
+        "most_likely_bitstring": best.most_likely_bitstring, "ground_bitstring": ground_bitstring,
+        "selected_round": int(sel), "nfev": int(total_nfev), "n_lookups": int(n_lookups),
+        "leakage": float(rounds[sel]["leakage"]),
+        "x": np.asarray(best.x, dtype=float).tolist(),
+        "sel_xa": int(rounds[sel]["xa"]), "sel_xb": int(rounds[sel]["xb"]),
+        "rounds": rounds,
+    }

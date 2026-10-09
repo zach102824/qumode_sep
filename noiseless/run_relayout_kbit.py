@@ -37,7 +37,7 @@ _REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_REPO))
 
 from noiseless.ecd_kbit import logical_energies_from_npz  # noqa: E402
-from noiseless.relayout_kbit import XorKbitSim, KbitLayout, default_nf, relayout_trial_kbit  # noqa: E402
+from noiseless.relayout_kbit import XorKbitSim, KbitLayout, default_nf, explore_exploit_trial_kbit, relayout_trial_kbit  # noqa: E402
 from noiseless.unitaries import U_NAMES  # noqa: E402
 
 RUN_ROOT = _REPO / "noiseless" / "results" / "relayout_runs" / "kbit"
@@ -82,8 +82,11 @@ def trial_seed(seed0: int, inst: int, trial: int) -> int:
     return int(seed0) + 100_000 * int(inst) + 1_000 * list(U_NAMES).index("jp") + 10 * 4 + int(trial)
 
 
-def config_tag(n, L, s, r, R, lr=0.1, nf=None, ham_set="scaling", method="fast") -> str:
+def config_tag(n, L, s, r, R, lr=0.1, nf=None, ham_set="scaling", method="fast", explore=1, topk=1,
+               explore_mask="random") -> str:
     t = f"n{n:02d}_L{L}s{s}_r{r}_R{R}"
+    if int(explore) > 1 or int(topk) > 1:
+        t += f"_E{int(explore)}K{int(topk)}" + ("" if explore_mask == "random" else f"{explore_mask}")
     if abs(float(lr) - 0.1) > 1e-12:
         t += f"_lr{lr:g}"
     if nf is not None and nf != default_nf((n - 2) // 2):
@@ -101,12 +104,23 @@ def worker(job: dict) -> dict:
     k = (n - 2) // 2
     E, gs = energies_for(job["path"], n, job["ham_set"])
     rng = np.random.default_rng(int(job["seed"]))
-    rec = relayout_trial_kbit(
-        E, gs, k=k, nf=int(job["nf"]), final_layers=int(job["L"]), rng=rng,
-        relayout_rounds=int(job["R"]), relayout_steps=int(job["r"]), relayout_lr=float(job["lr"]),
-        steps_per_stage=int(job["s"]), lr_schedule=lr_schedule_for(int(job["L"])), method=job["method"],
-    )
+    M = int(job.get("explore") or 1)
+    K = int(job.get("topk") or 1)
+    if M > 1 or K > 1:
+        rec = explore_exploit_trial_kbit(
+            E, gs, k=k, nf=int(job["nf"]), final_layers=int(job["L"]), rng=rng, explore_rounds=M,
+            explore_mask=job.get("explore_mask") or "random", topk=K,
+            relayout_rounds=int(job["R"]), relayout_steps=int(job["r"]), relayout_lr=float(job["lr"]),
+            steps_per_stage=int(job["s"]), lr_schedule=lr_schedule_for(int(job["L"])), method=job["method"],
+        )
+    else:
+        rec = relayout_trial_kbit(
+            E, gs, k=k, nf=int(job["nf"]), final_layers=int(job["L"]), rng=rng,
+            relayout_rounds=int(job["R"]), relayout_steps=int(job["r"]), relayout_lr=float(job["lr"]),
+            steps_per_stage=int(job["s"]), lr_schedule=lr_schedule_for(int(job["L"])), method=job["method"],
+        )
     rec.update({kk: job[kk] for kk in ("n", "L", "s", "r", "R", "lr", "nf", "inst", "trial", "seed", "ham_set", "method")})
+    rec.update(explore=M, topk=K, explore_mask=job.get("explore_mask") or "random")
     rec["file"] = Path(job["path"]).name
     nfc = int(job.get("nf_check") or 0)
     if nfc:
@@ -158,7 +172,7 @@ def load_records(path: Path, trials: int | None = None) -> list[dict]:
 
 def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_set="scaling", method="fast",
                workers=8, seed0=20260917, outdir: Path = RUN_ROOT, nf_check=None, max_h=None, log=None,
-               tag=None) -> tuple[str, list[dict]]:
+               tag=None, explore=1, topk=1, explore_mask="random") -> tuple[str, list[dict]]:
     if log is None:
         def log(msg):
             print(msg, flush=True)
@@ -166,7 +180,7 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
     nf = default_nf(k) if nf is None else int(nf)
     if nf_check is None:
         nf_check = 0 if nf == (1 << k) else nf + max(16, (1 << k) // 4)
-    tag = tag or config_tag(n, L, s, r, R, lr, nf, ham_set, method)
+    tag = tag or config_tag(n, L, s, r, R, lr, nf, ham_set, method, explore, topk, explore_mask)
     outdir.mkdir(parents=True, exist_ok=True)
     path = ckpt(outdir, tag)
     paths = ham_paths(n, ham_set)
@@ -179,7 +193,8 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
             if (i, t) in done:
                 continue
             jobs.append(dict(n=n, L=L, s=s, r=r, R=R, lr=lr, nf=nf, inst=i, trial=t, seed=trial_seed(seed0, i, t),
-                             path=str(p), ham_set=ham_set, method=method, nf_check=nf_check))
+                             path=str(p), ham_set=ham_set, method=method, nf_check=nf_check,
+                             explore=explore, topk=topk, explore_mask=explore_mask))
     log(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {tag}: {len(jobs)} jobs ({len(done)} done)")
     t0 = time.time()
     if jobs:
@@ -265,10 +280,14 @@ def main(argv=None) -> int:
     p.add_argument("--seed", type=int, default=20260917)
     p.add_argument("--outdir", default=str(RUN_ROOT))
     p.add_argument("--tag", default=None)
+    p.add_argument("--explore", type=int, default=1, help="explore growth runs (1 = old relayout protocol)")
+    p.add_argument("--topk", type=int, default=1, help="top-K code states per round added to the candidate pool")
+    p.add_argument("--explore-mask", choices=("random", "zero"), default="random")
     a = p.parse_args(argv)
     tag, recs = run_config(n=a.n, L=a.L, s=a.s, r=a.r, R=a.R, lr=a.lr, nf=a.nf, trials=a.trials,
                            trial_offset=a.trial_offset, ham_set=a.ham_set, method=a.method, workers=a.workers,
-                           seed0=a.seed, outdir=Path(a.outdir), nf_check=a.nf_check, max_h=a.max_h, tag=a.tag)
+                           seed0=a.seed, outdir=Path(a.outdir), nf_check=a.nf_check, max_h=a.max_h, tag=a.tag,
+                           explore=a.explore, topk=a.topk, explore_mask=a.explore_mask)
     sm = summarize(recs)
     sm.pop("per_h", None)
     print(json.dumps({"tag": tag, **sm}, indent=1))

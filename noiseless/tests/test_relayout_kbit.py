@@ -132,3 +132,23 @@ def test_small_n10_trial_runs_and_leakage_small():
     assert len(rec["rounds"]) == 3
     assert rec["nfev"] == 2 * 11 + 2 * 21
     assert 0.0 <= rec["p_gs"] <= 1.0 and rec["leakage"] < 1e-3
+
+
+def test_explore_exploit_smoke_n8():
+    """Explore-exploit protocol: runs, counts evals, pool guess has minimal energy among candidates."""
+    import numpy as np
+    from noiseless.relayout_kbit import explore_exploit_trial_kbit
+    from noiseless.run_relayout_kbit import energies_for, ham_paths
+
+    E, gs = energies_for(str(ham_paths(8, "scaling")[0]), 8, "scaling")
+    rec = explore_exploit_trial_kbit(E, gs, k=3, nf=24, final_layers=2, rng=np.random.default_rng(1),
+                                     explore_rounds=2, topk=2, relayout_rounds=1, relayout_steps=5,
+                                     steps_per_stage=3, lr_schedule=[0.5, 0.2])
+    assert [q["phase"] for q in rec["rounds"]] == ["explore", "explore", "exploit"]
+    assert rec["nfev"] == 2 * 2 * (2 * 3 + 1) + (2 * 5 + 1)
+    assert rec["n_lookups"] == 3 * 2 * 9
+    es = [q["next_guess_energy"] for q in rec["rounds"]]
+    assert all(b <= a for a, b in zip(es, es[1:]))
+    ex = rec["rounds"][2]
+    g = int(rec["rounds"][1]["next_guess"], 2)
+    assert (ex["xa"], ex["xb"]) == ((g >> 3) & 7, g & 7)
