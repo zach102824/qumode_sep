@@ -1,0 +1,5401 @@
+{
+  "settings": {
+    "lb_none_L4s10_r100": {
+      "target": "none",
+      "round0": "L4s10",
+      "relabel_steps": 100,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.416,
+          "mean_p_gs": 0.0926340786916887,
+          "cum_nfev": 84.0,
+          "polish_lookups": 9,
+          "round_success": 0.416,
+          "round_mean_p_gs": 0.0926340786916887,
+          "guess_hit": 0.56,
+          "round_polished_hit": 0.56
+        },
+        {
+          "round": 1,
+          "success": 0.444,
+          "mean_p_gs": 0.12758292915042155,
+          "cum_nfev": 285.0,
+          "polish_lookups": 18,
+          "round_success": 0.16,
+          "round_mean_p_gs": 0.07259043876791145,
+          "guess_hit": 0.582,
+          "round_polished_hit": 0.182
+        },
+        {
+          "round": 2,
+          "success": 0.464,
+          "mean_p_gs": 0.13734926508576126,
+          "cum_nfev": 486.0,
+          "polish_lookups": 27,
+          "round_success": 0.166,
+          "round_mean_p_gs": 0.07301379049920818,
+          "guess_hit": 0.594,
+          "round_polished_hit": 0.19
+        },
+        {
+          "round": 3,
+          "success": 0.474,
+          "mean_p_gs": 0.14264676189708056,
+          "cum_nfev": 687.0,
+          "polish_lookups": 36,
+          "round_success": 0.164,
+          "round_mean_p_gs": 0.07134154897968657,
+          "guess_hit": 0.61,
+          "round_polished_hit": 0.18
+        },
+        {
+          "round": 4,
+          "success": 0.492,
+          "mean_p_gs": 0.14657392851593584,
+          "cum_nfev": 888.0,
+          "polish_lookups": 45,
+          "round_success": 0.164,
+          "round_mean_p_gs": 0.07113627738668961,
+          "guess_hit": 0.624,
+          "round_polished_hit": 0.182
+        }
+      ],
+      "criterion": {
+        "round0_weak": true,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 220,
+      "frac_wrong0_final_success": 0.1409090909090909,
+      "frac_wrong0_later_guess_right": 0.17727272727272728,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 191,
+            "n_fixed": 29,
+            "fix_rate": 0.1518324607329843
+          },
+          "e": {
+            "n_missed": 111,
+            "n_fixed": 9,
+            "fix_rate": 0.08108108108108109
+          },
+          "A2": {
+            "n_missed": 124,
+            "n_fixed": 16,
+            "fix_rate": 0.12903225806451613
+          },
+          "A1": {
+            "n_missed": 129,
+            "n_fixed": 19,
+            "fix_rate": 0.14728682170542637
+          },
+          "A0": {
+            "n_missed": 86,
+            "n_fixed": 16,
+            "fix_rate": 0.18604651162790697
+          },
+          "B2": {
+            "n_missed": 100,
+            "n_fixed": 8,
+            "fix_rate": 0.08
+          },
+          "B1": {
+            "n_missed": 119,
+            "n_fixed": 14,
+            "fix_rate": 0.11764705882352941
+          },
+          "B0": {
+            "n_missed": 77,
+            "n_fixed": 14,
+            "fix_rate": 0.18181818181818182
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "2": {
+            "n": 1,
+            "n_fixed": 0
+          },
+          "3": {
+            "n": 82,
+            "n_fixed": 13
+          },
+          "4": {
+            "n": 55,
+            "n_fixed": 9
+          },
+          "5": {
+            "n": 39,
+            "n_fixed": 4
+          },
+          "6": {
+            "n": 28,
+            "n_fixed": 5
+          },
+          "7": {
+            "n": 14,
+            "n_fixed": 0
+          },
+          "8": {
+            "n": 1,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 0.7678571428571429
+    },
+    "lb_none_L4s10_r200": {
+      "target": "none",
+      "round0": "L4s10",
+      "relabel_steps": 200,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.416,
+          "mean_p_gs": 0.09263407869168869,
+          "cum_nfev": 84.0,
+          "polish_lookups": 9,
+          "round_success": 0.416,
+          "round_mean_p_gs": 0.09263407869168869,
+          "guess_hit": 0.56,
+          "round_polished_hit": 0.56
+        },
+        {
+          "round": 1,
+          "success": 0.54,
+          "mean_p_gs": 0.16981052898468416,
+          "cum_nfev": 485.0,
+          "polish_lookups": 18,
+          "round_success": 0.312,
+          "round_mean_p_gs": 0.1272430809403889,
+          "guess_hit": 0.658,
+          "round_polished_hit": 0.33
+        },
+        {
+          "round": 2,
+          "success": 0.594,
+          "mean_p_gs": 0.19033702538938685,
+          "cum_nfev": 886.0,
+          "polish_lookups": 27,
+          "round_success": 0.298,
+          "round_mean_p_gs": 0.12498984161816834,
+          "guess_hit": 0.694,
+          "round_polished_hit": 0.324
+        },
+        {
+          "round": 3,
+          "success": 0.612,
+          "mean_p_gs": 0.2030036443164504,
+          "cum_nfev": 1287.0,
+          "polish_lookups": 36,
+          "round_success": 0.306,
+          "round_mean_p_gs": 0.1295268160113981,
+          "guess_hit": 0.704,
+          "round_polished_hit": 0.32
+        },
+        {
+          "round": 4,
+          "success": 0.628,
+          "mean_p_gs": 0.21228903919926498,
+          "cum_nfev": 1688.0,
+          "polish_lookups": 45,
+          "round_success": 0.31,
+          "round_mean_p_gs": 0.13235453926832463,
+          "guess_hit": 0.72,
+          "round_polished_hit": 0.34
+        }
+      ],
+      "criterion": {
+        "round0_weak": true,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 220,
+      "frac_wrong0_final_success": 0.39545454545454545,
+      "frac_wrong0_later_guess_right": 0.42272727272727273,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 191,
+            "n_fixed": 78,
+            "fix_rate": 0.4083769633507853
+          },
+          "e": {
+            "n_missed": 111,
+            "n_fixed": 37,
+            "fix_rate": 0.3333333333333333
+          },
+          "A2": {
+            "n_missed": 124,
+            "n_fixed": 43,
+            "fix_rate": 0.3467741935483871
+          },
+          "A1": {
+            "n_missed": 129,
+            "n_fixed": 49,
+            "fix_rate": 0.3798449612403101
+          },
+          "A0": {
+            "n_missed": 86,
+            "n_fixed": 38,
+            "fix_rate": 0.4418604651162791
+          },
+          "B2": {
+            "n_missed": 100,
+            "n_fixed": 30,
+            "fix_rate": 0.3
+          },
+          "B1": {
+            "n_missed": 119,
+            "n_fixed": 45,
+            "fix_rate": 0.37815126050420167
+          },
+          "B0": {
+            "n_missed": 77,
+            "n_fixed": 36,
+            "fix_rate": 0.4675324675324675
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "2": {
+            "n": 1,
+            "n_fixed": 1
+          },
+          "3": {
+            "n": 82,
+            "n_fixed": 33
+          },
+          "4": {
+            "n": 55,
+            "n_fixed": 26
+          },
+          "5": {
+            "n": 39,
+            "n_fixed": 14
+          },
+          "6": {
+            "n": 28,
+            "n_fixed": 10
+          },
+          "7": {
+            "n": 14,
+            "n_fixed": 3
+          },
+          "8": {
+            "n": 1,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 0.8107142857142857
+    },
+    "lb_none_L4s10_r400": {
+      "target": "none",
+      "round0": "L4s10",
+      "relabel_steps": 400,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.416,
+          "mean_p_gs": 0.09263407869168869,
+          "cum_nfev": 84.0,
+          "polish_lookups": 9,
+          "round_success": 0.416,
+          "round_mean_p_gs": 0.09263407869168869,
+          "guess_hit": 0.56,
+          "round_polished_hit": 0.56
+        },
+        {
+          "round": 1,
+          "success": 0.638,
+          "mean_p_gs": 0.2248730374567448,
+          "cum_nfev": 885.0,
+          "polish_lookups": 18,
+          "round_success": 0.488,
+          "round_mean_p_gs": 0.19321914014593408,
+          "guess_hit": 0.748,
+          "round_polished_hit": 0.534
+        },
+        {
+          "round": 2,
+          "success": 0.694,
+          "mean_p_gs": 0.25611565335309044,
+          "cum_nfev": 1686.0,
+          "polish_lookups": 27,
+          "round_success": 0.496,
+          "round_mean_p_gs": 0.1895349156682423,
+          "guess_hit": 0.792,
+          "round_polished_hit": 0.538
+        },
+        {
+          "round": 3,
+          "success": 0.744,
+          "mean_p_gs": 0.2854631743730252,
+          "cum_nfev": 2487.0,
+          "polish_lookups": 36,
+          "round_success": 0.518,
+          "round_mean_p_gs": 0.20305914034918396,
+          "guess_hit": 0.83,
+          "round_polished_hit": 0.556
+        },
+        {
+          "round": 4,
+          "success": 0.784,
+          "mean_p_gs": 0.3057289875324676,
+          "cum_nfev": 3288.0,
+          "polish_lookups": 45,
+          "round_success": 0.518,
+          "round_mean_p_gs": 0.20491395107950733,
+          "guess_hit": 0.862,
+          "round_polished_hit": 0.56
+        }
+      ],
+      "criterion": {
+        "round0_weak": true,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 220,
+      "frac_wrong0_final_success": 0.6727272727272727,
+      "frac_wrong0_later_guess_right": 0.7636363636363637,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 191,
+            "n_fixed": 128,
+            "fix_rate": 0.6701570680628273
+          },
+          "e": {
+            "n_missed": 111,
+            "n_fixed": 75,
+            "fix_rate": 0.6756756756756757
+          },
+          "A2": {
+            "n_missed": 124,
+            "n_fixed": 76,
+            "fix_rate": 0.6129032258064516
+          },
+          "A1": {
+            "n_missed": 129,
+            "n_fixed": 85,
+            "fix_rate": 0.6589147286821705
+          },
+          "A0": {
+            "n_missed": 86,
+            "n_fixed": 59,
+            "fix_rate": 0.686046511627907
+          },
+          "B2": {
+            "n_missed": 100,
+            "n_fixed": 59,
+            "fix_rate": 0.59
+          },
+          "B1": {
+            "n_missed": 119,
+            "n_fixed": 74,
+            "fix_rate": 0.6218487394957983
+          },
+          "B0": {
+            "n_missed": 77,
+            "n_fixed": 56,
+            "fix_rate": 0.7272727272727273
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "2": {
+            "n": 1,
+            "n_fixed": 1
+          },
+          "3": {
+            "n": 82,
+            "n_fixed": 60
+          },
+          "4": {
+            "n": 55,
+            "n_fixed": 36
+          },
+          "5": {
+            "n": 39,
+            "n_fixed": 28
+          },
+          "6": {
+            "n": 28,
+            "n_fixed": 16
+          },
+          "7": {
+            "n": 14,
+            "n_fixed": 6
+          },
+          "8": {
+            "n": 1,
+            "n_fixed": 1
+          }
+        }
+      },
+      "frac_right0_final_success": 0.8714285714285714
+    },
+    "lb_xor_vacuum_L2s10_r100": {
+      "target": "xor_vacuum",
+      "round0": "L2s10",
+      "relabel_steps": 100,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.184,
+          "mean_p_gs": 0.04331476627021977,
+          "cum_nfev": 42.0,
+          "polish_lookups": 9,
+          "round_success": 0.184,
+          "round_mean_p_gs": 0.04331476627021977,
+          "guess_hit": 0.314,
+          "round_polished_hit": 0.314
+        },
+        {
+          "round": 1,
+          "success": 0.482,
+          "mean_p_gs": 0.36319588211733345,
+          "cum_nfev": 243.0,
+          "polish_lookups": 18,
+          "round_success": 0.482,
+          "round_mean_p_gs": 0.3576624662682375,
+          "guess_hit": 0.5,
+          "round_polished_hit": 0.5
+        },
+        {
+          "round": 2,
+          "success": 0.548,
+          "mean_p_gs": 0.5091475205066447,
+          "cum_nfev": 444.0,
+          "polish_lookups": 27,
+          "round_success": 0.55,
+          "round_mean_p_gs": 0.4975032380846075,
+          "guess_hit": 0.556,
+          "round_polished_hit": 0.56
+        },
+        {
+          "round": 3,
+          "success": 0.57,
+          "mean_p_gs": 0.561296960056178,
+          "cum_nfev": 645.0,
+          "polish_lookups": 36,
+          "round_success": 0.57,
+          "round_mean_p_gs": 0.5463982021266952,
+          "guess_hit": 0.576,
+          "round_polished_hit": 0.576
+        },
+        {
+          "round": 4,
+          "success": 0.588,
+          "mean_p_gs": 0.5829034293399922,
+          "cum_nfev": 846.0,
+          "polish_lookups": 45,
+          "round_success": 0.592,
+          "round_mean_p_gs": 0.5660406447437333,
+          "guess_hit": 0.594,
+          "round_polished_hit": 0.6
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 343,
+      "frac_wrong0_final_success": 0.39941690962099125,
+      "frac_wrong0_later_guess_right": 0.40816326530612246,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 317,
+            "n_fixed": 128,
+            "fix_rate": 0.4037854889589905
+          },
+          "e": {
+            "n_missed": 180,
+            "n_fixed": 78,
+            "fix_rate": 0.43333333333333335
+          },
+          "A2": {
+            "n_missed": 168,
+            "n_fixed": 29,
+            "fix_rate": 0.17261904761904762
+          },
+          "A1": {
+            "n_missed": 214,
+            "n_fixed": 67,
+            "fix_rate": 0.3130841121495327
+          },
+          "A0": {
+            "n_missed": 148,
+            "n_fixed": 57,
+            "fix_rate": 0.38513513513513514
+          },
+          "B2": {
+            "n_missed": 122,
+            "n_fixed": 17,
+            "fix_rate": 0.13934426229508196
+          },
+          "B1": {
+            "n_missed": 174,
+            "n_fixed": 60,
+            "fix_rate": 0.3448275862068966
+          },
+          "B0": {
+            "n_missed": 168,
+            "n_fixed": 67,
+            "fix_rate": 0.39880952380952384
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 100,
+            "n_fixed": 66
+          },
+          "4": {
+            "n": 108,
+            "n_fixed": 51
+          },
+          "5": {
+            "n": 69,
+            "n_fixed": 19
+          },
+          "6": {
+            "n": 50,
+            "n_fixed": 1
+          },
+          "7": {
+            "n": 14,
+            "n_fixed": 0
+          },
+          "8": {
+            "n": 2,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L2s10_r200": {
+      "target": "xor_vacuum",
+      "round0": "L2s10",
+      "relabel_steps": 200,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.184,
+          "mean_p_gs": 0.043314766270219775,
+          "cum_nfev": 42.0,
+          "polish_lookups": 9,
+          "round_success": 0.184,
+          "round_mean_p_gs": 0.043314766270219775,
+          "guess_hit": 0.314,
+          "round_polished_hit": 0.314
+        },
+        {
+          "round": 1,
+          "success": 0.598,
+          "mean_p_gs": 0.4241933347519361,
+          "cum_nfev": 443.0,
+          "polish_lookups": 18,
+          "round_success": 0.598,
+          "round_mean_p_gs": 0.4200253012507832,
+          "guess_hit": 0.624,
+          "round_polished_hit": 0.624
+        },
+        {
+          "round": 2,
+          "success": 0.702,
+          "mean_p_gs": 0.6483425035555289,
+          "cum_nfev": 844.0,
+          "polish_lookups": 27,
+          "round_success": 0.702,
+          "round_mean_p_gs": 0.6422178181203346,
+          "guess_hit": 0.706,
+          "round_polished_hit": 0.71
+        },
+        {
+          "round": 3,
+          "success": 0.748,
+          "mean_p_gs": 0.721503712799843,
+          "cum_nfev": 1245.0,
+          "polish_lookups": 36,
+          "round_success": 0.748,
+          "round_mean_p_gs": 0.7148790189219604,
+          "guess_hit": 0.756,
+          "round_polished_hit": 0.756
+        },
+        {
+          "round": 4,
+          "success": 0.784,
+          "mean_p_gs": 0.763803121657869,
+          "cum_nfev": 1646.0,
+          "polish_lookups": 45,
+          "round_success": 0.784,
+          "round_mean_p_gs": 0.7566354504199028,
+          "guess_hit": 0.788,
+          "round_polished_hit": 0.788
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 343,
+      "frac_wrong0_final_success": 0.685131195335277,
+      "frac_wrong0_later_guess_right": 0.6909620991253644,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 317,
+            "n_fixed": 214,
+            "fix_rate": 0.6750788643533123
+          },
+          "e": {
+            "n_missed": 180,
+            "n_fixed": 121,
+            "fix_rate": 0.6722222222222223
+          },
+          "A2": {
+            "n_missed": 168,
+            "n_fixed": 76,
+            "fix_rate": 0.4523809523809524
+          },
+          "A1": {
+            "n_missed": 214,
+            "n_fixed": 136,
+            "fix_rate": 0.6355140186915887
+          },
+          "A0": {
+            "n_missed": 148,
+            "n_fixed": 96,
+            "fix_rate": 0.6486486486486487
+          },
+          "B2": {
+            "n_missed": 122,
+            "n_fixed": 60,
+            "fix_rate": 0.4918032786885246
+          },
+          "B1": {
+            "n_missed": 174,
+            "n_fixed": 114,
+            "fix_rate": 0.6551724137931034
+          },
+          "B0": {
+            "n_missed": 168,
+            "n_fixed": 113,
+            "fix_rate": 0.6726190476190477
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 100,
+            "n_fixed": 91
+          },
+          "4": {
+            "n": 108,
+            "n_fixed": 85
+          },
+          "5": {
+            "n": 69,
+            "n_fixed": 40
+          },
+          "6": {
+            "n": 50,
+            "n_fixed": 16
+          },
+          "7": {
+            "n": 14,
+            "n_fixed": 3
+          },
+          "8": {
+            "n": 2,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L2s10_r25": {
+      "target": "xor_vacuum",
+      "round0": "L2s10",
+      "relabel_steps": 25,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.184,
+          "mean_p_gs": 0.043314766270219775,
+          "cum_nfev": 42.0,
+          "polish_lookups": 9,
+          "round_success": 0.184,
+          "round_mean_p_gs": 0.043314766270219775,
+          "guess_hit": 0.314,
+          "round_polished_hit": 0.314
+        },
+        {
+          "round": 1,
+          "success": 0.31,
+          "mean_p_gs": 0.22262249208299661,
+          "cum_nfev": 93.0,
+          "polish_lookups": 18,
+          "round_success": 0.31,
+          "round_mean_p_gs": 0.2110833590801082,
+          "guess_hit": 0.318,
+          "round_polished_hit": 0.322
+        },
+        {
+          "round": 2,
+          "success": 0.318,
+          "mean_p_gs": 0.25916833205290307,
+          "cum_nfev": 144.0,
+          "polish_lookups": 27,
+          "round_success": 0.31,
+          "round_mean_p_gs": 0.21558811588054608,
+          "guess_hit": 0.322,
+          "round_polished_hit": 0.33
+        },
+        {
+          "round": 3,
+          "success": 0.322,
+          "mean_p_gs": 0.2747816213190377,
+          "cum_nfev": 195.0,
+          "polish_lookups": 36,
+          "round_success": 0.306,
+          "round_mean_p_gs": 0.2107362375258592,
+          "guess_hit": 0.322,
+          "round_polished_hit": 0.332
+        },
+        {
+          "round": 4,
+          "success": 0.322,
+          "mean_p_gs": 0.2811159184558165,
+          "cum_nfev": 246.0,
+          "polish_lookups": 45,
+          "round_success": 0.316,
+          "round_mean_p_gs": 0.20878577039017085,
+          "guess_hit": 0.324,
+          "round_polished_hit": 0.328
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 343,
+      "frac_wrong0_final_success": 0.02040816326530612,
+      "frac_wrong0_later_guess_right": 0.023323615160349854,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 317,
+            "n_fixed": 7,
+            "fix_rate": 0.022082018927444796
+          },
+          "e": {
+            "n_missed": 180,
+            "n_fixed": 7,
+            "fix_rate": 0.03888888888888889
+          },
+          "A2": {
+            "n_missed": 168,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "A1": {
+            "n_missed": 214,
+            "n_fixed": 2,
+            "fix_rate": 0.009345794392523364
+          },
+          "A0": {
+            "n_missed": 148,
+            "n_fixed": 1,
+            "fix_rate": 0.006756756756756757
+          },
+          "B2": {
+            "n_missed": 122,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B1": {
+            "n_missed": 174,
+            "n_fixed": 3,
+            "fix_rate": 0.017241379310344827
+          },
+          "B0": {
+            "n_missed": 168,
+            "n_fixed": 2,
+            "fix_rate": 0.011904761904761904
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 100,
+            "n_fixed": 6
+          },
+          "4": {
+            "n": 108,
+            "n_fixed": 1
+          },
+          "5": {
+            "n": 69,
+            "n_fixed": 0
+          },
+          "6": {
+            "n": 50,
+            "n_fixed": 0
+          },
+          "7": {
+            "n": 14,
+            "n_fixed": 0
+          },
+          "8": {
+            "n": 2,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 0.9808917197452229
+    },
+    "lb_xor_vacuum_L2s10_r50": {
+      "target": "xor_vacuum",
+      "round0": "L2s10",
+      "relabel_steps": 50,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.184,
+          "mean_p_gs": 0.043314766270219775,
+          "cum_nfev": 42.0,
+          "polish_lookups": 9,
+          "round_success": 0.184,
+          "round_mean_p_gs": 0.043314766270219775,
+          "guess_hit": 0.314,
+          "round_polished_hit": 0.314
+        },
+        {
+          "round": 1,
+          "success": 0.352,
+          "mean_p_gs": 0.2954644601020367,
+          "cum_nfev": 143.0,
+          "polish_lookups": 18,
+          "round_success": 0.352,
+          "round_mean_p_gs": 0.28677343376276954,
+          "guess_hit": 0.382,
+          "round_polished_hit": 0.384
+        },
+        {
+          "round": 2,
+          "success": 0.4,
+          "mean_p_gs": 0.3606164175598489,
+          "cum_nfev": 244.0,
+          "polish_lookups": 27,
+          "round_success": 0.4,
+          "round_mean_p_gs": 0.3345778515575854,
+          "guess_hit": 0.406,
+          "round_polished_hit": 0.412
+        },
+        {
+          "round": 3,
+          "success": 0.414,
+          "mean_p_gs": 0.388541255663321,
+          "cum_nfev": 345.0,
+          "polish_lookups": 36,
+          "round_success": 0.414,
+          "round_mean_p_gs": 0.35373282910608134,
+          "guess_hit": 0.418,
+          "round_polished_hit": 0.422
+        },
+        {
+          "round": 4,
+          "success": 0.42,
+          "mean_p_gs": 0.4038582096535404,
+          "cum_nfev": 446.0,
+          "polish_lookups": 45,
+          "round_success": 0.42,
+          "round_mean_p_gs": 0.36551083774670845,
+          "guess_hit": 0.428,
+          "round_polished_hit": 0.434
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 343,
+      "frac_wrong0_final_success": 0.15451895043731778,
+      "frac_wrong0_later_guess_right": 0.1661807580174927,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 317,
+            "n_fixed": 50,
+            "fix_rate": 0.15772870662460567
+          },
+          "e": {
+            "n_missed": 180,
+            "n_fixed": 37,
+            "fix_rate": 0.20555555555555555
+          },
+          "A2": {
+            "n_missed": 168,
+            "n_fixed": 7,
+            "fix_rate": 0.041666666666666664
+          },
+          "A1": {
+            "n_missed": 214,
+            "n_fixed": 15,
+            "fix_rate": 0.07009345794392523
+          },
+          "A0": {
+            "n_missed": 148,
+            "n_fixed": 24,
+            "fix_rate": 0.16216216216216217
+          },
+          "B2": {
+            "n_missed": 122,
+            "n_fixed": 3,
+            "fix_rate": 0.02459016393442623
+          },
+          "B1": {
+            "n_missed": 174,
+            "n_fixed": 17,
+            "fix_rate": 0.09770114942528736
+          },
+          "B0": {
+            "n_missed": 168,
+            "n_fixed": 29,
+            "fix_rate": 0.17261904761904762
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 100,
+            "n_fixed": 32
+          },
+          "4": {
+            "n": 108,
+            "n_fixed": 19
+          },
+          "5": {
+            "n": 69,
+            "n_fixed": 2
+          },
+          "6": {
+            "n": 50,
+            "n_fixed": 0
+          },
+          "7": {
+            "n": 14,
+            "n_fixed": 0
+          },
+          "8": {
+            "n": 2,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s10_r100": {
+      "target": "xor_vacuum",
+      "round0": "L4s10",
+      "relabel_steps": 100,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.416,
+          "mean_p_gs": 0.09263407869168869,
+          "cum_nfev": 84.0,
+          "polish_lookups": 9,
+          "round_success": 0.416,
+          "round_mean_p_gs": 0.09263407869168869,
+          "guess_hit": 0.56,
+          "round_polished_hit": 0.56
+        },
+        {
+          "round": 1,
+          "success": 0.648,
+          "mean_p_gs": 0.5750721975585265,
+          "cum_nfev": 285.0,
+          "polish_lookups": 18,
+          "round_success": 0.648,
+          "round_mean_p_gs": 0.5681022818710164,
+          "guess_hit": 0.66,
+          "round_polished_hit": 0.66
+        },
+        {
+          "round": 2,
+          "success": 0.688,
+          "mean_p_gs": 0.6616436526348446,
+          "cum_nfev": 486.0,
+          "polish_lookups": 27,
+          "round_success": 0.688,
+          "round_mean_p_gs": 0.646243195856196,
+          "guess_hit": 0.696,
+          "round_polished_hit": 0.698
+        },
+        {
+          "round": 3,
+          "success": 0.706,
+          "mean_p_gs": 0.6974457089937655,
+          "cum_nfev": 687.0,
+          "polish_lookups": 36,
+          "round_success": 0.708,
+          "round_mean_p_gs": 0.6802945504648896,
+          "guess_hit": 0.712,
+          "round_polished_hit": 0.716
+        },
+        {
+          "round": 4,
+          "success": 0.724,
+          "mean_p_gs": 0.7149684238893118,
+          "cum_nfev": 888.0,
+          "polish_lookups": 45,
+          "round_success": 0.726,
+          "round_mean_p_gs": 0.6946588392138312,
+          "guess_hit": 0.726,
+          "round_polished_hit": 0.73
+        }
+      ],
+      "criterion": {
+        "round0_weak": true,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 220,
+      "frac_wrong0_final_success": 0.37272727272727274,
+      "frac_wrong0_later_guess_right": 0.37727272727272726,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 191,
+            "n_fixed": 68,
+            "fix_rate": 0.35602094240837695
+          },
+          "e": {
+            "n_missed": 111,
+            "n_fixed": 42,
+            "fix_rate": 0.3783783783783784
+          },
+          "A2": {
+            "n_missed": 124,
+            "n_fixed": 23,
+            "fix_rate": 0.18548387096774194
+          },
+          "A1": {
+            "n_missed": 129,
+            "n_fixed": 41,
+            "fix_rate": 0.3178294573643411
+          },
+          "A0": {
+            "n_missed": 86,
+            "n_fixed": 28,
+            "fix_rate": 0.32558139534883723
+          },
+          "B2": {
+            "n_missed": 100,
+            "n_fixed": 21,
+            "fix_rate": 0.21
+          },
+          "B1": {
+            "n_missed": 119,
+            "n_fixed": 37,
+            "fix_rate": 0.31092436974789917
+          },
+          "B0": {
+            "n_missed": 77,
+            "n_fixed": 29,
+            "fix_rate": 0.37662337662337664
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "2": {
+            "n": 1,
+            "n_fixed": 1
+          },
+          "3": {
+            "n": 82,
+            "n_fixed": 51
+          },
+          "4": {
+            "n": 55,
+            "n_fixed": 19
+          },
+          "5": {
+            "n": 39,
+            "n_fixed": 9
+          },
+          "6": {
+            "n": 28,
+            "n_fixed": 1
+          },
+          "7": {
+            "n": 14,
+            "n_fixed": 1
+          },
+          "8": {
+            "n": 1,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s10_r200": {
+      "target": "xor_vacuum",
+      "round0": "L4s10",
+      "relabel_steps": 200,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.416,
+          "mean_p_gs": 0.09263407869168869,
+          "cum_nfev": 84.0,
+          "polish_lookups": 9,
+          "round_success": 0.416,
+          "round_mean_p_gs": 0.09263407869168869,
+          "guess_hit": 0.56,
+          "round_polished_hit": 0.56
+        },
+        {
+          "round": 1,
+          "success": 0.732,
+          "mean_p_gs": 0.6259933392070072,
+          "cum_nfev": 485.0,
+          "polish_lookups": 18,
+          "round_success": 0.732,
+          "round_mean_p_gs": 0.6210332409949552,
+          "guess_hit": 0.738,
+          "round_polished_hit": 0.738
+        },
+        {
+          "round": 2,
+          "success": 0.808,
+          "mean_p_gs": 0.7590728273811548,
+          "cum_nfev": 886.0,
+          "polish_lookups": 27,
+          "round_success": 0.812,
+          "round_mean_p_gs": 0.7529115588624296,
+          "guess_hit": 0.81,
+          "round_polished_hit": 0.816
+        },
+        {
+          "round": 3,
+          "success": 0.834,
+          "mean_p_gs": 0.820973473093427,
+          "cum_nfev": 1287.0,
+          "polish_lookups": 36,
+          "round_success": 0.834,
+          "round_mean_p_gs": 0.8143154040535937,
+          "guess_hit": 0.838,
+          "round_polished_hit": 0.838
+        },
+        {
+          "round": 4,
+          "success": 0.858,
+          "mean_p_gs": 0.845587403313167,
+          "cum_nfev": 1688.0,
+          "polish_lookups": 45,
+          "round_success": 0.862,
+          "round_mean_p_gs": 0.8389105749567501,
+          "guess_hit": 0.858,
+          "round_polished_hit": 0.862
+        }
+      ],
+      "criterion": {
+        "round0_weak": true,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 220,
+      "frac_wrong0_final_success": 0.6772727272727272,
+      "frac_wrong0_later_guess_right": 0.6772727272727272,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 191,
+            "n_fixed": 122,
+            "fix_rate": 0.6387434554973822
+          },
+          "e": {
+            "n_missed": 111,
+            "n_fixed": 73,
+            "fix_rate": 0.6576576576576577
+          },
+          "A2": {
+            "n_missed": 124,
+            "n_fixed": 68,
+            "fix_rate": 0.5483870967741935
+          },
+          "A1": {
+            "n_missed": 129,
+            "n_fixed": 85,
+            "fix_rate": 0.6589147286821705
+          },
+          "A0": {
+            "n_missed": 86,
+            "n_fixed": 49,
+            "fix_rate": 0.5697674418604651
+          },
+          "B2": {
+            "n_missed": 100,
+            "n_fixed": 49,
+            "fix_rate": 0.49
+          },
+          "B1": {
+            "n_missed": 119,
+            "n_fixed": 75,
+            "fix_rate": 0.6302521008403361
+          },
+          "B0": {
+            "n_missed": 77,
+            "n_fixed": 46,
+            "fix_rate": 0.5974025974025974
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "2": {
+            "n": 1,
+            "n_fixed": 1
+          },
+          "3": {
+            "n": 82,
+            "n_fixed": 77
+          },
+          "4": {
+            "n": 55,
+            "n_fixed": 37
+          },
+          "5": {
+            "n": 39,
+            "n_fixed": 22
+          },
+          "6": {
+            "n": 28,
+            "n_fixed": 8
+          },
+          "7": {
+            "n": 14,
+            "n_fixed": 4
+          },
+          "8": {
+            "n": 1,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s10_r25": {
+      "target": "xor_vacuum",
+      "round0": "L4s10",
+      "relabel_steps": 25,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.416,
+          "mean_p_gs": 0.0926340786916887,
+          "cum_nfev": 84.0,
+          "polish_lookups": 9,
+          "round_success": 0.416,
+          "round_mean_p_gs": 0.0926340786916887,
+          "guess_hit": 0.56,
+          "round_polished_hit": 0.56
+        },
+        {
+          "round": 1,
+          "success": 0.54,
+          "mean_p_gs": 0.3860111182592896,
+          "cum_nfev": 135.0,
+          "polish_lookups": 18,
+          "round_success": 0.538,
+          "round_mean_p_gs": 0.37213200873557617,
+          "guess_hit": 0.566,
+          "round_polished_hit": 0.572
+        },
+        {
+          "round": 2,
+          "success": 0.566,
+          "mean_p_gs": 0.45001070292238515,
+          "cum_nfev": 186.0,
+          "polish_lookups": 27,
+          "round_success": 0.552,
+          "round_mean_p_gs": 0.38596068888218743,
+          "guess_hit": 0.566,
+          "round_polished_hit": 0.574
+        },
+        {
+          "round": 3,
+          "success": 0.566,
+          "mean_p_gs": 0.47475490261533626,
+          "cum_nfev": 237.0,
+          "polish_lookups": 36,
+          "round_success": 0.55,
+          "round_mean_p_gs": 0.3814409413134051,
+          "guess_hit": 0.568,
+          "round_polished_hit": 0.568
+        },
+        {
+          "round": 4,
+          "success": 0.568,
+          "mean_p_gs": 0.4901054443582863,
+          "cum_nfev": 288.0,
+          "polish_lookups": 45,
+          "round_success": 0.548,
+          "round_mean_p_gs": 0.380699750530651,
+          "guess_hit": 0.57,
+          "round_polished_hit": 0.566
+        }
+      ],
+      "criterion": {
+        "round0_weak": true,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 220,
+      "frac_wrong0_final_success": 0.022727272727272728,
+      "frac_wrong0_later_guess_right": 0.02727272727272727,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 191,
+            "n_fixed": 5,
+            "fix_rate": 0.02617801047120419
+          },
+          "e": {
+            "n_missed": 111,
+            "n_fixed": 4,
+            "fix_rate": 0.036036036036036036
+          },
+          "A2": {
+            "n_missed": 124,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "A1": {
+            "n_missed": 129,
+            "n_fixed": 4,
+            "fix_rate": 0.031007751937984496
+          },
+          "A0": {
+            "n_missed": 86,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B2": {
+            "n_missed": 100,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B1": {
+            "n_missed": 119,
+            "n_fixed": 1,
+            "fix_rate": 0.008403361344537815
+          },
+          "B0": {
+            "n_missed": 77,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "2": {
+            "n": 1,
+            "n_fixed": 1
+          },
+          "3": {
+            "n": 82,
+            "n_fixed": 4
+          },
+          "4": {
+            "n": 55,
+            "n_fixed": 0
+          },
+          "5": {
+            "n": 39,
+            "n_fixed": 0
+          },
+          "6": {
+            "n": 28,
+            "n_fixed": 0
+          },
+          "7": {
+            "n": 14,
+            "n_fixed": 0
+          },
+          "8": {
+            "n": 1,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 0.9964285714285714
+    },
+    "lb_xor_vacuum_L4s10_r400": {
+      "target": "xor_vacuum",
+      "round0": "L4s10",
+      "relabel_steps": 400,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.416,
+          "mean_p_gs": 0.09263407869168869,
+          "cum_nfev": 84.0,
+          "polish_lookups": 9,
+          "round_success": 0.416,
+          "round_mean_p_gs": 0.09263407869168869,
+          "guess_hit": 0.56,
+          "round_polished_hit": 0.56
+        },
+        {
+          "round": 1,
+          "success": 0.816,
+          "mean_p_gs": 0.6694571250940189,
+          "cum_nfev": 885.0,
+          "polish_lookups": 18,
+          "round_success": 0.818,
+          "round_mean_p_gs": 0.6660608491817304,
+          "guess_hit": 0.828,
+          "round_polished_hit": 0.83
+        },
+        {
+          "round": 2,
+          "success": 0.882,
+          "mean_p_gs": 0.8470915571344817,
+          "cum_nfev": 1686.0,
+          "polish_lookups": 27,
+          "round_success": 0.882,
+          "round_mean_p_gs": 0.8411030080427367,
+          "guess_hit": 0.892,
+          "round_polished_hit": 0.892
+        },
+        {
+          "round": 3,
+          "success": 0.924,
+          "mean_p_gs": 0.9003615688562268,
+          "cum_nfev": 2487.0,
+          "polish_lookups": 36,
+          "round_success": 0.924,
+          "round_mean_p_gs": 0.8919885414781509,
+          "guess_hit": 0.926,
+          "round_polished_hit": 0.926
+        },
+        {
+          "round": 4,
+          "success": 0.94,
+          "mean_p_gs": 0.930108565868947,
+          "cum_nfev": 3288.0,
+          "polish_lookups": 45,
+          "round_success": 0.94,
+          "round_mean_p_gs": 0.921611472245217,
+          "guess_hit": 0.94,
+          "round_polished_hit": 0.94
+        }
+      ],
+      "criterion": {
+        "round0_weak": true,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 220,
+      "frac_wrong0_final_success": 0.8636363636363636,
+      "frac_wrong0_later_guess_right": 0.8636363636363636,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 191,
+            "n_fixed": 162,
+            "fix_rate": 0.8481675392670157
+          },
+          "e": {
+            "n_missed": 111,
+            "n_fixed": 91,
+            "fix_rate": 0.8198198198198198
+          },
+          "A2": {
+            "n_missed": 124,
+            "n_fixed": 96,
+            "fix_rate": 0.7741935483870968
+          },
+          "A1": {
+            "n_missed": 129,
+            "n_fixed": 109,
+            "fix_rate": 0.8449612403100775
+          },
+          "A0": {
+            "n_missed": 86,
+            "n_fixed": 70,
+            "fix_rate": 0.813953488372093
+          },
+          "B2": {
+            "n_missed": 100,
+            "n_fixed": 79,
+            "fix_rate": 0.79
+          },
+          "B1": {
+            "n_missed": 119,
+            "n_fixed": 99,
+            "fix_rate": 0.8319327731092437
+          },
+          "B0": {
+            "n_missed": 77,
+            "n_fixed": 60,
+            "fix_rate": 0.7792207792207793
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "2": {
+            "n": 1,
+            "n_fixed": 1
+          },
+          "3": {
+            "n": 82,
+            "n_fixed": 82
+          },
+          "4": {
+            "n": 55,
+            "n_fixed": 49
+          },
+          "5": {
+            "n": 39,
+            "n_fixed": 34
+          },
+          "6": {
+            "n": 28,
+            "n_fixed": 16
+          },
+          "7": {
+            "n": 14,
+            "n_fixed": 8
+          },
+          "8": {
+            "n": 1,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s10_r50": {
+      "target": "xor_vacuum",
+      "round0": "L4s10",
+      "relabel_steps": 50,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.416,
+          "mean_p_gs": 0.09263407869168869,
+          "cum_nfev": 84.0,
+          "polish_lookups": 9,
+          "round_success": 0.416,
+          "round_mean_p_gs": 0.09263407869168869,
+          "guess_hit": 0.56,
+          "round_polished_hit": 0.56
+        },
+        {
+          "round": 1,
+          "success": 0.58,
+          "mean_p_gs": 0.4934997334365687,
+          "cum_nfev": 185.0,
+          "polish_lookups": 18,
+          "round_success": 0.58,
+          "round_mean_p_gs": 0.48273352013091436,
+          "guess_hit": 0.584,
+          "round_polished_hit": 0.59
+        },
+        {
+          "round": 2,
+          "success": 0.592,
+          "mean_p_gs": 0.5403762966110467,
+          "cum_nfev": 286.0,
+          "polish_lookups": 27,
+          "round_success": 0.592,
+          "round_mean_p_gs": 0.5029529598743085,
+          "guess_hit": 0.594,
+          "round_polished_hit": 0.596
+        },
+        {
+          "round": 3,
+          "success": 0.596,
+          "mean_p_gs": 0.560155908830532,
+          "cum_nfev": 387.0,
+          "polish_lookups": 36,
+          "round_success": 0.596,
+          "round_mean_p_gs": 0.5135876850764025,
+          "guess_hit": 0.596,
+          "round_polished_hit": 0.602
+        },
+        {
+          "round": 4,
+          "success": 0.598,
+          "mean_p_gs": 0.5704670206961389,
+          "cum_nfev": 488.0,
+          "polish_lookups": 45,
+          "round_success": 0.598,
+          "round_mean_p_gs": 0.5178127886830075,
+          "guess_hit": 0.598,
+          "round_polished_hit": 0.602
+        }
+      ],
+      "criterion": {
+        "round0_weak": true,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 220,
+      "frac_wrong0_final_success": 0.08636363636363636,
+      "frac_wrong0_later_guess_right": 0.08636363636363636,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 191,
+            "n_fixed": 17,
+            "fix_rate": 0.08900523560209424
+          },
+          "e": {
+            "n_missed": 111,
+            "n_fixed": 12,
+            "fix_rate": 0.10810810810810811
+          },
+          "A2": {
+            "n_missed": 124,
+            "n_fixed": 1,
+            "fix_rate": 0.008064516129032258
+          },
+          "A1": {
+            "n_missed": 129,
+            "n_fixed": 6,
+            "fix_rate": 0.046511627906976744
+          },
+          "A0": {
+            "n_missed": 86,
+            "n_fixed": 10,
+            "fix_rate": 0.11627906976744186
+          },
+          "B2": {
+            "n_missed": 100,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B1": {
+            "n_missed": 119,
+            "n_fixed": 3,
+            "fix_rate": 0.025210084033613446
+          },
+          "B0": {
+            "n_missed": 77,
+            "n_fixed": 11,
+            "fix_rate": 0.14285714285714285
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "2": {
+            "n": 1,
+            "n_fixed": 1
+          },
+          "3": {
+            "n": 82,
+            "n_fixed": 14
+          },
+          "4": {
+            "n": 55,
+            "n_fixed": 4
+          },
+          "5": {
+            "n": 39,
+            "n_fixed": 0
+          },
+          "6": {
+            "n": 28,
+            "n_fixed": 0
+          },
+          "7": {
+            "n": 14,
+            "n_fixed": 0
+          },
+          "8": {
+            "n": 1,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s25_r100": {
+      "target": "xor_vacuum",
+      "round0": "L4s25",
+      "relabel_steps": 100,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.804,
+          "mean_p_gs": 0.23930338214493932,
+          "cum_nfev": 204.0,
+          "polish_lookups": 9,
+          "round_success": 0.804,
+          "round_mean_p_gs": 0.23930338214493932,
+          "guess_hit": 0.934,
+          "round_polished_hit": 0.934
+        },
+        {
+          "round": 1,
+          "success": 0.94,
+          "mean_p_gs": 0.9089398674575673,
+          "cum_nfev": 405.0,
+          "polish_lookups": 18,
+          "round_success": 0.942,
+          "round_mean_p_gs": 0.9050356079209293,
+          "guess_hit": 0.94,
+          "round_polished_hit": 0.942
+        },
+        {
+          "round": 2,
+          "success": 0.942,
+          "mean_p_gs": 0.9272284307265829,
+          "cum_nfev": 606.0,
+          "polish_lookups": 27,
+          "round_success": 0.942,
+          "round_mean_p_gs": 0.9088221330566545,
+          "guess_hit": 0.942,
+          "round_polished_hit": 0.944
+        },
+        {
+          "round": 3,
+          "success": 0.944,
+          "mean_p_gs": 0.9322805077192717,
+          "cum_nfev": 807.0,
+          "polish_lookups": 36,
+          "round_success": 0.944,
+          "round_mean_p_gs": 0.9112476884797552,
+          "guess_hit": 0.946,
+          "round_polished_hit": 0.946
+        },
+        {
+          "round": 4,
+          "success": 0.948,
+          "mean_p_gs": 0.9376952142341984,
+          "cum_nfev": 1008.0,
+          "polish_lookups": 45,
+          "round_success": 0.948,
+          "round_mean_p_gs": 0.9169391669803696,
+          "guess_hit": 0.948,
+          "round_polished_hit": 0.948
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 33,
+      "frac_wrong0_final_success": 0.21212121212121213,
+      "frac_wrong0_later_guess_right": 0.21212121212121213,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 27,
+            "n_fixed": 6,
+            "fix_rate": 0.2222222222222222
+          },
+          "e": {
+            "n_missed": 10,
+            "n_fixed": 4,
+            "fix_rate": 0.4
+          },
+          "A2": {
+            "n_missed": 20,
+            "n_fixed": 4,
+            "fix_rate": 0.2
+          },
+          "A1": {
+            "n_missed": 23,
+            "n_fixed": 3,
+            "fix_rate": 0.13043478260869565
+          },
+          "A0": {
+            "n_missed": 12,
+            "n_fixed": 2,
+            "fix_rate": 0.16666666666666666
+          },
+          "B2": {
+            "n_missed": 16,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B1": {
+            "n_missed": 20,
+            "n_fixed": 3,
+            "fix_rate": 0.15
+          },
+          "B0": {
+            "n_missed": 8,
+            "n_fixed": 2,
+            "fix_rate": 0.25
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 16,
+            "n_fixed": 5
+          },
+          "4": {
+            "n": 7,
+            "n_fixed": 1
+          },
+          "5": {
+            "n": 3,
+            "n_fixed": 1
+          },
+          "6": {
+            "n": 4,
+            "n_fixed": 0
+          },
+          "7": {
+            "n": 3,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s25_r200": {
+      "target": "xor_vacuum",
+      "round0": "L4s25",
+      "relabel_steps": 200,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.804,
+          "mean_p_gs": 0.23930338214493932,
+          "cum_nfev": 204.0,
+          "polish_lookups": 9,
+          "round_success": 0.804,
+          "round_mean_p_gs": 0.23930338214493932,
+          "guess_hit": 0.934,
+          "round_polished_hit": 0.934
+        },
+        {
+          "round": 1,
+          "success": 0.948,
+          "mean_p_gs": 0.9373457870310968,
+          "cum_nfev": 605.0,
+          "polish_lookups": 18,
+          "round_success": 0.95,
+          "round_mean_p_gs": 0.9343836591493061,
+          "guess_hit": 0.948,
+          "round_polished_hit": 0.952
+        },
+        {
+          "round": 2,
+          "success": 0.964,
+          "mean_p_gs": 0.9507458655073652,
+          "cum_nfev": 1006.0,
+          "polish_lookups": 27,
+          "round_success": 0.966,
+          "round_mean_p_gs": 0.9461221190635801,
+          "guess_hit": 0.964,
+          "round_polished_hit": 0.966
+        },
+        {
+          "round": 3,
+          "success": 0.966,
+          "mean_p_gs": 0.9638572306479006,
+          "cum_nfev": 1407.0,
+          "polish_lookups": 36,
+          "round_success": 0.97,
+          "round_mean_p_gs": 0.9574961760950949,
+          "guess_hit": 0.968,
+          "round_polished_hit": 0.972
+        },
+        {
+          "round": 4,
+          "success": 0.972,
+          "mean_p_gs": 0.9678359475606219,
+          "cum_nfev": 1808.0,
+          "polish_lookups": 45,
+          "round_success": 0.972,
+          "round_mean_p_gs": 0.9623022788044386,
+          "guess_hit": 0.972,
+          "round_polished_hit": 0.972
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 33,
+      "frac_wrong0_final_success": 0.5757575757575758,
+      "frac_wrong0_later_guess_right": 0.5757575757575758,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 27,
+            "n_fixed": 17,
+            "fix_rate": 0.6296296296296297
+          },
+          "e": {
+            "n_missed": 10,
+            "n_fixed": 5,
+            "fix_rate": 0.5
+          },
+          "A2": {
+            "n_missed": 20,
+            "n_fixed": 11,
+            "fix_rate": 0.55
+          },
+          "A1": {
+            "n_missed": 23,
+            "n_fixed": 11,
+            "fix_rate": 0.4782608695652174
+          },
+          "A0": {
+            "n_missed": 12,
+            "n_fixed": 4,
+            "fix_rate": 0.3333333333333333
+          },
+          "B2": {
+            "n_missed": 16,
+            "n_fixed": 6,
+            "fix_rate": 0.375
+          },
+          "B1": {
+            "n_missed": 20,
+            "n_fixed": 10,
+            "fix_rate": 0.5
+          },
+          "B0": {
+            "n_missed": 8,
+            "n_fixed": 2,
+            "fix_rate": 0.25
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 16,
+            "n_fixed": 13
+          },
+          "4": {
+            "n": 7,
+            "n_fixed": 4
+          },
+          "5": {
+            "n": 3,
+            "n_fixed": 1
+          },
+          "6": {
+            "n": 4,
+            "n_fixed": 1
+          },
+          "7": {
+            "n": 3,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s25_r25": {
+      "target": "xor_vacuum",
+      "round0": "L4s25",
+      "relabel_steps": 25,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.804,
+          "mean_p_gs": 0.23930338214493935,
+          "cum_nfev": 204.0,
+          "polish_lookups": 9,
+          "round_success": 0.804,
+          "round_mean_p_gs": 0.23930338214493935,
+          "guess_hit": 0.934,
+          "round_polished_hit": 0.934
+        },
+        {
+          "round": 1,
+          "success": 0.916,
+          "mean_p_gs": 0.6383921973436129,
+          "cum_nfev": 255.0,
+          "polish_lookups": 18,
+          "round_success": 0.898,
+          "round_mean_p_gs": 0.6232646546940905,
+          "guess_hit": 0.934,
+          "round_polished_hit": 0.932
+        },
+        {
+          "round": 2,
+          "success": 0.932,
+          "mean_p_gs": 0.7308638960560748,
+          "cum_nfev": 306.0,
+          "polish_lookups": 27,
+          "round_success": 0.898,
+          "round_mean_p_gs": 0.6333243543603199,
+          "guess_hit": 0.934,
+          "round_polished_hit": 0.932
+        },
+        {
+          "round": 3,
+          "success": 0.934,
+          "mean_p_gs": 0.7650142793652036,
+          "cum_nfev": 357.0,
+          "polish_lookups": 36,
+          "round_success": 0.908,
+          "round_mean_p_gs": 0.6153162826137353,
+          "guess_hit": 0.934,
+          "round_polished_hit": 0.932
+        },
+        {
+          "round": 4,
+          "success": 0.936,
+          "mean_p_gs": 0.7877591298299426,
+          "cum_nfev": 408.0,
+          "polish_lookups": 45,
+          "round_success": 0.918,
+          "round_mean_p_gs": 0.6216034378903115,
+          "guess_hit": 0.936,
+          "round_polished_hit": 0.936
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 33,
+      "frac_wrong0_final_success": 0.030303030303030304,
+      "frac_wrong0_later_guess_right": 0.030303030303030304,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 27,
+            "n_fixed": 1,
+            "fix_rate": 0.037037037037037035
+          },
+          "e": {
+            "n_missed": 10,
+            "n_fixed": 1,
+            "fix_rate": 0.1
+          },
+          "A2": {
+            "n_missed": 20,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "A1": {
+            "n_missed": 23,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "A0": {
+            "n_missed": 12,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B2": {
+            "n_missed": 16,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B1": {
+            "n_missed": 20,
+            "n_fixed": 1,
+            "fix_rate": 0.05
+          },
+          "B0": {
+            "n_missed": 8,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 16,
+            "n_fixed": 1
+          },
+          "4": {
+            "n": 7,
+            "n_fixed": 0
+          },
+          "5": {
+            "n": 3,
+            "n_fixed": 0
+          },
+          "6": {
+            "n": 4,
+            "n_fixed": 0
+          },
+          "7": {
+            "n": 3,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s25_r400": {
+      "target": "xor_vacuum",
+      "round0": "L4s25",
+      "relabel_steps": 400,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.804,
+          "mean_p_gs": 0.23930338214493935,
+          "cum_nfev": 204.0,
+          "polish_lookups": 9,
+          "round_success": 0.804,
+          "round_mean_p_gs": 0.23930338214493935,
+          "guess_hit": 0.934,
+          "round_polished_hit": 0.934
+        },
+        {
+          "round": 1,
+          "success": 0.968,
+          "mean_p_gs": 0.9403132300689049,
+          "cum_nfev": 1005.0,
+          "polish_lookups": 18,
+          "round_success": 0.97,
+          "round_mean_p_gs": 0.9383451720929661,
+          "guess_hit": 0.968,
+          "round_polished_hit": 0.97
+        },
+        {
+          "round": 2,
+          "success": 0.972,
+          "mean_p_gs": 0.9687963062343484,
+          "cum_nfev": 1806.0,
+          "polish_lookups": 27,
+          "round_success": 0.974,
+          "round_mean_p_gs": 0.9594102554608882,
+          "guess_hit": 0.972,
+          "round_polished_hit": 0.974
+        },
+        {
+          "round": 3,
+          "success": 0.976,
+          "mean_p_gs": 0.9747903287812177,
+          "cum_nfev": 2607.0,
+          "polish_lookups": 36,
+          "round_success": 0.978,
+          "round_mean_p_gs": 0.9652779915381866,
+          "guess_hit": 0.976,
+          "round_polished_hit": 0.978
+        },
+        {
+          "round": 4,
+          "success": 0.98,
+          "mean_p_gs": 0.9770841872861726,
+          "cum_nfev": 3408.0,
+          "polish_lookups": 45,
+          "round_success": 0.982,
+          "round_mean_p_gs": 0.9680991090566522,
+          "guess_hit": 0.98,
+          "round_polished_hit": 0.982
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 33,
+      "frac_wrong0_final_success": 0.696969696969697,
+      "frac_wrong0_later_guess_right": 0.696969696969697,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 27,
+            "n_fixed": 18,
+            "fix_rate": 0.6666666666666666
+          },
+          "e": {
+            "n_missed": 10,
+            "n_fixed": 6,
+            "fix_rate": 0.6
+          },
+          "A2": {
+            "n_missed": 20,
+            "n_fixed": 13,
+            "fix_rate": 0.65
+          },
+          "A1": {
+            "n_missed": 23,
+            "n_fixed": 15,
+            "fix_rate": 0.6521739130434783
+          },
+          "A0": {
+            "n_missed": 12,
+            "n_fixed": 5,
+            "fix_rate": 0.4166666666666667
+          },
+          "B2": {
+            "n_missed": 16,
+            "n_fixed": 7,
+            "fix_rate": 0.4375
+          },
+          "B1": {
+            "n_missed": 20,
+            "n_fixed": 13,
+            "fix_rate": 0.65
+          },
+          "B0": {
+            "n_missed": 8,
+            "n_fixed": 4,
+            "fix_rate": 0.5
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 16,
+            "n_fixed": 16
+          },
+          "4": {
+            "n": 7,
+            "n_fixed": 4
+          },
+          "5": {
+            "n": 3,
+            "n_fixed": 1
+          },
+          "6": {
+            "n": 4,
+            "n_fixed": 2
+          },
+          "7": {
+            "n": 3,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s25_r50": {
+      "target": "xor_vacuum",
+      "round0": "L4s25",
+      "relabel_steps": 50,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.804,
+          "mean_p_gs": 0.23930338214493932,
+          "cum_nfev": 204.0,
+          "polish_lookups": 9,
+          "round_success": 0.804,
+          "round_mean_p_gs": 0.23930338214493932,
+          "guess_hit": 0.934,
+          "round_polished_hit": 0.934
+        },
+        {
+          "round": 1,
+          "success": 0.934,
+          "mean_p_gs": 0.8036131970946849,
+          "cum_nfev": 305.0,
+          "polish_lookups": 18,
+          "round_success": 0.934,
+          "round_mean_p_gs": 0.7983088297890631,
+          "guess_hit": 0.936,
+          "round_polished_hit": 0.936
+        },
+        {
+          "round": 2,
+          "success": 0.936,
+          "mean_p_gs": 0.8549723201995593,
+          "cum_nfev": 406.0,
+          "polish_lookups": 27,
+          "round_success": 0.936,
+          "round_mean_p_gs": 0.8045417900036554,
+          "guess_hit": 0.936,
+          "round_polished_hit": 0.936
+        },
+        {
+          "round": 3,
+          "success": 0.936,
+          "mean_p_gs": 0.8700220924584091,
+          "cum_nfev": 507.0,
+          "polish_lookups": 36,
+          "round_success": 0.936,
+          "round_mean_p_gs": 0.797987490023987,
+          "guess_hit": 0.936,
+          "round_polished_hit": 0.938
+        },
+        {
+          "round": 4,
+          "success": 0.936,
+          "mean_p_gs": 0.8796446927511703,
+          "cum_nfev": 608.0,
+          "polish_lookups": 45,
+          "round_success": 0.936,
+          "round_mean_p_gs": 0.8048685678478534,
+          "guess_hit": 0.936,
+          "round_polished_hit": 0.938
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 33,
+      "frac_wrong0_final_success": 0.030303030303030304,
+      "frac_wrong0_later_guess_right": 0.030303030303030304,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 27,
+            "n_fixed": 1,
+            "fix_rate": 0.037037037037037035
+          },
+          "e": {
+            "n_missed": 10,
+            "n_fixed": 1,
+            "fix_rate": 0.1
+          },
+          "A2": {
+            "n_missed": 20,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "A1": {
+            "n_missed": 23,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "A0": {
+            "n_missed": 12,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B2": {
+            "n_missed": 16,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B1": {
+            "n_missed": 20,
+            "n_fixed": 1,
+            "fix_rate": 0.05
+          },
+          "B0": {
+            "n_missed": 8,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 16,
+            "n_fixed": 1
+          },
+          "4": {
+            "n": 7,
+            "n_fixed": 0
+          },
+          "5": {
+            "n": 3,
+            "n_fixed": 0
+          },
+          "6": {
+            "n": 4,
+            "n_fixed": 0
+          },
+          "7": {
+            "n": 3,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s50_r100": {
+      "target": "xor_vacuum",
+      "round0": "L4s50",
+      "relabel_steps": 100,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.932,
+          "mean_p_gs": 0.39639791998313934,
+          "cum_nfev": 404.0,
+          "polish_lookups": 9,
+          "round_success": 0.932,
+          "round_mean_p_gs": 0.39639791998313934,
+          "guess_hit": 0.984,
+          "round_polished_hit": 0.984
+        },
+        {
+          "round": 1,
+          "success": 0.984,
+          "mean_p_gs": 0.9554101740773349,
+          "cum_nfev": 605.0,
+          "polish_lookups": 18,
+          "round_success": 0.984,
+          "round_mean_p_gs": 0.9532623637178077,
+          "guess_hit": 0.984,
+          "round_polished_hit": 0.984
+        },
+        {
+          "round": 2,
+          "success": 0.984,
+          "mean_p_gs": 0.9672180370427912,
+          "cum_nfev": 806.0,
+          "polish_lookups": 27,
+          "round_success": 0.986,
+          "round_mean_p_gs": 0.9529785184868306,
+          "guess_hit": 0.986,
+          "round_polished_hit": 0.988
+        },
+        {
+          "round": 3,
+          "success": 0.986,
+          "mean_p_gs": 0.9722303658957209,
+          "cum_nfev": 1007.0,
+          "polish_lookups": 36,
+          "round_success": 0.988,
+          "round_mean_p_gs": 0.9547061870382899,
+          "guess_hit": 0.986,
+          "round_polished_hit": 0.988
+        },
+        {
+          "round": 4,
+          "success": 0.986,
+          "mean_p_gs": 0.9742925794119829,
+          "cum_nfev": 1208.0,
+          "polish_lookups": 45,
+          "round_success": 0.986,
+          "round_mean_p_gs": 0.9536478974031948,
+          "guess_hit": 0.988,
+          "round_polished_hit": 0.988
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 8,
+      "frac_wrong0_final_success": 0.125,
+      "frac_wrong0_later_guess_right": 0.25,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 7,
+            "n_fixed": 1,
+            "fix_rate": 0.14285714285714285
+          },
+          "e": {
+            "n_missed": 2,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "A2": {
+            "n_missed": 5,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "A1": {
+            "n_missed": 5,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "A0": {
+            "n_missed": 5,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B2": {
+            "n_missed": 2,
+            "n_fixed": 1,
+            "fix_rate": 0.5
+          },
+          "B1": {
+            "n_missed": 2,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B0": {
+            "n_missed": 5,
+            "n_fixed": 1,
+            "fix_rate": 0.2
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 3,
+            "n_fixed": 1
+          },
+          "4": {
+            "n": 2,
+            "n_fixed": 0
+          },
+          "5": {
+            "n": 2,
+            "n_fixed": 0
+          },
+          "6": {
+            "n": 1,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s50_r50": {
+      "target": "xor_vacuum",
+      "round0": "L4s50",
+      "relabel_steps": 50,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.932,
+          "mean_p_gs": 0.39639791998313934,
+          "cum_nfev": 404.0,
+          "polish_lookups": 9,
+          "round_success": 0.932,
+          "round_mean_p_gs": 0.39639791998313934,
+          "guess_hit": 0.984,
+          "round_polished_hit": 0.984
+        },
+        {
+          "round": 1,
+          "success": 0.984,
+          "mean_p_gs": 0.8525683869167463,
+          "cum_nfev": 505.0,
+          "polish_lookups": 18,
+          "round_success": 0.984,
+          "round_mean_p_gs": 0.8443219749065275,
+          "guess_hit": 0.984,
+          "round_polished_hit": 0.984
+        },
+        {
+          "round": 2,
+          "success": 0.984,
+          "mean_p_gs": 0.8930443168442194,
+          "cum_nfev": 606.0,
+          "polish_lookups": 27,
+          "round_success": 0.984,
+          "round_mean_p_gs": 0.8328710793470109,
+          "guess_hit": 0.984,
+          "round_polished_hit": 0.984
+        },
+        {
+          "round": 3,
+          "success": 0.984,
+          "mean_p_gs": 0.9133668021299006,
+          "cum_nfev": 707.0,
+          "polish_lookups": 36,
+          "round_success": 0.984,
+          "round_mean_p_gs": 0.85133574912087,
+          "guess_hit": 0.984,
+          "round_polished_hit": 0.984
+        },
+        {
+          "round": 4,
+          "success": 0.984,
+          "mean_p_gs": 0.9227664087598885,
+          "cum_nfev": 808.0,
+          "polish_lookups": 45,
+          "round_success": 0.982,
+          "round_mean_p_gs": 0.8427605453350068,
+          "guess_hit": 0.984,
+          "round_polished_hit": 0.984
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 8,
+      "frac_wrong0_final_success": 0.0,
+      "frac_wrong0_later_guess_right": 0.0,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 7,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "e": {
+            "n_missed": 2,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "A2": {
+            "n_missed": 5,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "A1": {
+            "n_missed": 5,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "A0": {
+            "n_missed": 5,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B2": {
+            "n_missed": 2,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B1": {
+            "n_missed": 2,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          },
+          "B0": {
+            "n_missed": 5,
+            "n_fixed": 0,
+            "fix_rate": 0.0
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 3,
+            "n_fixed": 0
+          },
+          "4": {
+            "n": 2,
+            "n_fixed": 0
+          },
+          "5": {
+            "n": 2,
+            "n_fixed": 0
+          },
+          "6": {
+            "n": 1,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s5_r100": {
+      "target": "xor_vacuum",
+      "round0": "L4s5",
+      "relabel_steps": 100,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.138,
+          "mean_p_gs": 0.03819780349367592,
+          "cum_nfev": 44.0,
+          "polish_lookups": 9,
+          "round_success": 0.138,
+          "round_mean_p_gs": 0.03819780349367592,
+          "guess_hit": 0.244,
+          "round_polished_hit": 0.244
+        },
+        {
+          "round": 1,
+          "success": 0.35,
+          "mean_p_gs": 0.2822364943884363,
+          "cum_nfev": 245.0,
+          "polish_lookups": 18,
+          "round_success": 0.35,
+          "round_mean_p_gs": 0.27719454998101123,
+          "guess_hit": 0.382,
+          "round_polished_hit": 0.382
+        },
+        {
+          "round": 2,
+          "success": 0.418,
+          "mean_p_gs": 0.39489551728400796,
+          "cum_nfev": 446.0,
+          "polish_lookups": 27,
+          "round_success": 0.426,
+          "round_mean_p_gs": 0.3847255690458631,
+          "guess_hit": 0.432,
+          "round_polished_hit": 0.442
+        },
+        {
+          "round": 3,
+          "success": 0.45,
+          "mean_p_gs": 0.4399807339031208,
+          "cum_nfev": 647.0,
+          "polish_lookups": 36,
+          "round_success": 0.45,
+          "round_mean_p_gs": 0.4264979583952902,
+          "guess_hit": 0.454,
+          "round_polished_hit": 0.456
+        },
+        {
+          "round": 4,
+          "success": 0.48,
+          "mean_p_gs": 0.4638468985904519,
+          "cum_nfev": 848.0,
+          "polish_lookups": 45,
+          "round_success": 0.484,
+          "round_mean_p_gs": 0.4467179546747884,
+          "guess_hit": 0.484,
+          "round_polished_hit": 0.492
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 378,
+      "frac_wrong0_final_success": 0.31216931216931215,
+      "frac_wrong0_later_guess_right": 0.31746031746031744,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 354,
+            "n_fixed": 111,
+            "fix_rate": 0.3135593220338983
+          },
+          "e": {
+            "n_missed": 249,
+            "n_fixed": 75,
+            "fix_rate": 0.30120481927710846
+          },
+          "A2": {
+            "n_missed": 250,
+            "n_fixed": 40,
+            "fix_rate": 0.16
+          },
+          "A1": {
+            "n_missed": 219,
+            "n_fixed": 57,
+            "fix_rate": 0.2602739726027397
+          },
+          "A0": {
+            "n_missed": 208,
+            "n_fixed": 58,
+            "fix_rate": 0.27884615384615385
+          },
+          "B2": {
+            "n_missed": 135,
+            "n_fixed": 9,
+            "fix_rate": 0.06666666666666667
+          },
+          "B1": {
+            "n_missed": 199,
+            "n_fixed": 40,
+            "fix_rate": 0.20100502512562815
+          },
+          "B0": {
+            "n_missed": 196,
+            "n_fixed": 62,
+            "fix_rate": 0.3163265306122449
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 81,
+            "n_fixed": 55
+          },
+          "4": {
+            "n": 80,
+            "n_fixed": 32
+          },
+          "5": {
+            "n": 92,
+            "n_fixed": 28
+          },
+          "6": {
+            "n": 90,
+            "n_fixed": 2
+          },
+          "7": {
+            "n": 33,
+            "n_fixed": 1
+          },
+          "8": {
+            "n": 2,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s5_r25": {
+      "target": "xor_vacuum",
+      "round0": "L4s5",
+      "relabel_steps": 25,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.138,
+          "mean_p_gs": 0.03819780349367592,
+          "cum_nfev": 44.0,
+          "polish_lookups": 9,
+          "round_success": 0.138,
+          "round_mean_p_gs": 0.03819780349367592,
+          "guess_hit": 0.244,
+          "round_polished_hit": 0.244
+        },
+        {
+          "round": 1,
+          "success": 0.242,
+          "mean_p_gs": 0.17284829816311797,
+          "cum_nfev": 95.0,
+          "polish_lookups": 18,
+          "round_success": 0.238,
+          "round_mean_p_gs": 0.16227612428278917,
+          "guess_hit": 0.262,
+          "round_polished_hit": 0.264
+        },
+        {
+          "round": 2,
+          "success": 0.262,
+          "mean_p_gs": 0.20965576534590444,
+          "cum_nfev": 146.0,
+          "polish_lookups": 27,
+          "round_success": 0.25,
+          "round_mean_p_gs": 0.17510149602006045,
+          "guess_hit": 0.276,
+          "round_polished_hit": 0.276
+        },
+        {
+          "round": 3,
+          "success": 0.276,
+          "mean_p_gs": 0.22901563538439973,
+          "cum_nfev": 197.0,
+          "polish_lookups": 36,
+          "round_success": 0.27,
+          "round_mean_p_gs": 0.18800287316935893,
+          "guess_hit": 0.282,
+          "round_polished_hit": 0.282
+        },
+        {
+          "round": 4,
+          "success": 0.282,
+          "mean_p_gs": 0.24345870388549087,
+          "cum_nfev": 248.0,
+          "polish_lookups": 45,
+          "round_success": 0.28,
+          "round_mean_p_gs": 0.1958412295977713,
+          "guess_hit": 0.282,
+          "round_polished_hit": 0.288
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 378,
+      "frac_wrong0_final_success": 0.05026455026455026,
+      "frac_wrong0_later_guess_right": 0.05026455026455026,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 354,
+            "n_fixed": 19,
+            "fix_rate": 0.05367231638418079
+          },
+          "e": {
+            "n_missed": 249,
+            "n_fixed": 18,
+            "fix_rate": 0.07228915662650602
+          },
+          "A2": {
+            "n_missed": 250,
+            "n_fixed": 3,
+            "fix_rate": 0.012
+          },
+          "A1": {
+            "n_missed": 219,
+            "n_fixed": 5,
+            "fix_rate": 0.0228310502283105
+          },
+          "A0": {
+            "n_missed": 208,
+            "n_fixed": 3,
+            "fix_rate": 0.014423076923076924
+          },
+          "B2": {
+            "n_missed": 135,
+            "n_fixed": 3,
+            "fix_rate": 0.022222222222222223
+          },
+          "B1": {
+            "n_missed": 199,
+            "n_fixed": 3,
+            "fix_rate": 0.01507537688442211
+          },
+          "B0": {
+            "n_missed": 196,
+            "n_fixed": 5,
+            "fix_rate": 0.025510204081632654
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 81,
+            "n_fixed": 17
+          },
+          "4": {
+            "n": 80,
+            "n_fixed": 2
+          },
+          "5": {
+            "n": 92,
+            "n_fixed": 0
+          },
+          "6": {
+            "n": 90,
+            "n_fixed": 0
+          },
+          "7": {
+            "n": 33,
+            "n_fixed": 0
+          },
+          "8": {
+            "n": 2,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    },
+    "lb_xor_vacuum_L4s5_r50": {
+      "target": "xor_vacuum",
+      "round0": "L4s5",
+      "relabel_steps": 50,
+      "n_trials": 500,
+      "rows": [
+        {
+          "round": 0,
+          "success": 0.138,
+          "mean_p_gs": 0.03819780349367592,
+          "cum_nfev": 44.0,
+          "polish_lookups": 9,
+          "round_success": 0.138,
+          "round_mean_p_gs": 0.03819780349367592,
+          "guess_hit": 0.244,
+          "round_polished_hit": 0.244
+        },
+        {
+          "round": 1,
+          "success": 0.27,
+          "mean_p_gs": 0.2300775287848522,
+          "cum_nfev": 145.0,
+          "polish_lookups": 18,
+          "round_success": 0.27,
+          "round_mean_p_gs": 0.2221233296962527,
+          "guess_hit": 0.294,
+          "round_polished_hit": 0.294
+        },
+        {
+          "round": 2,
+          "success": 0.304,
+          "mean_p_gs": 0.28104723591872877,
+          "cum_nfev": 246.0,
+          "polish_lookups": 27,
+          "round_success": 0.306,
+          "round_mean_p_gs": 0.2637583547770628,
+          "guess_hit": 0.308,
+          "round_polished_hit": 0.312
+        },
+        {
+          "round": 3,
+          "success": 0.32,
+          "mean_p_gs": 0.2973378414894851,
+          "cum_nfev": 347.0,
+          "polish_lookups": 36,
+          "round_success": 0.32,
+          "round_mean_p_gs": 0.2684072333257485,
+          "guess_hit": 0.326,
+          "round_polished_hit": 0.326
+        },
+        {
+          "round": 4,
+          "success": 0.33,
+          "mean_p_gs": 0.313811568281016,
+          "cum_nfev": 448.0,
+          "polish_lookups": 45,
+          "round_success": 0.33,
+          "round_mean_p_gs": 0.28418380609775645,
+          "guess_hit": 0.33,
+          "round_polished_hit": 0.332
+        }
+      ],
+      "criterion": {
+        "round0_weak": false,
+        "each_round_improves": true,
+        "final_near_099": false,
+        "only_final_near_099": true,
+        "meets_all": false
+      },
+      "n_round0_guess_wrong": 378,
+      "frac_wrong0_final_success": 0.11375661375661375,
+      "frac_wrong0_later_guess_right": 0.11375661375661375,
+      "slot_misses": {
+        "per_slot": {
+          "d": {
+            "n_missed": 354,
+            "n_fixed": 41,
+            "fix_rate": 0.11581920903954802
+          },
+          "e": {
+            "n_missed": 249,
+            "n_fixed": 34,
+            "fix_rate": 0.13654618473895583
+          },
+          "A2": {
+            "n_missed": 250,
+            "n_fixed": 7,
+            "fix_rate": 0.028
+          },
+          "A1": {
+            "n_missed": 219,
+            "n_fixed": 10,
+            "fix_rate": 0.045662100456621
+          },
+          "A0": {
+            "n_missed": 208,
+            "n_fixed": 22,
+            "fix_rate": 0.10576923076923077
+          },
+          "B2": {
+            "n_missed": 135,
+            "n_fixed": 2,
+            "fix_rate": 0.014814814814814815
+          },
+          "B1": {
+            "n_missed": 199,
+            "n_fixed": 10,
+            "fix_rate": 0.05025125628140704
+          },
+          "B0": {
+            "n_missed": 196,
+            "n_fixed": 23,
+            "fix_rate": 0.11734693877551021
+          }
+        },
+        "single_slot_misses": {
+          "d": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "e": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "A0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B2": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B1": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          },
+          "B0": {
+            "n": 0,
+            "n_fixed": 0,
+            "fix_rate": null
+          }
+        },
+        "n_wrong_bits": {
+          "3": {
+            "n": 81,
+            "n_fixed": 29
+          },
+          "4": {
+            "n": 80,
+            "n_fixed": 8
+          },
+          "5": {
+            "n": 92,
+            "n_fixed": 6
+          },
+          "6": {
+            "n": 90,
+            "n_fixed": 0
+          },
+          "7": {
+            "n": 33,
+            "n_fixed": 0
+          },
+          "8": {
+            "n": 2,
+            "n_fixed": 0
+          }
+        }
+      },
+      "frac_right0_final_success": 1.0
+    }
+  },
+  "matched_growth": {
+    "lbgrow_L4s10_r100": {
+      "steps_per_stage": 110,
+      "success": 0.956,
+      "mean_p_gs": 0.4937774851158019,
+      "nfev": 884.0,
+      "n_trials": 500
+    },
+    "lbgrow_L4s10_r200": {
+      "steps_per_stage": 210,
+      "success": 0.97,
+      "mean_p_gs": 0.5336182738622066,
+      "nfev": 1684.0,
+      "n_trials": 500
+    },
+    "lbgrow_L4s10_r400": {
+      "steps_per_stage": 410,
+      "success": 0.972,
+      "mean_p_gs": 0.5589407960606283,
+      "nfev": 3284.0,
+      "n_trials": 500
+    }
+  },
+  "per_h": {
+    "lb_xor_vacuum_L4s10_r100": {
+      "vs_norelabel": {
+        "success_win_tie_loss": [
+          17,
+          1,
+          2
+        ],
+        "mean_p_win_loss": [
+          20,
+          0
+        ],
+        "per_h": {
+          "four_sat_000.npz": {
+            "relabel": [
+              0.4,
+              0.4094069058455689
+            ],
+            "control": [
+              0.32,
+              0.05029230127725029
+            ]
+          },
+          "four_sat_001.npz": {
+            "relabel": [
+              0.84,
+              0.8263425066762266
+            ],
+            "control": [
+              0.56,
+              0.08895555186426009
+            ]
+          },
+          "four_sat_002.npz": {
+            "relabel": [
+              0.84,
+              0.8396090158355747
+            ],
+            "control": [
+              0.72,
+              0.12954324126952696
+            ]
+          },
+          "four_sat_003.npz": {
+            "relabel": [
+              0.44,
+              0.4265801445344988
+            ],
+            "control": [
+              0.04,
+              0.03353462482712898
+            ]
+          },
+          "four_sat_004.npz": {
+            "relabel": [
+              0.64,
+              0.6412221603759448
+            ],
+            "control": [
+              0.04,
+              0.053493726258502246
+            ]
+          },
+          "four_sat_005.npz": {
+            "relabel": [
+              0.8,
+              0.7704953382101194
+            ],
+            "control": [
+              0.6,
+              0.14529904394542303
+            ]
+          },
+          "four_sat_006.npz": {
+            "relabel": [
+              0.68,
+              0.6743962436469221
+            ],
+            "control": [
+              0.44,
+              0.07450740043700409
+            ]
+          },
+          "four_sat_007.npz": {
+            "relabel": [
+              0.96,
+              0.9472275340629601
+            ],
+            "control": [
+              1.0,
+              0.8426393132015854
+            ]
+          },
+          "four_sat_008.npz": {
+            "relabel": [
+              1.0,
+              0.9847027207554416
+            ],
+            "control": [
+              1.0,
+              0.45029678293866615
+            ]
+          },
+          "four_sat_009.npz": {
+            "relabel": [
+              0.92,
+              0.9084393529492858
+            ],
+            "control": [
+              0.52,
+              0.10039770172749173
+            ]
+          },
+          "four_sat_010.npz": {
+            "relabel": [
+              0.56,
+              0.5519512717541971
+            ],
+            "control": [
+              0.0,
+              0.04333868851785835
+            ]
+          },
+          "four_sat_011.npz": {
+            "relabel": [
+              0.88,
+              0.8699460402806097
+            ],
+            "control": [
+              0.76,
+              0.09409602729027616
+            ]
+          },
+          "four_sat_012.npz": {
+            "relabel": [
+              0.64,
+              0.6434302329224298
+            ],
+            "control": [
+              0.24,
+              0.06939548134262581
+            ]
+          },
+          "four_sat_013.npz": {
+            "relabel": [
+              0.8,
+              0.7943004008441502
+            ],
+            "control": [
+              0.64,
+              0.09352159799276821
+            ]
+          },
+          "four_sat_014.npz": {
+            "relabel": [
+              0.76,
+              0.7220012142761613
+            ],
+            "control": [
+              0.52,
+              0.09052231530795787
+            ]
+          },
+          "four_sat_015.npz": {
+            "relabel": [
+              0.76,
+              0.7079132478714714
+            ],
+            "control": [
+              0.8,
+              0.1889259566856436
+            ]
+          },
+          "four_sat_016.npz": {
+            "relabel": [
+              0.44,
+              0.4553291254101961
+            ],
+            "control": [
+              0.24,
+              0.04377311041856446
+            ]
+          },
+          "four_sat_017.npz": {
+            "relabel": [
+              0.6,
+              0.6053911297580051
+            ],
+            "control": [
+              0.16,
+              0.04575699648950377
+            ]
+          },
+          "four_sat_018.npz": {
+            "relabel": [
+              0.72,
+              0.7244494220047857
+            ],
+            "control": [
+              0.48,
+              0.07816233810312227
+            ]
+          },
+          "four_sat_019.npz": {
+            "relabel": [
+              0.8,
+              0.7962344697716872
+            ],
+            "control": [
+              0.76,
+              0.21502637042355707
+            ]
+          }
+        }
+      },
+      "vs_matched_growth": {
+        "success_win_tie_loss": [
+          0,
+          1,
+          19
+        ],
+        "mean_p_win_loss": [
+          17,
+          3
+        ],
+        "per_h": {
+          "four_sat_000.npz": {
+            "relabel": [
+              0.4,
+              0.4094069058455689
+            ],
+            "control": [
+              1.0,
+              0.41270079356179906
+            ]
+          },
+          "four_sat_001.npz": {
+            "relabel": [
+              0.84,
+              0.8263425066762266
+            ],
+            "control": [
+              0.96,
+              0.4804431320850385
+            ]
+          },
+          "four_sat_002.npz": {
+            "relabel": [
+              0.84,
+              0.8396090158355747
+            ],
+            "control": [
+              1.0,
+              0.509879939672185
+            ]
+          },
+          "four_sat_003.npz": {
+            "relabel": [
+              0.44,
+              0.4265801445344988
+            ],
+            "control": [
+              0.84,
+              0.4038124763144593
+            ]
+          },
+          "four_sat_004.npz": {
+            "relabel": [
+              0.64,
+              0.6412221603759448
+            ],
+            "control": [
+              0.92,
+              0.45330108685349835
+            ]
+          },
+          "four_sat_005.npz": {
+            "relabel": [
+              0.8,
+              0.7704953382101194
+            ],
+            "control": [
+              1.0,
+              0.37335466907407805
+            ]
+          },
+          "four_sat_006.npz": {
+            "relabel": [
+              0.68,
+              0.6743962436469221
+            ],
+            "control": [
+              1.0,
+              0.4105801059252548
+            ]
+          },
+          "four_sat_007.npz": {
+            "relabel": [
+              0.96,
+              0.9472275340629601
+            ],
+            "control": [
+              1.0,
+              0.9833467112079712
+            ]
+          },
+          "four_sat_008.npz": {
+            "relabel": [
+              1.0,
+              0.9847027207554416
+            ],
+            "control": [
+              1.0,
+              0.6595541506470152
+            ]
+          },
+          "four_sat_009.npz": {
+            "relabel": [
+              0.92,
+              0.9084393529492858
+            ],
+            "control": [
+              1.0,
+              0.4871714334478554
+            ]
+          },
+          "four_sat_010.npz": {
+            "relabel": [
+              0.56,
+              0.5519512717541971
+            ],
+            "control": [
+              0.96,
+              0.29932142853552846
+            ]
+          },
+          "four_sat_011.npz": {
+            "relabel": [
+              0.88,
+              0.8699460402806097
+            ],
+            "control": [
+              0.96,
+              0.4933138910824312
+            ]
+          },
+          "four_sat_012.npz": {
+            "relabel": [
+              0.64,
+              0.6434302329224298
+            ],
+            "control": [
+              0.88,
+              0.475979186511358
+            ]
+          },
+          "four_sat_013.npz": {
+            "relabel": [
+              0.8,
+              0.7943004008441502
+            ],
+            "control": [
+              1.0,
+              0.5122232952216366
+            ]
+          },
+          "four_sat_014.npz": {
+            "relabel": [
+              0.76,
+              0.7220012142761613
+            ],
+            "control": [
+              1.0,
+              0.5040189647152163
+            ]
+          },
+          "four_sat_015.npz": {
+            "relabel": [
+              0.76,
+              0.7079132478714714
+            ],
+            "control": [
+              1.0,
+              0.6930690849999295
+            ]
+          },
+          "four_sat_016.npz": {
+            "relabel": [
+              0.44,
+              0.4553291254101961
+            ],
+            "control": [
+              0.96,
+              0.3143891335577068
+            ]
+          },
+          "four_sat_017.npz": {
+            "relabel": [
+              0.6,
+              0.6053911297580051
+            ],
+            "control": [
+              0.68,
+              0.29539554854090694
+            ]
+          },
+          "four_sat_018.npz": {
+            "relabel": [
+              0.72,
+              0.7244494220047857
+            ],
+            "control": [
+              0.96,
+              0.21243224759697787
+            ]
+          },
+          "four_sat_019.npz": {
+            "relabel": [
+              0.8,
+              0.7962344697716872
+            ],
+            "control": [
+              1.0,
+              0.9012624227651902
+            ]
+          }
+        }
+      }
+    },
+    "lb_xor_vacuum_L4s10_r200": {
+      "vs_norelabel": {
+        "success_win_tie_loss": [
+          14,
+          3,
+          3
+        ],
+        "mean_p_win_loss": [
+          19,
+          1
+        ],
+        "per_h": {
+          "four_sat_000.npz": {
+            "relabel": [
+              0.64,
+              0.5796219693670719
+            ],
+            "control": [
+              0.28,
+              0.05923007865421614
+            ]
+          },
+          "four_sat_001.npz": {
+            "relabel": [
+              0.96,
+              0.9588076842537252
+            ],
+            "control": [
+              0.68,
+              0.12527855046010578
+            ]
+          },
+          "four_sat_002.npz": {
+            "relabel": [
+              0.92,
+              0.9200259032981903
+            ],
+            "control": [
+              1.0,
+              0.2549673869941595
+            ]
+          },
+          "four_sat_003.npz": {
+            "relabel": [
+              0.64,
+              0.6502062143594333
+            ],
+            "control": [
+              0.12,
+              0.04618052556358826
+            ]
+          },
+          "four_sat_004.npz": {
+            "relabel": [
+              0.72,
+              0.7348383553689625
+            ],
+            "control": [
+              0.08,
+              0.06229032195411638
+            ]
+          },
+          "four_sat_005.npz": {
+            "relabel": [
+              0.96,
+              0.9604926977307889
+            ],
+            "control": [
+              0.96,
+              0.29017510985270284
+            ]
+          },
+          "four_sat_006.npz": {
+            "relabel": [
+              0.72,
+              0.7292998155602348
+            ],
+            "control": [
+              0.44,
+              0.07922941862937014
+            ]
+          },
+          "four_sat_007.npz": {
+            "relabel": [
+              0.96,
+              0.9574154199298366
+            ],
+            "control": [
+              1.0,
+              0.961163745056426
+            ]
+          },
+          "four_sat_008.npz": {
+            "relabel": [
+              1.0,
+              0.996704460633583
+            ],
+            "control": [
+              1.0,
+              0.6725151625673895
+            ]
+          },
+          "four_sat_009.npz": {
+            "relabel": [
+              0.96,
+              0.927144844498113
+            ],
+            "control": [
+              0.64,
+              0.11576474908759656
+            ]
+          },
+          "four_sat_010.npz": {
+            "relabel": [
+              0.8,
+              0.7578932234086652
+            ],
+            "control": [
+              0.12,
+              0.053358006100014545
+            ]
+          },
+          "four_sat_011.npz": {
+            "relabel": [
+              0.96,
+              0.9587465969898574
+            ],
+            "control": [
+              0.88,
+              0.10102583498687917
+            ]
+          },
+          "four_sat_012.npz": {
+            "relabel": [
+              0.84,
+              0.8539019163469554
+            ],
+            "control": [
+              0.36,
+              0.08011998293136074
+            ]
+          },
+          "four_sat_013.npz": {
+            "relabel": [
+              0.92,
+              0.8812319365473941
+            ],
+            "control": [
+              0.76,
+              0.10839555806404891
+            ]
+          },
+          "four_sat_014.npz": {
+            "relabel": [
+              0.84,
+              0.8406363317027273
+            ],
+            "control": [
+              0.56,
+              0.1039203470164966
+            ]
+          },
+          "four_sat_015.npz": {
+            "relabel": [
+              0.92,
+              0.889827954076836
+            ],
+            "control": [
+              0.92,
+              0.48600578299719754
+            ]
+          },
+          "four_sat_016.npz": {
+            "relabel": [
+              0.8,
+              0.7687381513840355
+            ],
+            "control": [
+              0.52,
+              0.06414652481578455
+            ]
+          },
+          "four_sat_017.npz": {
+            "relabel": [
+              0.76,
+              0.7292365855661481
+            ],
+            "control": [
+              0.32,
+              0.0573509795302954
+            ]
+          },
+          "four_sat_018.npz": {
+            "relabel": [
+              0.84,
+              0.8436348234656168
+            ],
+            "control": [
+              1.0,
+              0.17604913336634026
+            ]
+          },
+          "four_sat_019.npz": {
+            "relabel": [
+              1.0,
+              0.9733431817751651
+            ],
+            "control": [
+              0.92,
+              0.34861358535721043
+            ]
+          }
+        }
+      },
+      "vs_matched_growth": {
+        "success_win_tie_loss": [
+          0,
+          4,
+          16
+        ],
+        "mean_p_win_loss": [
+          19,
+          1
+        ],
+        "per_h": {
+          "four_sat_000.npz": {
+            "relabel": [
+              0.64,
+              0.5796219693670719
+            ],
+            "control": [
+              0.92,
+              0.43366858165822386
+            ]
+          },
+          "four_sat_001.npz": {
+            "relabel": [
+              0.96,
+              0.9588076842537252
+            ],
+            "control": [
+              0.96,
+              0.49624254800283296
+            ]
+          },
+          "four_sat_002.npz": {
+            "relabel": [
+              0.92,
+              0.9200259032981903
+            ],
+            "control": [
+              1.0,
+              0.5423560668969182
+            ]
+          },
+          "four_sat_003.npz": {
+            "relabel": [
+              0.64,
+              0.6502062143594333
+            ],
+            "control": [
+              0.96,
+              0.49986031298262334
+            ]
+          },
+          "four_sat_004.npz": {
+            "relabel": [
+              0.72,
+              0.7348383553689625
+            ],
+            "control": [
+              1.0,
+              0.5174786416798753
+            ]
+          },
+          "four_sat_005.npz": {
+            "relabel": [
+              0.96,
+              0.9604926977307889
+            ],
+            "control": [
+              1.0,
+              0.4287829347153451
+            ]
+          },
+          "four_sat_006.npz": {
+            "relabel": [
+              0.72,
+              0.7292998155602348
+            ],
+            "control": [
+              1.0,
+              0.4496261297483449
+            ]
+          },
+          "four_sat_007.npz": {
+            "relabel": [
+              0.96,
+              0.9574154199298366
+            ],
+            "control": [
+              1.0,
+              0.9850319318010473
+            ]
+          },
+          "four_sat_008.npz": {
+            "relabel": [
+              1.0,
+              0.996704460633583
+            ],
+            "control": [
+              1.0,
+              0.7291393545061261
+            ]
+          },
+          "four_sat_009.npz": {
+            "relabel": [
+              0.96,
+              0.927144844498113
+            ],
+            "control": [
+              1.0,
+              0.5110100657907171
+            ]
+          },
+          "four_sat_010.npz": {
+            "relabel": [
+              0.8,
+              0.7578932234086652
+            ],
+            "control": [
+              0.8,
+              0.3456189336451426
+            ]
+          },
+          "four_sat_011.npz": {
+            "relabel": [
+              0.96,
+              0.9587465969898574
+            ],
+            "control": [
+              1.0,
+              0.5172389054050529
+            ]
+          },
+          "four_sat_012.npz": {
+            "relabel": [
+              0.84,
+              0.8539019163469554
+            ],
+            "control": [
+              1.0,
+              0.5074789536349317
+            ]
+          },
+          "four_sat_013.npz": {
+            "relabel": [
+              0.92,
+              0.8812319365473941
+            ],
+            "control": [
+              1.0,
+              0.5298272573756784
+            ]
+          },
+          "four_sat_014.npz": {
+            "relabel": [
+              0.84,
+              0.8406363317027273
+            ],
+            "control": [
+              0.96,
+              0.5492885630287138
+            ]
+          },
+          "four_sat_015.npz": {
+            "relabel": [
+              0.92,
+              0.889827954076836
+            ],
+            "control": [
+              1.0,
+              0.7628228232283307
+            ]
+          },
+          "four_sat_016.npz": {
+            "relabel": [
+              0.8,
+              0.7687381513840355
+            ],
+            "control": [
+              0.96,
+              0.354197981414382
+            ]
+          },
+          "four_sat_017.npz": {
+            "relabel": [
+              0.76,
+              0.7292365855661481
+            ],
+            "control": [
+              0.88,
+              0.3459252948695506
+            ]
+          },
+          "four_sat_018.npz": {
+            "relabel": [
+              0.84,
+              0.8436348234656168
+            ],
+            "control": [
+              0.96,
+              0.23975089554351509
+            ]
+          },
+          "four_sat_019.npz": {
+            "relabel": [
+              1.0,
+              0.9733431817751651
+            ],
+            "control": [
+              1.0,
+              0.9270193013167806
+            ]
+          }
+        }
+      }
+    },
+    "lb_xor_vacuum_L4s10_r400": {
+      "vs_norelabel": {
+        "success_win_tie_loss": [
+          13,
+          3,
+          4
+        ],
+        "mean_p_win_loss": [
+          19,
+          1
+        ],
+        "per_h": {
+          "four_sat_000.npz": {
+            "relabel": [
+              0.8,
+              0.7747364213707424
+            ],
+            "control": [
+              0.44,
+              0.07504131261983005
+            ]
+          },
+          "four_sat_001.npz": {
+            "relabel": [
+              1.0,
+              0.9760072141151431
+            ],
+            "control": [
+              0.88,
+              0.2734445698602178
+            ]
+          },
+          "four_sat_002.npz": {
+            "relabel": [
+              1.0,
+              0.998839799067835
+            ],
+            "control": [
+              1.0,
+              0.3782443390970886
+            ]
+          },
+          "four_sat_003.npz": {
+            "relabel": [
+              0.84,
+              0.8061565204776987
+            ],
+            "control": [
+              0.48,
+              0.11738120293063799
+            ]
+          },
+          "four_sat_004.npz": {
+            "relabel": [
+              0.88,
+              0.8476698434221548
+            ],
+            "control": [
+              0.6,
+              0.1425651163182569
+            ]
+          },
+          "four_sat_005.npz": {
+            "relabel": [
+              0.96,
+              0.9627771217038367
+            ],
+            "control": [
+              1.0,
+              0.42813652239649286
+            ]
+          },
+          "four_sat_006.npz": {
+            "relabel": [
+              0.88,
+              0.8516932078293101
+            ],
+            "control": [
+              0.52,
+              0.09882063999935457
+            ]
+          },
+          "four_sat_007.npz": {
+            "relabel": [
+              0.96,
+              0.9591322854768939
+            ],
+            "control": [
+              1.0,
+              0.986441235272891
+            ]
+          },
+          "four_sat_008.npz": {
+            "relabel": [
+              1.0,
+              0.9989302982556161
+            ],
+            "control": [
+              1.0,
+              0.7247977051431165
+            ]
+          },
+          "four_sat_009.npz": {
+            "relabel": [
+              1.0,
+              0.9987161619392856
+            ],
+            "control": [
+              0.8,
+              0.18820232589815533
+            ]
+          },
+          "four_sat_010.npz": {
+            "relabel": [
+              0.92,
+              0.8950420265508106
+            ],
+            "control": [
+              0.6,
+              0.1904278692123086
+            ]
+          },
+          "four_sat_011.npz": {
+            "relabel": [
+              0.96,
+              0.9582586657441845
+            ],
+            "control": [
+              0.8,
+              0.1257556731824171
+            ]
+          },
+          "four_sat_012.npz": {
+            "relabel": [
+              1.0,
+              0.9988523657790144
+            ],
+            "control": [
+              0.8,
+              0.1444829940014504
+            ]
+          },
+          "four_sat_013.npz": {
+            "relabel": [
+              0.96,
+              0.9580776092308346
+            ],
+            "control": [
+              0.84,
+              0.15034173699302175
+            ]
+          },
+          "four_sat_014.npz": {
+            "relabel": [
+              0.92,
+              0.9201027060590249
+            ],
+            "control": [
+              0.88,
+              0.1671809812077843
+            ]
+          },
+          "four_sat_015.npz": {
+            "relabel": [
+              0.96,
+              0.9632956205005061
+            ],
+            "control": [
+              1.0,
+              0.7679266709855339
+            ]
+          },
+          "four_sat_016.npz": {
+            "relabel": [
+              0.88,
+              0.8507775712611234
+            ],
+            "control": [
+              0.64,
+              0.1454221151098093
+            ]
+          },
+          "four_sat_017.npz": {
+            "relabel": [
+              0.92,
+              0.9230213152592366
+            ],
+            "control": [
+              0.4,
+              0.09242002667719248
+            ]
+          },
+          "four_sat_018.npz": {
+            "relabel": [
+              1.0,
+              0.9988561477034452
+            ],
+            "control": [
+              1.0,
+              0.297032973431952
+            ]
+          },
+          "four_sat_019.npz": {
+            "relabel": [
+              0.96,
+              0.9612284156322416
+            ],
+            "control": [
+              1.0,
+              0.6205137403118394
+            ]
+          }
+        }
+      },
+      "vs_matched_growth": {
+        "success_win_tie_loss": [
+          3,
+          5,
+          12
+        ],
+        "mean_p_win_loss": [
+          19,
+          1
+        ],
+        "per_h": {
+          "four_sat_000.npz": {
+            "relabel": [
+              0.8,
+              0.7747364213707424
+            ],
+            "control": [
+              1.0,
+              0.5632684415635988
+            ]
+          },
+          "four_sat_001.npz": {
+            "relabel": [
+              1.0,
+              0.9760072141151431
+            ],
+            "control": [
+              1.0,
+              0.5134060116248941
+            ]
+          },
+          "four_sat_002.npz": {
+            "relabel": [
+              1.0,
+              0.998839799067835
+            ],
+            "control": [
+              1.0,
+              0.553702359827385
+            ]
+          },
+          "four_sat_003.npz": {
+            "relabel": [
+              0.84,
+              0.8061565204776987
+            ],
+            "control": [
+              0.92,
+              0.5206756159259992
+            ]
+          },
+          "four_sat_004.npz": {
+            "relabel": [
+              0.88,
+              0.8476698434221548
+            ],
+            "control": [
+              1.0,
+              0.5580900052871766
+            ]
+          },
+          "four_sat_005.npz": {
+            "relabel": [
+              0.96,
+              0.9627771217038367
+            ],
+            "control": [
+              1.0,
+              0.47272513795519056
+            ]
+          },
+          "four_sat_006.npz": {
+            "relabel": [
+              0.88,
+              0.8516932078293101
+            ],
+            "control": [
+              0.96,
+              0.5044510366901913
+            ]
+          },
+          "four_sat_007.npz": {
+            "relabel": [
+              0.96,
+              0.9591322854768939
+            ],
+            "control": [
+              1.0,
+              0.9784086370079027
+            ]
+          },
+          "four_sat_008.npz": {
+            "relabel": [
+              1.0,
+              0.9989302982556161
+            ],
+            "control": [
+              1.0,
+              0.7322918854062958
+            ]
+          },
+          "four_sat_009.npz": {
+            "relabel": [
+              1.0,
+              0.9987161619392856
+            ],
+            "control": [
+              1.0,
+              0.5311511386531935
+            ]
+          },
+          "four_sat_010.npz": {
+            "relabel": [
+              0.92,
+              0.8950420265508106
+            ],
+            "control": [
+              0.96,
+              0.3791583803664893
+            ]
+          },
+          "four_sat_011.npz": {
+            "relabel": [
+              0.96,
+              0.9582586657441845
+            ],
+            "control": [
+              0.96,
+              0.5359473474832612
+            ]
+          },
+          "four_sat_012.npz": {
+            "relabel": [
+              1.0,
+              0.9988523657790144
+            ],
+            "control": [
+              0.88,
+              0.5283815541066111
+            ]
+          },
+          "four_sat_013.npz": {
+            "relabel": [
+              0.96,
+              0.9580776092308346
+            ],
+            "control": [
+              1.0,
+              0.574880507744091
+            ]
+          },
+          "four_sat_014.npz": {
+            "relabel": [
+              0.92,
+              0.9201027060590249
+            ],
+            "control": [
+              1.0,
+              0.5211855181535147
+            ]
+          },
+          "four_sat_015.npz": {
+            "relabel": [
+              0.96,
+              0.9632956205005061
+            ],
+            "control": [
+              1.0,
+              0.7404053767270149
+            ]
+          },
+          "four_sat_016.npz": {
+            "relabel": [
+              0.88,
+              0.8507775712611234
+            ],
+            "control": [
+              0.96,
+              0.38811699357903484
+            ]
+          },
+          "four_sat_017.npz": {
+            "relabel": [
+              0.92,
+              0.9230213152592366
+            ],
+            "control": [
+              0.84,
+              0.3825017147327807
+            ]
+          },
+          "four_sat_018.npz": {
+            "relabel": [
+              1.0,
+              0.9988561477034452
+            ],
+            "control": [
+              0.96,
+              0.29385066847070507
+            ]
+          },
+          "four_sat_019.npz": {
+            "relabel": [
+              0.96,
+              0.9612284156322416
+            ],
+            "control": [
+              1.0,
+              0.9062175899072336
+            ]
+          }
+        }
+      }
+    }
+  }
+}
