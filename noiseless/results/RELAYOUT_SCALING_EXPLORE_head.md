@@ -1,5 +1,51 @@
 # Relayout scaling exploration (n = 8, 10, 12, …)
 
+## FINAL SUMMARY (Oct 10 2026, 9:30 AM CST)
+
+All rows 100 trials (20 H × 5 seeds), noiseless, Fock cutoff code + 16, leakage counted against p(GS), fix-up
+always Hamming 1. Shared recipe: L4, s=50, explore `--explore-mask perm --xeta 16`, exploit `--reta 2`, R=4 × r=200,
+lr 0.05 (0.07 at n=8). evals = 404·E + 1604. "lookups" = distinct classical energy-table entries read.
+
+| n | best setting | success | mean p(GS) | leakage | evals | distinct lookups | share of 2^n |
+|---|---|---|---|---|---|---|---|
+| 8 | E2 top-1, lr 0.07 | 1.000 | 0.995 | 0.0000 | 2412 | 10 | 0.040 |
+| 10 | E3 top-1 | 1.000 | 0.997 | 0.0000 | 2816 | 20 | 0.020 |
+| 12 | E5 top-1 | 1.000 | 0.997 | 0.0000 | 3624 | 46 | 0.011 |
+| 14 | E5 rawk64 t1 (seed block A) | 0.980 | 0.977 | 0.0021 | 3624 | 384 | 0.023 |
+| 14 | E5 rawk64 t1 (seed block B, fresh) | 0.990 | 0.987 | 0.0006 | 3624 | 383 | 0.023 |
+| 16 | E8 top-1, lr 0.1 (probe) | 0.430 | 0.429 | 0.0000 | 4836 | 159 | 0.002 |
+
+Cheaper variant: R3 instead of R4 keeps quality at n=10 (E3, 2415 evals, 1.000 / 0.997) and n=12 (E5, 3223 evals,
+1.000 / 0.997).
+
+**Seed-block reproducibility.** Block B (trials 5–9, `--trial-offset 5`): n=8 1.000 / 0.997, n=10 0.990 / 0.988,
+n=12 0.990 / 0.987 (lr 0.05 recipe); 10-seed averages ≈ 0.995 / 0.992 / 0.992 mean p(GS). n=14 rawk64: A 0.980 / 0.977,
+B 0.990 / 0.987 → 200-trial average 0.985 / 0.982.
+
+**How knobs scale with n.** Everything is fixed except the number of explore runs E: 2, 3, 5 at n = 8, 10, 12
+(top-1), and E=5 with a raw top-64 pool at n=14. Top-1 alone would need E ≈ 12–14 at n=14 and ≈ 36 at n=16 (single-run
+hit probability 0.66 → 0.26 → 0.12 at n = 12, 14, 16). evals grow ≈ 1.08–1.14× per bit through n=12.
+
+**Raw top-K option (`rawk<K>t<T>`, `--rawk K --polt T`).** After *every* round (explore and exploit), the K most
+probable code states of that round's output distribution are put into a running "raw pool", and their classical
+energies are looked up (1 lookup each). The T lowest-energy members of the whole pool (T=1 here) then get the usual
+Hamming-1 fix-up (itself + n one-bit flips, cached), and the guess is the lowest-energy fix-up result. `--topk` is
+ignored. Lookups are counted as distinct entries (`n_lookups == n_lookups_distinct`, a set of every state whose energy
+was read). The fix-up itself is still strictly Hamming 1; but the K raw-pool reads are extra classical lookups on
+top of it, so this is a *larger classical budget*, not a pure top-1 + Hamming-1 rule. Its benefit is only where the GS
+is sampled but not the most probable state: at n=10 E3 and n=12 E5 rawk64 gives the same 1.000 / 0.997 as top-1 but
+needs 211 vs 20 lookups (21% vs 2% of 2^10) and 327 vs 46 (8.0% vs 1.1% of 2^12), so it is only worth using at n≥14.
+At n=14 it reaches 0.985 / 0.982 with 2.3% of 2^14 lookups at 3624 evals (vs E13 top-1: 0.940 / 0.929, 6856 evals).
+
+**What did not help.** Cold concentration stage after explore (n=14 0.900 → 0.48–0.78; also hurts n=12); deeper explore
+(L=5/6, L=6 at n=14 0.76) or more explore steps (s=100, worse per eval); explore η×4 / η×64 at n=14; start growth at L=2;
+explore lr ×0.5/×2; SPSA c=0.3; Gray cavity code; smaller Fock margin; exploit r≥400 or more relabel rounds (drift and
+leak); exploit lr 0.05 with only E1 at n=8; fixed (identity) explore layout (n=10 drops to 0.850 / 0.841).
+
+**Open:** n=16 needs either many more explore runs or a better explore circuit; the raw-pool lookup share
+(2.3% at n=14) should be checked at n=16 before calling the scaling sub-exponential in classical cost.
+
+
 Running log of the explore-then-exploit relayout study (started Oct 9 2026, 10 PM CST). Dense
 `four_sat_scaling` sets, 20 H per n, 100 trials (20 H × 5 paired seeds) per setting, noiseless, Fock cutoff
 code levels + 16 per cavity, leakage counted against p(GS). Fix-up radius fixed at Hamming 1 (n+1 lookups per new candidate).

@@ -83,9 +83,11 @@ def trial_seed(seed0: int, inst: int, trial: int) -> int:
 
 
 def config_tag(n, L, s, r, R, lr=0.1, nf=None, ham_set="scaling", method="fast", explore=1, topk=1,
-               explore_mask="random", xeta=1.0, reta=1.0, xL=None, xs=None, cool=0, ceta=64.0, clr=0.05) -> str:
+               explore_mask="random", xeta=1.0, reta=1.0, xL=None, xs=None, cool=0, ceta=64.0, clr=0.05,
+               rawk=0, polt=1, xbeta=None, xkick=None) -> str:
     t = f"n{n:02d}_L{L}s{s}_r{r}_R{R}"
-    if int(explore) > 1 or int(topk) > 1 or float(xeta or 1) != 1.0 or float(reta or 1) != 1.0 or xL or xs or cool:
+    if int(explore) > 1 or int(topk) > 1 or float(xeta or 1) != 1.0 or float(reta or 1) != 1.0 or xL or xs or cool \
+            or rawk or xbeta or xkick:
         t += f"_E{int(explore)}K{int(topk)}" + ("" if explore_mask == "random" else f"{explore_mask}")
         if xeta and float(xeta) != 1.0:
             t += f"_xeta{float(xeta):g}"
@@ -97,6 +99,12 @@ def config_tag(n, L, s, r, R, lr=0.1, nf=None, ham_set="scaling", method="fast",
             t += f"_xs{int(xs)}"
         if cool:
             t += f"_cool{int(cool)}e{float(ceta):g}lr{float(clr):g}"
+        if rawk:
+            t += f"_rawk{int(rawk)}t{int(polt)}"
+        if xbeta:
+            t += f"_xb{float(xbeta):g}"
+        if xkick:
+            t += f"_xk{float(xkick):g}"
     if abs(float(lr) - 0.1) > 1e-12:
         t += f"_lr{lr:g}"
     if nf is not None and nf != default_nf((n - 2) // 2):
@@ -117,7 +125,8 @@ def worker(job: dict) -> dict:
     M = int(job.get("explore") or 1)
     K = int(job.get("topk") or 1)
     ee = M > 1 or K > 1 or float(job.get("xeta") or 1.0) != 1.0 or float(job.get("reta") or 1.0) != 1.0 \
-        or job.get("xL") or job.get("xs") or job.get("cool")
+        or job.get("xL") or job.get("xs") or job.get("cool") \
+        or job.get("rawk") or job.get("xbeta") or job.get("xkick")
     if ee:
         rec = explore_exploit_trial_kbit(
             E, gs, k=k, nf=int(job["nf"]), final_layers=int(job["L"]), rng=rng, explore_rounds=M,
@@ -125,7 +134,9 @@ def worker(job: dict) -> dict:
             explore_eta_scale=float(job.get("xeta") or 1.0), exploit_eta_scale=float(job.get("reta") or 1.0),
             explore_layers=job.get("xL"), explore_steps=job.get("xs"),
             cool_steps=int(job.get("cool") or 0), cool_eta_scale=float(job.get("ceta") or 64.0),
-            cool_lr=float(job.get("clr") or 0.05),
+            cool_lr=float(job.get("clr") or 0.05), raw_k=int(job.get("rawk") or 0), polish_t=int(job.get("polt") or 1),
+            init_beta_max=(float(job["xbeta"]) if job.get("xbeta") else None),
+            kick_sigma_x=(float(job["xkick"]) if job.get("xkick") else None),
             relayout_rounds=int(job["R"]), relayout_steps=int(job["r"]), relayout_lr=float(job["lr"]),
             steps_per_stage=int(job["s"]), lr_schedule=lr_schedule_for(int(job["L"])), method=job["method"],
         )
@@ -138,7 +149,8 @@ def worker(job: dict) -> dict:
     rec.update({kk: job[kk] for kk in ("n", "L", "s", "r", "R", "lr", "nf", "inst", "trial", "seed", "ham_set", "method")})
     rec.update(explore=M, topk=K, explore_mask=job.get("explore_mask") or "random",
                xeta=job.get("xeta"), reta=job.get("reta"), xL=job.get("xL"), xs=job.get("xs"),
-               cool=job.get("cool"), ceta=job.get("ceta"), clr=job.get("clr"))
+               cool=job.get("cool"), ceta=job.get("ceta"), clr=job.get("clr"), rawk=job.get("rawk"), polt=job.get("polt"),
+               xbeta=job.get("xbeta"), xkick=job.get("xkick"))
     rec["file"] = Path(job["path"]).name
     nfc = int(job.get("nf_check") or 0)
     if nfc:
@@ -191,7 +203,7 @@ def load_records(path: Path, trials: int | None = None) -> list[dict]:
 def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_set="scaling", method="fast",
                workers=8, seed0=20260917, outdir: Path = RUN_ROOT, nf_check=None, max_h=None, log=None,
                tag=None, explore=1, topk=1, explore_mask="random", xeta=1.0, reta=1.0, xL=None,
-               xs=None, cool=0, ceta=64.0, clr=0.05) -> tuple[str, list[dict]]:
+               xs=None, cool=0, ceta=64.0, clr=0.05, rawk=0, polt=1, xbeta=None, xkick=None) -> tuple[str, list[dict]]:
     if log is None:
         def log(msg):
             print(msg, flush=True)
@@ -199,7 +211,8 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
     nf = default_nf(k) if nf is None else int(nf)
     if nf_check is None:
         nf_check = 0 if nf == (1 << k) else nf + max(16, (1 << k) // 4)
-    tag = tag or config_tag(n, L, s, r, R, lr, nf, ham_set, method, explore, topk, explore_mask, xeta, reta, xL, xs, cool, ceta, clr)
+    tag = tag or config_tag(n, L, s, r, R, lr, nf, ham_set, method, explore, topk, explore_mask, xeta, reta, xL, xs, cool, ceta, clr,
+                            rawk, polt, xbeta, xkick)
     outdir.mkdir(parents=True, exist_ok=True)
     path = ckpt(outdir, tag)
     paths = ham_paths(n, ham_set)
@@ -214,7 +227,7 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
             jobs.append(dict(n=n, L=L, s=s, r=r, R=R, lr=lr, nf=nf, inst=i, trial=t, seed=trial_seed(seed0, i, t),
                              path=str(p), ham_set=ham_set, method=method, nf_check=nf_check,
                              explore=explore, topk=topk, explore_mask=explore_mask, xeta=xeta, reta=reta,
-                             xL=xL, xs=xs, cool=cool, ceta=ceta, clr=clr))
+                             xL=xL, xs=xs, cool=cool, ceta=ceta, clr=clr, rawk=rawk, polt=polt, xbeta=xbeta, xkick=xkick))
     log(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {tag}: {len(jobs)} jobs ({len(done)} done)")
     t0 = time.time()
     if jobs:
@@ -310,12 +323,17 @@ def main(argv=None) -> int:
     p.add_argument("--cool", type=int, default=0, help="cold concentration steps after each explore growth")
     p.add_argument("--ceta", type=float, default=64.0, help="eta multiplier in the cold stage")
     p.add_argument("--clr", type=float, default=0.05, help="Adam lr in the cold stage")
+    p.add_argument("--rawk", type=int, default=0, help="energy-ranked pool: top-rawk probable states per round (1 lookup each)")
+    p.add_argument("--polt", type=int, default=1, help="with --rawk: Hamming-1 fix-up of the polt lowest-energy raw-pool states")
+    p.add_argument("--xbeta", type=float, default=None, help="max |beta| of the first explore growth stage init (default 3)")
+    p.add_argument("--xkick", type=float, default=None, help="growth kick sigma in explore (default 0.05)")
     a = p.parse_args(argv)
     tag, recs = run_config(n=a.n, L=a.L, s=a.s, r=a.r, R=a.R, lr=a.lr, nf=a.nf, trials=a.trials,
                            trial_offset=a.trial_offset, ham_set=a.ham_set, method=a.method, workers=a.workers,
                            seed0=a.seed, outdir=Path(a.outdir), nf_check=a.nf_check, max_h=a.max_h, tag=a.tag,
                            explore=a.explore, topk=a.topk, explore_mask=a.explore_mask, xeta=a.xeta, reta=a.reta,
-                           xL=a.xL, xs=a.xs, cool=a.cool, ceta=a.ceta, clr=a.clr)
+                           xL=a.xL, xs=a.xs, cool=a.cool, ceta=a.ceta, clr=a.clr,
+                           rawk=a.rawk, polt=a.polt, xbeta=a.xbeta, xkick=a.xkick)
     sm = summarize(recs)
     sm.pop("per_h", None)
     print(json.dumps({"tag": tag, **sm}, indent=1))

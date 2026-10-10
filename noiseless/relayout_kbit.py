@@ -280,6 +280,10 @@ def explore_exploit_trial_kbit(
     cool_steps: int = 0,
     cool_eta_scale: float = 64.0,
     cool_lr: float = 0.05,
+    raw_k: int = 0,
+    polish_t: int = 1,
+    init_beta_max: float | None = None,
+    kick_sigma_x: float | None = None,
 ) -> dict:
     """Explore-then-exploit relayout (n = 10 cost fix, RELAYOUT_N10_COST_DIAGNOSIS.md).
 
@@ -302,6 +306,10 @@ def explore_exploit_trial_kbit(
     * ``cool_steps`` > 0: after each explore growth, a cold "concentration" stage of that many SPSA-Adam
       steps from the grown parameters at η × ``cool_eta_scale`` and lr ``cool_lr``; the explore candidate
       is the top-K of the cooled state (counted in evals).
+    * ``raw_k`` > 0 (energy-ranked pool): after every round the ``raw_k`` most probable code states are added to a
+      raw pool (1 classical energy lookup each); the guess is the best radius-``polish_radius`` fix-up of the
+      ``polish_t`` lowest-energy raw-pool members (``topk`` is then ignored). ``init_beta_max`` rescales the random
+      |beta| of the first growth stage (default 3); ``kick_sigma_x`` overrides the growth kick sigma.
     """
     n = 2 + 2 * int(k)
     E = np.asarray(energies_logical, dtype=float).reshape(-1)
@@ -326,6 +334,8 @@ def explore_exploit_trial_kbit(
     guess = None
     n_lookups = 0
     seen: set[int] = set()  # distinct energy-table entries read (cache)
+    raw_pool: set[int] = set()
+    polished_cache: dict[int, int] = {}
     n_total = int(explore_rounds) + int(relayout_rounds)
     for rnd in range(n_total):
         exploring = rnd < int(explore_rounds)
@@ -349,9 +359,10 @@ def explore_exploit_trial_kbit(
             sim = XorKbitSim(layout, E[Pm], Lr, gs_p, u_name=u_name, method=method, xa=xa, xb=xb)
         if exploring:
             res = grow_trial(sim, final_layers=Lx, rng=rng, start_layers=int(start_layers),
-                             kick_sigma=float(kick_sigma), c=float(c), A=float(A), optimizer="spsa_adam",
+                             kick_sigma=float(kick_sigma if kick_sigma_x is None else kick_sigma_x), c=float(c), A=float(A), optimizer="spsa_adam",
                              steps_per_stage=sx, adam_lr=float(adam_lr), lr_schedule=lr_x,
-                             eta_scale_schedule=[float(explore_eta_scale)] * len(lr_x))
+                             eta_scale_schedule=[float(explore_eta_scale)] * len(lr_x),
+                             init_beta_max=init_beta_max)
             if int(cool_steps) > 0:
                 sim.eta_scale = float(cool_eta_scale)
                 res_c = optimize_trial(sim, maxiter=int(cool_steps), rng=rng, x0=np.asarray(res.x, dtype=float),
@@ -376,12 +387,29 @@ def explore_exploit_trial_kbit(
         raw = [int(j) ^ mask for j in top]
         if Pm is not None:
             raw = [int(Pm[v]) for v in raw]
-        new = [polish_logical(v, E, n, polish_radius) for v in raw]
-        n_lookups += len(new) * (n + 1)
-        for v in raw:
-            seen.add(v)
-            seen.update(v ^ (1 << b) for b in range(n))
-        pool.update(new)
+        if int(raw_k) > 0:
+            top = np.argsort(-pl, kind="stable")[: int(raw_k)]
+            raw = [int(j) ^ mask for j in top]
+            if Pm is not None:
+                raw = [int(Pm[v]) for v in raw]
+            raw_pool.update(raw)
+            seen.update(raw)
+            lowest = sorted(raw_pool, key=lambda v: (E[v], v))[: max(1, int(polish_t))]
+            for v in lowest:
+                if v not in polished_cache:
+                    polished_cache[v] = polish_logical(v, E, n, polish_radius)
+                    seen.add(v)
+                    seen.update(v ^ (1 << b) for b in range(n))
+            new = [polished_cache[v] for v in lowest]
+            pool.update(new)
+            n_lookups = len(seen)
+        else:
+            new = [polish_logical(v, E, n, polish_radius) for v in raw]
+            n_lookups += len(new) * (n + 1)
+            for v in raw:
+                seen.add(v)
+                seen.update(v ^ (1 << b) for b in range(n))
+            pool.update(new)
         guess = min(pool, key=lambda v: (E[v], v))
         eta_now = max(float(r.eta) for r in res_list)
         funs = [float(gibbs_objective(pp, ss.energies_flat, eta_now)) for pp, ss in zip(prob_list, sim_list)]

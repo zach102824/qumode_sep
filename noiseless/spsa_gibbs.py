@@ -801,6 +801,7 @@ def grow_trial(
     c_schedule: list[float] | None = None,
     bfgs_eta_mode: str = "callback",
     record_x: bool = False,
+    init_beta_max: float | None = None,
 ) -> TrialResult:
     """Layer-growth trial: train L=start_layers from random init, then repeatedly append a
     transparent LAST layer (+ Gaussian kick σ on its 8 params) and retrain, up to
@@ -878,7 +879,7 @@ def grow_trial(
             sim.eta_scale = float(eta_seq[si])
         insert_info: dict = {}
         if x is None:
-            x0 = random_parameters(L, rng)
+            x0 = random_parameters(L, rng) if init_beta_max is None else small_beta_parameters(L, rng, float(init_beta_max))
         else:
             x_tr = np.concatenate([np.asarray(x, dtype=float), transparent_layer_params()])
             ev_tr = sim.evaluate(x_tr)
