@@ -288,6 +288,10 @@ def explore_exploit_trial_kbit(
     init_beta_max: float | None = None,
     kick_sigma_x: float | None = None,
     code: str = "gray",
+    sa_budget: int = 0,
+    sa_seed: int | None = None,
+    sa_noise: float = 0.15,
+    sa_mode: str = "uncertain_low",
 ) -> dict:
     """Explore-then-exploit relayout (n = 10 cost fix, RELAYOUT_N10_COST_DIAGNOSIS.md).
 
@@ -341,11 +345,31 @@ def explore_exploit_trial_kbit(
     raw_pool: set[int] = set()
     polished_cache: dict[int, int] = {}
     n_total = int(explore_rounds) + int(relayout_rounds)
+    sa_centers = sa_m = None
+    sa_rng = None
+    n_sa = 0
+    if explore_mask == "sa":
+        from noiseless.classical_layout import sa_sample, marginals, layout_for_run
+        sa_rng = np.random.default_rng(int(sa_seed if sa_seed is not None else 12345))
+        sa_seen = sa_sample(E, n, int(sa_budget), sa_rng)
+        seen.update(sa_seen.keys())
+        n_sa = len(sa_seen)
+        n_lookups += n_sa
+        sa_centers, sa_m = marginals(sa_seen, n)
+        pool.add(int(sa_centers[0]))  # classical best (already looked up) enters the pool
     for rnd in range(n_total):
         exploring = rnd < int(explore_rounds)
         Pm = None
         if exploring:
-            if rnd == 0 and explore_perm is not None:
+            if explore_mask == "sa":
+                base_mode = sa_mode.replace("_adapt", "")
+                perm, cen = layout_for_run(rnd, sa_centers, sa_m, n, int(k), sa_rng, float(sa_noise), base_mode)
+                if sa_mode.endswith("_adapt") and guess is not None:
+                    cen = int(guess)  # adaptive: center the next layout on the best state found so far
+                Pm = bit_perm_map(perm, n)
+                pc = int(np.flatnonzero(Pm == cen)[0])
+                xa, xb = cavity_masks_for(pc, int(k))
+            elif rnd == 0 and explore_perm is not None:
                 # explicit layout for explore run 1 (physical slot i holds logical bit explore_perm[i]), zero mask
                 xa = xb = 0
                 Pm = bit_perm_map(np.asarray(explore_perm, dtype=int), n)
@@ -451,7 +475,8 @@ def explore_exploit_trial_kbit(
         "success": bool(best.success), "p_gs": float(best.p_gs),
         "most_likely_bitstring": best.most_likely_bitstring, "ground_bitstring": ground_bitstring,
         "selected_round": int(sel), "nfev": int(total_nfev), "n_lookups": int(n_lookups),
-        "n_lookups_distinct": int(len(seen)),
+        "n_lookups_distinct": int(len(seen)), "n_lookups_sa": int(n_sa),
+        "sa_best_is_ground": bool(sa_centers is not None and int(sa_centers[0]) == gl),
         "leakage": float(rounds[sel]["leakage"]),
         "x": np.asarray(best.x, dtype=float).tolist(),
         "sel_xa": int(rounds[sel]["xa"]), "sel_xb": int(rounds[sel]["xb"]),

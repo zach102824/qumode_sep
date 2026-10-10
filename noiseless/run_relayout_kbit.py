@@ -167,6 +167,8 @@ def worker(job: dict) -> dict:
             relayout_rounds=int(job["R"]), relayout_steps=int(job["r"]), relayout_lr=float(job["lr"]),
             steps_per_stage=int(job["s"]), lr_schedule=lr_schedule_for(int(job["L"])), method=job["method"],
             code=job.get("code") or "binary", explore_perm=job.get("explore_perm"),
+            sa_budget=int(job.get("sab") or 0), sa_seed=int(job["seed"]) + 7, sa_noise=float(job.get("sanoise") or 0.15),
+            sa_mode=job.get("samode") or "uncertain_low",
         )
     else:
         rec = relayout_trial_kbit(
@@ -232,7 +234,7 @@ def load_records(path: Path, trials: int | None = None) -> list[dict]:
 def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_set="scaling", method="fast",
                workers=8, seed0=20260917, outdir: Path = RUN_ROOT, nf_check=None, max_h=None, log=None,
                tag=None, explore=1, topk=1, explore_mask="random", xeta=1.0, reta=1.0, xL=None,
-               xs=None, cool=0, ceta=64.0, clr=0.05, rawk=0, polt=1, xbeta=None, xkick=None, code="gray", layout_json=None) -> tuple[str, list[dict]]:
+               xs=None, cool=0, ceta=64.0, clr=0.05, rawk=0, polt=1, xbeta=None, xkick=None, code="gray", layout_json=None, sab=0, sanoise=0.15, samode="uncertain_low") -> tuple[str, list[dict]]:
     if log is None:
         def log(msg):
             print(msg, flush=True)
@@ -241,7 +243,7 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
     if nf_check is None:
         nf_check = 0 if nf == (1 << k) else nf + max(16, (1 << k) // 4)
     tag = tag or config_tag(n, L, s, r, R, lr, nf, ham_set, method, explore, topk, explore_mask, xeta, reta, xL, xs, cool, ceta, clr,
-                            rawk, polt, xbeta, xkick, code)
+                            rawk, polt, xbeta, xkick, code) + (f"_sab{sab}nz{sanoise:g}{samode}" if explore_mask == "sa" else "")
     outdir.mkdir(parents=True, exist_ok=True)
     path = ckpt(outdir, tag)
     paths = ham_paths(n, ham_set)
@@ -258,7 +260,7 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
                              path=str(p), ham_set=ham_set, method=method, nf_check=nf_check,
                              explore=explore, topk=topk, explore_mask=explore_mask, xeta=xeta, reta=reta,
                              xL=xL, xs=xs, cool=cool, ceta=ceta, clr=clr, rawk=rawk, polt=polt, xbeta=xbeta, xkick=xkick, code=code,
-                             explore_perm=lay_map.get(str(i))))
+                             explore_perm=lay_map.get(str(i)), sab=sab, sanoise=sanoise, samode=samode))
     log(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {tag}: {len(jobs)} jobs ({len(done)} done)")
     t0 = time.time()
     if jobs:
@@ -347,7 +349,7 @@ def main(argv=None) -> int:
     p.add_argument("--explore", type=int, default=1, help="explore growth runs (1 = old relayout protocol)")
     p.add_argument("--topk", type=int, default=1, help="top-K code states per round added to the candidate pool")
     p.add_argument("--layout-json", default=None, help="JSON {inst: perm} explicit layout for explore run 1")
-    p.add_argument("--explore-mask", choices=("random", "zero", "perm", "perm0"), default="random")
+    p.add_argument("--explore-mask", choices=("random", "zero", "perm", "perm0", "sa"), default="random")
     p.add_argument("--xeta", type=float, default=1.0, help="eta-controller multiplier in explore growth")
     p.add_argument("--reta", type=float, default=1.0, help="eta-controller multiplier in exploit rounds")
     p.add_argument("--xL", type=int, default=None, help="explore growth depth (default L)")
@@ -359,6 +361,9 @@ def main(argv=None) -> int:
     p.add_argument("--polt", type=int, default=1, help="with --rawk: Hamming-1 fix-up of the polt lowest-energy raw-pool states")
     p.add_argument("--xbeta", type=float, default=None, help="max |beta| of the first explore growth stage init (default 3)")
     p.add_argument("--xkick", type=float, default=None, help="growth kick sigma in explore (default 0.05)")
+    p.add_argument("--sab", type=int, default=0, help="explore-mask sa: classical SA lookup budget")
+    p.add_argument("--sanoise", type=float, default=0.15)
+    p.add_argument("--samode", default="uncertain_low")
     p.add_argument("--code", choices=("binary", "gray"), default="gray", help="cavity Fock code: Fock f holds f (binary) or f^(f>>1) (gray)")
     a = p.parse_args(argv)
     tag, recs = run_config(n=a.n, L=a.L, s=a.s, r=a.r, R=a.R, lr=a.lr, nf=a.nf, trials=a.trials,
@@ -366,7 +371,7 @@ def main(argv=None) -> int:
                            seed0=a.seed, outdir=Path(a.outdir), nf_check=a.nf_check, max_h=a.max_h, tag=a.tag,
                            layout_json=a.layout_json, explore=a.explore, topk=a.topk, explore_mask=a.explore_mask, xeta=a.xeta, reta=a.reta,
                            xL=a.xL, xs=a.xs, cool=a.cool, ceta=a.ceta, clr=a.clr,
-                           rawk=a.rawk, polt=a.polt, xbeta=a.xbeta, xkick=a.xkick, code=a.code)
+                           rawk=a.rawk, polt=a.polt, xbeta=a.xbeta, xkick=a.xkick, code=a.code, sab=a.sab, sanoise=a.sanoise, samode=a.samode)
     sm = summarize(recs)
     sm.pop("per_h", None)
     print(json.dumps({"tag": tag, **sm}, indent=1))
