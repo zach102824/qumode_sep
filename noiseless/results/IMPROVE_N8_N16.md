@@ -46,10 +46,12 @@ Evals per trial ≈ (explore cost) × E + (relabel cost) × R. Lookups = distinc
 | 16 | 8 | sab128 rawk24 xL3 xs35 R1 xeta128 | 0.68 | 0.653 | 2005 | about 330 |
 | 16 | 12 | sab128 rawk24 xL3 xs35 R1 xeta128 | 0.84 | 0.818 | 2857 | about 350 |
 | 16 | 12 | sab128 rawk48 polt3 xL3 xs35 R1 xeta128 | 0.90 | 0.878 | 2857 | about 400 |
+| 16 | 12 | sab128 rawk24 xL3 xs35 R2 xeta128 | 0.84 | 0.834 | 3158 | about 350 |
+| 16 | 16 | sab128 rawk24 xL3 xs35 R1 xeta128 | 0.86 | 0.848 | 3709 | about 370 |
 
 Older baselines for context: n=12 E5 random layout 0.92 / 0.914 at 2622 evals; n=14 E17 random layout 0.94 / 0.933 at 7470 evals. Current n=14 ~0.9 points are about 70% fewer evals than that baseline.
 
-## Scaling table (matched ~0.9 quality), updated Oct 11 about 07:20 Shanghai
+## Scaling table (matched ~0.9 quality), updated Oct 11 about 07:50 Shanghai
 
 The big new lever (queue20, previously unrecorded here) is a much larger explore eta multiplier: xeta128/256 instead of 16/32. It cut the explore count E needed at n=12 and n=14 a lot (n=14: E6 -> E3/E4).
 
@@ -160,3 +162,9 @@ Running / queued (all detached; do not kill; STOP file stops the watchdog only)
 - Also logged for completeness: n=16 E12 xL3 full-xs (no xs35) xeta256 rawk24: success 0.84, mean p(GS) 0.817, evals 3937. Same quality as xs35 xeta128 at higher cost.
 - Best n=16 remains rawk48 polt3: success 0.90, mean p(GS) 0.878 at 2857. Mean p(GS) still short of 0.9; success already at 0.90.
 - Running: queue26 on n=16 E12 R2 xeta128 rawk24 (5/50 at last check), then E16 xeta128, E16 rawk32 xeta256, then cheap n14/n12 knobs, then queue26.done. queue27 waits on that (rawk48 polt3 on E10/E8/E14, rawk64 polt4 at E12, n14/n12 rawk48). queue28 waits on queue27.done (E16/E14 rawk48, rawk48+xeta256, R2 rawk48, E11/E13 denser, xL2 vs xL3). queue21/22/23 alive but SIGSTOPped xeta16 fleet until queue26 cleanup CONT. Watchdog alive; no STOP file.
+
+## Update (Oct 11, 2026, about 07:50 Shanghai)
+- n=16 E12 xL3 xs35 xeta128 rawk24 R2: success 0.84, mean p(GS) 0.834, evals 3158 (final round; guess_hit 0.86, worst-H mean p(GS) about 0.598). Loss/neutral vs R1 rawk24 (0.84 / 0.818 at 2857) and clearly below rawk48 polt3 (0.90 / 0.878 at 2857); a second relabel round does not beat wider readout at this E.
+- n=16 E16 xL3 xs35 xeta128 rawk24 R1: success 0.86, mean p(GS) 0.848, evals 3709 (final round; guess_hit 0.86, worst-H mean p(GS) about 0.596). Slightly above E12 rawk24 (0.84 / 0.818 at 2857) but still below 0.9 and below E12 rawk48 polt3 at lower cost. Growing E alone is not enough.
+- Best n=16 remains E12 sab128 rawk48 polt3 xL3 xs35 R1 xeta128: success 0.90, mean p(GS) 0.878 at 2857. Mean p(GS) still short of 0.9.
+- Running: queue26 on n=16 E16 rawk32 xeta256 (just started after E16 rawk24), then cheap n14/n12 knobs, then queue26.done. queue27 waits (rawk48 polt3 on E10/E8/E14, rawk64 polt4 at E12, n14/n12 rawk48). queue28 waits on queue27.done (E16/E14 rawk48, rawk48+xeta256, R2 rawk48, denser E). queue29 waits on queue28.done (more mean-p(GS) levers). queue21/22/23 still alive (SIGSTOPped xeta16 fleet while high-priority runs). Watchdog alive; no STOP file. Compute busy (about 8 active workers). No new ladder-wide ≥0.9 result; no scaling-fit change yet.
