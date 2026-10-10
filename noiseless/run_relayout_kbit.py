@@ -56,7 +56,27 @@ def lr_schedule_for(L: int) -> list[float]:
     return [float(np.exp(np.interp(p, np.arange(4), np.log(HEADLINE_LR)))) for p in pos]
 
 
+def wmaxsat_energies(path: str, n: int):
+    """Weighted MAX-4-SAT JSON -> E over basis index int(bitstring, 2) (x1 = MSB, x=0 <-> Z=+1)."""
+    d = json.loads(Path(path).read_text())
+    if int(d["n"]) != int(n):
+        raise ValueError(f"{path}: n mismatch")
+    idx = np.arange(2 ** n)
+    bits = (idx[:, None] >> (n - 1 - np.arange(n))[None, :]) & 1  # bits[:, i-1] = x_i
+    E = np.zeros(2 ** n)
+    for c in d["clauses"]:
+        viol = np.ones(2 ** n, dtype=bool)
+        for v, sg in zip(c["vars"], c["signs"]):
+            x = bits[:, int(v) - 1]
+            viol &= (x == 0) if int(sg) > 0 else (x == 1)
+        E[viol] += float(c["w"])
+    return E, {"ground_bitstring": d["gs"], "E_gs": d["E_gs"]}
+
+
 def ham_paths(n: int, ham_set: str) -> list[Path]:
+    if ham_set == "wmaxsat":
+        return sorted((_REPO / "Hamiltonians" / "wmaxsat").glob(f"default_n{n:02d}_*.json"),
+                      key=lambda q: int(q.stem.rsplit("_", 1)[1]))
     if ham_set == "legacy8":
         if n != 8:
             raise SystemExit("legacy8 set is n = 8")
@@ -71,7 +91,12 @@ def energies_for(path: str, n: int, ham_set: str):
 
         inst = load_four_sat_npz(path)
         return logical_energies_from_terms(inst["terms"], inst["identity"]), inst["ground_bitstring"]
-    E, meta = logical_energies_from_npz(path, n)
+    if ham_set == "wmaxsat":
+        E, meta = wmaxsat_energies(path, n)
+        if not np.isclose(E.min(), float(meta["E_gs"])):
+            raise ValueError(f"{path}: E_gs mismatch")
+    else:
+        E, meta = logical_energies_from_npz(path, n)
     gs = meta["ground_bitstring"]
     if int(np.argmin(E)) != int(gs, 2) or np.count_nonzero(np.isclose(E, E.min())) != 1:
         raise ValueError(f"{path}: ground bitstring is not the unique argmin")
@@ -84,7 +109,7 @@ def trial_seed(seed0: int, inst: int, trial: int) -> int:
 
 def config_tag(n, L, s, r, R, lr=0.1, nf=None, ham_set="scaling", method="fast", explore=1, topk=1,
                explore_mask="random", xeta=1.0, reta=1.0, xL=None, xs=None, cool=0, ceta=64.0, clr=0.05,
-               rawk=0, polt=1, xbeta=None, xkick=None) -> str:
+               rawk=0, polt=1, xbeta=None, xkick=None, code="gray") -> str:
     t = f"n{n:02d}_L{L}s{s}_r{r}_R{R}"
     if int(explore) > 1 or int(topk) > 1 or float(xeta or 1) != 1.0 or float(reta or 1) != 1.0 or xL or xs or cool \
             or rawk or xbeta or xkick:
@@ -113,6 +138,8 @@ def config_tag(n, L, s, r, R, lr=0.1, nf=None, ham_set="scaling", method="fast",
         t += f"_{ham_set}"
     if method != "fast":
         t += f"_{method}"
+    if code != "binary":
+        t += f"_{code}"
     return t
 
 
@@ -139,25 +166,27 @@ def worker(job: dict) -> dict:
             kick_sigma_x=(float(job["xkick"]) if job.get("xkick") else None),
             relayout_rounds=int(job["R"]), relayout_steps=int(job["r"]), relayout_lr=float(job["lr"]),
             steps_per_stage=int(job["s"]), lr_schedule=lr_schedule_for(int(job["L"])), method=job["method"],
+            code=job.get("code") or "binary", explore_perm=job.get("explore_perm"),
         )
     else:
         rec = relayout_trial_kbit(
             E, gs, k=k, nf=int(job["nf"]), final_layers=int(job["L"]), rng=rng,
             relayout_rounds=int(job["R"]), relayout_steps=int(job["r"]), relayout_lr=float(job["lr"]),
             steps_per_stage=int(job["s"]), lr_schedule=lr_schedule_for(int(job["L"])), method=job["method"],
+            code=job.get("code") or "binary",
         )
     rec.update({kk: job[kk] for kk in ("n", "L", "s", "r", "R", "lr", "nf", "inst", "trial", "seed", "ham_set", "method")})
     rec.update(explore=M, topk=K, explore_mask=job.get("explore_mask") or "random",
                xeta=job.get("xeta"), reta=job.get("reta"), xL=job.get("xL"), xs=job.get("xs"),
                cool=job.get("cool"), ceta=job.get("ceta"), clr=job.get("clr"), rawk=job.get("rawk"), polt=job.get("polt"),
-               xbeta=job.get("xbeta"), xkick=job.get("xkick"))
+               xbeta=job.get("xbeta"), xkick=job.get("xkick"), code=job.get("code") or "binary", explore_perm=job.get("explore_perm"))
     rec["file"] = Path(job["path"]).name
     nfc = int(job.get("nf_check") or 0)
     if nfc:
-        L = int(job["L"])
+        L = int(rec.get("sel_layers") or job["L"])
         x = np.asarray(rec["x"], dtype=float)
-        a = XorKbitSim(KbitLayout(k, int(job["nf"])), E, L, gs, method=job["method"], xa=rec["sel_xa"], xb=rec["sel_xb"]).evaluate(x)
-        b = XorKbitSim(KbitLayout(k, nfc), E, L, gs, method="fast", xa=rec["sel_xa"], xb=rec["sel_xb"]).evaluate(x)
+        a = XorKbitSim(KbitLayout(k, int(job["nf"]), encoding=job.get("code") or "binary"), E, L, gs, method=job["method"], xa=rec["sel_xa"], xb=rec["sel_xb"]).evaluate(x)
+        b = XorKbitSim(KbitLayout(k, nfc, encoding=job.get("code") or "binary"), E, L, gs, method="fast", xa=rec["sel_xa"], xb=rec["sel_xb"]).evaluate(x)
         nf = int(job["nf"])
         pb = b["probs"].reshape(4, nfc, nfc)[:, :nf, :nf].reshape(-1)
         rec.update(nf_check=nfc, p_gs_check=float(b["p_gs"]), success_check=bool(b["success"]),
@@ -203,7 +232,7 @@ def load_records(path: Path, trials: int | None = None) -> list[dict]:
 def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_set="scaling", method="fast",
                workers=8, seed0=20260917, outdir: Path = RUN_ROOT, nf_check=None, max_h=None, log=None,
                tag=None, explore=1, topk=1, explore_mask="random", xeta=1.0, reta=1.0, xL=None,
-               xs=None, cool=0, ceta=64.0, clr=0.05, rawk=0, polt=1, xbeta=None, xkick=None) -> tuple[str, list[dict]]:
+               xs=None, cool=0, ceta=64.0, clr=0.05, rawk=0, polt=1, xbeta=None, xkick=None, code="gray", layout_json=None) -> tuple[str, list[dict]]:
     if log is None:
         def log(msg):
             print(msg, flush=True)
@@ -212,13 +241,14 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
     if nf_check is None:
         nf_check = 0 if nf == (1 << k) else nf + max(16, (1 << k) // 4)
     tag = tag or config_tag(n, L, s, r, R, lr, nf, ham_set, method, explore, topk, explore_mask, xeta, reta, xL, xs, cool, ceta, clr,
-                            rawk, polt, xbeta, xkick)
+                            rawk, polt, xbeta, xkick, code)
     outdir.mkdir(parents=True, exist_ok=True)
     path = ckpt(outdir, tag)
     paths = ham_paths(n, ham_set)
     if max_h is not None:
         paths = paths[:max_h]
     done = done_pairs(path)
+    lay_map = json.loads(Path(layout_json).read_text()) if layout_json else {}
     jobs = []
     for i, p in enumerate(paths):
         for t in range(trial_offset, trial_offset + trials):
@@ -227,7 +257,8 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
             jobs.append(dict(n=n, L=L, s=s, r=r, R=R, lr=lr, nf=nf, inst=i, trial=t, seed=trial_seed(seed0, i, t),
                              path=str(p), ham_set=ham_set, method=method, nf_check=nf_check,
                              explore=explore, topk=topk, explore_mask=explore_mask, xeta=xeta, reta=reta,
-                             xL=xL, xs=xs, cool=cool, ceta=ceta, clr=clr, rawk=rawk, polt=polt, xbeta=xbeta, xkick=xkick))
+                             xL=xL, xs=xs, cool=cool, ceta=ceta, clr=clr, rawk=rawk, polt=polt, xbeta=xbeta, xkick=xkick, code=code,
+                             explore_perm=lay_map.get(str(i))))
     log(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {tag}: {len(jobs)} jobs ({len(done)} done)")
     t0 = time.time()
     if jobs:
@@ -307,7 +338,7 @@ def main(argv=None) -> int:
     p.add_argument("--trials", type=int, default=5)
     p.add_argument("--trial-offset", type=int, default=0)
     p.add_argument("--max-h", type=int, default=None)
-    p.add_argument("--ham-set", choices=("scaling", "legacy8"), default="scaling")
+    p.add_argument("--ham-set", choices=("scaling", "legacy8", "wmaxsat"), default="scaling")
     p.add_argument("--method", choices=("fast", "legacy"), default="fast")
     p.add_argument("--workers", type=int, default=8)
     p.add_argument("--seed", type=int, default=20260917)
@@ -315,7 +346,8 @@ def main(argv=None) -> int:
     p.add_argument("--tag", default=None)
     p.add_argument("--explore", type=int, default=1, help="explore growth runs (1 = old relayout protocol)")
     p.add_argument("--topk", type=int, default=1, help="top-K code states per round added to the candidate pool")
-    p.add_argument("--explore-mask", choices=("random", "zero", "perm"), default="random")
+    p.add_argument("--layout-json", default=None, help="JSON {inst: perm} explicit layout for explore run 1")
+    p.add_argument("--explore-mask", choices=("random", "zero", "perm", "perm0"), default="random")
     p.add_argument("--xeta", type=float, default=1.0, help="eta-controller multiplier in explore growth")
     p.add_argument("--reta", type=float, default=1.0, help="eta-controller multiplier in exploit rounds")
     p.add_argument("--xL", type=int, default=None, help="explore growth depth (default L)")
@@ -327,13 +359,14 @@ def main(argv=None) -> int:
     p.add_argument("--polt", type=int, default=1, help="with --rawk: Hamming-1 fix-up of the polt lowest-energy raw-pool states")
     p.add_argument("--xbeta", type=float, default=None, help="max |beta| of the first explore growth stage init (default 3)")
     p.add_argument("--xkick", type=float, default=None, help="growth kick sigma in explore (default 0.05)")
+    p.add_argument("--code", choices=("binary", "gray"), default="gray", help="cavity Fock code: Fock f holds f (binary) or f^(f>>1) (gray)")
     a = p.parse_args(argv)
     tag, recs = run_config(n=a.n, L=a.L, s=a.s, r=a.r, R=a.R, lr=a.lr, nf=a.nf, trials=a.trials,
                            trial_offset=a.trial_offset, ham_set=a.ham_set, method=a.method, workers=a.workers,
                            seed0=a.seed, outdir=Path(a.outdir), nf_check=a.nf_check, max_h=a.max_h, tag=a.tag,
-                           explore=a.explore, topk=a.topk, explore_mask=a.explore_mask, xeta=a.xeta, reta=a.reta,
+                           layout_json=a.layout_json, explore=a.explore, topk=a.topk, explore_mask=a.explore_mask, xeta=a.xeta, reta=a.reta,
                            xL=a.xL, xs=a.xs, cool=a.cool, ceta=a.ceta, clr=a.clr,
-                           rawk=a.rawk, polt=a.polt, xbeta=a.xbeta, xkick=a.xkick)
+                           rawk=a.rawk, polt=a.polt, xbeta=a.xbeta, xkick=a.xkick, code=a.code)
     sm = summarize(recs)
     sm.pop("per_h", None)
     print(json.dumps({"tag": tag, **sm}, indent=1))

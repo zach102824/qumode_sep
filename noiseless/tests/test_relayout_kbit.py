@@ -49,7 +49,7 @@ def test_k3_legacy_matches_relayout_trial_bitwise():
                          lr_schedule=[0.5, 0.2, 0.05, 0.02], relayout_steps=6, relayout_lr=0.1,
                          relayout_init="small", relayout_return="best", relayout_guess="best",
                          relayout_fixed_stop=False, relayout_target="xor_vacuum", relayout_layers=4)
-    new = relayout_trial_kbit(E, gs, k=3, nf=8, final_layers=4, rng=np.random.default_rng(7), relayout_rounds=2,
+    new = relayout_trial_kbit(E, gs, code="binary", k=3, nf=8, final_layers=4, rng=np.random.default_rng(7), relayout_rounds=2,
                               relayout_steps=6, relayout_lr=0.1, steps_per_stage=4, method="legacy")
     assert [r["p_gs"] for r in old.rounds] == [r["p_gs"] for r in new["rounds"]]
     assert [r["fun_common_eta"] for r in old.rounds] == [r["fun_common_eta"] for r in new["rounds"]]
@@ -166,3 +166,17 @@ def test_explore_exploit_cool_counts_evals():
                                      cool_steps=4, explore_eta_scale=16.0, exploit_eta_scale=2.0)
     assert rec["nfev"] == 2 * (2 * (2 * 3 + 1) + (2 * 4 + 1)) + (2 * 5 + 1)
     assert rec["rounds"][1]["perm"] and not rec["rounds"][2]["perm"]
+
+
+def test_wmaxsat_n8_inst0_unique_gs():
+    import numpy as np
+    from noiseless.run_relayout_kbit import ham_paths, energies_for
+    paths = ham_paths(8, "wmaxsat")
+    assert len(paths) == 10 and paths[0].name == "default_n08_0.json"
+    E, gs = energies_for(str(paths[0]), 8, "wmaxsat")
+    assert gs == "11011010"
+    assert int(np.argmin(E)) == int(gs, 2)
+    assert np.count_nonzero(E == E.min()) == 1 and E.min() == 0
+    for n in (8, 10, 12, 14, 16):
+        for p in ham_paths(n, "wmaxsat"):
+            energies_for(str(p), n, "wmaxsat")

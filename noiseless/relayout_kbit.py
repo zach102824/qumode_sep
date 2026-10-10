@@ -130,6 +130,7 @@ def relayout_trial_kbit(
     method: str = "fast",
     u_name: str = "jp",
     want_probs: bool = False,
+    code: str = "gray",
 ) -> dict:
     """Headline relayout protocol on the k-bit layout. Returns a plain dict record."""
     if target not in KBIT_TARGETS:
@@ -138,7 +139,7 @@ def relayout_trial_kbit(
     E = np.asarray(energies_logical, dtype=float).reshape(-1)
     if E.size != (1 << n):
         raise ValueError("energies size mismatch")
-    layout = KbitLayout(int(k), int(nf))
+    layout = KbitLayout(int(k), int(nf), encoding=str(code))
     L = int(final_layers)
     n_st = L - int(start_layers) + 1
     if lr_schedule is None:
@@ -220,6 +221,7 @@ def relayout_trial_kbit(
         "leakage": float(rounds[sel]["leakage"]),
         "x": np.asarray(best.x, dtype=float).tolist(),
         "sel_xa": int(rounds[sel]["xa"]), "sel_xb": int(rounds[sel]["xb"]),
+        "sel_layers": int(rounds[sel]["n_layers"]),
         "rounds": rounds,
     }
     if want_probs:
@@ -259,6 +261,7 @@ def explore_exploit_trial_kbit(
     rng: np.random.Generator,
     explore_rounds: int = 5,
     explore_mask: str = "random",
+    explore_perm=None,
     topk: int = 4,
     relayout_rounds: int = 4,
     relayout_steps: int = 200,
@@ -284,6 +287,7 @@ def explore_exploit_trial_kbit(
     polish_t: int = 1,
     init_beta_max: float | None = None,
     kick_sigma_x: float | None = None,
+    code: str = "gray",
 ) -> dict:
     """Explore-then-exploit relayout (n = 10 cost fix, RELAYOUT_N10_COST_DIAGNOSIS.md).
 
@@ -313,7 +317,7 @@ def explore_exploit_trial_kbit(
     """
     n = 2 + 2 * int(k)
     E = np.asarray(energies_logical, dtype=float).reshape(-1)
-    layout = KbitLayout(int(k), int(nf))
+    layout = KbitLayout(int(k), int(nf), encoding=str(code))
     L = int(final_layers)
     n_st = L - int(start_layers) + 1
     if lr_schedule is None:
@@ -341,11 +345,20 @@ def explore_exploit_trial_kbit(
         exploring = rnd < int(explore_rounds)
         Pm = None
         if exploring:
-            if rnd == 0 or explore_mask == "zero":
+            if rnd == 0 and explore_perm is not None:
+                # explicit layout for explore run 1 (physical slot i holds logical bit explore_perm[i]), zero mask
                 xa = xb = 0
-            elif explore_mask in ("random", "perm"):
+                Pm = bit_perm_map(np.asarray(explore_perm, dtype=int), n)
+            elif rnd == 0 and explore_mask == "perm0":
+                # layout-only arm: random bit permutation, zero mask; drawn from a copy of rng so init draws are unchanged
+                import copy as _copy
+                xa = xb = 0
+                Pm = bit_perm_map(_copy.deepcopy(rng).permutation(n), n)
+            elif rnd == 0 or explore_mask == "zero":
+                xa = xb = 0
+            elif explore_mask in ("random", "perm", "perm0"):
                 xa, xb = int(rng.integers(1 << k)), int(rng.integers(1 << k))
-                if explore_mask == "perm":
+                if explore_mask in ("perm", "perm0"):
                     Pm = bit_perm_map(rng.permutation(n), n)
             else:
                 raise ValueError(f"unknown explore_mask {explore_mask!r}")
@@ -416,7 +429,7 @@ def explore_exploit_trial_kbit(
         bsf = min(range(len(funs)), key=lambda j: (funs[j], j))
         rounds.append({
             "round": rnd, "phase": "explore" if exploring else "exploit", "perm": Pm is not None,
-            "xa": int(xa), "xb": int(xb), "n_layers": L,
+            "xa": int(xa), "xb": int(xb), "n_layers": int(Lx if exploring else L),
             "success": bool(res.success), "p_gs": float(res.p_gs),
             "most_likely_bitstring": res.most_likely_bitstring,
             "polished_is_ground": gl in new,
@@ -442,5 +455,6 @@ def explore_exploit_trial_kbit(
         "leakage": float(rounds[sel]["leakage"]),
         "x": np.asarray(best.x, dtype=float).tolist(),
         "sel_xa": int(rounds[sel]["xa"]), "sel_xb": int(rounds[sel]["xb"]),
+        "sel_layers": int(rounds[sel]["n_layers"]),
         "rounds": rounds,
     }
