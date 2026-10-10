@@ -86,3 +86,18 @@ Next ideas
 - Early stop plus more explore runs at equal evals (for example n14 E15 with xstop1 against E13 plain).
 - Warm-start explore runs from the best previous parameters (not yet implemented).
 - Diverse layouts: keep and mutate layouts whose runs reached low energy (the re-centring variant failed; mutation of the layout itself is untested).
+
+### Half SA budget (50 trials, sab = n^2/2)
+| n | sab | E | success | mean p(GS) | evals |
+|---|---|---|---|---|---|
+| 12 | 72 | 4 | 0.90 | 0.894 | 2218 |
+| 12 | 72 | 5 | 0.90 | 0.894 | 2622 |
+| 14 | 98 | 11 | 0.86 | 0.857 | 5046 |
+| 14 | 98 | 13 | 0.90 | 0.895 | 5854 |
+
+Halving the SA budget gives the same quality at both n, so classical lookups drop by about n^2/2 for free.
+
+### Status update (Oct 10, 2026, about 17:00 Shanghai)
+- Running: logs/improve/queue6.sh (30-trial screens of thr, xstop, rawk), then logs/improve/queue7.sh
+  (50 trials: n14 sab49 E13, n12 sab36 E4, n14 E13 sab98 thr0.05, n14 E15 sab98 xstop1, n12 E4 sab72 thr0.05).
+- Next ideas unchanged: warm starts, layout mutation, stacking whichever of thr / xstop / rawk helps.
