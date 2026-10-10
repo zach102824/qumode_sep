@@ -297,6 +297,7 @@ def explore_exploit_trial_kbit(
     thr_eps: float = -1.0,
     xwarm_steps: int = 0,
     xmut: int = 2,
+    lmut_swaps: int = 0,
 ) -> dict:
     """Explore-then-exploit relayout (n = 10 cost fix, RELAYOUT_N10_COST_DIAGNOSIS.md).
 
@@ -326,6 +327,9 @@ def explore_exploit_trial_kbit(
     * ``xwarm_steps`` > 0 (warm-started explore): explore runs after the first start from the parameters and layout of the
       lowest-<E> earlier explore run (layout mutated by ``xmut`` random slot swaps, same centre state) and run a single
       stage of ``xwarm_steps`` SPSA-Adam steps at depth Lx instead of a full growth (cheaper; counted in evals).
+    * ``lmut_swaps`` > 0 (layout mutation, cold): explore runs after the first use the lowest-<E> earlier explore run's
+      layout mutated by ``lmut_swaps`` random slot swaps (same centre), but a full cold growth from scratch (no warm
+      parameters). Distinct from ``xwarm``; when both are set, ``xwarm`` wins. Tag suffix ``_lmN``.
     """
     n = 2 + 2 * int(k)
     E = np.asarray(energies_logical, dtype=float).reshape(-1)
@@ -373,12 +377,25 @@ def explore_exploit_trial_kbit(
     for rnd in range(n_total):
         exploring = rnd < int(explore_rounds)
         Pm = None
+        perm = cen = None  # set in sa / warm / lmut branches for best-layout tracking
         if exploring:
             warm = int(xwarm_steps) > 0 and rnd > 0 and best_x is not None
+            lmut = (not warm) and int(lmut_swaps) > 0 and rnd > 0 and best_perm is not None
             if warm:
                 perm = np.array(best_perm, dtype=int)
                 for _ in range(int(xmut)):
                     i, j = sa_rng.choice(n, 2, replace=False) if sa_rng is not None else rng.choice(n, 2, replace=False)
+                    perm[i], perm[j] = perm[j], perm[i]
+                cen = int(best_cen)
+                Pm = bit_perm_map(perm, n)
+                pc = int(np.flatnonzero(Pm == cen)[0])
+                xa, xb = cavity_masks_for(pc, int(k))
+            elif lmut:
+                # cold growth on a mutation of the best earlier layout (keeps layout diversity without warm params)
+                perm = np.array(best_perm, dtype=int)
+                _rng = sa_rng if sa_rng is not None else rng
+                for _ in range(int(lmut_swaps)):
+                    i, j = _rng.choice(n, 2, replace=False)
                     perm[i], perm[j] = perm[j], perm[i]
                 cen = int(best_cen)
                 Pm = bit_perm_map(perm, n)
@@ -469,7 +486,8 @@ def explore_exploit_trial_kbit(
                 res.p_gs = float(ev_o["p_gs"])
         total_nfev += int(res.nfev)
         ev = sim.evaluate(res.x)
-        if exploring and explore_mask == "sa" and float(ev["energy_mean"]) < best_em:
+        if exploring and float(ev["energy_mean"]) < best_em and perm is not None and cen is not None:
+            # track best layout for xwarm / lmut (perm/cen set in sa / warm / lmut branches)
             best_em, best_x, best_perm, best_cen = float(ev["energy_mean"]), np.asarray(res.x, dtype=float).copy(), np.array(perm), int(cen)
         probs = np.asarray(ev["probs"], dtype=float)
         res_list.append(res)

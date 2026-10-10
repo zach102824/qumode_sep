@@ -221,3 +221,61 @@ Confirmed (50 trials) best results so far, against the baselines (n=12 E5: 0.92 
 - queue12 (new, waits for queue11.done): cheaper relabel stage with rawk16 polt2: R1 (one relabel round) and r100 at n14 E7 and n12 E3;
   n14 E6 rawk24, n12 E2 rawk24; n14 E7 polt1; n14 E7 sab49 rawk32.
 - Expected total: about 6 more hours of compute at 8 cores. Next check-in: read queue10/11/12 outputs in logs/improve and record them here.
+
+## Queue10 / queue11 / queue12 confirmed (50 trials; Oct 10, 2026, about 20:55 Shanghai)
+
+All SA layout fixed_low, rawk polt 2 unless noted; wmaxsat, Gray.
+
+| n | E | setting | success | mean p(GS) | evals | lookups |
+|---|---|---|---|---|---|---|
+| 14 | 7 | rawk24 | 0.98 | 0.974 | 3430 | 321 |
+| 14 | 9 | xL3, rawk16 | 0.98 | 0.973 | 3329 | 294 |
+| 14 | 9 | xs35, rawk16 | 0.96 | 0.953 | 3158 | 302 |
+| 14 | 7 | R1, rawk16 | 0.94 | 0.931 | 3129 | 263 |
+| 14 | 6 | rawk24 | 0.90 | 0.893 | 3026 | 301 |
+| 14 | 7 | r100, rawk16 | 0.94 | 0.924 | 3230 | 266 |
+| 14 | 7 | polt1, rawk16 | 0.94 | 0.934 | 3430 | 240 |
+| 14 | 7 | sab49, rawk32 | 0.92 | 0.914 | 3430 | 349 |
+| 14 | 7 | nz0.4, rawk16 | 0.94 | 0.934 | 3430 | 266 |
+| 12 | 3 | R1, rawk16 | 1.00 | 0.988 | 1513 | 159 |
+| 12 | 2 | nz0.4, rawk16 | 0.96 | 0.953 | 1410 | 147 |
+| 12 | 2 | sab36, rawk16 | 0.94 | 0.933 | 1410 | 141 |
+| 12 | 2 | rawk24 | 0.92 | 0.913 | 1410 | 168 |
+| 12 | 3 | r100, rawk16 | 1.00 | 0.982 | 1614 | 162 |
+| 12 | 3 | xL3, rawk16 | 0.90 | 0.895 | 1511 | n/a |
+| 12 | 3 | xs35, rawk16 | 0.94 | 0.934 | 1454 | n/a |
+
+Reading
+- rawk24 at n14 E7 is the quality leader (0.98 / 0.974 at 3430).
+- One relabel round (R1) keeps quality and cuts about 301 evals (n14 E7: 3129; n12 E3: 1513).
+- Shallower explore (xL3) and fewer steps (xs35) cut evals at matched E without losing quality.
+- Matching cheapest 0.9+ points before the next stack (n12 at 1410, n14 at 3129): about 1.49 per added variable.
+
+## Stacking winners (queues 13-16; started Oct 10, 2026, about 20:53 Shanghai)
+
+Priority: cut the n12 to n14 step toward about 1.12^n by stacking R1 + rawk24 + cheaper explore (xL3 / xs35) at lower E, plus layout mutation.
+
+Code added: `--lmut N` (cold layout mutation). After explore run 0, later explore runs use the lowest-energy earlier layout with N random slot swaps and a full cold growth (no warm parameters; distinct from the failed xwarm). Tag suffix `_lmN`.
+
+### Early screen (30 trials)
+| n | E | setting | success | mean p(GS) | evals | lookups |
+|---|---|---|---|---|---|---|
+| 14 | 5 | R1, rawk24 | 0.90 | 0.890 | 2321 | 272 |
+
+Already matches 0.9 at 2321 evals (vs 3129 previous cheapest n14 0.9+). Against n12 at 1410 that is about 1.28 per added variable. 50-trial confirm queued.
+
+### Running (detached, chained)
+- queue13 (running): 30-trial screens of R1+rawk24 at E=4,5,6,7; xL3+rawk24; xs35+rawk24; nz0.4 stacks; n12 R1/nz40.
+- queue14 (waits for queue13): 50-trial confirms of the same stacks at E=4..7, including xL3+R1 and xs35+R1.
+- queue15 (waits for queue14): more aggressive confirms (rawk32, xL3+R1 at E7/E9, n12 E1).
+- queue16 (waits for queue15): `--lmut` 2 and 4 screens then 50-trial confirms.
+
+### Best confirmed so far (50 trials)
+- n12: E3 R1 rawk16 1.00 / 0.988 at 1513; E2 nz0.4 0.96 / 0.953 at 1410.
+- n14: E7 rawk24 0.98 / 0.974 at 3430; E9 xL3 0.98 / 0.973 at 3329; E7 R1 0.94 / 0.931 at 3129; E9 xs35 0.96 / 0.953 at 3158.
+
+### Next ideas
+- Confirm n14 E5 R1 rawk24 at 50 trials (target about 2321 evals for 0.9).
+- Stack xL3 or xs35 on top of R1+rawk24 at E=4..6 (target under 2000 evals).
+- Layout mutation (`--lmut`) vs sanoise diversity head-to-head.
+- If E5 clears 0.9 at 50 trials, try E4 and E3 with the full stack.
