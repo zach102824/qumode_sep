@@ -1,0 +1,41 @@
+{
+  "name": "relabel_n8_E1_s20_R2_r150",
+  "description": "Explore + XOR-relabel ECD ground-state finder; best low-cost noiseless n=8 setting on the weighted MAX-4-SAT set. Target circuit for noisy simulation.",
+  "noiseless_reference": {
+    "n": 8, "trials": 50, "instances": 10, "starts_per_instance": 5,
+    "per_stage": [
+      {"stage": "explore", "guess_correct": 0.80, "success": 0.80, "mean_p_gs": 0.150, "cum_evals": 164},
+      {"stage": "relabel_1", "guess_correct": 0.94, "success": 0.90, "mean_p_gs": 0.849, "cum_evals": 465},
+      {"stage": "relabel_2", "guess_correct": 0.98, "success": 0.96, "mean_p_gs": 0.957, "cum_evals": 766}
+    ],
+    "distinct_lookups_mean": 11.0
+  },
+  "hamiltonians": {
+    "set": "wmaxsat",
+    "path": "Hamiltonians/wmaxsat/default_n08_{0..9}.json",
+    "generator": "Hamiltonians/wmaxsat_gen.py",
+    "rules": "m = round(9.93 n) random 4-literal clauses, weights 1-5, keep only instances with a unique ground state"
+  },
+  "hardware": {
+    "transmons": 2, "cavities": 2,
+    "bit_layout": "x1,x2 -> transmons d,e; x3..x5 -> cavity A; x6..x8 -> cavity B (default; explore runs may permute)",
+    "cavity_code": "gray",
+    "bits_per_cavity": 3,
+    "fock_levels_per_cavity": 24,
+    "fock_rule": "code levels + 16",
+    "bus_gate": "jp (joint parity), ideal in noiseless sim"
+  },
+  "ansatz": {"type": "ECD layers", "L_max": 4},
+  "algorithm": {
+    "explore": {"E": 1, "growth": "L=1..4 warm start", "spsa_steps_per_layer": 20, "optimizer": "SPSA-Adam", "lr": 0.05,
+                "cost": "Gibbs, eta x16", "explore_mask": "perm", "readout": "top-1", "fixup": "Hamming-1 (n+1 lookups)"},
+    "relabel": {"R": 2, "L": 4, "spsa_steps": 150, "lr": 0.05, "cost": "Gibbs, eta x2", "init": "small beta",
+                "relabel": "XOR cavity bits so current guess maps to Fock vacuum (gray-encoded); transmons not relabeled",
+                "fixup": "Hamming-1 after each round", "keep": "best round by cost"}
+  },
+  "code": {
+    "runner": "noiseless/run_relayout_kbit.py",
+    "library": "noiseless/relayout_kbit.py",
+    "example_cmd": "python noiseless/run_relayout_kbit.py --n 8 --ham-set wmaxsat --code gray --L 4 --xL 4 --s 20 --explore 1 --explore-mask perm --topk 1 --xeta 16 --reta 2 --lr 0.05 --R 2 --r 150 --trials 5"
+  }
+}
