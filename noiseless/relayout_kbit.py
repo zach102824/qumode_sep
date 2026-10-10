@@ -298,6 +298,7 @@ def explore_exploit_trial_kbit(
     xwarm_steps: int = 0,
     xmut: int = 2,
     lmut_swaps: int = 0,
+    xagree: int = 0,
 ) -> dict:
     """Explore-then-exploit relayout (n = 10 cost fix, RELAYOUT_N10_COST_DIAGNOSIS.md).
 
@@ -330,6 +331,10 @@ def explore_exploit_trial_kbit(
     * ``lmut_swaps`` > 0 (layout mutation, cold): explore runs after the first use the lowest-<E> earlier explore run's
       layout mutated by ``lmut_swaps`` random slot swaps (same centre), but a full cold growth from scratch (no warm
       parameters). Distinct from ``xwarm``; when both are set, ``xwarm`` wins. Tag suffix ``_lmN``.
+    * ``xagree`` > 0 (agreement early stop, adaptive number of explore runs): after each explore run, a run "votes" for the
+      current guess if its top-``raw_k`` probable states contain a state within Hamming distance 1 of the guess (pure bit test,
+      no lookups). Remaining explore runs are skipped once ``xagree`` runs agree (explore_rounds then acts as a maximum E).
+      Skipped runs cost no evals. Tag suffix ``_xagN``.
     """
     n = 2 + 2 * int(k)
     E = np.asarray(energies_logical, dtype=float).reshape(-1)
@@ -374,8 +379,14 @@ def explore_exploit_trial_kbit(
     best_em = np.inf
     stage_emeans: list[float] = []  # explore early-stop: stage-xstop <E> of earlier runs (quantum, no lookups)
     n_stopped = 0
+    run_raws: list[list[int]] = []
+    agree_stop = False
+    n_expl_run = 0
     for rnd in range(n_total):
         exploring = rnd < int(explore_rounds)
+        if exploring and agree_stop:
+            continue
+        n_expl_run += int(exploring)
         Pm = None
         perm = cen = None  # set in sa / warm / lmut branches for best-layout tracking
         if exploring:
@@ -523,6 +534,11 @@ def explore_exploit_trial_kbit(
                 seen.update(v ^ (1 << b) for b in range(n))
             pool.update(new)
         guess = min(pool, key=lambda v: (E[v], v))
+        if exploring and int(xagree) > 0:
+            run_raws.append(list(raw))
+            votes = sum(1 for rr in run_raws if any(bin(int(v) ^ int(guess)).count("1") <= 1 for v in rr))
+            if votes >= int(xagree):
+                agree_stop = True
         eta_now = max(float(r.eta) for r in res_list)
         funs = [float(gibbs_objective(pp, ss.energies_flat, eta_now)) for pp, ss in zip(prob_list, sim_list)]
         bsf = min(range(len(funs)), key=lambda j: (funs[j], j))
@@ -550,7 +566,7 @@ def explore_exploit_trial_kbit(
         "success": bool(best.success), "p_gs": float(best.p_gs),
         "most_likely_bitstring": best.most_likely_bitstring, "ground_bitstring": ground_bitstring,
         "selected_round": int(sel), "nfev": int(total_nfev), "n_lookups": int(n_lookups),
-        "n_lookups_distinct": int(len(seen)), "n_lookups_sa": int(n_sa), "n_explore_stopped": int(n_stopped),
+        "n_lookups_distinct": int(len(seen)), "n_lookups_sa": int(n_sa), "n_explore_stopped": int(n_stopped), "n_explore_run": int(n_expl_run),
         "sa_best_is_ground": bool(sa_centers is not None and int(sa_centers[0]) == gl),
         "leakage": float(rounds[sel]["leakage"]),
         "x": np.asarray(best.x, dtype=float).tolist(),

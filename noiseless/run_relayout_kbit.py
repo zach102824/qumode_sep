@@ -171,7 +171,7 @@ def worker(job: dict) -> dict:
             sa_mode=job.get("samode") or "uncertain_low",
             xstop=int(job.get("xstop", -1)), xstop_q=float(job.get("xstopq", 0.5)), thr_eps=float(job.get("thr", -1.0)),
             xwarm_steps=int(job.get("xwarm", 0)), xmut=int(job.get("xmut", 2)),
-            lmut_swaps=int(job.get("lmut", 0)),
+            lmut_swaps=int(job.get("lmut", 0)), xagree=int(job.get("xagree", 0)),
         )
     else:
         rec = relayout_trial_kbit(
@@ -237,7 +237,7 @@ def load_records(path: Path, trials: int | None = None) -> list[dict]:
 def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_set="scaling", method="fast",
                workers=8, seed0=20260917, outdir: Path = RUN_ROOT, nf_check=None, max_h=None, log=None,
                tag=None, explore=1, topk=1, explore_mask="random", xeta=1.0, reta=1.0, xL=None,
-               xs=None, cool=0, ceta=64.0, clr=0.05, rawk=0, polt=1, xbeta=None, xkick=None, code="gray", layout_json=None, sab=0, sanoise=0.15, samode="uncertain_low", xstop=-1, xstopq=0.5, thr=-1.0, xwarm=0, xmut=2, lmut=0) -> tuple[str, list[dict]]:
+               xs=None, cool=0, ceta=64.0, clr=0.05, rawk=0, polt=1, xbeta=None, xkick=None, code="gray", layout_json=None, sab=0, sanoise=0.15, samode="uncertain_low", xstop=-1, xstopq=0.5, thr=-1.0, xwarm=0, xmut=2, lmut=0, xagree=0) -> tuple[str, list[dict]]:
     if log is None:
         def log(msg):
             print(msg, flush=True)
@@ -248,7 +248,7 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
     tag = tag or config_tag(n, L, s, r, R, lr, nf, ham_set, method, explore, topk, explore_mask, xeta, reta, xL, xs, cool, ceta, clr,
                             rawk, polt, xbeta, xkick, code) + (f"_sab{sab}nz{sanoise:g}{samode}" if explore_mask == "sa" else "") \
         + (f"_xstop{xstop}q{xstopq:g}" if xstop >= 0 else "") + (f"_thr{thr:g}" if thr >= 0 else "") \
-        + (f"_xw{xwarm}m{xmut}" if xwarm > 0 else "") + (f"_lm{lmut}" if lmut > 0 else "")
+        + (f"_xw{xwarm}m{xmut}" if xwarm > 0 else "") + (f"_lm{lmut}" if lmut > 0 else "") + (f"_xag{xagree}" if xagree > 0 else "")
     outdir.mkdir(parents=True, exist_ok=True)
     path = ckpt(outdir, tag)
     paths = ham_paths(n, ham_set)
@@ -266,7 +266,7 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
                              explore=explore, topk=topk, explore_mask=explore_mask, xeta=xeta, reta=reta,
                              xL=xL, xs=xs, cool=cool, ceta=ceta, clr=clr, rawk=rawk, polt=polt, xbeta=xbeta, xkick=xkick, code=code,
                              explore_perm=lay_map.get(str(i)), sab=sab, sanoise=sanoise, samode=samode,
-                             xstop=xstop, xstopq=xstopq, thr=thr, xwarm=xwarm, xmut=xmut, lmut=lmut))
+                             xstop=xstop, xstopq=xstopq, thr=thr, xwarm=xwarm, xmut=xmut, lmut=lmut, xagree=xagree))
     log(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {tag}: {len(jobs)} jobs ({len(done)} done)")
     t0 = time.time()
     if jobs:
@@ -376,6 +376,7 @@ def main(argv=None) -> int:
     p.add_argument("--xwarm", type=int, default=0, help="warm-started explore runs after the first: SPSA steps of a single stage from the best earlier run's parameters (0 = off)")
     p.add_argument("--xmut", type=int, default=2, help="with --xwarm: random slot swaps applied to the best earlier run's layout")
     p.add_argument("--lmut", type=int, default=0, help="cold layout mutation: after explore run 0, later explore runs use the best earlier layout with lmut slot swaps and a full cold growth (0 = off)")
+    p.add_argument("--xagree", type=int, default=0, help="agreement early stop: skip remaining explore runs once this many runs have the current guess (within Hamming 1) in their top-rawk states (--explore is then the max E)")
     p.add_argument("--code", choices=("binary", "gray"), default="gray", help="cavity Fock code: Fock f holds f (binary) or f^(f>>1) (gray)")
     a = p.parse_args(argv)
     tag, recs = run_config(n=a.n, L=a.L, s=a.s, r=a.r, R=a.R, lr=a.lr, nf=a.nf, trials=a.trials,
@@ -384,7 +385,7 @@ def main(argv=None) -> int:
                            layout_json=a.layout_json, explore=a.explore, topk=a.topk, explore_mask=a.explore_mask, xeta=a.xeta, reta=a.reta,
                            xL=a.xL, xs=a.xs, cool=a.cool, ceta=a.ceta, clr=a.clr,
                            rawk=a.rawk, polt=a.polt, xbeta=a.xbeta, xkick=a.xkick, code=a.code, sab=a.sab, sanoise=a.sanoise, samode=a.samode,
-                           xstop=a.xstop, xstopq=a.xstopq, thr=a.thr, xwarm=a.xwarm, xmut=a.xmut, lmut=a.lmut)
+                           xstop=a.xstop, xstopq=a.xstopq, thr=a.thr, xwarm=a.xwarm, xmut=a.xmut, lmut=a.lmut, xagree=a.xagree)
     sm = summarize(recs)
     sm.pop("per_h", None)
     print(json.dumps({"tag": tag, **sm}, indent=1))

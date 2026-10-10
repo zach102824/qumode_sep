@@ -287,3 +287,8 @@ E7 rawk24 xL3 at 30 trials: see table. 50-trial confirm queued.
 - Stack xL3 or xs35 on top of R1+rawk24 at E=4..6 (target under 2000 evals).
 - Layout mutation (`--lmut`) vs sanoise diversity head-to-head.
 - If E5 clears 0.9 at 50 trials, try E4 and E3 with the full stack.
+
+
+---
+
+**Superseded for the ladder view by [IMPROVE_N8_N16.md](IMPROVE_N8_N16.md)** (Oct 10, 2026 ~23:20 Shanghai). This file keeps the early n=12/14 idea history.
