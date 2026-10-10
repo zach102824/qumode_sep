@@ -295,6 +295,8 @@ def explore_exploit_trial_kbit(
     xstop: int = -1,
     xstop_q: float = 0.5,
     thr_eps: float = -1.0,
+    xwarm_steps: int = 0,
+    xmut: int = 2,
 ) -> dict:
     """Explore-then-exploit relayout (n = 10 cost fix, RELAYOUT_N10_COST_DIAGNOSIS.md).
 
@@ -321,6 +323,9 @@ def explore_exploit_trial_kbit(
       raw pool (1 classical energy lookup each); the guess is the best radius-``polish_radius`` fix-up of the
       ``polish_t`` lowest-energy raw-pool members (``topk`` is then ignored). ``init_beta_max`` rescales the random
       |beta| of the first growth stage (default 3); ``kick_sigma_x`` overrides the growth kick sigma.
+    * ``xwarm_steps`` > 0 (warm-started explore): explore runs after the first start from the parameters and layout of the
+      lowest-<E> earlier explore run (layout mutated by ``xmut`` random slot swaps, same centre state) and run a single
+      stage of ``xwarm_steps`` SPSA-Adam steps at depth Lx instead of a full growth (cheaper; counted in evals).
     """
     n = 2 + 2 * int(k)
     E = np.asarray(energies_logical, dtype=float).reshape(-1)
@@ -360,13 +365,26 @@ def explore_exploit_trial_kbit(
         n_lookups += n_sa
         sa_centers, sa_m = marginals(sa_seen, n)
         pool.add(int(sa_centers[0]))  # classical best (already looked up) enters the pool
+    best_x = best_perm = None  # warm-started explore: lowest-<E> earlier explore run
+    best_cen = None
+    best_em = np.inf
     stage_emeans: list[float] = []  # explore early-stop: stage-xstop <E> of earlier runs (quantum, no lookups)
     n_stopped = 0
     for rnd in range(n_total):
         exploring = rnd < int(explore_rounds)
         Pm = None
         if exploring:
-            if explore_mask == "sa":
+            warm = int(xwarm_steps) > 0 and rnd > 0 and best_x is not None
+            if warm:
+                perm = np.array(best_perm, dtype=int)
+                for _ in range(int(xmut)):
+                    i, j = sa_rng.choice(n, 2, replace=False) if sa_rng is not None else rng.choice(n, 2, replace=False)
+                    perm[i], perm[j] = perm[j], perm[i]
+                cen = int(best_cen)
+                Pm = bit_perm_map(perm, n)
+                pc = int(np.flatnonzero(Pm == cen)[0])
+                xa, xb = cavity_masks_for(pc, int(k))
+            elif explore_mask == "sa":
                 base_mode = sa_mode.replace("_adapt", "")
                 perm, cen = layout_for_run(rnd, sa_centers, sa_m, n, int(k), sa_rng, float(sa_noise), base_mode)
                 if sa_mode.endswith("_adapt") and guess is not None:
@@ -409,7 +427,12 @@ def explore_exploit_trial_kbit(
                     stop = len(_hist) >= 2 and em > float(np.quantile(_hist, float(xstop_q)))
                     _hist.append(em)
                     return stop
-            res = grow_trial(sim, final_layers=Lx, stage_callback=cb, rng=rng, start_layers=int(start_layers),
+            if warm:
+                res = grow_trial(sim, final_layers=Lx, start_layers=Lx, rng=rng, c=float(c), A=float(A), optimizer="spsa_adam",
+                                 steps_per_stage=int(xwarm_steps), adam_lr=float(adam_lr), lr_schedule=[lr_x[-1]],
+                                 eta_scale_schedule=[float(explore_eta_scale)], init_x=best_x)
+            else:
+              res = grow_trial(sim, final_layers=Lx, stage_callback=cb, rng=rng, start_layers=int(start_layers),
                              kick_sigma=float(kick_sigma if kick_sigma_x is None else kick_sigma_x), c=float(c), A=float(A), optimizer="spsa_adam",
                              steps_per_stage=sx, adam_lr=float(adam_lr), lr_schedule=lr_x,
                              eta_scale_schedule=[float(explore_eta_scale)] * len(lr_x),
@@ -421,7 +444,7 @@ def explore_exploit_trial_kbit(
                                        optimizer="spsa_adam", adam_lr=float(cool_lr))
                 res_c.nfev = int(res_c.nfev) + int(res.nfev)
                 res = res_c
-            if len(getattr(res, "stages", [])) < len(lr_x):
+            if not warm and int(cool_steps) == 0 and len(getattr(res, "stages", None) or []) < len(lr_x):
                 n_stopped += 1
                 from noiseless.spsa_gibbs import transparent_layer_params
                 while np.asarray(res.x).size < n_parameters(Lx):  # pad with identity layers (same state)
@@ -446,6 +469,8 @@ def explore_exploit_trial_kbit(
                 res.p_gs = float(ev_o["p_gs"])
         total_nfev += int(res.nfev)
         ev = sim.evaluate(res.x)
+        if exploring and explore_mask == "sa" and float(ev["energy_mean"]) < best_em:
+            best_em, best_x, best_perm, best_cen = float(ev["energy_mean"]), np.asarray(res.x, dtype=float).copy(), np.array(perm), int(cen)
         probs = np.asarray(ev["probs"], dtype=float)
         res_list.append(res)
         sim_list.append(sim)

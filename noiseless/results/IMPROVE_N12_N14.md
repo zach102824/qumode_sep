@@ -101,3 +101,38 @@ Halving the SA budget gives the same quality at both n, so classical lookups dro
 - Running: logs/improve/queue6.sh (30-trial screens of thr, xstop, rawk), then logs/improve/queue7.sh
   (50 trials: n14 sab49 E13, n12 sab36 E4, n14 E13 sab98 thr0.05, n14 E15 sab98 xstop1, n12 E4 sab72 thr0.05).
 - Next ideas unchanged: warm starts, layout mutation, stacking whichever of thr / xstop / rawk helps.
+
+## Queue6 screens (30 trials, paired with trials 0-2 of the matching 50-trial SA run; Oct 10, 2026, about 17:00 Shanghai)
+Same trials and seeds in both columns (noiseless/analyze_paired.py). Baseline = SA layout, nz0.15, fixed_low, sab = n^2.
+
+| n | E | variant | success | mean p(GS) | evals | lookups | baseline success / p(GS) / evals / lookups |
+|---|---|---|---|---|---|---|---|
+| 14 | 11 | thr 0.05 | 0.90 | 0.895 | 5046 | 318 | 0.90 / 0.895 / 5046 / 317 |
+| 14 | 11 | xstop 1 (early stop) | 0.77 | 0.764 | 4137 | 325 | 0.90 / 0.895 / 5046 / 317 |
+| 14 | 11 | thr 0 | 0.67 | 0.441 | 5046 | 331 | 0.90 / 0.895 / 5046 / 317 |
+| 14 | 11 | rawk 16, polt 2 | 1.00 | 0.993 | 5046 | 407 | 0.90 / 0.895 / 5046 / 317 |
+| 14 | 15 | xstop 1 | 0.83 | 0.831 | 5315 | 369 | E13 plain: 0.90 / 0.899 / 5854 / 337 |
+| 12 | 4 | thr 0.05 | 0.93 | 0.928 | 2218 | 179 | 0.93 / 0.928 / 2218 / 178 |
+| 12 | 4 | xstop 1 | 0.90 | 0.894 | 1949 | 182 | 0.93 / 0.928 / 2218 / 178 |
+| 12 | 4 | rawk 16, polt 2 | 1.00 | 0.993 | 2218 | 237 | 0.93 / 0.928 / 2218 / 178 |
+
+Reading
+- thr 0.05 does nothing (same numbers); thr 0 is clearly harmful. Drop thr.
+- xstop (early stop of explore runs after growth stage 1, then more explore runs) loses quality: n14 E15 xstop gives 0.83 at 5315 evals,
+  worse than plain E11 at 5046 evals (0.90) and E13 at 5854 evals. Early stopping discards runs that would have found the answer. Drop xstop.
+- rawk 16 with polt 2 (energy-ranked readout pool: 16 most probable states per round, 1 lookup each, Hamming-1 fix-up of the 2 lowest-energy ones)
+  is the only clear win: 1.00 success on 30 of 30 trials at both n, at the same evals. Extra lookups: about 90 at n=14 and 60 at n=12.
+  This needs a 50-trial confirmation with half-size SA (sab = n^2/2) and fewer explore runs (queue8).
+
+## Code added this round
+- --xwarm S / --xmut M: warm-started explore runs. After the first explore run, each later explore run starts from the final parameters of the
+  lowest-energy earlier explore run, on that run's layout with M random slot swaps (same centre state), and runs one stage of S steps
+  at full depth instead of a full 4-stage growth (about 101 evals instead of 404 at S = 50). Tag suffix _xwSmM.
+- noiseless/analyze_paired.py: paired comparison of checkpoints on shared (inst, trial) pairs.
+- Fixed a crash in the explore early-stop check when the cool stage is on (stages missing).
+
+## Queued (detached, chained by done-files)
+- queue7 (running): 50 trials, n14 sab49 E13, n12 sab36 E4, n14 E13 sab98 thr0.05, n14 E15 sab98 xstop1, n12 E4 sab72 thr0.05.
+- queue8 (waits for queue7.done): rawk16 polt2 at 50 trials with sab = n^2/2 and fewer explore runs:
+  n14 E11, E9, E7 (sab98), n12 E4, E3, E2 (sab72); rawk8; sab = n^2/4; polt3; rawk plus thr0.05.
+- queue9 (waits for queue8.done): warm-started explore runs (30 trials): n14 E13 xwarm50 m2 with and without rawk, xwarm100 m4, n14 E9 m1, n12 E5.

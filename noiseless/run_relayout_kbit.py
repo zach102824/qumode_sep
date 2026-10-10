@@ -170,6 +170,7 @@ def worker(job: dict) -> dict:
             sa_budget=int(job.get("sab") or 0), sa_seed=int(job["seed"]) + 7, sa_noise=float(job.get("sanoise") or 0.15),
             sa_mode=job.get("samode") or "uncertain_low",
             xstop=int(job.get("xstop", -1)), xstop_q=float(job.get("xstopq", 0.5)), thr_eps=float(job.get("thr", -1.0)),
+            xwarm_steps=int(job.get("xwarm", 0)), xmut=int(job.get("xmut", 2)),
         )
     else:
         rec = relayout_trial_kbit(
@@ -235,7 +236,7 @@ def load_records(path: Path, trials: int | None = None) -> list[dict]:
 def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_set="scaling", method="fast",
                workers=8, seed0=20260917, outdir: Path = RUN_ROOT, nf_check=None, max_h=None, log=None,
                tag=None, explore=1, topk=1, explore_mask="random", xeta=1.0, reta=1.0, xL=None,
-               xs=None, cool=0, ceta=64.0, clr=0.05, rawk=0, polt=1, xbeta=None, xkick=None, code="gray", layout_json=None, sab=0, sanoise=0.15, samode="uncertain_low", xstop=-1, xstopq=0.5, thr=-1.0) -> tuple[str, list[dict]]:
+               xs=None, cool=0, ceta=64.0, clr=0.05, rawk=0, polt=1, xbeta=None, xkick=None, code="gray", layout_json=None, sab=0, sanoise=0.15, samode="uncertain_low", xstop=-1, xstopq=0.5, thr=-1.0, xwarm=0, xmut=2) -> tuple[str, list[dict]]:
     if log is None:
         def log(msg):
             print(msg, flush=True)
@@ -245,7 +246,8 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
         nf_check = 0 if nf == (1 << k) else nf + max(16, (1 << k) // 4)
     tag = tag or config_tag(n, L, s, r, R, lr, nf, ham_set, method, explore, topk, explore_mask, xeta, reta, xL, xs, cool, ceta, clr,
                             rawk, polt, xbeta, xkick, code) + (f"_sab{sab}nz{sanoise:g}{samode}" if explore_mask == "sa" else "") \
-        + (f"_xstop{xstop}q{xstopq:g}" if xstop >= 0 else "") + (f"_thr{thr:g}" if thr >= 0 else "")
+        + (f"_xstop{xstop}q{xstopq:g}" if xstop >= 0 else "") + (f"_thr{thr:g}" if thr >= 0 else "") \
+        + (f"_xw{xwarm}m{xmut}" if xwarm > 0 else "")
     outdir.mkdir(parents=True, exist_ok=True)
     path = ckpt(outdir, tag)
     paths = ham_paths(n, ham_set)
@@ -263,7 +265,7 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
                              explore=explore, topk=topk, explore_mask=explore_mask, xeta=xeta, reta=reta,
                              xL=xL, xs=xs, cool=cool, ceta=ceta, clr=clr, rawk=rawk, polt=polt, xbeta=xbeta, xkick=xkick, code=code,
                              explore_perm=lay_map.get(str(i)), sab=sab, sanoise=sanoise, samode=samode,
-                             xstop=xstop, xstopq=xstopq, thr=thr))
+                             xstop=xstop, xstopq=xstopq, thr=thr, xwarm=xwarm, xmut=xmut))
     log(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {tag}: {len(jobs)} jobs ({len(done)} done)")
     t0 = time.time()
     if jobs:
@@ -370,6 +372,8 @@ def main(argv=None) -> int:
     p.add_argument("--xstop", type=int, default=-1, help="explore early stop: after growth stage index xstop, stop the run if its <E> is worse than the xstopq quantile of earlier runs")
     p.add_argument("--xstopq", type=float, default=0.5)
     p.add_argument("--thr", type=float, default=-1.0, help="relabel cost min(E - E(guess) - thr*std, 0) (>=0 enables)")
+    p.add_argument("--xwarm", type=int, default=0, help="warm-started explore runs after the first: SPSA steps of a single stage from the best earlier run's parameters (0 = off)")
+    p.add_argument("--xmut", type=int, default=2, help="with --xwarm: random slot swaps applied to the best earlier run's layout")
     p.add_argument("--code", choices=("binary", "gray"), default="gray", help="cavity Fock code: Fock f holds f (binary) or f^(f>>1) (gray)")
     a = p.parse_args(argv)
     tag, recs = run_config(n=a.n, L=a.L, s=a.s, r=a.r, R=a.R, lr=a.lr, nf=a.nf, trials=a.trials,
@@ -378,7 +382,7 @@ def main(argv=None) -> int:
                            layout_json=a.layout_json, explore=a.explore, topk=a.topk, explore_mask=a.explore_mask, xeta=a.xeta, reta=a.reta,
                            xL=a.xL, xs=a.xs, cool=a.cool, ceta=a.ceta, clr=a.clr,
                            rawk=a.rawk, polt=a.polt, xbeta=a.xbeta, xkick=a.xkick, code=a.code, sab=a.sab, sanoise=a.sanoise, samode=a.samode,
-                           xstop=a.xstop, xstopq=a.xstopq, thr=a.thr)
+                           xstop=a.xstop, xstopq=a.xstopq, thr=a.thr, xwarm=a.xwarm, xmut=a.xmut)
     sm = summarize(recs)
     sm.pop("per_h", None)
     print(json.dumps({"tag": tag, **sm}, indent=1))

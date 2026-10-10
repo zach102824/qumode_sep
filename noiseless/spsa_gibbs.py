@@ -803,6 +803,7 @@ def grow_trial(
     record_x: bool = False,
     init_beta_max: float | None = None,
     stage_callback=None,
+    init_x=None,
 ) -> TrialResult:
     """Layer-growth trial: train L=start_layers from random init, then repeatedly append a
     transparent LAST layer (+ Gaussian kick σ on its 8 params) and retrain, up to
@@ -879,7 +880,9 @@ def grow_trial(
         if eta_seq[si] is not None:
             sim.eta_scale = float(eta_seq[si])
         insert_info: dict = {}
-        if x is None:
+        if x is None and init_x is not None:
+            x0 = np.asarray(init_x, dtype=float).copy()  # warm start (must have n_parameters(L) entries)
+        elif x is None:
             x0 = random_parameters(L, rng) if init_beta_max is None else small_beta_parameters(L, rng, float(init_beta_max))
         else:
             x_tr = np.concatenate([np.asarray(x, dtype=float), transparent_layer_params()])

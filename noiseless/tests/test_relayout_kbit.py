@@ -180,3 +180,18 @@ def test_wmaxsat_n8_inst0_unique_gs():
     for n in (8, 10, 12, 14, 16):
         for p in ham_paths(n, "wmaxsat"):
             energies_for(str(p), n, "wmaxsat")
+
+
+def test_explore_warm_start_counts_evals_and_mutates_layout():
+    import numpy as np
+    from noiseless.relayout_kbit import explore_exploit_trial_kbit
+    from noiseless.run_relayout_kbit import energies_for, ham_paths
+
+    E, gs = energies_for(str(ham_paths(8, "wmaxsat")[0]), 8, "wmaxsat")
+    rec = explore_exploit_trial_kbit(E, gs, k=3, nf=24, final_layers=2, rng=np.random.default_rng(3),
+                                     explore_rounds=3, explore_mask="sa", sa_budget=16, sa_seed=5,
+                                     sa_mode="fixed_low", relayout_rounds=1, relayout_steps=5,
+                                     steps_per_stage=3, lr_schedule=[0.5, 0.2], xwarm_steps=4, xmut=1)
+    # first explore: 2 stages of 3 steps; warm explores: 1 stage of 4 steps; exploit: 5 steps
+    assert rec["nfev"] == 2 * (2 * 3 + 1) + 2 * (2 * 4 + 1) + (2 * 5 + 1)
+    assert [q["phase"] for q in rec["rounds"]] == ["explore"] * 3 + ["exploit"]
