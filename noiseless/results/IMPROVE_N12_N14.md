@@ -150,3 +150,29 @@ Reading
   At 30 trials xstop with sab196 looked worse (0.83), so this is within noise of 50-trial resolution; the gain is small.
 - A quarter-size SA budget (sab = n^2/4) is still fine at n=14 (0.92 / 0.914 at E13, 232 lookups) and costs about 0.02 at n=12.
 - thr 0.05 again changes nothing.
+
+## Queue8 results so far (rawk 16, polt 2, 50 trials; Oct 10, 2026, about 17:15 Shanghai)
+Settings: wmaxsat, Gray code, L4 s50, r150, R2, explore with SA layouts (fixed_low), SA budget sab = n^2/2 (98 at n=14, 72 at n=12).
+"Lookups" = all classical energy lookups (SA + readout pool + fix-up). n^2 is 144 at n=12 and 196 at n=14.
+
+| n | E | variant | trials | success | mean p(GS) | evals | lookups |
+|---|---|---|---|---|---|---|---|
+| 12 | 5 | plain SA baseline | 50 | 0.92 | 0.914 | 2622 | about 180 |
+| 12 | 4 | rawk16 polt2, sab72 | 50 | 1.00 | 0.993 | 2218 | 174 |
+| 12 | 3 | rawk16 polt2, sab72 | 50 | 1.00 | 0.993 | 1814 | 162 |
+| 14 | 17 | plain baseline | 50 | 0.94 | 0.933 | 7470 | about 340 |
+| 14 | 13 | plain SA, sab98 | 50 | 0.90 | 0.895 | 5854 | 256 |
+| 14 | 11 | rawk16 polt2, sab98 | 50 | 0.96 | 0.953 | 5046 | 322 |
+| 14 | 9 | rawk16 polt2, sab98 | 50 | 0.94 | 0.933 | 4238 | 295 |
+| 14 | 7 | rawk16 polt2, sab98 | 24 of 50 so far | 1.00 | 0.993 | 3430 | 263 |
+
+Reading
+- Confirmed at 50 trials: n=12 with E=3 gives 1.00 success and 0.993 mean p(GS) at 1814 evals, which is 31% fewer evals than the E=5 baseline (2622) and 18% fewer than the SA-layout baseline at E=4 (2218). Lookups 162, about 1.1 n^2.
+- n=14 with E=9 gives 0.94 / 0.933 at 4238 evals, the same quality as the E=17 baseline (7470 evals) with 43% fewer evals, and 16% fewer than the SA-layout baseline at E=11 (5046, 0.86 / 0.857). Lookups 295, about 1.5 n^2.
+- n=14 E=11 with rawk16 gives 0.96 / 0.953 at 5046 evals (the earlier 30-trial 1.00 was optimistic at full-size SA).
+- Half-size SA (sab = n^2/2) costs a little at n=14 (0.96 vs 1.00 at E=11, 50 vs 30 trials, not the same trials). Rest of queue8 still running (E=7 and E=2 points, rawk8, quarter SA, polt3, thr).
+
+## Queued after queue8 (all detached, chained by done-files)
+- queue9 (30 trials): warm-started explore runs, with and without rawk16.
+- queue10 (50 trials, rawk16 polt2): n14 E5, E6; n12 E1; n14 E7 sab49; n12 E2 sab36; layout diversity via SA noise 0.4 (n14 E7, n12 E2); rawk24 (n14 E7); top-K 3 (n14 E7).
+- queue11 (50 trials, rawk16 polt2): cheaper explore runs (xs 35, xL 3) at n14 E9 and n12 E3; warm-started explore runs (n14 E9, n12 E4); n14 E7 polt3; n14 E7 rawk8.
