@@ -136,3 +136,17 @@ Reading
 - queue8 (waits for queue7.done): rawk16 polt2 at 50 trials with sab = n^2/2 and fewer explore runs:
   n14 E11, E9, E7 (sab98), n12 E4, E3, E2 (sab72); rawk8; sab = n^2/4; polt3; rawk plus thr0.05.
 - queue9 (waits for queue8.done): warm-started explore runs (30 trials): n14 E13 xwarm50 m2 with and without rawk, xwarm100 m4, n14 E9 m1, n12 E5.
+
+## Queue7 (50 trials, finished)
+| n | E | SA budget | variant | success | mean p(GS) | evals | lookups |
+|---|---|---|---|---|---|---|---|
+| 14 | 13 | 49 (n^2/4) | plain | 0.92 | 0.914 | 5854 | 232 |
+| 14 | 13 | 98 | thr 0.05 | 0.90 | 0.895 | 5854 | 256 |
+| 14 | 15 | 98 | xstop 1 | 0.92 | 0.914 | 5171 | 291 |
+| 12 | 4 | 36 (n^2/4) | plain | 0.88 | 0.879 | 2218 | 109 |
+| 12 | 4 | 72 | thr 0.05 | 0.90 | 0.894 | 2218 | 115 |
+
+- n=14 E15 with xstop 1 at sab98 reaches 0.92 / 0.914 at 5171 evals (about 12% fewer than plain E13 at 5854), with 291 lookups.
+  At 30 trials xstop with sab196 looked worse (0.83), so this is within noise of 50-trial resolution; the gain is small.
+- A quarter-size SA budget (sab = n^2/4) is still fine at n=14 (0.92 / 0.914 at E13, 232 lookups) and costs about 0.02 at n=12.
+- thr 0.05 again changes nothing.
