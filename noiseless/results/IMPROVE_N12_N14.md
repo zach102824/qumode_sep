@@ -157,10 +157,10 @@ Settings: wmaxsat, Gray code, L4 s50, r150, R2, explore with SA layouts (fixed_l
 
 | n | E | variant | trials | success | mean p(GS) | evals | lookups |
 |---|---|---|---|---|---|---|---|
-| 12 | 5 | plain SA baseline | 50 | 0.92 | 0.914 | 2622 | about 180 |
+| 12 | 5 | plain SA baseline | 50 | 0.92 | 0.914 | 2622 | n/a (about n^2) |
 | 12 | 4 | rawk16 polt2, sab72 | 50 | 1.00 | 0.993 | 2218 | 174 |
 | 12 | 3 | rawk16 polt2, sab72 | 50 | 1.00 | 0.993 | 1814 | 162 |
-| 14 | 17 | plain baseline | 50 | 0.94 | 0.933 | 7470 | about 340 |
+| 14 | 17 | plain baseline | 50 | 0.94 | 0.933 | 7470 | n/a (about n^2) |
 | 14 | 13 | plain SA, sab98 | 50 | 0.90 | 0.895 | 5854 | 256 |
 | 14 | 11 | rawk16 polt2, sab98 | 50 | 0.96 | 0.953 | 5046 | 322 |
 | 14 | 9 | rawk16 polt2, sab98 | 50 | 0.94 | 0.933 | 4238 | 295 |
