@@ -292,6 +292,9 @@ def explore_exploit_trial_kbit(
     sa_seed: int | None = None,
     sa_noise: float = 0.15,
     sa_mode: str = "uncertain_low",
+    xstop: int = -1,
+    xstop_q: float = 0.5,
+    thr_eps: float = -1.0,
 ) -> dict:
     """Explore-then-exploit relayout (n = 10 cost fix, RELAYOUT_N10_COST_DIAGNOSIS.md).
 
@@ -357,6 +360,8 @@ def explore_exploit_trial_kbit(
         n_lookups += n_sa
         sa_centers, sa_m = marginals(sa_seen, n)
         pool.add(int(sa_centers[0]))  # classical best (already looked up) enters the pool
+    stage_emeans: list[float] = []  # explore early-stop: stage-xstop <E> of earlier runs (quantum, no lookups)
+    n_stopped = 0
     for rnd in range(n_total):
         exploring = rnd < int(explore_rounds)
         Pm = None
@@ -395,7 +400,16 @@ def explore_exploit_trial_kbit(
             gs_p = bitstring_from_logical(int(np.flatnonzero(Pm == gl)[0]), n)
             sim = XorKbitSim(layout, E[Pm], Lr, gs_p, u_name=u_name, method=method, xa=xa, xb=xb)
         if exploring:
-            res = grow_trial(sim, final_layers=Lx, rng=rng, start_layers=int(start_layers),
+            cb = None
+            if int(xstop) >= 0:
+                def cb(si, r_, _hist=stage_emeans):
+                    if si != int(xstop):
+                        return False
+                    em = float(r_.energy_mean)
+                    stop = len(_hist) >= 2 and em > float(np.quantile(_hist, float(xstop_q)))
+                    _hist.append(em)
+                    return stop
+            res = grow_trial(sim, final_layers=Lx, stage_callback=cb, rng=rng, start_layers=int(start_layers),
                              kick_sigma=float(kick_sigma if kick_sigma_x is None else kick_sigma_x), c=float(c), A=float(A), optimizer="spsa_adam",
                              steps_per_stage=sx, adam_lr=float(adam_lr), lr_schedule=lr_x,
                              eta_scale_schedule=[float(explore_eta_scale)] * len(lr_x),
@@ -407,11 +421,29 @@ def explore_exploit_trial_kbit(
                                        optimizer="spsa_adam", adam_lr=float(cool_lr))
                 res_c.nfev = int(res_c.nfev) + int(res.nfev)
                 res = res_c
+            if len(getattr(res, "stages", [])) < len(lr_x):
+                n_stopped += 1
+                from noiseless.spsa_gibbs import transparent_layer_params
+                while np.asarray(res.x).size < n_parameters(Lx):  # pad with identity layers (same state)
+                    res.x = np.concatenate([np.asarray(res.x, dtype=float), transparent_layer_params()])
+                sim.n_layers = Lx
         else:
-            sim.eta_scale = float(exploit_eta_scale)
+            sim_opt = sim
+            if float(thr_eps) >= 0 and guess is not None:
+                # threshold-shifted cost: only states at or below E(guess) score; guess gets -eps*scale
+                Es = np.asarray(sorted(E[list(seen)])) if seen else E
+                scale = float(np.std(Es)) or 1.0
+                Ethr = np.minimum(E - float(E[guess]) - float(thr_eps) * scale, 0.0)
+                if Pm is None:
+                    sim_opt = XorKbitSim(layout, Ethr, Lr, ground_bitstring, u_name=u_name, method=method, xa=xa, xb=xb)
+            sim_opt.eta_scale = float(exploit_eta_scale)
             x0 = small_beta_parameters(L, rng)
-            res = optimize_trial(sim, maxiter=int(relayout_steps), rng=rng, x0=x0, a=extra_a, c=float(c),
+            res = optimize_trial(sim_opt, maxiter=int(relayout_steps), rng=rng, x0=x0, a=extra_a, c=float(c),
                                  A=float(A), optimizer="spsa_adam", adam_lr=float(relayout_lr))
+            if sim_opt is not sim:
+                ev_o = sim.evaluate(res.x)
+                res.success = bool(ev_o["success"]) if "success" in ev_o else res.success
+                res.p_gs = float(ev_o["p_gs"])
         total_nfev += int(res.nfev)
         ev = sim.evaluate(res.x)
         probs = np.asarray(ev["probs"], dtype=float)
@@ -475,7 +507,7 @@ def explore_exploit_trial_kbit(
         "success": bool(best.success), "p_gs": float(best.p_gs),
         "most_likely_bitstring": best.most_likely_bitstring, "ground_bitstring": ground_bitstring,
         "selected_round": int(sel), "nfev": int(total_nfev), "n_lookups": int(n_lookups),
-        "n_lookups_distinct": int(len(seen)), "n_lookups_sa": int(n_sa),
+        "n_lookups_distinct": int(len(seen)), "n_lookups_sa": int(n_sa), "n_explore_stopped": int(n_stopped),
         "sa_best_is_ground": bool(sa_centers is not None and int(sa_centers[0]) == gl),
         "leakage": float(rounds[sel]["leakage"]),
         "x": np.asarray(best.x, dtype=float).tolist(),

@@ -802,6 +802,7 @@ def grow_trial(
     bfgs_eta_mode: str = "callback",
     record_x: bool = False,
     init_beta_max: float | None = None,
+    stage_callback=None,
 ) -> TrialResult:
     """Layer-growth trial: train L=start_layers from random init, then repeatedly append a
     transparent LAST layer (+ Gaussian kick σ on its 8 params) and retrain, up to
@@ -941,6 +942,9 @@ def grow_trial(
                                    "n_restarts": result.opt_info["n_restarts"],
                                    "etas": result.opt_info["etas"]})
         nit_actual += int(result.nit)
+        if stage_callback is not None and si < n_st - 1 and stage_callback(si, result):
+            steps_seq = steps_seq[: si + 1]  # early stop: remaining stages skipped
+            break
     sim.eta_scale = eta_scale0
     assert result is not None
     result.stages = stages
