@@ -19,8 +19,11 @@ Evals per trial ≈ (explore cost) × E + (relabel cost) × R. Lookups = distinc
 
 | n | E | setting | success | mean p(GS) | evals | lookups (approx) |
 |---|---|---|---|---|---|---|
-| 8 | — | not yet run on this stack | — | — | — | — |
-| 10 | — | not yet run on this stack | — | — | — | — |
+| 8 | 1 | sab32 rawk24 xL2 xs35 R1 xeta128 | 1.00 | 0.987 | 443 | about 40 |
+| 8 | 1 | sab32 rawk24 xL2 xs35 R1 (xeta16) | 0.98 | 0.967 | 443 | about 40 |
+| 10 | 1 | sab50 rawk24 xL2 xs35 R1 xeta128 | 0.96 | 0.951 | 443 | about 60 |
+| 10 | 1 | sab50 rawk24 xL2 R1 xeta128 | 1.00 | 0.989 | 503 | about 60 |
+| 10 | 2 | sab50 rawk24 xL2 xs35 R1 (xeta16) | 1.00 | 0.990 | 585 | about 70 |
 | 12 | 2 | sab72 rawk24 xL2 R1 | 0.92 | 0.910 | 705 | about 162 |
 | 12 | 2 | sab72 rawk24 xL3 xs35 R1 | 0.92 | 0.912 | 727 | about 160 |
 | 12 | 3 | sab72 rawk24 xL2 R1 | 0.98 | 0.965 | 907 | about 170 |
@@ -31,26 +34,36 @@ Evals per trial ≈ (explore cost) × E + (relabel cost) × R. Lookups = distinc
 | 14 | 6 | sab98 rawk24 xL3 R1 | 0.94 | 0.927 | 2119 | about 290 |
 | 14 | 7 | sab98 rawk24 xs35 R1 | 1.00 / 0.92 (rep) | 0.989 / 0.910 | 2289 | about 324 |
 | 14 | 7 | sab98 rawk24 xs35 (R2) | 1.00 | 0.993 | 2590 | about 320 |
-| 16 | — | queued (E=8..20 screen) | — | — | — | — |
+| 12 | 1 | sab72 rawk24 xL2 R1 xeta128 | 0.94 | 0.925 | 503 | about 130 |
+| 12 | 1 | sab72 rawk24 xL3 R1 xeta128 | 0.98 | 0.964 | 604 | about 130 |
+| 12 | 2 | sab72 rawk24 xL3 xs35 R1 xeta128 | 1.00 | 0.989 | 727 | about 160 |
+| 14 | 3 | sab98 rawk24 xL3 R1 xeta256 | 0.92 | 0.911 | 1210 | about 260 |
+| 14 | 4 | sab98 rawk24 xL2 R1 xeta128 | 0.92 | 0.909 | 1109 | about 280 |
+| 14 | 4 | sab98 rawk24 xL3 R1 xeta256 | 0.96 | 0.947 | 1513 | about 280 |
+| 14 | 4 | sab98 rawk32 xL3 R1 xeta128 | 0.98 | 0.967 | 1513 | about 290 |
+| 14 | 5 | sab98 rawk24 xL3 R1 xeta256 | 0.98 | 0.968 | 1816 | about 300 |
+| 16 | 8 | sab128 rawk24 xs35 R1 xeta16 (full-depth explore) | 0.58 | 0.572 | 2573 | about 330 |
+| 16 | 8 | sab128 rawk24 xL3 xs35 R1 xeta128 | 0.68 | 0.653 | 2005 | about 330 |
+| 16 | 12 | sab128 rawk24 xL3 xs35 R1 xeta128 | 0.84 | 0.818 | 2857 | about 350 |
 
 Older baselines for context: n=12 E5 random layout 0.92 / 0.914 at 2622 evals; n=14 E17 random layout 0.94 / 0.933 at 7470 evals. Current n=14 ~0.9 points are about 70% fewer evals than that baseline.
 
-## Scaling table (matched ~0.9 quality)
+## Scaling table (matched ~0.9 quality), updated Oct 11 about 01:20 Shanghai
 
-Using the cheapest confirmed points with success ≥ 0.9 and mean p(GS) ≥ 0.9 where available:
+The big new lever (queue20, previously unrecorded here) is a much larger explore eta multiplier: xeta128/256 instead of 16/32. It cut the explore count E needed at n=12 and n=14 a lot (n=14: E6 -> E3/E4).
 
-| n | cheapest ~0.9 point | evals | ratio to previous | b per unit n |
-|---|---|---|---|---|
-| 8 | pending | — | — | — |
-| 10 | pending | — | — | — |
-| 12 | E2 xL2 R1 rawk24 | 705 | — | — |
-| 14 | E6 xs35 R1 rawk24 (0.94/0.930; rep 0.90/0.888) | 2005 | 2.84× over 2 steps | about 1.69 |
-| 14 alt | E6 xL3 R1 xeta32 (0.96/0.947) | 2119 | 3.01× over 2 steps | about 1.73 |
-| 16 | pending | — | — | — |
+Cheapest confirmed points with success >= 0.9 and mean p(GS) >= 0.9:
 
-If we accept the borderline n14 E7 xL3 xs35 at 1792 (success 0.90, mean p(GS) 0.887 just under 0.9), the step from n12@705 is about 1.59 per unit n. Still above the 1.1–1.2 target. Filling n=8, 10, 16 is the next step so the fit is trustworthy.
+| n | cheapest ~0.9 point | success / mean p(GS) | evals |
+|---|---|---|---|
+| 8 | E1 xL2 xs35 R1 xeta128 | 1.00 / 0.987 | 443 |
+| 10 | E1 xL2 xs35 R1 xeta128 | 0.96 / 0.951 | 443 |
+| 12 | E1 xL2 R1 xeta128 | 0.94 / 0.925 | 503 |
+| 14 | E4 xL2 R1 xeta128 | 0.92 / 0.909 | 1109 |
+| 14 alt | E3 xL3 R1 xeta256 | 0.92 / 0.911 | 1210 |
+| 16 | not yet >= 0.9 | best so far 0.84 / 0.818 (E12) | 2857 |
 
-Fitted form evals ≈ A · b^n over n=12..14 alone is noisy; the full ladder will decide.
+Fit of evals = A * b^n using the n=8..14 points (443 at n=8, 1109 at n=14): b is about 1.165 per unit n over n=8..14. Piecewise: n=8..12 is almost flat (443 -> 503, b about 1.03 per unit n), and the whole growth sits in n=12 -> 14 (503 -> 1109, b about 1.48 per unit n) because one explore run is enough up to n=12 but not at n=14. With n=16 still below 0.9 at 2857 evals the full-ladder fit is not final; if n=16 lands near 3000 evals the 8..16 fit would be b about 1.27 per unit n.
 
 ## Recent idea outcomes (queues 10–19)
 
@@ -88,3 +101,19 @@ Next ideas
 4. Once all five n have a ~0.9 point, fit b^n and decide whether to grow rawk with n, add a second relabel only when guess_hit is low, or try a classical backbone XOR that SA almost-fixes.
 5. Keep several queues deep so compute never idles until Zach says stop.
 - logs/improve/queue23.sh (waits for queue22, queued 23:55): n=8 E1..3 (xL2/xL3/rawk16/xeta32), n=10 E1..3, more n=14 under-2000 tries with rawk32.
+
+
+## Status (Oct 11, 2026, about 01:25 Shanghai)
+
+Confirmed since the Oct 10 23:20 status
+- n=8, 10 measured on the full stack: both reach about 0.96-1.00 success at 443-503 evals (E=1, xL2).
+- n=12 E1 xeta128 xL2: 0.94 / 0.925 at 503 evals; E2 xL3 xs35 xeta128: 1.00 / 0.989 at 727.
+- n=14: xeta128/256 reaches 0.92 / 0.909 at 1109 evals (E4 xL2) and 0.92 / 0.911 at 1210 (E3 xL3 xeta256); 0.96 / 0.947 at 1513; 0.98 / 0.967 at 1513 with rawk32.
+- n=16 first points: E8 xeta16 full-depth explore 0.58 / 0.572 at 2573; E8 xL3 xs35 xeta128 0.68 / 0.653 at 2005; E12 same stack 0.84 / 0.818 at 2857. Still below 0.9, E needs to go to about 16 or the explore quality needs another lever.
+- Cost note: xL2/xs35 explore is cheap (about 4 s per trial at n=14), but at n=16 full-depth explore is about 55 s per trial.
+
+Running / queued (all detached; do not kill; STOP file stops the watchdog only)
+- queue21/22/23 chain (xeta16/32 n=16 E scan, n8/10 fills, n14 rawk32): still alive but now time-shared. queue25/26 temporarily SIGSTOP any xeta 16/32 job and SIGCONT it when they finish, so the 8 cores are never oversubscribed.
+- queue24 (done): n=8 / n=10 xeta16 points.
+- queue25 (running): n=8/10/12 xeta128 points, n=14 xeta128/256 sweep, n=16 xL3 xs35 xeta128 E12/8/6/10 and xeta256, rawk32, sab192, nz40 variants.
+- queue26 (waits for queue25): n=16 E12 knob screen (rawk48 polt3, xeta256/512, sab192, nz40, R2), n=16 E16, n=14 rawk32/xeta512 tries, n=12 rawk32/xeta512.
