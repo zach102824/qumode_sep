@@ -117,3 +117,8 @@ Running / queued (all detached; do not kill; STOP file stops the watchdog only)
 - queue24 (done): n=8 / n=10 xeta16 points.
 - queue25 (running): n=8/10/12 xeta128 points, n=14 xeta128/256 sweep, n=16 xL3 xs35 xeta128 E12/8/6/10 and xeta256, rawk32, sab192, nz40 variants.
 - queue26 (waits for queue25): n=16 E12 knob screen (rawk48 polt3, xeta256/512, sab192, nz40, R2), n=16 E16, n=14 rawk32/xeta512 tries, n=12 rawk32/xeta512.
+
+## Update (Oct 11, 2026, about 01:50 Shanghai)
+- n=16 E6 xL3 xs35 xeta128: 0.58 / 0.538 at 1579 evals (final round).
+- n=16 E10 xL3 full xs xeta128: 0.76 / 0.749 at 3331 evals.
+- Together with E12 xs35 (0.84 / 0.818 at 2857), n=16 is still below 0.9; queue25 continues (xeta256 E8 running), queue26 (E12 knob screen, E16, n14/n12 pushes) is queued behind it. Compute is fully busy (two n=16 jobs on 8 cores).
