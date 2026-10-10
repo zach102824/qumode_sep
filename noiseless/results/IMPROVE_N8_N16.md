@@ -122,3 +122,7 @@ Running / queued (all detached; do not kill; STOP file stops the watchdog only)
 - n=16 E6 xL3 xs35 xeta128: 0.58 / 0.538 at 1579 evals (final round).
 - n=16 E10 xL3 full xs xeta128: 0.76 / 0.749 at 3331 evals.
 - Together with E12 xs35 (0.84 / 0.818 at 2857), n=16 is still below 0.9; queue25 continues (xeta256 E8 running), queue26 (E12 knob screen, E16, n14/n12 pushes) is queued behind it. Compute is fully busy (two n=16 jobs on 8 cores).
+
+## Update (Oct 11, 2026, about 02:15 Shanghai)
+- n=16 E8 xL3 full xs xeta256: 0.74 / 0.719 at 2725 evals (final round). Better than E8 xeta16 (0.58 at 2573) but still below 0.9 and not cheaper than E12 xs35 (0.84 / 0.818 at 2857).
+- Compute fully busy: queue25 running n=16 E8 xL2 xs35 xeta128 (5 trials/worker batch), queue26 queued behind it (E12 knob screen, E16, n14/n12 pushes); queue21/22/23 time-shared and watchdog alive. No new confirmed ladder-wide result yet; n=16 remains the open point.
