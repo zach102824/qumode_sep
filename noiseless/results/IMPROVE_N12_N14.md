@@ -176,3 +176,48 @@ Reading
 - queue9 (30 trials): warm-started explore runs, with and without rawk16.
 - queue10 (50 trials, rawk16 polt2): n14 E5, E6; n12 E1; n14 E7 sab49; n12 E2 sab36; layout diversity via SA noise 0.4 (n14 E7, n12 E2); rawk24 (n14 E7); top-K 3 (n14 E7).
 - queue11 (50 trials, rawk16 polt2): cheaper explore runs (xs 35, xL 3) at n14 E9 and n12 E3; warm-started explore runs (n14 E9, n12 E4); n14 E7 polt3; n14 E7 rawk8.
+
+## Queue8 / queue9 / queue10 results (Oct 10, 2026, about 18:20 Shanghai)
+All rawk 16, polt 2 unless noted; wmaxsat, Gray code, L4 s50, r150, R2, SA layouts (fixed_low); 50 trials unless noted.
+Lookups = distinct classical lookups per trial including SA, readout pool and fix-up (n^2 = 144 at n=12, 196 at n=14).
+
+| n | E | variant | trials | success | mean p(GS) | evals | lookups |
+|---|---|---|---|---|---|---|---|
+| 14 | 7 | sab98 | 50 | 0.94 | 0.934 | 3430 | 266 |
+| 14 | 5 | sab98 | 50 | 0.84 | 0.834 | 2622 | 236 |
+| 14 | 9 | sab49 (n^2/4) | 50 | 0.96 | 0.953 | 4238 | about 200 |
+| 14 | 9 | sab98, rawk 8 | 50 | 0.92 | 0.913 | 4238 | 227 |
+| 14 | 9 | sab98, polt 3 | 50 | 0.94 | 0.933 | 4238 | n/a (same as polt 2) |
+| 14 | 9 | sab98, thr 0.05 | 50 | 0.94 | 0.933 | 4238 | n/a |
+| 12 | 2 | sab72 | 50 | 0.90 | 0.894 | 1410 | 146 |
+| 12 | 3 | sab72, rawk 8 | 50 | 0.94 | 0.934 | 1814 | 138 |
+| 12 | 3 | sab36 (n^2/4) | 50 | 0.96 | 0.953 | 1814 | 109-156 |
+
+Warm-started explore runs (xwarm / xmut, 30 trials) are clearly bad:
+| n | E | variant | success | mean p(GS) | evals |
+|---|---|---|---|---|---|
+| 14 | 13 | xwarm 50 mut 2, plain | 0.27 | 0.265 | 2218 |
+| 14 | 13 | xwarm 50 mut 2, rawk16 | 0.33 | 0.331 | 2218 |
+| 14 | 13 | xwarm 100 mut 4, rawk16 | 0.40 | 0.398 | 3418 |
+| 14 | 9 | xwarm 50 mut 1, rawk16 | 0.30 | 0.299 | 1814 |
+| 12 | 5 | xwarm 50 mut 2, rawk16 | 0.63 | 0.629 | 1410 |
+| 12 | 5 | xwarm 50 mut 2, plain | 0.37 | 0.366 | 1410 |
+Warm starts drop the layout diversity and the growth stages that find the answer; per eval they are worse than
+cold explore runs with the SA layout. Drop xwarm.
+
+Confirmed (50 trials) best results so far, against the baselines (n=12 E5: 0.92 / 0.914 at 2622; n=14 E17: 0.94 / 0.933 at 7470):
+- n=12: E=3, rawk16 polt2, sab72: 1.00 success, 0.993 mean p(GS), 1814 evals (31% fewer evals than 2622), 162 lookups.
+  E=2: 0.90 / 0.894 at 1410 evals (46% fewer), 146 lookups.
+- n=14: E=7, rawk16 polt2, sab98: 0.94 / 0.934 at 3430 evals (54% fewer than 7470), 266 lookups (1.4 n^2).
+  E=9 with sab49: 0.96 / 0.953 at 4238 evals, about 200 lookups (about n^2).
+- Rawk size: rawk 16 beats rawk 8 (n14 E9: 0.94 vs 0.92; n12 E3: 1.00 vs 0.94). polt 3 and thr give nothing beyond polt 2.
+- Evals scaling of the best points (n=12 E3: 1814, n=14 E7: 3430): ratio 1.89 over two steps in n, about 1.37 per unit n.
+  The E needed still grows from 3 to 7 because single explore runs find the answer only about 16% of the time at n=14.
+
+## Queued (Oct 10, 2026, about 18:20 Shanghai; all detached, chained by done-files)
+- queue10 (running, then queue11): n14 E6 (running), n12 E1, n14 E7 sab49, n12 E2 sab36, SA noise 0.4 diversity (n14 E7, n12 E2), rawk24 (n14 E7), top-K 3 (n14 E7).
+- queue11: cheaper explore runs (xs 35, xL 3) at n14 E9 and n12 E3; warm-started explore runs at 50 trials (expected bad, per the 30-trial results);
+  n14 E7 polt3; n14 E7 rawk8.
+- queue12 (new, waits for queue11.done): cheaper relabel stage with rawk16 polt2: R1 (one relabel round) and r100 at n14 E7 and n12 E3;
+  n14 E6 rawk24, n12 E2 rawk24; n14 E7 polt1; n14 E7 sab49 rawk32.
+- Expected total: about 6 more hours of compute at 8 cores. Next check-in: read queue10/11/12 outputs in logs/improve and record them here.
