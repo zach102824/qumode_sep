@@ -261,8 +261,16 @@ Code added: `--lmut N` (cold layout mutation). After explore run 0, later explor
 | n | E | setting | success | mean p(GS) | evals | lookups |
 |---|---|---|---|---|---|---|
 | 14 | 5 | R1, rawk24 | 0.90 | 0.890 | 2321 | 272 |
+| 14 | 6 | R1, rawk24 | 0.93 | 0.922 | 2725 | 295 |
+| 14 | 7 | R1, rawk24 | 1.00 | 0.990 | 3129 | 315 |
+| 14 | 4 | R1, rawk24 | 0.87 | 0.854 | 1917 | 252 |
+| 14 | 7 | rawk24, xL3 | 0.97 | 0.958 | 2723 | 320 |
+| 14 | 5 | rawk24, xL3 | 0.90 | 0.893 | 2117 | 278 |
+| 14 | 7 | R1, rawk24, xL3 | 0.97 | 0.949 | 2422 | 315 |
 
-Already matches 0.9 at 2321 evals (vs 3129 previous cheapest n14 0.9+). Against n12 at 1410 that is about 1.28 per added variable. 50-trial confirm queued.
+n14 E5 R1 rawk24 already matches 0.9 at 2321 evals (vs 3129 previous cheapest n14 0.9+). Against n12 at 1410 that is about 1.28 per added variable.
+n14 E4 R1 rawk24 and xL3 stacks are screened; 50-trial confirms are in queue14.
+E7 rawk24 xL3 at 30 trials: see table. 50-trial confirm queued.
 
 ### Running (detached, chained)
 - queue13 (running): 30-trial screens of R1+rawk24 at E=4,5,6,7; xL3+rawk24; xs35+rawk24; nz0.4 stacks; n12 R1/nz40.
