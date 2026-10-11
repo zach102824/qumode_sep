@@ -361,3 +361,10 @@ Results so far (mean evals):
 | E16 xc2 xs35 | 0.66 | 0.640 | 1967 | 825 | 7.8 | 0.14 |
 | E16 xc3 xs35 | 0.84 | 0.827 | 3257 | 1293 | 13.9 | 0.15 |
 | E8 si128 xs35 | 0.80 | 0.787 | 2005 | 1525 | 8.0 | 0.19 |
+
+## queue47 interim update (Oct 11, 2026, about 16:30 Shanghai)
+n=16 early-stop (xconsec) and independent SA per explore run (si128 = saind 128 lookups per run); absolute values, 50 trials unless noted:
+- E16 xc2 xs35 si128: success 0.76, mean p(GS) 0.742, evals 1907, lookups 1599.
+- E16 xc3 xs35 si128: success 0.92, mean p(GS) 0.908, evals 3326, lookups 2915. Matches the strict n=16 row (0.92 / 0.907 at 3709) with about 10% fewer evals, but classical lookups are far above n^2 (256).
+- E16 xc2 xs50: 0.64 / 0.626 at 2404 evals. E16 xc3 xs50 (34 of 50 trials so far): 0.88 / 0.872 at 4596 evals; xs50 is not better than xs35.
+Takeaway: independent SA per run helps early stop (xc3: 0.84 to 0.92 success), so the miss mode is partly shared layout. Next: cheaper per-run SA (si32/si64) with xc3, and si128 with E12 cap. Compute: busy (queue47/48 and queue43-45 running; watchdog alive).
