@@ -1048,3 +1048,35 @@ evals = A b^n on (403, 403, 503, 907, 3158): b = 1.279, A = 38.9. n=8 to 14 alon
 Next ideas unchanged: push n16 mean over 0.9 under 3158; grow n18 E until screen success approaches ~0.9 before spending 20-trial confirms; queue52 starts once queue51_n16cheap_n18n20.done appears.
 
 No message to Zach: no new cheapest >=0.9 point on the n=8..16 ladder and no fit change. n=18 E4/E8 are early screens only.
+
+
+## Update (Oct 12, 2026, 01:50 CEST): n=18 E12 screen; matched table unchanged
+
+Absolute values, gray, wmaxsat, base sab162 xL3 xs50 rawk54 polt3 xeta128 R1, **10 trials** (screen only, not 50-trial confirm); lookups in brackets. Numbers from summary footer in logs/improve/q51_n18_E12_t1.json and jsonl in noiseless/results/relayout_runs/kbit (gitignored).
+
+### n=18 screens (queue51_n16cheap_n18n20)
+- E4 R1 (prior): success 0.10, mean p(GS) 0.099, evals 1513 (519).
+- E8 R1 (prior): success 0.40, mean p(GS) 0.396, evals 2725 (756).
+- **E12 R1 (new):** success 0.50, mean p(GS) 0.489, evals 3937 (981). Continues the upward E trend (0.10 → 0.40 → 0.50) but still well under a ~0.9 screen bar. Exploratory only — not a ladder confirm.
+
+### Partial / in flight (not final)
+- queue51_n16cheap_n18n20: n18 E16_t1 started 01:46 CEST (hot 8-worker). Remaining n18: E20/E24 t1, then E12–E24 t2 (20 trials), R2 variants; then n20 screens; then queue51_n16cheap_n18n20.done.
+- queue51.done already exists. queue52 still waits for BOTH queue51.done AND queue51_n16cheap_n18n20.done.
+
+### Cheapest matched table (unchanged; n=8..16 only)
+- n=8: 403 evals (1.00 / 0.988; 126 lookups)
+- n=10: 403 evals (0.96 / 0.928; 166 lookups). Safer alt still 443 (1.00 / 0.990).
+- n=12: 503 evals (0.98 / 0.967)
+- n=14: 907 evals (0.94 / 0.915; 496 lookups; E3 xL2 rawk80 xeta256). Alt matched seed at same cost: 0.92 / 0.911 (418 lookups; rawk64 off50).
+- n=16: 3158 evals (pooled xeta128 0.91 / 0.903; first xeta128 seed 0.94 / 0.933; rawk96 confirm 0.94 / 0.933; xeta256 seeds 0.92 / 0.913). Still the cheapest matched n=16 point; nothing under 3158 reaches mean 0.9.
+
+### Fit (unchanged)
+evals = A b^n on (403, 403, 503, 907, 3158): b = 1.279, A = 38.9. n=8 to 14 alone: b = 1.142. No new cheapest matched point on the n=8..16 ladder, so fit b is unchanged. n=18 screens are exploratory only.
+
+### Compute / queue state (8 cores, load about 8–9 with single hot master, watchdog alive, no STOP file)
+- Running: queue51_n16cheap_n18n20 on n18 E16_t1 (just started after E12 finished).
+- Waiting (alive, do not kill): queue52 (after both queue51*.done), queue53, queue54, queue55, queue56, queue57, queue58, queue59, queue60, queue61, queue62, queue63. Queue depth still deep (12 waiters; no queue64 needed). Planned arms already cover denser n16 under-3158 (E11–E14 R1/R2, rawk midpoints, xeta128/256/512, large-saind>=192 xc3 only), n14 907-family offs, cheap ladder offs, light n18/n20. Gray + wmaxsat only. Avoid known losers: xwarm, lmut, thr, xstop, xagree, xc3 with tiny saind. Detached setsid/nohup.
+
+Next ideas: grow n18 E until screen success approaches ~0.9 before heavy 20-trial / R2 confirms; keep pushing n16 under-3158 mean≥0.9 and n14 sub-1100 via waiting queues 52–63; queue52 starts once queue51_n16cheap_n18n20.done appears.
+
+No message to Zach: no new cheapest >=0.9 point on the n=8..16 ladder and no fit change. n=18 E12 is an early screen only.
