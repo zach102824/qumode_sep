@@ -1,0 +1,158 @@
+{
+  "created_utc": "2026-09-29T07:33:37Z",
+  "tag": "smoke_hea",
+  "args": {
+    "ham_dir": "/workspace/qumode_sep/Hamiltonians/four_sat",
+    "arms": "hea",
+    "param_tiers": "16,24,32",
+    "trials": 2,
+    "steps": 200,
+    "workers": 6,
+    "seed": 20260917,
+    "max_h": 1
+  },
+  "n_jobs": 6,
+  "n_ok": 6,
+  "n_fail": 0,
+  "ranking": [
+    {
+      "arm": "hea",
+      "n_params": 16,
+      "depth": 1,
+      "n_hamiltonians": 1,
+      "n_trials": 2,
+      "n_success": 2,
+      "success_rate": 1.0,
+      "mean_p_gs": 0.9605641998424594
+    },
+    {
+      "arm": "hea",
+      "n_params": 24,
+      "depth": 2,
+      "n_hamiltonians": 1,
+      "n_trials": 2,
+      "n_success": 2,
+      "success_rate": 1.0,
+      "mean_p_gs": 0.9241566954708359
+    },
+    {
+      "arm": "hea",
+      "n_params": 32,
+      "depth": 3,
+      "n_hamiltonians": 1,
+      "n_trials": 2,
+      "n_success": 2,
+      "success_rate": 1.0,
+      "mean_p_gs": 0.923392849075577
+    }
+  ],
+  "by_tier": {
+    "16": [
+      {
+        "arm": "hea",
+        "n_params": 16,
+        "depth": 1,
+        "n_hamiltonians": 1,
+        "n_trials": 2,
+        "n_success": 2,
+        "success_rate": 1.0,
+        "mean_p_gs": 0.9605641998424594
+      }
+    ],
+    "16_winner": "hea",
+    "24": [
+      {
+        "arm": "hea",
+        "n_params": 24,
+        "depth": 2,
+        "n_hamiltonians": 1,
+        "n_trials": 2,
+        "n_success": 2,
+        "success_rate": 1.0,
+        "mean_p_gs": 0.9241566954708359
+      }
+    ],
+    "24_winner": "hea",
+    "32": [
+      {
+        "arm": "hea",
+        "n_params": 32,
+        "depth": 3,
+        "n_hamiltonians": 1,
+        "n_trials": 2,
+        "n_success": 2,
+        "success_rate": 1.0,
+        "mean_p_gs": 0.923392849075577
+      }
+    ],
+    "32_winner": "hea"
+  },
+  "cells": [
+    {
+      "arm": "hea",
+      "n_params": 16,
+      "depth": 1,
+      "ham_file": "four_sat_000.npz",
+      "n_trials": 2,
+      "n_success": 2,
+      "success_rate": 1.0,
+      "mean_p_gs": 0.9605641998424594,
+      "max_p_gs": 0.9624793891114527,
+      "median_p_gs": 0.9605641998424594
+    },
+    {
+      "arm": "hea",
+      "n_params": 24,
+      "depth": 2,
+      "ham_file": "four_sat_000.npz",
+      "n_trials": 2,
+      "n_success": 2,
+      "success_rate": 1.0,
+      "mean_p_gs": 0.9241566954708359,
+      "max_p_gs": 0.941872987196141,
+      "median_p_gs": 0.9241566954708359
+    },
+    {
+      "arm": "hea",
+      "n_params": 32,
+      "depth": 3,
+      "ham_file": "four_sat_000.npz",
+      "n_trials": 2,
+      "n_success": 2,
+      "success_rate": 1.0,
+      "mean_p_gs": 0.923392849075577,
+      "max_p_gs": 0.9348157457779551,
+      "median_p_gs": 0.923392849075577
+    }
+  ],
+  "nn_truncation": {
+    "n_hamiltonians": 1,
+    "mean_n_terms_full": 39.0,
+    "min_n_terms_full": 39.0,
+    "max_n_terms_full": 39.0,
+    "mean_n_terms_kept": 9.0,
+    "min_n_terms_kept": 9.0,
+    "max_n_terms_kept": 9.0,
+    "mean_n_terms_dropped": 30.0,
+    "min_n_terms_dropped": 30.0,
+    "max_n_terms_dropped": 30.0,
+    "mean_n_weight1": 6.0,
+    "min_n_weight1": 6.0,
+    "max_n_weight1": 6.0,
+    "mean_n_weight2_nn": 3.0,
+    "min_n_weight2_nn": 3.0,
+    "max_n_weight2_nn": 3.0,
+    "mean_n_weight2_non_nn": 11.0,
+    "min_n_weight2_non_nn": 11.0,
+    "max_n_weight2_non_nn": 11.0,
+    "mean_n_weight_ge3": 19.0,
+    "min_n_weight_ge3": 19.0,
+    "max_n_weight_ge3": 19.0,
+    "mean_frac_terms_dropped": 0.7692307692307693,
+    "min_frac_terms_dropped": 0.7692307692307693,
+    "max_frac_terms_dropped": 0.7692307692307693,
+    "mean_frac_coeff_l1_dropped": 0.6888888888888889,
+    "min_frac_coeff_l1_dropped": 0.6888888888888889,
+    "max_frac_coeff_l1_dropped": 0.6888888888888889
+  }
+}

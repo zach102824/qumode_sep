@@ -1,0 +1,145 @@
+{
+  "created_utc": "2026-09-17T10:05:18Z",
+  "tag": "parallel_smoke",
+  "args": {
+    "ham_dir": "Hamiltonians/four_sat",
+    "u_names": "identity,bs_pi4",
+    "layers": "2,3",
+    "trials": 2,
+    "steps": 100,
+    "workers": 4,
+    "seed": 20260917,
+    "max_h": 2
+  },
+  "n_jobs": 16,
+  "n_ok": 16,
+  "n_fail": 0,
+  "ranking": [
+    {
+      "u_name": "identity",
+      "n_layers": 3,
+      "n_hamiltonians": 2,
+      "n_trials": 4,
+      "n_success": 4,
+      "success_rate": 1.0,
+      "mean_p_gs": 0.16141139276806393
+    },
+    {
+      "u_name": "bs_pi4",
+      "n_layers": 2,
+      "n_hamiltonians": 2,
+      "n_trials": 4,
+      "n_success": 3,
+      "success_rate": 0.75,
+      "mean_p_gs": 0.11183664995937485
+    },
+    {
+      "u_name": "bs_pi4",
+      "n_layers": 3,
+      "n_hamiltonians": 2,
+      "n_trials": 4,
+      "n_success": 3,
+      "success_rate": 0.75,
+      "mean_p_gs": 0.10687600942663432
+    },
+    {
+      "u_name": "identity",
+      "n_layers": 2,
+      "n_hamiltonians": 2,
+      "n_trials": 4,
+      "n_success": 0,
+      "success_rate": 0.0,
+      "mean_p_gs": 0.10105407801242203
+    }
+  ],
+  "cells": [
+    {
+      "u_name": "bs_pi4",
+      "n_layers": 2,
+      "ham_file": "four_sat_000.npz",
+      "n_trials": 2,
+      "n_success": 1,
+      "success_rate": 0.5,
+      "mean_p_gs": 0.14864144646841487,
+      "max_p_gs": 0.2023109151651687,
+      "median_p_gs": 0.14864144646841487
+    },
+    {
+      "u_name": "bs_pi4",
+      "n_layers": 2,
+      "ham_file": "four_sat_001.npz",
+      "n_trials": 2,
+      "n_success": 2,
+      "success_rate": 1.0,
+      "mean_p_gs": 0.07503185345033483,
+      "max_p_gs": 0.0851494042072626,
+      "median_p_gs": 0.07503185345033483
+    },
+    {
+      "u_name": "bs_pi4",
+      "n_layers": 3,
+      "ham_file": "four_sat_000.npz",
+      "n_trials": 2,
+      "n_success": 1,
+      "success_rate": 0.5,
+      "mean_p_gs": 0.12411729505066588,
+      "max_p_gs": 0.1494451074073857,
+      "median_p_gs": 0.12411729505066588
+    },
+    {
+      "u_name": "bs_pi4",
+      "n_layers": 3,
+      "ham_file": "four_sat_001.npz",
+      "n_trials": 2,
+      "n_success": 2,
+      "success_rate": 1.0,
+      "mean_p_gs": 0.08963472380260276,
+      "max_p_gs": 0.1241078603778138,
+      "median_p_gs": 0.08963472380260276
+    },
+    {
+      "u_name": "identity",
+      "n_layers": 2,
+      "ham_file": "four_sat_000.npz",
+      "n_trials": 2,
+      "n_success": 0,
+      "success_rate": 0.0,
+      "mean_p_gs": 0.04744202761106387,
+      "max_p_gs": 0.09488405522134968,
+      "median_p_gs": 0.04744202761106387
+    },
+    {
+      "u_name": "identity",
+      "n_layers": 2,
+      "ham_file": "four_sat_001.npz",
+      "n_trials": 2,
+      "n_success": 0,
+      "success_rate": 0.0,
+      "mean_p_gs": 0.1546661284137802,
+      "max_p_gs": 0.18768548647753883,
+      "median_p_gs": 0.1546661284137802
+    },
+    {
+      "u_name": "identity",
+      "n_layers": 3,
+      "ham_file": "four_sat_000.npz",
+      "n_trials": 2,
+      "n_success": 2,
+      "success_rate": 1.0,
+      "mean_p_gs": 0.10986780949669653,
+      "max_p_gs": 0.11698630402115015,
+      "median_p_gs": 0.10986780949669653
+    },
+    {
+      "u_name": "identity",
+      "n_layers": 3,
+      "ham_file": "four_sat_001.npz",
+      "n_trials": 2,
+      "n_success": 2,
+      "success_rate": 1.0,
+      "mean_p_gs": 0.21295497603943134,
+      "max_p_gs": 0.22140566026518782,
+      "median_p_gs": 0.21295497603943134
+    }
+  ]
+}

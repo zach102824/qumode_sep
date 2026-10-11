@@ -1,0 +1,154 @@
+{
+  "created_utc": "2026-09-18T05:54:55Z",
+  "tag": "smoke_ecd_vs_qaoa",
+  "args": {
+    "ham_dir": "/workspace/qumode_sep/Hamiltonians/four_sat",
+    "arms": "ecd,qaoa_full,qaoa_nn",
+    "param_tiers": "16",
+    "trials": 1,
+    "steps": 8,
+    "workers": 3,
+    "seed": 20260918,
+    "max_h": 1
+  },
+  "n_jobs": 3,
+  "n_ok": 3,
+  "n_fail": 0,
+  "ranking": [
+    {
+      "arm": "qaoa_full",
+      "n_params": 16,
+      "depth": 8,
+      "n_hamiltonians": 1,
+      "n_trials": 1,
+      "n_success": 0,
+      "success_rate": 0.0,
+      "mean_p_gs": 0.02914780593481682
+    },
+    {
+      "arm": "qaoa_nn",
+      "n_params": 16,
+      "depth": 8,
+      "n_hamiltonians": 1,
+      "n_trials": 1,
+      "n_success": 0,
+      "success_rate": 0.0,
+      "mean_p_gs": 0.005837107275184354
+    },
+    {
+      "arm": "ecd",
+      "n_params": 16,
+      "depth": 2,
+      "n_hamiltonians": 1,
+      "n_trials": 1,
+      "n_success": 0,
+      "success_rate": 0.0,
+      "mean_p_gs": 6.514272473273598e-05
+    }
+  ],
+  "by_tier": {
+    "16": [
+      {
+        "arm": "qaoa_full",
+        "n_params": 16,
+        "depth": 8,
+        "n_hamiltonians": 1,
+        "n_trials": 1,
+        "n_success": 0,
+        "success_rate": 0.0,
+        "mean_p_gs": 0.02914780593481682
+      },
+      {
+        "arm": "qaoa_nn",
+        "n_params": 16,
+        "depth": 8,
+        "n_hamiltonians": 1,
+        "n_trials": 1,
+        "n_success": 0,
+        "success_rate": 0.0,
+        "mean_p_gs": 0.005837107275184354
+      },
+      {
+        "arm": "ecd",
+        "n_params": 16,
+        "depth": 2,
+        "n_hamiltonians": 1,
+        "n_trials": 1,
+        "n_success": 0,
+        "success_rate": 0.0,
+        "mean_p_gs": 6.514272473273598e-05
+      }
+    ],
+    "16_winner": "qaoa_full",
+    "24": [],
+    "32": []
+  },
+  "cells": [
+    {
+      "arm": "ecd",
+      "n_params": 16,
+      "depth": 2,
+      "ham_file": "four_sat_000.npz",
+      "n_trials": 1,
+      "n_success": 0,
+      "success_rate": 0.0,
+      "mean_p_gs": 6.514272473273598e-05,
+      "max_p_gs": 6.514272473273598e-05,
+      "median_p_gs": 6.514272473273598e-05
+    },
+    {
+      "arm": "qaoa_full",
+      "n_params": 16,
+      "depth": 8,
+      "ham_file": "four_sat_000.npz",
+      "n_trials": 1,
+      "n_success": 0,
+      "success_rate": 0.0,
+      "mean_p_gs": 0.02914780593481682,
+      "max_p_gs": 0.02914780593481682,
+      "median_p_gs": 0.02914780593481682
+    },
+    {
+      "arm": "qaoa_nn",
+      "n_params": 16,
+      "depth": 8,
+      "ham_file": "four_sat_000.npz",
+      "n_trials": 1,
+      "n_success": 0,
+      "success_rate": 0.0,
+      "mean_p_gs": 0.005837107275184354,
+      "max_p_gs": 0.005837107275184354,
+      "median_p_gs": 0.005837107275184354
+    }
+  ],
+  "nn_truncation": {
+    "n_hamiltonians": 1,
+    "mean_n_terms_full": 39.0,
+    "min_n_terms_full": 39.0,
+    "max_n_terms_full": 39.0,
+    "mean_n_terms_kept": 9.0,
+    "min_n_terms_kept": 9.0,
+    "max_n_terms_kept": 9.0,
+    "mean_n_terms_dropped": 30.0,
+    "min_n_terms_dropped": 30.0,
+    "max_n_terms_dropped": 30.0,
+    "mean_n_weight1": 6.0,
+    "min_n_weight1": 6.0,
+    "max_n_weight1": 6.0,
+    "mean_n_weight2_nn": 3.0,
+    "min_n_weight2_nn": 3.0,
+    "max_n_weight2_nn": 3.0,
+    "mean_n_weight2_non_nn": 11.0,
+    "min_n_weight2_non_nn": 11.0,
+    "max_n_weight2_non_nn": 11.0,
+    "mean_n_weight_ge3": 19.0,
+    "min_n_weight_ge3": 19.0,
+    "max_n_weight_ge3": 19.0,
+    "mean_frac_terms_dropped": 0.7692307692307693,
+    "min_frac_terms_dropped": 0.7692307692307693,
+    "max_frac_terms_dropped": 0.7692307692307693,
+    "mean_frac_coeff_l1_dropped": 0.6888888888888889,
+    "min_frac_coeff_l1_dropped": 0.6888888888888889,
+    "max_frac_coeff_l1_dropped": 0.6888888888888889
+  }
+}
