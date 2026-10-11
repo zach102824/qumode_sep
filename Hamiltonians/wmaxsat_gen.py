@@ -1,6 +1,6 @@
 import itertools, random, json, numpy as np
 RATIO=9.93
-for n in (8,10,12,14,16):
+for n in (8,10,12,14,16,18,20):
     states=np.array(list(itertools.product([0,1],repeat=n)),dtype=np.int8); m=int(round(RATIO*n))
     acc=0; tried=0; seed=0; z=0
     while acc<10:

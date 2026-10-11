@@ -1,4 +1,4 @@
-# Improvement search on the full ladder n = 8, 10, 12, 14, 16 (wmaxsat, Gray code)
+# Improvement search on the ladder n = 8, 10, 12, 14, 16 (and screens at n = 18, 20) (wmaxsat, Gray code)
 
 Goal: one recipe family with about the same performance at every n (success and mean p(GS) about ≥ 0.9, preferably about 0.95+), with evals growing competitively (target about 1.1–1.2^n or better). Classical SA lookups of about n^2 are fine.
 
@@ -495,3 +495,66 @@ Refit evals = A b^n (least squares on log evals, n = 8, 10, 12, 14, 16):
 The fit gets slightly steeper (1.29 versus 1.27) only because n=8 and n=10 got cheaper, not because n=16 got worse. n=14 to 16 (1109 to 3158) still dominates. Nothing at n=16 below 3158 evals reaches mean 0.9 yet.
 
 Compute / queue state (8 cores, load about 17, watchdog alive, no STOP file): queue44 finished. Running: queue50 (n=16 E9 R2 at 43 of 50, then n14 E2 R2 xeta256, n16 E12 R2 xeta256), queue45 (n=16 E12 R1 xs50 rawk48, 20 of 50). Waiting: queue48 (independent-seed confirms n8, n10, n12, n14 with trial offset 50, n16 xeta256 E13 to E16) and queue49 (si64/si32 xc3, E12 si128, off50 xc3 si128). No new jobs launched because the machine is fully loaded.
+
+## Update (2026-10-11 16:25 CEST): n=16 hunt continues; n=18 and n=20 instances ready; queue51 queued
+
+Absolute values, gray, wmaxsat. Numbers from jsonl / logs/improve summary JSONs.
+
+### Fresh n=16 finals (50 trials)
+- E9 R2 rawk64 polt4 xL3 xs35 xeta128: success 0.84, mean p(GS) 0.834, evals 2519 (lookups about 893). Under 2500 but not matched (mean well below 0.9).
+- E12 R1 xs50 rawk48 polt3 xL3 xeta128 (queue45): success 0.90, mean p(GS) 0.890, evals 3937. Not matched, more expensive than xs35.
+- n=14 E2 R2 xL3 xeta256 rawk48: success 0.86, mean p(GS) 0.854, evals 1208. Not matched.
+
+### Cheapest matched table (unchanged)
+- n=8: 403 evals (1.00 / 0.988)
+- n=10: 403 evals (0.96 / 0.928); safer alt 443 (1.00 / 0.990)
+- n=12: 503 evals (0.98 / 0.967)
+- n=14: 1109 evals (1.00 / 0.988)
+- n=16: 3158 evals (pooled 0.91 / 0.903). Nothing under about 2500 reaches mean 0.9 yet. Closest under-2500 miss: E9 R2 at 2519 with 0.84 / 0.834.
+
+Fit with (403, 403, 503, 1109, 3158): b about 1.29. n=8 to 14 alone about 1.18. n=14 to 16 still dominates.
+
+### n=18 and n=20 Hamiltonians
+Generated 10 unique-GS wmaxsat instances each under `Hamiltonians/wmaxsat/` with the same rules (m=round(9.93*n), weights 1-5, unique ground state):
+- n=18: m=179, 10/10 done (4 with E_gs=0).
+- n=20: m=199, 10/10 done (9 with E_gs=0).
+`Hamiltonians/wmaxsat_gen.py` now covers n in (8,10,12,14,16,18,20).
+
+### Compute / queues (detached setsid/nohup; no STOP file)
+- Running: queue50 (last arm: n16 E12 R2 xeta256, 8 of 50 at last look, early 1.00 / 0.992 at 3158 — too few trials), queue45 (n16 E14 xs50 rawk64 after finishing E12 xs50).
+- Waiting chain: queue48 (off50 confirms + n16 xeta256 E13-E16) then queue49 (si32/si64 xc3).
+- New: `logs/improve/queue51_n16cheap_n18n20.sh` waits for queue50 (+ soft-wait queue45), then (1) n=16 under-2500 hunt with xc3+saind, R2 denser E, colder xeta256, readout variants; (2) n=18 screens with K=54=3n, polt3, xeta128, xs50, xL3, R=1, sab162, grow E=4..24 at 10 then 20 trials; (3) n=20 screens with K=60, sab200, E=8..32 at 10 then 20 trials. Watchdog alive.
+
+No new matched n=16 point under 3158. Exploration continues non-stop.
+
+
+## Update (Oct 11, 2026, 16:25 CEST): harvest of queue50 / queue45 finals; matched table and fit unchanged
+
+Absolute values, gray, wmaxsat, base sab128 xL3 xs35 xeta128 reta2 (n=14: sab98 xL3), 50 trials each (all final) unless noted; lookups in brackets. Numbers taken from the per-run jsonl files in noiseless/results/relayout_runs/kbit (untracked, gitignored); progress logs are in logs/improve/.
+
+n=16 final:
+- E9 R2 rawk64 polt4: success 0.84, mean p(GS) 0.834, evals 2519 (887). Not matched (below the E10/E11 R2 misses already logged).
+- E12 R1 xs50 rawk48 polt3: 0.90 / 0.890, evals 3937 (831). Mean just under 0.9 and more expensive than the xs35 E12 R1 row at 2857; xs50 does not help here.
+
+n=14 final:
+- E2 R2 xL3 xeta256 rawk48 polt3: 0.86 / 0.854, evals 1208 (301). Not matched; R2 at E2 does not reach mean 0.9.
+
+Partial (not final, do not use yet):
+- n=16 E12 R2 rawk64 polt4 xeta256 (queue50 last job): 8 of 50 trials done, 1.00 / 0.992 at 3158 evals (1069). Same eval cost as the xeta128 E12 R2 row; quality looks strong so far but too few trials.
+- n=16 E14 R1 xs50 rawk64 polt4 (queue45): just started (0 of 50).
+
+Cheapest matched table (success and mean p(GS) both at or above 0.9), unchanged:
+- n=8: 403 evals (1.00 / 0.988; 126 lookups)
+- n=10: 403 evals (0.96 / 0.928; 166 lookups). Safer alt still 443 (1.00 / 0.990).
+- n=12: 503 evals (0.98 / 0.967)
+- n=14: 1109 evals (1.00 / 0.988; 474 lookups)
+- n=16: 3158 evals (pooled 0.91 / 0.903; first seed 0.94 / 0.933; 1071 lookups). Matched only marginally.
+
+Near-miss reminder still open for a sub-1100 n=14 point: E3 xL2 xeta256 rawk64 polt4 at 907 evals scored 0.92 / 0.895 (mean just under 0.9). queue51 will push rawk/polt and independent-seed confirms at that cost.
+
+Refit evals = A b^n (least squares on log evals, n = 8, 10, 12, 14, 16):
+- table above (403, 403, 503, 1109, 3158): b = 1.292, A = 35.9 (unchanged).
+- n = 8 to 14 only: b = 1.177 (unchanged).
+No new cheapest matched point; fit unchanged. n=14 to 16 still dominates.
+
+Compute / queue state (8 cores, load about 11, watchdog alive, no STOP file): Running: queue45 (n16 E14 xs50 rawk64 after finishing E12 xs50), queue50 (last job n16 E12 R2 xeta256 at 8 of 50). Waiting: queue48 (after queue45.done; n16 xeta256 E13–E16 + independent-seed confirms), queue49 (after queue48; xc3 si variants). New: queue51 waits for queue49.done — n16 under-3158 tries (E12 R1 xeta256, E13 R2, E11/E12 R2 rawk96, E12 R2 xeta256 off50 confirm), n14 sub-1100 near-miss pushes (E3 xL2 xeta256 rawk96 / off50, E2 R1 xeta256), and n8/n10/n12 cheap confirms.
