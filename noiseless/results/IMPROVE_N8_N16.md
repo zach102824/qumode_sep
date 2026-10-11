@@ -344,3 +344,20 @@ Per-explore-run find rate = fraction of explore runs whose own fixed-up top-K co
 Runs inside one trial are strongly correlated: at n=16 E16, 4 of 50 trials find the GS in 0 of 16 runs, while most trials find it in 10 or more. So adding E has diminishing returns; the misses are trials where every explore run is stuck. Per-instance find rates at n=16 are uniform (0.49-0.85), so it is not one bad instance.
 - New samode suffix `_div` (SA centers forced at least n/4 Hamming apart): n=16 E8 xL3 xs35 gives 0.66 / 0.650 at 2005, worse than baseline 0.74 / 0.712. Dropped.
 - queue46 (priority, runs alongside queue29): fewer deeper explore runs at n=16 (E4-8, xL3/xL4, xs50/80, R1/R2).
+
+## n=16: adaptive early stop (idea 3) and independent SA per explore run (idea 2), queue47 (in progress, 2026-10-11)
+
+New opt-in flags (defaults unchanged, tests in tests/test_explore_adaptive_saind.py):
+- `--xconsec N`: each explore run's own guess = best Hamming-1 fix-up of its polt lowest-energy top-rawk states; stop exploring once the last N runs give the same guess energy (--explore = Emax).
+- `--saind B`: every explore run gets its own SA pass of B lookups (own seed) for its layout and centre.
+
+Base: n=16 wmaxsat gray, sab128, L=4 s=50 r=150 R=1 lr=0.05, xeta128 reta2, xL3, rawk48 polt3, 50 trials.
+Queue: logs/improve/queue47_xconsec_saind.sh (detached with setsid), summary: `python noiseless/summ_q47.py`.
+find = fraction of explore runs whose own fix-up guess is the GS (xconsec arms) or whose raw top-48 is within Hamming 1 of the GS (other arms).
+Results so far (mean evals):
+
+| arm | success | mean p(GS) | mean evals | lookups | mean runs | find |
+|---|---|---|---|---|---|---|
+| E16 xc2 xs35 | 0.66 | 0.640 | 1967 | 825 | 7.8 | 0.14 |
+| E16 xc3 xs35 | 0.84 | 0.827 | 3257 | 1293 | 13.9 | 0.15 |
+| E8 si128 xs35 | 0.80 | 0.787 | 2005 | 1525 | 8.0 | 0.19 |
