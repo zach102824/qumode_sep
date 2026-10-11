@@ -207,3 +207,22 @@ n=8: E1 xL2 xs35 xeta128 rawk48 polt3: 1.00 / 0.987 / 443; xL2 no xs35: 1.00 / 0
 n=10: E1 xL2 xs35 xeta128 rawk48 polt3: 1.00 / 0.990 / 443; xL2 no xs35: 1.00 / 0.989 / 503.
 
 Compute / queues (Oct 11 about 12:00): queue28 running (n=16 E14 xeta256 now, then E12 xL2, E11, E13, E9, n14/n12 rawk48 fills). queue29 waits on queue28.done (n=16 E16 xeta256, rawk64 polt4 E12 xeta256, R2 E14, E15, xeta512, E18, n14 xeta256). queue42 (new) waits on queue29.done: n=16 rawk64 polt4 at E14, E10, E11, E16, R2, xeta256, plus rawk96 polt5. queue41 (new, 1 worker, cheap): n=8/10/12/14 rawk48 polt3 confirms and n=14 E2-E4 under about 1100 evals. queue21/22/23 stay SIGSTOPped (time-shared) until the high-priority queues finish. Watchdog alive; no STOP file.
+
+## Consistent recipe (Oct 11, 2026)
+
+One recipe for every n (wmaxsat, gray): top-K energy-ranked readout with K = 3n and 3 Hamming-1 fix-up passes (polt 3), xeta 128, 35 steps per explore layer (xs 35), explore depth xL 2 for n up to 14 and xL 3 at n=16, one relabel round (R=1, r=150, L=4), SA layout with about n²/2 lookups (sab 36, 50, 72, 98, 128). 50 trials each (10 instances x 5 starts).
+
+| n | E | K | xL | success | mean p(GS) | evals | lookups |
+|---|---|---|---|---|---|---|---|
+| 8 | 1 | 24 | 2 | 1.00 | 0.987 | 443 | 101 |
+| 10 | 1 | 30 | 2 | 0.98 | 0.970 | 443 | 136 |
+| 12 | 1 | 36 | 2 | 0.78 | 0.761 | 443 | 175 |
+| 14 | 4 | 42 | 2 | 0.74 | 0.720 | 869 | 368 |
+| 16 | 12 | 48 | 3 | 0.90 | 0.878 | 2857 | 834 |
+| 16 | 16 | 48 | 3 | 0.92 | 0.907 | 3709 | 1017 |
+
+Fitted evals ~ b^n over n=8..16 (least squares on log evals): b = 1.25 with n=16 at E=12, b = 1.28 with n=16 at E=16.
+
+Caveat: n=12 and n=14 miss the 0.9 bar with this recipe, so the fitted b is not at matched quality. Compared with the earlier ladder (n=12 E=1 0.98 / 0.967 at 503 evals, n=14 E=4 1.00 / 0.988 at 1109 evals, both xL 2 with 50 steps per explore layer and K=48), the drop comes mainly from xs 35 at xL 2 (cheaper explore runs, 443 vs 503 evals at n=12) and partly from the smaller K. A consistent recipe that holds 0.9 at every n likely needs 50 steps per explore layer for n up to 14, or a larger E at n=12 and 14.
+
+Runs: logs/improve/cons_n8_E1_sab36_rawk24_xL2, cons_n10_E1_sab50_rawk30_xL2, cons_n12_E1_sab72_rawk36_xL2, cons_n14_E4_sab98_rawk42_xL2; n=16 rows reuse n16_E12 and n16_E16 _sab128_rawk48_polt3_xL3_xs35_R1_xeta128_c50 (identical settings).
