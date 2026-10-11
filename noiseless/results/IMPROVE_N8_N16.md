@@ -856,3 +856,40 @@ evals = A b^n on (403, 403, 503, 907, 3158): b = 1.279, A = 38.9. n=8 to 14 alon
 Next ideas unchanged: push n16 mean over 0.9 under 3158 (E13 at 3070 and E12 R2/xc3 near-misses remain the closest); confirm more n14 907-family offs; prefer large-saind>=192 if using xc3; n18/n20 screens when secondary finishes its n16 block.
 
 No message to Zach: no new cheapest >=0.9 point and no fit change.
+
+
+## Update (Oct 11, 2026, 22:29 CEST): harvest queue51 finals + queue51_n16cheap n16 misses; matched table unchanged
+
+Absolute values, gray, wmaxsat, base sab128/sab98/sab72/sab50/sab32 xL2–3 xs25–35 reta2, 50 trials each (all final) unless noted; lookups in brackets. Numbers from summary footers in logs/improve/ and jsonl in noiseless/results/relayout_runs/kbit (gitignored).
+
+### n=16 finals
+- E12 R1 rawk64 polt4 xL3 xs35 xeta128 xc3 si48: success 0.80, mean p(GS) 0.790, evals 2674 (1960 lookups). Miss (tiny-saind xc3). Under 3158 on cost; mean well under 0.9. Same story as si32 (0.76 / 0.751 at 2661).
+- E14 R2 rawk64 polt4 xL3 xs35 xeta256: success 0.92, mean p(GS) 0.913, evals 3584 (1193 lookups). **Matched** on quality, but above the cheapest n=16 row at 3158. Same quality as the existing xeta256 seed (0.92 / 0.913 at 3158); does not beat it on cost. No n=16 table change.
+- E10 R1 rawk64 polt4 xL3 xs35 xeta128 xc2 si64: success 0.56, mean p(GS) 0.555, evals 1711 (1200 lookups). Miss (tiny-saind / under-budget).
+
+### Cheap ladder off50 confirms (queue51)
+- n=8 E1 xL2 xs25 rawk48 polt3 off50: success 1.00, mean p(GS) 0.985, evals 403 (126 lookups). **Matched** confirm of the cheapest n=8 row at 403.
+- n=10 E1 xL2 xs25 rawk48 polt3 off50: success 0.92, mean p(GS) 0.900, evals 403 (165 lookups). **Matched** at 403 (mean clears 0.9). Independent-seed confirm of the cheapest n=10 cost; quality a bit below the primary 0.96 / 0.928 seed, still above the matched bar.
+- n=12 E1 xL2 rawk48 polt3 xeta128 off50: success 0.96, mean p(GS) 0.947, evals 503 (191 lookups). **Matched** confirm of the cheapest n=12 row at 503.
+
+### Partial / in flight (not final)
+- queue51 finished at 22:28 CEST (wrote queue51.done) after the ladder offs.
+- queue51_n16cheap_n18n20: n16 E12 R2 rawk48 xs35 xeta256 started 22:28 CEST (after E10 xc2 finished). Then more n16 R2 arms and n18/n20 screens. queue52 still waits for queue51_n16cheap_n18n20.done.
+
+### Cheapest matched table (unchanged)
+- n=8: 403 evals (1.00 / 0.988; 126 lookups). off50 confirm 1.00 / 0.985 at same cost.
+- n=10: 403 evals (0.96 / 0.928; 166 lookups). Safer alt still 443 (1.00 / 0.990). off50 confirm 0.92 / 0.900 at 403.
+- n=12: 503 evals (0.98 / 0.967). off50 confirm 0.96 / 0.947 at 503.
+- n=14: 907 evals (0.94 / 0.915; 496 lookups; E3 xL2 rawk80 xeta256). Alt matched seed at same cost: 0.92 / 0.911 (418 lookups; rawk64 off50).
+- n=16: 3158 evals (pooled xeta128 0.91 / 0.903; first xeta128 seed 0.94 / 0.933; xeta256 seed 0.92 / 0.913; 1071 lookups). Still the cheapest matched n=16 point; E14 R2 xeta256 matched at 3584 (0.92 / 0.913) but is more expensive; nothing under 3158 reaches mean 0.9 this round (E12 xc3 si48 got 0.80 / 0.790 at 2674).
+
+### Fit (unchanged)
+evals = A b^n on (403, 403, 503, 907, 3158): b = 1.279, A = 38.9. n=8 to 14 alone: b = 1.142. No new cheapest matched point at any n, so fit b is unchanged.
+
+### Compute / queue state (8 cores, load about 7–8 with single master after queue51 exit, watchdog alive, no STOP file)
+- Running: queue51_n16cheap_n18n20 on n16 E12 R2 rawk48 xeta256 (hot 8-worker).
+- Waiting (alive, do not kill): queue52 (after both queue51*.done), queue53, queue54, queue55, queue56, queue57, queue58, queue59, queue60, queue61, queue62, queue63. Queue depth still deep (no queue64/65 needed yet). Gray + wmaxsat only. Avoid known losers: xwarm, lmut, thr, xstop, xagree, xc3 with tiny saind. Detached setsid/nohup.
+
+Next ideas unchanged: push n16 mean over 0.9 under 3158; prefer large-saind>=192 if using xc3; n18/n20 screens when secondary finishes its remaining n16 block; queue52 starts once queue51_n16cheap_n18n20.done appears.
+
+No message to Zach: no new cheapest >=0.9 point and no fit change.
