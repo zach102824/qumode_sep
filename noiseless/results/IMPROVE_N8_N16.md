@@ -412,3 +412,42 @@ Absolute values, 50 trials each, final round, gray, wmaxsat.
 Cheapest matched table (pooled for n=16): n8 443, n10 443, n12 503, n14 1109, n16 3158 (pooled 0.91 / 0.903; single-run 0.94 / 0.933). Fit b about 1.27 (strict, with pooled n=16 slightly weaker); n=8..14 alone about 1.15. n=14 to 16 still dominates.
 
 Running (all detached; load about 12, watchdog alive, no STOP file): queue50 (n16 E10 R2 25 of 50, then E11 R2, n14 E3 R2, E12 R2 xc3 si64, n8/n10 E1 xs25, E9 R2, n14 E2 R2 xeta256, E12 R2 xeta256), queue44 (n16 E17 R1 5 of 50, then E12 rawk128, E14 R2, E16, cheap ladder confirms), queue45/48/49 waiting chain.
+
+
+## Update (Oct 11, 2026, about 19:55 Shanghai): harvest of queue44 / queue50 results, no change to the matched table
+
+Absolute values, gray, wmaxsat, base sab128 xL3 xs35 xeta128 reta2 (n=14: sab98 xL2), 50 trials each unless noted; lookups in brackets. Numbers taken from the per-run jsonl files in noiseless/results/relayout_runs/kbit (untracked, gitignored); progress logs are in logs/improve/.
+
+n=16 final:
+- E17 R1 rawk64 polt4: success 0.94, mean p(GS) 0.930, evals 3922 (1363).
+- E18 R1 rawk64 polt4: 0.94 / 0.926, evals 4135 (1424).
+- E12 R1 rawk128 polt5: 0.92 / 0.898, evals 2857 (1858 lookups). Same as the rawk96 polt5 and rawk64 values at E12 R1; a wider readout only adds lookups.
+- E10 R2 rawk64 polt4: 0.86 / 0.854, evals 2732 (949).
+- E11 R2 rawk64 polt4: 0.88 / 0.874, evals 2945 (1010).
+- E12 R2 rawk64 polt4, pooled over two independent 50-trial seeds (100 trials): 0.91 / 0.903, evals 3158 (1071). Unchanged from the previous update.
+
+n=14 final:
+- E3 R2 rawk48 polt3 xL2 xeta128: 0.90 / 0.893, evals 1208 (349). Worse than E3 R1 and than the 1109 row.
+
+Partial (not final, do not use yet):
+- n=16 E14 R2 rawk64 polt4: 16 of 50 trials done, 1.00 / 0.994 at 3584 evals (1213). Too few trials; cost is above 3158 anyway.
+- n=16 E12 R2 rawk64 polt4 with xc3 si64: 16 of 50 trials done, 0.75 / 0.743 at 3118 evals (2074). Looks unmatched and not cheaper.
+
+Cheapest matched table (mean p(GS) at or above 0.9), unchanged:
+- n=8: 443 evals (1.00 / 0.987)
+- n=10: 443 evals (1.00 / 0.990)
+- n=12: 503 evals (0.98 / 0.967)
+- n=14: 1109 evals (1.00 / 0.988; 474 lookups)
+- n=16: 3158 evals (pooled 0.91 / 0.903; single first seed 0.94 / 0.933; 1071 lookups). Matched only marginally.
+Cheapest n=16 points at or above 0.92 success and mean at or above 0.9 remain: E12 R2 at 3158, E15 R1 at 3496 (0.92 / 0.909), strict old row 3709 (0.92 / 0.907). E13 R1 at 3070 gives 0.90 / 0.891 (mean just under 0.9).
+
+Refit evals = A b^n (least squares on log evals, n = 8, 10, 12, 14, 16):
+- with n=16 at 3158 (pooled): b = 1.274, A = 44.2 (same as before).
+- with n=16 at 3496: b = 1.287, A = 39.9.
+- with n=16 at 3709: b = 1.295, A = 37.6.
+- n = 8 to 14 only: b = 1.155.
+Fit does not change: n=14 to 16 (1109 to 3158) still dominates. n=16 lookups (1071) are about 4 times n^2 (256); n=14 lookups (474) are about 2.4 times n^2 (196).
+
+Conclusion: no new matched n=16 point below 3158. Cheaper R2 points (E10: 2732, E11: 2945) fall to mean p(GS) 0.854 and 0.874. No n=14 point under 1000 evals reaches mean 0.9 with success 0.9 or better beyond the earlier 907-eval arms (0.92 / 0.895 at E3 xeta256).
+
+Compute / queue state (8 cores, load about 15, watchdog alive, no STOP file): queue44 running n16 E14 R2 (16 of 50 done), then E16 rawk96 polt5, n12 E1 xL3, n14 E3 xL3, n8 E1 confirms; queue50 running n16 E12 R2 xc3 si64 (16 of 50), then n8 / n10 E1 xs25, n16 E9 R2, n14 E2 R2 xeta256, n16 E12 R2 xeta256; waiting chain queue45 then queue48 (n8, n10, n12, n14 independent-seed confirms with trial offset 50, n16 xeta256 E13 to E16) then queue49 (si64/si32 xc3, E12 si128, off50 xc3 si128). No new jobs launched because the machine is fully loaded.
