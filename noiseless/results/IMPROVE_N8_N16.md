@@ -335,3 +335,12 @@ n=16 (rawk48 polt3 xL3 xs35 xeta128, 50 trials, final round; absolute values)
 Cheapest matched >=0.9 table: no change (n8 443, n10 443, n12 503, n14 1109, n16 3709). Fit b unchanged (about 1.29 strict, 1.26 alt).
 
 Compute: busy (queue29 on n16 E12 xeta512, queue46 running, queue42 to 45 waiting; xeta16/32 fleet SIGSTOPped; watchdog alive; no STOP file).
+
+## Find-rate diagnostic (Oct 11, 2026, about 07:50 Rome)
+Per-explore-run find rate = fraction of explore runs whose own fixed-up top-K contains the GS (50 trials, rawk48 polt3):
+- n=12 E1 xL2 xs50: 0.98 (trial hit 0.98).
+- n=14 E4 xL2 xs50: 0.69 (trial hit 1.00); xL3: 0.80; xs35: 0.54.
+- n=16 xL3 xs35: 0.44 (E8), 0.54 (E12), 0.62 (E16); trial hit 0.70 / 0.86 / 0.92. xL2 at E12: 0.41.
+Runs inside one trial are strongly correlated: at n=16 E16, 4 of 50 trials find the GS in 0 of 16 runs, while most trials find it in 10 or more. So adding E has diminishing returns; the misses are trials where every explore run is stuck. Per-instance find rates at n=16 are uniform (0.49-0.85), so it is not one bad instance.
+- New samode suffix `_div` (SA centers forced at least n/4 Hamming apart): n=16 E8 xL3 xs35 gives 0.66 / 0.650 at 2005, worse than baseline 0.74 / 0.712. Dropped.
+- queue46 (priority, runs alongside queue29): fewer deeper explore runs at n=16 (E4-8, xL3/xL4, xs50/80, R1/R2).

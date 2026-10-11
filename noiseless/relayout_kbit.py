@@ -299,6 +299,8 @@ def explore_exploit_trial_kbit(
     xmut: int = 2,
     lmut_swaps: int = 0,
     xagree: int = 0,
+    xconsec: int = 0,
+    saind: int = 0,
 ) -> dict:
     """Explore-then-exploit relayout (n = 10 cost fix, RELAYOUT_N10_COST_DIAGNOSIS.md).
 
@@ -335,6 +337,11 @@ def explore_exploit_trial_kbit(
       current guess if its top-``raw_k`` probable states contain a state within Hamming distance 1 of the guess (pure bit test,
       no lookups). Remaining explore runs are skipped once ``xagree`` runs agree (explore_rounds then acts as a maximum E).
       Skipped runs cost no evals. Tag suffix ``_xagN``.
+    * ``xconsec`` > 0 (consecutive-agreement early stop): each explore run's own guess is the best Hamming-1 fix-up of its
+      ``polish_t`` lowest-energy top-``raw_k`` states; once the last ``xconsec`` runs give the same guess energy, remaining
+      explore runs are skipped (explore_rounds = Emax). Tag suffix ``_xcN``.
+    * ``saind`` > 0 (independent SA per explore run, explore_mask "sa"): every explore run gets its own SA pass of ``saind``
+      lookups with its own seed and takes its layout/centre from that pass (instead of sharing one SA pass). Tag ``_siN``.
     """
     n = 2 + 2 * int(k)
     E = np.asarray(energies_logical, dtype=float).reshape(-1)
@@ -368,7 +375,7 @@ def explore_exploit_trial_kbit(
     if explore_mask == "sa":
         from noiseless.classical_layout import sa_sample, marginals, layout_for_run
         sa_rng = np.random.default_rng(int(sa_seed if sa_seed is not None else 12345))
-        sa_seen = sa_sample(E, n, int(sa_budget), sa_rng)
+        sa_seen = sa_sample(E, n, int(saind) if int(saind) > 0 else int(sa_budget), sa_rng)
         seen.update(sa_seen.keys())
         n_sa = len(sa_seen)
         n_lookups += n_sa
@@ -388,6 +395,8 @@ def explore_exploit_trial_kbit(
     stage_emeans: list[float] = []  # explore early-stop: stage-xstop <E> of earlier runs (quantum, no lookups)
     n_stopped = 0
     run_raws: list[list[int]] = []
+    run_genergy: list[float] = []
+    run_guess_ground: list[bool] = []
     agree_stop = False
     n_expl_run = 0
     for rnd in range(n_total):
@@ -422,7 +431,17 @@ def explore_exploit_trial_kbit(
                 xa, xb = cavity_masks_for(pc, int(k))
             elif explore_mask == "sa":
                 base_mode = sa_mode.replace("_adapt", "").replace("_div", "")
-                perm, cen = layout_for_run(rnd, sa_centers, sa_m, n, int(k), sa_rng, float(sa_noise), base_mode)
+                if int(saind) > 0 and rnd > 0:
+                    # independent SA pass for this run: own seed, own centre/marginals
+                    _r = np.random.default_rng(int(sa_seed if sa_seed is not None else 12345) + 7919 * rnd)
+                    _seen = sa_sample(E, n, int(saind), _r)
+                    seen.update(_seen.keys())
+                    n_sa += len(_seen)
+                    _c, _m = marginals(_seen, n)
+                    pool.add(int(_c[0]))
+                    perm, cen = layout_for_run(0, _c, _m, n, int(k), _r, float(sa_noise), base_mode)
+                else:
+                    perm, cen = layout_for_run(rnd, sa_centers, sa_m, n, int(k), sa_rng, float(sa_noise), base_mode)
                 if "_adapt" in sa_mode and guess is not None:
                     cen = int(guess)  # adaptive: center the next layout on the best state found so far
                 Pm = bit_perm_map(perm, n)
@@ -542,6 +561,27 @@ def explore_exploit_trial_kbit(
                 seen.update(v ^ (1 << b) for b in range(n))
             pool.update(new)
         guess = min(pool, key=lambda v: (E[v], v))
+        if exploring and int(raw_k) > 0 and int(xconsec) <= 0:
+            # diagnostic only (no effect on the algorithm): did this run's raw top-k come within Hamming 1 of the GS?
+            run_guess_ground.append(any(bin(int(v) ^ gl).count("1") <= 1 for v in raw))
+        if exploring and int(raw_k) > 0 and int(xconsec) > 0:
+            _low = sorted(set(raw), key=lambda v: (E[v], v))[: max(1, int(polish_t))]
+            _pg = []
+            for v in _low:
+                if v not in polished_cache:
+                    polished_cache[v] = polish_logical(v, E, n, polish_radius)
+                    seen.add(v)
+                    seen.update(v ^ (1 << b) for b in range(n))
+                _pg.append(polished_cache[v])
+            pool.update(_pg)
+            n_lookups = len(seen)
+            guess = min(pool, key=lambda v: (E[v], v))
+            _rg = min(_pg, key=lambda v: (E[v], v))
+            run_genergy.append(float(E[_rg]))
+            run_guess_ground.append(bool(_rg == gl))
+            q = int(xconsec)
+            if q > 0 and len(run_genergy) >= q and len(set(run_genergy[-q:])) == 1:
+                agree_stop = True
         if exploring and int(xagree) > 0:
             run_raws.append(list(raw))
             votes = sum(1 for rr in run_raws if any(bin(int(v) ^ int(guess)).count("1") <= 1 for v in rr))
@@ -575,6 +615,7 @@ def explore_exploit_trial_kbit(
         "most_likely_bitstring": best.most_likely_bitstring, "ground_bitstring": ground_bitstring,
         "selected_round": int(sel), "nfev": int(total_nfev), "n_lookups": int(n_lookups),
         "n_lookups_distinct": int(len(seen)), "n_lookups_sa": int(n_sa), "n_explore_stopped": int(n_stopped), "n_explore_run": int(n_expl_run),
+        "run_guess_ground": run_guess_ground,
         "sa_best_is_ground": bool(sa_centers is not None and int(sa_centers[0]) == gl),
         "leakage": float(rounds[sel]["leakage"]),
         "x": np.asarray(best.x, dtype=float).tolist(),
