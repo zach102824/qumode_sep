@@ -778,3 +778,41 @@ evals = A b^n on (403, 403, 503, 1109, 3158): b = 1.292, A = 35.9. n=8 to 14 alo
 Next ideas unchanged: push n16 mean over 0.9 under 3158 (E13 at 3070 still the closest recent near-miss); n14 under ~1100 (907-eval family); prefer large-saind>=128 if using xc3; n18/n20 screens when secondary resumes.
 
 No message to Zach: no new cheapest >=0.9 point and no fit change.
+
+
+## Update (Oct 11, 2026, 20:53 CEST): harvest queue49 finals + NEW cheapest n=14 at 907; queue60/61 chained; fit b drops
+
+Absolute values, gray, wmaxsat, base sab128/sab98 xL2–3 xs35 reta2, 50 trials each (all final) unless noted; lookups in brackets. Numbers from summary footers in logs/improve/ and jsonl in noiseless/results/relayout_runs/kbit (gitignored).
+
+### n=16 finals (queue49)
+- E12 R1 rawk48 polt3 xL3 xs35 xeta128 xc3 si128: success 0.90, mean p(GS) 0.890, evals 2682 (2330 lookups). Success at 0.9 but mean under 0.9 — NOT matched. Under the cheapest n=16 row at 3158 on cost, but fails the mean bar. High classical lookups (~9× n²). Large-saind xc3 does not clear mean 0.9 here. Log as miss / near-miss; no table change for n=16.
+- E16 R1 rawk48 polt3 xL3 xs35 xeta128 xc3 si128 off50: success 0.90, mean p(GS) 0.890, evals 3206 (2794 lookups). Same quality story as the E12 xc3 arm (0.90 / 0.890). Mean under 0.9 — NOT matched. Above 3158 on cost. Log as miss / no n=16 table change.
+
+### n=14 finals (queue51) — NEW cheapest matched point
+- E3 R1 xL2 rawk96 polt5 xeta256: success 0.92, mean p(GS) 0.895, evals 907 (551 lookups). Same near-miss family as the prior 0.92 / 0.895 at 907 (mean just under 0.9). NOT matched.
+- E3 R1 xL2 rawk64 polt4 xeta256 off50: success 0.92, mean p(GS) 0.911, evals 907 (418 lookups). **Matched** at 907 (mean clears 0.9). Independent-seed confirm of the 907-eval recipe.
+- E3 R1 xL2 rawk80 polt5 xeta256: success 0.94, mean p(GS) 0.915, evals 907 (496 lookups). **Matched** at 907. Best quality in this family so far. Beats the prior cheapest n=14 row at 1109.
+
+### Partial / in flight (not final)
+- queue51 next: n14 E3 xL2 rawk64 xeta512 (started ~20:52 CEST). Then more n14 / n16 / ladder arms.
+- queue51_n16cheap n16 E12 xc3 si32 resumed by sigcont_secondary.sh at 20:49 CEST when queue49 exited (hot_R=0); at 35/50 and sharing cores with queue51 (load elevated; do not kill either).
+
+### Cheapest matched table (UPDATED n=14)
+- n=8: 403 evals (1.00 / 0.988; 126 lookups)
+- n=10: 403 evals (0.96 / 0.928; 166 lookups). Safer alt still 443 (1.00 / 0.990).
+- n=12: 503 evals (0.98 / 0.967)
+- n=14: **907 evals** (0.94 / 0.915; 496 lookups; E3 xL2 rawk80 xeta256). Alt matched seed at same cost: 0.92 / 0.911 (418 lookups; rawk64 off50). Prior row was 1109 (1.00 / 0.988).
+- n=16: 3158 evals (pooled xeta128 0.91 / 0.903; first xeta128 seed 0.94 / 0.933; xeta256 seed 0.92 / 0.913; 1071 lookups). Still the cheapest matched n=16 point; nothing under 3158 reaches mean 0.9 (E12 xc3 si128 got 0.90 / 0.890 at 2682).
+
+### Fit (UPDATED)
+evals = A b^n on (403, 403, 503, 907, 3158): b = 1.279, A = 38.9 (was b = 1.292, A = 35.9 on the old 1109 n=14 point). n=8 to 14 alone: b = 1.142 (was 1.177). n=14 to 16 still dominates the full-curve growth, but the n=8 to 14 segment is flatter after the new 907 point.
+
+### Compute / queue state (8 cores, load about 15 with secondary+queue51 overlap, watchdog alive, no STOP file)
+- queue49 finished at 20:49 CEST (wrote queue49.done) after E12 xc3 si128 and E16 xc3 si128 off50.
+- Running: queue51 on n14 sub-1100 arms (hot 8-worker). queue51_n16cheap n16 E12 xc3 si32 also running after SIGCONT (35/50) — intentional resume when primary idle; now overlapping briefly with queue51.
+- Waiting (alive, do not kill): queue52 (after both queue51*.done), queue53, queue54, queue55, queue56, queue57, queue58, queue59.
+- New: queue60 waits for queue59.done — denser n16 under-3158 mean>=0.9 tries (E13 R1 rawk64/80/96 xeta128/256, E12 R2 rawk64 xeta128 offs, E11/E12 rawk80–96 midpoints, large-saind>=192 xc3 only), n14 sub-1100 offs on the new 907 family, cheap ladder off* confirms, light n18/n20 screens (E32/40, E40/48). queue61 waits for queue60.done with further midpoints. Gray + wmaxsat only. Avoid known losers: xwarm, lmut, thr, xstop, xagree, xc3 with tiny saind. Detached setsid/nohup.
+
+Next ideas: confirm/reproduce the new n=14 907 matched points on more offs; push n16 mean over 0.9 under 3158 (E13 at 3070 and E12 xc3 at 2682 remain the closest under-cost near-misses); n18/n20 screens when queue51_n16cheap finishes its n16 block.
+
+Message Zach: new cheapest n=14 matched point at 907 evals (0.94 / 0.915) and fit b updated to 1.279 (n8–14 alone 1.142).
