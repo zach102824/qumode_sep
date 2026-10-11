@@ -369,3 +369,9 @@ n=16 early-stop (xconsec) and independent SA per explore run (si128 = saind 128 
 - E16 xc2 xs50: 0.64 / 0.626 at 2404 evals. E16 xc3 xs50 (34 of 50 trials so far): 0.88 / 0.872 at 4596 evals; xs50 is not better than xs35.
 Takeaway: independent SA per run helps early stop (xc3: 0.84 to 0.92 success), so the miss mode is partly shared layout. Next: cheaper per-run SA (si32/si64) with xc3, and si128 with E12 cap. Compute: busy (queue47/48 and queue43-45 running; watchdog alive).
 Queued queue49 (si64/si32 xc3, E12 si128, independent-seed confirm of xc3 si128) behind queue48.
+
+## queue47 finals (Oct 11, 2026, about 16:55 Shanghai)
+n=16 (50 trials, absolute values):
+- E16 xc3 xs50 (no per-run SA): success 0.90, mean p(GS) 0.888, evals 4434. Worse than xs35.
+- E8 si128 xs50: success 0.82, mean p(GS) 0.812, evals 2725 (xs35: 0.80 / 0.787 at 2005).
+Cheapest matched >=0.9 table unchanged (n8 443, n10 443, n12 503, n14 1109, n16 3709). Compute busy (queue43 E12 xs50, queue47/48/49 running; watchdog alive).
