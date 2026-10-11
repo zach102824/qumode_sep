@@ -400,3 +400,15 @@ Pending / queued (all detached; compute busy, load about 16):
 - Running: queue43 (E12 xs50 finishing, then E14 rawk96, E12 R2 rawk96, n14 E3/E4 rawk48/64), queue47 (xc3 si128 xs50 last arm).
 - Waiting chain: queue44 -> queue45 -> queue48 (off50 confirms n8/n10/n12/n14, xeta256 n16) -> queue49 (si64/si32 xc3, E12 si128, independent-seed xc3 si128).
 - New queue50 (starts now, 4 workers, runs alongside): n16 E12 R2 rawk64 independent-seed confirm (trial offset 50), then R2 at E10, E11, E9; E12 R2 with xc3 si64; E12 R2 xeta256; n14 E3 R2 and E2 R2 xeta256; n8 / n10 E1 xs25. Watchdog alive; no STOP file.
+
+
+## Update (Oct 11, 2026, 12:50 CEST): independent-seed confirm of n=16 E12 R2, n=14 fills
+
+Absolute values, 50 trials each, final round, gray, wmaxsat.
+- n=16 E12 R2 rawk64 polt4 xL3 xs35 xeta128 (trial offset 50, independent seed): success 0.88, mean p(GS) 0.874, evals 3158. First 50 trials gave 0.94 / 0.933, so the pooled 100 trials are 0.91 / 0.903 at 3158 evals. The 3158 point is matched only marginally (mean about 0.90), not a clear win over 3709 (0.92 / 0.907). The rawk96 polt5 run with the same seed gives the identical 0.94 / 0.933, so wider readout changes nothing at R2.
+- n=16 E12 si64 xs35 early-stop arm: 0.80 / 0.791 at 2857 evals. Not matched.
+- n=14 E4 xL2 rawk64 polt4 xeta128: 1.00 / 0.988 at 1109 (same as the 1109 row). n=14 E3 xL2 rawk64 xeta256: 0.92 / 0.895 at 907. n=14 E3 rawk48 xs50: 0.88 / 0.869 at 907. So n=14 under 1000 evals reaches about 0.9 but not strictly matched.
+
+Cheapest matched table (pooled for n=16): n8 443, n10 443, n12 503, n14 1109, n16 3158 (pooled 0.91 / 0.903; single-run 0.94 / 0.933). Fit b about 1.27 (strict, with pooled n=16 slightly weaker); n=8..14 alone about 1.15. n=14 to 16 still dominates.
+
+Running (all detached; load about 12, watchdog alive, no STOP file): queue50 (n16 E10 R2 25 of 50, then E11 R2, n14 E3 R2, E12 R2 xc3 si64, n8/n10 E1 xs25, E9 R2, n14 E2 R2 xeta256, E12 R2 xeta256), queue44 (n16 E17 R1 5 of 50, then E12 rawk128, E14 R2, E16, cheap ladder confirms), queue45/48/49 waiting chain.
