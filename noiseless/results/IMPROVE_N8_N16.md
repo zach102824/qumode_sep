@@ -451,3 +451,47 @@ Fit does not change: n=14 to 16 (1109 to 3158) still dominates. n=16 lookups (10
 Conclusion: no new matched n=16 point below 3158. Cheaper R2 points (E10: 2732, E11: 2945) fall to mean p(GS) 0.854 and 0.874. No n=14 point under 1000 evals reaches mean 0.9 with success 0.9 or better beyond the earlier 907-eval arms (0.92 / 0.895 at E3 xeta256).
 
 Compute / queue state (8 cores, load about 15, watchdog alive, no STOP file): queue44 running n16 E14 R2 (16 of 50 done), then E16 rawk96 polt5, n12 E1 xL3, n14 E3 xL3, n8 E1 confirms; queue50 running n16 E12 R2 xc3 si64 (16 of 50), then n8 / n10 E1 xs25, n16 E9 R2, n14 E2 R2 xeta256, n16 E12 R2 xeta256; waiting chain queue45 then queue48 (n8, n10, n12, n14 independent-seed confirms with trial offset 50, n16 xeta256 E13 to E16) then queue49 (si64/si32 xc3, E12 si128, off50 xc3 si128). No new jobs launched because the machine is fully loaded.
+
+
+## Update (Oct 11, 2026, 15:55 CEST): harvest of queue44 / queue50 finals, n=8 and n=10 now 403 evals, fit b = 1.29
+
+Absolute values, gray, wmaxsat, base sab128 xL3 xs35 xeta128 reta2 (n=14: sab98; n=8, n=10: xL2), 50 trials each (all final) unless noted; lookups in brackets. Numbers taken from the per-run jsonl files in noiseless/results/relayout_runs/kbit (untracked, gitignored); progress logs are in logs/improve/.
+
+n=16 final:
+- E14 R2 rawk64 polt4: success 0.92, mean p(GS) 0.913, evals 3584 (1196). Matched but above 3158 evals. The 16-trial partial (1.00 / 0.994) was a lucky start.
+- E16 R1 rawk96 polt5: 0.94 / 0.926, evals 3709 (1831 lookups). Same evals as the old 3709 row with better quality, no gain in cost.
+- E12 R2 rawk64 polt4 with xc3 si64: 0.80 / 0.793, evals 2975 (1969). Not matched.
+
+n=14 final:
+- E3 R1 xL3 xs50 rawk48 polt3: 0.88 / 0.871, evals 1210 (332). Not matched, not cheaper than 1109.
+
+n=12 final:
+- E1 R1 xL3 xs50 rawk48 polt3: 0.98 / 0.964, evals 604 (191). Matched but above the 503 row.
+
+n=10 final:
+- E1 R1 xL2 xs25 rawk48 polt3: 0.96 / 0.928, evals 403 (166 lookups). New cheapest matched n=10 point (was 443 with 1.00 / 0.990).
+
+n=8 final:
+- E1 R1 xL2 xs25 rawk48 polt3: 1.00 / 0.988, evals 403 (126 lookups). New cheapest matched n=8 point (was 443).
+- E1 R1 xL2 xs35 rawk24 polt3 with sab32 (confirm of the 443 row): 1.00 / 0.987, evals 443 (101 lookups). Reproduces the existing row exactly.
+
+Partial (not final, do not use yet):
+- n=16 E9 R2 rawk64 polt4: 43 of 50 trials done, 0.81 / 0.808 at 2519 evals (893). Looks unmatched.
+- n=16 E12 R1 xs50 rawk48 polt3 (queue45): 20 of 50 trials done, 0.85 / 0.839 at 3937 evals (838). Looks worse and more expensive than the xs35 runs.
+
+Cheapest matched table (success and mean p(GS) both at or above 0.9), refreshed:
+- n=8: 403 evals (1.00 / 0.988; 126 lookups)
+- n=10: 403 evals (0.96 / 0.928; 166 lookups). Only 0.96 success, so the 443 row (1.00 / 0.990) remains the safer alternative.
+- n=12: 503 evals (0.98 / 0.967)
+- n=14: 1109 evals (1.00 / 0.988; 474 lookups)
+- n=16: 3158 evals (pooled over two seeds 0.91 / 0.903; first seed 0.94 / 0.933; 1071 lookups). Matched only marginally.
+
+Refit evals = A b^n (least squares on log evals, n = 8, 10, 12, 14, 16):
+- table above (403, 403, 503, 1109, 3158): b = 1.292, A = 35.9.
+- with n=16 at 3496 (E15 R1, 0.92 / 0.909): b = 1.306, A = 32.4.
+- with n=16 at 3709: b = 1.313, A = 30.5.
+- with the old 443 rows for n=8 and n=10 (3158 at n=16): b = 1.274, A = 44.2 (previous fit).
+- n = 8 to 14 only: b = 1.177 (was 1.155; the cheaper small-n points steepen the fit slightly).
+The fit gets slightly steeper (1.29 versus 1.27) only because n=8 and n=10 got cheaper, not because n=16 got worse. n=14 to 16 (1109 to 3158) still dominates. Nothing at n=16 below 3158 evals reaches mean 0.9 yet.
+
+Compute / queue state (8 cores, load about 17, watchdog alive, no STOP file): queue44 finished. Running: queue50 (n=16 E9 R2 at 43 of 50, then n14 E2 R2 xeta256, n16 E12 R2 xeta256), queue45 (n=16 E12 R1 xs50 rawk48, 20 of 50). Waiting: queue48 (independent-seed confirms n8, n10, n12, n14 with trial offset 50, n16 xeta256 E13 to E16) and queue49 (si64/si32 xc3, E12 si128, off50 xc3 si128). No new jobs launched because the machine is fully loaded.
