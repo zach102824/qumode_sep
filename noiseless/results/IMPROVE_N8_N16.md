@@ -226,3 +226,22 @@ Fitted evals ~ b^n over n=8..16 (least squares on log evals): b = 1.25 with n=16
 Caveat: n=12 and n=14 miss the 0.9 bar with this recipe, so the fitted b is not at matched quality. Compared with the earlier ladder (n=12 E=1 0.98 / 0.967 at 503 evals, n=14 E=4 1.00 / 0.988 at 1109 evals, both xL 2 with 50 steps per explore layer and K=48), the drop comes mainly from xs 35 at xL 2 (cheaper explore runs, 443 vs 503 evals at n=12) and partly from the smaller K. A consistent recipe that holds 0.9 at every n likely needs 50 steps per explore layer for n up to 14, or a larger E at n=12 and 14.
 
 Runs: logs/improve/cons_n8_E1_sab36_rawk24_xL2, cons_n10_E1_sab50_rawk30_xL2, cons_n12_E1_sab72_rawk36_xL2, cons_n14_E4_sab98_rawk42_xL2; n=16 rows reuse n16_E12 and n16_E16 _sab128_rawk48_polt3_xL3_xs35_R1_xeta128_c50 (identical settings).
+
+### Consistent recipe, xs 50 for n up to 14 (Oct 11, 2026)
+
+Same as above but 50 steps per explore layer (xs 50) at xL 2 for n=8..14. n=16 rows unchanged (xL 3, xs 35). 50 trials each.
+
+| n | E | K | xL | xs | success | mean p(GS) | evals | lookups |
+|---|---|---|---|---|---|---|---|---|
+| 8 | 1 | 24 | 2 | 50 | 1.00 | 0.988 | 503 | 100 |
+| 10 | 1 | 30 | 2 | 50 | 1.00 | 0.989 | 503 | 135 |
+| 12 | 1 | 36 | 2 | 50 | 0.98 | 0.967 | 503 | 171 |
+| 14 | 4 | 42 | 2 | 50 | 1.00 | 0.988 | 1109 | 360 |
+| 16 | 12 | 48 | 3 | 35 | 0.90 | 0.878 | 2857 | 834 |
+| 16 | 16 | 48 | 3 | 35 | 0.92 | 0.907 | 3709 | 1017 |
+
+K=48 check at n=12 and 14 gave identical success / mean p(GS) / evals (0.98 / 0.967 / 503 and 1.00 / 0.988 / 1109) with more lookups (192, 387), so K = 3n is enough there.
+
+Fitted evals ~ b^n (least squares on log evals): n=8..16 b = 1.24 (n=16 E=12) or b = 1.27 (n=16 E=16, the only n=16 row with both metrics at 0.9 or above). n=8..14 alone b = 1.13. Every n now has success at 0.9 or above; mean p(GS) is at 0.9 or above everywhere except n=16 E=12 (0.878). The n=14 to 16 step is the remaining cost driver.
+
+Runs: logs/improve/consxs50_*; queue logs/improve/consistent_xs50_20261011_120723.sh.
