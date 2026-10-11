@@ -312,3 +312,14 @@ Next ideas (unchanged priority)
 1. Push n16 mean p(GS) to ≥0.9 under ~3000 via queued rawk64/96, xs50, R2+wide readout (queue42–45).
 2. n14 under ~1100 mean ≥0.9 via E3 xs50 rawk48/64 (queue43–45).
 3. Rewrite cheapest ≥0.9 / refit b only if a new matched point lands.
+
+
+## Update (Oct 11, 2026, about 13:20 Shanghai): queue29 first finals
+
+n=16 (xL3 xs35 R1, 50 trials, final round; absolute values)
+- E16 rawk48 polt3 xeta256: success 0.94, mean p(GS) 0.926, evals 3709 (guess_hit 0.94). Same cost as the strict E16 row (xeta128 gave 0.92 / 0.907), so quality is better but the cheapest matched n=16 point is unchanged.
+- E12 rawk64 polt4 xeta256: success 0.90, mean p(GS) 0.878, evals 2857. Worse than xeta128 at the same settings (0.92 / 0.898); larger xeta does not help at E12.
+
+Cheapest matched ≥0.9 table: no change (n8 443, n10 443, n12 503, n14 1109, n16 3709). Fit b unchanged.
+
+Compute: queue29 now on n16 E14 R2 xeta128, then E15, E12 xeta512, E18, n14 xeta256 fills; queue42 to 45 wait behind it. Old xeta16/32 fleet SIGSTOPped; watchdog alive; no STOP file.
