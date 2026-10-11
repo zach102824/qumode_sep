@@ -677,3 +677,40 @@ evals = A b^n on (403, 403, 503, 1109, 3158): b = 1.292, A = 35.9. n=8 to 14 alo
 - New: queue56 waits for queue55.done — denser n16 under-3158 mean>=0.9 tries (R2, rawk64–128, xeta256/512, large-saind>=128 xc3 only), n14 sub-1100 near-miss family (E3 xL2 xeta256 rawk64/96/off*), cheap ladder confirms with fresh trial-offsets, optional n18/n20 light screens. Gray + wmaxsat only. Avoid known losers: xwarm, lmut, thr, xstop, xagree, xc3 with tiny saind. Detached setsid/nohup.
 
 No message to Zach: no new cheapest >=0.9 point and no fit change.
+
+
+## Update (Oct 11, 2026, 19:23 CEST): harvest queue48 E14/E13/E16 xeta + ladder off50; queue57 chained; matched table unchanged
+
+Absolute values, gray, wmaxsat, base sab128 xL3 xs35 reta2 (n=8/10/12/14 ladder: sab32/50/72/98, xL2), 50 trials each (all final) unless noted; lookups in brackets. Numbers from summary footers in logs/improve/ and jsonl in noiseless/results/relayout_runs/kbit (gitignored).
+
+### n=16 finals (queue48)
+- E14 R1 rawk64 polt4 xL3 xs35 xeta256: success 0.90, mean p(GS) 0.890, evals 3283 (1181). Success hits 0.9 but mean under 0.9 — NOT matched. Above 3158 on cost anyway. Log as miss / no table change.
+- E13 R1 rawk48 polt3 xL3 xs35 xeta256: success 0.90, mean p(GS) 0.891, evals 3070 (879). Under-3158 on cost, mean just under 0.9 (same class as earlier E13 near-misses). Not matched.
+- E16 R1 rawk48 polt3 xL3 xs35 xeta512: success 0.92, mean p(GS) 0.907, evals 3709 (1015). Matched at 3709, above the cheapest n=16 row at 3158. Full 50-trial confirm of the earlier partial (~0.96 / 0.946 at mid-run cooled to 0.92 / 0.907). Log as miss / no table change.
+
+### Cheap ladder off50 confirms (queue48, fresh trial-offset 50)
+- n=8 E1 xL2 xs35 rawk24: success 1.00, mean p(GS) 0.989, evals 443 (100). Confirms the safer-alt row; does not beat cheapest n=8 at 403.
+- n=10 E1 xL2 xs50 rawk30: success 1.00, mean p(GS) 0.986, evals 503 (136). Strong confirm; above cheapest n=10 at 403.
+- n=12 E1 xL2 xs50 rawk36: success 0.92, mean p(GS) 0.908, evals 503 (171). Matched at same cost as current cheapest n=12 row (503); quality a bit below the table seed (0.98 / 0.967) but still ≥0.9. No cheaper point.
+- n=14 E4 xL2 xs50 rawk42: success 0.96, mean p(GS) 0.950, evals 1109 (362). Matched at the current cheapest n=14 cost; confirms 1109. No table change.
+
+### Cheapest matched table (unchanged)
+- n=8: 403 evals (1.00 / 0.988; 126 lookups)
+- n=10: 403 evals (0.96 / 0.928; 166 lookups). Safer alt still 443 (1.00 / 0.990).
+- n=12: 503 evals (0.98 / 0.967)
+- n=14: 1109 evals (1.00 / 0.988; 474 lookups)
+- n=16: 3158 evals (pooled xeta128 0.91 / 0.903; first xeta128 seed 0.94 / 0.933; xeta256 seed 0.92 / 0.913; 1071 lookups). Still the cheapest matched n=16 point; nothing under 3158 reaches mean 0.9 (E13 xeta256 got 0.90 / 0.891 at 3070).
+
+### Fit (unchanged)
+evals = A b^n on (403, 403, 503, 1109, 3158): b = 1.292, A = 35.9. n=8 to 14 alone: b = 1.177. n=14 to 16 still dominates. No new cheapest matched point at any n, so fit b is unchanged.
+
+### Compute / queue state (8 cores, load about 6.5, watchdog alive, no STOP file)
+- queue48 finished at 19:22 CEST (wrote queue48.done) after E16 + ladder off50 arms.
+- Running: queue49 on n16 E16 xc3 si64 xs35 (first arm). Workers=8. Only one hot 8-worker master.
+- Stopped (SIGSTOP, do not kill): queue51_n16cheap n16 E12 xc3 si32 still at 15/50; sigcont_secondary.sh monitoring (resume when primary workers idle).
+- Waiting (alive, do not kill): queue51 (after queue49), queue52 (after both queue51*.done), queue53, queue54, queue55, queue56.
+- New: queue57 waits for queue56.done — denser n16 under-3158 mean>=0.9 tries (R2 E10–E13, rawk64–128, xeta256/512, large-saind>=128 xc3 only), n14 sub-1100 near-miss family (E3 xL2 xeta256 rawk64/96/off* seeds), cheap ladder off* confirms, light n18/n20 screens. Gray + wmaxsat only. Avoid known losers: xwarm, lmut, thr, xstop, xagree, xc3 with tiny saind. Detached setsid/nohup.
+
+Next ideas unchanged: push n16 mean over 0.9 under 3158 (E13 at 3070 is the closest recent near-miss); n14 under ~1100 (907-eval family); n18/n20 screens when queue51_n16cheap resumes.
+
+No message to Zach: no new cheapest >=0.9 point and no fit change.
