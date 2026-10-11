@@ -64,13 +64,14 @@ Cheapest confirmed points with success >= 0.9 and mean p(GS) >= 0.9 (50 trials e
 | 12 | E1 sab72 rawk48 polt3 xL2 R1 xeta128 | 0.98 / 0.967 | 503 |
 | 14 | E4 sab98 rawk48 polt3 xL2 R1 xeta128 | 1.00 / 0.988 | 1109 |
 | 14 alt | E3 sab98 rawk48 polt3 xL3 R1 xeta256 | 0.96 / 0.944 | 1210 |
-| 16 | E16 sab128 rawk48 polt3 xL3 xs35 R1 xeta128 (also rawk32 xeta256: same) | 0.92 / 0.907 | 3709 |
+| 16 | E12 sab128 rawk64 polt4 xL3 xs35 R2 xeta128 (new, one 50-trial run; confirm queued) | 0.94 / 0.933 | 3158 |
+| 16 alt | E16 sab128 rawk48 polt3 xL3 xs35 R1 xeta128 | 0.92 / 0.907 | 3709 |
 | 16 alt (mean just under 0.9) | E12 sab128 rawk64 polt4 xL3 xs35 R1 xeta128 | 0.92 / 0.898 | 2857 |
 
 Note: n=12 E1 xs35 with rawk48 polt3 (443 evals) is too weak: 0.84 / 0.806. n=12 needs the xL2 run without xs35 (503 evals).
 
 Fit evals = A * b^n (least squares on log evals, best >= 0.9 point per n):
-- Strict set (443, 443, 503, 1109, 3709 at n=8,10,12,14,16): b = 1.29 per unit n (A about 38).
+- Strict set with the new n=16 point (443, 443, 503, 1109, 3158 at n=8,10,12,14,16): b = 1.27 per unit n (A about 44). Previous strict set with 3709: b = 1.29 (A about 38).
 - With the n=16 alt point (2857 evals, mean p(GS) 0.898): b = 1.26.
 - n=8..14 alone: b = 1.15. Two-point 8 to 16: 1.30 (strict) or 1.26 (alt).
 - Piecewise: n=8..12 is almost flat; n=12 -> 14 is a factor 2.2 and n=14 -> 16 is a factor 3.3 (strict) or 2.6 (alt). The n=16 step is where the target 1.1-1.2^n is missed.
@@ -375,3 +376,27 @@ n=16 (50 trials, absolute values):
 - E16 xc3 xs50 (no per-run SA): success 0.90, mean p(GS) 0.888, evals 4434. Worse than xs35.
 - E8 si128 xs50: success 0.82, mean p(GS) 0.812, evals 2725 (xs35: 0.80 / 0.787 at 2005).
 Cheapest matched >=0.9 table unchanged (n8 443, n10 443, n12 503, n14 1109, n16 3709). Compute busy (queue43 E12 xs50, queue47/48/49 running; watchdog alive).
+
+
+## Update (Oct 11, 2026, about 17:30 Shanghai): harvest, new n=16 matched point, queue50
+
+New confirmed n=16 results (50 trials each, final round, absolute values; base: sab128 xL3 xs35 xeta128 reta2, gray, wmaxsat; lookups in brackets):
+- E12 R2 rawk64 polt4: success 0.94, mean p(GS) 0.933, evals 3158 (lookups 1074). Meaningful new result: cheapest matched n=16 point so far (was 3709 with 0.92 / 0.907), about 15% fewer evals with better quality. This run finished at 15:05 and was not in the table before. Single 50-trial run; independent-seed confirm is queued first in queue50.
+- E15 R1 rawk64 polt4: 0.92 / 0.909, 3496 evals (1245). Also matched (mean at or above 0.9), cheaper than 3709 but above 3158.
+- E13 R1 rawk64 polt4: 0.90 / 0.891, 3070 evals (1123). E11 R1: 0.82 / 0.812, 2644. E10 R1: 0.82 / 0.792, 2431.
+- E12 R1 rawk96 polt5: 0.92 / 0.898, 2857 evals (1476 lookups). Same evals as the 0.898 alt, no gain from wider readout.
+- E12 R1 xeta512 rawk48: 0.88 / 0.858, 2857 (830). E18 R1 rawk48: 0.94 / 0.926, 4135 (1109).
+- Fewer, deeper explore runs: E6 xs50 rawk48: 0.68 / 0.669 at 2119 (551); E6 xs50 with diverse SA: 0.72 / 0.701; E4 xL4 xs50: 0.62 / 0.598 at 1917 (455); E4 R2 xs80: 0.62 / 0.615 at 2534; E8 xL4 xs35: 0.78 / 0.771 at 2573 (652); E5 xL4 xs50 diverse: 0.68 / 0.672 at 2321. None competitive.
+- Early stop (xconsec) with xs50: E16 xc2 si128: 0.78 / 0.762, 2343 evals, 1438 lookups. E16 xc3 si128 xs50 is running (2 of 50 done at last look).
+- E12 R1 xs50 rawk64 polt4 (running, 32 of 50 done): 0.84 / 0.834 at 3937 evals (1056 lookups). xs50 is worse and more expensive than xs35.
+
+n=14 (50 trials): E4 xL3 xeta256 rawk48 polt3: 1.00 / 0.982, 1513 evals (382 lookups). Does not beat the 1109 row (E4 xL2 xeta128: 1.00 / 0.988).
+
+Cheapest matched >=0.9 table (updated):
+- n8 443 (1.00 / 0.987), n10 443 (1.00 / 0.990), n12 503 (0.98 / 0.967), n14 1109 (1.00 / 0.988), n16 3158 (0.94 / 0.933; lookups 1074).
+- Fit evals = A b^n: strict b = 1.27 (A about 44), was 1.29. With n=16 at 3496: 1.29; at 2857 (alt, mean 0.898): 1.26. n=8..14 alone about 1.15. n=14 to 16 still dominates (1109 to 3158). n=16 lookups about 1074, still about 4 times n^2 (256); the cheapest-lookup matched n=16 point remains xc3 si128 at 2915 lookups (not cheaper), so lookups near n^2 is not yet reached with matched quality (E16 xc3 xs50 no per-run SA: 0.90 / 0.888 at 1263 lookups, just under).
+
+Pending / queued (all detached; compute busy, load about 16):
+- Running: queue43 (E12 xs50 finishing, then E14 rawk96, E12 R2 rawk96, n14 E3/E4 rawk48/64), queue47 (xc3 si128 xs50 last arm).
+- Waiting chain: queue44 -> queue45 -> queue48 (off50 confirms n8/n10/n12/n14, xeta256 n16) -> queue49 (si64/si32 xc3, E12 si128, independent-seed xc3 si128).
+- New queue50 (starts now, 4 workers, runs alongside): n16 E12 R2 rawk64 independent-seed confirm (trial offset 50), then R2 at E10, E11, E9; E12 R2 with xc3 si64; E12 R2 xeta256; n14 E3 R2 and E2 R2 xeta256; n8 / n10 E1 xs25. Watchdog alive; no STOP file.
