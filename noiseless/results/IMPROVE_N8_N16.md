@@ -245,3 +245,40 @@ K=48 check at n=12 and 14 gave identical success / mean p(GS) / evals (0.98 / 0.
 Fitted evals ~ b^n (least squares on log evals): n=8..16 b = 1.24 (n=16 E=12) or b = 1.27 (n=16 E=16, the only n=16 row with both metrics at 0.9 or above). n=8..14 alone b = 1.13. Every n now has success at 0.9 or above; mean p(GS) is at 0.9 or above everywhere except n=16 E=12 (0.878). The n=14 to 16 step is the remaining cost driver.
 
 Runs: logs/improve/consxs50_*; queue logs/improve/consistent_xs50_20261011_120723.sh.
+
+
+## Update (Oct 11, 2026, about 12:30 Shanghai): post-12:00 harvest
+
+New finals since the 12:00 catch-up (50 trials, final round; absolute values):
+
+n=16 (rawk48 polt3 xL3 xs35 R1 unless noted)
+- E11 xeta128: success 0.80, mean p(GS) 0.792, evals 2644. Below 0.9; denser E between 10 and 12 does not fill the gap.
+- E12 xL2 xs35 xeta128: success 0.72, mean p(GS) 0.697, evals 2005. xL2 clearly hurts at n=16 vs xL3 at the same E (0.90 / 0.878 at 2857).
+- E14 xeta256: success 0.90, mean p(GS) 0.890, evals 3283. Success at 0.9; mean p(GS) still short of 0.9. Cheaper than the strict E16 point (3709) but not a new matched ≥0.9 row.
+- E13 xeta128: still running at harvest (~30/50); skipped for the table.
+
+n=14 (rawk48 polt3 R1)
+- E2 xL3 xeta128: success 0.82, mean p(GS) 0.808, evals 907. Misses 0.9.
+- E3 xL2 xeta128: success 0.88, mean p(GS) 0.869, evals 907. Misses 0.9.
+- E3 xL2 xeta256: success 0.90, mean p(GS) 0.875, evals 907. Success hits 0.9; mean p(GS) short. Cheapest success-only near-miss under 1100, but not a matched ≥0.9 point.
+- E3 xL2 xs35 xeta128: success 0.70, mean p(GS) 0.680, evals 727. xs35 at xL2 is too weak at n=14.
+- E4 xL2 xs35 xeta128: success 0.78, mean p(GS) 0.760, evals 869. Same story; keep xs50 (no xs35) for the n=14 cheapest ≥0.9 row.
+
+consxs50 confirms (already in the consistent-recipe table): n8/10/12/14 with xs50 match the 12:00 ladder; K=48 vs K=3n identical at n=12 and 14.
+
+Cheapest matched ≥0.9 table: no change.
+- Still n8 E1 443; n10 E1 443; n12 E1 503; n14 E4 1109; n16 E16 3709 (strict).
+- Fit b unchanged: about 1.29 (strict) / 1.26 (n16 alt 2857 mean 0.898). n=8..14 alone about 1.13–1.15. Bottleneck remains n=14→16.
+- Near-misses that do not rewrite the table: n16 E14 xeta256 (0.90 / 0.890 / 3283), n14 E3 xL2 xeta256 (0.90 / 0.875 / 907), n16 E12 rawk64 (0.92 / 0.898 / 2857).
+
+Compute / queues (about 12:30)
+- queue28: running n16 E13 (~30/50), then E9, n14 E4 xL3, n14 E5 xL2, n12 E1 xL3.
+- queue29 waits on queue28.done; queue42 waits on queue29.done (rawk64/96 denser E, R2, xeta256).
+- queue41 done (n8/10/12/14 cheap fills and n14 E2–E4 under ~1100).
+- queue43 waits on queue42.done; queue44 waits on queue43.done (deeper n16 mean-p(GS) / under-3000 tries, n14 under-1100 mean-p pushes).
+- queue21/22/23 alive but SIGSTOPped xeta16/32 fleet; watchdog alive; no STOP file.
+
+Next ideas
+1. Push n16 mean p(GS) to ≥0.9 under ~3000: rawk64/96 at E12–14, R2 with wide readout, xs50 (full explore steps) at E12, denser E13/E15 with rawk64.
+2. n14 under ~1100 with mean ≥0.9: E3 xL3 (no xs35) already 0.96 / 0.944 at 1210; try E3 with xs50 + rawk48 / rawk64; E4 cheaper only if xs35 can be rescued (so far no).
+3. If rawk96 or xs50 at E12 clears mean 0.9 at 2857, rewrite the strict n16 row and refit b.
