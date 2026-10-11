@@ -586,3 +586,31 @@ evals = A b^n on (403, 403, 503, 1109, 3158): b = 1.292, A = 35.9. n=8 to 14 alo
 - New: queue53 waits for queue52.done — denser n16 under-3158 mean>=0.9 tries (R2 E11-E13, xeta256/512, rawk80-128, careful large-saind early-stop), more n14 sub-1100 near-miss seeds, and cheap ladder off100 confirms.
 
 No message to Zach: no new cheapest >=0.9 point and no fit change.
+
+
+## Update (Oct 11, 2026, 17:55 CEST): harvest E12 R2 xs50 miss; queue54 chained; matched table unchanged
+
+Absolute values, gray, wmaxsat, base sab128 xL3 reta2, 50 trials each (all final) unless noted; lookups in brackets. Numbers from summary footers in logs/improve/ and jsonl in noiseless/results/relayout_runs/kbit (gitignored).
+
+### n=16 final
+- E12 R2 rawk64 polt4 xL3 xs50 xeta128 (queue45): success 0.90, mean p(GS) 0.894, evals 4238 (1064). Not matched (mean under 0.9) and more expensive than the xs35 E12 R2 row at 3158 and the xs35 E12 R1 row at 2857. Same story as earlier xs50 misses (E12 R1 xs50 rawk48 at 3937 with 0.90 / 0.890; E14 R1 xs50 rawk64 at 4543 with 0.90 / 0.891). Log as miss.
+
+### Partial (not final, do not use yet)
+- n=16 E14 R1 xs50 rawk96 polt5 xL3 xeta128 (queue45 current): about 15 of 50 trials at 17:54 CEST. Early look about 0.94 / 0.929 at the expected ~4543-class eval cost — too few trials; harvest when finished. Remaining queue45 arms after this: E15 rawk96, n14 E3 xs50, n14 E3 xeta256.
+
+### Cheapest matched table (unchanged)
+- n=8: 403 evals (1.00 / 0.988; 126 lookups)
+- n=10: 403 evals (0.96 / 0.928; 166 lookups). Safer alt still 443 (1.00 / 0.990).
+- n=12: 503 evals (0.98 / 0.967)
+- n=14: 1109 evals (1.00 / 0.988; 474 lookups)
+- n=16: 3158 evals (pooled xeta128 0.91 / 0.903; first xeta128 seed 0.94 / 0.933; xeta256 seed 0.92 / 0.913; 1071 lookups). Still the cheapest matched n=16 point; nothing under 3158 reaches mean 0.9.
+
+### Fit (unchanged)
+evals = A b^n on (403, 403, 503, 1109, 3158): b = 1.292, A = 35.9. n=8 to 14 alone: b = 1.177. n=14 to 16 still dominates. No new cheapest matched point at any n, so fit b is unchanged.
+
+### Compute / queue state (8 cores, load about 8.2, watchdog alive, no STOP file)
+- Running: queue45 on n16 E14 xs50 rawk96 (about 15/50 at 17:54); then E15 rawk96, n14 E3 xs50, n14 E3 xeta256. Workers=8.
+- Waiting (alive, do not kill): queue48 (after queue45.done), queue49 (after queue48), queue51_n16cheap_n18n20 (after queue50.done, soft-waiting queue45; n16 under-2500 + n18/n20), queue51 (after queue49; n14 sub-1100), queue52 (after both queue51*.done), queue53 (after queue52.done).
+- New: queue54 waits for queue53.done — denser n16 under-3158 mean>=0.9 tries (R2 E10–E13, xeta256/512, rawk80–128, large-saind xc3 only), more n14 sub-1100 near-miss seeds (907-eval family), and cheap ladder off50/off100/off150 confirms. Gray + wmaxsat only.
+
+No message to Zach: no new cheapest >=0.9 point and no fit change.
