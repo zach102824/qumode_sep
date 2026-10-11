@@ -282,3 +282,29 @@ Next ideas
 1. Push n16 mean p(GS) to ≥0.9 under ~3000: rawk64/96 at E12–14, R2 with wide readout, xs50 (full explore steps) at E12, denser E13/E15 with rawk64.
 2. n14 under ~1100 with mean ≥0.9: E3 xL3 (no xs35) already 0.96 / 0.944 at 1210; try E3 with xs50 + rawk48 / rawk64; E4 cheaper only if xs35 can be rescued (so far no).
 3. If rawk96 or xs50 at E12 clears mean 0.9 at 2857, rewrite the strict n16 row and refit b.
+
+
+## Update (Oct 11, 2026, about 12:50 Shanghai): post-12:30 harvest
+
+New finals since the 12:30 section (50 trials, final round; absolute values):
+
+n=16 (rawk48 polt3 xL3 xs35 R1 xeta128)
+- E13: success 0.88, mean p(GS) 0.871, evals 3070 (guess_hit 0.88). Below 0.9. Denser E between 12 and 14 does not fill the gap; do not change the cheapest ≥0.9 table.
+- E9: success 0.78, mean p(GS) 0.759, evals 2218 (guess_hit 0.80). Below 0.9; cheaper E remains too weak at this readout.
+
+No other new finals between 12:30 and this harvest (E11 / E12 xL2 / E14 xeta256 / n14 E2–E4 fills already recorded at 12:30).
+
+Cheapest matched ≥0.9 table: no change.
+- Still n8 E1 443; n10 E1 443; n12 E1 503; n14 E4 1109; n16 E16 3709 (strict).
+- Fit b unchanged: about 1.29 (strict) / 1.26 (n16 alt 2857 mean 0.898). n=8..14 alone about 1.13–1.15. Bottleneck remains n=14→16.
+
+Compute / queues (about 12:50)
+- queue28: just finished n16 E9; now running n14 E4 xL3 rawk48, then n14 E5 xL2, n12 E1 xL3, then queue28.done.
+- Waiting chain: queue29 → queue42 → queue43 → queue44 → queue45 (new; waits on queue44.done).
+- queue45 jobs: n16 E12 xs50 rawk48; E14 xs50 rawk64/96; E13 rawk96; E12 R2 xs50 rawk64; E15 rawk96; n14 E3 xL3 xs50/rawk64 and E3 xL3 rawk64 xeta256.
+- queue41 done. Old xeta16/32 fleet stays SIGSTOPped by queue stopwatch. Watchdog alive; no STOP file.
+
+Next ideas (unchanged priority)
+1. Push n16 mean p(GS) to ≥0.9 under ~3000 via queued rawk64/96, xs50, R2+wide readout (queue42–45).
+2. n14 under ~1100 mean ≥0.9 via E3 xs50 rawk48/64 (queue43–45).
+3. Rewrite cheapest ≥0.9 / refit b only if a new matched point lands.
