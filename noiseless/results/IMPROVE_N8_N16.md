@@ -323,3 +323,15 @@ n=16 (xL3 xs35 R1, 50 trials, final round; absolute values)
 Cheapest matched ≥0.9 table: no change (n8 443, n10 443, n12 503, n14 1109, n16 3709). Fit b unchanged.
 
 Compute: queue29 now on n16 E14 R2 xeta128, then E15, E12 xeta512, E18, n14 xeta256 fills; queue42 to 45 wait behind it. Old xeta16/32 fleet SIGSTOPped; watchdog alive; no STOP file.
+
+
+## Update (Oct 11, 2026, about 13:45 Shanghai): queue29 harvest (E14 R2, E15, E8 diverse)
+
+n=16 (rawk48 polt3 xL3 xs35 xeta128, 50 trials, final round; absolute values)
+- E14 R2: success 0.88, mean p(GS) 0.873, evals 3584. Second relabel round does not lift quality over R1 (E14 R1 xeta256 was 0.90 / 0.890 at 3283); not worth the extra evals.
+- E15 R1: success 0.90, mean p(GS) 0.890, evals 3496. Still just under 0.9 mean; E16 (3709, 0.92 / 0.907) stays the strict n=16 row.
+- E8 diverse-layout explore R1: success 0.66, evals 2005. Too weak.
+
+Cheapest matched >=0.9 table: no change (n8 443, n10 443, n12 503, n14 1109, n16 3709). Fit b unchanged (about 1.29 strict, 1.26 alt).
+
+Compute: busy (queue29 on n16 E12 xeta512, queue46 running, queue42 to 45 waiting; xeta16/32 fleet SIGSTOPped; watchdog alive; no STOP file).
