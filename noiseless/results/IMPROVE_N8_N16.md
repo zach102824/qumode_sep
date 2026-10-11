@@ -292,17 +292,21 @@ n=16 (rawk48 polt3 xL3 xs35 R1 xeta128)
 - E13: success 0.88, mean p(GS) 0.871, evals 3070 (guess_hit 0.88). Below 0.9. Denser E between 12 and 14 does not fill the gap; do not change the cheapest ≥0.9 table.
 - E9: success 0.78, mean p(GS) 0.759, evals 2218 (guess_hit 0.80). Below 0.9; cheaper E remains too weak at this readout.
 
-No other new finals between 12:30 and this harvest (E11 / E12 xL2 / E14 xeta256 / n14 E2–E4 fills already recorded at 12:30).
+queue28 tail fills (absolute values; none rewrite the cheapest ≥0.9 table)
+- n14 E4 xL3 rawk48 (no xs35): success 0.98, mean p(GS) 0.967, evals 1513. Strong quality but above the 1109 cheapest n14 row.
+- n14 E5 xL2 rawk48: success 1.00, mean p(GS) 0.986, evals 1311. Also above 1109.
+- n12 E1 xL3 rawk48: success 0.98, mean p(GS) 0.964, evals 604. Above the 503 cheapest n12 row.
 
 Cheapest matched ≥0.9 table: no change.
 - Still n8 E1 443; n10 E1 443; n12 E1 503; n14 E4 1109; n16 E16 3709 (strict).
 - Fit b unchanged: about 1.29 (strict) / 1.26 (n16 alt 2857 mean 0.898). n=8..14 alone about 1.13–1.15. Bottleneck remains n=14→16.
 
-Compute / queues (about 12:50)
-- queue28: just finished n16 E9; now running n14 E4 xL3 rawk48, then n14 E5 xL2, n12 E1 xL3, then queue28.done.
-- Waiting chain: queue29 → queue42 → queue43 → queue44 → queue45 (new; waits on queue44.done).
-- queue45 jobs: n16 E12 xs50 rawk48; E14 xs50 rawk64/96; E13 rawk96; E12 R2 xs50 rawk64; E15 rawk96; n14 E3 xL3 xs50/rawk64 and E3 xL3 rawk64 xeta256.
-- queue41 done. Old xeta16/32 fleet stays SIGSTOPped by queue stopwatch. Watchdog alive; no STOP file.
+Compute / queues (about 12:51)
+- queue28 done (E9 + n14/n12 fills).
+- queue29 now running n16 E16 xeta256 rawk48 (first job after handoff); then rawk64/R2/E15/xeta512/E18 and n14 fills per queue29.sh.
+- Waiting: queue42 → queue43 → queue44 → queue45 (new; waits on queue44.done).
+- queue45 jobs: n16 E12 xs50 rawk48; E14 xs50 rawk64/96; E13 rawk96; E12 R2 xs50 rawk64; E15 rawk96; n14 E3 xL3 xs50 rawk64 and E3 xL3 rawk64 xeta256.
+- queue41 done. Old xeta16/32 fleet SIGSTOPped again by queue29 stopwatch. Watchdog alive; no STOP file.
 
 Next ideas (unchanged priority)
 1. Push n16 mean p(GS) to ≥0.9 under ~3000 via queued rawk64/96, xs50, R2+wide readout (queue42–45).
