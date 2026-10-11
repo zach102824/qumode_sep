@@ -374,6 +374,14 @@ def explore_exploit_trial_kbit(
         n_lookups += n_sa
         sa_centers, sa_m = marginals(sa_seen, n)
         pool.add(int(sa_centers[0]))  # classical best (already looked up) enters the pool
+        if "_div" in sa_mode:
+            # diverse centers: greedy pick from SA's low states, each >= n//4 Hamming from earlier picks
+            _ord = [int(v) for v, _ in sorted(sa_seen.items(), key=lambda kv: (kv[1], kv[0]))[:256]]
+            _pick = []
+            for _v in _ord:
+                if all(bin(_v ^ _q).count("1") >= max(2, n // 4) for _q in _pick):
+                    _pick.append(_v)
+            sa_centers = _pick + [v for v in sa_centers if v not in _pick]
     best_x = best_perm = None  # warm-started explore: lowest-<E> earlier explore run
     best_cen = None
     best_em = np.inf
@@ -413,9 +421,9 @@ def explore_exploit_trial_kbit(
                 pc = int(np.flatnonzero(Pm == cen)[0])
                 xa, xb = cavity_masks_for(pc, int(k))
             elif explore_mask == "sa":
-                base_mode = sa_mode.replace("_adapt", "")
+                base_mode = sa_mode.replace("_adapt", "").replace("_div", "")
                 perm, cen = layout_for_run(rnd, sa_centers, sa_m, n, int(k), sa_rng, float(sa_noise), base_mode)
-                if sa_mode.endswith("_adapt") and guess is not None:
+                if "_adapt" in sa_mode and guess is not None:
                     cen = int(guess)  # adaptive: center the next layout on the best state found so far
                 Pm = bit_perm_map(perm, n)
                 pc = int(np.flatnonzero(Pm == cen)[0])
