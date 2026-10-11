@@ -746,3 +746,35 @@ evals = A b^n on (403, 403, 503, 1109, 3158): b = 1.292, A = 35.9. n=8 to 14 alo
 Next ideas unchanged: push n16 mean over 0.9 under 3158 (E13 at 3070 still the closest recent near-miss); n14 under ~1100 (907-eval family); prefer large-saind>=128 if using xc3; n18/n20 screens when secondary resumes.
 
 No message to Zach: no new cheapest >=0.9 point and no fit change.
+
+
+## Update (Oct 11, 2026, 20:20 CEST): harvest queue49 E16 xc3 si32; queue59 chained; matched table unchanged
+
+Absolute values, gray, wmaxsat, base sab128 xL3 xs35 reta2, 50 trials each (all final) unless noted; lookups in brackets. Numbers from summary footers in logs/improve/ and jsonl in noiseless/results/relayout_runs/kbit (gitignored).
+
+### n=16 finals (queue49)
+- E16 R1 rawk48 polt3 xL3 xs35 xeta128 xc3 si32: success 0.84, mean p(GS) 0.827, evals 3351 (2104 lookups). Identical quality to the already-logged si64 arm (0.84 / 0.827 at 3351). Mean and success both under 0.9 — NOT matched. Above the cheapest n=16 row at 3158 on cost. Tiny-saind xc3 (si32) matches si64 here and still does not help vs plain E16. Log as miss / no table change.
+
+### Partial / in flight (not final)
+- queue49 next: n16 E12 xc3 si128 xs35 at 25/50 (~20:20 CEST; started 19:54). Then E16 xc3 si128 off50.
+- queue51_n16cheap n16 E12 xc3 si32 still SIGSTOP'd at 15/50; sigcont_secondary.sh monitoring (hot_R=8).
+
+### Cheapest matched table (unchanged)
+- n=8: 403 evals (1.00 / 0.988; 126 lookups)
+- n=10: 403 evals (0.96 / 0.928; 166 lookups). Safer alt still 443 (1.00 / 0.990).
+- n=12: 503 evals (0.98 / 0.967)
+- n=14: 1109 evals (1.00 / 0.988; 474 lookups)
+- n=16: 3158 evals (pooled xeta128 0.91 / 0.903; first xeta128 seed 0.94 / 0.933; xeta256 seed 0.92 / 0.913; 1071 lookups). Still the cheapest matched n=16 point; nothing under 3158 reaches mean 0.9.
+
+### Fit (unchanged)
+evals = A b^n on (403, 403, 503, 1109, 3158): b = 1.292, A = 35.9. n=8 to 14 alone: b = 1.177. n=14 to 16 still dominates. No new cheapest matched point at any n, so fit b is unchanged.
+
+### Compute / queue state (8 cores, load about 8.6, watchdog alive, no STOP file)
+- Running: queue49 on n16 E12 xc3 si128 xs35 (25/50 at harvest). Workers=8. Only one hot 8-worker master.
+- Stopped (SIGSTOP, do not kill): queue51_n16cheap n16 E12 xc3 si32 at 15/50; resume via detached sigcont_secondary.sh when primary workers go idle.
+- Waiting (alive, do not kill): queue51 (after queue49), queue52 (after both queue51*.done), queue53, queue54, queue55, queue56, queue57, queue58.
+- New: queue59 waits for queue58.done — denser n16 under-3158 mean>=0.9 tries (R2 E9–E14, midpoint rawk72/88/104/120, xs50 mixes, xeta256/512, large-saind>=128 xc3 only), n14 sub-1100 near-miss family (E2/E3/E4 xL2 xeta256/512 rawk* off*), cheap ladder off* confirms, light n18/n20 screens. Gray + wmaxsat only. Avoid known losers: xwarm, lmut, thr, xstop, xagree, xc3 with tiny saind. Detached setsid/nohup.
+
+Next ideas unchanged: push n16 mean over 0.9 under 3158 (E13 at 3070 still the closest recent near-miss); n14 under ~1100 (907-eval family); prefer large-saind>=128 if using xc3; n18/n20 screens when secondary resumes.
+
+No message to Zach: no new cheapest >=0.9 point and no fit change.
