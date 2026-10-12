@@ -1,4 +1,4 @@
-# 3-cavity / 3-transmon device (n=14 done; n=16 descent, n=18 confirm and n=20 running)
+# 3-cavity / 3-transmon device (n=14 and n=16 done; n=18 confirm missed 0.9; n=20 running)
 
 Device: cavities A, B, C, each with its own transmon d, e, f (1 data bit per transmon). Split: 3 transmon bits +
 Gray-code cavity bits 5, 4, 4 (code levels 32, 16, 16; Fock truncation 48, 32, 32; state 393,216). Layer: rotation
@@ -80,7 +80,16 @@ r=100. One relabel round (R=1) passes at 1053 evals, and cutting the SA budget f
 same quality (same trial outcomes) with 397 lookups instead of 504. Cheapest n=18 setting: E=4 r=100 R=1 sab=64,
 1.00 / 0.930 at 1053 evals and 397 lookups (10-trial screen). Its 50-trial confirm started 15:06 CST
 (queue `logs/3cav/q_3cav_resume_n18n16n20.sh`, which then runs the n=16 descent and n=20).
-n=20 follows after n=18.
+
+| setting | trials | success | mean p(GS) | evals | lookups | worst instance | pass? |
+|---|---|---|---|---|---|---|---|
+| E=4 r=100 R=1 sab=64 (confirm) | 50 | 0.96 | 0.879 | 1053 | 399 | 0.695 | no (mean p(GS) < 0.9) |
+
+The 50-trial confirm (finished 15:26 CST) misses the bar: 48 of 50 trials succeed (2 misses, p(GS) 0.001, on
+instances 8 and 9), mean p(GS) 0.879 (0.915 over the 48 successful trials), median 0.920. With one relabel round there
+is no second round to recover these. So the R=1 sab=64 setting is not confirmed. The cheapest n=18 setting that has
+passed is E=4 r=100 R=2 sab=162 (1.00 / 0.941 at 1254 evals, 519 lookups), but only as a 10-trial screen; it has no
+50-trial confirm yet. The queue moved on to n=16 and n=20 without re-confirming n=18.
 
 ## n=14 on 3 cavities (4,4,3; Fock 32,32,24), min-resource descent
 
@@ -98,6 +107,20 @@ Same recipe, sab start 98, 10-trial screens, then a 50-trial confirm (5 per inst
 
 n=14 on 3 cavities needs 828 evals, fewer than the 2-cavity best (907), so the table now uses 3 cavities at n=14.
 
-Scaling fit on the cheapest 0.9+ evals so far (n=8 403, n=10 443, n=12 503 on 2 cavities; n=14 828, n=16 1454
-(descent pending), n=18 1053 (screen, confirm running) on 3 cavities): about 1.14 per added variable over n=8 to 18
-(1.17 over n=8 to 16).
+## n=16 on 3 cavities (5,4,4), min-resource descent
+
+Start from the confirmed E=4 r=150 R=2 sab=128 (1.00 / 0.976 at 1454 evals, 435 lookups, 50 trials).
+
+| setting | trials | success | mean p(GS) | evals | lookups | worst instance | pass? |
+|---|---|---|---|---|---|---|---|
+| E=4 r=100 R=2 sab=128 | 10 | 1.00 | 0.934 | 1254 | 423 | 0.871 | yes |
+| E=4 r=75 R=2 sab=128 | 10 | 1.00 | 0.874 | 1154 | 424 | 0.726 | no (mean p(GS) < 0.9) |
+| E=4 r=100 R=2 sab=128 (confirm) | 50 | 1.00 | 0.934 | 1254 | 435 | 0.885 | yes, cheapest |
+
+r=75 fails, so the queue stopped the descent there; R=1, sab=64 and E=3 were not tried at n=16. Confirm finished
+15:47 CST. Cheapest n=16: E=4 r=100 R=2 sab=128, 1.00 / 0.934 at 1254 evals, 435 lookups (50 trials).
+
+Scaling fit on the cheapest 0.9+ evals so far: n=8 403, n=10 443, n=12 503 on 2 cavities; n=14 828, n=16 1254
+(50-trial confirms) on 3 cavities; n=18 1254 (E=4 r=100 R=2 sab=162, 10-trial screen only, since the 1053 setting
+failed its confirm). Log-linear fit: about 1.16 per added variable over n=8 to 16, about 1.14 over n=8 to 18.
+n=20 (6,6,5) descent started 15:47 CST.
