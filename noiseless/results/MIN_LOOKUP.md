@@ -117,3 +117,17 @@ Rule beats brute on n=8, 10, 12, 16 (confirmed). At n=18 the systematic K/probe 
 | 18 | sab162 K12 polt1 | 1053 | 1.00 | 0.930 | 247.9 | 162.0 | 0.095% | 10-trial screen only |
 
 Refit over confirmed (or best available) n = 8, 10, 12, 16, 18 total lookups [73.5, 129.2, 67.2, 129.4, 247.9]: still roughly flat-to-linear, not exponential. n=12 with probes 16 is an outlier low; without it the rest track closer to ~8–14*n. Full detail: `MIN_LOOKUP_RULE.md`.
+
+## Cutnext probes (auto, started 2026-10-13 00:31 CST)
+
+| run | sab | SA probes | rawk K | polt | trials | success | mean p(GS) | evals | total lookups | SA lookups | result |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| n18_confirm_sab162_k12_p1 | 162 | 64 | 12 | 1 | 50 | 0.96 | 0.858 | 1053 | 248.3 | 162.0 | fail |
+| n18_sab162_k10_p1 | 162 | 64 | 10 | 1 | 10 | 1.00 | 0.930 | 1053 | 241.1 | 162.0 | PASS |
+| n18_sab162_k8_p1 | 162 | 64 | 8 | 1 | 10 | 0.80 | 0.748 | 1053 | 232.1 | 162.0 | fail |
+| n18_sab162_k12_p0 | 162 | 64 | 12 | 0 | 10 | 1.00 | 0.930 | 1053 | 247.9 | 162.0 | PASS |
+| n16_sab64_k10_p0 | 64 | 64 | 10 | 0 | 10 | 1.00 | 0.914 | 1053 | 135.9 | 64.0 | PASS |
+| n16_sab64_k8_p1 | 64 | 64 | 8 | 1 | 10 | 1.00 | 0.914 | 1053 | 127.1 | 64.0 | PASS |
+| n16_sab64_k6_p1 | 64 | 64 | 6 | 1 | 10 | 1.00 | 0.914 | 1053 | 118.1 | 64.0 | PASS |
+| n18_sab162_pr32_k12_p1 | 162 | 32 | 12 | 1 | 10 | 1.00 | 0.930 | 1053 | 248.3 | 162.0 | PASS |
+| n18_sab162_pr16_k12_p1 | 162 | 16 | 12 | 1 | 10 | 1.00 | 0.930 | 1053 | 248.3 | 162.0 | PASS |
