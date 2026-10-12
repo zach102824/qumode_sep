@@ -78,3 +78,31 @@ The current values are averages of saved records. The bound column is a predicti
   - D. A 50-trial confirm of each passing setting.
   - Rows are appended below. The script commits and pushes at the end.
 - Comparison with MIN_LOOKUP.md: the brute-force descent never tries SA below 64, K = 12 together with polt = 1, or K values that are not 24 or 12. The rule screens fill those gaps. Compare the "cheapest passing" lines there with the confirm rows here once both are in.
+
+## Validation runs (auto-appended by logs/3cav/q_3cav_rule.sh, started 2026-10-12 23:14 CST)
+
+Fit (from diag pass + earlier rawk-48 records with ranks):
+```
+8 {'trials': 10, 'cov48': 1.0, 'K': 9, 'covK': 1.0, 'polt': 1, 'cov_polt3': 1.0, 'cov_poltP': 1.0, 'K_quantiles': {0.5: 4.5, 0.9: 7.199999999999999, 0.95: 8.099999999999998}, 'per_run_rank_h1_median': 3.5}
+10 {'trials': 20, 'cov48': 1.0, 'K': 37, 'covK': 1.0, 'polt': 1, 'cov_polt3': 1.0, 'cov_poltP': 1.0, 'K_quantiles': {0.5: 9.5, 0.9: 36.1, 0.95: 37.0}, 'per_run_rank_h1_median': 8.5}
+12 {'trials': 20, 'cov48': 1.0, 'K': 23, 'covK': 1.0, 'polt': 1, 'cov_polt3': 1.0, 'cov_poltP': 1.0, 'K_quantiles': {0.5: 7.5, 0.9: 15.300000000000004, 0.95: 18.250000000000004}, 'per_run_rank_h1_median': 6.5}
+14 {'trials': 30, 'cov48': 1.0, 'K': 2, 'covK': 1.0, 'polt': 1, 'cov_polt3': 1.0, 'cov_poltP': 1.0, 'K_quantiles': {0.5: 1.0, 0.9: 2.0, 0.95: 2.0}, 'per_run_rank_h1_median': 0.0}
+16 {'trials': 30, 'cov48': 1.0, 'K': 5, 'covK': 1.0, 'polt': 1, 'cov_polt3': 1.0, 'cov_poltP': 1.0, 'K_quantiles': {0.5: 1.0, 0.9: 4.0, 0.95: 4.549999999999997}, 'per_run_rank_h1_median': 4.0}
+18 {'trials': 10, 'cov48': 0.9, 'K': 10, 'covK': 0.9, 'polt': 1, 'cov_polt3': 0.9, 'cov_poltP': 0.9, 'K_quantiles': {0.5: 4.0, 0.9: 19.799999999999965, 0.95: 63.89999999999989}, 'per_run_rank_h1_median': 46.0}
+```
+
+| run | sab | SA probes | rawk K | polt | trials | success | mean p(GS) | total lookups | SA lookups | result |
+|---|---|---|---|---|---|---|---|---|---|---|
+| n18_rule_sab16_k10_p1 | 16 | 16 | 10 | 1 | 10 | 0.90 | 0.838 | 99.1 | 16.0 | fail |
+| n18_rule2_sab64_k20_p1 | 64 | 64 | 20 | 1 | 10 | 1.00 | 0.854 | 187.5 | 64.0 | fail |
+| n16_rule_sab16_k5_p1 | 16 | 16 | 5 | 1 | 10 | 0.90 | 0.819 | 64.0 | 16.0 | fail |
+| n16_rule2_sab64_k10_p1 | 64 | 64 | 10 | 1 | 10 | 1.00 | 0.914 | 135.9 | 64.0 | PASS |
+| n16_confirm_sab64_k10_p1 | 64 | 64 | 10 | 1 | 50 | 1.00 | 0.909 | 129.4 | 64.0 | PASS |
+| n14_rule_sab16_k2_p1 | 16 | 16 | 2 | 1 | 10 | 1.00 | 0.891 | 36.5 | 16.0 | fail |
+| n14_rule2_sab64_k4_p1 | 64 | 64 | 4 | 1 | 10 | 1.00 | 0.891 | 88.3 | 64.0 | fail |
+| n12_rule_sab16_k23_p1 | 16 | 16 | 23 | 1 | 10 | 1.00 | 0.986 | 66.9 | 16.0 | PASS |
+| n12_confirm_sab16_k23_p1 | 16 | 16 | 23 | 1 | 50 | 0.92 | 0.909 | 67.2 | 16.0 | PASS |
+| n10_rule_sab50_k37_p1 | 50 | 64 | 37 | 1 | 10 | 1.00 | 0.991 | 128.3 | 62.6 | PASS |
+| n10_confirm_sab50_k37_p1 | 50 | 64 | 37 | 1 | 50 | 1.00 | 0.990 | 129.2 | 62.2 | PASS |
+| n8_rule_sab32_k9_p1 | 32 | 64 | 9 | 1 | 10 | 1.00 | 0.990 | 74.2 | 56.7 | PASS |
+| n8_confirm_sab32_k9_p1 | 32 | 64 | 9 | 1 | 50 | 0.98 | 0.967 | 73.5 | 56.8 | PASS |

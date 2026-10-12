@@ -90,3 +90,30 @@ Fits over n = 8, 10, 12, 16, 18 (R2 on log lookups):
 - linear: 12.9 n - 18.8.
 
 Reading: over n = 8-18 the minimum lookup count grows roughly linearly (n^1.1), with jumps where E changes (1 run at n <= 12, 4 at n = 16-18) and where SA must stay at 162 (n=18; 81 fails, and the rule run with 64 probes, K 20 also fails at 0.854). The share of 2^n falls from 30% at n=8 to 0.095% at n=18. All rows are 10-trial screens and need 50-trial confirms. The rule validation (MIN_LOOKUP_RULE.md) found n=16 at 64, 10, 1 passing 1.00 / 0.914 at 135.9 lookups (10 trials), slightly below the 145.1 here; its 50-trial confirm is running.
+
+
+## Rule vs brute-force (written 2026-10-13 00:30 CST)
+
+`q_3cav_rule.sh` finished. Fitted K(n)/polt(n) from GS-rank diags, then 10-trial rule screens (SA probes 16 at n>=12, else 64) with Kx2+64-probe fallback, then 50-trial confirms of each pass.
+
+| n | brute cheapest (sab, K, polt) | total lookups | rule setting (sab, probes, K, polt) | total lookups | 50-trial success / mean p(GS) |
+|---|---|---|---|---|---|
+| 8 | 32, 12, 1 | 76.8 | 32, 64, 9, 1 | 73.5 | 0.98 / 0.967 PASS |
+| 10 | 50, 48, 1 | 145.4 | 50, 64, 37, 1 | 129.2 | 1.00 / 0.990 PASS |
+| 12 | 64, 24, 1 | 114.9 | 16, 16, 23, 1 | 67.2 | 0.92 / 0.909 PASS |
+| 14 | none (base 64, 48, 3 fails mean p(GS) 0.891) | 239.3 | 16/64 + K=2/4 all fail at 0.891 | — | quantum stage, not lookup cuts |
+| 16 | 64, 12, 1 | 145.1 | 64, 64, 10, 1 | 129.4 | 1.00 / 0.909 PASS |
+| 18 | 162, 12, 1 | 247.9 | sab16/K10 and sab64/K20 fail (0.838 / 0.854) | — | 50-trial confirm of brute 162/12/1 queued |
+
+Rule beats brute on n=8, 10, 12, 16 (confirmed). At n=18 the systematic K/probe cut undershoots mean p(GS); keep sab 162, K 12, polt 1 pending confirm. Updated min-lookup scaling using rule-confirmed rows where they exist:
+
+| n | setting | evals | success | mean p(GS) | total lookups | SA lookups | share of 2^n | source |
+|---|---|---|---|---|---|---|---|---|
+| 8 | sab32 K9 polt1 | 403 | 0.98 | 0.967 | 73.5 | 56.8 | 28.7% | rule 50-trial |
+| 10 | sab50 K37 polt1 | 443 | 1.00 | 0.990 | 129.2 | 62.2 | 12.6% | rule 50-trial |
+| 12 | sab16 K23 polt1 (probes 16) | 503 | 0.92 | 0.909 | 67.2 | 16.0 | 1.64% | rule 50-trial |
+| 14 | — | 627 | 1.00 | 0.891 | 239.3 | 64.0 | 1.46% | R1 base fails bar |
+| 16 | sab64 K10 polt1 | 1053 | 1.00 | 0.909 | 129.4 | 64.0 | 0.197% | rule 50-trial |
+| 18 | sab162 K12 polt1 | 1053 | 1.00 | 0.930 | 247.9 | 162.0 | 0.095% | 10-trial screen only |
+
+Refit over confirmed (or best available) n = 8, 10, 12, 16, 18 total lookups [73.5, 129.2, 67.2, 129.4, 247.9]: still roughly flat-to-linear, not exponential. n=12 with probes 16 is an outlier low; without it the rest track closer to ~8–14*n. Full detail: `MIN_LOOKUP_RULE.md`.
