@@ -23,3 +23,24 @@ Notes:
 - At n = 18, 1 of 10 trials had a wrong guess after explore, yet R1 still reached the GS (the top-K readout and fix-up run again inside the relabel round).
 - Not recorded: whether the GS was anywhere among the SA candidates; lookups after the explore and relabel stages. Recomputing those would need a code change and a re-run.
 - n = 8 file holds 100 trials (two 50-trial seeds); n = 20 is still running.
+
+## Classical lookups for the ONE-relabel-round table (added Oct 12, 2026)
+
+Lookups = distinct strings whose energy was evaluated (`n_lookups_distinct`). Only the SA count and the trial total are stored per trial; the split between explore and relabel round 1 is **not** recorded, and the readout distributions are not saved, so it can't be replayed classically.
+
+How the through-round-1 totals were obtained:
+- n = 8, 10, 12: the runs are already R=1 → totals are exact.
+- n = 18: an R=1 run with the identical settings (E4 r100 sab162, same 10 seeds) exists. Checked per seed: its round-1 p(GS) matches the R=2 run's round-1 p(GS) exactly, so the runs are identical through round 1 and its total is the exact through-round-1 count (10-trial screen).
+- n = 14 (sab64) and n = 16 (sab128): no matched R=1 run. Estimated as R=2 total minus the round-2 increment. That increment is measured from paired R=1/R=2 runs with the same seeds: +15.0 per trial at n=14 (sab98; range 7–21) and +15.4 at n=18 (sab162; range 10–28). Used 15 for both.
+- Explore vs R1 split: not recorded. As a rough proxy, R1 adds about as many new strings as R2 (~15 in the 3-cav runs). This is an estimate, not a measurement.
+
+| n | SA lookups | explore (top-K + fix-up) | relabel round 1 | total through R1 | post-SA (explore+R1) | status |
+|---|---|---|---|---|---|---|
+| 8 | 57 | not recorded | not recorded | 126 | 69 | total exact (100 trials) |
+| 10 | 62 | not recorded | not recorded | 163 | 101 | total exact (50) |
+| 12 | 72 | not recorded | not recorded | 192 | 120 | total exact (50) |
+| 14 | 64 | ~163 (est.) | ~15 (est.) | ~242 | ~178 | total estimated (257 − 15) |
+| 16 | 128 | ~277 (est.) | ~15 (est.) | ~420 | ~292 | total estimated (435 − 15) |
+| 18 | 162 | ~327 (est.) | ~15 (est.) | 504 | 342 | total exact (10-trial screen, matched R=1 run) |
+
+For reference: the R=1 n=14 sab98 screen gives 274; the R=1 n=18 sab64 50-trial confirm gives 399 (0.96 / 0.879, fails the bar).
