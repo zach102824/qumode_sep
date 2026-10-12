@@ -1113,3 +1113,37 @@ evals = A b^n on (403, 403, 503, 907, 3158): b = 1.279, A = 38.9. n=8 to 14 alon
 Next ideas: n18 E16 flat vs E12 on the 10-trial screen — watch E20/E24 t1 before heavy t2/R2 spend; if still ~0.5, prefer recipe changes (R2, denser rawk, larger xeta) over more E alone. Keep pushing n16 under-3158 mean≥0.9 and n14 sub-1100 via waiting queues 52–63; queue52 starts once queue51_n16cheap_n18n20.done appears.
 
 No message to Zach: no new cheapest >=0.9 point on the n=8..16 ladder and no fit change. n=18 E16 is an early screen only (and flat vs E12).
+
+
+## Update (Oct 12, 2026, 03:53 CEST): n=18 E20 interrupted at 8/10; STOP + 3cav took compute; matched table unchanged
+
+Absolute values, gray, wmaxsat. E20 was mid-screen under queue51_n16cheap_n18n20 when the improve chain was interrupted. Numbers from jsonl in noiseless/results/relayout_runs/kbit (gitignored).
+
+### n=18 screens (queue51_n16cheap_n18n20)
+- E4 R1 (prior): success 0.10, mean p(GS) 0.099, evals 1513 (519).
+- E8 R1 (prior): success 0.40, mean p(GS) 0.396, evals 2725 (756).
+- E12 R1 (prior): success 0.50, mean p(GS) 0.489, evals 3937 (981).
+- E16 R1 (prior): success 0.50, mean p(GS) 0.492, evals 5149 (1191). Flat vs E12.
+- **E20 R1 (interrupted, NOT final):** 8/10 jobs done (inst 0–7); among those 8: success 0.38, mean p(GS) 0.372, evals 6361 (1397). Missing inst 8 and 9. Do not treat as a finished screen. Trajectory so far is still in the ~0.4 band (below E12/E16's 0.50 on completed jobs), consistent with "more E alone may not lift n18" from the E16 flat note.
+
+### Interruption / compute handoff
+- Around 03:35–03:40 CEST a `logs/improve/STOP` file appeared and the improve queue/watchdog processes died mid-E20 (after first-wave 8/10). A resume script (`logs/improve/queue51_n16cheap_n18n20_resume.sh`) was written and briefly relaunched; STOP was recreated and the resume was killed again.
+- Compute is now owned by a separate 3-cavity track (commit 37a476f): `logs/3cav/q_sab_2cav.sh` (n16 2cav sab sweep, currently sab256, 4 workers) and `logs/3cav/q_3cav_screen.sh` (device 3cav ks 5,4,4 E4/E8/E12 screens, 3 workers). Improve waiters queue52–63 are not alive. queue51.done exists; queue51_n16cheap_n18n20.done was never written.
+- This update does **not** clear STOP or touch the 3cav jobs. When STOP is cleared and cores free, re-run the resume script (jsonl skips finished E20 inst 0–7) then the existing queue52–63 chain will proceed once queue51_n16cheap_n18n20.done appears.
+
+### Cheapest matched table (unchanged; n=8..16 only)
+- n=8: 403 evals (1.00 / 0.988; 126 lookups)
+- n=10: 403 evals (0.96 / 0.928; 166 lookups). Safer alt still 443 (1.00 / 0.990).
+- n=12: 503 evals (0.98 / 0.967)
+- n=14: 907 evals (0.94 / 0.915; 496 lookups; E3 xL2 rawk80 xeta256). Alt matched seed at same cost: 0.92 / 0.911 (418 lookups; rawk64 off50).
+- n=16: 3158 evals (pooled xeta128 0.91 / 0.903; first xeta128 seed 0.94 / 0.933; rawk96 confirm 0.94 / 0.933; xeta256 seeds 0.92 / 0.913). Still the cheapest matched n=16 point; nothing under 3158 reaches mean 0.9.
+
+### Fit (unchanged)
+evals = A b^n on (403, 403, 503, 907, 3158): b = 1.279, A = 38.9. n=8 to 14 alone: b = 1.142. No new cheapest matched point on the n=8..16 ladder, so fit b is unchanged. n=18 E20 incomplete.
+
+### Compute / queue state (STOP present; 3cav owns cores; improve chain paused)
+- Running (do not kill): logs/3cav/q_sab_2cav.sh (n16 sab256 R2 E12, 4 workers) + logs/3cav/q_3cav_screen.sh (3cav E4 screen, 3 workers).
+- Paused: queue51_n16cheap n18 E20 at 8/10; resume script ready. queue52–63 not running (were waiting on queue51_n16cheap_n18n20.done). Watchdog not alive while STOP exists.
+- Next for improve (when STOP cleared): finish E20 via resume script, then E24 t1, E12–E24 t2, R2 variants, n20 screens, touch queue51_n16cheap_n18n20.done, then queue52+ n16 under-3158 / n14 sub-1100 / cheap ladder. If n18 screens stay ~0.5 even at E20/E24, prefer recipe changes (R2, denser rawk, larger xeta) over more E alone — do not spam heavy 50-trial n18 until a screen approaches ~0.9.
+
+No message to Zach: no new cheapest >=0.9 point on the n=8..16 ladder and no fit change. E20 is incomplete; 3cav handoff is internal compute scheduling.
