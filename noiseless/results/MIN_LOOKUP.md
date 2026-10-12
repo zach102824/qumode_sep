@@ -129,5 +129,14 @@ Refit over confirmed (or best available) n = 8, 10, 12, 16, 18 total lookups [73
 | n16_sab64_k10_p0 | 64 | 64 | 10 | 0 | 10 | 1.00 | 0.914 | 1053 | 135.9 | 64.0 | PASS |
 | n16_sab64_k8_p1 | 64 | 64 | 8 | 1 | 10 | 1.00 | 0.914 | 1053 | 127.1 | 64.0 | PASS |
 | n16_sab64_k6_p1 | 64 | 64 | 6 | 1 | 10 | 1.00 | 0.914 | 1053 | 118.1 | 64.0 | PASS |
-| n18_sab162_pr32_k12_p1 | 162 | 32 | 12 | 1 | 10 | 1.00 | 0.930 | 1053 | 248.3 | 162.0 | PASS |
-| n18_sab162_pr16_k12_p1 | 162 | 16 | 12 | 1 | 10 | 1.00 | 0.930 | 1053 | 248.3 | 162.0 | PASS |
+
+## n=18 re-confirms after K12 confirm fail (auto, started 2026-10-13 01:38 CST)
+
+K12/polt1 50-trial: 0.96 / 0.858 (median p 0.924; 2 misses, one with GS at readout rank 19, so K>=24 would have caught it). The 10-trial screens reuse the trial-0 seeds, which are easier; K10/K8/K6 screens are therefore optimistic.
+
+| run | sab | SA probes | rawk K | polt | trials | success | mean p(GS) | evals | total lookups | SA lookups | result |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| n18_confirm_sab162_k24_p1 | 162 | 64 | 24 | 1 | 50 | 0.96 | 0.880 | 1053 | 303.9 | 162.0 | fail |
+| n18_confirm_sab162_k48_p1 | 162 | 64 | 48 | 1 | 50 | 0.98 | 0.897 | 1053 | 415.5 | 162.0 | fail |
+| n18_sab162_pr32_k12_p1_sep | 162 | 32 | 12 | 1 | 10 | 0.80 | 0.748 | 1053 | 251.3 | 162.0 | fail |
+| n18_sab162_pr16_k12_p1_sep | 162 | 16 | 12 | 1 | 10 | 1.00 | 0.930 | 1053 | 241.5 | 162.0 | PASS |
