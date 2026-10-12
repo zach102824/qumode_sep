@@ -20,6 +20,6 @@ Stages:
 Notes:
 - SA alone almost never lands on the GS (0–20%). Its job is only to seed layouts; the explore + top-K + fix-up step is what finds the GS (guess = GS in 98–100% of trials for n ≤ 16, 90% at n = 18 screen), and the relabel round turns that guess into a high-probability state (p(GS) 0.006–0.18 → 0.91–0.99).
 - `sa_sample` always spends 64 random probes before annealing, so with sab ≤ 64 (n = 8, 10, 14) the "SA" is effectively 64 random lookups (that is why n = 8 shows 57 and n = 10 shows 62 distinct lookups despite sab 32 / 50).
-- At n = 18 the R1 success 1.00 is the second relabel center; at n = 18 one trial's guess was wrong after explore but the R1 relabel round still reached the GS.
+- At n = 18, 1 of 10 trials had a wrong guess after explore, yet R1 still reached the GS (the top-K readout and fix-up run again inside the relabel round).
 - Not recorded: whether the GS was anywhere among the SA candidates; lookups after the explore and relabel stages. Recomputing those would need a code change and a re-run.
 - n = 8 file holds 100 trials (two 50-trial seeds); n = 20 is still running.
