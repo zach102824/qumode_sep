@@ -112,7 +112,9 @@ detuned by $\sim 1~\mathrm{GHz}$ so they do not hybridize \cite{Gao2018}.
 
 Far off resonance, $\Delta_{j\mu}=\omega_j-\omega_\mu$, each transmon--cavity
 pair has a dispersive shift
-$\chi_{j\mu}=g_{j\mu}^2\alpha_j/[\Delta_{j\mu}(\Delta_{j\mu}+\alpha_j)]$.
+$\chi_{j\mu}=-2g_{j\mu}^2\alpha_j/[\Delta_{j\mu}(\Delta_{j\mu}+\alpha_j)]$,
+positive for $\alpha_j<0$ and $\Delta_{j\mu}>0$ (transmon above cavity),
+matching the $-\chi_{j\mu}\hat{n}_\mu\Pe{j}$ sign convention below.
 
 In the lab, $\chi_{qA}$ is a measured frequency difference, not a derived
 symbol.  Probe cavity $A$ with a weak tone: the resonance peak sits at one
@@ -218,7 +220,7 @@ $\gamma_q=1/T_{1,q}$
   & transmon relaxation\\
 $\gamma_{\phi,q}$ from $T_{2}\approx30~\mathrm{\mu s}$
   & $T_{2}^{-1}-T_{1}^{-1}/2$
-  & $\tilde\gamma_{\phi,q}\approx1.8\times10^{-3}$
+  & $\tilde\gamma_{\phi,q}\approx3.7\times10^{-3}$
   & extra dephasing of $q$\\
 \bottomrule
 \end{tabular}
@@ -407,7 +409,15 @@ $\hat{\widetilde{H}}_I=e^{i\hat{\widetilde{H}}_0\tilde t}
 e^{-i\hat{\widetilde{H}}_0\tilde t}$ with
 $\hat{\widetilde{H}}_0=\tilde\omega_A\hat{n}_A+\tilde\omega_B\hat{n}_B
 +\sum_j\tilde\omega_j\Pe{j}$, which removes the stiff GHz numbers without
-dropping Kerr or any $\chi_{j\mu}$.  Either picture is equivalent; the
+dropping Kerr or any $\chi_{j\mu}$.  Every term in
+Eq.~\eqref{eq:Htilde} commutes with $\hat{\widetilde{H}}_0$ (all are
+diagonal in the joint Fock--transmon basis), so the interaction picture is
+exact and time-independent:
+$\hat{\widetilde{H}}_I=\hat{\widetilde{H}}-\hat{\widetilde{H}}_0$, i.e.\
+simply delete the $\tilde\omega$ rows.  The dissipators
+$\mathcal{D}[\hat{a}]$, $\mathcal{D}[\hat{b}]$,
+$\mathcal{D}[\hat\sigma_-]$, $\mathcal{D}[\hat\sigma_z]$ are invariant
+under this frame change.  Either picture is equivalent; the
 interaction picture is what a Lindblad integrator should use.
 
 Then

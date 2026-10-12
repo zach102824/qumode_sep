@@ -154,6 +154,7 @@ def worker(job: dict) -> dict:
     ee = M > 1 or K > 1 or float(job.get("xeta") or 1.0) != 1.0 or float(job.get("reta") or 1.0) != 1.0 \
         or job.get("xL") or job.get("xs") or job.get("cool") \
         or job.get("rawk") or job.get("xbeta") or job.get("xkick")
+    sim = {"sim_cls": job["sim_cls"], "sim_kwargs": job.get("sim_kwargs")} if job.get("sim_cls") and job.get("device") != "3cav" else {}
     if job.get("device") == "3cav":
         from noiseless.relayout_3cav import explore_exploit_trial_3cav
         _trial = lambda E_, gs_, k, nf, **kw: explore_exploit_trial_3cav(  # noqa: E731
@@ -177,14 +178,14 @@ def worker(job: dict) -> dict:
             sa_mode=job.get("samode") or "uncertain_low",
             xstop=int(job.get("xstop", -1)), xstop_q=float(job.get("xstopq", 0.5)), thr_eps=float(job.get("thr", -1.0)),
             xwarm_steps=int(job.get("xwarm", 0)), xmut=int(job.get("xmut", 2)),
-            lmut_swaps=int(job.get("lmut", 0)), xagree=int(job.get("xagree", 0)), xconsec=int(job.get("xconsec", 0)), saind=int(job.get("saind", 0)),
+            lmut_swaps=int(job.get("lmut", 0)), xagree=int(job.get("xagree", 0)), xconsec=int(job.get("xconsec", 0)), saind=int(job.get("saind", 0)), **sim,
         )
     else:
         rec = relayout_trial_kbit(
             E, gs, k=k, nf=int(job["nf"]), final_layers=int(job["L"]), rng=rng,
             relayout_rounds=int(job["R"]), relayout_steps=int(job["r"]), relayout_lr=float(job["lr"]),
             steps_per_stage=int(job["s"]), lr_schedule=lr_schedule_for(int(job["L"])), method=job["method"],
-            code=job.get("code") or "binary",
+            code=job.get("code") or "binary", **sim,
         )
     rec.update({kk: job[kk] for kk in ("n", "L", "s", "r", "R", "lr", "nf", "inst", "trial", "seed", "ham_set", "method")})
     rec.update(explore=M, topk=K, explore_mask=job.get("explore_mask") or "random",
@@ -243,7 +244,9 @@ def load_records(path: Path, trials: int | None = None) -> list[dict]:
 def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_set="scaling", method="fast",
                workers=8, seed0=20260917, outdir: Path = RUN_ROOT, nf_check=None, max_h=None, log=None,
                tag=None, explore=1, topk=1, explore_mask="random", xeta=1.0, reta=1.0, xL=None,
-               xs=None, cool=0, ceta=64.0, clr=0.05, rawk=0, polt=1, xbeta=None, xkick=None, code="gray", layout_json=None, sab=0, sanoise=0.15, samode="uncertain_low", xstop=-1, xstopq=0.5, thr=-1.0, xwarm=0, xmut=2, lmut=0, xagree=0, xconsec=0, saind=0, device="2cav", ks=None, nfs=None, ring=False) -> tuple[str, list[dict]]:
+               xs=None, cool=0, ceta=64.0, clr=0.05, rawk=0, polt=1, xbeta=None, xkick=None, code="gray", layout_json=None, sab=0, sanoise=0.15, samode="uncertain_low", xstop=-1, xstopq=0.5, thr=-1.0, xwarm=0, xmut=2, lmut=0, xagree=0, xconsec=0, saind=0, device="2cav", ks=None, nfs=None, ring=False,
+               job_extra: dict | None = None) -> tuple[str, list[dict]]:
+    """``job_extra`` is merged into every job (e.g. ``sim_cls`` / ``sim_kwargs`` for a noisy simulator)."""
     if log is None:
         def log(msg):
             print(msg, flush=True)
@@ -283,7 +286,7 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
                              xL=xL, xs=xs, cool=cool, ceta=ceta, clr=clr, rawk=rawk, polt=polt, xbeta=xbeta, xkick=xkick, code=code,
                              explore_perm=lay_map.get(str(i)), sab=sab, sanoise=sanoise, samode=samode,
                              xstop=xstop, xstopq=xstopq, thr=thr, xwarm=xwarm, xmut=xmut, lmut=lmut, xagree=xagree, xconsec=xconsec, saind=saind, device=device,
-                             ks=list(ks) if ks else None, nfs=list(nfs) if nfs else None, ring=bool(ring)))
+                             ks=list(ks) if ks else None, nfs=list(nfs) if nfs else None, ring=bool(ring), **(job_extra or {})))
     log(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {tag}: {len(jobs)} jobs ({len(done)} done)")
     t0 = time.time()
     if jobs:

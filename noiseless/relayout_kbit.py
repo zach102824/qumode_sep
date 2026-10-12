@@ -131,8 +131,14 @@ def relayout_trial_kbit(
     u_name: str = "jp",
     want_probs: bool = False,
     code: str = "gray",
+    sim_cls: type = XorKbitSim,
+    sim_kwargs: dict | None = None,
 ) -> dict:
-    """Headline relayout protocol on the k-bit layout. Returns a plain dict record."""
+    """Headline relayout protocol on the k-bit layout. Returns a plain dict record.
+
+    ``sim_cls`` / ``sim_kwargs`` swap in another simulator with the XorKbitSim interface (e.g. the
+    noisy one in noisy_simulation/simulator.py)."""
+    sim_kwargs = dict(sim_kwargs or {})
     if target not in KBIT_TARGETS:
         raise ValueError(f"target must be one of {KBIT_TARGETS}")
     n = 2 + 2 * int(k)
@@ -154,7 +160,7 @@ def relayout_trial_kbit(
     res_list, sim_list, prob_list = [], [], []
     total_nfev = 0
     for rnd in range(int(relayout_rounds) + 1):
-        sim = XorKbitSim(layout, E, L, ground_bitstring, u_name=u_name, method=method, xa=xa, xb=xb)
+        sim = sim_cls(layout, E, L, ground_bitstring, u_name=u_name, method=method, xa=xa, xb=xb, **sim_kwargs)
         if rnd == 0:
             res = grow_trial(sim, final_layers=L, rng=rng, start_layers=int(start_layers),
                              kick_sigma=float(kick_sigma), c=float(c), A=float(A), optimizer="spsa_adam",
@@ -302,6 +308,8 @@ def explore_exploit_trial_kbit(
     xconsec: int = 0,
     saind: int = 0,
     device=None,
+    sim_cls: type = XorKbitSim,
+    sim_kwargs: dict | None = None,
 ) -> dict:
     """Explore-then-exploit relayout (n = 10 cost fix, RELAYOUT_N10_COST_DIAGNOSIS.md).
 
@@ -343,6 +351,7 @@ def explore_exploit_trial_kbit(
       explore runs are skipped (explore_rounds = Emax). Tag suffix ``_xcN``.
     * ``saind`` > 0 (independent SA per explore run, explore_mask "sa"): every explore run gets its own SA pass of ``saind``
       lookups with its own seed and takes its layout/centre from that pass (instead of sharing one SA pass). Tag ``_siN``.
+    * ``sim_cls`` / ``sim_kwargs``: simulator with the XorKbitSim interface (default noiseless, or the chip's class).
     """
     # ``device`` (optional, e.g. relayout_3cav.MultiCavDevice) supplies n, layout, simulator class, cavity
     # XOR masks and the SA slot order for a different chip; None = the 2-cavity k-bit chip (unchanged).
@@ -359,6 +368,9 @@ def explore_exploit_trial_kbit(
         layout = device.layout
         _Sim = device.sim_cls
         _masks, _mask_int, _rand_masks, _slots = device.masks, device.mask_int, device.random_masks, device.slots
+    if sim_cls is not XorKbitSim:
+        _Sim = sim_cls
+    sim_kwargs = dict(sim_kwargs or {})
     E = np.asarray(energies_logical, dtype=float).reshape(-1)
     L = int(final_layers)
     n_st = L - int(start_layers) + 1
@@ -482,10 +494,10 @@ def explore_exploit_trial_kbit(
             xa, xb = _masks(guess) if guess is not None else (0, 0)
         Lr = Lx if exploring else L
         if Pm is None:
-            sim = _Sim(layout, E, Lr, ground_bitstring, u_name=u_name, method=method, xa=xa, xb=xb)
+            sim = _Sim(layout, E, Lr, ground_bitstring, u_name=u_name, method=method, xa=xa, xb=xb, **sim_kwargs)
         else:
             gs_p = bitstring_from_logical(int(np.flatnonzero(Pm == gl)[0]), n)
-            sim = _Sim(layout, E[Pm], Lr, gs_p, u_name=u_name, method=method, xa=xa, xb=xb)
+            sim = _Sim(layout, E[Pm], Lr, gs_p, u_name=u_name, method=method, xa=xa, xb=xb, **sim_kwargs)
         if exploring:
             cb = None
             if int(xstop) >= 0:
