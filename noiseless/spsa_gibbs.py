@@ -887,9 +887,10 @@ def grow_trial(
         else:
             x_tr = np.concatenate([np.asarray(x, dtype=float), transparent_layer_params()])
             ev_tr = sim.evaluate(x_tr)
-            kick = rng.normal(0.0, float(kick_sigma), size=8)
+            npl = len(transparent_layer_params())  # 8 for the 2-pair chip (unchanged); 4P for P pairs
+            kick = rng.normal(0.0, float(kick_sigma), size=npl)
             x0 = x_tr.copy()
-            x0[-8:] += kick
+            x0[-npl:] += kick
             ev_k = sim.evaluate(x0)
             insert_info = {
                 "p_gs_after_insert": float(ev_tr["p_gs"]),

@@ -301,6 +301,7 @@ def explore_exploit_trial_kbit(
     xagree: int = 0,
     xconsec: int = 0,
     saind: int = 0,
+    device=None,
 ) -> dict:
     """Explore-then-exploit relayout (n = 10 cost fix, RELAYOUT_N10_COST_DIAGNOSIS.md).
 
@@ -343,9 +344,22 @@ def explore_exploit_trial_kbit(
     * ``saind`` > 0 (independent SA per explore run, explore_mask "sa"): every explore run gets its own SA pass of ``saind``
       lookups with its own seed and takes its layout/centre from that pass (instead of sharing one SA pass). Tag ``_siN``.
     """
-    n = 2 + 2 * int(k)
+    # ``device`` (optional, e.g. relayout_3cav.MultiCavDevice) supplies n, layout, simulator class, cavity
+    # XOR masks and the SA slot order for a different chip; None = the 2-cavity k-bit chip (unchanged).
+    if device is None:
+        n = 2 + 2 * int(k)
+        layout = KbitLayout(int(k), int(nf), encoding=str(code))
+        _Sim = XorKbitSim
+        _masks = lambda v: cavity_masks_for(v, int(k))  # noqa: E731
+        _mask_int = lambda a, b: (int(a) << k) | int(b)  # noqa: E731
+        _rand_masks = lambda g: (int(g.integers(1 << k)), int(g.integers(1 << k)))  # noqa: E731
+        _slots = None
+    else:
+        n = int(device.n)
+        layout = device.layout
+        _Sim = device.sim_cls
+        _masks, _mask_int, _rand_masks, _slots = device.masks, device.mask_int, device.random_masks, device.slots
     E = np.asarray(energies_logical, dtype=float).reshape(-1)
-    layout = KbitLayout(int(k), int(nf), encoding=str(code))
     L = int(final_layers)
     n_st = L - int(start_layers) + 1
     if lr_schedule is None:
@@ -417,7 +431,7 @@ def explore_exploit_trial_kbit(
                 cen = int(best_cen)
                 Pm = bit_perm_map(perm, n)
                 pc = int(np.flatnonzero(Pm == cen)[0])
-                xa, xb = cavity_masks_for(pc, int(k))
+                xa, xb = _masks(pc)
             elif lmut:
                 # cold growth on a mutation of the best earlier layout (keeps layout diversity without warm params)
                 perm = np.array(best_perm, dtype=int)
@@ -428,7 +442,7 @@ def explore_exploit_trial_kbit(
                 cen = int(best_cen)
                 Pm = bit_perm_map(perm, n)
                 pc = int(np.flatnonzero(Pm == cen)[0])
-                xa, xb = cavity_masks_for(pc, int(k))
+                xa, xb = _masks(pc)
             elif explore_mask == "sa":
                 base_mode = sa_mode.replace("_adapt", "").replace("_div", "")
                 if int(saind) > 0 and rnd > 0:
@@ -439,14 +453,14 @@ def explore_exploit_trial_kbit(
                     n_sa += len(_seen)
                     _c, _m = marginals(_seen, n)
                     pool.add(int(_c[0]))
-                    perm, cen = layout_for_run(0, _c, _m, n, int(k), _r, float(sa_noise), base_mode)
+                    perm, cen = layout_for_run(0, _c, _m, n, int(k), _r, float(sa_noise), base_mode, slots=_slots)
                 else:
-                    perm, cen = layout_for_run(rnd, sa_centers, sa_m, n, int(k), sa_rng, float(sa_noise), base_mode)
+                    perm, cen = layout_for_run(rnd, sa_centers, sa_m, n, int(k), sa_rng, float(sa_noise), base_mode, slots=_slots)
                 if "_adapt" in sa_mode and guess is not None:
                     cen = int(guess)  # adaptive: center the next layout on the best state found so far
                 Pm = bit_perm_map(perm, n)
                 pc = int(np.flatnonzero(Pm == cen)[0])
-                xa, xb = cavity_masks_for(pc, int(k))
+                xa, xb = _masks(pc)
             elif rnd == 0 and explore_perm is not None:
                 # explicit layout for explore run 1 (physical slot i holds logical bit explore_perm[i]), zero mask
                 xa = xb = 0
@@ -459,19 +473,19 @@ def explore_exploit_trial_kbit(
             elif rnd == 0 or explore_mask == "zero":
                 xa = xb = 0
             elif explore_mask in ("random", "perm", "perm0"):
-                xa, xb = int(rng.integers(1 << k)), int(rng.integers(1 << k))
+                xa, xb = _rand_masks(rng)
                 if explore_mask in ("perm", "perm0"):
                     Pm = bit_perm_map(rng.permutation(n), n)
             else:
                 raise ValueError(f"unknown explore_mask {explore_mask!r}")
         else:
-            xa, xb = cavity_masks_for(guess, int(k)) if guess is not None else (0, 0)
+            xa, xb = _masks(guess) if guess is not None else (0, 0)
         Lr = Lx if exploring else L
         if Pm is None:
-            sim = XorKbitSim(layout, E, Lr, ground_bitstring, u_name=u_name, method=method, xa=xa, xb=xb)
+            sim = _Sim(layout, E, Lr, ground_bitstring, u_name=u_name, method=method, xa=xa, xb=xb)
         else:
             gs_p = bitstring_from_logical(int(np.flatnonzero(Pm == gl)[0]), n)
-            sim = XorKbitSim(layout, E[Pm], Lr, gs_p, u_name=u_name, method=method, xa=xa, xb=xb)
+            sim = _Sim(layout, E[Pm], Lr, gs_p, u_name=u_name, method=method, xa=xa, xb=xb)
         if exploring:
             cb = None
             if int(xstop) >= 0:
@@ -513,7 +527,7 @@ def explore_exploit_trial_kbit(
                 scale = float(np.std(Es)) or 1.0
                 Ethr = np.minimum(E - float(E[guess]) - float(thr_eps) * scale, 0.0)
                 if Pm is None:
-                    sim_opt = XorKbitSim(layout, Ethr, Lr, ground_bitstring, u_name=u_name, method=method, xa=xa, xb=xb)
+                    sim_opt = _Sim(layout, Ethr, Lr, ground_bitstring, u_name=u_name, method=method, xa=xa, xb=xb)
             sim_opt.eta_scale = float(exploit_eta_scale)
             x0 = small_beta_parameters(L, rng)
             res = optimize_trial(sim_opt, maxiter=int(relayout_steps), rng=rng, x0=x0, a=extra_a, c=float(c),
@@ -531,7 +545,7 @@ def explore_exploit_trial_kbit(
         res_list.append(res)
         sim_list.append(sim)
         prob_list.append(probs)
-        mask = (int(xa) << k) | int(xb)
+        mask = _mask_int(xa, xb)
         pl = probs[flat0]  # pl[j] = prob of logical j ^ mask
         top = np.argsort(-pl, kind="stable")[: max(1, int(topk))]
         raw = [int(j) ^ mask for j in top]

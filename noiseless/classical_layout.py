@@ -63,7 +63,7 @@ def slot_order(k: int) -> list[int]:
 
 
 def layout_for_run(j: int, centers, m, n: int, k: int, rng: np.random.Generator, noise: float = 0.15,
-                   unc_mode: str = "uncertain_low"):
+                   unc_mode: str = "uncertain_low", slots=None):
     u = np.minimum(m, 1 - m)  # 0 = fixed, 0.5 = uncertain
     if j > 0:
         u = u + noise * rng.random(n)
@@ -71,6 +71,6 @@ def layout_for_run(j: int, centers, m, n: int, k: int, rng: np.random.Generator,
     if unc_mode == "fixed_low":
         order_bits = order_bits[::-1]
     perm = np.empty(n, dtype=int)
-    for slot, b in zip(slot_order(k), order_bits):
+    for slot, b in zip(slot_order(k) if slots is None else slots, order_bits):
         perm[slot] = int(b)
     return perm, int(centers[j % len(centers)])

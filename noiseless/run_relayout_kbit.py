@@ -154,8 +154,14 @@ def worker(job: dict) -> dict:
     ee = M > 1 or K > 1 or float(job.get("xeta") or 1.0) != 1.0 or float(job.get("reta") or 1.0) != 1.0 \
         or job.get("xL") or job.get("xs") or job.get("cool") \
         or job.get("rawk") or job.get("xbeta") or job.get("xkick")
-    if ee:
-        rec = explore_exploit_trial_kbit(
+    if job.get("device") == "3cav":
+        from noiseless.relayout_3cav import explore_exploit_trial_3cav
+        _trial = lambda E_, gs_, k, nf, **kw: explore_exploit_trial_3cav(  # noqa: E731
+            E_, gs_, ks=tuple(job["ks"]), nfs=tuple(job["nfs"]), ring=bool(job.get("ring")), **kw)
+    else:
+        _trial = explore_exploit_trial_kbit
+    if ee or job.get("device") == "3cav":
+        rec = _trial(
             E, gs, k=k, nf=int(job["nf"]), final_layers=int(job["L"]), rng=rng, explore_rounds=M,
             explore_mask=job.get("explore_mask") or "random", topk=K,
             explore_eta_scale=float(job.get("xeta") or 1.0), exploit_eta_scale=float(job.get("reta") or 1.0),
@@ -186,7 +192,7 @@ def worker(job: dict) -> dict:
                cool=job.get("cool"), ceta=job.get("ceta"), clr=job.get("clr"), rawk=job.get("rawk"), polt=job.get("polt"),
                xbeta=job.get("xbeta"), xkick=job.get("xkick"), code=job.get("code") or "binary", explore_perm=job.get("explore_perm"))
     rec["file"] = Path(job["path"]).name
-    nfc = int(job.get("nf_check") or 0)
+    nfc = 0 if job.get("device") == "3cav" else int(job.get("nf_check") or 0)
     if nfc:
         L = int(rec.get("sel_layers") or job["L"])
         x = np.asarray(rec["x"], dtype=float)
@@ -237,10 +243,11 @@ def load_records(path: Path, trials: int | None = None) -> list[dict]:
 def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_set="scaling", method="fast",
                workers=8, seed0=20260917, outdir: Path = RUN_ROOT, nf_check=None, max_h=None, log=None,
                tag=None, explore=1, topk=1, explore_mask="random", xeta=1.0, reta=1.0, xL=None,
-               xs=None, cool=0, ceta=64.0, clr=0.05, rawk=0, polt=1, xbeta=None, xkick=None, code="gray", layout_json=None, sab=0, sanoise=0.15, samode="uncertain_low", xstop=-1, xstopq=0.5, thr=-1.0, xwarm=0, xmut=2, lmut=0, xagree=0, xconsec=0, saind=0) -> tuple[str, list[dict]]:
+               xs=None, cool=0, ceta=64.0, clr=0.05, rawk=0, polt=1, xbeta=None, xkick=None, code="gray", layout_json=None, sab=0, sanoise=0.15, samode="uncertain_low", xstop=-1, xstopq=0.5, thr=-1.0, xwarm=0, xmut=2, lmut=0, xagree=0, xconsec=0, saind=0, device="2cav", ks=None, nfs=None, ring=False) -> tuple[str, list[dict]]:
     if log is None:
         def log(msg):
             print(msg, flush=True)
+    explicit_tag = tag is not None
     k = (n - 2) // 2
     nf = default_nf(k) if nf is None else int(nf)
     if nf_check is None:
@@ -249,6 +256,15 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
                             rawk, polt, xbeta, xkick, code) + (f"_sab{sab}nz{sanoise:g}{samode}" if explore_mask == "sa" else "") \
         + (f"_xstop{xstop}q{xstopq:g}" if xstop >= 0 else "") + (f"_thr{thr:g}" if thr >= 0 else "") \
         + (f"_xw{xwarm}m{xmut}" if xwarm > 0 else "") + (f"_lm{lmut}" if lmut > 0 else "") + (f"_xag{xagree}" if xagree > 0 else "") + (f"_xc{xconsec}" if xconsec > 0 else "") + (f"_si{saind}" if saind > 0 else "")
+    if device == "3cav":
+        from noiseless.relayout_3cav import default_nfs
+        ks = tuple(int(v) for v in ks)
+        nfs = default_nfs(ks) if not nfs else tuple(int(v) for v in nfs)
+        if len(ks) + sum(ks) != n:
+            raise ValueError(f"ks {ks} hold {len(ks) + sum(ks)} bits, need n={n}")
+        nf_check = 0
+        if not explicit_tag:
+            tag += "_3cav" + "-".join(map(str, ks)) + "_nf" + "-".join(map(str, nfs)) + ("_ring" if ring else "")
     outdir.mkdir(parents=True, exist_ok=True)
     path = ckpt(outdir, tag)
     paths = ham_paths(n, ham_set)
@@ -266,7 +282,8 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
                              explore=explore, topk=topk, explore_mask=explore_mask, xeta=xeta, reta=reta,
                              xL=xL, xs=xs, cool=cool, ceta=ceta, clr=clr, rawk=rawk, polt=polt, xbeta=xbeta, xkick=xkick, code=code,
                              explore_perm=lay_map.get(str(i)), sab=sab, sanoise=sanoise, samode=samode,
-                             xstop=xstop, xstopq=xstopq, thr=thr, xwarm=xwarm, xmut=xmut, lmut=lmut, xagree=xagree, xconsec=xconsec, saind=saind))
+                             xstop=xstop, xstopq=xstopq, thr=thr, xwarm=xwarm, xmut=xmut, lmut=lmut, xagree=xagree, xconsec=xconsec, saind=saind, device=device,
+                             ks=list(ks) if ks else None, nfs=list(nfs) if nfs else None, ring=bool(ring)))
     log(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {tag}: {len(jobs)} jobs ({len(done)} done)")
     t0 = time.time()
     if jobs:
@@ -379,6 +396,10 @@ def main(argv=None) -> int:
     p.add_argument("--xagree", type=int, default=0, help="agreement early stop: skip remaining explore runs once this many runs have the current guess (within Hamming 1) in their top-rawk states (--explore is then the max E)")
     p.add_argument("--xconsec", type=int, default=0, help="stop exploring once the last N runs give the same fix-up guess energy")
     p.add_argument("--saind", type=int, default=0, help="independent SA pass of this many lookups per explore run")
+    p.add_argument("--device", choices=("2cav", "3cav"), default="2cav", help="3cav: one transmon per cavity (relayout_3cav)")
+    p.add_argument("--ks", default="5,4,4", help="3cav: bits per cavity")
+    p.add_argument("--nfs", default=None, help="3cav: Fock levels per cavity (default code levels + 16)")
+    p.add_argument("--ring", action="store_true", help="3cav: add the A-C joint-parity gate")
     p.add_argument("--code", choices=("binary", "gray"), default="gray", help="cavity Fock code: Fock f holds f (binary) or f^(f>>1) (gray)")
     a = p.parse_args(argv)
     tag, recs = run_config(n=a.n, L=a.L, s=a.s, r=a.r, R=a.R, lr=a.lr, nf=a.nf, trials=a.trials,
@@ -387,7 +408,8 @@ def main(argv=None) -> int:
                            layout_json=a.layout_json, explore=a.explore, topk=a.topk, explore_mask=a.explore_mask, xeta=a.xeta, reta=a.reta,
                            xL=a.xL, xs=a.xs, cool=a.cool, ceta=a.ceta, clr=a.clr,
                            rawk=a.rawk, polt=a.polt, xbeta=a.xbeta, xkick=a.xkick, code=a.code, sab=a.sab, sanoise=a.sanoise, samode=a.samode,
-                           xstop=a.xstop, xstopq=a.xstopq, thr=a.thr, xwarm=a.xwarm, xmut=a.xmut, lmut=a.lmut, xagree=a.xagree, xconsec=a.xconsec, saind=a.saind)
+                           xstop=a.xstop, xstopq=a.xstopq, thr=a.thr, xwarm=a.xwarm, xmut=a.xmut, lmut=a.lmut, xagree=a.xagree, xconsec=a.xconsec, saind=a.saind,
+                           device=a.device, ks=[int(v) for v in a.ks.split(",")], nfs=[int(v) for v in a.nfs.split(",")] if a.nfs else None, ring=a.ring)
     sm = summarize(recs)
     sm.pop("per_h", None)
     print(json.dumps({"tag": tag, **sm}, indent=1))
