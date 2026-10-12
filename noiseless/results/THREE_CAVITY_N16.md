@@ -1,4 +1,4 @@
-# 3-cavity / 3-transmon device (n=14 and n=16 done; n=18 confirm missed 0.9; n=20 running)
+# 3-cavity / 3-transmon device (n=14 and n=16 done; n=18 R2 confirm running; n=20 baseline failed)
 
 Device: cavities A, B, C, each with its own transmon d, e, f (1 data bit per transmon). Split: 3 transmon bits +
 Gray-code cavity bits 5, 4, 4 (code levels 32, 16, 16; Fock truncation 48, 32, 32; state 393,216). Layer: rotation
@@ -47,8 +47,8 @@ Find rate = fraction of explore runs whose top-48 states come within Hamming 1 o
 
 Eval time (1 core): n=18 0.18 s (L=3), 0.23 s (L=4); n=20 0.68 s / 0.91 s. sab 162 / 200. Screen E=4,6,8
 (10 trials), then a min-resource descent (lower E, then lower r/R/sab) and 50-trial confirm of the cheapest
-setting with success and mean p(GS) both at least 0.9. Old screen queue `logs/3cav/q_3cav_n18n20.sh` was stopped;
-min-resource queue `logs/3cav/q_3cav_min.sh` is running.
+setting with success and mean p(GS) both at least 0.9. Old screen queue `logs/3cav/q_3cav_n18n20.sh` was stopped; min-resource work finished in
+`logs/3cav/q_3cav_resume_n18n16n20.sh` (n=20 baseline failed). n=18 R2 confirm and R1 confirms are still running.
 
 ### n=18 screen (5,5,5), 10 trials, 1 per instance, R2, sab 162
 
@@ -123,4 +123,14 @@ r=75 fails, so the queue stopped the descent there; R=1, sab=64 and E=3 were not
 Scaling fit on the cheapest 0.9+ evals so far: n=8 403, n=10 443, n=12 503 on 2 cavities; n=14 828, n=16 1254
 (50-trial confirms) on 3 cavities; n=18 1254 (E=4 r=100 R=2 sab=162, 10-trial screen only, since the 1053 setting
 failed its confirm). Log-linear fit: about 1.16 per added variable over n=8 to 16, about 1.14 over n=8 to 18.
-n=20 (6,6,5) descent started 15:47 CST.
+n=20 (6,6,5) descent started 15:47 CST and finished 16:38 CST.
+
+### n=20 baseline (6,6,5), 10-trial screen, E=4 r=150 R=2 sab=200
+
+| setting | trials | success | mean p(GS) | evals | lookups | SA lookups | worst instance | pass? |
+|---|---|---|---|---|---|---|---|---|
+| E=4 r=150 R=2 sab=200 | 10 | 0.80 | 0.783 | 1454 | 590 | 200 | 0.0001 | no |
+
+Baseline fails both bars (need success and mean p(GS) at least 0.9). Two of ten trials miss completely (instances 5 and 7, p(GS) about 0.0001 to 0.0003); the eight hits sit near 0.96 to 0.99, so mean p(GS) given success is 0.979. Round-0 polished/raw hit both 0. The queue stopped the descent and skipped the 50-trial confirm. n=20 needs more resources (higher E, or a larger cavity/Fock budget, or another algorithmic change) before it can join the scaling table.
+
+Still running after that: 50-trial n=18 confirm at E=4 r=100 R=2 sab=162 (`q_3cav_n18confirm2.sh`), then one-relabel-round confirms for n=14/16/18 (`q_3cav_r1confirm.sh`).
