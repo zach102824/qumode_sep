@@ -1147,3 +1147,13 @@ evals = A b^n on (403, 403, 503, 907, 3158): b = 1.279, A = 38.9. n=8 to 14 alon
 - Next for improve (when STOP cleared): finish E20 via resume script, then E24 t1, E12–E24 t2, R2 variants, n20 screens, touch queue51_n16cheap_n18n20.done, then queue52+ n16 under-3158 / n14 sub-1100 / cheap ladder. If n18 screens stay ~0.5 even at E20/E24, prefer recipe changes (R2, denser rawk, larger xeta) over more E alone — do not spam heavy 50-trial n18 until a screen approaches ~0.9.
 
 No message to Zach: no new cheapest >=0.9 point on the n=8..16 ladder and no fit change. E20 is incomplete; 3cav handoff is internal compute scheduling.
+
+## Update (Oct 12, 2026, 03:54 CEST): improve hold-then-resume armed; matched table unchanged
+
+Absolute values unchanged. No new n=8..16 finals. 3cav still owns cores; `logs/improve/STOP` still present.
+
+### Compute / resume arming
+- Detached waiter `logs/improve/hold_then_resume.sh` is running: waits until `q_sab_2cav` and `q_3cav_screen` are idle/done, clears `logs/improve/STOP`, launches `queue51_n16cheap_n18n20_resume.sh` (jsonl skips finished E20 inst 0–7), relaunches waiters queue52–63 if missing, restarts watchdog. Does not kill 3cav jobs.
+- Matched table and fit unchanged (403, 403, 503, 907, 3158; b ≈ 1.279).
+
+No message to Zach: no new cheapest >=0.9 point and no fit change; 3cav handoff + resume arming is internal scheduling.
