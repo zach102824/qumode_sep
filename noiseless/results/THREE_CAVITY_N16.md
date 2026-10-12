@@ -47,3 +47,16 @@ Find rate = fraction of explore runs whose top-48 states come within Hamming 1 o
 
 Eval time (1 core): n=18 0.18 s (L=3), 0.23 s (L=4); n=20 0.68 s / 0.91 s. sab 162 / 200. Screen E=4,6,8
 (10 trials), then 50 trials at the cheapest E clearing 0.9 on both. Queue `logs/3cav/q_3cav_n18n20.sh` (running).
+
+### n=18 screen (5,5,5), 10 trials, 1 per instance, R2, sab 162
+
+| E | success | mean p(GS) | evals | lookups | leakage max | per-run find rate |
+|---|---|---|---|---|---|---|
+| 4 | 1.00 | 0.978 | 1454 | 521 | 6e-31 | 0.45 (18 of 40 explore runs) |
+
+Worst instance mean p(GS) 0.947. Evals are the same 1454 as at n=16 (E=4 explore runs plus R=2 relabel rounds of
+r=150); only lookups grew (435 to 521). E=6 and E=8 screens, then the 50-trial confirm at E=4, are still running.
+
+Scaling fit on the cheapest 0.9+ evals (n=8..14 2-cavity 403, 403, 503, 907; n=16 and n=18 3-cavity 1454, 1454):
+about 1.17 per added variable over n=8 to 18 (1.18 over n=8 to 16).
+
