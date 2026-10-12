@@ -1,4 +1,4 @@
-# 3-cavity / 3-transmon device at n=16 (n=16 complete; n=18 min-resource running)
+# 3-cavity / 3-transmon device (n=14 done; n=16 descent, n=18 confirm and n=20 running)
 
 Device: cavities A, B, C, each with its own transmon d, e, f (1 data bit per transmon). Split: 3 transmon bits +
 Gray-code cavity bits 5, 4, 4 (code levels 32, 16, 16; Fock truncation 48, 32, 32; state 393,216). Layer: rotation
@@ -71,13 +71,33 @@ Goal: cheapest setting with success and mean p(GS) both at least 0.9. Start from
 | E=4 r=150 R=2 sab=162 (screen above) | 1.00 | 0.978 | 1454 | 521 | yes |
 | E=3 r=150 R=2 sab=162 | 0.90 | 0.878 | 1241 | 476 | no (mean p(GS) < 0.9) |
 | E=4 r=100 R=2 sab=162 | 1.00 | 0.941 | 1254 | 519 | yes (worst instance 0.864) |
+| E=4 r=75 R=2 sab=162 | 1.00 | 0.895 | 1154 | 518 | no (mean p(GS) < 0.9, worst instance 0.730) |
+| E=4 r=100 R=1 sab=162 | 1.00 | 0.930 | 1053 | 504 | yes (worst instance 0.854) |
+| E=4 r=100 R=1 sab=64 | 1.00 | 0.930 | 1053 | 397 | yes (worst instance 0.854), cheapest |
 
-E=3 fails the mean p(GS) bar, so explore stays at E=4. Cutting refine steps to r=100 passes (1.00 / 0.941 at
-1254 evals, 200 fewer than r=150), so it is the new cheapest passing n=18 setting. Next probe: E=4 r=75 R=2 sab=162
-(started 14:12 CST), then R=1 and sab=64 if those still pass, then a 50-trial confirm at the cheapest passing setting.
+E=3 fails the mean p(GS) bar, so explore stays at E=4. r=100 passes and r=75 does not, so refine stays at
+r=100. One relabel round (R=1) passes at 1053 evals, and cutting the SA budget from 162 to 64 lookups gives the
+same quality (same trial outcomes) with 397 lookups instead of 504. Cheapest n=18 setting: E=4 r=100 R=1 sab=64,
+1.00 / 0.930 at 1053 evals and 397 lookups (10-trial screen). Its 50-trial confirm started 15:06 CST
+(queue `logs/3cav/q_3cav_resume_n18n16n20.sh`, which then runs the n=16 descent and n=20).
 n=20 follows after n=18.
 
-Scaling fit on the cheapest 0.9+ evals so far (n=8..14 2-cavity 403, 403, 503, 907; n=16 3-cavity 1454 (50-trial
-confirm); n=18 3-cavity 1254 (10-trial screen, confirm pending)): about 1.16 per added variable over n=8 to 18
-(1.18 over n=8 to 16).
+## n=14 on 3 cavities (4,4,3; Fock 32,32,24), min-resource descent
 
+Same recipe, sab start 98, 10-trial screens, then a 50-trial confirm (5 per instance) of the cheapest pass.
+
+| setting | trials | success | mean p(GS) | evals | lookups | worst instance | pass? |
+|---|---|---|---|---|---|---|---|
+| E=4 r=100 R=2 sab=98 | 10 | 1.00 | 0.951 | 1254 | 368 | 0.924 | yes |
+| E=3 r=100 R=2 sab=98 | 10 | 1.00 | 0.936 | 1041 | 327 | 0.907 | yes |
+| E=2 r=100 R=2 sab=98 | 10 | 1.00 | 0.936 | 828 | 289 | 0.893 | yes |
+| E=2 r=75 R=2 sab=98 | 10 | 1.00 | 0.836 | 728 | 288 | 0.525 | no |
+| E=2 r=100 R=1 sab=98 | 10 | 1.00 | 0.891 | 627 | 274 | 0.711 | no |
+| E=2 r=100 R=2 sab=64 | 10 | 1.00 | 0.936 | 828 | 254 | 0.893 | yes, cheapest |
+| E=2 r=100 R=2 sab=64 (confirm) | 50 | 1.00 | 0.932 | 828 | 257 | 0.915 | yes |
+
+n=14 on 3 cavities needs 828 evals, fewer than the 2-cavity best (907), so the table now uses 3 cavities at n=14.
+
+Scaling fit on the cheapest 0.9+ evals so far (n=8 403, n=10 443, n=12 503 on 2 cavities; n=14 828, n=16 1454
+(descent pending), n=18 1053 (screen, confirm running) on 3 cavities): about 1.14 per added variable over n=8 to 18
+(1.17 over n=8 to 16).
