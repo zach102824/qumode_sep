@@ -70,10 +70,14 @@ Goal: cheapest setting with success and mean p(GS) both at least 0.9. Start from
 |---|---|---|---|---|---|
 | E=4 r=150 R=2 sab=162 (screen above) | 1.00 | 0.978 | 1454 | 521 | yes |
 | E=3 r=150 R=2 sab=162 | 0.90 | 0.878 | 1241 | 476 | no (mean p(GS) < 0.9) |
+| E=4 r=100 R=2 sab=162 | 1.00 | 0.941 | 1254 | 519 | yes (worst instance 0.864) |
 
-E=3 fails the mean p(GS) bar, so explore stays at E=4. Next probe: E=4 r=100 R=2 sab=162 (running), then r=75,
-R=1, sab=64 if those still pass, then a 50-trial confirm at the cheapest passing setting. n=20 follows after n=18.
+E=3 fails the mean p(GS) bar, so explore stays at E=4. Cutting refine steps to r=100 passes (1.00 / 0.941 at
+1254 evals, 200 fewer than r=150), so it is the new cheapest passing n=18 setting. Next probe: E=4 r=75 R=2 sab=162
+(started 14:12 CST), then R=1 and sab=64 if those still pass, then a 50-trial confirm at the cheapest passing setting.
+n=20 follows after n=18.
 
-Scaling fit on the cheapest 0.9+ evals so far (n=8..14 2-cavity 403, 403, 503, 907; n=16 and n=18 3-cavity 1454, 1454):
-about 1.17 per added variable over n=8 to 18 (1.18 over n=8 to 16).
+Scaling fit on the cheapest 0.9+ evals so far (n=8..14 2-cavity 403, 403, 503, 907; n=16 3-cavity 1454 (50-trial
+confirm); n=18 3-cavity 1254 (10-trial screen, confirm pending)): about 1.16 per added variable over n=8 to 18
+(1.18 over n=8 to 16).
 
