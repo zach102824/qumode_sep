@@ -140,3 +140,12 @@ K12/polt1 50-trial: 0.96 / 0.858 (median p 0.924; 2 misses, one with GS at reado
 | n18_confirm_sab162_k48_p1 | 162 | 64 | 48 | 1 | 50 | 0.98 | 0.897 | 1053 | 415.5 | 162.0 | fail |
 | n18_sab162_pr32_k12_p1_sep | 162 | 32 | 12 | 1 | 10 | 0.80 | 0.748 | 1053 | 251.3 | 162.0 | fail |
 | n18_sab162_pr16_k12_p1_sep | 162 | 16 | 12 | 1 | 10 | 1.00 | 0.930 | 1053 | 241.5 | 162.0 | PASS |
+
+## Cutnext3: n=16 confirm + SA probes, n=18 E=6 fallback (auto, started 2026-10-13 03:48 CST)
+
+| run | sab | SA probes | rawk K | polt | trials | success | mean p(GS) | evals | total lookups | SA lookups | result |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| n16_confirm_sab64_k6_p1 | 64 | 64 | 6 | 1 | 50 | 0.98 | 0.890 | 1053 | 116.7 | 64.0 | fail |
+| n16_sab32_pr32_k10_p1 | 32 | 32 | 10 | 1 | 10 | 0.90 | 0.843 | 1053 | 94.2 | 32.0 | fail |
+| n16_sab16_pr16_k10_p1 | 16 | 16 | 10 | 1 | 10 | 0.90 | 0.819 | 1053 | 83.4 | 16.0 | fail |
+| n18_confirm_E6_sab162_k12_p1 | 162 | 64 | 12 | 1 | 50 | 0.98 | 0.895 | 1479 | 271.8 | 162.0 | fail |
