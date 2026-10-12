@@ -1,4 +1,4 @@
-# 3-cavity / 3-transmon device at n=16 (n=16 complete; n=18/20 running)
+# 3-cavity / 3-transmon device at n=16 (n=16 complete; n=18 min-resource running)
 
 Device: cavities A, B, C, each with its own transmon d, e, f (1 data bit per transmon). Split: 3 transmon bits +
 Gray-code cavity bits 5, 4, 4 (code levels 32, 16, 16; Fock truncation 48, 32, 32; state 393,216). Layer: rotation
@@ -46,17 +46,34 @@ Find rate = fraction of explore runs whose top-48 states come within Hamming 1 o
 ## n=18 (5,5,5; Fock 48,48,48) and n=20 (6,6,5; Fock 80,80,48)
 
 Eval time (1 core): n=18 0.18 s (L=3), 0.23 s (L=4); n=20 0.68 s / 0.91 s. sab 162 / 200. Screen E=4,6,8
-(10 trials), then 50 trials at the cheapest E clearing 0.9 on both. Queue `logs/3cav/q_3cav_n18n20.sh` (running).
+(10 trials), then a min-resource descent (lower E, then lower r/R/sab) and 50-trial confirm of the cheapest
+setting with success and mean p(GS) both at least 0.9. Old screen queue `logs/3cav/q_3cav_n18n20.sh` was stopped;
+min-resource queue `logs/3cav/q_3cav_min.sh` is running.
 
 ### n=18 screen (5,5,5), 10 trials, 1 per instance, R2, sab 162
 
 | E | success | mean p(GS) | evals | lookups | leakage max | per-run find rate |
 |---|---|---|---|---|---|---|
 | 4 | 1.00 | 0.978 | 1454 | 521 | 6e-31 | 0.45 (18 of 40 explore runs) |
+| 6 | 0.90 | 0.879 | 1880 | 614 | 0.099 | 0.42 (25 of 60 explore runs) |
+| 8 | 0.86 (7/10, killed) | 0.832 | 2306 | 706 | 0.189 | 0.41 (partial) |
 
-Worst instance mean p(GS) 0.947. Evals are the same 1454 as at n=16 (E=4 explore runs plus R=2 relabel rounds of
-r=150); only lookups grew (435 to 521). E=6 and E=8 screens, then the 50-trial confirm at E=4, are still running.
+Worst instance mean p(GS) at E=4: 0.947. Evals at E=4 match n=16 (1454); only lookups grew (435 to 521).
+E=6 clears success 0.9 but mean p(GS) 0.879 falls short of 0.9, so the cheapest passing screen stays E=4.
+E=8 was stopped mid-run when the min-resource queue took over (7 of 10 trials done).
 
-Scaling fit on the cheapest 0.9+ evals (n=8..14 2-cavity 403, 403, 503, 907; n=16 and n=18 3-cavity 1454, 1454):
+### n=18 min-resource descent (10-trial screens)
+
+Goal: cheapest setting with success and mean p(GS) both at least 0.9. Start from E=4 r=150 R=2 sab=162.
+
+| setting | success | mean p(GS) | evals | lookups | pass? |
+|---|---|---|---|---|---|
+| E=4 r=150 R=2 sab=162 (screen above) | 1.00 | 0.978 | 1454 | 521 | yes |
+| E=3 r=150 R=2 sab=162 | 0.90 | 0.878 | 1241 | 476 | no (mean p(GS) < 0.9) |
+
+E=3 fails the mean p(GS) bar, so explore stays at E=4. Next probe: E=4 r=100 R=2 sab=162 (running), then r=75,
+R=1, sab=64 if those still pass, then a 50-trial confirm at the cheapest passing setting. n=20 follows after n=18.
+
+Scaling fit on the cheapest 0.9+ evals so far (n=8..14 2-cavity 403, 403, 503, 907; n=16 and n=18 3-cavity 1454, 1454):
 about 1.17 per added variable over n=8 to 18 (1.18 over n=8 to 16).
 
