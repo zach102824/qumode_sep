@@ -140,4 +140,13 @@ about 1.14 over n=8 to 18. n=20 (6,6,5) baseline finished 16:38 CST (failed); la
 
 Baseline fails both bars (need success and mean p(GS) at least 0.9). Two of ten trials miss completely (instances 5 and 7, p(GS) about 0.0001 to 0.0003); the eight hits sit near 0.96 to 0.99, so mean p(GS) given success is 0.979. Round-0 polished/raw hit both 0. The queue stopped the descent and skipped the 50-trial confirm. n=20 needs more resources (higher E, or a larger cavity/Fock budget, or another algorithmic change) before it can join the scaling table.
 
-Still running: n=20 larger-resource escalation (`q_3cav_n20big.sh`), then one-relabel-round 50-trial confirms for n=14/16/18 (`q_3cav_r1confirm.sh`), then lookup-cutting screens (`q_3cav_minlookup.sh`).
+### n=20 larger-resource step 1 (6,6,5), 10-trial screen, E=6 r=150 R=2 sab=200 xs=35 (finished 20:28 CST)
+
+| setting | trials | success | mean p(GS) | evals | lookups | SA lookups | worst instance | pass? |
+|---|---|---|---|---|---|---|---|---|
+| E=6 r=150 R=2 sab=200 xs=35, after relabel round 1 | 10 | 0.90 | 0.874 | 1579 | n/a | 200 | 0.0000 | no |
+| E=6 r=150 R=2 sab=200 xs=35, after relabel round 2 | 10 | 0.90 | 0.880 | 1880 | 686 | 200 | 0.0003 | no |
+
+Success reaches 0.90 but mean p(GS) stays under 0.9, so this step fails. Instance 5 (missed in the baseline) is now found; instance 7 still misses: all six explore runs proposed wrong guesses (best guess energy 2, not the ground state), so relabel refines a wrong string. The nine hits sit at 0.97 to 0.99 (mean p(GS) given success 0.978). Wall time about 39 min per trial on 8 cores (2 h for the screen).
+
+Next n=20 steps (sab=400 at E=6, then E=8, xs=50, r=200) are queued in `q_3cav_n20cont.sh`, gated behind the lookup-cutting screens (`q_3cav_minlookup.sh`, running since 20:28 CST) and the one-relabel-round 50-trial confirms for n=14/16/18 (`q_3cav_r1confirm.sh`).
