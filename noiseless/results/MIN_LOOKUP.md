@@ -68,3 +68,25 @@
 | n8_sab32_k12_p1 | 32 | 12 | 1 | 10 | 1.00 | 0.990 | 403 | 76.8 | 56.7 | PASS |
 
 **n=8 cheapest passing: sab 32, rawk 12, polt 1**
+
+## Scaling fit of the minimum lookups (written 2026-10-12 23:50 CST)
+
+Cheapest passing 10-trial screen per n (brute-force descent above). n=14 has no passing row: its R1 base (3-cav 4,4,3, E=2) already fails on mean p(GS) (0.891), so the miss is the quantum stage, not a lookup cut, and n=14 is left out of the fit.
+
+| n | setting (sab, rawk, polt) | evals | success | mean p(GS) | total lookups | SA lookups | share of 2^n |
+|---|---|---|---|---|---|---|---|
+| 8 | 32, 12, 1 | 403 | 1.00 | 0.990 | 76.8 | 56.7 | 30.0% |
+| 10 | 50, 48, 1 | 443 | 1.00 | 0.991 | 145.4 | 62.6 | 14.2% |
+| 12 | 64, 24, 1 | 503 | 1.00 | 0.986 | 114.9 | 64.0 | 2.81% |
+| 14 | none passes (base 64, 48, 3) | 627 | 1.00 | 0.891 | 239.3 | 64.0 | 1.46% |
+| 16 | 64, 12, 1 | 1053 | 1.00 | 0.914 | 145.1 | 64.0 | 0.22% |
+| 18 | 162, 12, 1 | 1053 | 1.00 | 0.930 | 247.9 | 162.0 | 0.095% |
+
+Fits over n = 8, 10, 12, 16, 18 (R2 on log lookups):
+- a*2^n: a = 1.0e-3, R2 = -93. Ruled out; lookups are nowhere near exponential.
+- a*n^2: a = 0.75 (48, 75, 108, 191, 242), R2 = -0.03. Right at n = 16-18, too low at n = 8-10.
+- power law: 8.9 * n^1.09, R2 = 0.72.
+- exponential: 44 * 1.091^n, R2 = 0.73.
+- linear: 12.9 n - 18.8.
+
+Reading: over n = 8-18 the minimum lookup count grows roughly linearly (n^1.1), with jumps where E changes (1 run at n <= 12, 4 at n = 16-18) and where SA must stay at 162 (n=18; 81 fails, and the rule run with 64 probes, K 20 also fails at 0.854). The share of 2^n falls from 30% at n=8 to 0.095% at n=18. All rows are 10-trial screens and need 50-trial confirms. The rule validation (MIN_LOOKUP_RULE.md) found n=16 at 64, 10, 1 passing 1.00 / 0.914 at 135.9 lookups (10 trials), slightly below the 145.1 here; its 50-trial confirm is running.
