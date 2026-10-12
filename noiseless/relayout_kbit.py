@@ -423,6 +423,7 @@ def explore_exploit_trial_kbit(
     run_raws: list[list[int]] = []
     run_genergy: list[float] = []
     run_guess_ground: list[bool] = []
+    run_gs_diag: list[dict] = []  # diagnostic only (MIN_LOOKUP_RULE): GS ranks in readout / energy order
     agree_stop = False
     n_expl_run = 0
     for rnd in range(n_total):
@@ -590,6 +591,20 @@ def explore_exploit_trial_kbit(
         if exploring and int(raw_k) > 0 and int(xconsec) <= 0:
             # diagnostic only (no effect on the algorithm): did this run's raw top-k come within Hamming 1 of the GS?
             run_guess_ground.append(any(bin(int(v) ^ gl).count("1") <= 1 for v in raw))
+            try:
+                _o = np.argsort(-pl, kind="stable")[:4096]
+                _lg = [int(j) ^ mask for j in _o]
+                if Pm is not None:
+                    _lg = [int(Pm[v]) for v in _lg]
+                _h = [bin(v ^ gl).count("1") for v in _lg]
+                _r0 = next((i for i, h in enumerate(_h) if h == 0), -1)
+                _r1 = next((i for i, h in enumerate(_h) if h <= 1), -1)
+                _pe = sorted(raw_pool, key=lambda v: (E[v], v))
+                _e1 = next((i for i, v in enumerate(_pe) if bin(v ^ gl).count("1") <= 1), -1)
+                run_gs_diag.append({"rank_gs": _r0, "rank_h1": _r1, "pool_erank_h1": _e1,
+                                    "p_gs_run": float(pl[_o[_r0]]) if _r0 >= 0 else 0.0})
+            except Exception:
+                run_gs_diag.append({})
         if exploring and int(raw_k) > 0 and int(xconsec) > 0:
             _low = sorted(set(raw), key=lambda v: (E[v], v))[: max(1, int(polish_t))]
             _pg = []
@@ -641,7 +656,7 @@ def explore_exploit_trial_kbit(
         "most_likely_bitstring": best.most_likely_bitstring, "ground_bitstring": ground_bitstring,
         "selected_round": int(sel), "nfev": int(total_nfev), "n_lookups": int(n_lookups),
         "n_lookups_distinct": int(len(seen)), "n_lookups_sa": int(n_sa), "n_explore_stopped": int(n_stopped), "n_explore_run": int(n_expl_run),
-        "run_guess_ground": run_guess_ground,
+        "run_guess_ground": run_guess_ground, "run_gs_diag": run_gs_diag,
         "sa_best_is_ground": bool(sa_centers is not None and int(sa_centers[0]) == gl),
         "leakage": float(rounds[sel]["leakage"]),
         "x": np.asarray(best.x, dtype=float).tolist(),

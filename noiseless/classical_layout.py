@@ -22,8 +22,10 @@ def sa_sample(E: np.ndarray, n: int, budget: int, rng: np.random.Generator, swee
             seen[v] = float(E[v])
         return seen[v]
 
-    scale = float(np.std(E[rng.integers(0, len(E), 64)]))  # 64 random probes, counted
-    for v in rng.integers(0, len(E), 64):
+    import os
+    npr = int(os.environ.get("QM_SA_PROBES", "64"))  # MIN_LOOKUP_RULE: probe count (default 64 = unchanged)
+    scale = float(np.std(E[rng.integers(0, len(E), npr)]))  # npr random probes, counted
+    for v in rng.integers(0, len(E), npr):
         look(int(v))
     scale = max(scale, 1e-9)
     T0, T1 = sweeps_T
