@@ -285,3 +285,4 @@ Formulas: lookups per trial = 10n + (E+1)*2n + (E+1)*n = 10n + 3n(E+1), identica
 | n | chip | E | xL | xs | r | success | mean p(GS) | evals | formula check | SA / readout / fix-up lookups | total lookups per trial | share of 2^n |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 8 | 2cav 2+3/3 | 2 | 2 | 25 | 150 | 1.00 | 0.987 | 505 | 2*2*51+301=505 ok | 80 / 48 / 24 | 152 | 59.4% |
+| 10 | 2cav 2+4/4 | 2 | 2 | 35 | 150 | 1.00 | 0.986 | 585 | 2*2*71+301=585 ok | 100 / 60 / 30 | 190 | 18.6% |
