@@ -150,3 +150,74 @@ Baseline fails both bars (need success and mean p(GS) at least 0.9). Two of ten 
 Success reaches 0.90 but mean p(GS) stays under 0.9, so this step fails. Instance 5 (missed in the baseline) is now found; instance 7 still misses: all six explore runs proposed wrong guesses (best guess energy 2, not the ground state), so relabel refines a wrong string. The nine hits sit at 0.97 to 0.99 (mean p(GS) given success 0.978). Wall time about 39 min per trial on 8 cores (2 h for the screen).
 
 Next n=20 steps (sab=400 at E=6, then E=8, xs=50, r=200) are queued in `q_3cav_n20cont.sh`, gated behind the lookup-cutting screens (`q_3cav_minlookup.sh`, running since 20:28 CST) and the one-relabel-round 50-trial confirms for n=14/16/18 (`q_3cav_r1confirm.sh`).
+
+## n=20 explore-only layout-noise test, instance 5 (2026-10-13 14:52-15:16 CST)
+
+Strict n=20 recipe (E=8, xL3 xs35, K=40, polt1, SA 200 raw, ks 6,6,5), relabel round skipped (QM_EXPLORE_ONLY=1), instance 5 only (QM_INSTS=5), same seed as kbit_fixed. Each job: 1704 explore evals, 680 lookups. next_guess and fix-up hit are cumulative (best of the pool so far), so once GS is found later rows stay at GS. Queue logs/3cav/q_n20_noise_explore.sh, outdir relayout_runs/n20_noise_explore.
+
+Summary: 0.15 -> E=1 (HD 4), miss; 0.3 -> GS found at run 2; 0.5 -> E=1 (HD 2), miss; 1.0 -> GS at run 5; 2.0 -> GS at run 6.
+
+### inst 5 sanoise 0.15  GS 10111111100011010101  SA best is GS: False  evals 1704  lookups 680
+| run | perm differs from run 1 | center differs | next_guess | E | HD to GS | p_gs | fix-up hit GS |
+|---|---|---|---|---|---|---|---|
+| 1 | no | no | 00111111110001110101 | 3 | 4 | 0.0000 | no |
+| 2 | yes | yes | 00111111110001110101 | 3 | 4 | 0.0008 | no |
+| 3 | yes | yes | 00111111110001110101 | 3 | 4 | 0.0000 | no |
+| 4 | yes | yes | 00111111110001110101 | 3 | 4 | 0.0002 | no |
+| 5 | yes | yes | 00111111110001110101 | 3 | 4 | 0.0002 | no |
+| 6 | yes | yes | 00111111110001110101 | 3 | 4 | 0.0000 | no |
+| 7 | yes | yes | 00111111110001110101 | 3 | 4 | 0.0000 | no |
+| 8 | yes | yes | 10001001100011010101 | 1 | 4 | 0.0000 | no |
+any run hit GS: False; final guess E 1, HD 4
+
+### inst 5 sanoise 0.3  GS 10111111100011010101  SA best is GS: False  evals 1704  lookups 680
+| run | perm differs from run 1 | center differs | next_guess | E | HD to GS | p_gs | fix-up hit GS |
+|---|---|---|---|---|---|---|---|
+| 1 | no | no | 00111111110001110101 | 3 | 4 | 0.0000 | no |
+| 2 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0001 | yes |
+| 3 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0000 | yes |
+| 4 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0000 | yes |
+| 5 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0000 | yes |
+| 6 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0004 | yes |
+| 7 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0000 | yes |
+| 8 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0000 | yes |
+any run hit GS: True; final guess E 0, HD 0
+
+### inst 5 sanoise 0.5  GS 10111111100011010101  SA best is GS: False  evals 1704  lookups 680
+| run | perm differs from run 1 | center differs | next_guess | E | HD to GS | p_gs | fix-up hit GS |
+|---|---|---|---|---|---|---|---|
+| 1 | no | no | 00111111110001110101 | 3 | 4 | 0.0000 | no |
+| 2 | yes | yes | 10111001100011010101 | 1 | 2 | 0.0006 | no |
+| 3 | yes | yes | 10111001100011010101 | 1 | 2 | 0.0000 | no |
+| 4 | yes | yes | 10111001100011010101 | 1 | 2 | 0.0000 | no |
+| 5 | yes | yes | 10111001100011010101 | 1 | 2 | 0.0001 | no |
+| 6 | yes | yes | 10111001100011010101 | 1 | 2 | 0.0004 | no |
+| 7 | yes | yes | 10111001100011010101 | 1 | 2 | 0.0000 | no |
+| 8 | yes | yes | 10111001100011010101 | 1 | 2 | 0.0000 | no |
+any run hit GS: False; final guess E 1, HD 2
+
+### inst 5 sanoise 1  GS 10111111100011010101  SA best is GS: False  evals 1704  lookups 680
+| run | perm differs from run 1 | center differs | next_guess | E | HD to GS | p_gs | fix-up hit GS |
+|---|---|---|---|---|---|---|---|
+| 1 | no | no | 00111111110001110101 | 3 | 4 | 0.0000 | no |
+| 2 | yes | yes | 00111111110001110101 | 3 | 4 | 0.0000 | no |
+| 3 | yes | yes | 00111111110001110101 | 3 | 4 | 0.0000 | no |
+| 4 | yes | yes | 00111111110001110101 | 3 | 4 | 0.0000 | no |
+| 5 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0004 | yes |
+| 6 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0014 | yes |
+| 7 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0000 | yes |
+| 8 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0003 | yes |
+any run hit GS: True; final guess E 0, HD 0
+
+### inst 5 sanoise 2  GS 10111111100011010101  SA best is GS: False  evals 1704  lookups 680
+| run | perm differs from run 1 | center differs | next_guess | E | HD to GS | p_gs | fix-up hit GS |
+|---|---|---|---|---|---|---|---|
+| 1 | no | no | 00111111110001110101 | 3 | 4 | 0.0000 | no |
+| 2 | yes | yes | 10101111100011010101 | 1 | 1 | 0.0002 | no |
+| 3 | yes | yes | 10001001100011010101 | 1 | 4 | 0.0000 | no |
+| 4 | yes | yes | 01101101010000010001 | 1 | 9 | 0.0000 | no |
+| 5 | yes | yes | 01101101010000010001 | 1 | 9 | 0.0000 | no |
+| 6 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0012 | yes |
+| 7 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0000 | yes |
+| 8 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0000 | yes |
+any run hit GS: True; final guess E 0, HD 0

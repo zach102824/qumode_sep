@@ -278,6 +278,8 @@ def run_config(*, n, L, s, r, R, lr=0.1, nf=None, trials=5, trial_offset=0, ham_
     jobs = []
     for i, p in enumerate(paths):
         for t in range(trial_offset, trial_offset + trials):
+            if _os.environ.get("QM_INSTS") and i not in {int(v) for v in _os.environ["QM_INSTS"].split(",")}:
+                continue  # opt-in instance filter (default: all)
             if (i, t) in done:
                 continue
             jobs.append(dict(n=n, L=L, s=s, r=r, R=R, lr=lr, nf=nf, inst=i, trial=t, seed=trial_seed(seed0, i, t),

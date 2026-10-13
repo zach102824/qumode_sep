@@ -435,6 +435,8 @@ def explore_exploit_trial_kbit(
     n_expl_run = 0
     for rnd in range(n_total):
         exploring = rnd < int(explore_rounds)
+        if not exploring and _os_fc.environ.get("QM_EXPLORE_ONLY", "") == "1":
+            break  # opt-in diagnostic: explore rounds only, skip relabel/exploit (default unchanged)
         if exploring and agree_stop:
             continue
         n_expl_run += int(exploring)
@@ -655,6 +657,8 @@ def explore_exploit_trial_kbit(
             "nfev": int(res.nfev), "cum_nfev": int(total_nfev),
             "next_guess": bitstring_from_logical(guess, n), "next_guess_is_ground": guess == gl,
             "next_guess_energy": float(E[guess]),
+            **({"layout_perm": (None if perm is None else [int(v) for v in perm]), "layout_cen": (None if cen is None else int(cen)),
+                "next_guess_hd": int(bin(int(guess) ^ int(gl)).count("1"))} if _os_fc.environ.get("QM_EXPLORE_ONLY", "") == "1" else {}),
             "bsf_round": int(bsf), "bsf_success": bool(res_list[bsf].success), "bsf_p_gs": float(res_list[bsf].p_gs),
         })
     eta_ref = max(float(r.eta) for r in res_list)
