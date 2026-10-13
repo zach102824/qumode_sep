@@ -28,3 +28,4 @@ Variants
 | tunedsa10 | 8 | QM_CLS_ALGO=tunedsa | 10 | 1.00 | 0.987 | 505 | 80 / 48 / 24 | 152 | 19:10 |
 | tunedsa10 | 10 | QM_CLS_ALGO=tunedsa | 10 | 1.00 | 0.986 | 585 | 100 / 60 / 30 | 190 | 19:11 |
 | tunedsa10 | 12 | QM_CLS_ALGO=tunedsa | 10 | 1.00 | 0.991 | 705 | 120 / 72 / 36 | 228 | 19:11 |
+| tunedsa10 | 14 | QM_CLS_ALGO=tunedsa | 10 | 1.00 | 0.961 | 727 | 140 / 84 / 42 | 266 | 19:12 |
