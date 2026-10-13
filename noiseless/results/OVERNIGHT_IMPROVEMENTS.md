@@ -33,3 +33,9 @@ Variants
 | tunedsa10 | 18 | QM_CLS_ALGO=tunedsa | 10 | 1.00 | 0.963 | 1579 | 180 / 252 / 126 | 558 | 19:37 |
 | satlike5 | 20 | QM_CLS_ALGO=satlike  r=150  | 10 | 0.90 | 0.861 | 2005 | 100 / 360 / 180 | 640 | 21:04 |
 | sl5_Elow | 16 | QM_CLS_ALGO=satlike EMAP=16:2,18:3,20:4 r=150     | 10 | 0.90 | 0.876 | 727 | 80 / 96 / 48 | 224 | 21:06 |
+
+## Status notes (auto)
+- satlike5 (budget 5n, same quantum recipe): **passes n=8..18** with fewer lookups (112..468 vs 152..558), same evals; **fails n=20** (success 0.90, mean p(GS) 0.861; instance 9 collapsed, p=0.0007; lookups 640 vs 740).
+- satlike10: fails n=18 (0.90 / 0.869).
+- tunedsa10: passes n=8..18 at **same** lookups as final (not a cost win); n=20 not run.
+- Next: sl5_Elow (fewer explore rounds), sl3, sl5_r100 (queue2); K=n / CW / r75 (queue3); sl5div + sl10rs (queue4 after q2+q3).
