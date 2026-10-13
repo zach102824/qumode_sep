@@ -221,3 +221,44 @@ any run hit GS: True; final guess E 0, HD 0
 | 7 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0000 | yes |
 | 8 | yes | yes | 10111111100011010101 | 0 | 0 | 0.0000 | yes |
 any run hit GS: True; final guess E 0, HD 0
+
+## n=20 full screens, r150 + layout noise (2026-10-13 15:21–16:45 CST)
+
+Strict recipe: E=8, xL3 xs35, K=40, polt1, SA 200 raw (`QM_SA_COUNT=raw`), R=1, r=150, ks 6,6,5.
+Every trial: **2005 evals**, **740 lookups** (`n_lookups_fixed`; distinct strings vary ~554–611).
+Queue `logs/3cav/q_n20_noise_r150.sh` → `relayout_runs/n20_noise_r150/`; instances 8–9 for sanoise 0.3 finished in `q_n20_r150_nz03_extra.sh` → `n20_noise_r150_extra/` (main nz0.3 killed after 8 lines to avoid duplicating 8–9). Noise 1.0 screen killed after 4 trials (partial).
+
+| sanoise | trials | success | mean p(GS) | evals | lookups | pass? | notes |
+|---|---|---|---|---|---|---|---|
+| 0.3 | 10 (inst 0–9) | **1.00** | **0.957** | 2005 | 740 | **yes** | worst inst 4 at 0.926; inst 5 (prior miss) 0.963 |
+| 1.0 | 4 (inst 0–3, killed) | 0.75 | 0.720 | 2005 | 740 | partial | miss inst 3; hits match nz0.3 p(GS) |
+
+### sanoise 0.3 per instance (combined main + extra)
+
+| inst | success | p(GS) | explore runs with next_guess / polished = GS |
+|---|---|---|---|
+| 0 | yes | 0.955 | 6, 7 |
+| 1 | yes | 0.968 | 5, 6, 7 |
+| 2 | yes | 0.957 | 0–7 (all) |
+| 3 | yes | 0.967 | 7 |
+| 4 | yes | 0.926 | 1–7 |
+| 5 | yes | 0.963 | 1–7 |
+| 6 | yes | 0.966 | 0–7 (all) |
+| 7 | yes | 0.960 | 6, 7 |
+| 8 | yes | 0.945 | 1–7 |
+| 9 | yes | 0.963 | 1–7 |
+
+No misses. SA best was never the ground state; the ground string entered via explore fix-up, then the r150 relabel round raised p(GS) to 0.93–0.97.
+
+### sanoise 1.0 partial (inst 0–3 only)
+
+| inst | success | p(GS) |
+|---|---|---|
+| 0 | yes | 0.955 |
+| 1 | yes | 0.968 |
+| 2 | yes | 0.957 |
+| 3 | **no** | 0.0004 |
+
+**Miss inst 3:** ground `00001011001000111101`. Final most_likely `10001110000111010010` (HD 12). Final / BSF next_guess `11100000101010001000` at energy 1, HD 12. Selected round 3 (explore). No explore run had `polished_is_ground` or `next_guess_is_ground` (all eight `run_guess_ground` false); runs 1–7 stuck on the same energy-1 guess.
+
+**Takeaway:** sanoise 0.3 + r150 clears both bars at n=20 (1.00 / 0.957). Prefer 0.3 over 1.0 for the recipe; 1.0 still collapses on some instances.
