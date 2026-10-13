@@ -578,10 +578,30 @@ def explore_exploit_trial_kbit(
             raw = [int(j) ^ mask for j in top]
             if Pm is not None:
                 raw = [int(Pm[v]) for v in raw]
+            # OVERNIGHT idea (3): adaptive K — if QM_ADAPT_K=Q>0, keep only strings until the round's top-1
+            # has appeared as top-1 in Q previous rounds (shared rule). Lookups still count full raw_k (fixed cost).
+            _ak = int(_os_fc.environ.get("QM_ADAPT_K", "0") or 0)
+            if _ak > 0:
+                _tops = getattr(polish_logical, "_adapt_tops", [])
+                if len(_tops) >= _ak and all(t == raw[0] for t in _tops[-_ak:]):
+                    raw = raw[:1]  # already confident: only fix-up the repeated top (still counted K lookups below via n_read_raw)
+                polish_logical._adapt_tops = _tops + [raw[0]]
             raw_pool.update(raw)
             seen.update(raw)
-            n_read_raw += len(raw)
-            lowest = sorted(raw_pool, key=lambda v: (E[v], v))[: max(1, int(polish_t))]
+            # fixed cost: always charge full K (=raw_k) lookups even if adaptive K truncates the active list
+            n_read_raw += int(raw_k) if _os_fc.environ.get("QM_ADAPT_K", "") else len(raw)
+            if _os_fc.environ.get("QM_CW_FIX", "") == "1":
+                # OVERNIGHT idea (2): rank fix-up centers by unsat clause weight (then E, then id)
+                from noiseless.cls_search import _clauses_for as _cw_cl
+                _cw = getattr(polish_logical, "_cw", None)
+                if _cw is None or _cw[0] is not E:
+                    polish_logical._cw = (E, _cw_cl(E, n))
+                _cl = polish_logical._cw[1]
+                def _cw_cost(v, _cl=_cl):
+                    return sum(1 for vs, bs in _cl if all(((v >> j) & 1) == b for j, b in zip(vs, bs))), float(E[v]), v
+                lowest = sorted(raw_pool, key=_cw_cost)[: max(1, int(polish_t))]
+            else:
+                lowest = sorted(raw_pool, key=lambda v: (E[v], v))[: max(1, int(polish_t))]
             for v in lowest:
                 if _FIXED_COST:
                     n_fix_raw += n  # QM_FIXED_COST: fix-up always performed and counted, repeats included

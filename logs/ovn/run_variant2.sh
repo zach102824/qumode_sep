@@ -2,10 +2,14 @@
 # usage: run_variant.sh NAME SABMUL "NS" [ENV=VAL ...]   (one shared rule for all n; final recipe otherwise)
 cd /workspace/qumode_sep; source /workspace/venv-qumode/bin/activate
 NAME=$1; SM=$2; NSL=$3; shift 3
-export PYTHONPATH=. OMP_NUM_THREADS=1 QM_SA_COUNT=raw QM_FIXED_COST=1 "$@"
+export PYTHONPATH=. OMP_NUM_THREADS=1 QM_SA_COUNT=raw QM_FIXED_COST=1
+[ -n "$OVN_CW_FIX" ] && export QM_CW_FIX=1
+[ -n "$OVN_ADAPT_K" ] && export QM_ADAPT_K="$OVN_ADAPT_K"
+# remaining args are ENV=VAL for the python jobs
+for _a in "$@"; do case "$_a" in *=*) export "$_a";; esac; done
 OUT=noiseless/results/relayout_runs/ovn_$NAME; D=logs/ovn/$NAME; RES=noiseless/results/OVERNIGHT_IMPROVEMENTS.md
 mkdir -p "$OUT" "$D"
-CM="--L 4 --s 50 --lr 0.05 --xeta 128 --reta 2 --ham-set wmaxsat --code gray --workers 8 --explore-mask sa --samode ${OVN_SAMODE:-fixed_low} --polt 1 --R 1 --trials 1 --sanoise 0.3 --outdir $OUT"
+CM="--L 4 --s 50 --lr 0.05 --xeta 128 --reta 2 --ham-set wmaxsat --code gray --workers 8 --explore-mask sa --samode ${OVN_SAMODE:-fixed_low} --polt ${OVN_POLT:-1} --R 1 --trials 1 --sanoise 0.3 --outdir $OUT"
 RR=${OVN_R:-150}; C2="$CM --r $RR --xL 2"; C3="$CM --device 3cav --r $RR --xL 3 --xs 35"
 declare -A A EE XL XS
 A[8]="$C2 --n 8 --xs 25 --explore 2"; EE[8]=2; XL[8]=2; XS[8]=25
@@ -19,8 +23,8 @@ for kv in ${OVN_EMAP//,/ }; do k=${kv%%:*}; v=${kv##*:}; EE[$k]=$v; A[$k]="$(ech
 for n in $NSL; do
   [ -f logs/ovn/STOP ] && { echo STOP; exit 0; }
   f=$D/n$n.json; echo "[$(TZ=Asia/Shanghai date '+%F %T') CST] START $NAME n$n"
-  python noiseless/run_relayout_kbit.py ${A[$n]} --sab $((SM*n)) --rawk $((2*n)) > "$f" 2>&1
-  python - "$f" "$n" "${EE[$n]}" "${XL[$n]}" "${XS[$n]}" "$SM" "$RES" "$OUT" "$NAME" "$* ${OVN_EMAP:+EMAP=$OVN_EMAP} r=$RR ${OVN_SAMODE:+samode=$OVN_SAMODE}" "$RR" <<'PYX'
+  python noiseless/run_relayout_kbit.py ${A[$n]} --sab $((SM*n)) --rawk $(( ${OVN_RAWK_MUL:-2} * n )) > "$f" 2>&1
+  python - "$f" "$n" "${EE[$n]}" "${XL[$n]}" "${XS[$n]}" "$SM" "$RES" "$OUT" "$NAME" "$* ${OVN_EMAP:+EMAP=$OVN_EMAP} r=$RR ${OVN_SAMODE:+samode=$OVN_SAMODE} ${OVN_RAWK_MUL:+Kmul=$OVN_RAWK_MUL} ${OVN_CW_FIX:+cw=1} ${OVN_POLT:+polt=$OVN_POLT}" "$RR" <<'PYX'
 import json,sys
 f,n,E,S,s,sm,res,od,name,env,rr=sys.argv[1:]; rr=int(rr); n,E,S,s,sm=map(int,(n,E,S,s,sm))
 t=open(f).read(); now=__import__('subprocess').run("TZ=Asia/Shanghai date '+%H:%M'",shell=True,capture_output=True,text=True).stdout.strip()
@@ -29,7 +33,7 @@ try:
 except Exception as e:
     open(res,"a").write(f"| {name} | {n} | ERROR {type(e).__name__} |\n"); raise SystemExit
 key=lambda x:(x['n_lookups_sa_raw'],x['n_lookups_readout_raw'],x['n_lookups_fixup_raw'],x['n_lookups_fixed'])
-ks={key(x) for x in recs}; exp=sm*n+3*n*(E+1); ev=d['evals']; fe=E*S*(2*s+1)+2*rr+1
+ks={key(x) for x in recs}; mul=int(__import__("os").environ.get("OVN_RAWK_MUL","2")); polt=int(__import__("os").environ.get("OVN_POLT","1")); exp=sm*n+(E+1)*(mul+polt)*n; ev=d['evals']; fe=E*S*(2*s+1)+2*rr+1
 mins=min(r.get('p_gs',r.get('p_gs_final',1)) for r in recs) if recs and ('p_gs' in recs[0]) else None
 if len(ks)!=1: open(res,"a").write(f"| {name} | {n} | ERROR non-identical lookups {sorted(ks)} |\n"); raise SystemExit
 sa,rd,fx,tot=ks.pop()
