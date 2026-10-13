@@ -40,3 +40,4 @@ Variants
 - tunedsa10: passes n=8..18 at **same** lookups as final (not a cost win); n=20 not run.
 - Next: sl5_Elow (fewer explore rounds), sl3, sl5_r100 (queue2); K=n / CW / r75 (queue3); sl5div + sl10rs (queue4 after q2+q3).
 | sl5_Elow | 18 | killed after n16 failed (0.90) — variant rejected | | | | | | | 21:14 |
+| sl3 | 18 | QM_CLS_ALGO=satlike  r=150     | 10 | 1.00 | 0.963 | 1579 | 54 / 252 / 126 | 432 | 21:25 |
