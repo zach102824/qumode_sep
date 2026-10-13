@@ -1,0 +1,9 @@
+c6_fits.py:15: OptimizeWarning: Covariance of the parameters could not be estimated
+  f1=lambda t,A,T,B:A*np.exp(-t/T)+B; p1,_=curve_fit(f1,ts,t1,p0=[1,4e-5,0])
+c6_fits.py:16: OptimizeWarning: Covariance of the parameters could not be estimated
+  p2,_=curve_fit(f1,ts,ram,p0=[.5,3e-5,.5]); res[nm]=(p1[1],p2[1]); data[nm]=(t1,ram,p1,p2)
+d: idle fit T1=25.0000 us  T2(Ramsey)=15.0000 us
+e: idle fit T1=37.4133 us  T2(Ramsey)=30.0000 us
+cavity A ring-down (idle, alpha=2): kappa^-1=436.000 us, n0=4.0000
+through 120 full noisy layers (fast path): cavity kappa^-1=436.000 us, d T1=25.0000 us, e T2 (|rho_ge|)=64795541629.7672 us
+exit=0

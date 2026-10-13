@@ -1,0 +1,34 @@
+== 1. Kraus completeness  ||sum K^dag K - I||
+ cavity kt=0.001 jmax=None: 2.2e-16
+ cavity kt=0.001 jmax=2: 2.2e-16
+ cavity kt=0.1 jmax=None: 1.3e-15
+ cavity kt=0.1 jmax=2: 1.1e-16
+ cavity kt=1.0 jmax=None: 2.7e-15
+ cavity kt=1.0 jmax=2: 2.2e-16
+ qubit: 1.1e-16
+== 2. analytic: Fock |5>, coherent alpha=1.5 under loss, <n>/(n0 e^-kt)
+ kt=0.05 fock5: ratio=1.000000000000 purity=0.646811
+ kt=0.05 coh1.5: ratio=1.000000000000 purity=1.000000
+ kt=0.5 fock5: ratio=1.000000000000 purity=0.252553
+ kt=0.5 coh1.5: ratio=1.000000000000 purity=1.000000
+ kt=2.0 fock5: ratio=1.000000000000 purity=0.391036
+ kt=2.0 coh1.5: ratio=1.000000000000 purity=1.000000
+ qubit: start |+e>, gt=0.4, gpt=0.3
+  P_e=0.335160 expect 0.335160;  |rho_ge|=0.303265 expect 0.303265
+== 3. CPTP along the circuit (trace, min eig, hermiticity) per layer, nf=10, L=3
+ scale=1.0 fast: tr-1=-1.8e-13 mineig=-2.4e-16 herm=3e-17 | tr-1=-6.7e-13 mineig=-2.9e-26 herm=1e-16 | tr-1=-1.4e-12 mineig=+2.8e-23 herm=9e-17
+ scale=1.0 direct: tr-1=-6.7e-16 mineig=-2.2e-16 herm=8e-17 | tr-1=-3.7e-15 mineig=-7.3e-27 herm=1e-16 | tr-1=-5.2e-15 mineig=+2.9e-23 herm=2e-16
+ scale=30.0 fast: tr-1=-1.1e-07 mineig=-3.5e-17 herm=1e-17 | tr-1=-3.8e-07 mineig=-1.2e-23 herm=2e-17 | tr-1=-6.8e-07 mineig=+6.5e-22 herm=2e-17
+ scale=30.0 direct: tr-1=+1.8e-15 mineig=-2.2e-19 herm=1e-17 | tr-1=+3.8e-15 mineig=-6.4e-24 herm=2e-17 | tr-1=+4.9e-15 mineig=+6.6e-22 herm=4e-17
+== 4. zero noise == ideal, and fidelity vs noise_scale (monotone?)
+ ideal purity=1.000000000000
+ scale=     0: F_fast=1.00000000 F_direct=1.00000000
+ scale=  0.01: F_fast=0.99816940 F_direct=0.99816940
+ scale=   0.1: F_fast=0.98187168 F_direct=0.98187168
+ scale=   0.3: F_fast=0.94677229 F_direct=0.94677229
+ scale=     1: F_fast=0.83515529 F_direct=0.83515529
+ scale=     3: F_fast=0.59348434 F_direct=0.59348434
+ scale=    10: F_fast=0.21673910 F_direct=0.21673910
+ scale=    30: F_fast=0.03885705 F_direct=0.03885699
+ scale=   100: F_fast=0.00168043 F_direct=0.00168044
+exit=0

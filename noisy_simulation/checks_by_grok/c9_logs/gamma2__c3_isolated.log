@@ -1,0 +1,10 @@
+kappa only: kappa=2294 gamma=0 gphi=0
+  fast: TD(de) noisy-vs-ideal=5.88e-12, |de - analytic channel|max=1.1e-11; TD(AB)=4.47e-03, max|dFockpop(AB)|=1.1e-03; <nA> 0.6944->0.6917, <nB> 1.0959->1.0917, ratios 0.996223,0.996223 vs e^-kT=0.996223
+  direct: TD(de) noisy-vs-ideal=4.72e-16, |de - analytic channel|max=8.9e-16; TD(AB)=4.47e-03, max|dFockpop(AB)|=1.1e-03; <nA> 0.6944->0.6917, <nB> 1.0959->1.0917, ratios 0.996223,0.996223 vs e^-kT=0.996223
+gamma only: kappa=0 gamma=4e+04 gphi=0
+  fast: TD(de) noisy-vs-ideal=1.19e-01, |de - analytic channel|max=6.7e-16; TD(AB)=1.54e-02, max|dFockpop(AB)|=1.4e-16; <nA> 0.6944->0.6944, <nB> 1.0959->1.0959, ratios 1.000000,1.000000 vs e^-kT=1.000000
+  direct: TD(de) noisy-vs-ideal=1.19e-01, |de - analytic channel|max=3.8e-15; TD(AB)=1.54e-02, max|dFockpop(AB)|=7.5e-16; <nA> 0.6944->0.6944, <nB> 1.0959->1.0959, ratios 1.000000,1.000000 vs e^-kT=1.000000
+gphi only: kappa=0 gamma=0 gphi=3.333e+04
+  fast: TD(de) noisy-vs-ideal=2.41e-03, |de - analytic channel|max=1.7e-15; TD(AB)=8.13e-03, max|dFockpop(AB)|=3.3e-16; <nA> 0.6944->0.6944, <nB> 1.0959->1.0959, ratios 1.000000,1.000000 vs e^-kT=1.000000
+  direct: TD(de) noisy-vs-ideal=2.41e-03, |de - analytic channel|max=6.6e-15; TD(AB)=8.13e-03, max|dFockpop(AB)|=1.1e-15; <nA> 0.6944->0.6944, <nB> 1.0959->1.0959, ratios 1.000000,1.000000 vs e^-kT=1.000000
+exit=0
