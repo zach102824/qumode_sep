@@ -35,8 +35,12 @@ def satlike_sample(E, n, budget, rng, swt=20, sp=0.01, t=3):
             if nsat[c] == 0: s += dw[c]
             elif nsat[c] == 1 and b != vb: s -= dw[c]
         return s
+    rlen = int(float(os.environ.get("QM_SL_RESTART", "0")) * n); last = 0  # optional: fresh random start every rlen lookups
     while cnt[0] < budget:
         step += 1
+        if rlen > 0 and cnt[0] - last >= rlen:
+            last = cnt[0]; x = int(rng.integers(1 << n)); look(x); dw = [1] * m
+            nsat = [sum(((x >> j) & 1) != b for j, b in zip(*cl[c])) for c in range(m)]; continue
         sc = [score(j) for j in range(n)]; good = [j for j in range(n) if sc[j] > 0]
         if good:
             cand = good if len(good) <= t else [good[int(rng.integers(len(good)))] for _ in range(t)]

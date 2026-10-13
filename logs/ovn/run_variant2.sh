@@ -5,7 +5,7 @@ NAME=$1; SM=$2; NSL=$3; shift 3
 export PYTHONPATH=. OMP_NUM_THREADS=1 QM_SA_COUNT=raw QM_FIXED_COST=1 "$@"
 OUT=noiseless/results/relayout_runs/ovn_$NAME; D=logs/ovn/$NAME; RES=noiseless/results/OVERNIGHT_IMPROVEMENTS.md
 mkdir -p "$OUT" "$D"
-CM="--L 4 --s 50 --lr 0.05 --xeta 128 --reta 2 --ham-set wmaxsat --code gray --workers 8 --explore-mask sa --samode fixed_low --polt 1 --R 1 --trials 1 --sanoise 0.3 --outdir $OUT"
+CM="--L 4 --s 50 --lr 0.05 --xeta 128 --reta 2 --ham-set wmaxsat --code gray --workers 8 --explore-mask sa --samode ${OVN_SAMODE:-fixed_low} --polt 1 --R 1 --trials 1 --sanoise 0.3 --outdir $OUT"
 RR=${OVN_R:-150}; C2="$CM --r $RR --xL 2"; C3="$CM --device 3cav --r $RR --xL 3 --xs 35"
 declare -A A EE XL XS
 A[8]="$C2 --n 8 --xs 25 --explore 2"; EE[8]=2; XL[8]=2; XS[8]=25
@@ -20,7 +20,7 @@ for n in $NSL; do
   [ -f logs/ovn/STOP ] && { echo STOP; exit 0; }
   f=$D/n$n.json; echo "[$(TZ=Asia/Shanghai date '+%F %T') CST] START $NAME n$n"
   python noiseless/run_relayout_kbit.py ${A[$n]} --sab $((SM*n)) --rawk $((2*n)) > "$f" 2>&1
-  python - "$f" "$n" "${EE[$n]}" "${XL[$n]}" "${XS[$n]}" "$SM" "$RES" "$OUT" "$NAME" "$* ${OVN_EMAP:+EMAP=$OVN_EMAP} r=$RR" "$RR" <<'PYX'
+  python - "$f" "$n" "${EE[$n]}" "${XL[$n]}" "${XS[$n]}" "$SM" "$RES" "$OUT" "$NAME" "$* ${OVN_EMAP:+EMAP=$OVN_EMAP} r=$RR ${OVN_SAMODE:+samode=$OVN_SAMODE}" "$RR" <<'PYX'
 import json,sys
 f,n,E,S,s,sm,res,od,name,env,rr=sys.argv[1:]; rr=int(rr); n,E,S,s,sm=map(int,(n,E,S,s,sm))
 t=open(f).read(); now=__import__('subprocess').run("TZ=Asia/Shanghai date '+%H:%M'",shell=True,capture_output=True,text=True).stdout.strip()
