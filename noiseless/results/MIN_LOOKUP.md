@@ -113,7 +113,7 @@ Rule beats brute on n=8, 10, 12, 16 (confirmed). At n=18 the systematic K/probe 
 | 10 | sab50 K37 polt1 | 443 | 1.00 | 0.990 | 129.2 | 62.2 | 12.6% | rule 50-trial |
 | 12 | sab16 K23 polt1 (probes 16) | 503 | 0.92 | 0.909 | 67.2 | 16.0 | 1.64% | rule 50-trial |
 | 14 | — | 627 | 1.00 | 0.891 | 239.3 | 64.0 | 1.46% | R1 base fails bar |
-| 16 | sab64 K10 polt1 | 1053 | 1.00 | 0.909 | 129.4 | 64.0 | 0.197% | rule 50-trial |
+| 16 | sab64 K8 polt1 | 1053 | 1.00 | 0.909 | 124.3 | 64.0 | 0.190% | cutnext4 confirm (5×10) |
 | 18 | sab162 K12 polt1 | 1053 | 1.00 | 0.930 | 247.9 | 162.0 | 0.095% | 10-trial screen only |
 
 Refit over confirmed (or best available) n = 8, 10, 12, 16, 18 total lookups [73.5, 129.2, 67.2, 129.4, 247.9]: still roughly flat-to-linear, not exponential. n=12 with probes 16 is an outlier low; without it the rest track closer to ~8–14*n. Full detail: `MIN_LOOKUP_RULE.md`.
@@ -149,3 +149,15 @@ K12/polt1 50-trial: 0.96 / 0.858 (median p 0.924; 2 misses, one with GS at reado
 | n16_sab32_pr32_k10_p1 | 32 | 32 | 10 | 1 | 10 | 0.90 | 0.843 | 1053 | 94.2 | 32.0 | fail |
 | n16_sab16_pr16_k10_p1 | 16 | 16 | 10 | 1 | 10 | 0.90 | 0.819 | 1053 | 83.4 | 16.0 | fail |
 | n18_confirm_E6_sab162_k12_p1 | 162 | 64 | 12 | 1 | 50 | 0.98 | 0.895 | 1479 | 271.8 | 162.0 | fail |
+
+## Cutnext4: n16 K8/polt0 confirms, n18 E6 follow-up, n12 probes8 (auto, started 2026-10-13 07:36 CST)
+
+| run | sab | SA probes | rawk K | polt | trials | success | mean p(GS) | evals | total lookups | SA lookups | result |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| n16_confirm_sab64_k8_p1 | 64 | 64 | 8 | 1 | 50 | 1.00 | 0.909 | 1053 | 124.3 | 64.0 | PASS |
+
+**n=16 new cheapest (2026-10-13 01:44 CST):** sab 64, rawk 8, polt 1 confirmed at 124.3 lookups (success 1.00, mean p(GS) 0.909), below the prior rule K10 confirm at 129.4. Scaling table above updated.
+
+## Scaling note after n16 K8 (2026-10-13 08:54 CST)
+
+Confirmed (or best available) total lookups now [73.5, 129.2, 67.2, 124.3, 247.9] for n = 8, 10, 12, 16, 18. Still flat-to-linear, not exponential; n=16 edged down from 129.4 to 124.3.
