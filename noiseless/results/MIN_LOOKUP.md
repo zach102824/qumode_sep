@@ -203,3 +203,11 @@ Pass = success >= 0.9 and mean p(GS) >= 0.89. sab 0 (no SA lookups); K descended
 | nosa_n10_random_k37_p1 | random | 0 | 37 | 1 | 10 | 0.90 | 0.894 | 443 | 70.5 | 0.0 | PASS |
 | nosa_n10_random_k32_p1 | random | 0 | 32 | 1 | 10 | 0.90 | 0.887 | 443 | 62.8 | 0.0 | fail |
 | nosa_n10_random_k37_p0 | random | 0 | 37 | 0 | 10 | 0.90 | 0.894 | 443 | 70.5 | 0.0 | PASS |
+| nosa_n12_zero_k23_p1 | zero | 0 | 23 | 1 | 10 | 0.90 | 0.817 | 503 | 50.4 | 0.0 | fail |
+| nosa_n12_zero_k24_p1 | zero | 0 | 24 | 1 | 10 | 0.90 | 0.817 | 503 | 52.1 | 0.0 | fail |
+| nosa_n12_zero_k32_p1 | zero | 0 | 32 | 1 | 10 | 1.00 | 0.986 | 503 | 64.9 | 0.0 | PASS |
+| nosa_n12_zero_k32_p0 | zero | 0 | 32 | 0 | 10 | 1.00 | 0.986 | 503 | 64.9 | 0.0 | PASS |
+| nosa_n12_random_k23_p1 | random | 0 | 23 | 1 | 10 | 0.90 | 0.817 | 503 | 50.4 | 0.0 | fail |
+| nosa_n12_random_k24_p1 | random | 0 | 24 | 1 | 10 | 0.90 | 0.817 | 503 | 52.1 | 0.0 | fail |
+| nosa_n12_random_k32_p1 | random | 0 | 32 | 1 | 10 | 1.00 | 0.986 | 503 | 64.9 | 0.0 | PASS |
+| nosa_n12_random_k32_p0 | random | 0 | 32 | 0 | 10 | 1.00 | 0.986 | 503 | 64.9 | 0.0 | PASS |
