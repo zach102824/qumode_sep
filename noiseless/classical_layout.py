@@ -15,8 +15,14 @@ import numpy as np
 
 
 def sa_sample(E: np.ndarray, n: int, budget: int, rng: np.random.Generator, sweeps_T=(2.0, 0.05)):
-    seen: dict[int, float] = {}
     import os as _os
+    _alg = _os.environ.get("QM_CLS_ALGO", "")
+    if _alg:  # OVERNIGHT_IMPROVEMENTS: alternative classical stage (default unchanged)
+        from noiseless import cls_search as _cs
+        f = {"satlike": _cs.satlike_sample, "tunedsa": _cs.tunedsa_sample}[_alg]
+        out = f(E, n, budget, rng); sa_sample.last_raw = f.last_raw
+        return out
+    seen: dict[int, float] = {}
     raw = _os.environ.get("QM_SA_COUNT", "") == "raw"  # opt-in: budget counts every evaluation, repeats included
     cnt = [0]
 
