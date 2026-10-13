@@ -246,7 +246,7 @@ Started 2026-10-13 11:05 CST. SA budget = 10n cost evaluations counted raw (QM_S
 | 16 | 3cav 3+5/4/4 | 4 | 3 | 35 | 100 | 1.00 | 0.917 | 1053 | 4*3*71+201=1053 ok | 160 | 160 | 17.6 | 337.6 | 298.9 | 0.515% |
 | 18 | 3cav 3+5/5/5 | 6 | 3 | 35 | 100 | 1.00 | 0.908 | 1479 | 6*3*71+201=1479 ok | 180 | 252 | 34.2 | 466.2 | 432.6 | 0.178% |
 
-## Strict recipe (SA=10n raw, K=3n, polt 1, R1), 10-trial
+## Strict recipe (SA=10n raw, K=3n, polt 1, R1), 10-trial — SUPERSEDED by FINAL recipe (n=18 row kept as reference; n=20 stopped unfinished)
 
 Started 2026-10-13 11:30 CST. SA budget = 10n cost evaluations counted raw (QM_SA_COUNT=raw: 64 random probes + anneal steps, repeats count), K = 3n top readouts per explore run, plus the relabel round also reads its own top K, so readout lookups = (E+1)*K (kept deliberately), polt 1 (n single-bit neighbours per new fix-up center), one relabel round, Gray code, fixed_low, 1 trial per instance x 10 instances. Raw lookups = SA + readouts + fix-ups as counted by the code; distinct = unique strings. Eval formula E*S*(2s+1)+(2r+1) with S = xL, s = xs.
 
