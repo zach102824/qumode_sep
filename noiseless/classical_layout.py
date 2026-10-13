@@ -16,8 +16,15 @@ import numpy as np
 
 def sa_sample(E: np.ndarray, n: int, budget: int, rng: np.random.Generator, sweeps_T=(2.0, 0.05)):
     seen: dict[int, float] = {}
+    import os as _os
+    raw = _os.environ.get("QM_SA_COUNT", "") == "raw"  # opt-in: budget counts every evaluation, repeats included
+    cnt = [0]
+
+    def used():
+        return cnt[0] if raw else len(seen)
 
     def look(v):
+        cnt[0] += 1
         if v not in seen:
             seen[v] = float(E[v])
         return seen[v]
@@ -29,18 +36,19 @@ def sa_sample(E: np.ndarray, n: int, budget: int, rng: np.random.Generator, swee
         look(int(v))
     scale = max(scale, 1e-9)
     T0, T1 = sweeps_T
-    while len(seen) < budget:
+    while used() < budget:
         v = int(rng.integers(len(E)))
         e = look(v)
         nsteps = 8 * n
         for t in range(nsteps):
-            if len(seen) >= budget:
+            if used() >= budget:
                 break
             T = scale * T0 * (T1 / T0) ** (t / max(1, nsteps - 1))
             w = v ^ (1 << int(rng.integers(n)))
             ew = look(w)
             if ew <= e or rng.random() < np.exp(-(ew - e) / T):
                 v, e = w, ew
+    sa_sample.last_raw = cnt[0]
     return seen
 
 

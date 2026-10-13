@@ -398,12 +398,16 @@ def explore_exploit_trial_kbit(
     sa_centers = sa_m = None
     sa_rng = None
     n_sa = 0
+    n_sa_raw = 0
+    n_read_raw = 0
+    n_fix_raw = 0
     if explore_mask == "sa":
         from noiseless.classical_layout import sa_sample, marginals, layout_for_run
         sa_rng = np.random.default_rng(int(sa_seed if sa_seed is not None else 12345))
         sa_seen = sa_sample(E, n, int(saind) if int(saind) > 0 else int(sa_budget), sa_rng)
         seen.update(sa_seen.keys())
         n_sa = len(sa_seen)
+        n_sa_raw = int(getattr(sa_sample, 'last_raw', n_sa))
         n_lookups += n_sa
         sa_centers, sa_m = marginals(sa_seen, n)
         pool.add(int(sa_centers[0]))  # classical best (already looked up) enters the pool
@@ -571,9 +575,11 @@ def explore_exploit_trial_kbit(
                 raw = [int(Pm[v]) for v in raw]
             raw_pool.update(raw)
             seen.update(raw)
+            n_read_raw += len(raw)
             lowest = sorted(raw_pool, key=lambda v: (E[v], v))[: max(1, int(polish_t))]
             for v in lowest:
                 if v not in polished_cache:
+                    n_fix_raw += n
                     polished_cache[v] = polish_logical(v, E, n, polish_radius)
                     seen.add(v)
                     seen.update(v ^ (1 << b) for b in range(n))
@@ -610,6 +616,7 @@ def explore_exploit_trial_kbit(
             _pg = []
             for v in _low:
                 if v not in polished_cache:
+                    n_fix_raw += n
                     polished_cache[v] = polish_logical(v, E, n, polish_radius)
                     seen.add(v)
                     seen.update(v ^ (1 << b) for b in range(n))
@@ -655,7 +662,7 @@ def explore_exploit_trial_kbit(
         "success": bool(best.success), "p_gs": float(best.p_gs),
         "most_likely_bitstring": best.most_likely_bitstring, "ground_bitstring": ground_bitstring,
         "selected_round": int(sel), "nfev": int(total_nfev), "n_lookups": int(n_lookups),
-        "n_lookups_distinct": int(len(seen)), "n_lookups_sa": int(n_sa), "n_explore_stopped": int(n_stopped), "n_explore_run": int(n_expl_run),
+        "n_lookups_distinct": int(len(seen)), "n_lookups_sa": int(n_sa), "n_lookups_sa_raw": int(n_sa_raw), "n_lookups_readout_raw": int(n_read_raw), "n_lookups_fixup_raw": int(n_fix_raw), "n_lookups_raw": int(n_sa_raw + n_read_raw + n_fix_raw), "n_explore_stopped": int(n_stopped), "n_explore_run": int(n_expl_run),
         "run_guess_ground": run_guess_ground, "run_gs_diag": run_gs_diag,
         "sa_best_is_ground": bool(sa_centers is not None and int(sa_centers[0]) == gl),
         "leakage": float(rounds[sel]["leakage"]),
