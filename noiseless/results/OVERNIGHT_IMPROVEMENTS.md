@@ -42,3 +42,4 @@ Variants
 | sl5_Elow | 18 | killed after n16 failed (0.90) — variant rejected | | | | | | | 21:14 |
 | sl3 | 18 | QM_CLS_ALGO=satlike  r=150     | 10 | 1.00 | 0.963 | 1579 | 54 / 252 / 126 | 432 | 21:25 |
 | sl3 | 16 | QM_CLS_ALGO=satlike  r=150     | 10 | 1.00 | 0.972 | 1153 | 48 / 160 / 80 | 288 | 22:56 |
+| sl3 | 14 | QM_CLS_ALGO=satlike  r=150     | 10 | 1.00 | 0.961 | 727 | 42 / 84 / 42 | 168 | 22:57 |
