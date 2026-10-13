@@ -230,3 +230,11 @@ Same steps at every n: SA with sab = 9n distinct lookups (QM_SA_PROBES = 4n rand
 | 12 | 41.4 | 0.0 | 18 | 1 | 0.90 | 0.817 | 503 | 1.01% | fail |
 | 12 | 52.1 | 0.0 | 24 | 1 | 0.90 | 0.817 | 503 | 1.27% | fail |
 | 12 | 72.1 | 0.0 | 36 | 1 | 1.00 | 0.986 | 503 | 1.76% | PASS |
+
+## Strict recipe (SA=10n raw, K=2n, polt 1, R1), 10-trial
+
+Started 2026-10-13 11:05 CST. SA budget = 10n cost evaluations counted raw (QM_SA_COUNT=raw: 64 random probes + anneal steps, repeats count), K = 2n top readouts per explore run, polt 1 (n single-bit neighbours per new fix-up center), one relabel round, Gray code, fixed_low, 1 trial per instance x 10 instances. Raw lookups = SA + readouts + fix-ups as counted by the code; distinct = unique strings. Eval formula E*S*(2s+1)+(2r+1) with S = xL, s = xs.
+
+| n | chip | E | xL | xs | r | success | mean p(GS) | evals | formula | SA lookups | readout lookups | fix-up lookups | total raw lookups | distinct lookups | share of 2^n (raw) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 8 | 2cav 2+3/3 | 1 | 2 | 25 | 150 | 1.00 | 0.990 | 403 | 1*2*51+301=403 ok | 80 | 32 | 8 | 120 | 91 | 46.9% |
