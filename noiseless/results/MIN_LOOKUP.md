@@ -238,3 +238,4 @@ Started 2026-10-13 11:05 CST. SA budget = 10n cost evaluations counted raw (QM_S
 | n | chip | E | xL | xs | r | success | mean p(GS) | evals | formula | SA lookups | readout lookups | fix-up lookups | total raw lookups | distinct lookups | share of 2^n (raw) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 8 | 2cav 2+3/3 | 1 | 2 | 25 | 150 | 1.00 | 0.990 | 403 | 1*2*51+301=403 ok | 80 | 32 | 8 | 120 | 91 | 46.9% |
+| 10 | 2cav 2+4/4 | 1 | 2 | 35 | 150 | 1.00 | 0.991 | 443 | 1*2*71+301=443 ok | 100 | 40 | 10 | 150 | 125.5 | 14.6% |
