@@ -19,3 +19,4 @@ Variants
 | satlike10 | 14 | QM_CLS_ALGO=satlike | 10 | 1.00 | 0.961 | 727 | 140 / 84 / 42 | 266 | 17:59 |
 | satlike10 | 16 | QM_CLS_ALGO=satlike | 10 | 1.00 | 0.972 | 1153 | 160 / 160 / 80 | 400 | 18:13 |
 | satlike10 | 18 | QM_CLS_ALGO=satlike | 10 | 0.90 | 0.869 | 1579 | 180 / 252 / 126 | 558 | 18:43 |
+| satlike5 | 8 | QM_CLS_ALGO=satlike | 10 | 1.00 | 0.987 | 505 | 40 / 48 / 24 | 112 | 18:43 |
