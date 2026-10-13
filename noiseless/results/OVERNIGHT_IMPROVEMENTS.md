@@ -32,3 +32,4 @@ Variants
 | tunedsa10 | 16 | QM_CLS_ALGO=tunedsa | 10 | 1.00 | 0.972 | 1153 | 160 / 160 / 80 | 400 | 19:15 |
 | tunedsa10 | 18 | QM_CLS_ALGO=tunedsa | 10 | 1.00 | 0.963 | 1579 | 180 / 252 / 126 | 558 | 19:37 |
 | satlike5 | 20 | QM_CLS_ALGO=satlike  r=150  | 10 | 0.90 | 0.861 | 2005 | 100 / 360 / 180 | 640 | 21:04 |
+| sl5_Elow | 16 | QM_CLS_ALGO=satlike EMAP=16:2,18:3,20:4 r=150     | 10 | 0.90 | 0.876 | 727 | 80 / 96 / 48 | 224 | 21:06 |
