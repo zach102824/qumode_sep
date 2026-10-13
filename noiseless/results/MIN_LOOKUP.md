@@ -275,3 +275,13 @@ Formulas: lookups = 10n + (E+1)*2n + E*n (upper bound; fix-ups are not repeated 
 | 14 | 3cav 3+4/4/3 | 2 | 3 | 35 | 100 | 1.00 | 0.891 | 627 | 2*3*71+201=627 ok | 140 | 84 | 14 | 238 | 213.4 | 1.45% | kbit_strict |
 | 16 | 3cav 3+5/4/4 | 4 | 3 | 35 | 100 | 1.00 | 0.917 | 1053 | 4*3*71+201=1053 ok | 160 | 160 | 17.6 | 337.6 | 298.9 | 0.515% | kbit_strict |
 | 18 | 3cav 3+5/5/5 | 6 | 3 | 35 | 100 | 1.00 | 0.908 | 1479 | 6*3*71+201=1479 ok | 180 | 252 | 34.2 | 466.2 | 432.6 | 0.178% | kbit_strict |
+
+## FINAL fixed-cost strict recipe
+
+Started 2026-10-13 11:57 CST. Fixed cost per trial (QM_FIXED_COST=1): SA = 10n raw evaluations; readout = K = 2n top strings in each of the E+1 rounds (E explore + 1 relabel); fix-up = all n one-bit flips of the lowest-cost readout string so far, performed and counted every round even if repeated (n per round). Same guess logic as before. polt 1, R1, Gray, fixed_low, 1 trial x 10 instances. E = 2,2,2,2,4,6,8 for n=8..20. 2cav (n<=12): xL2, xs 25/35/50, r150; 3cav (n>=14): xL3, xs35, r100. L4 s50 lr0.05 xeta128 reta2. Fresh outdir relayout_runs/kbit_fixed.
+
+Formulas: lookups per trial = 10n + (E+1)*2n + (E+1)*n = 10n + 3n(E+1), identical in every trial (asserted). evals = E*S*(2s+1)+(2r+1), S = xL, s = xs.
+
+| n | chip | E | xL | xs | r | success | mean p(GS) | evals | formula check | SA / readout / fix-up lookups | total lookups per trial | share of 2^n |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 8 | 2cav 2+3/3 | 2 | 2 | 25 | 150 | 1.00 | 0.987 | 505 | 2*2*51+301=505 ok | 80 / 48 / 24 | 152 | 59.4% |
