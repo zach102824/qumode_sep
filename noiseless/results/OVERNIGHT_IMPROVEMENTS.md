@@ -14,3 +14,4 @@ Variants
 | variant | n | env | trials | success | mean p(GS) | evals | SA / readout / fix-up lookups | lookups per trial | finished CST |
 |---|---|---|---|---|---|---|---|---|---|
 | satlike10 | 8 | QM_CLS_ALGO=satlike | 10 | 1.00 | 0.987 | 505 | 80 / 48 / 24 | 152 | 17:58 |
+| satlike10 | 10 | QM_CLS_ALGO=satlike | 10 | 1.00 | 0.986 | 585 | 100 / 60 / 30 | 190 | 17:58 |
