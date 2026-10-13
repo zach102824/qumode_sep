@@ -158,6 +158,10 @@ K12/polt1 50-trial: 0.96 / 0.858 (median p 0.924; 2 misses, one with GS at reado
 
 **n=16 new cheapest (2026-10-13 01:44 CST):** sab 64, rawk 8, polt 1 confirmed at 124.3 lookups (success 1.00, mean p(GS) 0.909), below the prior rule K10 confirm at 129.4. Scaling table above updated.
 
+| n16_confirm_sab64_k10_p0 | 64 | 64 | 10 | 0 | 50 | 1.00 | 0.909 | 1053 | 129.4 | 64.0 | PASS |
+
+n16 K10/polt0 confirm (2026-10-13 08:55 CST): PASS at 129.4 lookups, not a new cheapest (above K8/polt1 at 124.3).
+
 ## Scaling note after n16 K8 (2026-10-13 08:54 CST)
 
-Confirmed (or best available) total lookups now [73.5, 129.2, 67.2, 124.3, 247.9] for n = 8, 10, 12, 16, 18. Still flat-to-linear, not exponential; n=16 edged down from 129.4 to 124.3.
+Confirmed (or best available) total lookups now [73.5, 129.2, 67.2, 124.3, 247.9] for n = 8, 10, 12, 16, 18. Still flat-to-linear, not exponential; n=16 edged down from 129.4 to 124.3. K10/polt0 confirm at 129.4 does not change the cheapest.
