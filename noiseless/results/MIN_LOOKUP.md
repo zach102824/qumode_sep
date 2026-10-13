@@ -243,3 +243,11 @@ Started 2026-10-13 11:05 CST. SA budget = 10n cost evaluations counted raw (QM_S
 | 14 | 3cav 3+4/4/3 | 2 | 3 | 35 | 100 | 1.00 | 0.891 | 627 | 2*3*71+201=627 ok | 140 | 84 | 14 | 238 | 213.4 | 1.45% |
 | 16 | 3cav 3+5/4/4 | 4 | 3 | 35 | 100 | 1.00 | 0.917 | 1053 | 4*3*71+201=1053 ok | 160 | 160 | 17.6 | 337.6 | 298.9 | 0.515% |
 | 18 | 3cav 3+5/5/5 | 6 | 3 | 35 | 100 | 1.00 | 0.908 | 1479 | 6*3*71+201=1479 ok | 180 | 252 | 34.2 | 466.2 | 432.6 | 0.178% |
+
+## Strict recipe (SA=10n raw, K=3n, polt 1, R1), 10-trial
+
+Started 2026-10-13 11:30 CST. SA budget = 10n cost evaluations counted raw (QM_SA_COUNT=raw: 64 random probes + anneal steps, repeats count), K = 3n top readouts per explore run, plus the relabel round also reads its own top K, so readout lookups = (E+1)*K (kept deliberately), polt 1 (n single-bit neighbours per new fix-up center), one relabel round, Gray code, fixed_low, 1 trial per instance x 10 instances. Raw lookups = SA + readouts + fix-ups as counted by the code; distinct = unique strings. Eval formula E*S*(2s+1)+(2r+1) with S = xL, s = xs.
+
+| n | chip | E | xL | xs | r | success | mean p(GS) | evals | formula | SA lookups | readout lookups | fix-up lookups | total raw lookups | distinct lookups | share of 2^n (raw) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 8 | 2cav 2+3/3 | 1 | 2 | 25 | 150 | 1.00 | 0.990 | 403 | 1*2*51+301=403 ok | 80 | 48 | 8 | 136 | 100.7 | 53.1% |
