@@ -177,3 +177,23 @@ Confirmed (or best available) total lookups now [73.5, 129.2, 67.2, 124.3, 247.9
 | n16_rand_lmut2_k10_p1 | random | 0 | 10 | 1 | 10 | 1.00 | 0.900 | 1053 | 61.8 | 0.0 | PASS |
 | n12_rand_k23_p1 | random | 0 | 23 | 1 | ERROR ||||||
 | n18_E6_rand_k12_p1 | random | 0 | 12 | 1 | 10 | 0.90 | 0.826 | 1479 | 105.2 | 0.0 | fail |
+
+## Cutnext6: n16 K8/polt0 confirm, n12 probe follow-up, n18 E8 (auto, started 2026-10-13 09:24 CST)
+
+| run | sab | SA probes | rawk K | polt | trials | success | mean p(GS) | evals | total lookups | SA lookups | result |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+
+| n16_confirm_sab64_k8_p0 | killed 09:25 CST: 50-trial confirms dropped (10-trial screens only); cutnext6 superseded by no-SA sweep |
+
+## No-SA sweep, 10-trial screens only (auto, started 2026-10-13 09:26 CST)
+
+Pass = success >= 0.9 and mean p(GS) >= 0.89. sab 0 (no SA lookups); K descended to smallest pass, then polt 0.
+
+| run | mask | sab | rawk K | polt | trials | success | mean p(GS) | evals | total lookups | SA lookups | result |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| nosa_n8_zero_k9_p1 | zero | 0 | 9 | 1 | 10 | 1.00 | 0.896 | 403 | 22.3 | 0.0 | PASS |
+| nosa_n8_zero_k8_p1 | zero | 0 | 8 | 1 | 10 | 0.90 | 0.803 | 403 | 20.7 | 0.0 | fail |
+| nosa_n8_zero_k9_p0 | zero | 0 | 9 | 0 | 10 | 1.00 | 0.896 | 403 | 22.3 | 0.0 | PASS |
+| nosa_n8_random_k9_p1 | random | 0 | 9 | 1 | 10 | 1.00 | 0.896 | 403 | 22.3 | 0.0 | PASS |
+| nosa_n8_random_k8_p1 | random | 0 | 8 | 1 | 10 | 0.90 | 0.803 | 403 | 20.7 | 0.0 | fail |
+| nosa_n8_random_k9_p0 | random | 0 | 9 | 0 | 10 | 1.00 | 0.896 | 403 | 22.3 | 0.0 | PASS |
