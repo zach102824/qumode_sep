@@ -1,6 +1,6 @@
 # Strong classical baselines vs hybrid lookups (wmaxsat, 70 strict-sweep instances)
 
-Run 2026-10-13, 03:46-03:53 CST (box 11:46-11:53 CEST), 8 cores, detached setsid nohup queue. Script `noiseless/strong_classical.py`,
+Run 2026-10-13, 17:46-17:53 CST (box 11:46-11:53 CEST), 8 cores, detached setsid nohup queue. Script `noiseless/strong_classical.py`,
 analysis `noiseless/analyze_strong_classical.py`, raw data `logs/strong/{tune,eval}.jsonl`, chosen configs `logs/strong/best_cfg.json`.
 
 ## Method
@@ -104,4 +104,4 @@ Hybrid lookups: exp b=1.1426 R2(log)=0.9792; power k=1.714 R2(log)=0.9321
 - SATLike is a re-implementation, not the official binary; hard-clause machinery is irrelevant (all soft). Held-out tuning per n on 10 instances;
   several chosen configs sit on grid edges (SA Tend=1.0, WalkSAT p=0.0/0.5), so slightly better tunes may exist.
 - 10 eval instances per n, n<=20; fits over 7 points. Noiseless hybrid; its quantum evals are not converted to lookups.
-- Times: CST taken as box CEST - 8h, consistent with SA_ALONE_SCALING.md.
+- Times: CST = box time + 6h (box UTC+2, CST UTC+8).
