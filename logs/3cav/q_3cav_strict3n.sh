@@ -17,11 +17,11 @@ A[14]="$C3 --n 14 --ks 4,4,3 --explore 2"; CH[14]="3cav 3+4/4/3"; XL[14]=3; XS[1
 A[16]="$C3 --n 16 --ks 5,4,4 --explore 4"; CH[16]="3cav 3+5/4/4"; XL[16]=3; XS[16]=35; RR[16]=100; EE[16]=4
 A[18]="$C3 --n 18 --ks 5,5,5 --explore 6"; CH[18]="3cav 3+5/5/5"; XL[18]=3; XS[18]=35; RR[18]=100; EE[18]=6
 A[20]="$C3 --n 20 --ks 6,6,5 --explore 8"; CH[20]="3cav 3+6/6/5"; XL[20]=3; XS[20]=35; RR[20]=100; EE[20]=8
-{ echo ""; echo "## Strict recipe (SA=10n raw, K=3n, polt 1, R1), 10-trial"; echo ""
+[ -z "$NOHDR" ] && { echo ""; echo "## Strict recipe (SA=10n raw, K=3n, polt 1, R1), 10-trial"; echo ""
   echo "Started $(TZ=Asia/Shanghai date '+%F %H:%M') CST. SA budget = 10n cost evaluations counted raw (QM_SA_COUNT=raw: 64 random probes + anneal steps, repeats count), K = 3n top readouts per explore run, plus the relabel round also reads its own top K, so readout lookups = (E+1)*K (kept deliberately), polt 1 (n single-bit neighbours per new fix-up center), one relabel round, Gray code, fixed_low, 1 trial per instance x 10 instances. Raw lookups = SA + readouts + fix-ups as counted by the code; distinct = unique strings. Eval formula E*S*(2s+1)+(2r+1) with S = xL, s = xs."; echo ""
   echo "| n | chip | E | xL | xs | r | success | mean p(GS) | evals | formula | SA lookups | readout lookups | fix-up lookups | total raw lookups | distinct lookups | share of 2^n (raw) |"
   echo "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"; } >> "$RES"
-for n in 8 10 12 14 16 18 20; do
+for n in ${NS:-8 10 12 14 16 18 20}; do
   [ -f "$STOPF" ] && { echo "[$(date +%T)] STOP"; exit 0; }
   f=$D/strict_n$n.json; echo "[$(TZ=Asia/Shanghai date +%T) CST] START n$n"
   # shellcheck disable=SC2086
