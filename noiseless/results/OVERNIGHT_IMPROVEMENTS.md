@@ -27,3 +27,4 @@ Variants
 | satlike5 | 18 | QM_CLS_ALGO=satlike | 10 | 1.00 | 0.963 | 1579 | 90 / 252 / 126 | 468 | 19:10 |
 | tunedsa10 | 8 | QM_CLS_ALGO=tunedsa | 10 | 1.00 | 0.987 | 505 | 80 / 48 / 24 | 152 | 19:10 |
 | tunedsa10 | 10 | QM_CLS_ALGO=tunedsa | 10 | 1.00 | 0.986 | 585 | 100 / 60 / 30 | 190 | 19:11 |
+| tunedsa10 | 12 | QM_CLS_ALGO=tunedsa | 10 | 1.00 | 0.991 | 705 | 120 / 72 / 36 | 228 | 19:11 |
