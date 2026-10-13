@@ -268,6 +268,7 @@ Formulas: lookups = 10n + (E+1)*2n + E*n (upper bound; fix-ups are not repeated 
 | n | chip | E | xL | xs | r | success | mean p(GS) | evals | formula | SA lookups | readout lookups | fix-up lookups | total raw lookups | distinct lookups | share of 2^n (raw) | source |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 8 | 2cav 2+3/3 | 2 | 2 | 25 | 150 | 1.00 | 0.987 | 505 | 2*2*51+301=505 ok | 80 | 48 | 8 | 136 | 98.3 | 53.1% | kbit_final |
+| 10 | 2cav 2+4/4 | 2 | 2 | 35 | 150 | 1.00 | 0.986 | 585 | 2*2*71+301=585 ok | 100 | 60 | 10 | 170 | 137.6 | 16.6% | kbit_final |
 | 14 | 3cav 3+4/4/3 | 2 | 3 | 35 | 100 | 1.00 | 0.891 | 627 | 2*3*71+201=627 ok | 140 | 84 | 14 | 238 | 213.4 | 1.45% | kbit_strict |
 | 16 | 3cav 3+5/4/4 | 4 | 3 | 35 | 100 | 1.00 | 0.917 | 1053 | 4*3*71+201=1053 ok | 160 | 160 | 17.6 | 337.6 | 298.9 | 0.515% | kbit_strict |
 | 18 | 3cav 3+5/5/5 | 6 | 3 | 35 | 100 | 1.00 | 0.908 | 1479 | 6*3*71+201=1479 ok | 180 | 252 | 34.2 | 466.2 | 432.6 | 0.178% | kbit_strict |
