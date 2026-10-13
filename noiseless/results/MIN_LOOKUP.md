@@ -258,3 +258,16 @@ Started 2026-10-13 11:30 CST. SA budget = 10n cost evaluations counted raw (QM_S
 | 14 | 3cav 3+4/4/3 | 2 | 3 | 35 | 100 | 1.00 | 0.891 | 627 | 2*3*71+201=627 ok | 140 | 126 | 14 | 280 | 250.7 | 1.71% |
 | 16 | 3cav 3+5/4/4 | 4 | 3 | 35 | 100 | 1.00 | 0.917 | 1053 | 4*3*71+201=1053 ok | 160 | 240 | 17.6 | 417.6 | 368.7 | 0.637% |
 | 18 | 3cav 3+5/5/5 | 6 | 3 | 35 | 100 | 1.00 | 0.908 | 1479 | 6*3*71+201=1479 ok | 180 | 378 | 28.8 | 586.8 | 547.3 | 0.224% |
+
+## FINAL strict recipe (SA=10n raw, K=2n, polt 1, R1, E=max(2,...)), 10-trial
+
+Started 2026-10-13 11:50 CST. SA = 10n raw cost evaluations (QM_SA_COUNT=raw), K = 2n top readouts per explore run and for the relabel round, polt 1, one relabel round, Gray, fixed_low, 1 trial x 10 instances. E = 2,2,2,2,4,6,8 for n=8..20. 2cav (n<=12): xL2, xs 25/35/50, r150; 3cav (n>=14): xL3, xs35, r100. L4 s50 lr0.05 xeta128 reta2.
+
+Formulas: lookups = 10n + (E+1)*2n + E*n (upper bound; fix-ups are not repeated for a center already done). evals = E*S*(2s+1)+(2r+1), S = xL, s = xs. n=14/16/18 reused from kbit_strict (identical recipe).
+
+| n | chip | E | xL | xs | r | success | mean p(GS) | evals | formula | SA lookups | readout lookups | fix-up lookups | total raw lookups | distinct lookups | share of 2^n (raw) | source |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 8 | 2cav 2+3/3 | 2 | 2 | 25 | 150 | 1.00 | 0.987 | 505 | 2*2*51+301=505 ok | 80 | 48 | 8 | 136 | 98.3 | 53.1% | kbit_final |
+| 14 | 3cav 3+4/4/3 | 2 | 3 | 35 | 100 | 1.00 | 0.891 | 627 | 2*3*71+201=627 ok | 140 | 84 | 14 | 238 | 213.4 | 1.45% | kbit_strict |
+| 16 | 3cav 3+5/4/4 | 4 | 3 | 35 | 100 | 1.00 | 0.917 | 1053 | 4*3*71+201=1053 ok | 160 | 160 | 17.6 | 337.6 | 298.9 | 0.515% | kbit_strict |
+| 18 | 3cav 3+5/5/5 | 6 | 3 | 35 | 100 | 1.00 | 0.908 | 1479 | 6*3*71+201=1479 ok | 180 | 252 | 34.2 | 466.2 | 432.6 | 0.178% | kbit_strict |
