@@ -213,3 +213,12 @@ Pass = success >= 0.9 and mean p(GS) >= 0.89. sab 0 (no SA lookups); K descended
 | nosa_n12_random_k32_p0 | random | 0 | 32 | 0 | 10 | 1.00 | 0.986 | 503 | 64.9 | 0.0 | PASS |
 | nosa_n14_zero_k2_p1 | zero | 0 | 2 | 1 | 10 | 0.80 | 0.700 | 627 | 24.0 | 0.0 | fail |
 | nosa_n14_zero_k3_p1 | zero | 0 | 3 | 1 | 10 | 0.80 | 0.713 | 627 | 24.4 | 0.0 | fail |
+
+## Consistent linear-SA recipe (10-trial screens, started 2026-10-13 09:29 CST)
+
+Same steps at every n: SA with sab = 9n distinct lookups (QM_SA_PROBES = 4n random probes, rest in anneal chains of 8n steps), E explore runs (1,1,1,2,4,6), top-K readouts with K = n, polt 1 single-bit fix-ups, one relabel round (r 150 n<=12 on 2 cav, r 100 n>=14 on 3 cav), Gray code, fixed_low. If K = n fails, K steps up 1.5n, 2n, 3n; if it passes, K = n/2 is tried once. Pass = success >= 0.9 and mean p(GS) >= 0.89.
+
+| n | lookups total | SA lookups | K | E | success | mean p(GS) | evals | share of 2^n | result |
+|---|---|---|---|---|---|---|---|---|---|
+| 8 | 20.7 | 0.0 | 8 | 1 | 0.90 | 0.803 | 403 | 8.09% | fail |
+| 8 | 24.9 | 0.0 | 12 | 1 | 1.00 | 0.990 | 403 | 9.73% | PASS |
