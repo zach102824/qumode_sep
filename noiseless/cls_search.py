@@ -26,6 +26,8 @@ def satlike_sample(E, n, budget, rng, swt=20, sp=0.01, t=3):
     def look(v):
         cnt[0] += 1
         if v not in seen: seen[v] = float(E[v])
+    npr = int(os.environ.get("QM_SL_PROBES", "0"))  # optional counted random probes (diverse seeds), inside budget
+    for v in rng.integers(0, 1 << n, npr): look(int(v))
     x = int(rng.integers(1 << n)); look(x)
     nsat = [sum(((x >> j) & 1) != b for j, b in zip(*cl[c])) for c in range(m)]
     dw = [1] * m; age = [0] * n; step = 0

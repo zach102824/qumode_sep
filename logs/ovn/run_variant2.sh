@@ -23,8 +23,8 @@ for kv in ${OVN_EMAP//,/ }; do k=${kv%%:*}; v=${kv##*:}; EE[$k]=$v; A[$k]="$(ech
 for n in $NSL; do
   [ -f logs/ovn/STOP ] && { echo STOP; exit 0; }
   f=$D/n$n.json; echo "[$(TZ=Asia/Shanghai date '+%F %T') CST] START $NAME n$n"
-  python noiseless/run_relayout_kbit.py ${A[$n]} --sab $((SM*n)) --rawk $(( ${OVN_RAWK_MUL:-2} * n )) > "$f" 2>&1
-  python - "$f" "$n" "${EE[$n]}" "${XL[$n]}" "${XS[$n]}" "$SM" "$RES" "$OUT" "$NAME" "$* ${OVN_EMAP:+EMAP=$OVN_EMAP} r=$RR ${OVN_SAMODE:+samode=$OVN_SAMODE} ${OVN_RAWK_MUL:+Kmul=$OVN_RAWK_MUL} ${OVN_CW_FIX:+cw=1} ${OVN_POLT:+polt=$OVN_POLT}" "$RR" <<'PYX'
+  python noiseless/run_relayout_kbit.py ${A[$n]} --sab $((SM*n + ${OVN_SAB_ADD:-0})) --rawk $(( ${OVN_RAWK_MUL:-2} * n )) > "$f" 2>&1
+  python - "$f" "$n" "${EE[$n]}" "${XL[$n]}" "${XS[$n]}" "$SM" "$RES" "$OUT" "$NAME" "$* ${OVN_EMAP:+EMAP=$OVN_EMAP} r=$RR ${OVN_SAMODE:+samode=$OVN_SAMODE} ${OVN_RAWK_MUL:+Kmul=$OVN_RAWK_MUL} ${OVN_CW_FIX:+cw=1} ${OVN_POLT:+polt=$OVN_POLT} ${OVN_SAB_ADD:+sab+=$OVN_SAB_ADD}" "$RR" <<'PYX'
 import json,sys
 f,n,E,S,s,sm,res,od,name,env,rr=sys.argv[1:]; rr=int(rr); n,E,S,s,sm=map(int,(n,E,S,s,sm))
 t=open(f).read(); now=__import__('subprocess').run("TZ=Asia/Shanghai date '+%H:%M'",shell=True,capture_output=True,text=True).stdout.strip()
@@ -33,7 +33,7 @@ try:
 except Exception as e:
     open(res,"a").write(f"| {name} | {n} | ERROR {type(e).__name__} |\n"); raise SystemExit
 key=lambda x:(x['n_lookups_sa_raw'],x['n_lookups_readout_raw'],x['n_lookups_fixup_raw'],x['n_lookups_fixed'])
-ks={key(x) for x in recs}; mul=int(__import__("os").environ.get("OVN_RAWK_MUL","2")); polt=int(__import__("os").environ.get("OVN_POLT","1")); exp=sm*n+(E+1)*(mul+polt)*n; ev=d['evals']; fe=E*S*(2*s+1)+2*rr+1
+ks={key(x) for x in recs}; mul=int(__import__("os").environ.get("OVN_RAWK_MUL","2")); polt=int(__import__("os").environ.get("OVN_POLT","1")); exp=sm*n+int(__import__("os").environ.get("OVN_SAB_ADD","0"))+(E+1)*(mul+polt)*n; ev=d['evals']; fe=E*S*(2*s+1)+2*rr+1
 mins=min(r.get('p_gs',r.get('p_gs_final',1)) for r in recs) if recs and ('p_gs' in recs[0]) else None
 if len(ks)!=1: open(res,"a").write(f"| {name} | {n} | ERROR non-identical lookups {sorted(ks)} |\n"); raise SystemExit
 sa,rd,fx,tot=ks.pop()

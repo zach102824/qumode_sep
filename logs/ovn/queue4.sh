@@ -2,6 +2,9 @@
 # independent of queue2/3; different outdirs (sl5div, sl5rs)
 cd /workspace/qumode_sep
 V=logs/ovn/run_variant2.sh
+# satlike5 + 64 counted random probes (diverse seeds), SA lookups = 5n+64; n20 first (the failing case)
+OVN_SAB_ADD=64 $V sl5p64 5 "20" QM_CLS_ALGO=satlike QM_SL_PROBES=64
+python3 logs/ovn/passed.py sl5p64 && OVN_SAB_ADD=64 $V sl5p64 5 "18 16 14 12 10 8" QM_CLS_ALGO=satlike QM_SL_PROBES=64
 # diverse SA centers (Hamming-separated) + satlike5 — targets n20 valley collapse
 OVN_SAMODE=fixed_low_div $V sl5div 5 "8 10 12 14 16 18" QM_CLS_ALGO=satlike
 python3 logs/ovn/passed.py sl5div && OVN_SAMODE=fixed_low_div $V sl5div 5 "20" QM_CLS_ALGO=satlike
