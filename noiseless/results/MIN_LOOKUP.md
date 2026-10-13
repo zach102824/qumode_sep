@@ -165,3 +165,5 @@ n16 K10/polt0 confirm (2026-10-13 08:55 CST): PASS at 129.4 lookups, not a new c
 ## Scaling note after n16 K8 (2026-10-13 08:54 CST)
 
 Confirmed (or best available) total lookups now [73.5, 129.2, 67.2, 124.3, 247.9] for n = 8, 10, 12, 16, 18. Still flat-to-linear, not exponential; n=16 edged down from 129.4 to 124.3. K10/polt0 confirm at 129.4 does not change the cheapest.
+| n18_E6_sab162_k24_p1 | 162 | 64 | 24 | 1 | 10 | 0.90 | 0.820 | 1479 | 351.5 | 162.0 | fail |
+| n12_sab16_pr8_k23_p1 | 16 | 8 | 23 | 1 | ERROR ||||||
