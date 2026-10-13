@@ -185,7 +185,7 @@ Confirmed (or best available) total lookups now [73.5, 129.2, 67.2, 124.3, 247.9
 
 | n16_confirm_sab64_k8_p0 | killed 09:25 CST: 50-trial confirms dropped (10-trial screens only); cutnext6 superseded by no-SA sweep |
 
-## No-SA sweep, 10-trial screens only (auto, started 2026-10-13 09:26 CST)
+## No-SA sweep, 10-trial screens only (auto, started 2026-10-13 09:26 CST) — SUPERSEDED 2026-10-13 09:3x CST (Zach: keep SA; replaced by consistent linear-SA recipe)
 
 Pass = success >= 0.9 and mean p(GS) >= 0.89. sab 0 (no SA lookups); K descended to smallest pass, then polt 0.
 
@@ -211,3 +211,5 @@ Pass = success >= 0.9 and mean p(GS) >= 0.89. sab 0 (no SA lookups); K descended
 | nosa_n12_random_k24_p1 | random | 0 | 24 | 1 | 10 | 0.90 | 0.817 | 503 | 52.1 | 0.0 | fail |
 | nosa_n12_random_k32_p1 | random | 0 | 32 | 1 | 10 | 1.00 | 0.986 | 503 | 64.9 | 0.0 | PASS |
 | nosa_n12_random_k32_p0 | random | 0 | 32 | 0 | 10 | 1.00 | 0.986 | 503 | 64.9 | 0.0 | PASS |
+| nosa_n14_zero_k2_p1 | zero | 0 | 2 | 1 | 10 | 0.80 | 0.700 | 627 | 24.0 | 0.0 | fail |
+| nosa_n14_zero_k3_p1 | zero | 0 | 3 | 1 | 10 | 0.80 | 0.713 | 627 | 24.4 | 0.0 | fail |
