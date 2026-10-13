@@ -43,6 +43,9 @@ from .spsa_gibbs import (
 KBIT_TARGETS = ("xor_vacuum", "none")
 
 
+import os as _os_fc
+_FIXED_COST = _os_fc.environ.get("QM_FIXED_COST", "") == "1"  # opt-in: every round's fix-up counted (n), repeats included
+
 def default_nf(k: int, margin_frac: float = 0.25, min_margin: int = 16) -> int:
     """Fock truncation used in the scaling study: 2^k + max(2^k/4, 16) levels per cavity
     (k = 3..7: 24, 32, 48, 80, 160). A 2^k/4-only margin leaked up to 0.23 at n = 10 (nf = 20)."""
@@ -578,8 +581,11 @@ def explore_exploit_trial_kbit(
             n_read_raw += len(raw)
             lowest = sorted(raw_pool, key=lambda v: (E[v], v))[: max(1, int(polish_t))]
             for v in lowest:
+                if _FIXED_COST:
+                    n_fix_raw += n  # QM_FIXED_COST: fix-up always performed and counted, repeats included
                 if v not in polished_cache:
-                    n_fix_raw += n
+                    if not _FIXED_COST:
+                        n_fix_raw += n
                     polished_cache[v] = polish_logical(v, E, n, polish_radius)
                     seen.add(v)
                     seen.update(v ^ (1 << b) for b in range(n))
@@ -658,11 +664,16 @@ def explore_exploit_trial_kbit(
     for j in range(len(rounds)):
         rounds[j]["selected"] = j == sel
     best = res_list[sel]
+    if _FIXED_COST and int(raw_k) > 0:
+        _R = len(rounds)
+        assert n_read_raw == _R * int(raw_k), (n_read_raw, _R, raw_k)
+        assert n_fix_raw == _R * max(1, int(polish_t)) * n, (n_fix_raw, _R, n)
+    n_lookups_fixed = int(n_sa_raw + n_read_raw + n_fix_raw)
     return {
         "success": bool(best.success), "p_gs": float(best.p_gs),
         "most_likely_bitstring": best.most_likely_bitstring, "ground_bitstring": ground_bitstring,
         "selected_round": int(sel), "nfev": int(total_nfev), "n_lookups": int(n_lookups),
-        "n_lookups_distinct": int(len(seen)), "n_lookups_sa": int(n_sa), "n_lookups_sa_raw": int(n_sa_raw), "n_lookups_readout_raw": int(n_read_raw), "n_lookups_fixup_raw": int(n_fix_raw), "n_lookups_raw": int(n_sa_raw + n_read_raw + n_fix_raw), "n_explore_stopped": int(n_stopped), "n_explore_run": int(n_expl_run),
+        "n_lookups_distinct": int(len(seen)), "n_lookups_sa": int(n_sa), "n_lookups_sa_raw": int(n_sa_raw), "n_lookups_readout_raw": int(n_read_raw), "n_lookups_fixup_raw": int(n_fix_raw), "n_lookups_raw": int(n_sa_raw + n_read_raw + n_fix_raw), "n_lookups_fixed": n_lookups_fixed if _FIXED_COST else None, "n_explore_stopped": int(n_stopped), "n_explore_run": int(n_expl_run),
         "run_guess_ground": run_guess_ground, "run_gs_diag": run_gs_diag,
         "sa_best_is_ground": bool(sa_centers is not None and int(sa_centers[0]) == gl),
         "leakage": float(rounds[sel]["leakage"]),

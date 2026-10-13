@@ -261,6 +261,8 @@ Started 2026-10-13 11:30 CST. SA budget = 10n cost evaluations counted raw (QM_S
 
 ## FINAL strict recipe (SA=10n raw, K=2n, polt 1, R1, E=max(2,...)), 10-trial
 
+**SUPERSEDED** (2026-10-13) by "FINAL fixed-cost strict recipe" below: fix-ups here skipped repeated centers, so lookups varied per trial; the n=20 run was stopped before finishing.
+
 Started 2026-10-13 11:50 CST. SA = 10n raw cost evaluations (QM_SA_COUNT=raw), K = 2n top readouts per explore run and for the relabel round, polt 1, one relabel round, Gray, fixed_low, 1 trial x 10 instances. E = 2,2,2,2,4,6,8 for n=8..20. 2cav (n<=12): xL2, xs 25/35/50, r150; 3cav (n>=14): xL3, xs35, r100. L4 s50 lr0.05 xeta128 reta2.
 
 Formulas: lookups = 10n + (E+1)*2n + E*n (upper bound; fix-ups are not repeated for a center already done). evals = E*S*(2s+1)+(2r+1), S = xL, s = xs. n=14/16/18 reused from kbit_strict (identical recipe).
