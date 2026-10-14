@@ -402,6 +402,10 @@ def main(argv=None) -> int:
     p.add_argument("--xconsec", type=int, default=0, help="stop exploring once the last N runs give the same fix-up guess energy")
     p.add_argument("--saind", type=int, default=0, help="independent SA pass of this many lookups per explore run")
     p.add_argument("--shots", type=int, default=0, help="finite-shot model: S shots per circuit eval (noiseless/shots.py); tag gets _shotsS")
+    p.add_argument("--shot-readout", choices=("freq", "lowE"), default="freq", help="shots: top-2n readout = most frequent final-state strings (freq) or 2n lowest-E strings sampled in the run (lowE; also round selection by best sampled E)")
+    p.add_argument("--shot-crn", action="store_true", help="shots: common random numbers for the +/- SPSA evals of each step")
+    p.add_argument("--shot-cost", choices=("gibbs", "cvar"), default="gibbs", help="shots: training cost (cvar = mean E of best --cvar-alpha fraction of shots)")
+    p.add_argument("--cvar-alpha", type=float, default=0.1)
     p.add_argument("--ecd-fast", action="store_true", help="3cav: buffered batched-matmul circuit (noiseless/ecd_bench.py); same numbers, 2.541x faster per n=20 trial")
     p.add_argument("--device", choices=("2cav", "3cav"), default="2cav", help="3cav: one transmon per cavity (relayout_3cav)")
     p.add_argument("--ks", default="5,4,4", help="3cav: bits per cavity")
@@ -411,6 +415,10 @@ def main(argv=None) -> int:
     a = p.parse_args(argv)
     if a.shots > 0:
         _os.environ["QM_SHOTS"] = str(a.shots)
+        _os.environ["QM_SHOT_READOUT"] = a.shot_readout
+        _os.environ["QM_SHOT_CRN"] = "1" if a.shot_crn else ""
+        _os.environ["QM_SHOT_COST"] = a.shot_cost
+        _os.environ["QM_SHOT_CVAR_ALPHA"] = str(a.cvar_alpha)
     if a.ecd_fast:
         _os.environ["QM_ECD_FAST"] = "1"
     tag, recs = run_config(n=a.n, L=a.L, s=a.s, r=a.r, R=a.R, lr=a.lr, nf=a.nf, trials=a.trials,

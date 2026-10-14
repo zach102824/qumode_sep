@@ -178,8 +178,12 @@ def relayout_trial_kbit(
         res_list.append(res)
         sim_list.append(sim)
         prob_list.append(np.asarray(ev["probs"], dtype=float))
+        if _shots.S > 0:
+            run_best_e.append(min((float(E[v]) for v in _shots.STATE["run"]), default=float("inf")))
         eta_now = max(float(r.eta) for r in res_list)
         funs = [float(gibbs_objective(pp, ss.energies_flat, eta_now)) for pp, ss in zip(prob_list, sim_list)]
+        if _shots.S > 0 and _shots.READOUT == "lowE":
+            funs = list(run_best_e)
         bsf = min(range(len(funs)), key=lambda j: (funs[j], j))
         cand = res.most_likely_bitstring
         cand_i = None if cand == "LEAKED" else int(cand, 2)
@@ -217,6 +221,10 @@ def relayout_trial_kbit(
     for j, (pp, ss) in enumerate(zip(prob_list, sim_list)):
         rounds[j]["fun_common_eta"] = float(gibbs_objective(pp, ss.energies_flat, eta_ref))
     sel = min(range(len(rounds)), key=lambda j: (rounds[j]["fun_common_eta"], j))
+    if _shots.S > 0 and _shots.READOUT == "lowE":
+        for j in range(len(rounds)):
+            rounds[j]["best_sampled_E"] = run_best_e[j]
+        sel = min(range(len(rounds)), key=lambda j: (run_best_e[j], rounds[j]["fun_common_eta"], j))
     for j in range(len(rounds)):
         rounds[j]["selected"] = j == sel
     best = res_list[sel]
@@ -438,6 +446,7 @@ def explore_exploit_trial_kbit(
     run_gs_diag: list[dict] = []  # diagnostic only (MIN_LOOKUP_RULE): GS ranks in readout / energy order
     agree_stop = False
     n_expl_run = 0
+    run_best_e: list[float] = []  # shots: best sampled energy per run
     for rnd in range(n_total):
         exploring = rnd < int(explore_rounds)
         if not exploring and _os_fc.environ.get("QM_EXPLORE_ONLY", "") == "1":
@@ -445,6 +454,8 @@ def explore_exploit_trial_kbit(
         if exploring and agree_stop:
             continue
         n_expl_run += int(exploring)
+        if _shots.S > 0:
+            _shots.STATE["run"] = set()  # strings sampled during this run (lowE readout)
         Pm = None
         perm = cen = None  # set in sa / warm / lmut branches for best-layout tracking
         if exploring:
@@ -584,6 +595,12 @@ def explore_exploit_trial_kbit(
             raw = [int(j) ^ mask for j in top]
             if Pm is not None:
                 raw = [int(Pm[v]) for v in raw]
+            if _shots.S > 0 and _shots.READOUT == "lowE":
+                # lowest-energy readout: 2n lowest-E distinct strings sampled during this run (energies already
+                # known from the cost); pad with the frequency order only if fewer than raw_k were sampled
+                _low = sorted(_shots.STATE["run"], key=lambda v: (E[v], v))[: int(raw_k)]
+                _ls = set(_low)
+                raw = _low + [v for v in raw if v not in _ls][: int(raw_k) - len(_low)]
             # OVERNIGHT idea (3): adaptive K — if QM_ADAPT_K=Q>0, keep only strings until the round's top-1
             # has appeared as top-1 in Q previous rounds (shared rule). Lookups still count full raw_k (fixed cost).
             _ak = int(_os_fc.environ.get("QM_ADAPT_K", "0") or 0)
