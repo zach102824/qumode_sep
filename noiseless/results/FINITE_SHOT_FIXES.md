@@ -1,6 +1,6 @@
 # Finite-shot fixes: 10-trial screens at n = 8, 10 (sl3 recipe, same 10 instances/seeds as FINITE_SHOT_1000.md)
 
-Run: `logs/shotfix/run.sh V S n...` (driver `logs/shotfix/all.sh`). Same args as `logs/shotfix1000/run.sh` 2cav rows (sl3, `QM_CLS_ALGO=satlike`, `--workers 6`), plus `--shots S` and the fix flags below. Raw: `noiseless/results/relayout_runs/shotfix/<V>_S<S>/*.jsonl` (gitignored). Table: `python noiseless/analyze_finite_shot_fixes.py`.
+Run: `logs/shotfix/run.sh V S n...` (driver `logs/shotfix/all.sh`). Same args as `logs/shots1000/run.sh` 2cav rows (sl3, `QM_CLS_ALGO=satlike`, `--workers 6`), plus `--shots S` and the fix flags below. Raw: `noiseless/results/relayout_runs/shotfix/<V>_S<S>/*.jsonl` (gitignored). Table: `python noiseless/analyze_finite_shot_fixes.py`.
 
 ## Variants (new flags, defaults unchanged; `--shots S` with no fix flags reproduces FINITE_SHOT_1000 bit-identically: checked per trial, p(GS) and unique totals, n=8 and 10)
 - **V0** plain shot code.
