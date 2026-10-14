@@ -56,3 +56,31 @@ Exact-cost sl3 reference: 10/10, p(GS) 0.987 (n=8), 0.988 (n=10).
 - Remaining failures (e.g. n=10 inst 1, 7) fail in all variants: the GS never reached the readout/fix-up.
 - Unique strings checked stay large (~40-68% of 2^n at n=10, ~81-93% at n=8). Shots dominate the count.
 - Caveat: 10 trials, so differences of 1-2 successes are within noise.
+
+## n = 14, 16 screens (3cav, --ecd-fast, sl3 args as logs/shots1000/run.sh: n=14 ks 4,4,3 E=2; n=16 ks 5,4,4 E=4; 8 workers)
+
+Run: `logs/shotfix/all1416.sh` (V2 S=100, V1 S=1000, V0 S=100). Table: `python noiseless/analyze_finite_shot_fixes.py 14 16`.
+
+| variant | S | n | success | mean exact p(GS) | mean shot p(GS) | SPSA evals (nfev) | shot evals | raw lookups | unique lookups | unique total | 2^n | total/2^n mean | total/2^n max |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| V0 plain | 100 | 14 | 4/10 | 0.378 | 0.383 | 727 | 817 | 168 | 137.3 | 4358.5 | 16384 | 26.60% | 46.77% |
+| V0 plain | 100 | 16 | 2/10 | 0.159 | 0.160 | 1153 | 1301 | 288 | 226.6 | 14208.2 | 65536 | 21.68% | 29.13% |
+| V2 lowE + CRN | 100 | 14 | 6/10 | 0.500 | 0.511 | 727 | 817 | 168 | 104.3 | 3025.2 | 16384 | 18.46% | 36.00% |
+| V2 lowE + CRN | 100 | 16 | 3/10 | 0.254 | 0.251 | 1153 | 1301 | 288 | 184.8 | 10477.1 | 65536 | 15.99% | 26.80% |
+| V1 lowE readout | 1000 | 14 | 8/10 | 0.752 | 0.755 | 727 | 817 | 168 | 110.9 | 8002.9 | 16384 | 48.85% | 74.92% |
+| V1 lowE readout | 1000 | 16 | 7/10 | 0.671 | 0.672 | 1153 | 1301 | 288 | 190.6 | 30469.1 | 65536 | 46.49% | 62.80% |
+
+Per-trial:
+- V0 S=100 n=14: i0:n p=0.000 tot=4494 ; i1:n p=0.000 tot=3896 ; i2:Y p=0.942 tot=7662 ; i3:n p=0.069 tot=3538 ; i4:n p=0.000 tot=2766 ; i5:Y p=0.898 tot=4888 ; i6:Y p=0.960 tot=4290 ; i7:Y p=0.908 tot=2436 ; i8:n p=0.000 tot=4016 ; i9:n p=0.000 tot=5599
+- V0 S=100 n=16: i0:n p=0.000 tot=13405 ; i1:Y p=0.662 tot=19090 ; i2:n p=0.000 tot=14108 ; i3:Y p=0.929 tot=15746 ; i4:n p=0.000 tot=13461 ; i5:n p=0.000 tot=11185 ; i6:n p=0.000 tot=10652 ; i7:n p=0.000 tot=18076 ; i8:n p=0.000 tot=10152 ; i9:n p=0.000 tot=16207
+- V2 S=100 n=14: i0:Y p=0.936 tot=2827 ; i1:n p=0.000 tot=1932 ; i2:Y p=0.976 tot=1483 ; i3:Y p=0.269 tot=3053 ; i4:n p=0.000 tot=1687 ; i5:Y p=0.883 tot=4593 ; i6:Y p=0.977 tot=5899 ; i7:Y p=0.959 tot=1904 ; i8:n p=0.000 tot=1506 ; i9:n p=0.000 tot=5368
+- V2 S=100 n=16: i0:Y p=0.951 tot=16557 ; i1:Y p=0.634 tot=7993 ; i2:n p=0.000 tot=17565 ; i3:Y p=0.958 tot=11565 ; i4:n p=0.000 tot=5857 ; i5:n p=0.000 tot=15017 ; i6:n p=0.000 tot=3902 ; i7:n p=0.000 tot=10441 ; i8:n p=0.000 tot=6876 ; i9:n p=0.000 tot=8998
+- V1 S=1000 n=14: i0:Y p=0.975 tot=9894 ; i1:n p=0.000 tot=7170 ; i2:Y p=0.961 tot=9234 ; i3:Y p=0.788 tot=8917 ; i4:Y p=0.958 tot=12275 ; i5:Y p=0.942 tot=4159 ; i6:Y p=0.983 tot=5354 ; i7:Y p=0.949 tot=7546 ; i8:Y p=0.961 tot=10850 ; i9:n p=0.000 tot=4630
+- V1 S=1000 n=16: i0:Y p=0.951 tot=21649 ; i1:Y p=0.931 tot=25974 ; i2:Y p=0.982 tot=40667 ; i3:Y p=0.973 tot=37573 ; i4:Y p=0.976 tot=30502 ; i5:Y p=0.935 tot=39711 ; i6:Y p=0.966 tot=41159 ; i7:n p=0.000 tot=22914 ; i8:n p=0.000 tot=25397 ; i9:n p=0.000 tot=19145
+
+Exact-cost sl3 reference: 10/10, p(GS) 0.961 (n=14), 0.972 (n=16).
+
+## Reading (n=14, 16)
+- Success degrades with n under shots: V2 S=100 6/10 -> 3/10, V1 S=1000 8/10 -> 7/10, V0 S=100 4/10 -> 2/10 (exact cost: 10/10 both).
+- Unique share of 2^n does drop with n, but slowly: V2 S=100 46.91% (n=10) -> 18.46% (n=14) -> 15.99% (n=16); V1 S=1000 65.16% -> 48.85% -> 46.49%. n=12 was not run in this screen.
+- S=1000 is the only setting that stays reasonably accurate, at ~3x the unique strings of S=100.

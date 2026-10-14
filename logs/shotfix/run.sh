@@ -8,10 +8,11 @@ case $V in
  V3) F="--shot-readout lowE --shot-crn --shot-cost cvar --cvar-alpha 0.1";;
 esac
 OUT=noiseless/results/relayout_runs/shotfix/${V}_S$S; D=logs/shotfix; mkdir -p $OUT
-CM="--L 4 --s 50 --lr 0.05 --xeta 128 --reta 2 --ham-set wmaxsat --code gray --workers 6 --explore-mask sa --samode fixed_low --polt 1 --R 1 --trials 1 --sanoise 0.3 --outdir $OUT --shots $S $F"
-C2="$CM --r 150 --xL 2"
+CM="--L 4 --s 50 --lr 0.05 --xeta 128 --reta 2 --ham-set wmaxsat --code gray --workers ${W:-6} --explore-mask sa --samode fixed_low --polt 1 --R 1 --trials 1 --sanoise 0.3 --outdir $OUT --shots $S $F"
+C2="$CM --r 150 --xL 2"; C3="$CM --device 3cav --r 150 --xL 3 --xs 35 --ecd-fast"
 declare -A A
 A[8]="$C2 --n 8 --xs 25 --explore 2"; A[10]="$C2 --n 10 --xs 35 --explore 2"
+A[14]="$C3 --n 14 --ks 4,4,3 --explore 2"; A[16]="$C3 --n 16 --ks 5,4,4 --explore 4"
 for n in "$@"; do
   echo "[$(date '+%F %T') CST] START $V S$S n$n"
   python noiseless/run_relayout_kbit.py ${A[$n]} --sab $((3*n)) --rawk $((2*n)) > $D/${V}_S${S}_n$n.json 2>&1
