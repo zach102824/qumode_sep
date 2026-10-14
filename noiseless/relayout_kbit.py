@@ -729,6 +729,6 @@ def explore_exploit_trial_kbit(
         "sel_layers": int(rounds[sel]["n_layers"]),
         "rounds": rounds,
         **({"shots": _shots.S, "n_unique_sampled": len(_shots.STATE["union"]), "n_unique_total": len(_shots.STATE["union"] | seen),
-            "n_shot_evals": int(_shots.STATE["n_shot_evals"]),
+            "n_shot_evals": int(_shots.STATE["n_shot_evals"]), "n_shots_total": int(_shots.STATE["n_shots"]),
             "p_gs_shots": float(prob_list[sel][sim_list[sel].ground_flat_index])} if _shots.S > 0 else {}),
     }

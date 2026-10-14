@@ -19,7 +19,17 @@ READOUT = os.environ.get("QM_SHOT_READOUT", "freq")  # "lowE": readout = 2n lowe
 CRN = os.environ.get("QM_SHOT_CRN", "") == "1"       # common random numbers for the +/- SPSA evals of a step
 COST = os.environ.get("QM_SHOT_COST", "gibbs")       # "cvar": mean E of the best alpha fraction of shots
 ALPHA = float(os.environ.get("QM_SHOT_CVAR_ALPHA", "0.1") or 0.1)
-STATE = {"rng": None, "union": set(), "n_shot_evals": 0, "run": set(), "crn_seed": None}
+# R2 shot schedule: within every SPSA run (stage), shots grow geometrically from S0 to S (0 = off, fixed S).
+S0 = int(os.environ.get("QM_SHOT_S0", "0") or 0)
+# R3 eta anneal: shot Gibbs cost uses eta * F**(frac-1), i.e. eta/F at the start of a stage -> eta at its end (0/1 = off).
+ETA_F = float(os.environ.get("QM_SHOT_ETA_ANNEAL", "0") or 0)
+STATE = {"rng": None, "union": set(), "n_shot_evals": 0, "run": set(), "crn_seed": None, "frac": 1.0, "n_shots": 0}
+
+
+def cur_S() -> int:
+    if S0 <= 0 or S0 >= S:
+        return S
+    return int(round(S0 * (S / S0) ** float(STATE["frac"])))
 
 
 def reset(seed: int) -> None:
@@ -28,6 +38,8 @@ def reset(seed: int) -> None:
     STATE["n_shot_evals"] = 0
     STATE["run"] = set()
     STATE["crn_seed"] = None
+    STATE["frac"] = 1.0
+    STATE["n_shots"] = 0
 
 
 def _orig_map(sim) -> np.ndarray:
@@ -48,7 +60,9 @@ def sample(sim, probs) -> np.ndarray:
     p = np.clip(np.asarray(probs, dtype=float).reshape(-1), 0, None)
     p = p / p.sum()
     r = STATE["rng"] if STATE["crn_seed"] is None else np.random.default_rng(STATE["crn_seed"])
-    counts = r.multinomial(S, p)
+    Sk = cur_S()
+    STATE["n_shots"] += Sk
+    counts = r.multinomial(Sk, p)
     idx = np.flatnonzero(counts)
     orig = _orig_map(sim)[idx]
     vs = [int(v) for v in orig if v >= 0]
@@ -56,7 +70,7 @@ def sample(sim, probs) -> np.ndarray:
     STATE["run"].update(vs)
     STATE["n_shot_evals"] += 1
     emp = np.zeros_like(p)
-    emp[idx] = counts[idx] / S
+    emp[idx] = counts[idx] / Sk
     return emp
 
 
@@ -93,6 +107,7 @@ def run_spsa_adam_crn(fun, x0, *, maxiter, rng, lr=None, beta1=None, beta2=None,
     x = np.asarray(x0, dtype=float).copy()
     m = np.zeros_like(x); v = np.zeros_like(x); nfev = 0
     for k in range(1, int(maxiter) + 1):
+        STATE["frac"] = (k - 1) / max(int(maxiter) - 1, 1)
         if on_before_step is not None:
             on_before_step(k, x)
         ck = c / k**gamma
@@ -107,6 +122,7 @@ def run_spsa_adam_crn(fun, x0, *, maxiter, rng, lr=None, beta1=None, beta2=None,
         m = b1 * m + (1.0 - b1) * ghat
         v = b2 * v + (1.0 - b2) * ghat * ghat
         x = x - float(lr) * (m / (1.0 - b1**k)) / (np.sqrt(v / (1.0 - b2**k)) + float(eps))
+    STATE["frac"] = 1.0
     return x, float(fun(x)), nfev + 1
 
 
@@ -122,7 +138,10 @@ def patch(cls) -> None:
         if COST == "cvar":
             g = cvar_support(emp, self.energies_flat)
         else:
-            g = gibbs_support(emp, self.energies_flat, self._current_eta if eta is None else float(eta))
+            et = self._current_eta if eta is None else float(eta)
+            if ETA_F > 1.0:
+                et = et * ETA_F ** (float(STATE["frac"]) - 1.0)
+            g = gibbs_support(emp, self.energies_flat, et)
         if float(getattr(self, "lambda1", 0.0)) == 0.0 and float(getattr(self, "lam", 0.0)) == 0.0:
             return g
         return float(g + beta_regularizer(betas_from_x(x, self.n_layers), lambda1=self.lambda1, lam=self.lam, beta_max=self.beta_max))
@@ -141,6 +160,8 @@ def patch(cls) -> None:
         return ev
 
     cls.cost, cls.refresh_eta, cls.evaluate = cost, refresh_eta, evaluate
+    if (S0 > 0 or ETA_F > 1.0) and not CRN:
+        raise ValueError("QM_SHOT_S0 / QM_SHOT_ETA_ANNEAL need --shot-crn (stage progress is tracked in the CRN SPSA loop)")
     if CRN:
         from . import spsa_gibbs as sg
         sg.run_spsa_adam = run_spsa_adam_crn

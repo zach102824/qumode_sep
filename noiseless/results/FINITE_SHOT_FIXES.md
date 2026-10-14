@@ -84,3 +84,86 @@ Exact-cost sl3 reference: 10/10, p(GS) 0.961 (n=14), 0.972 (n=16).
 - Success degrades with n under shots: V2 S=100 6/10 -> 3/10, V1 S=1000 8/10 -> 7/10, V0 S=100 4/10 -> 2/10 (exact cost: 10/10 both).
 - Unique share of 2^n does drop with n, but slowly: V2 S=100 46.91% (n=10) -> 18.46% (n=14) -> 15.99% (n=16); V1 S=1000 65.16% -> 48.85% -> 46.49%. n=12 was not run in this screen.
 - S=1000 is the only setting that stays reasonably accurate, at ~3x the unique strings of S=100.
+
+## R1-R3 screens (Oct 14, n = 10, 12, 14, 16; lowE readout + CRN always on; same instances/seeds/sl3 args, --ecd-fast for 3cav; 8 workers)
+
+New flags (defaults unchanged): `--shot-s0 S0` (R2: shots grow geometrically S0 -> `--shots` over every SPSA stage, restarting each stage), `--shot-eta-anneal F` (R3: the shot Gibbs cost uses eta*F^(frac-1), i.e. eta/F at the start of every stage growing geometrically to the controller's eta at its end). Both track stage progress in the CRN SPSA loop, so they require `--shot-crn`. R1 (warm start) uses the existing `--xbeta 1`: the first explore growth stage starts with |beta| ~ U(0,1) instead of U(0,3), so the explore state starts near the vacuum, which the SA explore mask maps to the classical guess; early training is less broad. Records now carry `n_shots_total`.
+Settings: B100 = S=100 lowE+CRN (= V2 S100; n=12 newly run); R1 = B100 + xbeta 1; R2 = S 50->1000; R3 = S=100 + eta anneal F=16; C23 = R2+R3; C123 = R1+R2+R3; C3S1000 = S=1000 + R3; C23b = S 100->3000 + R3.
+Run: `logs/shotfix2/all.sh`, `logs/shotfix2/combo.sh`. Table: `python noiseless/analyze_finite_shot_r123.py B100 R1 R2 R3 C23 C123 C3S1000 C23b`. "unique strings checked" = union of all sampled strings and all lookups, each counted once.
+
+| setting | n | success | mean exact p(GS) | unique strings checked (mean) | share of 2^n mean | share max | total shots (mean) | SPSA evals (nfev) | shot evals |
+|---|---|---|---|---|---|---|---|---|---|
+| B100 | 10 | 6/10 | 0.531 | 480.4 | 46.91% | 78.32% | 65,500 | 585 | 655 |
+| B100 | 12 | 6/10 | 0.587 | 929.5 | 22.69% | 57.40% | 78,700 | 705 | 787 |
+| B100 | 14 | 6/10 | 0.500 | 3025.2 | 18.46% | 36.00% | 81,700 | 727 | 817 |
+| B100 | 16 | 3/10 | 0.254 | 10477.1 | 15.99% | 26.80% | 130,100 | 1153 | 1301 |
+| R1 | 10 | 6/10 | 0.518 | 552.5 | 53.96% | 89.06% | 65,500 | 585 | 655 |
+| R1 | 12 | 5/10 | 0.493 | 276.5 | 6.75% | 9.77% | 78,700 | 705 | 787 |
+| R1 | 14 | 5/10 | 0.424 | 3218.1 | 19.64% | 31.13% | 81,700 | 727 | 817 |
+| R1 | 16 | 2/10 | 0.149 | 6447.8 | 9.84% | 21.30% | 130,100 | 1153 | 1301 |
+| R2 | 10 | 7/10 | 0.629 | 559.0 | 54.59% | 89.26% | 219,768 | 585 | 655 |
+| R2 | 12 | 5/10 | 0.492 | 447.3 | 10.92% | 17.65% | 261,648 | 705 | 787 |
+| R2 | 14 | 7/10 | 0.552 | 5184.3 | 31.64% | 43.03% | 276,788 | 727 | 817 |
+| R2 | 16 | 6/10 | 0.542 | 13028.3 | 19.88% | 31.10% | 445,848 | 1153 | 1301 |
+| R3 | 10 | 7/10 | 0.689 | 473.7 | 46.26% | 84.67% | 65,500 | 585 | 655 |
+| R3 | 12 | 5/10 | 0.494 | 793.8 | 19.38% | 46.92% | 78,700 | 705 | 787 |
+| R3 | 14 | 6/10 | 0.558 | 4405.0 | 26.89% | 40.97% | 81,700 | 727 | 817 |
+| R3 | 16 | 3/10 | 0.280 | 9843.3 | 15.02% | 29.33% | 130,100 | 1153 | 1301 |
+| C23 | 10 | 8/10 | 0.778 | 490.3 | 47.88% | 93.07% | 219,768 | 585 | 655 |
+| C23 | 12 | 5/10 | 0.494 | 481.6 | 11.76% | 32.91% | 261,648 | 705 | 787 |
+| C23 | 14 | 8/10 | 0.755 | 6257.6 | 38.19% | 64.66% | 276,788 | 727 | 817 |
+| C23 | 16 | 6/10 | 0.541 | 13114.3 | 20.01% | 37.60% | 445,848 | 1153 | 1301 |
+| C123 | 10 | 7/10 | 0.691 | 453.4 | 44.28% | 89.84% | 219,768 | 585 | 655 |
+| C123 | 12 | 5/10 | 0.495 | 287.8 | 7.03% | 9.81% | 261,648 | 705 | 787 |
+| C123 | 14 | 5/10 | 0.450 | 3968.9 | 24.22% | 40.08% | 276,788 | 727 | 817 |
+| C123 | 16 | 4/10 | 0.376 | 10125.9 | 15.45% | 24.82% | 445,848 | 1153 | 1301 |
+| C3S1000 | 10 | 8/10 | 0.788 | 667.2 | 65.16% | 99.12% | 655,000 | 585 | 655 |
+| C3S1000 | 12 | 6/10 | 0.589 | 789.4 | 19.27% | 58.25% | 787,000 | 705 | 787 |
+| C3S1000 | 14 | 7/10 | 0.653 | 5567.6 | 33.98% | 66.31% | 817,000 | 727 | 817 |
+| C3S1000 | 16 | 3/10 | 0.285 | 14676.3 | 22.39% | 46.09% | 1,301,000 | 1153 | 1301 |
+| C23b | 10 | 7/10 | 0.681 | 640.7 | 62.57% | 96.39% | 597,064 | 585 | 655 |
+| C23b | 12 | 6/10 | 0.588 | 908.4 | 22.18% | 65.84% | 709,560 | 705 | 787 |
+| C23b | 14 | 8/10 | 0.743 | 5230.2 | 31.92% | 55.13% | 753,220 | 727 | 817 |
+| C23b | 16 | 5/10 | 0.479 | 17293.8 | 26.39% | 62.41% | 1,215,688 | 1153 | 1301 |
+
+Per-trial:
+- B100 n=10: i0:Y p=0.987 tot=495 ; i1:Y p=0.956 tot=621 ; i2:n p=0.000 tot=398 ; i3:Y p=0.989 tot=802 ; i4:Y p=0.992 tot=155 ; i5:Y p=0.973 tot=327 ; i6:Y p=0.411 tot=552 ; i7:n p=0.000 tot=311 ; i8:n p=0.000 tot=600 ; i9:n p=0.000 tot=543
+- B100 n=12: i0:n p=0.000 tot=679 ; i1:n p=0.000 tot=179 ; i2:Y p=0.965 tot=1026 ; i3:Y p=0.977 tot=753 ; i4:n p=0.000 tot=361 ; i5:Y p=0.990 tot=2351 ; i6:Y p=0.990 tot=192 ; i7:Y p=0.968 tot=373 ; i8:Y p=0.979 tot=1645 ; i9:n p=0.000 tot=1736
+- B100 n=14: i0:Y p=0.936 tot=2827 ; i1:n p=0.000 tot=1932 ; i2:Y p=0.976 tot=1483 ; i3:Y p=0.269 tot=3053 ; i4:n p=0.000 tot=1687 ; i5:Y p=0.883 tot=4593 ; i6:Y p=0.977 tot=5899 ; i7:Y p=0.959 tot=1904 ; i8:n p=0.000 tot=1506 ; i9:n p=0.000 tot=5368
+- B100 n=16: i0:Y p=0.951 tot=16557 ; i1:Y p=0.634 tot=7993 ; i2:n p=0.000 tot=17565 ; i3:Y p=0.958 tot=11565 ; i4:n p=0.000 tot=5857 ; i5:n p=0.000 tot=15017 ; i6:n p=0.000 tot=3902 ; i7:n p=0.000 tot=10441 ; i8:n p=0.000 tot=6876 ; i9:n p=0.000 tot=8998
+- R1 n=10: i0:Y p=0.986 tot=381 ; i1:n p=0.000 tot=659 ; i2:Y p=0.720 tot=661 ; i3:n p=0.000 tot=674 ; i4:Y p=0.992 tot=162 ; i5:Y p=0.973 tot=416 ; i6:Y p=0.522 tot=912 ; i7:Y p=0.987 tot=565 ; i8:n p=0.000 tot=377 ; i9:n p=0.000 tot=718
+- R1 n=12: i0:n p=0.000 tot=400 ; i1:n p=0.000 tot=191 ; i2:Y p=0.992 tot=360 ; i3:Y p=0.994 tot=377 ; i4:n p=0.000 tot=160 ; i5:n p=0.000 tot=187 ; i6:Y p=0.995 tot=337 ; i7:Y p=0.959 tot=259 ; i8:Y p=0.987 tot=301 ; i9:n p=0.000 tot=193
+- R1 n=14: i0:Y p=0.977 tot=2899 ; i1:n p=0.000 tot=1282 ; i2:Y p=0.978 tot=4868 ; i3:Y p=0.357 tot=5101 ; i4:n p=0.000 tot=2557 ; i5:n p=0.000 tot=3117 ; i6:Y p=0.971 tot=3297 ; i7:Y p=0.960 tot=3762 ; i8:n p=0.000 tot=2152 ; i9:n p=0.000 tot=3146
+- R1 n=16: i0:n p=0.000 tot=7389 ; i1:Y p=0.569 tot=4368 ; i2:n p=0.000 tot=8841 ; i3:Y p=0.920 tot=5390 ; i4:n p=0.000 tot=5775 ; i5:n p=0.000 tot=4271 ; i6:n p=0.000 tot=6667 ; i7:n p=0.000 tot=13957 ; i8:n p=0.000 tot=1582 ; i9:n p=0.000 tot=6238
+- R2 n=10: i0:Y p=0.990 tot=661 ; i1:n p=0.000 tot=170 ; i2:n p=0.000 tot=851 ; i3:Y p=0.989 tot=914 ; i4:Y p=0.990 tot=148 ; i5:Y p=0.974 tot=647 ; i6:Y p=0.480 tot=778 ; i7:n p=0.000 tot=194 ; i8:Y p=0.986 tot=533 ; i9:Y p=0.882 tot=694
+- R2 n=12: i0:n p=0.000 tot=599 ; i1:n p=0.000 tot=196 ; i2:Y p=0.978 tot=723 ; i3:Y p=0.993 tot=608 ; i4:n p=0.000 tot=259 ; i5:n p=0.000 tot=561 ; i6:Y p=0.985 tot=420 ; i7:Y p=0.983 tot=300 ; i8:Y p=0.985 tot=310 ; i9:n p=0.000 tot=497
+- R2 n=14: i0:Y p=0.966 tot=3277 ; i1:n p=0.000 tot=7050 ; i2:Y p=0.972 tot=4670 ; i3:Y p=0.252 tot=5499 ; i4:n p=0.000 tot=5635 ; i5:Y p=0.728 tot=6420 ; i6:Y p=0.888 tot=4476 ; i7:Y p=0.952 tot=4588 ; i8:Y p=0.758 tot=6848 ; i9:n p=0.000 tot=3380
+- R2 n=16: i0:Y p=0.938 tot=18885 ; i1:Y p=0.766 tot=13184 ; i2:Y p=0.953 tot=15831 ; i3:Y p=0.961 tot=8119 ; i4:n p=0.000 tot=4728 ; i5:n p=0.000 tot=10689 ; i6:n p=0.000 tot=9845 ; i7:Y p=0.864 tot=14906 ; i8:n p=0.000 tot=13716 ; i9:Y p=0.935 tot=20380
+- R3 n=10: i0:Y p=0.989 tot=574 ; i1:n p=0.000 tot=181 ; i2:n p=0.000 tot=425 ; i3:Y p=0.981 tot=741 ; i4:Y p=0.985 tot=156 ; i5:Y p=0.989 tot=211 ; i6:Y p=0.979 tot=867 ; i7:Y p=0.973 tot=505 ; i8:Y p=0.991 tot=318 ; i9:n p=0.000 tot=759
+- R3 n=12: i0:n p=0.000 tot=737 ; i1:n p=0.000 tot=178 ; i2:Y p=0.988 tot=1409 ; i3:Y p=0.990 tot=847 ; i4:n p=0.000 tot=319 ; i5:n p=0.000 tot=289 ; i6:Y p=0.985 tot=172 ; i7:Y p=0.991 tot=376 ; i8:Y p=0.984 tot=1922 ; i9:n p=0.000 tot=1689
+- R3 n=14: i0:Y p=0.963 tot=6712 ; i1:n p=0.000 tot=2659 ; i2:Y p=0.970 tot=3617 ; i3:Y p=0.892 tot=3851 ; i4:n p=0.000 tot=2291 ; i5:Y p=0.931 tot=5113 ; i6:Y p=0.915 tot=4939 ; i7:Y p=0.911 tot=5618 ; i8:n p=0.000 tot=3787 ; i9:n p=0.000 tot=5463
+- R3 n=16: i0:n p=0.000 tot=19220 ; i1:Y p=0.908 tot=10360 ; i2:n p=0.000 tot=4667 ; i3:Y p=0.927 tot=6826 ; i4:Y p=0.968 tot=7272 ; i5:n p=0.000 tot=5104 ; i6:n p=0.000 tot=10386 ; i7:n p=0.000 tot=14488 ; i8:n p=0.000 tot=7834 ; i9:n p=0.000 tot=12276
+- C23 n=10: i0:Y p=0.991 tot=485 ; i1:n p=0.000 tot=176 ; i2:Y p=0.994 tot=689 ; i3:Y p=0.989 tot=953 ; i4:Y p=0.985 tot=149 ; i5:Y p=0.976 tot=307 ; i6:Y p=0.951 tot=638 ; i7:n p=0.000 tot=174 ; i8:Y p=0.985 tot=628 ; i9:Y p=0.909 tot=704
+- C23 n=12: i0:n p=0.000 tot=325 ; i1:n p=0.000 tot=192 ; i2:Y p=0.984 tot=1348 ; i3:Y p=0.994 tot=379 ; i4:n p=0.000 tot=266 ; i5:n p=0.000 tot=373 ; i6:Y p=0.991 tot=343 ; i7:Y p=0.989 tot=339 ; i8:Y p=0.987 tot=433 ; i9:n p=0.000 tot=818
+- C23 n=14: i0:Y p=0.907 tot=4221 ; i1:Y p=0.969 tot=10594 ; i2:Y p=0.931 tot=5867 ; i3:Y p=0.960 tot=9356 ; i4:n p=0.000 tot=1521 ; i5:Y p=0.968 tot=6043 ; i6:Y p=0.926 tot=7877 ; i7:Y p=0.928 tot=4803 ; i8:Y p=0.960 tot=7054 ; i9:n p=0.000 tot=5240
+- C23 n=16: i0:Y p=0.963 tot=13051 ; i1:Y p=0.703 tot=10005 ; i2:n p=0.000 tot=18324 ; i3:Y p=0.911 tot=16961 ; i4:Y p=0.963 tot=9876 ; i5:Y p=0.931 tot=12630 ; i6:n p=0.000 tot=7993 ; i7:Y p=0.935 tot=9874 ; i8:n p=0.000 tot=7785 ; i9:n p=0.000 tot=24644
+- C123 n=10: i0:Y p=0.986 tot=920 ; i1:n p=0.000 tot=344 ; i2:Y p=0.996 tot=379 ; i3:Y p=0.983 tot=812 ; i4:Y p=0.988 tot=156 ; i5:Y p=0.986 tot=245 ; i6:Y p=0.983 tot=336 ; i7:n p=0.000 tot=223 ; i8:Y p=0.985 tot=873 ; i9:n p=0.000 tot=246
+- C123 n=12: i0:n p=0.000 tot=402 ; i1:n p=0.000 tot=207 ; i2:Y p=0.983 tot=381 ; i3:Y p=0.990 tot=274 ; i4:n p=0.000 tot=192 ; i5:n p=0.000 tot=355 ; i6:Y p=0.997 tot=212 ; i7:Y p=0.991 tot=313 ; i8:Y p=0.989 tot=350 ; i9:n p=0.000 tot=192
+- C123 n=14: i0:Y p=0.906 tot=4417 ; i1:n p=0.000 tot=5436 ; i2:Y p=0.957 tot=4499 ; i3:Y p=0.791 tot=6567 ; i4:n p=0.000 tot=4427 ; i5:n p=0.000 tot=4057 ; i6:Y p=0.916 tot=3135 ; i7:Y p=0.927 tot=1549 ; i8:n p=0.000 tot=2425 ; i9:n p=0.000 tot=3177
+- C123 n=16: i0:Y p=0.963 tot=16266 ; i1:Y p=0.940 tot=8278 ; i2:n p=0.000 tot=14839 ; i3:Y p=0.885 tot=13992 ; i4:Y p=0.967 tot=13328 ; i5:n p=0.000 tot=4878 ; i6:n p=0.000 tot=12228 ; i7:n p=0.000 tot=8130 ; i8:n p=0.000 tot=3114 ; i9:n p=0.000 tot=6206
+- C3S1000 n=10: i0:Y p=0.988 tot=654 ; i1:n p=0.000 tot=344 ; i2:Y p=0.990 tot=990 ; i3:Y p=0.976 tot=1015 ; i4:Y p=0.992 tot=218 ; i5:Y p=0.985 tot=626 ; i6:Y p=0.987 tot=688 ; i7:n p=0.000 tot=285 ; i8:Y p=0.987 tot=873 ; i9:Y p=0.973 tot=979
+- C3S1000 n=12: i0:n p=0.000 tot=1056 ; i1:n p=0.000 tot=247 ; i2:Y p=0.995 tot=635 ; i3:Y p=0.969 tot=497 ; i4:n p=0.000 tot=376 ; i5:Y p=0.988 tot=1412 ; i6:Y p=0.992 tot=376 ; i7:Y p=0.973 tot=352 ; i8:Y p=0.974 tot=557 ; i9:n p=0.000 tot=2386
+- C3S1000 n=14: i0:Y p=0.962 tot=10864 ; i1:n p=0.000 tot=5073 ; i2:Y p=0.968 tot=4204 ; i3:Y p=0.899 tot=7141 ; i4:Y p=0.890 tot=8643 ; i5:Y p=0.961 tot=1899 ; i6:Y p=0.921 tot=4324 ; i7:Y p=0.928 tot=9262 ; i8:n p=0.000 tot=2168 ; i9:n p=0.000 tot=2098
+- C3S1000 n=16: i0:n p=0.000 tot=4879 ; i1:Y p=0.963 tot=12758 ; i2:Y p=0.935 tot=23565 ; i3:Y p=0.956 tot=30203 ; i4:n p=0.000 tot=11597 ; i5:n p=0.000 tot=16806 ; i6:n p=0.000 tot=5663 ; i7:n p=0.000 tot=11869 ; i8:n p=0.000 tot=7606 ; i9:n p=0.000 tot=21817
+- C23b n=10: i0:Y p=0.984 tot=956 ; i1:n p=0.000 tot=232 ; i2:Y p=0.994 tot=890 ; i3:Y p=0.990 tot=987 ; i4:Y p=0.992 tot=187 ; i5:Y p=0.977 tot=596 ; i6:Y p=0.983 tot=950 ; i7:n p=0.000 tot=530 ; i8:n p=0.000 tot=280 ; i9:Y p=0.894 tot=799
+- C23b n=12: i0:n p=0.000 tot=1438 ; i1:n p=0.000 tot=180 ; i2:Y p=0.958 tot=2697 ; i3:Y p=0.987 tot=447 ; i4:n p=0.000 tot=346 ; i5:Y p=0.986 tot=994 ; i6:Y p=0.998 tot=1025 ; i7:Y p=0.968 tot=404 ; i8:Y p=0.985 tot=1179 ; i9:n p=0.000 tot=374
+- C23b n=14: i0:Y p=0.965 tot=9033 ; i1:n p=0.000 tot=4707 ; i2:Y p=0.976 tot=2973 ; i3:Y p=0.873 tot=2813 ; i4:Y p=0.911 tot=6255 ; i5:Y p=0.967 tot=7535 ; i6:Y p=0.953 tot=4511 ; i7:Y p=0.917 tot=3039 ; i8:Y p=0.872 tot=8507 ; i9:n p=0.000 tot=2929
+- C23b n=16: i0:Y p=0.973 tot=19132 ; i1:Y p=0.974 tot=4770 ; i2:Y p=0.957 tot=40901 ; i3:Y p=0.949 tot=17285 ; i4:n p=0.000 tot=9902 ; i5:n p=0.000 tot=22979 ; i6:n p=0.000 tot=6677 ; i7:Y p=0.942 tot=16438 ; i8:n p=0.000 tot=23091 ; i9:n p=0.000 tot=11763
+
+Reference: S=1000 lowE (V1): 8/10 n=10, 8/10 n=14, 7/10 n=16 at 65%, 49%, 46% of 2^n.
+
+## Reading (R1-R3)
+- No setting reaches 9/10 at n=14 or n=16. Best success: C23 (S 50->1000 + eta anneal) 8/10, 5/10, 8/10, 6/10 at n=10, 12, 14, 16, at 47.9%, 11.8%, 38.2%, 20.0% of 2^n, which is about half V1's share at n=14 and 16, with fewer shots (219,768 to 445,848 vs 655,000 to 1,301,000), but one fewer success at n=16.
+- R1 (xbeta 1) cuts the unique share (n=12 6.75%, n=16 9.84%) but lowers success (5/10, 2/10 at n=14, 16). Narrower starts reach fewer strings, so the GS is reached less often.
+- R2 (shot schedule) is the only single fix that helps n=16 (3 -> 6/10). R3 alone is roughly neutral (within 10-trial noise).
+- More shots don't fix it: C23b (100->3000) and C3S1000 are no better than C23. n=12 is stuck at 5-6/10 in every setting, so the same instances fail across all settings.

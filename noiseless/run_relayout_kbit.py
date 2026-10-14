@@ -403,6 +403,8 @@ def main(argv=None) -> int:
     p.add_argument("--saind", type=int, default=0, help="independent SA pass of this many lookups per explore run")
     p.add_argument("--shots", type=int, default=0, help="finite-shot model: S shots per circuit eval (noiseless/shots.py); tag gets _shotsS")
     p.add_argument("--shot-readout", choices=("freq", "lowE"), default="freq", help="shots: top-2n readout = most frequent final-state strings (freq) or 2n lowest-E strings sampled in the run (lowE; also round selection by best sampled E)")
+    p.add_argument("--shot-s0", type=int, default=0, help="shots R2: shots grow geometrically S0 -> --shots over every SPSA stage (needs --shot-crn)")
+    p.add_argument("--shot-eta-anneal", type=float, default=0.0, help="shots R3: shot Gibbs eta grows geometrically eta/F -> eta over every SPSA stage (needs --shot-crn)")
     p.add_argument("--shot-crn", action="store_true", help="shots: common random numbers for the +/- SPSA evals of each step")
     p.add_argument("--shot-cost", choices=("gibbs", "cvar"), default="gibbs", help="shots: training cost (cvar = mean E of best --cvar-alpha fraction of shots)")
     p.add_argument("--cvar-alpha", type=float, default=0.1)
@@ -418,6 +420,8 @@ def main(argv=None) -> int:
         _os.environ["QM_SHOT_READOUT"] = a.shot_readout
         _os.environ["QM_SHOT_CRN"] = "1" if a.shot_crn else ""
         _os.environ["QM_SHOT_COST"] = a.shot_cost
+        _os.environ["QM_SHOT_S0"] = str(a.shot_s0)
+        _os.environ["QM_SHOT_ETA_ANNEAL"] = str(a.shot_eta_anneal)
         _os.environ["QM_SHOT_CVAR_ALPHA"] = str(a.cvar_alpha)
     if a.ecd_fast:
         _os.environ["QM_ECD_FAST"] = "1"
