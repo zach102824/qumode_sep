@@ -59,3 +59,4 @@ Variants
 | sl5_Kn | 12 | QM_CLS_ALGO=satlike  r=150  Kmul=1    | 10 | 1.00 | 0.992 | 705 | 60 / 36 / 36 | 132 | 10:14 |
 | sl5_Kn | 14 | QM_CLS_ALGO=satlike  r=150  Kmul=1    | 10 | 1.00 | 0.961 | 727 | 70 / 42 / 42 | 154 | 10:15 |
 | sl5_Kn | 16 | QM_CLS_ALGO=satlike  r=150  Kmul=1    | 10 | 1.00 | 0.972 | 1153 | 80 / 80 / 80 | 240 | 10:22 |
+| sl5_Kn | 18 | QM_CLS_ALGO=satlike  r=150  Kmul=1    | 10 | 1.00 | 0.963 | 1579 | 90 / 126 / 126 | 342 | 10:35 |
