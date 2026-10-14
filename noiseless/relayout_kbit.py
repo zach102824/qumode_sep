@@ -427,6 +427,15 @@ def explore_exploit_trial_kbit(
         n_lookups += n_sa
         sa_centers, sa_m = marginals(sa_seen, n)
         pool.add(int(sa_centers[0]))  # classical best (already looked up) enters the pool
+        if _os_fc.environ.get("QM_NOCLS", "") == "1":
+            # QUANTUM_BENEFIT test 2: no classical search. Centers are uniform random strings, marginals flat
+            # (layouts then differ only by layout noise); only the first random center is looked up (1 lookup).
+            _nr = np.random.default_rng(int(sa_seed if sa_seed is not None else 12345) ^ 0xC0FFEE)
+            sa_centers = [int(v) for v in _nr.integers(0, 1 << n, size=max(1, n_total))]
+            sa_m = np.full(n, 0.5)
+            pool.clear(); seen.clear()
+            pool.add(sa_centers[0]); seen.add(sa_centers[0])
+            n_sa = n_sa_raw = 1; n_lookups = 1
         if "_div" in sa_mode:
             # diverse centers: greedy pick from SA's low states, each >= n//4 Hamming from earlier picks
             _ord = [int(v) for v, _ in sorted(sa_seen.items(), key=lambda kv: (kv[1], kv[0]))[:256]]
@@ -601,6 +610,12 @@ def explore_exploit_trial_kbit(
                 _low = sorted(_shots.STATE["run"], key=lambda v: (E[v], v))[: int(raw_k)]
                 _ls = set(_low)
                 raw = _low + [v for v in raw if v not in _ls][: int(raw_k) - len(_low)]
+            if _os_fc.environ.get("QM_RANDREAD", "") == "1":
+                # QUANTUM_BENEFIT test 3: readout replaced by raw_k uniform random strings (same lookup count)
+                _rr = getattr(polish_logical, "_rand_rng", None)
+                if _rr is None or _rr[0] is not E:
+                    polish_logical._rand_rng = (E, np.random.default_rng(int(sa_seed if sa_seed is not None else 1) ^ 0xBEEF))
+                raw = [int(v) for v in polish_logical._rand_rng[1].integers(0, 1 << n, size=int(raw_k))]
             # OVERNIGHT idea (3): adaptive K — if QM_ADAPT_K=Q>0, keep only strings until the round's top-1
             # has appeared as top-1 in Q previous rounds (shared rule). Lookups still count full raw_k (fixed cost).
             _ak = int(_os_fc.environ.get("QM_ADAPT_K", "0") or 0)
