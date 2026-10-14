@@ -26,6 +26,7 @@ the guess's cavity codes sit at Fock (0, .., 0).
 from __future__ import annotations
 
 import contextlib
+import os
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -298,6 +299,9 @@ class XorMultiCavSim:
         self.lambda3 = float(value)
 
     def probs_from_x(self, x) -> np.ndarray:
+        if os.environ.get("QM_ECD_FAST") == "1":
+            from .ecd_bench import apply_circuit_multi_fast2 as apply_circuit_multi_fast
+            return born(apply_circuit_multi_fast(x, self.n_layers, self.layout, self.u_name))
         return born(apply_circuit_multi(x, self.n_layers, self.layout, self.u_name))
 
     def cost(self, x, eta=None) -> float:

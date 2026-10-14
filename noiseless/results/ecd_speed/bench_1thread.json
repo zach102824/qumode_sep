@@ -1,0 +1,66 @@
+{
+ "threads": "1",
+ "dims": [
+  2,
+  2,
+  2,
+  80,
+  80,
+  48
+ ],
+ "rows": [
+  {
+   "method": "a_current(eig D + tensordot/moveaxis/stack)",
+   "ms_per_layer": 150.52667090203613,
+   "max_abs_err": 0.0
+  },
+  {
+   "method": "b_laguerre_D + matmul(out=)",
+   "ms_per_layer": 71.02092980057932,
+   "max_abs_err": 3.030954607830199e-16
+  },
+  {
+   "method": "c_expm_multiply",
+   "ms_per_layer": 4350.087170004069,
+   "max_abs_err": 2.897767167584095e-16
+  },
+  {
+   "method": "d1_eig_D + matmul(out=)",
+   "ms_per_layer": 71.57361260033213,
+   "max_abs_err": 0.0
+  },
+  {
+   "method": "d2_eig_on_state(two basis changes)",
+   "ms_per_layer": 236.4691321970895,
+   "max_abs_err": 1.0838898772828417e-16
+  },
+  {
+   "method": "e_eig_D + matmul complex64",
+   "ms_per_layer": 1388.7342214002274,
+   "max_abs_err": 2.679791968868208e-08
+  },
+  {
+   "method": "f_split exp(a^dag)exp(a)",
+   "ms_per_layer": 75.11457349755801,
+   "max_abs_err": 3.281884095148032e-16
+  },
+  {
+   "method": "g_scipy_expm_D + matmul",
+   "ms_per_layer": 77.69541020388715,
+   "max_abs_err": 3.071979285004614e-16
+  }
+ ],
+ "Dbuild_ms_eig_nf80": 0.0901740591507405,
+ "Dbuild_ms_laguerre_nf80": 0.960772120160982,
+ "Dbuild_ms_expm_nf80": 1.0279006999917328,
+ "jp_diag_values": [
+  "(-1+0j)",
+  "(1+0j)",
+  "-1j"
+ ],
+ "jp_ms": 11.760615999810398,
+ "full_L4_err": 5.003707553108402e-17,
+ "full_L4_ms_old": 921.1371710058302,
+ "full_L4_ms_fast": 427.4068371974863,
+ "born_ms": 8.348383801057935
+}
