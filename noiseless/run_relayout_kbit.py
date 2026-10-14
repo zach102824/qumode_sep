@@ -401,6 +401,7 @@ def main(argv=None) -> int:
     p.add_argument("--xagree", type=int, default=0, help="agreement early stop: skip remaining explore runs once this many runs have the current guess (within Hamming 1) in their top-rawk states (--explore is then the max E)")
     p.add_argument("--xconsec", type=int, default=0, help="stop exploring once the last N runs give the same fix-up guess energy")
     p.add_argument("--saind", type=int, default=0, help="independent SA pass of this many lookups per explore run")
+    p.add_argument("--shots", type=int, default=0, help="finite-shot model: S shots per circuit eval (noiseless/shots.py); tag gets _shotsS")
     p.add_argument("--ecd-fast", action="store_true", help="3cav: buffered batched-matmul circuit (noiseless/ecd_bench.py); same numbers, 2.541x faster per n=20 trial")
     p.add_argument("--device", choices=("2cav", "3cav"), default="2cav", help="3cav: one transmon per cavity (relayout_3cav)")
     p.add_argument("--ks", default="5,4,4", help="3cav: bits per cavity")
@@ -408,6 +409,8 @@ def main(argv=None) -> int:
     p.add_argument("--ring", action="store_true", help="3cav: add the A-C joint-parity gate")
     p.add_argument("--code", choices=("binary", "gray"), default="gray", help="cavity Fock code: Fock f holds f (binary) or f^(f>>1) (gray)")
     a = p.parse_args(argv)
+    if a.shots > 0:
+        _os.environ["QM_SHOTS"] = str(a.shots)
     if a.ecd_fast:
         _os.environ["QM_ECD_FAST"] = "1"
     tag, recs = run_config(n=a.n, L=a.L, s=a.s, r=a.r, R=a.R, lr=a.lr, nf=a.nf, trials=a.trials,

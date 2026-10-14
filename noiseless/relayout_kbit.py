@@ -393,6 +393,11 @@ def explore_exploit_trial_kbit(
     res_list, sim_list, prob_list = [], [], []
     total_nfev = 0
     guess = None
+    from . import shots as _shots
+    if _shots.S > 0:
+        import copy as _cp_sh
+        _shots.reset(int(_cp_sh.deepcopy(rng).integers(2**62)) ^ 0x5107)
+        _shots.patch(_Sim)
     n_lookups = 0
     seen: set[int] = set()  # distinct energy-table entries read (cache)
     raw_pool: set[int] = set()
@@ -508,6 +513,7 @@ def explore_exploit_trial_kbit(
         else:
             gs_p = bitstring_from_logical(int(np.flatnonzero(Pm == gl)[0]), n)
             sim = _Sim(layout, E[Pm], Lr, gs_p, u_name=u_name, method=method, xa=xa, xb=xb, **sim_kwargs)
+            sim._Pm = Pm
         if exploring:
             cb = None
             if int(xstop) >= 0:
@@ -705,4 +711,7 @@ def explore_exploit_trial_kbit(
         "sel_xa": int(rounds[sel]["xa"]), "sel_xb": int(rounds[sel]["xb"]),
         "sel_layers": int(rounds[sel]["n_layers"]),
         "rounds": rounds,
+        **({"shots": _shots.S, "n_unique_sampled": len(_shots.STATE["union"]), "n_unique_total": len(_shots.STATE["union"] | seen),
+            "n_shot_evals": int(_shots.STATE["n_shot_evals"]),
+            "p_gs_shots": float(prob_list[sel][sim_list[sel].ground_flat_index])} if _shots.S > 0 else {}),
     }
