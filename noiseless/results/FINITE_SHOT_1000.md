@@ -25,4 +25,4 @@ Raw output: `noiseless/results/relayout_runs/shots1000/*.jsonl` (gitignored), lo
 | 14 | 10/10 | 3/10 | 0.270 | 0.271 | 0.961 | 727 | 817 | 168 | 129.0 | 8039.7 | 8055.9 | 16384 | 49.17% | 75.24% |
 |  | per-trial: i0:n p=0.000 samp=9854 look=139 tot=9876 ; i1:n p=0.000 samp=7115 look=125 tot=7124 ; i2:Y p=0.961 samp=9229 look=114 tot=9235 ; i3:Y p=0.788 samp=8890 look=122 tot=8917 ; i4:n p=0.000 samp=12322 look=116 tot=12328 ; i5:n p=0.000 samp=4068 look=140 tot=4095 ; i6:n p=0.000 samp=6062 look=140 tot=6075 ; i7:Y p=0.949 samp=7530 look=139 tot=7550 ; i8:n p=0.000 samp=10861 look=131 tot=10867 ; i9:n p=0.000 samp=4466 look=124 tot=4492 | | | | | | | | | | | | | |
 
-n=14-20 rows fill in as the detached run finishes; re-run the analyzer to refresh.
+n=16-20 rows fill in as the detached run finishes; re-run the analyzer to refresh.
