@@ -11,7 +11,8 @@ _REPO = Path(__file__).resolve().parents[1]
 
 def _clauses_for(E, n):
     g = int(np.argmin(E)); emin = float(E[g])
-    for p in (_REPO / "Hamiltonians/wmaxsat").glob(f"default_n{n:02d}_*.json"):
+    for p in [*(_REPO / "Hamiltonians/wmaxsat").glob(f"default_n{n:02d}_*.json"),
+              *(_REPO / "Hamiltonians/wmaxsat_fresh").glob(f"fresh_n{n:02d}_*.json")]:
         d = json.loads(p.read_text())
         if int(d["gs"], 2) == g and abs(d["E_gs"] - emin) < 1e-9:
             cl = [([n - v for v in c["vars"]], [0 if s > 0 else 1 for s in c["signs"]]) for c in d["clauses"]]

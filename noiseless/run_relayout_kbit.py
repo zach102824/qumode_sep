@@ -74,6 +74,9 @@ def wmaxsat_energies(path: str, n: int):
 
 
 def ham_paths(n: int, ham_set: str) -> list[Path]:
+    if ham_set == "wmaxsat_fresh":
+        return sorted((_REPO / "Hamiltonians" / "wmaxsat_fresh").glob(f"fresh_n{n:02d}_*.json"),
+                      key=lambda q: int(q.stem.rsplit("_", 1)[1]))[: int(_os.environ.get("QM_NINST", "100"))]
     if ham_set == "wmaxsat":
         return sorted((_REPO / "Hamiltonians" / "wmaxsat").glob(f"default_n{n:02d}_*.json"),
                       key=lambda q: int(q.stem.rsplit("_", 1)[1]))
@@ -91,7 +94,7 @@ def energies_for(path: str, n: int, ham_set: str):
 
         inst = load_four_sat_npz(path)
         return logical_energies_from_terms(inst["terms"], inst["identity"]), inst["ground_bitstring"]
-    if ham_set == "wmaxsat":
+    if ham_set in ("wmaxsat", "wmaxsat_fresh"):
         E, meta = wmaxsat_energies(path, n)
         if not np.isclose(E.min(), float(meta["E_gs"])):
             raise ValueError(f"{path}: E_gs mismatch")
@@ -368,7 +371,7 @@ def main(argv=None) -> int:
     p.add_argument("--trials", type=int, default=5)
     p.add_argument("--trial-offset", type=int, default=0)
     p.add_argument("--max-h", type=int, default=None)
-    p.add_argument("--ham-set", choices=("scaling", "legacy8", "wmaxsat"), default="scaling")
+    p.add_argument("--ham-set", choices=("scaling", "legacy8", "wmaxsat", "wmaxsat_fresh"), default="scaling")
     p.add_argument("--method", choices=("fast", "legacy"), default="fast")
     p.add_argument("--workers", type=int, default=8)
     p.add_argument("--seed", type=int, default=20260917)
