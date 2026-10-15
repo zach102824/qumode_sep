@@ -11,6 +11,15 @@ import json, collections, numpy as np, os
 SATLIKE_FRESH = {8: (2000, 31, 107, 249), 10: (2000, 50, 180, 429), 12: (2000, 91, 320, 951),
                  14: (2000, 113, 370, 1095), 16: (2000, 142, 540, 1730), 18: (2000, 177, 620, 1740),
                  20: (6000, 227, 886, 2905)}
+# CONV (logs/conv/satlike_conv.jsonl, noiseless/satlike_convergence.py): 2000 new instances x 5 runs per n,
+# value and bootstrap std over instances; unsolved=inf. n=12 std(B99)=inf: 95/10000 unsolved (cfg mode=1), near 1%.
+SATLIKE_CONV = {8: {'median': (32, 0.7), 'B90': (114, 2.1), 'B99': (252, 8.6), 'unsolved': 0},
+                10: {'median': (51, 1.0), 'B90': (183, 3.6), 'B99': (433, 19.4), 'unsolved': 0},
+                12: {'median': (95, 2.1), 'B90': (323, 6.0), 'B99': (1170, float('inf')), 'unsolved': 95},
+                14: {'median': (104, 1.8), 'B90': (373, 7.3), 'B99': (929, 46.4), 'unsolved': 1},
+                16: {'median': (140, 2.5), 'B90': (514, 10.5), 'B99': (1439, 85.0), 'unsolved': 5},
+                18: {'median': (183, 3.5), 'B90': (673, 15.1), 'B99': (2031, 162.6), 'unsolved': 0},
+                20: {'median': (221, 3.9), 'B90': (871, 18.8), 'B99': (2877, 161.8), 'unsolved': 0}}
 # OLD (10 instances only, bumpy): Saved results (n: (B90, B99)) from logs/strong/eval.jsonl, 200 runs per n
 SATLIKE_B90_B99 = {8: (153, 298), 10: (162, 287), 12: (356, 1183), 14: (299, 962),
                    16: (532, 1050), 18: (1004, 2538), 20: (795, 2718)}
