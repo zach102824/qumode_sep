@@ -1,0 +1,184 @@
+tuning WalkSATlm: 1225 configs, 8 cores
+  tune 50/1225
+  tune 100/1225
+  tune 150/1225
+  tune 200/1225
+  tune 250/1225
+  tune 300/1225
+  tune 350/1225
+  tune 400/1225
+  tune 450/1225
+  tune 500/1225
+  tune 550/1225
+  tune 600/1225
+  tune 650/1225
+  tune 700/1225
+  tune 750/1225
+  tune 800/1225
+  tune 850/1225
+  tune 900/1225
+  tune 950/1225
+  tune 1000/1225
+  tune 1050/1225
+  tune 1100/1225
+  tune 1150/1225
+  tune 1200/1225
+best configs: {
+ "walksatlm|8": {
+  "p": 0.3,
+  "maxf": 8,
+  "w1": 3,
+  "w2": 1
+ },
+ "walksat|8": {
+  "p": 0.3,
+  "maxf": 8
+ },
+ "satlike|8": {
+  "mode": 0,
+  "swt": 20,
+  "sp": 0.01,
+  "t_bms": 3
+ },
+ "walksatlm|10": {
+  "p": 0.1,
+  "maxf": 10,
+  "w1": 1,
+  "w2": 0
+ },
+ "walksat|10": {
+  "p": 0.5,
+  "maxf": 10
+ },
+ "satlike|10": {
+  "mode": 0,
+  "swt": 20,
+  "sp": 0.01,
+  "t_bms": 3
+ },
+ "walksatlm|12": {
+  "p": 0.05,
+  "maxf": 12,
+  "w1": 1,
+  "w2": 0
+ },
+ "walksat|12": {
+  "p": 0.2,
+  "maxf": 12
+ },
+ "satlike|12": {
+  "mode": 1,
+  "swt": 20,
+  "sp": 0.0,
+  "t_bms": 3
+ },
+ "walksatlm|14": {
+  "p": 0.15,
+  "maxf": 14,
+  "w1": 5,
+  "w2": 4
+ },
+ "walksat|14": {
+  "p": 0.05,
+  "maxf": 14
+ },
+ "satlike|14": {
+  "mode": 0,
+  "swt": 100,
+  "sp": 0.0,
+  "t_bms": 15
+ },
+ "walksatlm|16": {
+  "p": 0.15,
+  "maxf": 16,
+  "w1": 6,
+  "w2": 5
+ },
+ "walksat|16": {
+  "p": 0.1,
+  "maxf": 16
+ },
+ "satlike|16": {
+  "mode": 0,
+  "swt": 100,
+  "sp": 0.0,
+  "t_bms": 15
+ },
+ "walksatlm|18": {
+  "p": 0.1,
+  "maxf": 18,
+  "w1": 1,
+  "w2": 0
+ },
+ "walksat|18": {
+  "p": 0.0,
+  "maxf": 18
+ },
+ "satlike|18": {
+  "mode": 0,
+  "swt": 20,
+  "sp": 0.01,
+  "t_bms": 15
+ },
+ "walksatlm|20": {
+  "p": 0.5,
+  "maxf": 80,
+  "w1": 5,
+  "w2": 4
+ },
+ "walksat|20": {
+  "p": 0.5,
+  "maxf": 320
+ },
+ "satlike|20": {
+  "mode": 0,
+  "swt": 20,
+  "sp": 0.01,
+  "t_bms": 3
+ }
+}
+eval 21 jobs
+  walksatlm  n=16 B90=1590 med=430.5 succ=1.000 cfg={'p': 0.15, 'maxf': 16, 'w1': 6, 'w2': 5}
+  walksat    n=16 B90=1470 med=380.5 succ=1.000 cfg={'p': 0.1, 'maxf': 16}
+  walksat    n=14 B90=1155 med=305.5 succ=1.000 cfg={'p': 0.05, 'maxf': 14}
+  walksatlm  n=14 B90=927 med=265.5 succ=1.000 cfg={'p': 0.15, 'maxf': 14, 'w1': 5, 'w2': 4}
+  satlike    n=16 B90=526 med=120.5 succ=1.000 cfg={'mode': 0, 'swt': 100, 'sp': 0.0, 't_bms': 15}
+  satlike    n=14 B90=310 med=88.5 succ=1.000 cfg={'mode': 0, 'swt': 100, 'sp': 0.0, 't_bms': 15}
+  walksat    n=12 B90=811 med=214.5 succ=1.000 cfg={'p': 0.2, 'maxf': 12}
+  walksatlm  n=12 B90=744 med=215.5 succ=1.000 cfg={'p': 0.05, 'maxf': 12, 'w1': 1, 'w2': 0}
+  satlike    n=12 B90=333 med=94.0 succ=0.995 cfg={'mode': 1, 'swt': 20, 'sp': 0.0, 't_bms': 3}
+  walksat    n=10 B90=468 med=117.0 succ=1.000 cfg={'p': 0.5, 'maxf': 10}
+  satlike    n=10 B90=161 med=37.5 succ=1.000 cfg={'mode': 0, 'swt': 20, 'sp': 0.01, 't_bms': 3}
+  walksatlm  n=10 B90=399 med=127.0 succ=1.000 cfg={'p': 0.1, 'maxf': 10, 'w1': 1, 'w2': 0}
+  walksat    n= 8 B90=270 med=50.0 succ=1.000 cfg={'p': 0.3, 'maxf': 8}
+  walksatlm  n= 8 B90=270 med=62.0 succ=1.000 cfg={'p': 0.3, 'maxf': 8, 'w1': 3, 'w2': 1}
+  satlike    n= 8 B90=161 med=33.0 succ=1.000 cfg={'mode': 0, 'swt': 20, 'sp': 0.01, 't_bms': 3}
+  walksat    n=18 B90=2142 med=576.5 succ=1.000 cfg={'p': 0.0, 'maxf': 18}
+  satlike    n=18 B90=994 med=240.5 succ=1.000 cfg={'mode': 0, 'swt': 20, 'sp': 0.01, 't_bms': 15}
+  walksatlm  n=18 B90=2674 med=643.0 succ=1.000 cfg={'p': 0.1, 'maxf': 18, 'w1': 1, 'w2': 0}
+  walksat    n=20 B90=3980 med=1067.5 succ=1.000 cfg={'p': 0.5, 'maxf': 320}
+  walksatlm  n=20 B90=4107 med=1204.5 succ=1.000 cfg={'p': 0.5, 'maxf': 80, 'w1': 5, 'w2': 4}
+  satlike    n=20 B90=795 med=257.5 succ=1.000 cfg={'mode': 0, 'swt': 20, 'sp': 0.01, 't_bms': 3}
+
+=== FINAL ===
+n=16 walksatlm  B90=1590 med=430.5 succ=1.000
+n=16 walksat    B90=1470 med=380.5 succ=1.000
+n=14 walksat    B90=1155 med=305.5 succ=1.000
+n=14 walksatlm  B90=927 med=265.5 succ=1.000
+n=16 satlike    B90=526 med=120.5 succ=1.000
+n=14 satlike    B90=310 med=88.5 succ=1.000
+n=12 walksat    B90=811 med=214.5 succ=1.000
+n=12 walksatlm  B90=744 med=215.5 succ=1.000
+n=12 satlike    B90=333 med=94.0 succ=0.995
+n=10 walksat    B90=468 med=117.0 succ=1.000
+n=10 satlike    B90=161 med=37.5 succ=1.000
+n=10 walksatlm  B90=399 med=127.0 succ=1.000
+n= 8 walksat    B90=270 med=50.0 succ=1.000
+n= 8 walksatlm  B90=270 med=62.0 succ=1.000
+n= 8 satlike    B90=161 med=33.0 succ=1.000
+n=18 walksat    B90=2142 med=576.5 succ=1.000
+n=18 satlike    B90=994 med=240.5 succ=1.000
+n=18 walksatlm  B90=2674 med=643.0 succ=1.000
+n=20 walksat    B90=3980 med=1067.5 succ=1.000
+n=20 walksatlm  B90=4107 med=1204.5 succ=1.000
+n=20 satlike    B90=795 med=257.5 succ=1.000
