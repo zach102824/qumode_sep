@@ -60,3 +60,6 @@ if __name__ == "__main__":
     print("n  B90  B99  (B99 10k runs)")
     for n, (b90, b99) in recompute().items():
         print(n, b90, b99, SATLIKE_B99_10K.get(n, "-"))
+
+# Unweighted random 4-SAT (all w=1), same protocol as SATLIKE_CONV; cfg mode0 swt20 sp0.01 tbms3; (value, bootstrap std). See results/SATLIKE_4SAT.md
+SATLIKE_4SAT = {8: {'median': (30, 0.7), 'B90': (103, 2.1), 'B99': (232, 9.4), 'instances': 2000, 'unsolved': 0, 'sat': 1979}, 10: {'median': (45, 0.9), 'B90': (161, 3.0), 'B99': (347, 11.5), 'instances': 2000, 'unsolved': 0, 'sat': 1967}, 12: {'median': (67, 1.2), 'B90': (229, 4.6), 'B99': (504, 18.0), 'instances': 2000, 'unsolved': 0, 'sat': 1956}, 14: {'median': (93, 1.6), 'B90': (321, 6.7), 'B99': (752, 23.5), 'instances': 2000, 'unsolved': 0, 'sat': 1951}, 16: {'median': (122, 2.4), 'B90': (428, 8.3), 'B99': (980, 32.0), 'instances': 2000, 'unsolved': 0, 'sat': 1939}, 18: {'median': (154, 2.8), 'B90': (572, 9.3), 'B99': (1475, 83.1), 'instances': 2000, 'unsolved': 0, 'sat': 1941}, 20: {'median': (193, 3.4), 'B90': (696, 15.1), 'B99': (1790, 72.7), 'instances': 2000, 'unsolved': 0, 'sat': 1938}}
