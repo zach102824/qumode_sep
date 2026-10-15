@@ -4,7 +4,8 @@ import json, sys
 import numpy as np
 import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 R = 1000; XS = [100, 250, 500, 1000, 2000]; Q = {"median": 50, "B90": 90, "B99": 99}
-rows = [json.loads(l) for l in open("logs/conv/satlike_conv.jsonl")]
+SRC = sys.argv[1] if len(sys.argv) > 1 else "logs/conv/satlike_conv_uniform.jsonl"; UNI = "uniform" in SRC
+rows = [json.loads(l) for l in open(SRC)]
 data = {}
 for r in rows: data.setdefault(r["n"], {})[r["inst"]] = [h if h >= 0 else np.inf for h in r["hits"]]
 def stats(H):  # H: (inst, runs)
@@ -25,7 +26,7 @@ for k in Q:
     fits[k] = (np.exp(A[1]), np.exp(A[0]), 1 - ((y - yp) ** 2).sum() / ((y - y.mean()) ** 2).sum())
 L = ["# SATLike convergence study (wmaxsat_conv)", "",
      "Instances: new unique-GS random weighted 4-SAT (m=round(9.93n), w in 1..5), same generator as wmaxsat_fresh, seeds 5e9+1e7n+k (disjoint). "
-     "SATLike = strong_classical.runone, cfg BEST[satlike|n], cap min(40*2^n,4e6), 5 runs/instance. Strict lookups to first GS check. "
+     "SATLike = strong_classical.runone, " + ("ONE cfg for all n: {mode:0, swt:20, sp:0.01, t_bms:3} (chosen by best avg B90 over 4 uniform candidates on held-out 200 inst x2 at n=12,16,20, satlike_uniform_tune.py)" if UNI else "per-n cfg BEST[satlike|n]") + ", cap min(40*2^n,4e6), 5 runs/instance. Strict lookups to first GS check. "
      "Unsolved = inf. Std = bootstrap over instances (1000 resamples, instance keeps its runs).", "",
      "| n | instances | runs | unsolved | median | B90 | B99 |", "|---|---|---|---|---|---|---|"]
 for n in ns:
@@ -37,6 +38,11 @@ for k in Q:
     for n in ns: L.append(f"| {n} | " + " | ".join(f"{conv[n][x][0][k]:.0f} ± {conv[n][x][1][k]:.1f}" if x in conv[n] else "-" for x in XS) + " |")
     L.append("")
 L += ["![](satlike_convergence.png)", ""]
+OLD = "## Note: earlier per-n-cfg result (commit 05b5bdf8)\n\nEach n used its own tuned cfg BEST[satlike|n]; n=12 used mode=1 (others mode=0) and had 95/10000 unsolved runs, making its B99 unreliable. Superseded by the single shared cfg above. Old table:\n\n"
+if UNI:
+    import subprocess; old = subprocess.run([sys.executable, __file__, "logs/conv/satlike_conv.jsonl", "--table"], capture_output=True, text=True).stdout
+    L += [OLD + old]
+if "--table" in sys.argv: print("\n".join(L[4:4 + 2 + len(ns)])); sys.exit()
 open("noiseless/results/SATLIKE_CONVERGENCE.md", "w").write("\n".join(L))
 plt.rcParams.update({"text.color": "black", "axes.labelcolor": "black", "xtick.color": "black", "ytick.color": "black", "font.size": 12})
 fig, ax = plt.subplots(figsize=(6.4, 4.6), facecolor="white"); ax.set_facecolor("white")

@@ -7,6 +7,8 @@ sys.path.insert(0, '.')
 from noiseless import strong_classical as sc
 from noiseless.make_fresh_instances import fast_energies
 BEST = json.load(open('logs/strong/best_cfg.json')); Y = 5
+UNIFORM = {"mode": 0, "swt": 20, "sp": 0.01, "t_bms": 3}  # one cfg for all n (pick: satlike_uniform_tune.py); set CONV_PER_N=1 for old per-n BEST
+CFG = (lambda n: BEST[f"satlike|{n}"]["cfg"]) if os.environ.get("CONV_PER_N") else (lambda n: UNIFORM)
 def job(a):
     n, idx = a; k = idx * 1000  # each instance index scans its own k block until first unique-GS
     while True:
@@ -21,7 +23,7 @@ def job(a):
     open(f"Hamiltonians/wmaxsat_conv/conv_n{n:02d}_{idx}.json", "w").write(json.dumps(d))
     d2 = {"n": n, "clauses": cl, "gsv": g}; hits = []
     for j in range(Y):
-        h, _ = sc.runone("satlike", d2, 6_000_000_000 + 10_000_000 * n + 10 * idx + j, min(40 * 2 ** n, 4_000_000), BEST[f"satlike|{n}"]["cfg"])
+        h, _ = sc.runone("satlike", d2, 6_000_000_000 + 10_000_000 * n + 10 * idx + j, min(40 * 2 ** n, 4_000_000), CFG(n))
         hits.append(int(h))
     return n, idx, seed, hits
 if __name__ == "__main__":
