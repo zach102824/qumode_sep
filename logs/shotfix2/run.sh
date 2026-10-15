@@ -16,9 +16,11 @@ CM="--L 4 --s 50 --lr 0.05 --xeta 128 --reta 2 --ham-set wmaxsat --code gray --w
 C2="$CM --r 150 --xL 2"; C3="$CM --device 3cav --r 150 --xL 3 --xs 35 --ecd-fast"
 declare -A A
 A[10]="$C2 --n 10 --xs 35 --explore 2"; A[12]="$C2 --n 12 --xs 50 --explore 2"
+A[8]="$C2 --n 8 --xs 25 --explore 2"
+A[18]="$C3 --n 18 --ks 5,5,5 --explore 6"
 A[14]="$C3 --n 14 --ks 4,4,3 --explore 2"; A[16]="$C3 --n 16 --ks 5,4,4 --explore 4"
 for n in "$@"; do
   echo "[$(date '+%F %T') CST] START $V n$n"
-  python noiseless/run_relayout_kbit.py ${A[$n]} --sab $((3*n)) --rawk $((2*n)) > $D/${V}_n$n.json 2>&1
+  python noiseless/run_relayout_kbit.py ${A[$n]} --sab $((3*n)) --rawk $((2*n)) ${POST} > $D/${V}_n$n.json 2>&1
   echo "[$(date '+%F %T') CST] DONE $V n$n rc=$?"
 done

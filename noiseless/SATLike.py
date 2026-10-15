@@ -6,7 +6,12 @@ Run `python noiseless/SATLike.py` to recompute from the raw data.
 """
 import json, collections, numpy as np, os
 
-# Saved results (n: (B90, B99)) from logs/strong/eval.jsonl, 200 runs per n
+# MAIN: fresh instances, one run per instance (logs/strong/satlike_manyinst.jsonl)
+# n: (instances, median, B90, B99); 2000 instances per n, 6000 at n=20
+SATLIKE_FRESH = {8: (2000, 31, 107, 249), 10: (2000, 50, 180, 429), 12: (2000, 91, 320, 951),
+                 14: (2000, 113, 370, 1095), 16: (2000, 142, 540, 1730), 18: (2000, 177, 620, 1740),
+                 20: (6000, 227, 886, 2905)}
+# OLD (10 instances only, bumpy): Saved results (n: (B90, B99)) from logs/strong/eval.jsonl, 200 runs per n
 SATLIKE_B90_B99 = {8: (153, 298), 10: (162, 287), 12: (356, 1183), 14: (299, 962),
                    16: (532, 1050), 18: (1004, 2538), 20: (795, 2718)}
 # More reliable 99% from 10,000 runs per n (logs/strong/satlike_many.jsonl, 10 instances x 1000 seeds)
@@ -23,7 +28,16 @@ def recompute(path=os.path.join(os.path.dirname(__file__), "..", "logs/strong/ev
     return {n: (int(np.percentile(a, 90, method="higher")), int(np.percentile(a, 99, method="higher")))
             for n, a in sorted(d.items())}
 
+def recompute_fresh(path=os.path.join(os.path.dirname(__file__), "..", "logs/strong/satlike_manyinst.jsonl")):
+    d = collections.defaultdict(list)
+    for l in open(path):
+        r = json.loads(l); d[r["n"]] += [h if h >= 0 else 10**9 for h in r["hits"]]
+    return {n: (len(a), int(np.median(a)), int(np.percentile(a, 90, method="higher")), int(np.percentile(a, 99, method="higher")))
+            for n, a in ((n, np.array(v)) for n, v in sorted(d.items()))}
+
 if __name__ == "__main__":
+    print("FRESH: n inst median B90 B99")
+    for n, v in recompute_fresh().items(): print(n, *v)
     print("n  B90  B99  (B99 10k runs)")
     for n, (b90, b99) in recompute().items():
         print(n, b90, b99, SATLIKE_B99_10K.get(n, "-"))
