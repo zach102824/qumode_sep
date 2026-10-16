@@ -311,3 +311,16 @@ Do not lock onto one circuit yet — wait for compact comparison table vs SATLik
 | 2 | 20.7/38.0 | 44.9/112.2 | 97.9/209.6 | 204.7/502.9 | 2109.1/6859.4 |
 | 4 | 5.9/12.4 | 10.9/32.4 | 16.7/60.2 | 26.3/92.3 | 131.6/447.3 |
 | 8 | 2.5/6.1 | 3.5/10.0 | 5.0/22.8 | 6.9/34.8 | 20.0/164.0 |
+
+## Broad-scan highlight (20:39 CST): S_gxcost + schedule effect
+
+ECD + U=GrayX·cost (product, order gx_cost), train L=2→4→8 (no L=1/6):
+
+| L | n=8 | n=14 | n=20 | vs SATLike n=20 |
+|---|---|---|---|---|
+| 4 | 5.9/12 | 26/92 | **132/447** | ≈1× |
+| 8 | 2.5/6 | 6.9/35 | **20/164** | **6× better** |
+
+Key: earlier U_ecd_raw L=4 n=20 was **611** (same circuit, but grown via L=1,2,4,6,8).
+Skipping L=1/6 lands L=4 near BF_gray (123). Schedule/init matters for ECD+GrayX.
+S_costgx (order cost·GrayX) training; other S_* queued. Not locking yet.
