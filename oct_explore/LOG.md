@@ -145,3 +145,35 @@ and/or control transmons. Find the best transferring unitary first; make it GRAP
    path deferred until theory unitary is settled.
 
 Code: `theory_u.py`. Detached setsid/nohup, ≤8 cores, never touch `*.STOP`.
+
+## Theory unitary interim (19:53 CST)
+
+Roles confirmed by ablation:
+- **Joint Gray-X + raw cost** (BF_gray / U_ecd_raw) transfers like QAOA.
+- **ECD on top of exact Gray-X** neither helps nor hurts much at n=8–14 (ECD optional
+  when GRAPE owns cavity mixing; keep ECD only if transmon bits need it).
+- **Stronger diagonal poly2 OVERFITS**: n=8 L=8 median 1.8 (best yet) but n=14 L=8
+  3040 and n=20 L=4 already 61k — nonlinear Cn^2 fits n=8 and does not transfer.
+  Raw cost D=γ Cn remains the transferable diagonal. Soft/step next; if they overfit
+  too, stick to raw. Joint-train 8+10 only if a size-free nonlinear form is found.
+
+### U_poly2 (partial 19:53 CST)
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| 1 | 128.0/256.0 | 512.0/1024.0 | 2048.0/4096.0 | 8192.0/16384.0 | 349525.5/1048576.2 |
+| 2 | 17.1/32.7 | 41.0/95.2 | 110.1/241.1 | 330.2/922.6 | 13726.5/42363.2 |
+| 4 | 4.2/8.9 | 9.8/24.0 | 34.7/160.5 | 260.3/2174.0 | 61602.2/467728.2 |
+| 6 | 2.4/5.0 | 5.9/14.1 | 48.4/330.8 | 1015.5/17653.8 | 282876.2/2081991.4 |
+| 8 | 1.8/3.6 | 4.4/12.8 | 75.4/770.5 | 3040.5/42312.3 | - |
+
+### U_ecd_raw (partial 19:53 CST)
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| 1 | 137.6/267.8 | 538.3/1168.2 | 2216.5/4676.6 | 7317.5/17758.8 | 423503.6/1691140.2 |
+| 2 | 20.7/38.0 | 44.9/112.2 | 97.9/209.9 | 204.7/503.4 | 2109.4/6856.9 |
+| 4 | 6.4/13.5 | 12.5/38.7 | 23.3/68.6 | 31.6/110.8 | - |
+| 6 | 3.7/7.4 | 5.2/16.6 | 7.7/28.6 | 11.7/47.3 | - |
+| 8 | 2.5/6.1 | 3.5/9.9 | 5.3/20.0 | 6.9/36.3 | - |
+
+
+Compare: BF_gray L=8 n=14=7.0/36, n=20=17/132; QAOA L=8 n=20=16/54; SATLike n=20~124/~530.

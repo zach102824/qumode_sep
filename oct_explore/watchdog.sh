@@ -4,26 +4,31 @@ set -u
 cd /workspace/qumode_sep/oct_explore
 export OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2
 export XLA_PYTHON_CLIENT_PREALLOCATE=false
-export JAX_ENABLE_X64=false
-DEADLINE=$(date -d '2026-10-19 09:00:00' +%s 2>/dev/null || date -j -f '%Y-%m-%d %H:%M:%S' '2026-10-19 09:00:00' +%s)
+DEADLINE=$(date -d '2026-10-19 09:00:00' +%s)
 LOGW=logs/watchdog.log
 say() { echo "$(date '+%F %T')" "$*" | tee -a "$LOGW"; }
 
 n_oct_jobs() {
-  pgrep -af 'oct_explore/(train|theory_u|bitflip|qaoa|fit_ecd)' 2>/dev/null | grep -v 'watchdog\|pgrep\|grep' | wc -l
+  pgrep -af 'python3 -u train.py|python3 -u theory_u.py|python3 -u bitflip_mix.py|python3 -u qaoa_ref.py' 2>/dev/null | grep -v grep | wc -l
+}
+
+job_running() {
+  local tag="$1"
+  pgrep -af -- "--tag ${tag}" 2>/dev/null | grep -v grep >/dev/null
+}
+
+job_done() {
+  local tag="$1"
+  [[ -f "results/${tag}.json" ]] && grep -q ALLDONE "logs/${tag}.log" 2>/dev/null
 }
 
 run_job() {
   local tag="$1"; shift
-  if [[ -f "results/${tag}.json" ]] && grep -q ALLDONE "logs/${tag}.log" 2>/dev/null; then
-    say "skip $tag (done)"; return 0
-  fi
-  if pgrep -af "theory_u.py --tag $tag|train.py --tag $tag" | grep -v grep >/dev/null; then
-    say "skip $tag (running)"; return 0
-  fi
-  # wait until <2 oct jobs (R_raw + one theory)
-  while [[ $(n_oct_jobs) -ge 2 ]]; do
-    say "wait slots (jobs=$(n_oct_jobs)) for $tag"; sleep 120
+  if job_done "$tag"; then say "skip $tag (done)"; return 0; fi
+  if job_running "$tag"; then say "skip $tag (running)"; return 0; fi
+  while [[ $(n_oct_jobs) -ge 3 ]]; do
+    say "wait slots (jobs=$(n_oct_jobs)) for $tag"
+    sleep 120
     now=$(date +%s); [[ $now -ge $DEADLINE ]] && return 1
   done
   say "LAUNCH $tag: $*"
@@ -36,47 +41,54 @@ run_job() {
 
 finalize_and_push() {
   local tag="$1"
-  if grep -q ALLDONE "logs/${tag}.log" 2>/dev/null; then
-    if [[ ! -f "logs/${tag}.pushed" ]]; then
-      say "DONE $tag — updating LOG + push"
-      python3 report.py BF_gray QAOA_raw T_raw U_ecd_raw U_poly2 U_soft U_step R_raw 2>/dev/null || true
-      python3 - << PY
-import json, time
+  if ! job_done "$tag"; then return 0; fi
+  if [[ -f "logs/${tag}.pushed" ]]; then return 0; fi
+  say "DONE $tag — updating LOG + push"
+  python3 report.py BF_gray QAOA_raw T_raw U_ecd_raw U_poly2 U_soft U_step U_poly2_810 U_ecd_poly2 R_raw 2>/dev/null || true
+  python3 - "$tag" <<'PY'
+import json, sys, time
 from pathlib import Path
-tag = "$tag"
+tag = sys.argv[1]
 p = Path("LOG.md")
-try:
-    d = json.load(open(f"results/{tag}.json"))
-except Exception as e:
-    print(e); raise SystemExit
-lines = [f"\\n## {tag} finished ({time.strftime('%H:%M CST')})\\n"]
+d = json.load(open(f"results/{tag}.json"))
 te = d.get("test", {})
-hdr = "| L | " + " | ".join(f"n={n}" for n in sorted(te, key=int)) + " |"
-sep = "|---|" + "|".join(["---"]*len(te)) + "|"
+if not te:
+    Path(f"logs/{tag}.pushed").write_text("no test\n"); raise SystemExit
+lines = [f"\n## {tag} finished ({time.strftime('%H:%M CST')})\n"]
+ns = sorted(te, key=lambda x: int(x))
+hdr = "| L | " + " | ".join(f"n={n}" for n in ns) + " |"
+sep = "|---|" + "|".join(["---"] * len(ns)) + "|"
 lines += [hdr, sep]
 Ls = sorted({int(L) for n in te for L in te[n]}, key=int)
 for L in Ls:
     row = [str(L)]
-    for n in sorted(te, key=int):
-        s = te[str(n) if str(n) in te else n].get(str(L)) or te[str(n) if str(n) in te else n].get(L)
-        if s: row.append(f"{s['median_inv_p']:.1f}/{s['B90_inv_p']:.1f}")
-        else: row.append("-")
+    for n in ns:
+        block = te[str(n)] if str(n) in te else te[n]
+        s = block.get(str(L), block.get(L))
+        row.append(f"{s['median_inv_p']:.1f}/{s['B90_inv_p']:.1f}" if s else "-")
     lines.append("| " + " | ".join(row) + " |")
-Path("LOG.md").write_text(p.read_text().rstrip() + "\\n" + "\\n".join(lines) + "\\n")
+# note vs SATLike / BF_gray at n=20 L=4 and L=8 if present
+note = []
+for L in (4, 8):
+    for n in (14, 20):
+        if str(n) in te or n in te:
+            block = te[str(n)] if str(n) in te else te[n]
+            s = block.get(str(L), block.get(L))
+            if s:
+                note.append(f"n={n} L={L}: {s['median_inv_p']:.1f}/{s['B90_inv_p']:.1f}")
+if note:
+    lines.append("\nKey: " + "; ".join(note))
+p.write_text(p.read_text().rstrip() + "\n" + "\n".join(lines) + "\n")
 print("appended", tag)
 PY
-      git -C /workspace/qumode_sep add oct_explore/LOG.md oct_explore/results oct_explore/theory_u.py oct_explore/report.py oct_explore/logs/${tag}.log 2>/dev/null || true
-      git -C /workspace/qumode_sep add -u oct_explore/ 2>/dev/null || true
-      git -C /workspace/qumode_sep commit -m "oct_explore: ${tag} theory unitary results" 2>/dev/null || true
-      git -C /workspace/qumode_sep push origin main 2>/dev/null || say "push failed for $tag"
-      touch "logs/${tag}.pushed"
-    fi
-  fi
+  git -C /workspace/qumode_sep add oct_explore/LOG.md oct_explore/results/${tag}.json oct_explore/logs/${tag}.log oct_explore/results/table.md oct_explore/results/scaling.png 2>/dev/null || true
+  git -C /workspace/qumode_sep commit -m "oct_explore: ${tag} theory unitary results" 2>/dev/null || true
+  git -C /workspace/qumode_sep push origin main 2>/dev/null || say "push failed for $tag"
+  touch "logs/${tag}.pushed"
 }
 
-say "watchdog start deadline=$(date -d @$DEADLINE '+%F %T' 2>/dev/null || echo Monday-09:00)"
+say "watchdog (re)start deadline=2026-10-19 09:00:00 jobs=$(n_oct_jobs)"
 
-# Queue (theory first)
 QUEUE=(
   "U_ecd_raw|theory_u.py --tag U_ecd_raw --ecd 1 --diag raw --Ls 1 2 4 6 8 --restarts 4 --maxiter 250 --ntrain 80"
   "U_poly2|theory_u.py --tag U_poly2 --ecd 0 --diag poly2 --Ls 1 2 4 6 8 --restarts 5 --maxiter 300 --ntrain 100"
@@ -86,40 +98,24 @@ QUEUE=(
   "U_ecd_poly2|theory_u.py --tag U_ecd_poly2 --ecd 1 --diag poly2 --Ls 1 2 4 6 8 --restarts 4 --maxiter 250 --ntrain 80"
 )
 
-idx=0
 while true; do
   now=$(date +%s)
   if [[ $now -ge $DEADLINE ]]; then
-    say "deadline reached — stopping launches (running jobs keep going)"
+    say "deadline reached — no new launches"
     break
   fi
-  # finalize finished
   for ent in "${QUEUE[@]}"; do
-    tag="${ent%%|*}"; finalize_and_push "$tag"
+    finalize_and_push "${ent%%|*}"
   done
   finalize_and_push R_raw
 
-  # launch next pending
+  launched=0
   for ent in "${QUEUE[@]}"; do
     tag="${ent%%|*}"; cmd="${ent#*|}"
-    if [[ -f "results/${tag}.json" ]] && grep -q ALLDONE "logs/${tag}.log" 2>/dev/null; then
-      continue
-    fi
-    if pgrep -af -- "--tag ${tag}" | grep -v grep >/dev/null; then
-      continue
-    fi
+    if job_done "$tag" || job_running "$tag"; then continue; fi
     # shellcheck disable=SC2086
-    run_job "$tag" $cmd || break 2
-    break  # one launch per loop
+    if run_job "$tag" $cmd; then launched=1; break; else break 2; fi
   done
-
-  # if R_raw died early without ALLDONE, leave it (don't restart unless clearly dead with no result)
-  if ! pgrep -af 'train.py --tag R_raw' | grep -v grep >/dev/null; then
-    if [[ -f results/R_raw.json ]] && ! grep -q ALLDONE logs/R_raw.log 2>/dev/null; then
-      # resume only if train has some L saved and test incomplete — skip auto-resume to avoid clobber
-      say "R_raw not running; log has no ALLDONE (leave for manual)"
-    fi
-  fi
 
   sleep 180
 done
