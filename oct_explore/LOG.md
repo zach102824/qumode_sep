@@ -504,3 +504,15 @@ Queue N_*: no Gray-X. Watchdog v7. Gray-X deep/snap4/R killed to free cores.
 | 2 | 32.4/68.4 | 163.7/641.3 | 1828.6/14560.3 | 874.4/3306.7 | 2810032.0/132729576.0 |
 | 4 | 30.3/68.0 | 295.4/3810.8 | 3702.2/25811.2 | 1516.3/18328.1 | 944079.2/10642523.0 |
 | 8 | 40.3/222.9 | 516.8/8389.7 | 2871.1/38731.9 | 3109.9/45367.7 | 1098072.2/7804058.0 |
+
+## Check-in 05:50 CST Sat — native forms summary + box freeze
+
+Native joint U (no Gray-X), n=20 best median/B90 1/p at L=8: N_gensum 103k/1.06M, N_dsnap 135k, N_snapd 157k,
+N_dsnapd 167k, N_snapcost 346k, N_dsnap4 425k, N_dsnapd4 1.1M (gets worse with L, training fails).
+SATLike ~124/~530; Gray-X ref S_costgx 17/129; cost-only (no mixer) 72k. So every native form so far is
+~1000× worse than SATLike at n=20 and no better than having no mixer. snap=4 hurts vs snap=2.
+
+**Box freeze found:** the box is suspended whenever no agent turn is active. Watchdog `sleep 120` loops
+took 38–48 min; N_dsnap_R (launched 01:00) has only finished 3 n=8 L=2 restarts by 05:49 (N_dsnap did 6 in 46 s);
+process start times show ~4h20m of the last ~4h50m was frozen. Jobs only advance during check-ins.
+Still running: N_dsnap_R, N_bssnap (last two in native queue).
