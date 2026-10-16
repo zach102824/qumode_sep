@@ -2,6 +2,10 @@
 
 Circuit: start |+⟩^⊗8; each layer applies exp(-i γ H_P) then exp(-i β H_M)
 with H_M = Σ_j X_j. H_P is diagonal in the computational basis.
+
+This module is the four_sat Gibbs/SPSA bake-off. The Boulebnane–Montanaro
+random k-SAT QAOA reproduction (half-angle convention, Definition 2 of
+PRX Quantum 5, 030348) lives in ``qaoa_ksat/``.
 """
 
 from __future__ import annotations
