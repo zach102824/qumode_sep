@@ -392,3 +392,11 @@ mixer for ≤14 cavity bits. A truly non-separable joint mixer would need cross-
 
 **Next (data-driven):** L 4→8 cut n=20 median 1/p 79→17 (S_costgx), the biggest single lever so far,
 so queued **S_deep** (same S_costgx recipe, warm-grown L=8→12→16). Watchdog v6 restarted.
+
+## S_snap2 finished (22:03 CST)
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| 2 | 10.8/22.9 | 22.7/59.1 | 36.7/107.6 | 74.5/209.2 | 504.2/1694.2 |
+| 4 | 4.8/9.8 | 8.2/23.4 | 14.8/57.5 | 18.6/70.8 | 230.3/1638.3 |
+| 8 | 2.2/4.9 | 3.1/9.9 | 4.9/24.5 | 6.2/36.1 | 42.1/311.2 |
