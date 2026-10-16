@@ -1,0 +1,35 @@
+01:45:12 build n=8 form=d_snap_d snap=4 layout=T NP=13
+01:45:22   L=2 try loss=3.5073
+01:45:28   L=2 try loss=4.9901
+01:45:34   L=2 try loss=5.1540
+01:45:41   L=2 try loss=5.5533
+01:45:47   L=2 try loss=5.1806
+01:45:48 L=2 train med1/p=33.2 mean_p=0.0362 (36s)
+01:46:06   L=4 try loss=3.4289
+01:46:22   L=4 try loss=4.3209
+01:46:35   L=4 try loss=4.9992
+02:52:46   L=4 try loss=5.0479
+02:53:05   L=4 try loss=5.3566
+02:53:07 L=4 train med1/p=32.3 mean_p=0.0391 (4039s)
+02:54:10   L=8 try loss=3.7309
+02:54:43   L=8 try loss=4.8123
+02:55:13   L=8 try loss=5.0065
+02:55:43   L=8 try loss=4.9635
+02:56:14   L=8 try loss=5.0005
+02:56:15 L=8 train med1/p=35.2 mean_p=0.0325 (188s)
+02:56:19 test n=8 L=2 med1/p=32.4 B90=68.4 rand=128
+02:56:24 test n=8 L=4 med1/p=30.3 B90=68.0 rand=128
+02:56:32 test n=8 L=8 med1/p=40.3 B90=222.9 rand=128
+02:56:35 test n=10 L=2 med1/p=163.7 B90=641.3 rand=512
+02:56:40 test n=10 L=4 med1/p=295.4 B90=3810.8 rand=512
+02:56:48 test n=10 L=8 med1/p=516.8 B90=8389.7 rand=512
+02:56:52 test n=12 L=2 med1/p=1828.6 B90=14560.3 rand=2048
+02:56:57 test n=12 L=4 med1/p=3702.2 B90=25811.2 rand=2048
+02:57:06 test n=12 L=8 med1/p=2871.1 B90=38731.9 rand=2048
+03:49:57 test n=14 L=2 med1/p=874.4 B90=3306.7 rand=8192
+03:50:34 test n=14 L=4 med1/p=1516.3 B90=18328.1 rand=8192
+03:51:33 test n=14 L=8 med1/p=3109.9 B90=45367.7 rand=8192
+03:52:55 test n=20 L=2 med1/p=2810032.0 B90=132729576.0 rand=349525
+03:54:52 test n=20 L=4 med1/p=944079.2 B90=10642523.0 rand=349525
+04:58:00 test n=20 L=8 med1/p=1098072.2 B90=7804058.0 rand=349525
+04:58:00 ALLDONE
