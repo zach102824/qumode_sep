@@ -201,3 +201,27 @@ Key: n=14 L=4: 260.3/2174.0; n=20 L=4: 61602.2/467728.2; n=14 L=8: 3040.5/42312.
 | 8 | 2.5/6.1 | 3.5/9.9 | 5.3/20.0 | 6.9/36.3 | 21.3/169.6 |
 
 Key: n=14 L=4: 31.6/110.8; n=20 L=4: 610.5/6259.7; n=14 L=8: 6.9/36.3; n=20 L=8: 21.3/169.6
+
+## Theory conclusion (20:08 CST)
+
+Best transferring unitary under the hardware model (local ECD + arbitrary joint cavity U):
+
+| circuit | L | n=8 | n=14 | n=20 | vs SATLike n=20 |
+|---|---|---|---|---|---|
+| **Gray-X + raw cost (BF_gray, ECD off)** | 4 | 5.9/12 | 26/85 | **123/374** | ≈1× |
+| **Gray-X + raw cost** | 8 | 2.4/6 | 7/36 | **17/132** | **7× better** |
+| ECD on + Gray-X + raw (U_ecd_raw) | 8 | 2.5/6 | 6.9/36 | 21/170 | 6× better |
+| QAOA L=8 | 8 | 2.5/5 | 6.3/18 | 16/54 | — |
+| poly2 / soft diagonals | 8 | 1.5–1.8 | 600–3000 | >1e5 | overfit, fail |
+| plain ECD mixer (T_raw) | 8 | 17/45 | 245/1079 | 55599 | fail |
+
+**Takeaways**
+1. Joint cavity U = ∏_cav exp(-i β/2 ∑_j X_j^Gray) · exp(-i γ C) is the theory target. It
+   matches QAOA and beats SATLike at n=20. Make this GRAPE-friendly next (not ECD+SNAP per cavity).
+2. ECD is optional once that U owns mixing: U_ecd_raw ≈ BF_gray (n=20 L=8: 21 vs 17). Use ECD
+   only for transmon-bit entanglement/prep if needed.
+3. Stronger size-free diagonals (poly2, soft) improve n=8 train but **destroy transfer**. Stick
+   to raw D=γ·(E n/m). Joint 8+10 poly2 still running as a last check.
+4. Focus L≈4 already competitive with SATLike at n=20 (median 123 ≈ 124); L=8 is clearly better.
+
+Next: U_cav (cavity-only bits, ECD off), U_L4deep (more restarts at L≤4), resume R_raw, then GRAPE compile plan.
