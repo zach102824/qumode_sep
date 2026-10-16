@@ -416,3 +416,11 @@ Gray-X reference (do not chase further):
 
 New code: `native_u.py`. Forms: d_snap, snap_d, d_snap_d, snap_cost, gen_sum, bs_snap.
 Queue N_*: no Gray-X. Watchdog v7. Gray-X deep/snap4/R killed to free cores.
+
+## S_costgx finished (23:22 CST)
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| 2 | 10.8/23.0 | 22.4/58.4 | 36.6/110.9 | 75.0/208.3 | 490.8/1688.3 |
+| 4 | 4.8/9.9 | 8.1/22.5 | 11.7/44.9 | 18.2/69.4 | 79.0/416.4 |
+| 8 | 2.2/5.1 | 3.2/8.9 | 4.5/18.8 | 6.0/32.1 | 17.1/128.6 |
