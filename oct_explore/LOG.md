@@ -375,3 +375,20 @@ add **SNAP-per-cavity + joint mixer U** (`--snap 2/4`, local and joint mixer): S
 | 2 | 10.8/23.0 | 22.6/58.3 | 36.0/103.7 | 73.9/202.9 | 448.4/1525.0 |
 | 4 | 4.8/9.8 | 8.1/23.3 | 11.4/40.9 | 18.3/70.1 | 75.4/354.0 |
 | 8 | 2.2/5.2 | 3.1/9.0 | 4.5/26.7 | 6.2/36.5 | 24.6/409.8 |
+
+## S_joint crashed at n=20 test (21:37 CST) — dropped as redundant
+
+Joint mixer (X on the concatenated cavity bits) OOM'd building a dense 2^17 matrix (256 GiB) for n=20.
+It is mathematically identical to the local mixer: sum_j X_j is separable across cavities, so
+exp(-i b/2 sum X) = product of per-cavity exps. Data agrees — S_joint vs S_costgx (med 1/p / B90):
+
+| L | n=8 | n=10 | n=12 | n=14 |
+|---|---|---|---|---|
+| 8 joint | 2.2/5.0 | 3.1/8.9 | 4.6/18.8 | 5.9/32.3 |
+| 8 local (S_costgx) | 2.2/5.1 | 3.2/8.9 | 4.5/18.8 | 6.0/32.1 |
+
+So S_joint and S_snap2j are removed from the queue; `theory_u.py` now only builds the dense joint
+mixer for ≤14 cavity bits. A truly non-separable joint mixer would need cross-cavity terms.
+
+**Next (data-driven):** L 4→8 cut n=20 median 1/p 79→17 (S_costgx), the biggest single lever so far,
+so queued **S_deep** (same S_costgx recipe, warm-grown L=8→12→16). Watchdog v6 restarted.

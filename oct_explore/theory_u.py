@@ -114,7 +114,11 @@ def build(n, insts, ks):
     # scatter on computational Fock block. We implement via logical 2^{ktot} matrix
     # acting through an embedding index.
     joint_V = joint_lam = None
-    if a.mixer == "joint" and a.u_form != "cost_only":
+    # NOTE (21:45 CST 10-16): sum_j X_j over concatenated cavity bits is separable, so
+    # exp(-i b/2 sum X) == product of per-cavity exps == local mixer (S_joint matched S_costgx
+    # to <2% at n=8..14). Dense 2^ktot build OOMs at n=20 (256 GiB), so only build it for
+    # small ktot; otherwise fall back to the mathematically identical local path.
+    if a.mixer == "joint" and a.u_form != "cost_only" and sum(ks) <= 14:
         # Build X on ktot bits, embed into product of 2^{k_c} blocks (pad levels = 0)
         Nlog = 1 << ktot
         Xj = np.zeros((Nlog, Nlog), complex)

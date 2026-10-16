@@ -33,7 +33,7 @@ finalize_and_push() {
   if [[ -f "logs/${tag}.pushed" ]]; then return 0; fi
   say "DONE $tag — updating LOG + push"
   python3 report.py BF_gray QAOA_raw T_raw U_ecd_raw U_poly2 U_soft U_step U_poly2_810 U_cav U_L4deep \
-    S_gxcost S_costgx S_gxonly S_costonly S_bin S_joint S_R S_snap2 S_snap2j S_snap4 U_cav R_raw 2>/dev/null || true
+    S_gxcost S_costgx S_gxonly S_costonly S_bin S_joint S_R S_snap2 S_snap4 S_deep U_cav R_raw 2>/dev/null || true
   python3 - "$tag" <<'PY'
 import json, sys, time
 from pathlib import Path
@@ -63,7 +63,7 @@ PY
   touch "logs/${tag}.pushed"
 }
 
-say "watchdog v5 cost_gx+SNAP start jobs=$(n_oct_jobs)"
+say "watchdog v6 (joint mixer dropped: identical to local; +S_deep L=12,16) start jobs=$(n_oct_jobs)"
 
 # Finish leftover theory jobs, then BROAD SCAN (ECD on every layer; one joint U).
 # Short screens L=2,4,8; n=8 train -> n=14/20 test. Do not lock onto one yet.
@@ -73,10 +73,9 @@ QUEUE=(
   "S_gxonly|theory_u.py --tag S_gxonly --ecd 1 --diag raw --u_form gx_only --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60"
   "S_costonly|theory_u.py --tag S_costonly --ecd 1 --diag raw --u_form cost_only --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60"
   "S_bin|theory_u.py --tag S_bin --ecd 1 --diag raw --u_form product --u_order cost_gx --code binary --mixer local --Ls 2 4 8 --restarts 4 --maxiter 250 --ntrain 80"
-  "S_joint|theory_u.py --tag S_joint --ecd 1 --diag raw --u_form product --u_order cost_gx --code gray --mixer joint --Ls 2 4 8 --restarts 4 --maxiter 250 --ntrain 80"
   "S_R|theory_u.py --tag S_R --layout R --ecd 1 --diag raw --u_form product --u_order cost_gx --code gray --mixer local --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60"
   "S_snap2|theory_u.py --tag S_snap2 --ecd 1 --snap 2 --diag raw --u_form product --u_order cost_gx --code gray --mixer local --Ls 2 4 8 --restarts 4 --maxiter 250 --ntrain 80"
-  "S_snap2j|theory_u.py --tag S_snap2j --ecd 1 --snap 2 --diag raw --u_form product --u_order cost_gx --code gray --mixer joint --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60"
+  "S_deep|theory_u.py --tag S_deep --ecd 1 --diag raw --u_form product --u_order cost_gx --code gray --mixer local --Ls 8 12 16 --restarts 3 --maxiter 250 --ntrain 80"
   "S_snap4|theory_u.py --tag S_snap4 --ecd 1 --snap 4 --diag raw --u_form product --u_order cost_gx --code gray --mixer local --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60"
   "U_cav|theory_u.py --tag U_cav --layout C --ecd 0 --diag raw --Ls 1 2 4 6 8 --restarts 5 --maxiter 300 --ntrain 100 --test 10 12 14"
   "R_raw|train.py --tag R_raw --layout R --cost raw --kind logp --Ls 1 2 4 6 8 --restarts 3 --maxiter 120 --test 10 12 14 20 --ntrain 60"

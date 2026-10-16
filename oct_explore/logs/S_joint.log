@@ -1,0 +1,41 @@
+21:21:31 build train n=8 form=product order=cost_gx code=gray mixer=joint ecd=1 snap=0
+21:21:38   L=2 try loss=2.5158
+21:21:43   L=2 try loss=2.5158
+21:21:49   L=2 try loss=3.5695
+21:21:54   L=2 try loss=3.3630
+21:21:59   L=2 try loss=2.6429
+21:22:07   L=2 try loss=2.6429
+21:22:07 L=2 train med1/p=13.8 mean_p=0.0955 (36s)
+21:22:31   L=4 try loss=2.2730
+21:22:47   L=4 try loss=1.7148
+21:23:08   L=4 try loss=1.9411
+21:23:30   L=4 try loss=2.0009
+21:23:51   L=4 try loss=2.6333
+21:24:12   L=4 try loss=2.0323
+21:24:13 L=4 train med1/p=5.8 mean_p=0.2120 (126s)
+21:25:03   L=8 try loss=1.5147
+21:25:46   L=8 try loss=1.0254
+21:26:29   L=8 try loss=1.6666
+21:27:14   L=8 try loss=1.4357
+21:27:58   L=8 try loss=1.6207
+21:28:41   L=8 try loss=1.7846
+21:28:42 L=8 train med1/p=2.6 mean_p=0.4096 (269s)
+21:28:45 test n=8 L=2 med1/p=10.8 B90=23.0 rand=128
+21:28:50 test n=8 L=4 med1/p=4.8 B90=9.9 rand=128
+21:28:57 test n=8 L=8 med1/p=2.2 B90=5.0 rand=128
+21:29:01 test n=10 L=2 med1/p=22.3 B90=58.1 rand=512
+21:29:05 test n=10 L=4 med1/p=8.1 B90=22.4 rand=512
+21:29:13 test n=10 L=8 med1/p=3.1 B90=8.9 rand=512
+21:29:21 test n=12 L=2 med1/p=36.6 B90=112.8 rand=2048
+21:29:31 test n=12 L=4 med1/p=11.7 B90=45.2 rand=2048
+21:29:47 test n=12 L=8 med1/p=4.6 B90=18.8 rand=2048
+21:31:11 test n=14 L=2 med1/p=75.2 B90=208.5 rand=8192
+21:33:18 test n=14 L=4 med1/p=18.2 B90=68.2 rand=8192
+21:36:53 test n=14 L=8 med1/p=5.9 B90=32.3 rand=8192
+Traceback (most recent call last):
+  File "/workspace/qumode_sep/oct_explore/theory_u.py", line 473, in <module>
+    pp, _ = build(n, ins[i:i + ch], LAY[n])
+            ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/qumode_sep/oct_explore/theory_u.py", line 120, in build
+    Xj = np.zeros((Nlog, Nlog), complex)
+numpy._core._exceptions._ArrayMemoryError: Unable to allocate 256. GiB for an array with shape (131072, 131072) and data type complex128
