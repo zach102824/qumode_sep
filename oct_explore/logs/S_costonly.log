@@ -1,0 +1,35 @@
+21:11:04 build train n=8 form=cost_only order=gx_cost code=gray mixer=local ecd=1 snap=0
+21:11:08   L=2 try loss=4.9160
+21:11:10   L=2 try loss=4.1316
+21:11:11   L=2 try loss=4.1316
+21:11:13   L=2 try loss=4.1316
+21:11:15   L=2 try loss=4.1316
+21:11:15 L=2 train med1/p=64.3 mean_p=0.0194 (11s)
+21:11:27   L=4 try loss=3.8449
+21:11:36   L=4 try loss=3.4197
+21:11:44   L=4 try loss=3.4922
+21:11:54   L=4 try loss=3.4183
+21:12:02   L=4 try loss=4.5735
+21:12:02 L=4 train med1/p=30.5 mean_p=0.0426 (47s)
+21:12:25   L=8 try loss=3.3103
+21:12:41   L=8 try loss=2.8424
+21:12:56   L=8 try loss=3.1968
+21:13:12   L=8 try loss=3.8701
+21:13:28   L=8 try loss=3.3797
+21:13:29 L=8 train med1/p=15.5 mean_p=0.0731 (87s)
+21:13:32 test n=8 L=2 med1/p=52.9 B90=131.2 rand=128
+21:13:36 test n=8 L=4 med1/p=32.4 B90=92.4 rand=128
+21:13:42 test n=8 L=8 med1/p=16.8 B90=43.9 rand=128
+21:13:45 test n=10 L=2 med1/p=244.3 B90=636.6 rand=512
+21:13:48 test n=10 L=4 med1/p=122.6 B90=504.2 rand=512
+21:13:55 test n=10 L=8 med1/p=61.6 B90=306.0 rand=512
+21:13:58 test n=12 L=2 med1/p=1057.1 B90=4456.0 rand=2048
+21:14:03 test n=12 L=4 med1/p=634.8 B90=3353.4 rand=2048
+21:14:10 test n=12 L=8 med1/p=422.0 B90=2266.3 rand=2048
+21:14:29 test n=14 L=2 med1/p=1667.3 B90=5764.7 rand=8192
+21:14:55 test n=14 L=4 med1/p=707.0 B90=3196.4 rand=8192
+21:15:39 test n=14 L=8 med1/p=286.2 B90=1091.0 rand=8192
+21:17:08 test n=20 L=2 med1/p=120230.3 B90=5458849.0 rand=349525
+21:18:51 test n=20 L=4 med1/p=182438.2 B90=1747960.4 rand=349525
+21:21:22 test n=20 L=8 med1/p=72457.9 B90=557709.6 rand=349525
+21:21:22 ALLDONE
