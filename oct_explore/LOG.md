@@ -118,3 +118,30 @@ small n. Full R_raw restarted 19:16 CST with corrected layouts.
 n=20 L=8 median 17 vs SATLike ~124 (7× better), vs ECD 55599.
 Interpretation: need Hamming-local cavity mixer (Gray X), synthesizable by ECD+SNAP/GRAPE
 as a compiled block; plain ECD displacement is the wrong mixer.
+
+## Hardware model lock-in (19:27 CST) — theory first
+
+Zach: each layer = **local ECD** on each cavity–transmon + an **arbitrary** (not just
+diagonal) unitary on the **joint cavity space** via GRAPE. No JP. Bits may sit on cavities
+and/or control transmons. Find the best transferring unitary first; make it GRAPE-friendly later.
+
+### Roles of each operation
+- **ECD alone** only mixes each cavity with its own transmon (conditional displacement:
+  Fock walk n↔n±1). Mixing time on a k-bit cavity is O(2^k) along the Gray path, not O(k)
+  on the hypercube. ECD cannot couple cavities to each other.
+- **Joint cavity unitary (GRAPE)** is the *only* place that can (i) Hamming-mix cavity bits,
+  (ii) mix across cavities, and (iii) apply the cost. Theory target used here:
+  product of local Gray-X on each cavity (QAOA-analogue hypercube mixer) × cost diagonal D(C).
+- **ECD is optional** once GRAPE owns cavity mixing. Useful ECD roles left: entangle / move
+  information involving **transmon bits**, or cheap local prep. Ablate ECD on/off to check.
+- Plain ECD-as-mixer fails (T_raw n=20 L=8 median 55599). Exact Gray-X + cost (BF_gray)
+  matches QAOA and beats SATLike (n=20 L=8 median **17** vs ~124).
+
+### Next experiments (`theory_u.py`)
+1. **U_ecd_raw**: ECD on + Gray-X joint U + raw cost (does ECD help when Gray-X is exact?).
+2. **U_poly2 / U_soft / U_step**: ECD off, stronger size-free diagonals in U (L focus ≈4–8).
+3. Keep **R_raw** (rebalanced k) running as ECD-only baseline with more transmon bits.
+4. Killed `fit_ecd_bitflip` (ECD+SNAP ≈ Gray-X synthesis): low fidelity (~0.3), GRAPE-friendly
+   path deferred until theory unitary is settled.
+
+Code: `theory_u.py`. Detached setsid/nohup, ≤8 cores, never touch `*.STOP`.
