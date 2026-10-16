@@ -400,3 +400,19 @@ so queued **S_deep** (same S_costgx recipe, warm-grown L=8→12→16). Watchdog 
 | 2 | 10.8/22.9 | 22.7/59.1 | 36.7/107.6 | 74.5/209.2 | 504.2/1694.2 |
 | 4 | 4.8/9.8 | 8.2/23.4 | 14.8/57.5 | 18.6/70.8 | 230.3/1638.3 |
 | 8 | 2.2/4.9 | 3.1/9.9 | 4.9/24.5 | 6.2/36.1 | 42.1/311.2 |
+
+## Pivot (23:20 CST): native qumode U — Gray-X is reference only
+
+Zach: less QAOA-like Gray-X; prefer ECD + SNAP + displacement/phase.
+Joint cavity U from SNAP/displacement generators (not Pauli-X). Goal: transfer ≈ SATLike.
+
+Gray-X reference (do not chase further):
+| run | L | n=20 | vs SATLike |
+|---|---|---|---|
+| **S_costgx** (ECD+cost·GrayX) | 8 | **17/129** | 7× better |
+| S_snap2 (SNAP+GrayX) | 8 | 42/311 | SNAP on GrayX hurts |
+| S_bin | 8 | 25/410 | Gray≈binary |
+| S_costonly (no mixer) | 8 | 72k | fail |
+
+New code: `native_u.py`. Forms: d_snap, snap_d, d_snap_d, snap_cost, gen_sum, bs_snap.
+Queue N_*: no Gray-X. Watchdog v7. Gray-X deep/snap4/R killed to free cores.
