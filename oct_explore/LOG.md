@@ -62,3 +62,40 @@ phi(n)=s1 u + s2 u^2, u=n/sqrt(2^k), part of the allowed arbitrary diagonal, ins
 - SNAP helps at n=8 (L=2: 32 vs 52) but transfers worse: it overfits the k=3 cavity. Next: train SNAP jointly
   on n=8+10 (two cavity sizes, forces size-free SNAP) and a deeper baseline (L up to 16) to see whether the ECD
   circuit keeps improving with depth at n=14.
+
+## Finished jobs (18:36–18:48 CST)
+
+### Direct train at n=14 (T_raw_direct14)
+| L | transferred from n=8 | trained at n=14 |
+|---|---|---|
+| 1 | 7287/18825 | 7475/18218 |
+| 2 | 1704/5541 | 1913/4500 |
+| 4 | 644/3050 | 462/2427 |
+
+Transfer loss ≤1.4× at L=4. Expressivity, not transfer, is the bottleneck. Depth alone (T_raw_deep) only gets
+n=14 L=16 to 195/2298 — still 4× SATLike median (50) and 30× QAOA.
+
+### Joint SNAP n=8+10 (E_snap2_8and10)
+n=14 L=6: 276/957 (vs baseline L=8 245/1079). Small help, not enough.
+
+### Gray-bit X mixer upper bound (BF_gray) — KEY RESULT
+Mixer = transmon R_x(β_tm) on every register + exact ∑_j X_j on Gray-coded cavity bits
+(shared β_cav), then cost phase. Same training/test protocol. This is what ECD *should*
+approximate if it mixed the cavity hypercube.
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 | vs SATLike n=20 |
+|---|---|---|---|---|---|---|
+| 4 | 5.9/12 | 10.5/31 | 15/50 | 26/85 | 123/374 | ≈1× median |
+| 6 | 3.6/8 | 5.3/17 | 7.5/30 | 11.5/47 | 38/174 | 3× better |
+| 8 | 2.4/6 | 3.5/10 | 4.8/23 | 7.0/36 | **17/132** | **7× better** |
+| QAOA L=8 | 2.5/5 | 3.5/7 | 4.6/16 | 6.3/18 | 16/54 | — |
+| ECD L=8 | 17/45 | 60/203 | 258/1391 | 245/1079 | 55599/825k | 450× worse |
+| SATLike | 16/70 | 26/111 | 36/157 | 50/208 | ~124/~530 | — |
+
+Conclusion: a Hamming-local cavity mixer transfers like QAOA and beats SATLike at n=20.
+ECD fails because a displacement only walks the Gray *path* (Fock n↔n±1), mixing time
+O(2^k), not the hypercube (mixing O(k)). Next: (1) rebalance to k=1 cavities where ECD
+≈ bit flip; (2) synthesize Gray X via ECD+SNAP if rebalance isn't enough.
+
+## Running (18:44–)
+R_raw: layout R = more registers, k=1 at n=8 (4×(1+1)), k=2 at n=12/14, k=4 at n=20.

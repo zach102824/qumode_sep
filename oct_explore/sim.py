@@ -48,6 +48,9 @@ def instances(n, count, base):
 
 LAYOUTS_T = {8: [3, 3], 10: [4, 4], 12: [5, 5], 14: [4, 4, 3], 16: [5, 4, 4], 18: [5, 5, 5], 20: [6, 6, 5]}
 LAYOUTS_C = {8: [4, 4], 10: [5, 5], 12: [6, 6], 14: [5, 5, 4], 16: [6, 5, 5], 18: [6, 6, 6], 20: [7, 7, 6]}
+# Rebalanced: more registers so a larger fraction of bits sit on control transmons (true X-mixing).
+# n=8: 4 regs × (1 cav + 1 tm) → 50% on transmons; n=12/14: 3-4 regs × ~2; n=20: 4 regs × 4.
+LAYOUTS_R = {8: [1, 1, 1, 1], 10: [1, 1, 1, 1, 1], 12: [2, 2, 2], 14: [2, 2, 2, 2], 16: [3, 3, 3], 18: [4, 4, 4], 20: [4, 4, 4, 4]}
 
 
 def ungray(g):

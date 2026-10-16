@@ -14,13 +14,13 @@ ap.add_argument("--Ls", type=int, nargs="+", default=[1, 2, 3, 4, 6, 8]); ap.add
 ap.add_argument("--maxiter", type=int, default=400); ap.add_argument("--test", type=int, nargs="*", default=[10, 12, 14, 20])
 ap.add_argument("--ntest", type=int, nargs="*", default=None); ap.add_argument("--seed", type=int, default=0); ap.add_argument("--eval-only", action="store_true"); ap.add_argument("--snap", type=int, default=0); ap.add_argument("--pad", type=int, default=None)
 a = ap.parse_args()
-OUT = f"results/{a.tag}.json"; LAY = sim.LAYOUTS_T if a.layout == "T" else sim.LAYOUTS_C
+OUT = f"results/{a.tag}.json"; LAY = {'T': sim.LAYOUTS_T, 'C': sim.LAYOUTS_C, 'R': sim.LAYOUTS_R}[a.layout]
 NTEST = dict(zip(a.test, a.ntest)) if a.ntest else {10: 100, 12: 100, 14: 200, 16: 100, 18: 100, 20: 100}
 TRB, TEB = 31_000_000_000, 32_000_000_000
 log = lambda *s: print(time.strftime("%H:%M:%S"), *s, flush=True)
 
 def mk(n, insts, **kw):
-    return sim.Circuit(n, insts, LAY[n], tbit=(a.layout == "T"), code=a.code, cost=a.cost, prep=a.prep, snap=a.snap, pad=a.pad, **kw)
+    return sim.Circuit(n, insts, LAY[n], tbit=(a.layout in ('T','R')), code=a.code, cost=a.cost, prep=a.prep, snap=a.snap, pad=a.pad, **kw)
 
 if not a.eval_only:
     tr = mk(a.nt, sim.instances(a.nt, a.ntrain, TRB)); trs = [tr] + [mk(m, sim.instances(m, a.ntrain // 2, TRB)) for m in a.nt2]
@@ -51,7 +51,7 @@ for L in ([] if a.eval_only else a.Ls):
         cands.append(np.concatenate([small_layer() for _ in range(L)]))
     best = None
     for x0 in cands:
-        x, fv = opt(x0)
+        x, fv = opt(x0); log(f'  L={L} try loss={fv:.4f}');
         if best is None or fv < best[1]: best = (x, fv)
     prev = best[0]; p = tr.probs(prev)
     res["train"][L] = {"x": prev.tolist(), "loss": best[1], "train": sim.summarize(p), "sec": time.time() - t0}
@@ -62,7 +62,7 @@ import gc
 for n in ([] if a.eval_only else [a.nt]) + a.test:
     N = 100 if n == a.nt else NTEST.get(n, 100)
     ins = sim.instances(n, N, TEB); res["test"][n] = {}
-    chunk = 100 if n <= 12 else (25 if n <= 16 else 5)
+    chunk = (5 if (a.layout=='R' and n>=10) else 100) if n <= 12 else (10 if n <= 16 else (2 if a.layout=='R' else 5))
     for L in a.Ls:
         x = np.array(res["train"][L]["x"]); p = []
         for i in range(0, N, chunk):
