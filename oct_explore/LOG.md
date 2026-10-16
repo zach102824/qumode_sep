@@ -351,3 +351,11 @@ S_sexp abandoned (NaN / non-transferring). Soft/poly2 still out.
 
 **Next (data-driven):** keep ECD; default U order = cost·GrayX; screen binary/joint/R;
 add **SNAP-per-cavity + joint mixer U** (`--snap 2/4`, local and joint mixer): S_snap2, S_snap2j, S_snap4.
+
+## S_gxonly finished (21:15 CST)
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| 2 | 150.1/379.5 | 875.8/20052.5 | 2221.0/15242.3 | 10054.3/164839.3 | 501083.7/4502829.0 |
+| 4 | 151.5/368.5 | 1075.7/5929.5 | 3657.0/42632.9 | 9396.9/81914.4 | 880049.6/20089352.0 |
+| 8 | 140.9/409.0 | 676.8/12140.5 | 2577.1/23331.6 | 11093.0/142565.5 | 1184760.5/53469548.0 |
