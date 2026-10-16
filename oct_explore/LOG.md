@@ -225,3 +225,13 @@ Best transferring unitary under the hardware model (local ECD + arbitrary joint 
 4. Focus L≈4 already competitive with SATLike at n=20 (median 123 ≈ 124); L=8 is clearly better.
 
 Next: U_cav (cavity-only bits, ECD off), U_L4deep (more restarts at L≤4), resume R_raw, then GRAPE compile plan.
+
+## U_soft finished (20:14 CST)
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| 1 | 128.0/256.0 | 512.0/1024.0 | 2048.0/4096.0 | 8192.0/16384.0 | 349525.5/1048576.2 |
+| 2 | 16.8/31.9 | 41.3/91.3 | 108.8/245.9 | 341.6/900.7 | 20997.7/85456.8 |
+| 4 | 4.2/8.6 | 9.7/21.9 | 38.9/157.2 | 300.5/1750.0 | 158145.1/807230.5 |
+| 6 | 2.1/4.2 | 6.1/18.5 | 53.1/256.0 | 552.3/1923.4 | 137009.3/419532.5 |
+| 8 | 1.5/2.6 | 5.5/22.5 | 69.5/249.2 | 605.1/2246.5 | 111593.4/342554.2 |
