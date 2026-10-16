@@ -50,7 +50,7 @@ LAYOUTS_T = {8: [3, 3], 10: [4, 4], 12: [5, 5], 14: [4, 4, 3], 16: [5, 4, 4], 18
 LAYOUTS_C = {8: [4, 4], 10: [5, 5], 12: [6, 6], 14: [5, 5, 4], 16: [6, 5, 5], 18: [6, 6, 6], 20: [7, 7, 6]}
 # Rebalanced: more registers so a larger fraction of bits sit on control transmons (true X-mixing).
 # n=8: 4 regs × (1 cav + 1 tm) → 50% on transmons; n=12/14: 3-4 regs × ~2; n=20: 4 regs × 4.
-LAYOUTS_R = {8: [1, 1, 1, 1], 10: [1, 1, 1, 1, 1], 12: [2, 2, 2], 14: [2, 2, 2, 2], 16: [3, 3, 3], 18: [4, 4, 4], 20: [4, 4, 4, 4]}
+LAYOUTS_R = {8: [1,1,1,1], 10: [1,1,1,1,1], 12: [2,2,2,2], 14: [3,3,2,2], 16: [3,3,3,3], 18: [5,5,5], 20: [4,4,4,4]}
 
 
 def ungray(g):
@@ -61,8 +61,8 @@ def ungray(g):
 
 class Circuit:
     def __init__(self, n, insts, ks, tbit=True, code="gray", cost="raw", prep="uniform", pad=None, dtype=np.complex64,
-                 diag_fn=None, snap=0):
-        self.snap = snap; self.np = NP + snap
+                 diag_fn=None, snap=0, bmax=None):
+        self.snap = snap; self.np = NP + snap; self.bmax = bmax
         self.n, self.ks, self.tbit, self.C = n, list(ks), tbit, len(ks)
         assert sum(ks) + (self.C if tbit else 0) == n
         self.nfs = [(1 << k) + (pad if pad is not None else max(8, (1 << k) // 4)) for k in ks]
@@ -123,6 +123,8 @@ class Circuit:
         C = self.C; L = x.size // self.np; x = x.reshape(L, self.np)
         for l in range(L):
             bre, bim, th, ph, g = [x[l, j] for j in range(NP)]
+            if self.bmax is not None:
+                bre = self.bmax * jnp.tanh(bre); bim = self.bmax * jnp.tanh(bim)
             cth, sth = jnp.cos(th / 2), jnp.sin(th / 2)
             R = jnp.array([[cth, -1j * sth * jnp.exp(-1j * ph)], [-1j * sth * jnp.exp(1j * ph), cth]]).astype(self.cdt)
             for c in range(C):

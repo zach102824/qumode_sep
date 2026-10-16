@@ -99,3 +99,22 @@ O(2^k), not the hypercube (mixing O(k)). Next: (1) rebalance to k=1 cavities whe
 
 ## Running (18:44–)
 R_raw: layout R = more registers, k=1 at n=8 (4×(1+1)), k=2 at n=12/14, k=4 at n=20.
+
+## Mixer probes continued (18:48–19:16 CST)
+
+### T_bmax (force |b|≤1.5 via tanh): no gain
+Trained |b| still collapses to 0.02–0.35. Test n=14 L=8: 333/1355 (vs T_raw 245/1079).
+Optimizer does not want large ECD displacements.
+
+### E_snap4 joint 8+10: worse
+n=14 L=8: 1441/7831. Heavy SNAP hurts; discarded.
+
+### R layout (more registers, fewer cavity bits) — in progress
+Fixed bit-count bug (n=12/14 layouts). Partial from earlier valid n=8/10 run (k=1 cavities):
+n=8 L=2: 33/75 (vs T 52/126); n=10 L=2: 103/223 (vs T 236/624). Rebalancing helps at
+small n. Full R_raw restarted 19:16 CST with corrected layouts.
+
+### BF_gray remains the only method matching QAOA
+n=20 L=8 median 17 vs SATLike ~124 (7× better), vs ECD 55599.
+Interpretation: need Hamming-local cavity mixer (Gray X), synthesizable by ECD+SNAP/GRAPE
+as a compiled block; plain ECD displacement is the wrong mixer.

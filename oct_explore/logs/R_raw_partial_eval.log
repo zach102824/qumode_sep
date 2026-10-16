@@ -1,0 +1,11 @@
+19:11:58 R n=8 L=1 med=129.3 B90=265.5 rand=128
+19:12:10 R n=8 L=2 med=32.9 B90=75.1 rand=128
+19:12:31 R n=10 L=1 med=515.6 B90=1073.9 rand=512
+19:13:13 R n=10 L=2 med=102.6 B90=223.3 rand=512
+Traceback (most recent call last):
+  File "/workspace/qumode_sep/oct_explore/eval_partial_R.py", line 9, in <module>
+    c=sim.Circuit(n,ins[i:i+ch],sim.LAYOUTS_R[n],tbit=True)
+  File "/workspace/qumode_sep/oct_explore/sim.py", line 67, in __init__
+    assert sum(ks) + (self.C if tbit else 0) == n
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

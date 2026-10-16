@@ -12,7 +12,7 @@ ap.add_argument("--code", default="gray"); ap.add_argument("--prep", default="un
 ap.add_argument("--ntrain", type=int, default=100); ap.add_argument("--nt", type=int, default=8); ap.add_argument("--nt2", type=int, nargs="*", default=[])
 ap.add_argument("--Ls", type=int, nargs="+", default=[1, 2, 3, 4, 6, 8]); ap.add_argument("--restarts", type=int, default=6)
 ap.add_argument("--maxiter", type=int, default=400); ap.add_argument("--test", type=int, nargs="*", default=[10, 12, 14, 20])
-ap.add_argument("--ntest", type=int, nargs="*", default=None); ap.add_argument("--seed", type=int, default=0); ap.add_argument("--eval-only", action="store_true"); ap.add_argument("--snap", type=int, default=0); ap.add_argument("--pad", type=int, default=None)
+ap.add_argument("--ntest", type=int, nargs="*", default=None); ap.add_argument("--seed", type=int, default=0); ap.add_argument("--eval-only", action="store_true"); ap.add_argument("--snap", type=int, default=0); ap.add_argument("--pad", type=int, default=None); ap.add_argument("--bmax", type=float, default=None)
 a = ap.parse_args()
 OUT = f"results/{a.tag}.json"; LAY = {'T': sim.LAYOUTS_T, 'C': sim.LAYOUTS_C, 'R': sim.LAYOUTS_R}[a.layout]
 NTEST = dict(zip(a.test, a.ntest)) if a.ntest else {10: 100, 12: 100, 14: 200, 16: 100, 18: 100, 20: 100}
@@ -20,7 +20,7 @@ TRB, TEB = 31_000_000_000, 32_000_000_000
 log = lambda *s: print(time.strftime("%H:%M:%S"), *s, flush=True)
 
 def mk(n, insts, **kw):
-    return sim.Circuit(n, insts, LAY[n], tbit=(a.layout in ('T','R')), code=a.code, cost=a.cost, prep=a.prep, snap=a.snap, pad=a.pad, **kw)
+    return sim.Circuit(n, insts, LAY[n], tbit=(a.layout in ('T','R')), code=a.code, cost=a.cost, prep=a.prep, snap=a.snap, pad=a.pad, bmax=a.bmax, **kw)
 
 if not a.eval_only:
     tr = mk(a.nt, sim.instances(a.nt, a.ntrain, TRB)); trs = [tr] + [mk(m, sim.instances(m, a.ntrain // 2, TRB)) for m in a.nt2]
@@ -32,7 +32,9 @@ def opt(x0):
     return r.x, float(r.fun)
 
 rng = np.random.default_rng(a.seed); PN = sim.NP + a.snap
-def small_layer(): return np.concatenate([[0.3 * rng.standard_normal(), 0.3 * rng.standard_normal(), rng.uniform(0, np.pi), rng.uniform(0, 2*np.pi), 0.3 * rng.standard_normal()], 0.1 * rng.standard_normal(a.snap)])
+def small_layer():
+    br = (0.8 if a.bmax else 0.3) * rng.standard_normal(); bi = (0.8 if a.bmax else 0.3) * rng.standard_normal()
+    return np.concatenate([[br, bi, rng.uniform(0, np.pi), rng.uniform(0, 2*np.pi), 0.3 * rng.standard_normal()], 0.1 * rng.standard_normal(a.snap)])
 res = json.load(open(OUT)) if a.eval_only else {"args": vars(a), "train": {}}
 res["train"] = {int(k): v for k, v in res["train"].items()}
 prev = None
