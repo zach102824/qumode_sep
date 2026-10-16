@@ -9,7 +9,7 @@ import sim
 ap = argparse.ArgumentParser()
 ap.add_argument("--tag", required=True); ap.add_argument("--layout", default="T"); ap.add_argument("--cost", default="raw")
 ap.add_argument("--code", default="gray"); ap.add_argument("--prep", default="uniform"); ap.add_argument("--kind", default="meanp")
-ap.add_argument("--ntrain", type=int, default=100); ap.add_argument("--nt", type=int, default=8)
+ap.add_argument("--ntrain", type=int, default=100); ap.add_argument("--nt", type=int, default=8); ap.add_argument("--nt2", type=int, nargs="*", default=[])
 ap.add_argument("--Ls", type=int, nargs="+", default=[1, 2, 3, 4, 6, 8]); ap.add_argument("--restarts", type=int, default=6)
 ap.add_argument("--maxiter", type=int, default=400); ap.add_argument("--test", type=int, nargs="*", default=[10, 12, 14, 20])
 ap.add_argument("--ntest", type=int, nargs="*", default=None); ap.add_argument("--seed", type=int, default=0); ap.add_argument("--eval-only", action="store_true"); ap.add_argument("--snap", type=int, default=0); ap.add_argument("--pad", type=int, default=None)
@@ -22,8 +22,11 @@ log = lambda *s: print(time.strftime("%H:%M:%S"), *s, flush=True)
 def mk(n, insts, **kw):
     return sim.Circuit(n, insts, LAY[n], tbit=(a.layout == "T"), code=a.code, cost=a.cost, prep=a.prep, snap=a.snap, pad=a.pad, **kw)
 
-if not a.eval_only: tr = mk(a.nt, sim.instances(a.nt, a.ntrain, TRB))
-f = lambda x: tr.vg(x, a.kind)
+if not a.eval_only:
+    tr = mk(a.nt, sim.instances(a.nt, a.ntrain, TRB)); trs = [tr] + [mk(m, sim.instances(m, a.ntrain // 2, TRB)) for m in a.nt2]
+def f(x):  # average of per-size mean-log-p losses (joint training over sizes)
+    vs = [c.vg(x, a.kind) for c in trs]
+    return sum(v[0] for v in vs) / len(vs), sum(v[1] for v in vs) / len(vs)
 def opt(x0):
     r = minimize(f, np.asarray(x0, float), jac=True, method="L-BFGS-B", options={"maxiter": a.maxiter})
     return r.x, float(r.fun)

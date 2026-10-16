@@ -50,3 +50,15 @@ Findings:
 ## Next (18:12): mixer expressivity probes at n=8 -> 12,14 (L=1,2,4,6)
 E_bin (binary code), E_vac (vacuum start), E_snap2 (per-layer size-free cavity SNAP phase
 phi(n)=s1 u + s2 u^2, u=n/sqrt(2^k), part of the allowed arbitrary diagonal, instance independent).
+
+### Results (18:18): median/B90 1/p, train n=8
+| run | L | n=8 | n=12 | n=14 |
+|---|---|---|---|---|
+| E_bin (binary code) | 6 | 22/70 | 755/4940 | 394/3521 |
+| E_vac (vacuum start) | 6 | 26/54 | 2389/33923 | 609/6285 |
+| E_snap2 (+cavity SNAP) | 6 | 15/29 | 1512/14065 | 530/3599 |
+| T_raw (baseline, Gray, uniform) | 6 | 19/45 | 408/1828 | 358/1722 |
+- Gray >= binary, uniform start > vacuum: keep Gray + uniform.
+- SNAP helps at n=8 (L=2: 32 vs 52) but transfers worse: it overfits the k=3 cavity. Next: train SNAP jointly
+  on n=8+10 (two cavity sizes, forces size-free SNAP) and a deeper baseline (L up to 16) to see whether the ECD
+  circuit keeps improving with depth at n=14.
