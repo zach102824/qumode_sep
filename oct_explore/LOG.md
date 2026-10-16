@@ -324,3 +324,11 @@ ECD + U=GrayX·cost (product, order gx_cost), train L=2→4→8 (no L=1/6):
 Key: earlier U_ecd_raw L=4 n=20 was **611** (same circuit, but grown via L=1,2,4,6,8).
 Skipping L=1/6 lands L=4 near BF_gray (123). Schedule/init matters for ECD+GrayX.
 S_costgx (order cost·GrayX) training; other S_* queued. Not locking yet.
+
+## S_costgx finished (20:59 CST)
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| 2 | 10.8/23.0 | 22.4/58.4 | 36.6/110.9 | 75.0/208.3 | 490.8/1688.3 |
+| 4 | 4.8/9.9 | 8.1/22.5 | 11.7/44.9 | 18.2/69.4 | 79.0/416.4 |
+| 8 | 2.2/5.1 | 3.2/8.9 | 4.5/18.8 | 6.0/32.1 | 17.1/128.6 |
