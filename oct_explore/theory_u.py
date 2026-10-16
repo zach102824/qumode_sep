@@ -33,6 +33,7 @@ ap.add_argument("--u_form", default="product",
 ap.add_argument("--u_order", default="gx_cost", choices=["gx_cost", "cost_gx"])
 ap.add_argument("--code", default="gray", choices=["gray", "binary"])
 ap.add_argument("--mixer", default="local", choices=["local", "joint"])
+ap.add_argument("--snap", type=int, default=0, help="size-free per-cavity SNAP poly degree")
 ap.add_argument("--Ls", type=int, nargs="+", default=[2, 4, 8])
 ap.add_argument("--ntrain", type=int, default=80)
 ap.add_argument("--nt2", type=int, nargs="*", default=[])
@@ -50,8 +51,10 @@ OUT = f"results/{a.tag}.json"
 
 BASE = (6 if a.ecd else 3)
 EXTRA = {"raw": 0, "poly2": 1, "soft": 1, "step": 1}[a.diag]
+SNAP = int(a.snap)
 # single_exp / product / gx use b_cav; cost_only still has a slot but unused
-NP = BASE + EXTRA
+# param/layer: BASE + SNAP coeffs + EXTRA diag
+NP = BASE + SNAP + EXTRA
 
 
 def ungray_scalar(g):
@@ -295,6 +298,18 @@ def build(n, insts, ks):
         amp = amp.at[flat_j].set(a2.astype(jnp.complex64))
         return amp.reshape(psi.shape)
 
+    def apply_snap(psi, s_coeffs):
+        """Size-free per-cavity SNAP: phi(n)=sum_j s_j (n/sqrt(2^k))^{j+1}, part of joint U."""
+        if SNAP <= 0:
+            return psi
+        for c in range(C):
+            u = nvs[c] / scales[c]
+            ph = sum(s_coeffs[j] * (u ** (j + 1)) for j in range(SNAP))
+            Dph = jnp.exp(-1j * ph).astype(jnp.complex64)
+            # apply diagonal on cavity axis C+c
+            psi = psi * Dph.reshape([1] * (C + c) + [-1] + [1] * (len(nfs) - 1 - c))
+        return psi
+
     def apply_ecd_or_tm(psi, row):
         if a.ecd:
             bre, bim, th, ph = row[0], row[1], row[2], row[3]
@@ -309,21 +324,25 @@ def build(n, insts, ks):
                 n0 = apply_M(Dp.conj().T, p1, fa); n1 = apply_M(Dp, p0, fa)
                 psi = jnp.stack([n0, n1], axis=c)
             bc, g = row[4], row[5]
-            extra = row[6] if EXTRA else 0.0
+            s_coeffs = row[6:6 + SNAP] if SNAP else jnp.zeros((0,))
+            extra = row[6 + SNAP] if EXTRA else 0.0
         else:
             bt, bc, g = row[0], row[1], row[2]
-            extra = row[3] if EXTRA else 0.0
+            s_coeffs = row[3:3 + SNAP] if SNAP else jnp.zeros((0,))
+            extra = row[3 + SNAP] if EXTRA else 0.0
             Mtm = jnp.array([[jnp.cos(bt / 2), -1j * jnp.sin(bt / 2)],
                              [-1j * jnp.sin(bt / 2), jnp.cos(bt / 2)]]).astype(jnp.complex64)
             for c in range(C):
                 psi = apply_M(Mtm, psi, c)
-        return psi, bc, g, extra
+        return psi, bc, g, extra, s_coeffs
 
     def state1(x, psi, cn, cn_log):
         L = x.size // NP
         x = x.reshape(L, NP)
         for l in range(L):
-            psi, bc, g, extra = apply_ecd_or_tm(psi, x[l])
+            psi, bc, g, extra, s_coeffs = apply_ecd_or_tm(psi, x[l])
+            # Joint cavity U (theory): SNAP-per-cavity + mixer + cost folded into one U
+            psi = apply_snap(psi, s_coeffs)
             form = a.u_form
             if form == "cost_only":
                 psi = apply_cost(psi, cn, g, extra)
@@ -365,7 +384,7 @@ for m in a.nt2:
 
 tr_p, tr_vg = [], []
 for n, insts, ks in builders:
-    log(f"build train n={n} form={a.u_form} order={a.u_order} code={a.code} mixer={a.mixer} ecd={a.ecd}")
+    log(f"build train n={n} form={a.u_form} order={a.u_order} code={a.code} mixer={a.mixer} ecd={a.ecd} snap={SNAP}")
     p, vg = build(n, insts, ks)
     tr_p.append(p); tr_vg.append(vg)
 
@@ -388,6 +407,8 @@ def init_layer(scale=1.0):
                       0.6 * scale, 0.4 * scale])
     else:
         v = np.array([0.6 * scale, 0.6 * scale, 0.4 * scale])
+    if SNAP:
+        v = np.concatenate([v, 0.1 * rng.standard_normal(SNAP)])
     if a.diag == "poly2":
         v = np.concatenate([v, [0.05 * rng.standard_normal()]])
     elif a.diag == "soft":
@@ -415,13 +436,17 @@ for L in a.Ls:
         cands.append(sched.reshape(-1))
         cands.append(sched.reshape(-1) * 1.4)
     else:
-        # ECD schedule: small beta, QAOA-like bcav/gamma
+        # ECD schedule: small beta, QAOA-like bcav/gamma (+ zero SNAP)
         for sc in (0.7, 1.2):
             rows = []
             for i in range(L):
-                t = i / max(L - 1, 1)
-                rows.append([0.05 * sc, 0.05 * sc, 0.3, 0.0,
-                             (0.9 - 0.7 * t) * sc, (0.2 + 0.7 * t) * sc])
+                tt = i / max(L - 1, 1)
+                row = [0.05 * sc, 0.05 * sc, 0.3, 0.0,
+                       (0.9 - 0.7 * tt) * sc, (0.2 + 0.7 * tt) * sc]
+                row += [0.0] * SNAP
+                if EXTRA:
+                    row += [{"poly2": 0.0, "soft": 1.0, "step": 0.5}[a.diag]]
+                rows.append(row)
             cands.append(np.array(rows, float).reshape(-1))
     cands = cands[: a.restarts + 2]
     best = None

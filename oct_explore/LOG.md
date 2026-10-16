@@ -332,3 +332,22 @@ S_costgx (order cost·GrayX) training; other S_* queued. Not locking yet.
 | 2 | 10.8/23.0 | 22.4/58.4 | 36.6/110.9 | 75.0/208.3 | 490.8/1688.3 |
 | 4 | 4.8/9.9 | 8.1/22.5 | 11.7/44.9 | 18.2/69.4 | 79.0/416.4 |
 | 8 | 2.2/5.1 | 3.2/8.9 | 4.5/18.8 | 6.0/32.1 | 17.1/128.6 |
+
+## Decision from data (21:11 CST) — prefer cost·GrayX; add SNAP
+
+**S_costgx beats S_gxcost** (same ECD+GrayX+raw, only U order flipped):
+
+| run | L | n=8 | n=14 | n=20 | vs SATLike n=20 |
+|---|---|---|---|---|---|
+| **S_costgx** (cost·GrayX) | 4 | 4.8/10 | 18/69 | **79/416** | **1.6× better** |
+| **S_costgx** | 8 | 2.2/5 | 6.0/32 | **17/129** | **7× better** |
+| S_gxcost (GrayX·cost) | 4 | 5.9/12 | 26/92 | 132/447 | ≈1× |
+| S_gxcost | 8 | 2.5/6 | 6.9/35 | 20/164 | 6× |
+| BF_gray (no ECD) | 8 | 2.4/6 | 7/36 | 17/132 | 7× |
+| SATLike | — | 16/70 | 50/208 | ~124/~530 | — |
+
+Ablations so far: **S_gxonly** (no cost) ≈ random — cost phase required.
+S_sexp abandoned (NaN / non-transferring). Soft/poly2 still out.
+
+**Next (data-driven):** keep ECD; default U order = cost·GrayX; screen binary/joint/R;
+add **SNAP-per-cavity + joint mixer U** (`--snap 2/4`, local and joint mixer): S_snap2, S_snap2j, S_snap4.
