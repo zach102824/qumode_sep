@@ -303,3 +303,11 @@ Hardware: local ECD + arbitrary joint cavity unitary (GRAPE later). Theory first
 
 Still finishing: U_cav, R_raw (ECD-only R baseline). Soft/poly2 confirmed overfit.
 Do not lock onto one circuit yet — wait for compact comparison table vs SATLike.
+
+## S_gxcost finished (20:39 CST)
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| 2 | 20.7/38.0 | 44.9/112.2 | 97.9/209.6 | 204.7/502.9 | 2109.1/6859.4 |
+| 4 | 5.9/12.4 | 10.9/32.4 | 16.7/60.2 | 26.3/92.3 | 131.6/447.3 |
+| 8 | 2.5/6.1 | 3.5/10.0 | 5.0/22.8 | 6.9/34.8 | 20.0/164.0 |
