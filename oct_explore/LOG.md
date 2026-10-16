@@ -272,3 +272,34 @@ Next: U_cav (cavity-only bits, ECD off), U_L4deep (more restarts at L≤4), resu
 | 2 | 20.1/39.0 | 43.8/113.1 | 91.8/199.4 | 200.4/536.2 | 2155.0/5261.5 |
 | 3 | 9.1/19.0 | 18.5/55.3 | 28.8/84.5 | 54.6/168.7 | 336.1/971.0 |
 | 4 | 5.9/12.2 | 10.5/30.8 | 15.1/49.5 | 25.9/85.2 | 122.7/373.6 |
+
+## U_cav partial (in progress)
+
+| L | n=8 | n=10 | n=12 | n=14 |
+|---|---|---|---|---|
+| 1 | 128.0/256.0 | 512.0/1024.0 | 2048.0/4096.0 | 8192.0/16384.0 |
+| 2 | 20.0/39.1 | 43.7/113.1 | 91.0/200.5 | 199.5/533.4 |
+| 4 | 5.9/12.4 | 10.4/30.8 | 15.3/49.6 | 25.9/84.6 |
+| 6 | 3.6/7.7 | 5.1/15.8 | 7.6/29.9 | 11.4/45.1 |
+| 8 | 2.5/6.0 | 3.4/9.8 | 4.8/23.8 | 6.8/36.1 |
+
+## Broad scan (20:23 CST) — explore MANY options before locking
+
+Zach update: keep ECD every layer; one joint cavity U per layer (mixer+cost folded in).
+Hardware: local ECD + arbitrary joint cavity unitary (GRAPE later). Theory first.
+
+`theory_u.py` extended with `--u_form/--u_order/--code/--mixer`. Short screens L=2,4,8.
+
+| tag | what |
+|---|---|
+| S_gxcost | ECD + U=GrayX·cost (order A; ≈ U_ecd_raw) |
+| S_costgx | ECD + U=cost·GrayX (order B) |
+| S_sexp | ECD + U=exp(-i(aX+bC)) single generator (test≤12) |
+| S_gxonly | ECD + U=GrayX only (no cost) ablation |
+| S_costonly | ECD + U=cost only (no GrayX) ablation |
+| S_bin | ECD + U=binary-X·cost |
+| S_joint | ECD + U=joint concatenated-bit GrayX·cost |
+| S_R | layout R (more regs / fewer cav bits) + ECD + GrayX·cost |
+
+Still finishing: U_cav, R_raw (ECD-only R baseline). Soft/poly2 confirmed overfit.
+Do not lock onto one circuit yet — wait for compact comparison table vs SATLike.
