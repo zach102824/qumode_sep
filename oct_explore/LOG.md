@@ -896,3 +896,8 @@ SNAP_cs4 (n=8-only train) done — SNAP strength holds (~0.39–0.62) but transf
 | 4 | 9.6/19.8 | 82.5/350 | 23698/280906 |
 | 8 | 6.4/14.4 | 723/4440 | 791073/6.0e6 |
 QAOA L4/L8 n=20 = 84.9/238 / 16.4/54. No beat. Next hope: SNAP_cs4j joint multi-n.
+
+## Check-in (Sat 12:14 CST)
+
+Alive: NN_v2b (L8 train, ~57m CPU-busy), NN_fix04 (L4 cand1), SNAP_cs4j (L2 cand2+), watchdog_nn + watchdog_snap. PID 2888494 untouched. Mem ~2.2 GiB avail — no new launch.
+Best n=20 so far still short of QAOA (L4 84.9/238, L8 16.4/54): S_costgx L4 79/416 (med ok, B90 miss), S_costgx L8 17.1/129, NN_v2 L8 21.6/122, NN_v2b L4 91.7/397. No beat — stay quiet.
