@@ -1122,3 +1122,6 @@ Zach: keep trying versions, with the network involved. Un-held NN_bin_soft (bina
 
 ## QAOA start removed (Sat 15:08 CST)
 Zach: remove the QAOA-start idea. All `--init qaoa` / `--init both` entries in queue_cg.txt are marked REMOVED and will not run again. Current NN, SNAP and binary-X runs already start from grown/random init (no QAOA angles). G_qfe results stay in the log for reference only.
+
+## 15:12 CST restart (v2): Zach stopped everything and confirmed the plan
+Found structure (per layer: local ECD per cavity+transmon, then one joint U = cost phase · Gray-X; plus final ECD), trained from scratch at n=8 with BFGS, frozen and tested at n=10/12/14/20 vs QAOA at equal L. No QAOA init, nothing forced on ECD. Variations only on this setup: L (2/4/8/10), Gray vs binary, more restarts (16), objective (meanlog/CVaR/mix), n=12 validation for iterate selection, ECD2. Baseline G_fe (4 restarts): n=20 L4 116.1/387.7, L8 20.3/118.8 vs QAOA 84.9/238.1, 16.4/54.2. Queue: queue_v2.txt, runner watchdog_v2.sh (2 jobs x 4 threads).

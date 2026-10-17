@@ -1,0 +1,8 @@
+# v2 restart (Zach 15:12): found structure ECD -> cost·GrayX (+final ECD), from scratch, n=8 BFGS, frozen test n=10/12/14/20. No QAOA init, no forced ECD.
+R_g16|costgx.py --tag R_g16 --code gray --init grow --final_ecd --ntrain 120 --Ls 2 4 8 10 --restarts 16 --maxiter 400 --test 10 12 14 20
+R_b16|costgx.py --tag R_b16 --code binary --init grow --final_ecd --ntrain 120 --Ls 2 4 8 10 --restarts 16 --maxiter 400 --test 10 12 14 20
+R_gcvar|costgx.py --tag R_gcvar --code gray --init grow --final_ecd --obj cvar --alpha 0.2 --ntrain 120 --Ls 2 4 8 10 --restarts 8 --maxiter 400 --test 10 12 14 20
+R_gmix|costgx.py --tag R_gmix --code gray --init grow --final_ecd --obj mix --alpha 0.2 --w 1.0 --ntrain 120 --Ls 2 4 8 10 --restarts 8 --maxiter 400 --test 10 12 14 20
+R_gval|costgx.py --tag R_gval --code gray --init grow --final_ecd --val_n 12 --ntrain 120 --Ls 2 4 8 10 --restarts 8 --maxiter 400 --test 10 12 14 20
+R_bcvar|costgx.py --tag R_bcvar --code binary --init grow --final_ecd --obj cvar --alpha 0.2 --ntrain 120 --Ls 2 4 8 10 --restarts 8 --maxiter 400 --test 10 12 14 20
+R_gecd2|costgx.py --tag R_gecd2 --code gray --init grow --final_ecd --ecd2 --ntrain 120 --Ls 2 4 8 10 --restarts 8 --maxiter 400 --test 10 12 14 20

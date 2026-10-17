@@ -24,6 +24,7 @@ ap.add_argument("--layout", default="T", choices=["T", "C", "R"])
 ap.add_argument("--code", default="gray", choices=["gray", "binary"])
 ap.add_argument("--Ls", type=int, nargs="+", default=[2, 4, 8])
 ap.add_argument("--ntrain", type=int, default=80)
+ap.add_argument("--train_n", type=int, default=8, help="main training size (Zach 15:11: try n=12)")
 ap.add_argument("--nt2", type=int, nargs="*", default=[])
 ap.add_argument("--nt2_count", type=int, default=40)
 ap.add_argument("--test", type=int, nargs="*", default=[10, 12, 14, 20])
@@ -135,7 +136,7 @@ def build(n, insts, ks):
     return jax.jit(probs), jax.jit(jax.value_and_grad(loss))
 
 
-tr = [(8, sim.instances(8, a.ntrain, TRB))] + [(m, sim.instances(m, a.nt2_count, TRB)) for m in a.nt2]
+tr = [(a.train_n, sim.instances(a.train_n, a.ntrain, TRB))] + [(m, sim.instances(m, a.nt2_count, TRB)) for m in a.nt2]
 tr_p, tr_vg = [], []
 for n, insts in tr:
     log(f"build train n={n} N={len(insts)} final_ecd={a.final_ecd} ecd2={a.ecd2} obj={a.obj} init={a.init}")
