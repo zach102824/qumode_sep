@@ -551,3 +551,13 @@ Note for PART 2: QAOA with paper angles is a stronger median reference (13.7 at 
 
 Stopped N_bssnap and N_dsnap_R (Zach: focus on ECD + cost·GrayX). Partial results kept in results/N_bssnap_partial.json
 (n=14 L=8 434/2224, n=20 not reached) and results/N_dsnap_R_partial.json (train L=2 only, med 27.9).
+
+## G_qfe finished (Sat 08:56 CST)  [layout=T code=gray ntrain=80 nt2=[] final_ecd=True ecd2=False init=qaoa obj=meanlog alpha=0.2 w=1.0 beta_l2=0.0]
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| 4 | 5.4/9.9 | 9.2/20.5 | 14.6/37.6 | 22.8/57.5 | 103.5/358.6 |
+| QAOA 4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| 8 | 2.5/4.5 | 3.6/7.3 | 4.8/15.4 | 6.6/17.3 | 16.4/59.2 |
+| QAOA 8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| SATLike | 16/70 | 26/111 | 36/157 | 50/208 | ~124/~530 |
