@@ -4,7 +4,7 @@
 SNAP_cs4|--kind csnap --snap 4 --Ls 2 4 8 --ntrain 80 --restarts 4 --maxiter 300 --test 10 12 14 20
 SNAP_cs4j|--kind csnap --snap 4 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 4 --maxiter 300 --test 10 12 14 20
 # --- next (native / non-QAOA, best bets for n20 beat) ---
-SNAP_cs4jBm|--kind csnap --snap 4 --code binary --obj mix --alpha 0.2 --w 1.0 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
+# ABORTED early L2 train 35/118 (worse than gray); SNAP_cs4jBm|--kind csnap --snap 4 --code binary --obj mix --alpha 0.2 --w 1.0 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
 SNAP_cs4jB|--kind csnap --snap 4 --code binary --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
 SNAP_cs4jfix|--kind csnap --snap 4 --fix_snap 0.25 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
 SNAP_cs4jmin|--kind csnap --snap 4 --snap_min 0.35 --snap_w 2.0 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20

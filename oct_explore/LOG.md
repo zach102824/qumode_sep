@@ -1099,3 +1099,13 @@ No n=20 QAOA beat → stay quiet.
 | 4 | 51.7/144.8 | 75.9/196.5 | 154.3/467.5 | 2821.1/9489.7 |
 | QAOA 4 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
 | G_qfe 4 | 9.2/20.5 | 14.6/37.6 | 22.8/57.5 | 103.5/358.6 |
+
+## Pivot to C_binmix (2026-10-17 14:29 CST)
+
+SNAP_cs4jBm L2 train **35.3/117.7** snap_mag=0.24 — worse than gray cs4j L2 (25/56). Aborted; commented out of SNAP queue.
+Launched **C_binmix** (binary cost·X + mix α=0.2 w=1.5, joint n=8..14) and **C_bincvar** — direct attack on S_bin B90 gap (75.4/354 vs QAOA 84.9/238).
+NN_bin04 still running. No SNAP until these finish. PID 2888494 untouched.
+
+## Check-in (2026-10-17 14:35 CST)
+
+Alive: NN_bin04 (curriculum build), C_binmix, C_bincvar, SNAP_cs4jB (L2 training; cand0 7.50→6.30), watchdogs nn+snap+tu. PID 2888494 untouched. MemAvail ~1.9 GiB; load ~19 on 8 cores (busy but progressing). No finished n=20 this window; no QAOA beat → stay quiet.
