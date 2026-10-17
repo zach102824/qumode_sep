@@ -650,3 +650,10 @@ ECD), G_qfe_deep (L=10/12/14), G_qfe_val (val selection, grow+QAOA cands), G_qfe
 | 8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
 | QAOA 8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
 | SATLike | 16/70 | 26/111 | 36/157 | 50/208 | ~124/~530 |
+
+## G_qfe12 finished (Sat 09:12 CST)  [layout=T code=gray ntrain=80 nt2=[] final_ecd=True ecd2=False init=qaoa obj=meanlog alpha=0.2 w=1.0 beta_l2=0.0]
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| 12 | 1.8/3.6 | 2.4/5.7 | 3.0/11.1 | 4.0/15.1 | 9.3/50.6 |
+| SATLike | 16/70 | 26/111 | 36/157 | 50/208 | ~124/~530 |
