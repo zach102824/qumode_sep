@@ -781,3 +781,9 @@ New knobs in `nn_costgx.py`:
 
 Queued after NN_v2b / NN_cc: NN_fix04 (α=0.04), NN_fix06 (α=0.06), NN_ebin (12 bins + fix04), NN_ccfix.
 Target still QAOA n=20 L4 84.9/238 and L8 16.4/54. Stay quiet until a clear beat.
+
+## Check-in (Sat 10:40 CST)
+
+Running: NN_v2b (shared joint 8–14, L4 restarts) and NN_cc (costcond). No new results; no QAOA beat yet.
+Found NN_v2b launched with old code where shared-mode restarts were identical (cand0–2 all 7.864→2.335) — wasted ~17 min each.
+Fix: restarts already use variants 0/1/2; now r≥3 adds seeded jitter so all restarts differ. Helper `logs/requeue_v2b.sh` kills NN_v2b once its L4 tests are saved; watchdog relaunches it (L4 skipped, L8 trains with distinct restarts).

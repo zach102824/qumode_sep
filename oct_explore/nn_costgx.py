@@ -653,7 +653,10 @@ for si, train_sizes in enumerate(stage_list):
                         flat[n_before: n_before + dout * din] *= 0.01
                         flat[n_before + dout * din:] = init_params(L_, variant=r % 3)
                     pieces.append(flat.astype(np.float32))
-                return np.concatenate(pieces).astype(np.float32)
+                out = np.concatenate(pieces).astype(np.float32)
+                if r >= 3:  # variants repeat mod 3: jitter so restarts stay distinct
+                    out = out + 0.05 * np.random.default_rng(a.seed + 101 * r + L_).standard_normal(out.size).astype(np.float32)
+                return out.astype(np.float32)
             cands.append(_iv(L, pack))
         # dedupe length
         cands = [c for c in cands if c.size == pack_dim(pack)]
