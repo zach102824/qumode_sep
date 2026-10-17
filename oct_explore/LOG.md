@@ -628,3 +628,13 @@ Reading: the tail gap was a training-basin/overfit issue; starting in QAOA's bas
 n=20, so next: iterate/candidate selection on held-out validation sets at n=12,14 (seed base 3.3e10, disjoint from
 test 3.2e10) — `--val_n`. Queued: G_fe (grow init + final ECD, isolates final-ECD effect), G_q (QAOA init, no final
 ECD), G_qfe_deep (L=10/12/14), G_qfe_val (val selection, grow+QAOA cands), G_qfe81012 (train n=8+10+12).
+
+## G_q finished (Sat 09:03 CST)  [layout=T code=gray ntrain=80 nt2=[] final_ecd=False ecd2=False init=qaoa obj=meanlog alpha=0.2 w=1.0 beta_l2=0.0]
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| 4 | 5.8/10.5 | 10.4/23.9 | 16.0/42.6 | 24.7/69.5 | 102.1/413.1 |
+| QAOA 4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| 8 | 2.6/4.6 | 3.7/7.8 | 5.1/16.6 | 7.1/18.3 | 17.1/62.6 |
+| QAOA 8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| SATLike | 16/70 | 26/111 | 36/157 | 50/208 | ~124/~530 |
