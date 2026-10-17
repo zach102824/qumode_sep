@@ -14,7 +14,7 @@ job_done() { [[ -f "results/${1}.json" ]] && grep -q ALLDONE "logs/${1}.log" 2>/
 finalize() {
   local tag="$1"; job_done "$tag" || return 0; [[ -f "logs/${tag}.pushed" ]] && return 0
   say "DONE $tag"
-  python3 snap_report.py "$tag" >>"$LOGW" 2>&1 || true
+  python3 snap_report.py "$tag" >> LOG.md 2>>"$LOGW" || true
   git -C /workspace/qumode_sep add oct_explore/LOG.md oct_explore/results/${tag}.json oct_explore/logs/${tag}.log \
     oct_explore/snap_costgx.py oct_explore/snap_report.py oct_explore/watchdog_snap.sh oct_explore/queue_snap.txt 2>/dev/null
   git -C /workspace/qumode_sep commit -qm "oct_explore: ${tag} SNAP-instead-of-ECD results" 2>/dev/null

@@ -929,3 +929,9 @@ Beats QAOA median at n=14; loses at n=20 (~1.4× med, ~2.2× B90). No n=20 beat.
 **NN_ebin** launched (ebins=12 + fix β). Queued: SNAP_cs4jeb, free8j, uc4j, cs4jm.
 
 Killed NN_v2b mid-L8 (|β|=0.004 near-QAOA) and deferred NN_cc to free RAM. Watchdogs healthy. No QAOA beat → no Zach ping.
+
+## Check-in (2026-10-17 12:23 CST)
+
+Alive: NN_fix04 (L8 after L4 n20=120/515), NN_ebin (ebins=12+fixβ), SNAP_cs4j (joint L2 done snap_mag=0.43; L4+). watchdog_nn+snap. PID 2888494 untouched. No G_*/watchdog_cg restart.
+Queue iterate from data: NN_fix02 / NN_ebin02 before larger |β|; SNAP_cs4jr2 (rich=2 cost) added; fix06/cc deferred. snap_report now → LOG.md.
+No n=20 QAOA beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
