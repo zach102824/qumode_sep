@@ -37,6 +37,8 @@ ap.add_argument("--qaoa_ref", default="results/QAOA_raw.json")
 ap.add_argument("--obj", default="meanlog", choices=["meanlog", "cvar", "mix"])
 ap.add_argument("--alpha", type=float, default=0.2)
 ap.add_argument("--w", type=float, default=1.0)
+ap.add_argument("--val_n", type=int, nargs="*", default=[], help="validation sizes (seed base 3.3e10, disjoint from test) for iterate selection")
+ap.add_argument("--val_count", type=int, default=60)
 ap.add_argument("--beta_l2", type=float, default=0.0, help="L2 penalty on ECD beta (transfer regulariser)")
 a = ap.parse_args()
 
@@ -140,6 +142,12 @@ for n, insts in tr:
     p, vg = build(n, insts, LAY[n]); tr_p.append(p); tr_vg.append(vg)
 
 
+VAB = 33_000_000_000
+val_p = [build(m, sim.instances(m, a.val_count, VAB), LAY[m])[0] for m in a.val_n]
+def vscore(x):  # mean over val sizes of mean -log p (lower better)
+    return float(np.mean([np.mean(-np.log(np.asarray(vp(jnp.asarray(x, jnp.float32))) + 1e-12)) for vp in val_p]))
+
+
 def f(x):
     vs = [vg(jnp.asarray(x, jnp.float32)) for vg in tr_vg]
     return sum(float(v[0]) for v in vs) / len(vs), sum(np.asarray(v[1], float) for v in vs) / len(vs)
@@ -197,11 +205,17 @@ for L in a.Ls:
     cands = cands[: a.restarts + (2 if a.init != "qaoa" else 0)] if a.init != "qaoa" else cands[:1]
     best = None
     for i, c0 in enumerate(cands):
-        l0 = f(c0)[0]; r = minimize(f, c0, jac=True, method="L-BFGS-B", options={"maxiter": a.maxiter})
-        log(f"  L={L} cand{i} loss {l0:.4f} -> {r.fun:.4f} ({r.nit} it)")
-        if best is None or r.fun < best[1]: best = (r.x, float(r.fun))
+        l0 = f(c0)[0]; its = [np.array(c0)]
+        r = minimize(f, c0, jac=True, method="L-BFGS-B", options={"maxiter": a.maxiter}, callback=lambda xk: its.append(np.array(xk)))
+        if val_p:
+            sel = its[::max(1, len(its) // 15)] + [r.x]; vs = [vscore(z) for z in sel]; j = int(np.argmin(vs))
+            log(f"  L={L} cand{i} loss {l0:.4f} -> {r.fun:.4f} ({r.nit} it) val {vs[0]:.4f}->{vs[-1]:.4f} best {vs[j]:.4f} @{j}/{len(sel)-1}")
+            if best is None or vs[j] < best[2]: best = (sel[j], float(f(sel[j])[0]), vs[j])
+        else:
+            log(f"  L={L} cand{i} loss {l0:.4f} -> {r.fun:.4f} ({r.nit} it)")
+            if best is None or r.fun < best[1]: best = (r.x, float(r.fun), 0.0)
     prev = best[0]; p = np.asarray(tr_p[0](jnp.asarray(prev, jnp.float32)))
-    res["train"][str(L)] = {"x": prev.tolist(), "loss": best[1], "train": sim.summarize(p), "sec": time.time() - t0}
+    res["train"][str(L)] = {"x": prev.tolist(), "loss": best[1], "val": best[2], "train": sim.summarize(p), "sec": time.time() - t0}
     log(f"L={L} train med1/p={np.median(1/np.maximum(p,1e-300)):.2f} B90={np.quantile(1/np.maximum(p,1e-300),.9):.2f} ({time.time()-t0:.0f}s)")
     json.dump(res, open(OUT, "w"), indent=1)
 

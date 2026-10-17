@@ -596,3 +596,35 @@ G_qfe halves the n=20 B90 tail vs S_costgx (128.6→59.2) and ties QAOA's n=20 m
 Adding n=10 to training and the mix objective both hurt n=20 transfer. G_qfe_mix was OOM-killed once at its n=20 test
 (3 n=20 tests at ~2.7 GB each), watchdog resumed it fine.
 **Next:** G_qfe recipe at L=10,14 (G_qfe1014) vs QAOA_raw L=10/14; G_fe and G_q ablations running.
+
+## PART 2 start — ECD + cost·GrayX improvement (Sat 09:05 CST)
+
+New driver `costgx.py` (same physics as theory_u.py S_costgx; resumable per L / per test) + `watchdog_cg.sh` (v8, reads
+`queue_cg.txt` each minute, ≤3 jobs × 2 threads, deadline Mon 09:00 CST) + `cg_report.py` (tables vs QAOA_raw, SATLike).
+
+Diagnosis of S_costgx: trained ECD β ≈ 0 (|β| < 0.01 every layer), so ECD = transmon X and the circuit is QAOA with a
+separate transmon angle θ_l (alternating ≈ π±0.6) and cavity Gray-X angle. It contains QAOA exactly
+(θ_l = b_{l-1} − π, φ = 0, β = 0, verified: maxiter-0 QAOA init reproduces QAOA_raw 2.5/4.5 at n=8), but its own
+train loss (1.024) beats QAOA (1.084) while n=20 B90 is 2.4× worse → overfit to n=8, not a missing capability.
+Also: transmon bits only get L−1 useful mixes (first R+ECD acts on |+>), so added `--final_ecd` (one trailing R+ECD).
+
+First batch (median/B90 1/p, n=20 on 100 inst, n=14 on 200):
+
+| run | L | n=14 | n=20 | note |
+|---|---|---|---|---|
+| S_costgx (old best) | 4 | 18.2/69.4 | 79.0/416.4 | |
+| G_qfe (QAOA init + final ECD) | 4 | 22.8/57.5 | 103.5/358.6 | |
+| G_qfe810 (+ train n=8+10) | 4 | 21.7/54.9 | 83.1/247.8 | ≈ QAOA tail |
+| G_qfe_mix (+ CVaR20 term) | 4 | 21.8/57.1 | 128.9/476.1 | tail obj hurts |
+| QAOA_raw | 4 | 20.8/59.6 | 84.9/238.1 | |
+| S_costgx (old best) | 8 | 6.0/32.1 | 17.1/128.6 | |
+| **G_qfe** | 8 | 6.6/17.3 | **16.4/59.2** | B90 128.6 → 59.2 |
+| G_qfe810 | 8 | 6.7/18.8 | 21.3/89.3 | |
+| G_qfe_mix | 8 | 7.1/18.3 | 24.1/100.2 | |
+| QAOA_raw | 8 | 6.3/18.3 | 16.4/54.2 | |
+
+Reading: the tail gap was a training-basin/overfit issue; starting in QAOA's basin with a final ECD fixes most of it
+(L=8 now ties QAOA). Tail-weighted (CVaR) training at n=8 does not transfer. n=8 train loss is a bad predictor of
+n=20, so next: iterate/candidate selection on held-out validation sets at n=12,14 (seed base 3.3e10, disjoint from
+test 3.2e10) — `--val_n`. Queued: G_fe (grow init + final ECD, isolates final-ECD effect), G_q (QAOA init, no final
+ECD), G_qfe_deep (L=10/12/14), G_qfe_val (val selection, grow+QAOA cands), G_qfe81012 (train n=8+10+12).
