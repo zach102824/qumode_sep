@@ -1112,3 +1112,7 @@ Alive: NN_bin04 (curriculum build), C_binmix, C_bincvar, SNAP_cs4jB (L2 training
 
 ## Direction change (Sat 14:57 CST)
 Zach: don't force ECD to work. If it's useless, find a natural way. No more locked/floored ECD displacement (`--fix_beta`) or forced SNAP strength (`--fix_snap`, `--snap_min`) runs; those queued entries are marked DROPPED. Remaining work lets each design use what actually helps (ECD free to go to zero or off, binary/Gray mixers, free diagonal costs, unforced SNAP).
+
+## Check-in (2026-10-17 14:58 CST)
+
+Only C_binmix was alive (L=4 train cand1 loss 23.0→7.99), leaving ~4 cores idle. Relaunched **C_bincvar** (binary cost·X, CVaR α=0.15, ECD unforced) and started **S_bin0j** (binary cost·X, ECD off, joint n=8..14), the natural no-ECD test after Zach's "don't force ECD" note. NN_bin04/SNAP_cs4jB stay paused (forced-ECD dropped / held). PID 2888494 untouched. No finished n=20 this window; no QAOA beat → stay quiet.
