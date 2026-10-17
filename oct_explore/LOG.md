@@ -1341,3 +1341,6 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy: A_g8 / A_b8 L8 screens 
 | G_fe L=2 | 11.6/21.3 | 21.9/43.2 | 43.2/90.5 | 75.4/169.5 | 664.0/1501.0 |
 
 n=20 winner vs QAOA L=2: median 323.5 vs 336.4, B90 1475.2 vs 971.4 -> no beat
+
+## Check-in (2026-10-18 00:13 CST)
+v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 / A_b8 L8 screens 110/200 (best 1.307 gray / 1.330 binary; p10 improving to 1.70 / 1.54), B_g2_iii_A_tq on init 1 (init 0 2.289 -> 2.027), B_g4_iii_A launched 23:58 (GNN L4 from the A_g4 keep-list, 85k weights/model; the KeyError at the top of its log is the stale 19:20 attempt from before A_g4 had finished, the new run started cleanly). B_g2_iii_A_f (formula features) n=20 test: 323.5/1475.2 vs QAOA L2 336.4/971.4, median slightly better but B90 much worse, so the formula features do not fix the GNN tail; tq features (better n=8 train, 2.027 vs 2.124) decide next. Load ~22 on 8 cores, MemAvail ~2 GiB, so no extra slot. No new n=20 beat beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
