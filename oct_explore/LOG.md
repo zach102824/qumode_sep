@@ -1119,3 +1119,6 @@ Only C_binmix was alive (L=4 train cand1 loss 23.0→7.99), leaving ~4 cores idl
 
 ## NN back in (Sat 15:03 CST)
 Zach: keep trying versions, with the network involved. Un-held NN_bin_soft (binary mixer, ECD free, no lock) and NN_ebinB_soft (binary mixer + learned energy-bin cost, ECD free). watchdog_nn launches them when RAM allows.
+
+## QAOA start removed (Sat 15:08 CST)
+Zach: remove the QAOA-start idea. All `--init qaoa` / `--init both` entries in queue_cg.txt are marked REMOVED and will not run again. Current NN, SNAP and binary-X runs already start from grown/random init (no QAOA angles). G_qfe results stay in the log for reference only.
