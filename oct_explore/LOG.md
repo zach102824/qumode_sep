@@ -1172,3 +1172,15 @@ n=20 winner vs QAOA L=2: median 319.9 vs 336.4, B90 1097.5 vs 971.4 -> no beat
 | G_fe L=2 | 11.6/21.3 | 21.9/43.2 | 43.2/90.5 | 75.4/169.5 | 664.0/1501.0 |
 
 n=20 winner vs QAOA L=2: median 332.6 vs 336.4, B90 1036.1 vs 971.4 -> no beat
+
+### B_g4_iii finished 2026-10-17 16:04 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 clause_w=True var_mix=True ninit=6 ntrain=1000 maxiter=1000 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] chunk=250`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_g4_iii winner 0 (train 3.926, val 8.023) | 37.0/428.6 | 1450.1/19931.1 | 5178.2/65609.5 | 13279.0/240575.4 | 1509185.3/22838228.6 |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 1509185.3 vs 84.9, B90 22838228.6 vs 238.1 -> no beat
