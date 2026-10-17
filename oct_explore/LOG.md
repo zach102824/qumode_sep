@@ -581,3 +581,18 @@ Stopped N_bssnap and N_dsnap_R (Zach: focus on ECD + cost·GrayX). Partial resul
 | 8 | 2.6/4.5 | 3.7/7.6 | 5.2/15.8 | 7.1/18.3 | 24.1/100.2 |
 | QAOA 8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
 | SATLike | 16/70 | 26/111 | 36/157 | 50/208 | ~124/~530 |
+
+## Check-in 09:05 CST Sat — QAOA-init + final ECD is a new best
+
+| run (L=8) | n=14 med/B90 | n=20 med/B90 |
+|---|---|---|
+| **G_qfe** (QAOA_raw init, final ECD, meanlog, train n=8) | 6.6/**17.3** | **16.4/59.2** |
+| G_qfe810 (+n=10 in train) | 6.7/18.8 | 21.3/89.3 |
+| G_qfe_mix (mix obj) | 7.1/18.3 | 24.1/100.2 |
+| S_costgx (previous best, grown init) | 6.0/32.1 | 17.1/128.6 |
+| QAOA_raw | 6.3/18.3 | 16.4/54.2 |
+
+G_qfe halves the n=20 B90 tail vs S_costgx (128.6→59.2) and ties QAOA's n=20 median; beats QAOA's n=14 B90 slightly.
+Adding n=10 to training and the mix objective both hurt n=20 transfer. G_qfe_mix was OOM-killed once at its n=20 test
+(3 n=20 tests at ~2.7 GB each), watchdog resumed it fine.
+**Next:** G_qfe recipe at L=10,14 (G_qfe1014) vs QAOA_raw L=10/14; G_fe and G_q ablations running.
