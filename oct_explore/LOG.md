@@ -734,3 +734,16 @@ Notes: ECD |β| held ~0.25 on cond runs; shared NN_sh collapsed |β|→0.07. Sha
 (29549 vs 716k) but still ≫ QAOA. NN_best died mid stage 8+10 (no ALLDONE); NN_best_r3 died mid L=8 train.
 Queue now: NN_sh (running), NN_v2 shared+joint β0=0.1 (running), NN_v2c / NN_v3 queued. Watchdog up, ≤2 jobs.
 
+
+## NN_v2 L=4 joint 8+10+12 (Sat 09:39 CST)
+
+shared + per_bit GrayX + rich=1 + bmax=0.15. ECD collapsed to |β|≈0.01 (optimizer choice).
+
+| L | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|
+| NN_v2 4 | 10.4/34.2 | 14.7/53.7 | 24.4/91.4 | 116.6/447.0 |
+| QAOA 4 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_qfe 4 | 9.2/20.5 | 14.6/37.6 | 22.8/57.5 | 103.5/358.6 |
+
+Joint multi-n training restored transfer (n=20 now 116/447 vs broken 1e5). Still ~1.4× QAOA median.
+L=8 training. Next: joint +14, QAOA-basin-free grow with more restarts, tiny instance δ on frozen shared base.
