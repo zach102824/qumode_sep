@@ -4,7 +4,7 @@
 set -u
 cd /workspace/qumode_sep/oct_explore
 DEADLINE=$(date -d '2026-10-19 09:00:00' +%s)
-LOGW=logs/v3/runner.log; QF=v3/queue_v3.txt; PY=/usr/bin/python3.13; MAXJ=4; MINMEM=3000
+LOGW=logs/v3/runner.log; QF=v3/queue_v3.txt; PY=/usr/bin/python3.13; MAXJ=4; MINMEM=3500; MAXGNN=2
 say() { echo "$(date '+%F %T')" "$*" >> "$LOGW"; }
 n_run() { pgrep -f "$PY -u v3/" | wc -l; }
 mem_mb() { awk '/MemAvailable:/ {print int($2/1024)}' /proc/meminfo; }
@@ -26,6 +26,7 @@ while [[ $(date +%s) -lt $DEADLINE ]]; do
     finalize "$tag"; done_ "$tag" && continue; running "$tag" && continue
     ready "$after" || continue
     [[ $(n_run) -ge $MAXJ ]] && continue
+    [[ "$args" == *gnn_v3.py* && $(pgrep -f "$PY -u v3/gnn_v3.py" | wc -l) -ge $MAXGNN ]] && continue
     m=$(mem_mb); [[ $m -lt $MINMEM ]] && { say "hold $tag mem=${m}MB"; continue; }
     say "LAUNCH $tag (mem=${m}MB)"
     setsid nohup env OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 XLA_PYTHON_CLIENT_PREALLOCATE=false \

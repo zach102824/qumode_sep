@@ -1,17 +1,23 @@
-# v3 queue (approved 15:18 CST). tag|after|args. Plain = PLAN A (v3_plain.py), GNN = PLAN B (gnn_v3.py). n=8 training only.
+# v3 queue (approved 15:18 CST). tag|after|args. Plain = PLAN A (v3_plain.py), GNN = PLAN B (gnn_v3.py). n=8 training only. --chunk 125
+# 16:00 CST revision: random-base GNN cut to 1 init (val/test only); GNN now starts from the from-scratch plain keep-list (*_A tags). No QAOA anywhere.
 A_g2||v3/v3_plain.py --tag A_g2 --code gray --L 2 --ninit 200 --refine 16
 A_b2||v3/v3_plain.py --tag A_b2 --code binary --L 2 --ninit 200 --refine 16
-B_g4_iii||v3/gnn_v3.py --tag B_g4_iii --code gray --L 4 --hidden 64 --clause_w --var_mix --ninit 6
-B_g4_i||v3/gnn_v3.py --tag B_g4_i --code gray --L 4 --hidden 64 --ninit 6
+B_g4_iii||v3/gnn_v3.py --tag B_g4_iii --code gray --L 4 --hidden 64 --clause_w --var_mix --ninit 1 --chunk 125
+B_g4_i||v3/gnn_v3.py --tag B_g4_i --code gray --L 4 --hidden 64 --ninit 1 --chunk 125
+B_g2_iii_A|A_g2|v3/gnn_v3.py --tag B_g2_iii_A --code gray --L 2 --hidden 64 --clause_w --var_mix --ninit 4 --init_from results/v3/A_g2.json --chunk 125
+B_g2_i_A|A_g2|v3/gnn_v3.py --tag B_g2_i_A --code gray --L 2 --hidden 64 --ninit 4 --init_from results/v3/A_g2.json --chunk 125
 A_g4|A_g2|v3/v3_plain.py --tag A_g4 --code gray --L 4 --ninit 200 --refine 12 --grow_from A_g2
 A_b4|A_b2|v3/v3_plain.py --tag A_b4 --code binary --L 4 --ninit 200 --refine 12 --grow_from A_b2
-B_g4_ii||v3/gnn_v3.py --tag B_g4_ii --code gray --L 4 --hidden 64 --clause_w --ninit 6
+B_g4_iii_A|A_g4|v3/gnn_v3.py --tag B_g4_iii_A --code gray --L 4 --hidden 64 --clause_w --var_mix --ninit 4 --init_from results/v3/A_g4.json --chunk 125
+B_g4_i_A|A_g4|v3/gnn_v3.py --tag B_g4_i_A --code gray --L 4 --hidden 64 --ninit 3 --init_from results/v3/A_g4.json --chunk 125
 A_g8|A_g4|v3/v3_plain.py --tag A_g8 --code gray --L 8 --ninit 200 --refine 12 --grow_from A_g4
 A_b8|A_b4|v3/v3_plain.py --tag A_b8 --code binary --L 8 --ninit 200 --refine 12 --grow_from A_b4
-B_g8_iii||v3/gnn_v3.py --tag B_g8_iii --code gray --L 8 --hidden 64 --clause_w --var_mix --ninit 4
+B_g8_iii_A|A_g8|v3/gnn_v3.py --tag B_g8_iii_A --code gray --L 8 --hidden 64 --clause_w --var_mix --ninit 3 --init_from results/v3/A_g8.json --chunk 125
+B_g4_ii_A|A_g4|v3/gnn_v3.py --tag B_g4_ii_A --code gray --L 4 --hidden 64 --clause_w --ninit 3 --init_from results/v3/A_g4.json --chunk 125
 A_g10|A_g8|v3/v3_plain.py --tag A_g10 --code gray --L 10 --ninit 200 --refine 12 --grow_from A_g8
 A_b10|A_b8|v3/v3_plain.py --tag A_b10 --code binary --L 10 --ninit 200 --refine 12 --grow_from A_b8
-B_g4_iii_h32||v3/gnn_v3.py --tag B_g4_iii_h32 --code gray --L 4 --hidden 32 --clause_w --var_mix --ninit 6
-B_g4_iii_h128||v3/gnn_v3.py --tag B_g4_iii_h128 --code gray --L 4 --hidden 128 --clause_w --var_mix --ninit 6
-B_b4_iii||v3/gnn_v3.py --tag B_b4_iii --code binary --L 4 --hidden 64 --clause_w --var_mix --ninit 6
-B_g8_i||v3/gnn_v3.py --tag B_g8_i --code gray --L 8 --hidden 64 --ninit 4
+B_b4_iii_A|A_b4|v3/gnn_v3.py --tag B_b4_iii_A --code binary --L 4 --hidden 64 --clause_w --var_mix --ninit 3 --init_from results/v3/A_b4.json --chunk 125
+B_g4_iii_A_h32|A_g4|v3/gnn_v3.py --tag B_g4_iii_A_h32 --code gray --L 4 --hidden 32 --clause_w --var_mix --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+B_g4_iii_A_h128|A_g4|v3/gnn_v3.py --tag B_g4_iii_A_h128 --code gray --L 4 --hidden 128 --clause_w --var_mix --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+B_g8_i_A|A_g8|v3/gnn_v3.py --tag B_g8_i_A --code gray --L 8 --hidden 64 --ninit 3 --init_from results/v3/A_g8.json --chunk 125
+B_g10_iii_A|A_g10|v3/gnn_v3.py --tag B_g10_iii_A --code gray --L 10 --hidden 64 --clause_w --var_mix --ninit 2 --init_from results/v3/A_g10.json --chunk 125

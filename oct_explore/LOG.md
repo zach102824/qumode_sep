@@ -1139,3 +1139,10 @@ Runner `v3/run_v3.sh` (4 jobs x 2 threads, MemAvailable >= 3000 MB gate, deps vi
 
 ## Check-in (2026-10-17 15:34 CST)
 v3 runner alive (run_v3.sh), 4 jobs x 2 threads on 8 cores: A_g2 (screen 30/200), A_b2 (screen 20/200), B_g4_iii and B_g4_i (GNN building). MemAvail ~6 GiB. No finished jobs yet; no n=20 QAOA beat. PID 2888494 untouched.
+
+## Check-in + queue revision (2026-10-17 16:05 CST)
+A_g2 / A_b2 DONE (L2, 200 inits): the L2 landscape is easy, ~half of the 200 screened inits reach the same basin (refined train loss 2.2885-2.2886). n=20 L2 winner med/B90 1/p: gray 319.9/1097.5, binary 332.6/1036.1 (gray ~ binary). No QAOA beat (targets are L4/8/10).
+Random-base GNN (B_g4_iii, B_g4_i) init 0 after 1000 L-BFGS its (~26 min): train loss 3.926 (clause_w+var_mix) vs 4.556 (global only), both far worse than the plain L2 optimum 2.289. Reason: the random base starts in a bad basin (screen median ~4.4-4.8) and 85k weights don't escape it. So: 
+- B_g4_iii / B_g4_i cut to --ninit 1 (keep init 0, run val/test only) as the from-scratch-base GNN reference.
+- All further GNN runs (*_A tags) start from the from-scratch n=8 plain keep-list (`--init_from results/v3/A_*.json`, heads zero-init => exactly the plain optimum at it 0, so GNN can only improve train loss). Still no QAOA anywhere. Added L2 GNN (B_g2_iii_A, B_g2_i_A) to test this quickly; ablations (global / +clause / +clause+var, H32/H128, binary) moved to the _A bases at L4/8/10.
+- Stray old-queue random-base launches at 16:00-16:01 (B_g4_iii_h128, B_b4_iii, B_g8_i) were stopped; logs in logs/v3/aborted/. Runner now caps GNN at 2 concurrent and uses --chunk 125 (an OOM killed GNN workers at 4 concurrent).
