@@ -1,0 +1,19 @@
+09:18:39 === curriculum stage 8 ===
+09:18:39 build n=8 N=80 mode=cond rich=2 per_cav=False per_bit=True beta0=0.25
+09:19:36   8|L4 cand0 loss 6.1197 -> 1.6603 (400 it)
+09:20:27   8|L4 cand1 loss 6.1242 -> 1.9773 (400 it)
+09:20:29   8|L4 train med1/p=5.54 B90=10.25 |beta|=0.254 (110s)
+09:20:33   test 8|L4|n10 med1/p=12.4 B90=29.3
+09:20:39   test 8|L4|n12 med1/p=92.5 B90=687.3
+09:21:11   test 8|L4|n14 med1/p=158.9 B90=1112.1
+09:23:11   test 8|L4|n20 med1/p=716307.1 B90=3758644.0
+09:24:40   8|L8 cand0 loss 6.3105 -> 1.3405 (400 it)
+09:26:06   8|L8 cand1 loss 6.2498 -> 3.7429 (400 it)
+09:26:10   8|L8 train med1/p=3.41 B90=5.53 |beta|=0.257 (179s)
+09:26:20   test 8|L8|n10 med1/p=20.8 B90=98.4
+09:26:30   test 8|L8|n12 med1/p=549.5 B90=7247.4
+09:27:30   test 8|L8|n14 med1/p=1647.8 B90=11127.1
+09:30:36   test 8|L8|n20 med1/p=575648.8 B90=3436603.8
+09:30:36 === curriculum stage 8+10 ===
+09:30:36 build n=8 N=80 mode=cond rich=2 per_cav=False per_bit=True beta0=0.25
+09:30:36 build n=10 N=40 mode=cond rich=2 per_cav=False per_bit=True beta0=0.25

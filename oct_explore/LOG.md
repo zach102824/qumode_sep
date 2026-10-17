@@ -716,3 +716,21 @@ Forced ECD+|β|≈0.25 matches n=8 but **destroys transfer** (Fock leakage / wro
 rich=2 (Cn²) also hurts. Killed NN_best; launched **NN_v2**: shared, joint train n=8+10+12,
 per_bit GrayX, rich=1, soft ECD cap bmax=0.15, tiny β pull. Goal: beat QAOA via richer mixer
 without breaking size transfer.
+
+## NN check-in 09:31 CST Sat — stage-8 done; queue pivoted
+
+Stage-8 (train n=8 only) finished for L=4 and L=8. No QAOA beat; transfer still collapses.
+
+| run | L | n=8 train | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|---|
+| NN_best (cond δ=0.4) | 4 | 5.5/10.2 | 12.4/29.3 | 92.5/687.3 | 158.9/1112.1 | 716307/3.8e6 |
+| NN_best | 8 | 3.4/5.5 | 20.8/98.4 | 549.5/7247 | 1647.8/11127 | 575649/3.4e6 |
+| NN_sh (shared, no δ) | 4 | 7.8/11.5 | 31.8/63.9 | 185.2/614.7 | 160.6/474.9 | 29549/112241 |
+| NN_best_r3 (rich3) | 4 | 7.9/12.1 | 29.2/75.0 | 402.7/2381 | 179.7/669.5 | 406415/4.8e6 |
+| QAOA_raw | 4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | **84.9/238.1** |
+| QAOA_raw | 8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | **16.4/54.2** |
+
+Notes: ECD |β| held ~0.25 on cond runs; shared NN_sh collapsed |β|→0.07. Shared beats cond on n=20 L=4
+(29549 vs 716k) but still ≫ QAOA. NN_best died mid stage 8+10 (no ALLDONE); NN_best_r3 died mid L=8 train.
+Queue now: NN_sh (running), NN_v2 shared+joint β0=0.1 (running), NN_v2c / NN_v3 queued. Watchdog up, ≤2 jobs.
+
