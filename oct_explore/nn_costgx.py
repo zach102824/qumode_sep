@@ -26,7 +26,7 @@ import sim
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--tag", required=True)
-ap.add_argument("--mode", default="cond", choices=["cond", "agnostic", "shared"])
+ap.add_argument("--mode", default="cond", choices=["cond", "agnostic", "shared", "costcond"])
 ap.add_argument("--layout", default="T", choices=["T", "C", "R"])
 ap.add_argument("--code", default="gray", choices=["gray", "binary"])
 ap.add_argument("--Ls", type=int, nargs="+", default=[4, 8])
@@ -318,23 +318,36 @@ def build(n, insts, ks):
 rng = np.random.default_rng(a.seed)
 
 
-def init_params(L):
-    """Meaningful ECD betas, QAOA-unlike angles."""
+def init_params(L, variant=0):
+    """ECD at beta0; mixer/cost schedules. variant diversifies restarts.
+    variant 0: equal per-bit angles (= sum-X / QAOA-topology mixer) + linear cost schedule
+    variant 1: decaying per-bit spectrum (high digits weaker)
+    variant 2: flipped transmon + mid cost
+    No published QAOA angles are used.
+    """
     rows = []
-    for t in np.linspace(0, 1, L):
-        bre = a.beta0 * np.cos(0.7 + 1.3 * t)
-        bim = a.beta0 * np.sin(0.7 + 1.3 * t)
-        th = 0.8 + 0.6 * t          # not near pi (QAOA-like flip)
-        ph = 0.4 * t
-        if a.per_bit:
-            bcs = [(0.7 - 0.3 * t) * (1.0 - 0.1 * j) for j in range(NC)]
+    for li, t in enumerate(np.linspace(0, 1, L)):
+        ang = 0.7 + 1.3 * t + 0.4 * variant
+        bre = a.beta0 * np.cos(ang); bim = a.beta0 * np.sin(ang)
+        if variant == 2:
+            th = -np.pi + 0.3 * t; ph = 0.0   # near bit-flip on transmon (hardware-natural)
         else:
-            bcs = [0.7 - 0.4 * t] * NC
-        gs = [0.35 + 0.5 * t] + ([0.08 * (0.5 - t)] * (NG - 1) if NG > 1 else [])
+            th = 0.6 + 0.9 * t + 0.2 * variant; ph = 0.3 * t * (variant + 1)
+        bc0 = (0.9 - 0.5 * t) * (0.7 + 0.2 * variant)
+        if a.per_bit:
+            if variant == 1:
+                bcs = [bc0 * (0.85 ** j) for j in range(NC)]
+            else:
+                bcs = [bc0] * NC   # equal digits ≡ Σ X mixer
+        else:
+            bcs = [bc0] * NC
+        g0 = 0.25 + 0.7 * t
+        gs = [g0] + ([0.05 * (1 - 2 * t) * (variant + 1)] * (NG - 1) if NG > 1 else [])
         rows.append([bre, bim, th, ph] + bcs + gs)
     x = np.array(rows, float).reshape(-1)
     if NF:
-        x = np.concatenate([x, [a.beta0 * 0.7, a.beta0 * 0.7, 0.5, 0.2]])
+        x = np.concatenate([x, [a.beta0 * 0.5, a.beta0 * 0.5,
+                                (-np.pi + 0.2) if variant == 2 else 0.5, 0.0]])
     return x.astype(np.float32)
 
 
@@ -348,9 +361,13 @@ def make_pack(L):
     if a.mode == "shared":
         return {"kind": "shared", "P": P, "sizes": None}
     if a.mode == "agnostic":
-        # input is 1-d: [n/20]; reuse NF_FEAT by putting n in feat[0]
         sizes = [1] + [a.hidden] * a.depth + [P]
         return {"kind": "agnostic", "P": P, "sizes": sizes}
+    if a.mode == "costcond":
+        # MLP outputs only the cost gammas per layer: L * NG
+        Cout = L * NG
+        sizes = [NF_FEAT] + [a.hidden] * a.depth + [Cout]
+        return {"kind": "costcond", "P": P, "sizes": sizes, "Cout": Cout}
     sizes = mlp_sizes(P)
     return {"kind": "cond", "P": P, "sizes": sizes}
 
@@ -362,7 +379,7 @@ def unpack(v, pack):
     if pack["kind"] == "agnostic":
         th, i = flat_to_theta(v, sizes)
         return {"base": None, "theta": th}, i
-    # cond: base + mlp
+    # cond / costcond: base + mlp
     base = v[: pack["P"]]; th, j = flat_to_theta(v[pack["P"]:], sizes)
     return {"base": base, "theta": th}, pack["P"] + j
 
@@ -376,14 +393,12 @@ def pack_dim(pack):
 def init_vec(L, pack):
     P = pack["P"]; pieces = []
     if pack["kind"] != "agnostic":
-        pieces.append(init_params(L))
-        for _ in range(1, a.restarts):  # will use separately
-            pass
+        pieces.append(init_params(L, variant=0))
     if pack["kind"] != "shared":
         th0 = pack_mlp(pack["sizes"], rng)
         flat = np.concatenate([t.ravel() for t in th0])
         # shrink output layer so initial deltas are small
-        if pack["kind"] == "cond":
+        if pack["kind"] in ("cond", "costcond"):
             # last W, b
             sizes = pack["sizes"]; dout, din = sizes[-1], sizes[-2]
             # rescale last W
@@ -458,15 +473,38 @@ def vg_for_pool(pool, pack, L):
             return jnp.mean(nl) + a.beta_w * pool["bpen"](xv)
         return jax.jit(jax.value_and_grad(loss))
 
-    # cond
     sizes = pack["sizes"]; feat = pool["feat"]
+    if pack["kind"] == "costcond":
+        Cout = pack["Cout"]; L_ = Cout // NG
+        def loss(v):
+            base = v[:P]; th, _ = flat_to_theta(v[P:], sizes)
+            gs = a.delta_scale * mlp_forward(th, feat)  # (B, L*NG)
+            # scatter into full param vectors
+            X = jnp.tile(base[None, :], (feat.shape[0], 1))
+            def inject(xv_g):
+                xv, g = xv_g
+                # replace cost slots in each layer
+                rows = []
+                for l in range(L_):
+                    row = xv[l*NP:(l+1)*NP]
+                    # cost coeffs sit at indices NB+NC : NB+NC+NG
+                    g_l = g[l*NG:(l+1)*NG]
+                    row = row.at[NB+NC:NB+NC+NG].set(row[NB+NC:NB+NC+NG] + g_l)
+                    rows.append(row)
+                out = jnp.concatenate(rows)
+                if NF: out = jnp.concatenate([out, xv[L_*NP:]])
+                return out
+            X = jax.lax.map(inject, (X, gs))
+            nl = -jnp.log(pool["pp"](X) + 1e-12)
+            return jnp.mean(nl) + a.beta_w * pool["bpen"](base)
+        return jax.jit(jax.value_and_grad(loss))
+
+    # cond
     def loss(v):
         base = v[:P]; th, _ = flat_to_theta(v[P:], sizes)
         X = base[None, :] + a.delta_scale * mlp_forward(th, feat)
         nl = -jnp.log(pool["pp"](X) + 1e-12)
-        # beta pen on base + mean over instances of pen(X_i)
         pen = pool["bpen"](base)
-        # cheap: also pen on mean |delta| instance — use first few
         pen = pen + jnp.mean(jax.lax.map(pool["bpen"], X))
         return jnp.mean(nl) + a.beta_w * pen
     return jax.jit(jax.value_and_grad(loss))
@@ -495,6 +533,15 @@ def eval_params_fn(state, pack, n, insts, chunk=None):
         elif pack["kind"] == "agnostic":
             xv = mlp_forward(state["theta"], jnp.array([[n / 20.0]], jnp.float32))[0]
             p = np.asarray(ps(xv))
+        elif pack["kind"] == "costcond":
+            base = state["base"]; gs = a.delta_scale * mlp_forward(state["theta"], feat)
+            B = feat.shape[0]; X = np.tile(np.asarray(base), (B, 1))
+            Cout = gs.shape[-1]; L_ = Cout // NG
+            for bi in range(B):
+                for l in range(L_):
+                    sl = slice(l*NP + NB + NC, l*NP + NB + NC + NG)
+                    X[bi, sl] = X[bi, sl] + np.asarray(gs[bi, l*NG:(l+1)*NG])
+            p = np.asarray(pp(jnp.asarray(X, jnp.float32)))
         else:
             X = state["base"][None, :] + a.delta_scale * mlp_forward(state["theta"], feat)
             p = np.asarray(pp(X))
@@ -546,7 +593,28 @@ for si, train_sizes in enumerate(stage_list):
                 xi = np.stack([np.interp(t1s, t0s, xp[:, j]) if Lp > 1 else np.repeat(xp[0, j], L) for j in range(NP)], 1)
                 cands.append(np.concatenate([xi.reshape(-1), tail]).astype(np.float32))
         for r in range(a.restarts):
-            cands.append(init_vec(L, pack))
+            # diversify: rebuild init_vec with different variant by temp patching
+            global_init = init_params
+            def _iv(L_, pack_, r=r):
+                P = pack_["P"]; pieces = []
+                if pack_["kind"] != "agnostic":
+                    pieces.append(init_params(L_, variant=r % 3))
+                if pack_["kind"] != "shared":
+                    th0 = pack_mlp(pack_["sizes"], np.random.default_rng(a.seed + 17 * L_ + r))
+                    flat = np.concatenate([t.ravel() for t in th0])
+                    if pack_["kind"] in ("cond", "costcond"):
+                        sizes = pack_["sizes"]; dout, din = sizes[-1], sizes[-2]
+                        n_before = theta_dim(sizes) - dout * din - dout
+                        flat[n_before: n_before + dout * din] *= 0.05
+                        flat[n_before + dout * din:] = 0.0
+                    elif pack_["kind"] == "agnostic":
+                        sizes = pack_["sizes"]; dout, din = sizes[-1], sizes[-2]
+                        n_before = theta_dim(sizes) - dout * din - dout
+                        flat[n_before: n_before + dout * din] *= 0.01
+                        flat[n_before + dout * din:] = init_params(L_, variant=r % 3)
+                    pieces.append(flat.astype(np.float32))
+                return np.concatenate(pieces).astype(np.float32)
+            cands.append(_iv(L, pack))
         # dedupe length
         cands = [c for c in cands if c.size == pack_dim(pack)]
         if not cands: cands = [init_vec(L, pack)]
