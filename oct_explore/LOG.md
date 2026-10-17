@@ -940,3 +940,9 @@ No n=20 QAOA beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
 
 Alive: NN_fix04 (L8 after OOM-relaunch @12:25; L4 n20=120.1/515.2 held), NN_ebin (L4 cand1+), SNAP_cs4j (L2 done snap_mag=0.43 train 25.0/56.4; L4 cand1+), watchdog_nn+snap. PID 2888494 untouched. MemAvail ~2.0 GiB — no new launch (3 trainers). No G_*/watchdog_cg restart.
 No n=20 QAOA beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
+
+## OOM guard (2026-10-17 12:34 CST)
+
+OOM killed NN_fix04 once (~12:25); relaunched and resumed L8 (L4 checkpoint kept: n20=120/515).
+Paused NN_ebin to free RAM. Now: SNAP_cs4j + NN_fix04 only. Watchdogs: ≤1 NN while SNAP runs.
+No n=20 QAOA beat → stay quiet.

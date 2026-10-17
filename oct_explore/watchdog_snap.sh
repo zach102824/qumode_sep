@@ -31,10 +31,10 @@ while [[ $(date +%s) -lt $DEADLINE ]]; do
     # Prefer empty NN; allow launch if only 1 NN and plenty of RAM
     nn=$(n_nn); mem=$(mem_avail_mb)
     # SNAP train at n<=14 is light (<1GB); n>=20 evals share /tmp/nn_n20.lock with NN. Allow alongside 2 NN if RAM ok.
-    if [[ $nn -ge 3 ]]; then continue; fi
-    if [[ $nn -eq 2 && $mem -lt 2200 ]]; then continue; fi
-    if [[ $nn -eq 1 && $mem -lt 2500 ]]; then continue; fi
-    if [[ $nn -eq 0 && $mem -lt 3000 ]]; then continue; fi
+    # After OOMs with 2 NN + 1 SNAP: only run SNAP with ≤1 NN and RAM headroom
+    if [[ $nn -ge 2 ]]; then continue; fi
+    if [[ $nn -eq 1 && $mem -lt 2800 ]]; then continue; fi
+    if [[ $nn -eq 0 && $mem -lt 2500 ]]; then continue; fi
     say "LAUNCH $tag (nn=$nn mem=${mem}MB): $args"
     # shellcheck disable=SC2086
     setsid nohup env OMP_NUM_THREADS=3 OPENBLAS_NUM_THREADS=3 MKL_NUM_THREADS=3 XLA_PYTHON_CLIENT_PREALLOCATE=false \
