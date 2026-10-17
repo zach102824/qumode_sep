@@ -4,3 +4,5 @@ Traceback (most recent call last):
     ks = json.load(open(a.init_from))["keep"]; bases = [np.array(k["x"], np.float32) for k in ks][: a.ninit]
          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
 KeyError: 'keep'
+10-18 00:38:23 GNN L=4 H=64 rounds=3 clause_w=False var_mix=False code=gray ntrain=1000
+10-18 00:38:23 weights per model: 84700
