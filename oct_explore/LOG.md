@@ -1226,3 +1226,15 @@ v3 runner alive (run_v3.sh pid 3365113), same 4 jobs (A_g4, A_b4, B_g2_iii_A, B_
 
 ## Check-in (2026-10-17 19:16 CST)
 v3 runner alive (run_v3.sh pid 3365113), same 4 jobs (A_g4, A_b4, B_g2_iii_A, B_g2_i_A), CPU advancing, MemAvail ~2 GiB (3000 MB gate holds queue; queue unchanged). A_g4 screen 180/200 (best 1.556, p10 1.836), A_b4 180/200 (best 1.607, p10 1.958); last screen lines ~18:58-19:00, so another apparent box pause since then. L4 screens should finish within ~10-20 min of active time and move to refine (12). GNN-from-plain L2 jobs on init 3, then val/test. No new finished jobs; no n=20 QAOA beat. PID 2888494 untouched.
+
+### B_g2_i_A finished 2026-10-17 19:20 CST  (L=2)
+
+`code=gray L=2 hidden=64 rounds=3 ninit=4 ntrain=1000 maxiter=1000 init_from=results/v3/A_g2.json val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_g2_i_A winner 0 (train 2.204, val 4.699) | 8.7/21.9 | 31.2/411.1 | 310.7/1540.6 | 75.6/322.2 | 176275.6/1892119.9 |
+| QAOA_raw L=2 | 9.0/18.8 | 18.4/55.0 | 28.7/84.0 | 54.8/166.2 | 336.4/971.4 |
+| G_fe L=2 | 11.6/21.3 | 21.9/43.2 | 43.2/90.5 | 75.4/169.5 | 664.0/1501.0 |
+
+n=20 winner vs QAOA L=2: median 176275.6 vs 336.4, B90 1892119.9 vs 971.4 -> no beat
