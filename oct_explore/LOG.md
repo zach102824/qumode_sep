@@ -701,3 +701,18 @@ cond+per_bit+rich2, trained only at n=8. |β| held at 0.25 (ECD not collapsed).
 Reading: n=8 matches QAOA, but instance-δ overfits — n≥12 collapses. Next: curriculum +10/+12,
 shared (no δ), and tiny δ_scale=0.08. L=8 training in progress.
 
+
+## NN stage-8 diagnosis (Sat 09:31 CST)
+
+| run | L | n=8 | n=10 | n=12 | n=14 | n=20 | |β| |
+|---|---|---|---|---|---|---|---|
+| NN_best cond+per_bit+rich2 | 4 | 5.5/10.2 | 12.4/29.3 | 92.5/687 | 159/1112 | 7e5/4e6 | 0.25 |
+| NN_best | 8 | 3.4/5.5 | 20.8/98 | 550/7247 | 1648/11127 | (testing) | 0.26 |
+| NN_sh shared+per_bit+rich2 | 4 | 7.8/11.5 | 31.8/64 | 185/615 | 161/475 | 29549/1e5 | 0.07 |
+| QAOA_raw | 4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238 | 0 |
+| QAOA_raw | 8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 | 0 |
+
+Forced ECD+|β|≈0.25 matches n=8 but **destroys transfer** (Fock leakage / wrong scale at large k).
+rich=2 (Cn²) also hurts. Killed NN_best; launched **NN_v2**: shared, joint train n=8+10+12,
+per_bit GrayX, rich=1, soft ECD cap bmax=0.15, tiny β pull. Goal: beat QAOA via richer mixer
+without breaking size transfer.

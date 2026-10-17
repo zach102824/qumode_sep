@@ -1,5 +1,5 @@
 # TAG|args
-NN_best|--mode cond --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 2 --beta0 0.25 --beta_min 0.05 --beta_w 0.3 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --hidden 64 --depth 2 --delta_scale 0.4 --test 10 12 14 20
 NN_sh|--mode shared --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 2 --beta0 0.25 --beta_min 0.05 --beta_w 0.2 --ntrain 80 --nt2_count 40 --maxiter 500 --restarts 3 --test 10 12 14 20
-NN_sd|--mode cond --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 2 --beta0 0.2 --beta_min 0.05 --beta_w 0.2 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --hidden 64 --depth 2 --delta_scale 0.08 --test 10 12 14 20
-NN_agn|--mode agnostic --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 2 --beta0 0.25 --beta_min 0.05 --beta_w 0.2 --ntrain 80 --maxiter 400 --restarts 2 --hidden 48 --depth 2 --test 10 12 14 20
+NN_v2|--mode shared --joint --Ls 4 8 --stages 8 10 12 --per_bit --rich 1 --beta0 0.1 --beta_min 0.0 --beta_w 0.05 --bmax 0.15 --ntrain 80 --nt2_count 40 --maxiter 500 --restarts 3 --test 10 12 14 20
+NN_v2c|--mode cond --joint --Ls 4 8 --stages 8 10 12 --per_bit --rich 1 --beta0 0.1 --beta_min 0.0 --beta_w 0.05 --bmax 0.15 --delta_scale 0.1 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --hidden 64 --depth 2 --test 10 12 14 20
+NN_v3|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 2 --beta0 0.08 --beta_min 0.0 --beta_w 0.02 --bmax 0.1 --ntrain 80 --nt2_count 40 --maxiter 500 --restarts 3 --test 10 12 14 20

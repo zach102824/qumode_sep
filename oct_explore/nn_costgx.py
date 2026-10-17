@@ -52,6 +52,10 @@ ap.add_argument("--maxiter", type=int, default=250)
 ap.add_argument("--restarts", type=int, default=2)
 ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--eval_only", action="store_true")
+ap.add_argument("--joint", action="store_true",
+                help="train on all --stages sizes at once (no curriculum)")
+ap.add_argument("--bmax", type=float, default=0.0,
+                help="if >0, ECD beta = bmax*tanh(raw) (caps displacement)")
 a = ap.parse_args()
 if a.no_final_ecd: a.final_ecd = False
 
@@ -252,8 +256,11 @@ def build(n, insts, ks):
 
     def local(psi, r):
         R = Rm(r[2], r[3])
+        bre, bim = r[0], r[1]
+        if a.bmax > 0:
+            bre = a.bmax * jnp.tanh(bre); bim = a.bmax * jnp.tanh(bim)
         for c in range(C):
-            psi = apply_M(R, psi, c); Dp = disp(c, r[0], r[1])
+            psi = apply_M(R, psi, c); Dp = disp(c, bre, bim)
             p0 = jnp.take(psi, 0, axis=c); p1 = jnp.take(psi, 1, axis=c); fa = C - 1 + c
             psi = jnp.stack([apply_M(Dp.conj().T, p1, fa), apply_M(Dp, p0, fa)], axis=c)
         return psi
@@ -508,8 +515,8 @@ res = json.load(open(OUT)) if os.path.exists(OUT) else {
 res["args_last"] = vars(a)
 
 # Curriculum: after stage k, training pool = stages[:k+1]
-for si, stage_n in enumerate(a.stages):
-    train_sizes = a.stages[: si + 1]
+stage_list = [a.stages] if a.joint else [a.stages[:i+1] for i in range(len(a.stages))]
+for si, train_sizes in enumerate(stage_list):
     stage_key = "+".join(str(s) for s in train_sizes)
     log(f"=== curriculum stage {stage_key} ===")
     pools = load_pool(train_sizes)
