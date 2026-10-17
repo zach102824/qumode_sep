@@ -1146,3 +1146,16 @@ Random-base GNN (B_g4_iii, B_g4_i) init 0 after 1000 L-BFGS its (~26 min): train
 - B_g4_iii / B_g4_i cut to --ninit 1 (keep init 0, run val/test only) as the from-scratch-base GNN reference.
 - All further GNN runs (*_A tags) start from the from-scratch n=8 plain keep-list (`--init_from results/v3/A_*.json`, heads zero-init => exactly the plain optimum at it 0, so GNN can only improve train loss). Still no QAOA anywhere. Added L2 GNN (B_g2_iii_A, B_g2_i_A) to test this quickly; ablations (global / +clause / +clause+var, H32/H128, binary) moved to the _A bases at L4/8/10.
 - Stray old-queue random-base launches at 16:00-16:01 (B_g4_iii_h128, B_b4_iii, B_g8_i) were stopped; logs in logs/v3/aborted/. Runner now caps GNN at 2 concurrent and uses --chunk 125 (an OOM killed GNN workers at 4 concurrent).
+
+### A_g2 finished 2026-10-17 16:04 CST  (L=2)
+
+`code=gray L=2 ninit=200 screen_n=128 screen_iter=300 refine=16 keep=10 ntrain=1000 maxiter=2000 grow_wait_h=8.0 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] obj=meanlog alpha=0.2 w=1.0 chunk=500`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| A_g2 winner scr48 (train 2.289, val 3.109) | 9.2/19.0 | 18.7/50.2 | 30.5/84.7 | 55.9/166.6 | 319.9/1097.5 |
+| A_g2 trainbest scr147 (train 2.289, val 3.112) | 9.2/19.0 | 18.9/49.9 | 31.0/86.8 | 55.8/166.8 | 316.1/1126.3 |
+| QAOA_raw L=2 | 9.0/18.8 | 18.4/55.0 | 28.7/84.0 | 54.8/166.2 | 336.4/971.4 |
+| G_fe L=2 | 11.6/21.3 | 21.9/43.2 | 43.2/90.5 | 75.4/169.5 | 664.0/1501.0 |
+
+n=20 winner vs QAOA L=2: median 319.9 vs 336.4, B90 1097.5 vs 971.4 -> no beat
