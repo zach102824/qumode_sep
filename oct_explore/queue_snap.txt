@@ -1,6 +1,8 @@
-# TAG|args  — SNAP instead of ECD + cost·GrayX. Watchdog waits for NN to free RAM.
+# TAG|args  — SNAP instead of ECD + cost·GrayX. Prefer JOINT multi-n (n=8-only fails transfer).
 SNAP_cs4|--kind csnap --snap 4 --Ls 2 4 8 --ntrain 80 --restarts 4 --maxiter 300 --test 10 12 14 20
 SNAP_cs4j|--kind csnap --snap 4 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 4 --maxiter 300 --test 10 12 14 20
-SNAP_uc4|--kind uncond --snap 4 --Ls 2 4 8 --ntrain 80 --restarts 3 --maxiter 250 --test 10 12 14 20
-SNAP_free8|--kind free --snap 8 --Ls 2 4 8 --ntrain 80 --restarts 3 --maxiter 250 --test 10 12 14 20
+SNAP_cs4jeb|--kind csnap --snap 4 --ebins 12 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
+SNAP_free8j|--kind free --snap 8 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
+SNAP_uc4j|--kind uncond --snap 4 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
+SNAP_cs4jm|--kind csnap --snap 4 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --obj mix --alpha 0.2 --w 1.0 --test 10 12 14 20
 SNAP_cs4jR|--kind csnap --snap 4 --layout R --Ls 2 4 8 --ntrain 60 --nt2 10 12 --nt2_count 30 --restarts 3 --maxiter 250 --test 10 12 14 20

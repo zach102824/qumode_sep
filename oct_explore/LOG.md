@@ -847,3 +847,20 @@ L=2 snap_mag=0.9236 (mean |s0−s1| for csnap, else mean |s|).
 ## SNAP queue unblocked (Sat 11:32 CST)
 watchdog_snap was waiting for both NN jobs to finish (could be hours). SNAP training at n≤14 is light, so watchdog v2 now runs 1 SNAP job (3 threads) alongside the 2 NN jobs when RAM allows; `snap_costgx.py` n=20 tests now share `/tmp/nn_n20.lock` with NN (chunk=2), so only one big eval runs at a time.
 Running: NN_v2b L8, NN_cc L8, SNAP_cs4.
+
+## SNAP_cs4 n=8-only (Sat 11:57 CST)  [kind=csnap snap=4 layout=T nt2=[]]
+
+Train n=8 only (next queue item is joint SNAP_cs4j). snap_mag stays nonzero (L2 0.62 → L8 0.39). Transfer fails hard — confirms need for joint multi-n.
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| SNAP_cs4 2 | 21.0/50.6 | 129/937 | 379/4591 | 448/3476 | 101848/1.7e6 |
+| SNAP_cs4 4 | 9.6/19.8 | 28.8/100 | 241/1898 | 82.5/350 | **23698/280906** |
+| SNAP_cs4 8 | 6.4/14.4 | 349/2600 | 3444/19792 | 723/4439 | (n20 L8 running) |
+| QAOA 4 | — | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | **84.9/238.1** |
+| QAOA 8 | — | — | — | — | **16.4/54.2** |
+
+No QAOA beat. Running: NN_v2b L8, NN_fix04 (fixed |β|=0.04 + phys_beta), SNAP_cs4 n20 L8 then SNAP_cs4j.
+## Check-in (Sat 11:57 CST)
+
+Alive: NN_v2b (L8 train), NN_fix04 just launched (fix_beta+phys_beta), SNAP_cs4 (n20 L8 eval under shared lock), both watchdogs. NN_cc deferred (L4 n20=122/506 + OOM on L8). PID 2888494 untouched. No n=20 QAOA beat yet — stay quiet.

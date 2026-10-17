@@ -41,6 +41,9 @@ ap.add_argument("--obj", default="meanlog", choices=["meanlog", "cvar", "mix"])
 ap.add_argument("--alpha", type=float, default=0.2)
 ap.add_argument("--w", type=float, default=1.0)
 ap.add_argument("--no_R", action="store_true", help="skip transmon R (ablation)")
+ap.add_argument("--rich", type=int, default=1, help="cost poly degree (1=g*Cn, 2=+g1*Cn^2, ...)")
+ap.add_argument("--ebins", type=int, default=0,
+                help="if >0, free diagonal cost with ebins phases on round(Cn) (overrides --rich)")
 a = ap.parse_args()
 
 LAY = {"T": sim.LAYOUTS_T, "C": sim.LAYOUTS_C, "R": sim.LAYOUTS_R}[a.layout]
@@ -49,6 +52,10 @@ log = lambda *s: print(time.strftime("%H:%M:%S"), *s, flush=True)
 TRB, TEB = 31_000_000_000, 32_000_000_000
 OUT = f"results/{a.tag}.json"
 S = int(a.snap)
+if a.ebins > 0:
+    a.rich = a.ebins
+NG = int(a.rich)
+USE_EBINS = a.ebins > 0
 # param layout
 # R: th,ph (2) unless --no_R
 NR = 0 if a.no_R else 2
@@ -58,7 +65,7 @@ elif a.kind == "csnap":
     NS = 2 * S
 else:  # free
     NS = S
-NP = NR + NS + 2  # + bc, g
+NP = NR + NS + 1 + NG  # + bc + g0..g_{NG-1}
 
 
 def gray_scalar(i):
@@ -195,8 +202,16 @@ def build(n, insts, ks):
         psi = psi0
         for l in range(L):
             psi = local_snap(psi, X[l])
-            bc = X[l, -2]; g = X[l, -1]
-            psi = psi * jnp.exp(-1j * g * cn).astype(jnp.complex64)
+            bc = X[l, -(1 + NG)]
+            gs = X[l, -NG:]
+            if USE_EBINS:
+                idx = jnp.clip(jnp.round(cn).astype(jnp.int32), 0, NG - 1)
+                phase = gs[idx]
+            else:
+                phase = gs[0] * cn
+                for j in range(1, NG):
+                    phase = phase + gs[j] * (cn ** (j + 1))
+            psi = psi * jnp.exp(-1j * phase).astype(jnp.complex64)
             for c in range(C):
                 psi = apply_M(cav_U(c, bc), psi, C + c)
         return psi
@@ -216,7 +231,7 @@ def build(n, insts, ks):
 tr = [(8, sim.instances(8, a.ntrain, TRB))] + [(m, sim.instances(m, a.nt2_count, TRB)) for m in a.nt2]
 tr_p, tr_vg = [], []
 for n, insts in tr:
-    log(f"build train n={n} N={len(insts)} kind={a.kind} snap={S} NP={NP} layout={a.layout}")
+    log(f"build train n={n} N={len(insts)} kind={a.kind} snap={S} NP={NP} NG={NG} ebin={USE_EBINS} layout={a.layout}")
     p, vg = build(n, insts, LAY[n]); tr_p.append(p); tr_vg.append(vg)
 
 
@@ -241,7 +256,13 @@ def init_layer(scale=1.0, t=0.5):
         row += list(0.2 * scale * rng.standard_normal(S))
     else:
         row += list(0.3 * scale * rng.standard_normal(S))
-    row += [(0.9 - 0.7 * t) * scale, (0.2 + 0.7 * t) * scale]  # bc, g
+    row += [(0.9 - 0.7 * t) * scale]  # bc
+    # cost coeffs
+    g0 = (0.2 + 0.7 * t) * scale
+    if USE_EBINS:
+        row += [g0 * (1.0 - k / max(NG - 1, 1)) for k in range(NG)]
+    else:
+        row += [g0] + [0.05 * (1 - 2 * t) * scale] * (NG - 1)
     return np.array(row, float)
 
 
@@ -273,7 +294,12 @@ for L in a.Ls:
         r = []
         if NR: r += [-np.pi if t < 1e-9 else 0.3, 0.0]
         r += [0.0] * NS
-        r += [(0.9 - 0.7 * t), (0.2 + 0.7 * t)]
+        r += [(0.9 - 0.7 * t)]
+        g0 = (0.2 + 0.7 * t)
+        if USE_EBINS:
+            r += [g0 * (1.0 - k / max(NG - 1, 1)) for k in range(NG)]
+        else:
+            r += [g0] + [0.0] * (NG - 1)
         rows.append(r)
     cands.append(np.array(rows, float).reshape(-1))
     cands = cands[: max(a.restarts, 3)]

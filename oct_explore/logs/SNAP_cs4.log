@@ -1,0 +1,39 @@
+11:31:44 build train n=8 N=80 kind=csnap snap=4 NP=12 layout=T
+11:31:52   L=2 cand0 loss 5.2889 -> 3.5107 (300 it)
+11:31:59   L=2 cand1 loss 5.7539 -> 3.1187 (300 it)
+11:32:04   L=2 cand2 loss 5.9610 -> 3.5343 (300 it)
+11:32:11   L=2 cand3 loss 5.4475 -> 3.4982 (300 it)
+11:32:11 L=2 train med1/p=25.22 B90=43.56 snap_mag=0.6237 (27s)
+11:32:26   L=4 cand0 loss 4.5058 -> 2.8856 (300 it)
+11:32:40   L=4 cand1 loss 3.1717 -> 2.3307 (300 it)
+11:32:55   L=4 cand2 loss 5.7437 -> 2.7873 (300 it)
+11:33:09   L=4 cand3 loss 6.4004 -> 2.8085 (300 it)
+11:33:09 L=4 train med1/p=11.44 B90=19.74 snap_mag=0.5316 (58s)
+11:33:48   L=8 cand0 loss 4.8686 -> 2.0264 (300 it)
+11:34:19   L=8 cand1 loss 2.4276 -> 2.1523 (300 it)
+11:34:49   L=8 cand2 loss 6.6834 -> 2.6500 (300 it)
+11:35:21   L=8 cand3 loss 6.2714 -> 1.9392 (300 it)
+11:35:22 L=8 train med1/p=7.35 B90=15.20 snap_mag=0.3911 (133s)
+11:35:24 test n=8 L=2 med1/p=21.0 B90=50.6
+11:35:27 test n=8 L=4 med1/p=9.6 B90=19.8
+11:35:31 test n=8 L=8 med1/p=6.4 B90=14.4
+11:35:33 test n=10 L=2 med1/p=129.4 B90=937.5
+11:35:36 test n=10 L=4 med1/p=28.8 B90=100.4
+11:35:41 test n=10 L=8 med1/p=349.3 B90=2600.4
+11:48:48 test n=12 L=2 med1/p=378.6 B90=4591.4
+11:48:53 test n=12 L=4 med1/p=240.9 B90=1897.8
+11:49:00 test n=12 L=8 med1/p=3444.1 B90=19791.9
+11:49:15 test n=14 L=2 med1/p=447.9 B90=3475.7
+11:49:35 test n=14 L=4 med1/p=82.5 B90=350.3
+11:50:08 test n=14 L=8 med1/p=723.5 B90=4439.5
+11:51:50 test n=20 L=2 med1/p=101848.4 B90=1734683.1
+E1017 11:55:01.023304 3241869 slow_operation_alarm.cc:73] 
+********************************
+[Compiling module jit_probs for CPU] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+E1017 11:55:55.989366 3241836 slow_operation_alarm.cc:140] The operation took 2m54.97712119s
+
+********************************
+[Compiling module jit_probs for CPU] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+11:56:21 test n=20 L=4 med1/p=23697.9 B90=280906.1

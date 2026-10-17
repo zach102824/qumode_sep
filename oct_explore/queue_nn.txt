@@ -1,8 +1,10 @@
 # TAG|args
+# Prefer fixed-|β| ECD + free ebin cost (more native / not near-QAOA). Defer NN_cc L8.
 NN_v2|--mode shared --joint --Ls 4 8 --stages 8 10 12 --per_bit --rich 1 --beta0 0.1 --beta_min 0.0 --beta_w 0.05 --bmax 0.15 --ntrain 80 --nt2_count 40 --maxiter 500 --restarts 3 --test 10 12 14 20
 NN_v2b|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 1 --beta0 0.05 --beta_min 0.0 --beta_w 0.0 --bmax 0.2 --ntrain 100 --nt2_count 50 --maxiter 600 --restarts 4 --test 10 12 14 20
-NN_cc|--mode costcond --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 2 --beta0 0.05 --beta_min 0.0 --beta_w 0.0 --bmax 0.15 --delta_scale 0.3 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --hidden 64 --depth 2 --test 10 12 14 20
 NN_fix04|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 1 --fix_beta --phys_beta --beta0 0.04 --beta_min 0.0 --beta_w 0.0 --ntrain 100 --nt2_count 50 --maxiter 500 --restarts 3 --test 10 12 14 20
-NN_fix06|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 1 --fix_beta --phys_beta --beta0 0.06 --beta_min 0.0 --beta_w 0.0 --ntrain 100 --nt2_count 50 --maxiter 500 --restarts 3 --test 10 12 14 20
 NN_ebin|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --ebins 12 --fix_beta --phys_beta --beta0 0.04 --beta_min 0.0 --beta_w 0.0 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --test 10 12 14 20
+NN_fix06|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 1 --fix_beta --phys_beta --beta0 0.06 --beta_min 0.0 --beta_w 0.0 --ntrain 100 --nt2_count 50 --maxiter 500 --restarts 3 --test 10 12 14 20
 NN_ccfix|--mode costcond --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 1 --fix_beta --phys_beta --beta0 0.04 --delta_scale 0.25 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --hidden 64 --depth 2 --test 10 12 14 20
+# deferred: costcond L4 already poor at n=20 (122/506)
+#NN_cc|--mode costcond --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 2 --beta0 0.05 --beta_min 0.0 --beta_w 0.0 --bmax 0.15 --delta_scale 0.3 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --hidden 64 --depth 2 --test 10 12 14 20
