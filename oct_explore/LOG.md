@@ -1074,3 +1074,28 @@ No beat. Watchdog already launched **SNAP_cs4jBm** (binary+mix, next queue prior
 ## Check-in (2026-10-17 14:22 CST)
 
 Alive: SNAP_cs4jBm (just started), NN_ebin (L4 done n20=2821/9490; L8+), watchdog_nn+snap+tu. MemAvail ~2.2 GiB. No G_*/watchdog_cg. No n=20 QAOA beat → stay quiet.
+
+## SNAP_cs4j DONE + NN_ebin abort (2026-10-17 14:25 CST)
+
+**SNAP_cs4j** (joint n=8..14, gray, csnap=4): snap_mag shrank 0.43→0.26→0.15. n=20 failed hard.
+| L | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|
+| 2 | 65.8/489 | 303/3125 | 325/1658 | 55264/580194 |
+| 4 | 59.4/456 | 287/2431 | 256/1283 | 48502/1.07e6 |
+| 8 | 60.4/401 | 256/2554 | 250/1042 | 63827/631356 |
+| QAOA 8 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | **16.4/54.2** |
+
+Joint helped train (L8 train 19.0/33.6) but did **not** transfer. Gray SNAP≠binary X.
+
+**NN_ebin** L4 n20 **2821/9489** (ebins=12 overfit). Aborted before L8; freed for binary.
+
+**Now running:** SNAP_cs4jBm (binary+mix) — best bet from S_bin med-win. Next NN: NN_bin04.
+No n=20 QAOA beat → stay quiet.
+
+## NN_ebin (Sat 14:25 CST)  [mode=shared stages=[8, 10, 12, 14] ntrain=80 hidden=64 depth=2 delta_scale=0.3 rich=12 per_cav=False per_bit=True final_ecd=True beta0=0.04 beta_min=0.0 beta_w=0.0 bmax=0.0 fix_beta=True phys_beta=True ebins=12]
+
+| L | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|
+| 4 | 51.7/144.8 | 75.9/196.5 | 154.3/467.5 | 2821.1/9489.7 |
+| QAOA 4 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_qfe 4 | 9.2/20.5 | 14.6/37.6 | 22.8/57.5 | 103.5/358.6 |
