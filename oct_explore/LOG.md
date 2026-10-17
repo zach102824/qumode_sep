@@ -969,7 +969,7 @@ No clear n=20 beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
 Alive: NN_fix04 (L8 cand2 done @13:28 → train pick/tests next; L4 n20=120.1/515.2 held, |β|=0.040), SNAP_cs4j (L8 cand0 done @13:20 after L4 train 19.6/34 snap_mag=0.26; cand1+/tests pending), watchdog_nn+snap+tu. PID 2888494 untouched. MemAvail ~2.2 GiB — no new launch (OOM guard: ≤1 NN while SNAP). No G_*/watchdog_cg restart. NN_ebin stays paused; tu idle-only.
 No n=20 QAOA beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
 
-## NN_fix04 (Sat 13:57 CST)  [mode=shared stages=[8, 10, 12, 14] ntrain=100 hidden=64 depth=2 delta_scale=0.3 rich=1 per_cav=False per_bit=True final_ecd=True beta0=0.04 beta_min=0.0 beta_w=0.0 bmax=0.0 fix_beta=True phys_beta=True ebins=0]
+## NN_fix04 (Sat 13:59 CST)  [mode=shared stages=[8, 10, 12, 14] ntrain=100 hidden=64 depth=2 delta_scale=0.3 rich=1 per_cav=False per_bit=True final_ecd=True beta0=0.04 beta_min=0.0 beta_w=0.0 bmax=0.0 fix_beta=True phys_beta=True ebins=0]
 
 | L | n=10 | n=12 | n=14 | n=20 |
 |---|---|---|---|---|
@@ -979,3 +979,10 @@ No n=20 QAOA beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
 | 8 | 3.2/10.6 | 4.9/28.7 | 6.9/32.5 | 29.6/208.0 |
 | QAOA 8 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
 | G_qfe 8 | 3.6/7.3 | 4.8/15.4 | 6.6/17.3 | 16.4/59.2 |
+
+## Check-in (2026-10-17 13:55–14:00 CST)
+
+Alive: SNAP_cs4j (L8 cand2+ after L4 train 19.6/34 snap_mag=0.26; tests pending), NN_ebin (just launched by watchdog after NN_fix04 ALLDONE @13:56), watchdog_nn+snap+tu. PID 2888494 untouched. MemAvail ~4.2 GiB. No G_*/watchdog_cg restart.
+
+**NN_fix04 DONE** L8 n20 = **29.6/208** vs QAOA 16.4/54.2 — no beat (~1.8× med, ~3.8× B90). L4 was 120.1/515.2. Fixed |β|=0.040 held. Beats QAOA med at n=14 L4 only; loses n=20 both L.
+No n=20 QAOA beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
