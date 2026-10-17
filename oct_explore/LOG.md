@@ -833,3 +833,13 @@ Smoke SNAP_smoke L=2 n=8: med1/p=16.5/37.6, **snap_mag=0.92** (does not collapse
 
 Queued (watchdog_snap waits for NN to free RAM): SNAP_cs4, SNAP_cs4j (joint 8+10+12+14), SNAP_uc4, SNAP_free8, SNAP_cs4jR.
 Target still QAOA n=20 L4 84.9/238 and L8 16.4/54. NN jobs left running.
+
+## SNAP_smoke (Sat 11:10 CST)  [kind=csnap snap=2 layout=T nt2=[]]
+
+| L | n=8 |
+|---|---|
+| SNAP_smoke 2 | 16.5/37.6 |
+| QAOA 2 | 9.0/18.8 |
+| G_qfe 2 | — |
+
+L=2 snap_mag=0.9236 (mean |s0−s1| for csnap, else mean |s|).
