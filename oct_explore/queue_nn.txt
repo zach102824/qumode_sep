@@ -1,0 +1,4 @@
+# TAG|args  (watchdog_nn.sh; max 2 concurrent x 4 threads)
+NN_best|--mode cond --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 2 --beta0 0.25 --beta_min 0.05 --beta_w 0.3 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --hidden 64 --depth 2 --delta_scale 0.4 --test 10 12 14 20
+NN_best_r3|--mode cond --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 3 --beta0 0.3 --beta_min 0.08 --beta_w 0.5 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --hidden 64 --depth 2 --delta_scale 0.5 --test 10 12 14 20
+NN_agn|--mode agnostic --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 2 --beta0 0.25 --beta_min 0.05 --beta_w 0.3 --ntrain 80 --maxiter 400 --restarts 2 --hidden 48 --depth 2 --test 10 12 14 20

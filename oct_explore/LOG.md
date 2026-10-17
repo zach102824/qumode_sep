@@ -667,3 +667,23 @@ ECD), G_qfe_deep (L=10/12/14), G_qfe_val (val selection, grow+QAOA cands), G_qfe
 | 14 | 1.6/3.7 | 2.0/5.7 | 2.9/12.6 | 3.5/18.5 | 9.3/89.7 |
 | QAOA 14 | 1.6/3.6 | 2.0/5.7 | 2.6/12.9 | 3.5/17.1 | 7.0/92.3 |
 | SATLike | 16/70 | 26/111 | 36/157 | 50/208 | ~124/~530 |
+
+## PART 3 start — NN parameter predictor for ECD + cost·GrayX (Sat 09:18 CST)
+
+G_* costgx queue stopped per Zach. New direction: **instance-conditioned neural net**, deliberately *not* a QAOA correction.
+
+Design (`nn_costgx.py`):
+- Circuit = ECD + cost·GrayX + final ECD (same hardware model), **no QAOA warm-start**.
+- ECD soft floor + pull toward `|β|≈β0` so displacements stay meaningful (do not collapse to 0).
+- **Learned diagonal**: phase = g₀·Cn + g₁·Cn² (+ g₂·Cn³ with `--rich 3`).
+- **Per-bit Gray-X**: independent angle per Gray digit (pad to 6), not one shared β.
+- **Instance-conditioned MLP** (clause/energy features + n) → additive δ on a shared base (`--mode cond`).
+- Curriculum: train {8} → test 10; add 10 → test 12; … through 14; always eval n=20.
+- Held-out test seed base 3.2e10 (same as G_qfe / QAOA_raw).
+
+Running now (detached, ≤2×4 threads, deadline Mon 09:00 CST):
+- `NN_best`: cond + per_bit + rich=2 + β0=0.25, L∈{4,8}, stages 8→10→12→14
+- `NN_best_r3`: same with rich=3, stronger ECD pull
+- `NN_agn` queued: size-extrapolation ablation (n→params)
+
+Target: beat QAOA_raw n=20 L=4 (84.9/238.1) and L=8 (16.4/54.2). First table as soon as stage-8 L=4/8 tests land.
