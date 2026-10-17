@@ -1295,3 +1295,16 @@ Running (4/4 slots): A_g4 (L4 refine/growth), A_g8 / A_b8 (L8 screens 50/200, be
 
 ## Check-in (2026-10-17 21:53 CST)
 v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g4 (L4 growth, grown cands reconverge to ~1.857, no gain over refine best ~1.570), A_g8 / A_b8 (L8 screens 60/200; best 1.307 / 1.385, p10 improving 2.00 / 1.83), B_g2_iii_A_f (size-free "formula" GNN features, L2, started 21:39, 84k weights/model). B_g2_iii_A_tq waits for a slot; MemAvail ~2 GiB. No new finished jobs since A_b4 (already reported: n=20 median 62.4 vs QAOA L4 84.9, B90 250.5 vs 238.1). Queue unchanged. PID 2888494 untouched.
+
+### A_g4 finished 2026-10-17 21:56 CST  (L=4)
+
+`code=gray L=4 ninit=200 screen_n=128 screen_iter=300 refine=12 keep=10 ntrain=1000 maxiter=2000 grow_from=A_g2 grow_wait_h=8.0 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] obj=meanlog alpha=0.2 w=1.0 chunk=500`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| A_g4 winner scr34 (train 1.570, val 2.128) | 4.4/9.0 | 7.2/20.7 | 10.4/39.3 | 16.1/62.4 | 60.7/243.5 |
+| A_g4 trainbest scr49 (train 1.570, val 2.128) | 4.4/9.0 | 7.2/20.7 | 10.4/39.4 | 16.1/62.5 | - |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 60.7 vs 84.9, B90 243.5 vs 238.1 -> no beat
