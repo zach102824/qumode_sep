@@ -1287,3 +1287,8 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing:
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 62.4 vs 84.9, B90 250.5 vs 238.1 -> no beat
+
+## Check-in (2026-10-17 21:40 CST)
+**First n=20 median beat vs QAOA at equal L.** A_b4 (plain shared-angle ECD → cost·binary-X, L=4, trained from scratch at n=8 with BFGS, 200 inits + growth from A_b2, frozen) tests at n=20 (100 instances) at median/B90 1/p = 62.4/250.5 vs QAOA L4 84.9/238.1: median ~26% better, B90 ~5% worse. It also beats QAOA L4 on median at every n (8: 4.3 vs 5.3, 10: 7.2 vs 8.4, 12: 10.0 vs 12.8, 14: 16.0 vs 20.8); B90 is better at n=8/10 and slightly worse from n=12 on. The auto-report line says "no beat" because it requires both metrics; under the standing order a median beat counts, so this is handed to Zach.
+**Reasoning for follow-ups:** binary-X currently looks at least as good as Gray-X at L4 (A_g4 still refining; gray grown candidates 1.75–1.86 vs binary 1.570). The queue already has A_b8 (L8 binary, screen 50/200), A_b10, and B_b4_iii_A (GNN from the A_b4 keep-list). Once the size-free-feature GNN tests (B_g2_iii_A_f launched 21:39, B_g2_iii_A_tq next) report, the binary GNN entries will switch to whichever feature set transfers to n=20.
+Running (4/4 slots): A_g4 (L4 refine/growth), A_g8 / A_b8 (L8 screens 50/200, best 1.307 / 1.385), B_g2_iii_A_f. MemAvail ~2 GiB. PID 2888494 untouched.
