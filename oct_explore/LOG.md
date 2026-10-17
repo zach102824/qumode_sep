@@ -1214,3 +1214,6 @@ v3 runner alive (run_v3.sh pid 3365113), same 4 jobs (A_g4, A_b4, B_g2_iii_A, B_
 
 ## Check-in (2026-10-17 17:52 CST)
 v3 runner alive (run_v3.sh pid 3365113), same 4 jobs, CPU advancing, MemAvail ~2 GiB (3000 MB gate holds queue; queue unchanged). A_g4 screen 100/200 (best 1.556, p10 1.948), A_b4 100/200 (best 1.607, p10 2.035). GNN-from-plain L2 init 1: clause_w+var_mix 2.2886 -> 2.0253, global-only 2.2886 -> 2.2226, consistent with init 0 (per-clause/per-variable heads carry the gain). No new finished jobs; no n=20 QAOA beat. PID 2888494 untouched.
+
+## Check-in (2026-10-17 18:11 CST)
+v3 runner alive (run_v3.sh pid 3365113), same 4 jobs, CPU advancing, MemAvail ~2 GiB (3000 MB gate holds queue; queue unchanged). A_g4 screen 120/200 (best 1.556, p10 1.839), A_b4 110/200 (best 1.607, p10 2.034); the gray-code L4 tail keeps improving (p10 1.95 -> 1.84) while binary has flattened. GNN-from-plain L2 jobs on inits 2-3 (init 1 already logged). No new finished jobs; no n=20 QAOA beat. PID 2888494 untouched.
