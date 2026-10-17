@@ -986,3 +986,15 @@ Alive: SNAP_cs4j (L8 cand2+ after L4 train 19.6/34 snap_mag=0.26; tests pending)
 
 **NN_fix04 DONE** L8 n20 = **29.6/208** vs QAOA 16.4/54.2 — no beat (~1.8× med, ~3.8× B90). L4 was 120.1/515.2. Fixed |β|=0.040 held. Beats QAOA med at n=14 L4 only; loses n=20 both L.
 No n=20 QAOA beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
+
+## NN_fix04 done (2026-10-17 14:01 CST)
+
+Fixed |β|=0.04 held. L8 n20 **29.6/208** vs QAOA 16.4/54 (no beat; ~1.8× med, ~3.8× B90). Worse transfer than NN_v2 L8 21.6/122 (β→0).
+| L | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|
+| 4 | 7.7/20.4 | 13.1/46.1 | 17.8/75.8 | 120.1/515.2 |
+| 8 | 3.2/10.6 | 4.9/28.7 | 6.9/32.5 | 29.6/208.0 |
+| QAOA 8 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | **16.4/54.2** |
+
+Next: NN_ebin (free diagonal cost, fixβ) running; queued soft-β ebin + binary. SNAP_cs4j L8 cand2 done (~4.53 best so far), cand3+/tests pending. No Zach ping.
+
