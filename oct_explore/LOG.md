@@ -516,3 +516,38 @@ SATLike ~124/~530; Gray-X ref S_costgx 17/129; cost-only (no mixer) 72k. So ever
 took 38–48 min; N_dsnap_R (launched 01:00) has only finished 3 n=8 L=2 restarts by 05:49 (N_dsnap did 6 in 46 s);
 process start times show ~4h20m of the last ~4h50m was frozen. Jobs only advance during check-ins.
 Still running: N_dsnap_R, N_bssnap (last two in native queue).
+
+## QAOA reference cross-check vs PRX Quantum 5, 030348 (Sat Oct 17, 08:50 CST)
+
+Ran the exact `qaoa_ref.make()` circuit (the code path that produced QAOA_raw; `qaoa_paper_check.py` execs it without training)
+on qaoa_ksat's saved random 8-SAT instances (paper ensemble: Poisson m, r=176.54, literals with replacement, SAT only) with
+the published angles. Convention map: paper layer exp(+i γ H/2)·Rx(β), Rx=exp(-iβX/2) ⇒ ours b=β, g=-γ/2 on Cn=E.
+
+| n | p | N | oct_explore mean p / med TTS | qaoa_ksat mean p / med TTS | paper | max per-instance |Δp| |
+|---|---|---|---|---|---|---|
+| 8 | 14 | 40 | 0.3688 / 2.81 | 0.3688 / 2.81 | Table II fit 2.92 (extrap.) | 4e-7 |
+| 12 | 14 | 40 | 0.1765 / 6.10 | 0.1765 / 6.10 | Table II 7.20 | 2e-7 |
+| 12 | 60 | 40 | **0.5576** / 1.51 | 0.5576 / 1.51 | **mean ≈0.56** (text), Table II 1.72 | 6e-7 |
+| 20 | 14 | 40 | 0.0559 / 25.7 | 0.0559 / 25.7 | Table II 43.9 | 2e-7 |
+| 20 | 60 | 40 | 0.2574 / 5.02 | 0.2574 / 5.02 | Table II 9.18 | 6e-7 |
+
+Per-instance agreement to float32 precision. Eq. (13) sign taken literally gives mean p ≈ 4e-5 at n=8 (below random 7e-3),
+confirming the sign pitfall. Independent float64 numpy re-evaluation (qaoa_ksat.circuit) of QAOA_raw L=14 angles on the first
+24 of our n=20 4-SAT test instances: max rel. diff 5e-6 vs stored p.
+
+4-SAT sanity (`qaoa_paper_k4.py`): paper's published k=4, r=9.93 angles on OUR 4-SAT test sets vs our trained QAOA_raw
+(median / B90 1/p):
+
+| n | paper k4 p=8 | QAOA_raw L=8 | paper k4 p=10 | QAOA_raw L=10 |
+|---|---|---|---|---|
+| 8 | 2.0 / 5.3 | 2.5 / 4.5 | 1.6 / 4.2 | 2.2 / 4.2 |
+| 14 | 5.7 / 37.0 | 6.3 / 18.3 | 4.1 / 27.2 | 5.5 / 16.8 |
+| 20 | 13.7 / 121.9 | 16.4 / 54.2 | 8.8 / 141.6 | 13.2 / 48.4 |
+
+Paper angles (optimised for mean p at n→∞) give a slightly better median; our mean-log-p training gives a 2-3× tighter B90.
+Same ballpark, so QAOA_raw is a fair (not inflated, not crippled) baseline. L=14 n=20 median 7.0 on 4-SAT vs 25.7 on 8-SAT at
+p=14 is consistent with k=4 being easier (log2 slope 0.18/var vs 0.26 for 8-SAT in qaoa_ksat). **Verdict: correct, no bug.**
+Note for PART 2: QAOA with paper angles is a stronger median reference (13.7 at L=8, 8.8 at L=10, n=20).
+
+Stopped N_bssnap and N_dsnap_R (Zach: focus on ECD + cost·GrayX). Partial results kept in results/N_bssnap_partial.json
+(n=14 L=8 434/2224, n=20 not reached) and results/N_dsnap_R_partial.json (train L=2 only, med 27.9).
