@@ -3,6 +3,9 @@
 # RUNNING/DONE manual: C_binmix|costgx.py --tag C_binmix --code binary --init grow --obj mix --alpha 0.2 --w 1.5 --nt2 10 12 14 --nt2_count 40 --ntrain 80 --Ls 4 8 --restarts 3 --maxiter 300 --test 10 12 14 20
 # RUNNING manual (relaunched 14:58): C_bincvar|costgx.py --tag C_bincvar --code binary --init grow --obj cvar --alpha 0.15 --nt2 10 12 14 --nt2_count 40 --ntrain 80 --Ls 4 8 --restarts 3 --maxiter 300 --test 10 12 14 20
 # Zach 15:10: found structure (ECD -> cost -> GrayX + final ECD), trained purely from scratch (grow init, no QAOA start)
+# Zach 15:11: train purely at noiseless n=12 with BFGS (L-BFGS-B), from scratch, found structure
+G_fe12|costgx.py --tag G_fe12 --code gray --init grow --final_ecd --train_n 12 --ntrain 60 --Ls 2 4 8 --restarts 4 --maxiter 300 --test 10 14 20
+G_fe12B|costgx.py --tag G_fe12B --code binary --init grow --final_ecd --train_n 12 --ntrain 60 --Ls 2 4 8 --restarts 4 --maxiter 300 --test 10 14 20
 G_fej|costgx.py --tag G_fej --code gray --init grow --final_ecd --nt2 10 12 14 --nt2_count 40 --ntrain 80 --Ls 2 4 8 --restarts 4 --maxiter 300 --test 10 12 14 20
 G_fejB|costgx.py --tag G_fejB --code binary --init grow --final_ecd --nt2 10 12 14 --nt2_count 40 --ntrain 80 --Ls 4 8 --restarts 6 --maxiter 300 --test 10 12 14 20
 C_binj|costgx.py --tag C_binj --code binary --init grow --nt2 10 12 14 --nt2_count 40 --ntrain 80 --Ls 4 8 --restarts 3 --maxiter 300 --test 10 12 14 20

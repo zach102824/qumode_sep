@@ -1,0 +1,66 @@
+2026-10-16 23:22:21 DONE S_costgx — updating LOG + push
+2026-10-16 23:22:27 DONE S_snap2 — updating LOG + push
+2026-10-16 23:22:31 DONE S_bin — updating LOG + push
+2026-10-16 23:22:37 DONE S_costonly — updating LOG + push
+2026-10-16 23:22:43 wait slots (jobs=3) for N_snapcost
+2026-10-16 23:24:43 wait slots (jobs=3) for N_snapcost
+2026-10-16 23:26:43 wait slots (jobs=3) for N_snapcost
+2026-10-16 23:28:43 wait slots (jobs=3) for N_snapcost
+2026-10-16 23:30:43 wait slots (jobs=3) for N_snapcost
+2026-10-16 23:32:43 wait slots (jobs=3) for N_snapcost
+2026-10-16 23:34:43 wait slots (jobs=3) for N_snapcost
+2026-10-16 23:36:43 wait slots (jobs=3) for N_snapcost
+2026-10-16 23:38:44 wait slots (jobs=3) for N_snapcost
+2026-10-16 23:40:44 wait slots (jobs=3) for N_snapcost
+2026-10-16 23:42:44 wait slots (jobs=3) for N_snapcost
+2026-10-16 23:44:44 wait slots (jobs=3) for N_snapcost
+2026-10-16 23:46:44 LAUNCH N_snapcost: native_u.py --tag N_snapcost --form snap_cost --snap 2 --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60
+2026-10-16 23:48:49 DONE N_dsnap — updating LOG + push
+2026-10-16 23:48:57 DONE N_snapd — updating LOG + push
+2026-10-16 23:49:03 LAUNCH N_gensum: native_u.py --tag N_gensum --form gen_sum --snap 2 --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60
+2026-10-16 23:51:09 wait slots (jobs=3) for N_bssnap
+2026-10-16 23:53:09 LAUNCH N_bssnap: native_u.py --tag N_bssnap --form bs_snap --snap 2 --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60
+2026-10-16 23:55:14 DONE N_dsnapd — updating LOG + push
+2026-10-16 23:55:24 wait slots (jobs=3) for N_dsnap4
+2026-10-16 23:57:24 wait slots (jobs=3) for N_dsnap4
+2026-10-16 23:59:24 wait slots (jobs=3) for N_dsnap4
+2026-10-17 00:01:24 wait slots (jobs=3) for N_dsnap4
+2026-10-17 00:03:24 wait slots (jobs=3) for N_dsnap4
+2026-10-17 00:05:25 LAUNCH N_dsnap4: native_u.py --tag N_dsnap4 --form d_snap --snap 4 --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60
+2026-10-17 00:07:30 DONE N_snapcost — updating LOG + push
+2026-10-17 00:07:39 wait slots (jobs=3) for N_dsnap_R
+2026-10-17 00:09:39 wait slots (jobs=3) for N_dsnap_R
+2026-10-17 00:58:15 wait slots (jobs=3) for N_dsnap_R
+2026-10-17 01:00:15 LAUNCH N_dsnap_R: native_u.py --tag N_dsnap_R --layout R --form d_snap --snap 2 --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60
+2026-10-17 01:02:20 DONE N_gensum — updating LOG + push
+2026-10-17 01:02:25 wait slots (jobs=3) for N_dsnapd4
+2026-10-17 01:04:25 wait slots (jobs=3) for N_dsnapd4
+2026-10-17 01:43:11 wait slots (jobs=3) for N_dsnapd4
+2026-10-17 01:45:11 LAUNCH N_dsnapd4: native_u.py --tag N_dsnapd4 --form d_snap_d --snap 4 --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60
+2026-10-17 02:52:57 DONE N_dsnap4 — updating LOG + push
+2026-10-17 02:53:02 push failed N_dsnap4
+2026-10-17 04:58:36 DONE N_dsnapd4 — updating LOG + push
+2026-10-17 04:58:41 LAUNCH N_bssnap: native_u.py --tag N_bssnap --form bs_snap --snap 2 --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60
+2026-10-17 07:18:12 LAUNCH N_dsnap_R: native_u.py --tag N_dsnap_R --layout R --form d_snap --snap 2 --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60
+2026-10-17 08:35:13 LAUNCH N_bssnap: native_u.py --tag N_bssnap --form bs_snap --snap 2 --Ls 2 4 8 --restarts 3 --maxiter 200 --ntrain 60
+2026-10-17 08:49:09 watchdog v8 costgx start
+2026-10-17 08:49:09 LAUNCH G_qfe: --init qaoa --final_ecd --Ls 4 8
+2026-10-17 08:49:12 LAUNCH G_qfe810: --init qaoa --final_ecd --nt2 10 --Ls 4 8
+2026-10-17 08:49:16 LAUNCH G_qfe_mix: --init qaoa --final_ecd --obj mix --alpha 0.2 --w 1.0 --Ls 4 8
+2026-10-17 08:54:29 LAUNCH G_qfe_mix: --init qaoa --final_ecd --obj mix --alpha 0.2 --w 1.0 --Ls 4 8
+2026-10-17 08:56:33 DONE G_qfe
+2026-10-17 08:56:37 LAUNCH G_fe: --init grow --final_ecd --Ls 2 4 8
+2026-10-17 08:57:40 DONE G_qfe810
+2026-10-17 08:57:44 DONE G_qfe_mix
+2026-10-17 08:57:48 LAUNCH G_q: --init qaoa --Ls 4 8
+2026-10-17 09:01:51 LAUNCH G_qfe1014: --init qaoa --final_ecd --Ls 10 14
+2026-10-17 09:03:55 DONE G_q
+2026-10-17 09:03:59 LAUNCH G_qfe12: --init qaoa --final_ecd --Ls 12
+2026-10-17 09:11:20 DONE G_fe
+2026-10-17 09:11:23 push failed G_fe
+2026-10-17 09:11:23 LAUNCH G_qfe_val: --init both --final_ecd --val_n 12 14 --Ls 4 8
+2026-10-17 09:12:26 DONE G_qfe12
+2026-10-17 09:12:29 push failed G_qfe12
+2026-10-17 09:12:29 LAUNCH G_qfe81012: --init qaoa --final_ecd --nt2 10 12 --Ls 4 8
+2026-10-17 09:14:32 DONE G_qfe1014
+2026-10-17 09:14:34 push failed G_qfe1014

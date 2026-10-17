@@ -1271,3 +1271,6 @@ Running (4/4 slots, ~7.5 cores): A_g4 / A_b4 in refine (~11/22 cands each after 
 
 ## Check-in (2026-10-17 20:52 CST)
 v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g4 / A_b4 in refine (latest grown candidates converge to 1.783 gray / 1.570 binary, no improvement on the ~1.570 refine best), A_g8 / A_b8 L8 screens 30/200 (best 1.307 / 1.437). Last log lines ~20:43, runner etime lags wall-clock by ~6 min, so a short box pause again; processes intact. MemAvail ~2 GiB; size-free GNN tests (B_g2_iii_A_f / _tq) still wait for a slot, queue unchanged. No new finished jobs; no n=20 QAOA beat. PID 2888494 untouched.
+
+## Check-in (2026-10-17 21:17 CST)
+v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g4 / A_b4 still in refine/growth (gray grown cands 1.75-1.86, binary grown cands all reconverge to 1.5696, same basin as refine best ~1.570), A_g8 / A_b8 L8 screens 50/200 (gray best 1.307, p10 2.25; binary best improved 1.437 -> 1.385, p10 1.99). Last log lines ~21:01 and runner etime (19 min) lags its 20:38 start by ~20 min, so another box pause; processes intact. MemAvail ~2 GiB; size-free GNN tests (B_g2_iii_A_f / _tq) still wait for a slot, queue unchanged. No new finished jobs; no n=20 QAOA beat. PID 2888494 untouched.

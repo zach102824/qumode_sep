@@ -1,0 +1,22 @@
+2026-10-17 08:49:09 watchdog v8 costgx start
+2026-10-17 08:49:09 LAUNCH G_qfe: --init qaoa --final_ecd --Ls 4 8
+2026-10-17 08:49:12 LAUNCH G_qfe810: --init qaoa --final_ecd --nt2 10 --Ls 4 8
+2026-10-17 08:49:16 LAUNCH G_qfe_mix: --init qaoa --final_ecd --obj mix --alpha 0.2 --w 1.0 --Ls 4 8
+2026-10-17 08:54:29 LAUNCH G_qfe_mix: --init qaoa --final_ecd --obj mix --alpha 0.2 --w 1.0 --Ls 4 8
+watchdog_cg.sh: line 36: 3166037 Killed                  setsid nohup env OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 XLA_PYTHON_CLIENT_PREALLOCATE=false XLA_FLAGS="--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=2" taskset -c 0-7 python3 -u costgx.py --tag "$tag" $args >> "logs/${tag}.log" 2>&1 < /dev/null
+2026-10-17 08:56:33 DONE G_qfe
+2026-10-17 08:56:37 LAUNCH G_fe: --init grow --final_ecd --Ls 2 4 8
+2026-10-17 08:57:40 DONE G_qfe810
+2026-10-17 08:57:44 DONE G_qfe_mix
+2026-10-17 08:57:48 LAUNCH G_q: --init qaoa --Ls 4 8
+2026-10-17 09:01:51 LAUNCH G_qfe1014: --init qaoa --final_ecd --Ls 10 14
+2026-10-17 09:03:55 DONE G_q
+2026-10-17 09:03:59 LAUNCH G_qfe12: --init qaoa --final_ecd --Ls 12
+2026-10-17 09:11:20 DONE G_fe
+2026-10-17 09:11:23 push failed G_fe
+2026-10-17 09:11:23 LAUNCH G_qfe_val: --init both --final_ecd --val_n 12 14 --Ls 4 8
+2026-10-17 09:12:26 DONE G_qfe12
+2026-10-17 09:12:29 push failed G_qfe12
+2026-10-17 09:12:29 LAUNCH G_qfe81012: --init qaoa --final_ecd --nt2 10 12 --Ls 4 8
+2026-10-17 09:14:32 DONE G_qfe1014
+2026-10-17 09:14:34 push failed G_qfe1014
