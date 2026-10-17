@@ -1392,3 +1392,15 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing:
 
 ## Check-in (2026-10-18 04:12 CST)
 v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 refining 22 cands on 1000 inst (scr5 1.3255 -> 1.2732, scr171 1.4022 -> 1.0827 in 752 it, now the best L8 n=8 train loss, gray back below binary), A_b8 refining (scr83 1.3495 -> 1.1517, scr179 1.3874 -> 1.1974). Refinement gains are large and the screen rank is a poor predictor (scr171 was not near the screen top), so the full 22-cand refine is worth its time before growth. B_g4_iii_A (GNN L4 full) on init 3 of 4 (1.354 / 1.351 / 1.363), B_g4_i_A (angles-only) on init 2 of 3 (1.517 / 1.522). Load ~18-19 on 8 cores, MemAvail ~2 GiB (<3500 MB gate), caps hold, no new launches. No new finished jobs; no new n=20 beat beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
+
+### B_g4_i_A finished 2026-10-18 04:14 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 ninit=3 ntrain=1000 maxiter=1000 init_from=results/v3/A_g4.json val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=full chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_g4_i_A winner 2 (train 1.517, val 3.541) | 4.3/9.2 | 9.8/31.7 | 118.9/2777.8 | 19.6/87.1 | 117559.2/1703765.6 |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 117559.2 vs 84.9, B90 1703765.6 vs 238.1 -> no beat
