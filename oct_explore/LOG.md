@@ -884,3 +884,15 @@ L=2 snap_mag=0.6237 (mean |s0−s1| for csnap, else mean |s|).
 L=4 snap_mag=0.5316 (mean |s0−s1| for csnap, else mean |s|).
 
 L=8 snap_mag=0.3911 (mean |s0−s1| for csnap, else mean |s|).
+
+## Status 2026-10-17 11:59 CST — native bias
+
+Running: NN_v2b (L8), NN_fix04 (fixed |β|=0.04), SNAP_cs4j (joint n=8+10+12+14).
+Killed deferred NN_cc L8 relaunch (L4 already 122/506 @n=20). Queued NN_ebin, SNAP_cs4jeb (ebins=12), SNAP_free8j, SNAP_uc4j.
+
+SNAP_cs4 (n=8-only train) done — SNAP strength holds (~0.39–0.62) but transfer fails hard:
+| L | n=8 | n=14 | n=20 |
+|---|---|---|---|
+| 4 | 9.6/19.8 | 82.5/350 | 23698/280906 |
+| 8 | 6.4/14.4 | 723/4440 | 791073/6.0e6 |
+QAOA L4/L8 n=20 = 84.9/238 / 16.4/54. No beat. Next hope: SNAP_cs4j joint multi-n.
