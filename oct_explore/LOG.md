@@ -1347,3 +1347,15 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing:
 
 ## Check-in (2026-10-18 00:36 CST)
 v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 / A_b8 L8 screens 120/200 (best 1.307 gray / 1.330 binary; p10 1.70 / 1.54), B_g4_iii_A (GNN L4, 85k weights/model) training init 0 since 23:58, B_g2_iii_A_tq in frozen testing. Early tq-feature transfer: n=8 7.0/21.3, n=10 15.6/48.1, n=12 37.7/141.1 (median/B90 1/p) vs QAOA L2 9.0/18.8, 18.4/55.0, 28.7/84.0, so the tq features train better on n=8 (2.027) but transfer worse than full or formula features by n=12; the GNN tail problem is not a feature-set issue. Plain shared-angle circuits (A_b4/A_g4) remain the n=20 leaders. Load ~28 on 8 cores, MemAvail ~2 GiB, so no extra slot. No new n=20 beat beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
+
+### B_g2_iii_A_tq finished 2026-10-18 00:38 CST  (L=2)
+
+`code=gray L=2 hidden=64 rounds=3 clause_w=True var_mix=True ninit=2 ntrain=1000 maxiter=1000 init_from=results/v3/A_g2.json val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=tq chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_g2_iii_A_tq winner 0 (train 2.027, val 3.171) | 7.0/21.3 | 15.6/48.1 | 37.7/141.1 | 40.2/174.0 | 2816.1/26892.8 |
+| QAOA_raw L=2 | 9.0/18.8 | 18.4/55.0 | 28.7/84.0 | 54.8/166.2 | 336.4/971.4 |
+| G_fe L=2 | 11.6/21.3 | 21.9/43.2 | 43.2/90.5 | 75.4/169.5 | 664.0/1501.0 |
+
+n=20 winner vs QAOA L=2: median 2816.1 vs 336.4, B90 26892.8 vs 971.4 -> no beat
