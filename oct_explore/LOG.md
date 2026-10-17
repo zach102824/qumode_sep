@@ -912,3 +912,20 @@ Best n=20 so far still short of QAOA (L4 84.9/238, L8 16.4/54): S_costgx L4 79/4
 
 ## NN_v2b aborted mid-L8 (2026-10-17 12:18:09 CST)
 L4 complete (n20 91.7/397, |beta|=0.004). Killed L8 to free RAM for SNAP_cs4j + NN_fix04/ebin (more native).
+
+## Status 2026-10-17 12:22 CST
+
+**NN_fix04 L4** (fixed |β|=0.04, held!): train |beta|=0.040. Transfer:
+| n | fix04 | QAOA | NN_v2b (β→0) |
+|---|---|---|---|
+| 10 | 7.7/20.4 | 8.4/19.7 | 8.9/25.7 |
+| 12 | 13.1/46.1 | 12.8/32.8 | 12.3/45.9 |
+| 14 | **17.8**/75.8 | 20.8/59.6 | 20.8/74.3 |
+| 20 | 120.1/515.2 | **84.9/238** | 91.7/397 |
+Beats QAOA median at n=14; loses at n=20 (~1.4× med, ~2.2× B90). No n=20 beat. L8 running.
+
+**SNAP_cs4** (n=8-only): snap_mag holds 0.39–0.62 but n=20 fails (L4 23700/281k). Pushed.
+**SNAP_cs4j** L2 train 25.0/56.4 snap_mag=0.43; L4/L8+tests running (joint n=8..14).
+**NN_ebin** launched (ebins=12 + fix β). Queued: SNAP_cs4jeb, free8j, uc4j, cs4jm.
+
+Killed NN_v2b mid-L8 (|β|=0.004 near-QAOA) and deferred NN_cc to free RAM. Watchdogs healthy. No QAOA beat → no Zach ping.
