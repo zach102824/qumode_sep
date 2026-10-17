@@ -935,3 +935,8 @@ Killed NN_v2b mid-L8 (|β|=0.004 near-QAOA) and deferred NN_cc to free RAM. Watc
 Alive: NN_fix04 (L8 after L4 n20=120/515), NN_ebin (ebins=12+fixβ), SNAP_cs4j (joint L2 done snap_mag=0.43; L4+). watchdog_nn+snap. PID 2888494 untouched. No G_*/watchdog_cg restart.
 Queue iterate from data: NN_fix02 / NN_ebin02 before larger |β|; SNAP_cs4jr2 (rich=2 cost) added; fix06/cc deferred. snap_report now → LOG.md.
 No n=20 QAOA beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
+
+## Check-in (2026-10-17 12:32 CST)
+
+Alive: NN_fix04 (L8 after OOM-relaunch @12:25; L4 n20=120.1/515.2 held), NN_ebin (L4 cand1+), SNAP_cs4j (L2 done snap_mag=0.43 train 25.0/56.4; L4 cand1+), watchdog_nn+snap. PID 2888494 untouched. MemAvail ~2.0 GiB — no new launch (3 trainers). No G_*/watchdog_cg restart.
+No n=20 QAOA beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
