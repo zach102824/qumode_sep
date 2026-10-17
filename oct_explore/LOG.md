@@ -864,3 +864,23 @@ No QAOA beat. Running: NN_v2b L8, NN_fix04 (fixed |β|=0.04 + phys_beta), SNAP_c
 ## Check-in (Sat 11:57 CST)
 
 Alive: NN_v2b (L8 train), NN_fix04 just launched (fix_beta+phys_beta), SNAP_cs4 (n20 L8 eval under shared lock), both watchdogs. NN_cc deferred (L4 n20=122/506 + OOM on L8). PID 2888494 untouched. No n=20 QAOA beat yet — stay quiet.
+
+## SNAP_cs4 (Sat 11:58 CST)  [kind=csnap snap=4 layout=T nt2=[]]
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| SNAP_cs4 2 | 21.0/50.6 | 129.4/937.5 | 378.6/4591.4 | 447.9/3475.7 | 101848.4/1734683.1 |
+| QAOA 2 | 9.0/18.8 | 18.4/55.0 | 28.7/84.0 | 54.8/166.2 | 336.4/971.4 |
+| G_qfe 2 | — | — | — | — | — |
+| SNAP_cs4 4 | 9.6/19.8 | 28.8/100.4 | 240.9/1897.8 | 82.5/350.3 | 23697.9/280906.1 |
+| QAOA 4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_qfe 4 | 5.4/9.9 | 9.2/20.5 | 14.6/37.6 | 22.8/57.5 | 103.5/358.6 |
+| SNAP_cs4 8 | 6.4/14.4 | 349.3/2600.4 | 3444.1/19791.9 | 723.5/4439.5 | 791073.4/6005532.5 |
+| QAOA 8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| G_qfe 8 | 2.5/4.5 | 3.6/7.3 | 4.8/15.4 | 6.6/17.3 | 16.4/59.2 |
+
+L=2 snap_mag=0.6237 (mean |s0−s1| for csnap, else mean |s|).
+
+L=4 snap_mag=0.5316 (mean |s0−s1| for csnap, else mean |s|).
+
+L=8 snap_mag=0.3911 (mean |s0−s1| for csnap, else mean |s|).
