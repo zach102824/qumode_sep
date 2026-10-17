@@ -787,3 +787,16 @@ Target still QAOA n=20 L4 84.9/238 and L8 16.4/54. Stay quiet until a clear beat
 Running: NN_v2b (shared joint 8–14, L4 restarts) and NN_cc (costcond). No new results; no QAOA beat yet.
 Found NN_v2b launched with old code where shared-mode restarts were identical (cand0–2 all 7.864→2.335) — wasted ~17 min each.
 Fix: restarts already use variants 0/1/2; now r≥3 adds seeded jitter so all restarts differ. Helper `logs/requeue_v2b.sh` kills NN_v2b once its L4 tests are saved; watchdog relaunches it (L4 skipped, L8 trains with distinct restarts).
+
+## NN_v2b L=4 interim (Sat 10:48 CST) — best NN so far, still no QAOA beat
+
+shared+joint 8+10+12+14, ntrain=100, |β|→0.004.
+
+| L | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|
+| NN_v2b 4 | 8.9/25.7 | 12.3/45.9 | 20.8/74.3 | **91.7/397.4** |
+| NN_v2 4 | 10.4/34.2 | 14.7/53.7 | 24.4/91.4 | 116.6/447.0 |
+| QAOA 4 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | **84.9/238.1** |
+
++14 joint training closed most of the median gap (1.08× QAOA). B90 still 1.7×. ECD collapsed again.
+L=8 training (requeued with distinct restart jitter). NN_cc L4 cand0 train-loss 2.13 (better than shared 2.33).
