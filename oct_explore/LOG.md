@@ -1109,3 +1109,6 @@ NN_bin04 still running. No SNAP until these finish. PID 2888494 untouched.
 ## Check-in (2026-10-17 14:35 CST)
 
 Alive: NN_bin04 (curriculum build), C_binmix, C_bincvar, SNAP_cs4jB (L2 training; cand0 7.50→6.30), watchdogs nn+snap+tu. PID 2888494 untouched. MemAvail ~1.9 GiB; load ~19 on 8 cores (busy but progressing). No finished n=20 this window; no QAOA beat → stay quiet.
+
+## Direction change (Sat 14:57 CST)
+Zach: don't force ECD to work. If it's useless, find a natural way. No more locked/floored ECD displacement (`--fix_beta`) or forced SNAP strength (`--fix_snap`, `--snap_min`) runs; those queued entries are marked DROPPED. Remaining work lets each design use what actually helps (ECD free to go to zero or off, binary/Gray mixers, free diagonal costs, unforced SNAP).

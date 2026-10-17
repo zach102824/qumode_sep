@@ -5,14 +5,14 @@ SNAP_cs4|--kind csnap --snap 4 --Ls 2 4 8 --ntrain 80 --restarts 4 --maxiter 300
 SNAP_cs4j|--kind csnap --snap 4 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 4 --maxiter 300 --test 10 12 14 20
 # --- next (native / non-QAOA, best bets for n20 beat) ---
 # ABORTED early L2 train 35/118 (worse than gray); SNAP_cs4jBm|--kind csnap --snap 4 --code binary --obj mix --alpha 0.2 --w 1.0 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
-SNAP_cs4jB|--kind csnap --snap 4 --code binary --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
-SNAP_cs4jfix|--kind csnap --snap 4 --fix_snap 0.25 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
-SNAP_cs4jmin|--kind csnap --snap 4 --snap_min 0.35 --snap_w 2.0 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
-SNAP_cs4jBfix|--kind csnap --snap 4 --code binary --fix_snap 0.25 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
-SNAP_cs4jBeb|--kind csnap --snap 4 --code binary --ebins 12 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
-SNAP_cs4jm|--kind csnap --snap 4 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --obj mix --alpha 0.2 --w 1.0 --test 10 12 14 20
-SNAP_cs4jeb|--kind csnap --snap 4 --ebins 12 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
-SNAP_cs4jr2|--kind csnap --snap 4 --rich 2 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
-SNAP_free8j|--kind free --snap 8 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
-SNAP_uc4j|--kind uncond --snap 4 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
-SNAP_cs4jR|--kind csnap --snap 4 --layout R --Ls 2 4 8 --ntrain 60 --nt2 10 12 --nt2_count 30 --restarts 3 --maxiter 250 --test 10 12 14 20
+# HOLD for C_binmix: SNAP_cs4jB|--kind csnap --snap 4 --code binary --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
+# DROPPED (Zach 14:57: don't force ECD/SNAP) for C_binmix: SNAP_cs4jfix|--kind csnap --snap 4 --fix_snap 0.25 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
+# DROPPED (Zach 14:57: don't force ECD/SNAP) for C_binmix: SNAP_cs4jmin|--kind csnap --snap 4 --snap_min 0.35 --snap_w 2.0 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
+# DROPPED (Zach 14:57: don't force ECD/SNAP) for C_binmix: SNAP_cs4jBfix|--kind csnap --snap 4 --code binary --fix_snap 0.25 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
+# HOLD for C_binmix: SNAP_cs4jBeb|--kind csnap --snap 4 --code binary --ebins 12 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
+# HOLD for C_binmix: SNAP_cs4jm|--kind csnap --snap 4 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --obj mix --alpha 0.2 --w 1.0 --test 10 12 14 20
+# HOLD for C_binmix: SNAP_cs4jeb|--kind csnap --snap 4 --ebins 12 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
+# HOLD for C_binmix: SNAP_cs4jr2|--kind csnap --snap 4 --rich 2 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
+# HOLD for C_binmix: SNAP_free8j|--kind free --snap 8 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
+# HOLD for C_binmix: SNAP_uc4j|--kind uncond --snap 4 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 3 --maxiter 250 --test 10 12 14 20
+# HOLD for C_binmix: SNAP_cs4jR|--kind csnap --snap 4 --layout R --Ls 2 4 8 --ntrain 60 --nt2 10 12 --nt2_count 30 --restarts 3 --maxiter 250 --test 10 12 14 20
