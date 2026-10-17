@@ -1365,3 +1365,6 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing:
 
 ## Check-in (2026-10-18 01:15 CST)
 v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 / A_b8 L8 screens 140/200 (best 1.307 gray / 1.330 binary; p10 1.70 / 1.54, screen medians drifting down 3.49 -> 3.36 gray), B_g4_iii_A (GNN L4 full, since 23:58) and B_g4_i_A (GNN L4 angles-only, since 00:38) still on init 0, no epoch lines yet. Load ~23-32 on 8 cores, MemAvail ~2 GiB, so no extra slot. No new finished jobs; no new n=20 beat beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
+
+## Check-in (2026-10-18 01:30 CST)
+v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 / A_b8 L8 screens 150/200 (best 1.307 gray / 1.330 binary; binary p10 improved 1.54 -> 1.50), B_g4_iii_A (GNN L4 full) finished init 0 with n=8 train 1.570 -> 1.354 (4621 s), a large drop below the plain A_g4 basin (1.570); given the L2 pattern (lower n=8 train, worse n=20 transfer) this needs the frozen n=20 test before reading it as progress. B_g4_i_A (angles-only) still on init 0. Load ~24-31 on 8 cores, MemAvail ~2 GiB, so no extra slot. No new finished jobs; no new n=20 beat beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
