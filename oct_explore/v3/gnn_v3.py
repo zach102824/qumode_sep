@@ -31,6 +31,7 @@ ap.add_argument("--pre_iter", type=int, default=0, help="optional: first fit bas
 ap.add_argument("--init_from", default="", help="results/v3/<tag>.json of a v3_plain run: use its keep-list x as bases (from-scratch plain, no QAOA)")
 ap.add_argument("--val", type=int, nargs="*", default=[10, 12]); ap.add_argument("--val_count", type=int, default=60)
 ap.add_argument("--test", type=int, nargs="*", default=[8, 10, 12, 14, 20])
+ap.add_argument("--feat", default="full", choices=["full", "tq", "formula"], help="var features: full=hardware placement (k_c,digit unseen beyond k=3 at n=8); tq=degrees+is_transmon; formula=degrees only")
 ap.add_argument("--seed", type=int, default=0); ap.add_argument("--chunk", type=int, default=250)
 a = ap.parse_args()
 TRB, TEB, VAB = 31_000_000_000, 32_000_000_000, 33_000_000_000
@@ -52,6 +53,8 @@ def graph(n, ins, lay):
     for c, k in enumerate(lay.ks):
         fv[lay.tvar[c], 3] = 1; fv[lay.tvar[c], 6] = k / 6
         for j, v in enumerate(lay.cvar[c]): fv[v, 4] = 1; fv[v, 5] = j / 6; fv[v, 6] = k / 6
+    if a.feat == "tq": fv[:, 4:] = 0
+    elif a.feat == "formula": fv[:, 3:] = 0
     return dict(Ip=Ip, In=In, fv=fv, deg=np.maximum(Ip.sum(0) + In.sum(0), 1)), cl
 
 

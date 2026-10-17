@@ -8,6 +8,9 @@ B_g2_iii_A|A_g2|v3/gnn_v3.py --tag B_g2_iii_A --code gray --L 2 --hidden 64 --cl
 B_g2_i_A|A_g2|v3/gnn_v3.py --tag B_g2_i_A --code gray --L 2 --hidden 64 --ninit 4 --init_from results/v3/A_g2.json --chunk 125
 A_g4|A_g2|v3/v3_plain.py --tag A_g4 --code gray --L 4 --ninit 200 --refine 12 --grow_from A_g2
 A_b4|A_b2|v3/v3_plain.py --tag A_b4 --code binary --L 4 --ninit 200 --refine 12 --grow_from A_b2
+# 19:40 CST: GNN n=20 collapse traced to hardware-placement features: n=8 only has k=3 cavities, n=12 k=5 / n=20 k=6,6,5 are unseen (n=14 k=4,4,3 transfers). Test size-free features.
+B_g2_iii_A_f|A_g2|v3/gnn_v3.py --tag B_g2_iii_A_f --code gray --L 2 --hidden 64 --clause_w --var_mix --feat formula --ninit 2 --init_from results/v3/A_g2.json --chunk 125
+B_g2_iii_A_tq|A_g2|v3/gnn_v3.py --tag B_g2_iii_A_tq --code gray --L 2 --hidden 64 --clause_w --var_mix --feat tq --ninit 2 --init_from results/v3/A_g2.json --chunk 125
 B_g4_iii_A|A_g4|v3/gnn_v3.py --tag B_g4_iii_A --code gray --L 4 --hidden 64 --clause_w --var_mix --ninit 4 --init_from results/v3/A_g4.json --chunk 125
 B_g4_i_A|A_g4|v3/gnn_v3.py --tag B_g4_i_A --code gray --L 4 --hidden 64 --ninit 3 --init_from results/v3/A_g4.json --chunk 125
 A_g8|A_g4|v3/v3_plain.py --tag A_g8 --code gray --L 8 --ninit 200 --refine 12 --grow_from A_g4

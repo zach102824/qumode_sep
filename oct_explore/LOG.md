@@ -1250,3 +1250,11 @@ n=20 winner vs QAOA L=2: median 176275.6 vs 336.4, B90 1892119.9 vs 971.4 -> no 
 | G_fe L=2 | 11.6/21.3 | 21.9/43.2 | 43.2/90.5 | 75.4/169.5 | 664.0/1501.0 |
 
 n=20 winner vs QAOA L=2: median 22801.5 vs 336.4, B90 462798.0 vs 971.4 -> no beat
+
+## Check-in (2026-10-17 19:40 CST)
+**Runner bug fixed.** `ready()` in `v3/run_v3.sh` grepped the result JSON for the string `"keep"`, which also matches the `args.keep` option, so dependents launched before their parent finished. Effect: at 19:20 B_g4_iii_A / B_g4_i_A launched and crashed at once (`KeyError: 'keep'`, A_g4 still screening), and A_g8 / A_b8 launched early (harmless: v3_plain screens first and waits internally for the parent keep-list before growth/refine). `ready()` now checks for a top-level `keep` key; runner restarted (new pid in runner.log), running jobs untouched. The two B_g4_*_A jobs will relaunch automatically once A_g4 writes its keep-list.
+
+**GNN-from-plain L2 results (both done).** Plain A_g2 (shared angles) is QAOA-level everywhere (n=20 319.9/1097.5 vs QAOA 336.4/971.4). GNN clause_w+var_mix (B_g2_iii_A) beats QAOA L2 at n=8 (6.8 vs 9.0), n=10 (15.8 vs 18.4) and n=14 (40.7 vs 54.8 median), but collapses at n=12 (68.8/477) and n=20 (22801/462798); global-only (B_g2_i_A) collapses too (n=12 310.7, n=20 176276).
+**Diagnosis:** the non-monotone pattern (n=14 fine, n=12/n=20 broken) matches the cavity layout, not n. Layout ks: n=8 [3,3], n=10 [4,4], n=12 [5,5], n=14 [4,4,3], n=20 [6,6,5]. The GNN var features include hardware placement (digit_j/6, k_c/6, is_cavity), and n=8 training only ever sees k=3, so k=5/6 cavities are out of distribution and the heads output garbage there (n=14's k=4,4,3 stays close to training).
+**Follow-up queued:** added `--feat {full,tq,formula}` to `v3/gnn_v3.py` (tq = clause degrees + is_transmon; formula = clause degrees only, size- and placement-free). Queued B_g2_iii_A_f (formula) and B_g2_iii_A_tq (tq), L2 clause_w+var_mix from the A_g2 keep-list, 2 inits each, ahead of the L4 GNN jobs. If they transfer to n=20, the L4/L8 GNN queue entries will be switched to the size-free features.
+Running: A_g4 / A_b4 (L4 screens ~190/200, then refine), A_g8 / A_b8 (L8 screens). No n=20 QAOA beat. PID 2888494 untouched.
