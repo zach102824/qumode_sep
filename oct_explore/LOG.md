@@ -1423,3 +1423,6 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing:
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 129679.9 vs 84.9, B90 2568903.1 vs 238.1 -> no beat
+
+## Check-in (2026-10-18 05:13 CST)
+v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing. B_g4_iii_A (GNN L4 full outputs, full features, reference) finished 05:01: n=8 train 1.352, but n=12 97.3/1339 and n=20 129680/2568903 vs QAOA L4 84.9/238.1, no beat. This is the fifth full-feature GNN to collapse at n=20, which confirms the 04:30 switch of all remaining GNN jobs to `--feat formula`. B_g4_i_A_f (angles-only, formula features) took the freed GNN slot at 05:01; B_g4_iii_A_f (full outputs, formula) on init 0 since 04:30. Plain refines continue: A_g8 5/22 done (best scr171 1.083), A_b8 5/22 done (best scr83 1.152; scr190 1.227, scr7 1.276). Load ~15-18 on 8 cores, MemAvail ~3 GiB (<3500 MB gate), caps hold, no new launches. No new n=20 beat beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
