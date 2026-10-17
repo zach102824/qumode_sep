@@ -1,0 +1,6 @@
+10-17 19:20:23 GNN L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray ntrain=1000
+Traceback (most recent call last):
+  File "/workspace/qumode_sep/oct_explore/v3/gnn_v3.py", line 161, in <module>
+    ks = json.load(open(a.init_from))["keep"]; bases = [np.array(k["x"], np.float32) for k in ks][: a.ninit]
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'keep'
