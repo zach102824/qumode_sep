@@ -815,3 +815,21 @@ First NN that beats QAOA on both median and B90 at n=10/12/14 (L=4), but the cos
 NN_cc was OOM-killed right after its n20 test (box has only ~4.4 GB free); L4 results were saved and the watchdog relaunched it straight into L=8.
 Guard added to `nn_costgx.py` (new launches): n≥20 evals take `/tmp/nn_n20.lock` and use chunk=2, so two jobs never run big evals at once.
 Running: NN_v2b L8 (distinct restarts), NN_cc L8.
+
+## SNAP instead of ECD (Sat 11:10 CST) — design
+
+Zach: maybe use SNAP instead of ECD. ECD collapsed to |β|≈0 in ECD+cost·GrayX and NN arms.
+Prior S_snap2 kept ECD+SNAP and hurt n=20 (42/311 vs S_costgx 17/129). Native N_* (no GrayX) failed at n=20.
+
+**New arm `snap_costgx.py` (NO ECD):**
+each layer = R(th,ph) on transmons + **local SNAP** on each cavity + joint U = cost · GrayX.
+
+Kinds:
+- `csnap` (default): conditional SNAP |0⟩⊗SNAP(s0)+|1⟩⊗SNAP(s1) — true ECD replacement
+- `uncond`: unconditional size-free poly SNAP
+- `free`: free phases on logical Fock levels
+
+Smoke SNAP_smoke L=2 n=8: med1/p=16.5/37.6, **snap_mag=0.92** (does not collapse).
+
+Queued (watchdog_snap waits for NN to free RAM): SNAP_cs4, SNAP_cs4j (joint 8+10+12+14), SNAP_uc4, SNAP_free8, SNAP_cs4jR.
+Target still QAOA n=20 L4 84.9/238 and L8 16.4/54. NN jobs left running.
