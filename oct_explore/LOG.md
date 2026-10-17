@@ -757,3 +757,14 @@ L=8 training. Next: joint +14, QAOA-basin-free grow with more restarts, tiny ins
 
 Joint training transfers at L=8 too (n=20 21.6/122), but still 1.3× QAOA median, 2.3× B90. ECD |β|→0.012 again.
 NN_v2 ALLDONE; NN_v2b (joint +14) running, watchdog starting NN_cc (costcond) next.
+
+## NN_v2 (Sat 10:12 CST)  [mode=shared stages=[8, 10, 12] ntrain=80 hidden=64 depth=2 delta_scale=0.3 rich=1 per_cav=False per_bit=True final_ecd=True beta0=0.1 beta_min=0.0 beta_w=0.05]
+
+| L | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|
+| 4 | 10.4/34.2 | 14.7/53.7 | 24.4/91.4 | 116.6/447.0 |
+| QAOA 4 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_qfe 4 | 9.2/20.5 | 14.6/37.6 | 22.8/57.5 | 103.5/358.6 |
+| 8 | 3.5/9.8 | 4.9/27.2 | 6.8/34.3 | 21.6/122.0 |
+| QAOA 8 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| G_qfe 8 | 3.6/7.3 | 4.8/15.4 | 6.6/17.3 | 16.4/59.2 |
