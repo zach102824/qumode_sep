@@ -1274,3 +1274,16 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing:
 
 ## Check-in (2026-10-17 21:17 CST)
 v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g4 / A_b4 still in refine/growth (gray grown cands 1.75-1.86, binary grown cands all reconverge to 1.5696, same basin as refine best ~1.570), A_g8 / A_b8 L8 screens 50/200 (gray best 1.307, p10 2.25; binary best improved 1.437 -> 1.385, p10 1.99). Last log lines ~21:01 and runner etime (19 min) lags its 20:38 start by ~20 min, so another box pause; processes intact. MemAvail ~2 GiB; size-free GNN tests (B_g2_iii_A_f / _tq) still wait for a slot, queue unchanged. No new finished jobs; no n=20 QAOA beat. PID 2888494 untouched.
+
+### A_b4 finished 2026-10-17 21:20 CST  (L=4)
+
+`code=binary L=4 ninit=200 screen_n=128 screen_iter=300 refine=12 keep=10 ntrain=1000 maxiter=2000 grow_from=A_b2 grow_wait_h=8.0 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] obj=meanlog alpha=0.2 w=1.0 chunk=500`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| A_b4 winner scr22 (train 1.570, val 2.128) | 4.3/9.1 | 7.2/20.5 | 10.0/36.6 | 16.0/63.6 | 62.4/250.5 |
+| A_b4 trainbest grow_scr114 (train 1.570, val 2.129) | 4.3/9.1 | 7.2/20.5 | 10.0/36.7 | 16.0/63.5 | - |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 62.4 vs 84.9, B90 250.5 vs 238.1 -> no beat
