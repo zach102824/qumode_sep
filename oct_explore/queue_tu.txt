@@ -2,6 +2,9 @@
 # Fix B90 via mix/cvar + joint multi-n. Prefer ecd=0 (ECD collapsed in S_bin anyway).
 # RUNNING/DONE manual: C_binmix|costgx.py --tag C_binmix --code binary --init grow --obj mix --alpha 0.2 --w 1.5 --nt2 10 12 14 --nt2_count 40 --ntrain 80 --Ls 4 8 --restarts 3 --maxiter 300 --test 10 12 14 20
 # RUNNING manual (relaunched 14:58): C_bincvar|costgx.py --tag C_bincvar --code binary --init grow --obj cvar --alpha 0.15 --nt2 10 12 14 --nt2_count 40 --ntrain 80 --Ls 4 8 --restarts 3 --maxiter 300 --test 10 12 14 20
+# Zach 15:10: found structure (ECD -> cost -> GrayX + final ECD), trained purely from scratch (grow init, no QAOA start)
+G_fej|costgx.py --tag G_fej --code gray --init grow --final_ecd --nt2 10 12 14 --nt2_count 40 --ntrain 80 --Ls 2 4 8 --restarts 4 --maxiter 300 --test 10 12 14 20
+G_fejB|costgx.py --tag G_fejB --code binary --init grow --final_ecd --nt2 10 12 14 --nt2_count 40 --ntrain 80 --Ls 4 8 --restarts 6 --maxiter 300 --test 10 12 14 20
 C_binj|costgx.py --tag C_binj --code binary --init grow --nt2 10 12 14 --nt2_count 40 --ntrain 80 --Ls 4 8 --restarts 3 --maxiter 300 --test 10 12 14 20
 # RUNNING manual 14:58: S_bin0j|theory_u.py --tag S_bin0j --u_order cost_gx --code binary --ecd 0 --diag raw --nt2 10 12 14 --ntrain 80 --Ls 2 4 8 --restarts 4 --maxiter 300 --test 10 12 14 20
 S_binj|theory_u.py --tag S_binj --u_order cost_gx --code binary --ecd 1 --diag raw --nt2 10 12 14 --ntrain 80 --Ls 2 4 8 --restarts 4 --maxiter 300 --test 10 12 14 20
