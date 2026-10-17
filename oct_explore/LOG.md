@@ -901,3 +901,14 @@ QAOA L4/L8 n=20 = 84.9/238 / 16.4/54. No beat. Next hope: SNAP_cs4j joint multi-
 
 Alive: NN_v2b (L8 train, ~57m CPU-busy), NN_fix04 (L4 cand1), SNAP_cs4j (L2 cand2+), watchdog_nn + watchdog_snap. PID 2888494 untouched. Mem ~2.2 GiB avail — no new launch.
 Best n=20 so far still short of QAOA (L4 84.9/238, L8 16.4/54): S_costgx L4 79/416 (med ok, B90 miss), S_costgx L8 17.1/129, NN_v2 L8 21.6/122, NN_v2b L4 91.7/397. No beat — stay quiet.
+
+## NN_v2b (Sat 12:18 CST)  [mode=shared stages=[8, 10, 12, 14] ntrain=100 hidden=64 depth=2 delta_scale=0.3 rich=1 per_cav=False per_bit=True final_ecd=True beta0=0.05 beta_min=0.0 beta_w=0.0 bmax=0.2]
+
+| L | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|
+| 4 | 8.9/25.7 | 12.3/45.9 | 20.8/74.3 | 91.7/397.4 |
+| QAOA 4 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_qfe 4 | 9.2/20.5 | 14.6/37.6 | 22.8/57.5 | 103.5/358.6 |
+
+## NN_v2b aborted mid-L8 (2026-10-17 12:18:09 CST)
+L4 complete (n20 91.7/397, |beta|=0.004). Killed L8 to free RAM for SNAP_cs4j + NN_fix04/ebin (more native).
