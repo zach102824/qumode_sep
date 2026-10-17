@@ -1264,3 +1264,7 @@ v3 runner alive (restarted runner pid 3407180, dependency fix in place), 4 jobs 
 
 ## Check-in (2026-10-17 20:18 CST)
 v3 runner alive (run_v3.sh pid 3407180), same 4 jobs (A_g4 / A_b4 L4 screens 190/200, best 1.556 / 1.607; A_g8 / A_b8 L8 screens 10/200, best 1.307 / 1.437), ~7.4 cores busy. No new log lines since ~19:42 and runner etime (14.5 min) lags its 19:40 start by ~24 min, so another box pause; processes intact. MemAvail ~4 GiB (`free`), MAXJ=4 slots full, so the size-free-feature GNN tests (B_g2_iii_A_f / _tq) still wait; queue unchanged. No new finished jobs; no n=20 QAOA beat. PID 2888494 untouched.
+
+## Check-in (2026-10-17 20:38 CST)
+v3 runner alive (restarted pid 3419014). Fixed a silent failure mode: A_g4/A_b4 log paths were recreated at 19:37 while the jobs still held the old (deleted) inodes, so refine/ALLDONE lines vanished from the visible logs and `done_()` would have missed completion → risked a full relaunch. `run_v3.sh` now (1) treats a result JSON with `keep`+`winner`+`test.winner[20]` as done, and (2) each loop refreshes any visible log from a live deleted-fd. Jobs untouched.
+Running (4/4 slots, ~7.5 cores): A_g4 / A_b4 in refine (~11/22 cands each after 200-init screen; best refined train loss ~1.570 gray / ~1.570 binary, same basin), A_g8 / A_b8 L8 screens 30/200 and 20/200 (best train-subset 1.307 / 1.437, already below L4 screen bests). MemAvail ~6 GiB; size-free GNN tests (B_g2_iii_A_f / _tq) wait for a free slot. No new finished jobs; no n=20 QAOA beat. PID 2888494 untouched.
