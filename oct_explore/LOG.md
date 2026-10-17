@@ -1159,3 +1159,16 @@ Random-base GNN (B_g4_iii, B_g4_i) init 0 after 1000 L-BFGS its (~26 min): train
 | G_fe L=2 | 11.6/21.3 | 21.9/43.2 | 43.2/90.5 | 75.4/169.5 | 664.0/1501.0 |
 
 n=20 winner vs QAOA L=2: median 319.9 vs 336.4, B90 1097.5 vs 971.4 -> no beat
+
+### A_b2 finished 2026-10-17 16:04 CST  (L=2)
+
+`code=binary L=2 ninit=200 screen_n=128 screen_iter=300 refine=16 keep=10 ntrain=1000 maxiter=2000 grow_wait_h=8.0 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] obj=meanlog alpha=0.2 w=1.0 chunk=500`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| A_b2 winner scr114 (train 2.289, val 3.110) | 9.2/19.1 | 18.6/50.5 | 29.6/84.9 | 55.6/172.0 | 332.6/1036.1 |
+| A_b2 trainbest scr51 (train 2.289, val 3.111) | 9.2/19.0 | 18.6/50.7 | 29.6/85.1 | 55.5/172.6 | 334.2/1035.5 |
+| QAOA_raw L=2 | 9.0/18.8 | 18.4/55.0 | 28.7/84.0 | 54.8/166.2 | 336.4/971.4 |
+| G_fe L=2 | 11.6/21.3 | 21.9/43.2 | 43.2/90.5 | 75.4/169.5 | 664.0/1501.0 |
+
+n=20 winner vs QAOA L=2: median 332.6 vs 336.4, B90 1036.1 vs 971.4 -> no beat
