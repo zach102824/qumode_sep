@@ -1261,3 +1261,6 @@ Running: A_g4 / A_b4 (L4 screens ~190/200, then refine), A_g8 / A_b8 (L8 screens
 
 ## Check-in (2026-10-17 19:53 CST)
 v3 runner alive (restarted runner pid 3407180, dependency fix in place), 4 jobs at MAXJ=4 on ~7.4 cores: A_g4 / A_b4 (L4 screens 190/200, best 1.556 / 1.607, then refine 12), A_g8 / A_b8 (L8 screens 10/200, best train-subset loss 1.307 gray / 1.437 binary, already below the L4 bests). MemAvail ~2 GiB, so the size-free-feature GNN tests (B_g2_iii_A_f / _tq) wait for a slot; queue unchanged. No new finished jobs; no n=20 QAOA beat. PID 2888494 untouched.
+
+## Check-in (2026-10-17 20:18 CST)
+v3 runner alive (run_v3.sh pid 3407180), same 4 jobs (A_g4 / A_b4 L4 screens 190/200, best 1.556 / 1.607; A_g8 / A_b8 L8 screens 10/200, best 1.307 / 1.437), ~7.4 cores busy. No new log lines since ~19:42 and runner etime (14.5 min) lags its 19:40 start by ~24 min, so another box pause; processes intact. MemAvail ~4 GiB (`free`), MAXJ=4 slots full, so the size-free-feature GNN tests (B_g2_iii_A_f / _tq) still wait; queue unchanged. No new finished jobs; no n=20 QAOA beat. PID 2888494 untouched.
