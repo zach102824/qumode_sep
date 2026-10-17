@@ -1238,3 +1238,15 @@ v3 runner alive (run_v3.sh pid 3365113), same 4 jobs (A_g4, A_b4, B_g2_iii_A, B_
 | G_fe L=2 | 11.6/21.3 | 21.9/43.2 | 43.2/90.5 | 75.4/169.5 | 664.0/1501.0 |
 
 n=20 winner vs QAOA L=2: median 176275.6 vs 336.4, B90 1892119.9 vs 971.4 -> no beat
+
+### B_g2_iii_A finished 2026-10-17 19:35 CST  (L=2)
+
+`code=gray L=2 hidden=64 rounds=3 clause_w=True var_mix=True ninit=4 ntrain=1000 maxiter=1000 init_from=results/v3/A_g2.json val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_g2_iii_A winner 1 (train 2.025, val 3.531) | 6.8/20.2 | 15.8/52.1 | 68.8/477.1 | 40.7/205.0 | 22801.5/462798.0 |
+| QAOA_raw L=2 | 9.0/18.8 | 18.4/55.0 | 28.7/84.0 | 54.8/166.2 | 336.4/971.4 |
+| G_fe L=2 | 11.6/21.3 | 21.9/43.2 | 43.2/90.5 | 75.4/169.5 | 664.0/1501.0 |
+
+n=20 winner vs QAOA L=2: median 22801.5 vs 336.4, B90 462798.0 vs 971.4 -> no beat

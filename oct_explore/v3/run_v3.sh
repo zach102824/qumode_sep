@@ -10,7 +10,7 @@ n_run() { pgrep -f "$PY -u v3/" | wc -l; }
 mem_mb() { awk '/MemAvailable:/ {print int($2/1024)}' /proc/meminfo; }
 running() { pgrep -f -- "--tag ${1}( |$)" >/dev/null; }
 done_() { grep -q ALLDONE "logs/v3/${1}.log" 2>/dev/null; }
-ready() { [[ -z "$1" ]] && return 0; grep -qE '"(keep|winner)"' "results/v3/${1}.json" 2>/dev/null; }
+ready() { [[ -z "$1" ]] && return 0; $PY -c "import json,sys; d=json.load(open(\"results/v3/$1.json\")); sys.exit(0 if \"keep\" in d else 1)" 2>/dev/null; }
 finalize() {
   local t="$1"; done_ "$t" || return 0; [[ -f "logs/v3/${t}.pushed" ]] && return 0
   say "DONE $t"; $PY v3/report_v3.py "$t" >> LOG.md 2>>"$LOGW" || true
