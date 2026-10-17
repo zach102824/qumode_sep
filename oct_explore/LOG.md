@@ -1374,3 +1374,6 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing:
 
 ## Check-in (2026-10-18 02:20 CST)
 v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 / A_b8 L8 screens 170/200 (best 1.307 gray / 1.330 binary; p10 1.67 / 1.50), finishing ~03:00-03:30 CST before refine/growth. B_g4_iii_A (GNN L4 full) on init 1 (init 0 1.570 -> 1.354, init 1 due ~02:35), B_g4_i_A (angles-only) on init 1 (init 0 1.570 -> 1.517). Load ~15-19 on 8 cores, MemAvail ~2 GiB, so no extra slot. No new finished jobs; no new n=20 beat beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
+
+## Check-in (2026-10-18 02:31 CST)
+v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 / A_b8 L8 screens 170/200 (best 1.307 gray / 1.330 binary; p10 1.67 / 1.50), B_g4_iii_A (GNN L4 full) on init 1 (init 0 1.570 -> 1.354), B_g4_i_A (angles-only) on init 1 (init 0 1.570 -> 1.517). Load ~17-19 on 8 cores, MemAvail ~5 GiB, caps hold. No new finished jobs; no new n=20 beat beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
