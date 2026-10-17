@@ -800,3 +800,18 @@ shared+joint 8+10+12+14, ntrain=100, |β|→0.004.
 
 +14 joint training closed most of the median gap (1.08× QAOA). B90 still 1.7×. ECD collapsed again.
 L=8 training (requeued with distinct restart jitter). NN_cc L4 cand0 train-loss 2.13 (better than shared 2.33).
+
+## Check-in (Sat 11:02 CST) — NN_cc L=4: beats QAOA at n≤14, not at n=20
+
+costcond (MLP on cost features → per-instance γ offsets), joint 8+10+12+14, rich=2.
+
+| L | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|
+| NN_cc 4 | **6.8/16.2** | **10.4/30.6** | **16.5/54.6** | 122.1/505.7 |
+| NN_v2b 4 | 8.9/25.7 | 12.3/45.9 | 20.8/74.3 | 91.7/397.4 |
+| QAOA 4 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+
+First NN that beats QAOA on both median and B90 at n=10/12/14 (L=4), but the cost-conditioned offsets extrapolate badly to n=20 (overfits n≤14 feature range). |β|→0.009 again.
+NN_cc was OOM-killed right after its n20 test (box has only ~4.4 GB free); L4 results were saved and the watchdog relaunched it straight into L=8.
+Guard added to `nn_costgx.py` (new launches): n≥20 evals take `/tmp/nn_n20.lock` and use chunk=2, so two jobs never run big evals at once.
+Running: NN_v2b L8 (distinct restarts), NN_cc L8.

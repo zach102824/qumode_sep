@@ -698,7 +698,13 @@ for si, train_sizes in enumerate(stage_list):
             tkey = f"{key}|n{n}"
             if tkey in res["test"]: continue
             insts = sim.instances(n, N, TEB)
-            p = eval_params_fn(st, pack, n, insts)
+            if n >= 20:  # serialize big evals across jobs (OOM guard, ~4.4GB headroom)
+                import fcntl
+                with open("/tmp/nn_n20.lock", "w") as _lk:
+                    fcntl.flock(_lk, fcntl.LOCK_EX)
+                    p = eval_params_fn(st, pack, n, insts, chunk=2)
+            else:
+                p = eval_params_fn(st, pack, n, insts)
             s = sim.summarize(p, insts); s["p"] = [float(v) for v in p]
             res["test"][tkey] = s
             log(f"  test {tkey} med1/p={s['median_inv_p']:.1f} B90={s['B90_inv_p']:.1f}")
