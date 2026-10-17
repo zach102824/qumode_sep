@@ -17,7 +17,7 @@ uncond: [th, ph, s_0..s_{S-1}, bc, g]
 free K: [th, ph, φ_0..φ_{K-1}, bc, g]  applied as φ[min(n,K-1)] on Fock n (logical)
 """
 from __future__ import annotations
-import argparse, json, os, sys, time
+import argparse, json, os, sys, time, fcntl, contextlib
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np, jax, jax.numpy as jnp
 from scipy.optimize import minimize
@@ -306,8 +306,13 @@ for n, N in [(8, 100)] + [(nn, 200 if nn == 14 else 100) for nn in a.test]:
         if str(L) in res["test"][str(n)]: continue
         ins = ins or sim.instances(n, N, TEB); p = []
         x = np.asarray(res["train"][str(L)]["x"], np.float32)
-        for i in range(0, N, ch):
-            pp, _ = build(n, ins[i:i + ch], LAY[n]); p += list(np.asarray(pp(jnp.asarray(x))))
+        _lk = open("/tmp/nn_n20.lock", "w") if n >= 20 else None
+        if _lk: fcntl.flock(_lk, fcntl.LOCK_EX); ch = 2  # shared with nn_costgx: one big eval at a time
+        try:
+            for i in range(0, N, ch):
+                pp, _ = build(n, ins[i:i + ch], LAY[n]); p += list(np.asarray(pp(jnp.asarray(x))))
+        finally:
+            if _lk: fcntl.flock(_lk, fcntl.LOCK_UN); _lk.close()
         s = sim.summarize(p, ins); s["p"] = [float(v) for v in p]
         res["test"][str(n)][str(L)] = s
         log(f"test n={n} L={L} med1/p={s['median_inv_p']:.1f} B90={s['B90_inv_p']:.1f}")

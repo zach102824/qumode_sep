@@ -843,3 +843,7 @@ Target still QAOA n=20 L4 84.9/238 and L8 16.4/54. NN jobs left running.
 | G_qfe 2 | — |
 
 L=2 snap_mag=0.9236 (mean |s0−s1| for csnap, else mean |s|).
+
+## SNAP queue unblocked (Sat 11:32 CST)
+watchdog_snap was waiting for both NN jobs to finish (could be hours). SNAP training at n≤14 is light, so watchdog v2 now runs 1 SNAP job (3 threads) alongside the 2 NN jobs when RAM allows; `snap_costgx.py` n=20 tests now share `/tmp/nn_n20.lock` with NN (chunk=2), so only one big eval runs at a time.
+Running: NN_v2b L8, NN_cc L8, SNAP_cs4.
