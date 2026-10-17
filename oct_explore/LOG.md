@@ -1328,3 +1328,16 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing:
 
 ## Check-in (2026-10-17 23:56 CST)
 v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy: A_g8 / A_b8 L8 screens 100/200 (best 1.307 gray / 1.330 binary, p10 1.82 / 1.65), B_g2_iii_A_f (formula features) finished both inits (2.124 / 2.122, worse on n=8 train than tq's 2.027) and is moving to val/test, B_g2_iii_A_tq on init 1. Load ~22-30 on 8 cores, MemAvail ~2 GiB, so no extra slot. No new finished jobs; no new n=20 result beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
+
+### B_g2_iii_A_f finished 2026-10-17 23:58 CST  (L=2)
+
+`code=gray L=2 hidden=64 rounds=3 clause_w=True var_mix=True ninit=2 ntrain=1000 maxiter=1000 init_from=results/v3/A_g2.json val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_g2_iii_A_f winner 0 (train 2.124, val 3.040) | 7.8/17.6 | 15.8/38.5 | 28.8/78.1 | 44.4/138.7 | 323.5/1475.2 |
+| B_g2_iii_A_f trainbest 1 (train 2.122, val 3.052) | 7.8/18.0 | 15.5/36.8 | 26.3/72.3 | 46.2/150.2 | 353.6/1497.6 |
+| QAOA_raw L=2 | 9.0/18.8 | 18.4/55.0 | 28.7/84.0 | 54.8/166.2 | 336.4/971.4 |
+| G_fe L=2 | 11.6/21.3 | 21.9/43.2 | 43.2/90.5 | 75.4/169.5 | 664.0/1501.0 |
+
+n=20 winner vs QAOA L=2: median 323.5 vs 336.4, B90 1475.2 vs 971.4 -> no beat
