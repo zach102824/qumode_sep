@@ -956,3 +956,10 @@ No n=20 QAOA beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
 
 Alive: NN_fix04 (L8 cand1 done @13:07 → cand2+; L4 n20=120.1/515.2 held, |β|=0.040), SNAP_cs4j (L2/L4 train done; L4 train 19.56/33.95 snap_mag=0.26; L8 cand0+ in progress — tests after all L), watchdog_nn+snap. PID 2888494 untouched. MemAvail ~2.2 GiB — no new launch (OOM guard: ≤1 NN while SNAP). No G_*/watchdog_cg restart. NN_ebin stays paused.
 No n=20 QAOA beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
+
+## Check-in (2026-10-17 13:16 CST)
+
+Alive: NN_fix04 (L8 train; L4 n20=120.1/515.2), SNAP_cs4j (L8 after L4 train 19.6/34 snap_mag=0.26; tests pending), watchdog_nn+snap+tu. PID 2888494 untouched. No G_*/watchdog_cg.
+Data move: S_bin beat QAOA **median** at n20 L4 (75.4 vs 84.9) but B90 354>238 — queued binary SNAP (cs4jB/Bm), snap_min/fix_snap floors, and idle-only S_binj/C_binmix (joint+mix) via watchdog_tu.
+No clear n=20 beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
+

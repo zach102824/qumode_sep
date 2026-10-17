@@ -44,6 +44,11 @@ ap.add_argument("--no_R", action="store_true", help="skip transmon R (ablation)"
 ap.add_argument("--rich", type=int, default=1, help="cost poly degree (1=g*Cn, 2=+g1*Cn^2, ...)")
 ap.add_argument("--ebins", type=int, default=0,
                 help="if >0, free diagonal cost with ebins phases on round(Cn) (overrides --rich)")
+ap.add_argument("--snap_min", type=float, default=0.0,
+                help="soft floor on mean |s0-s1| (csnap) or |s| (else); L2 pull if below")
+ap.add_argument("--snap_w", type=float, default=1.0, help="weight of snap_min regulariser")
+ap.add_argument("--fix_snap", type=float, default=0.0,
+                help="if >0, freeze csnap as s1=-s0 with |s0|_rms = fix_snap (size-free)")
 a = ap.parse_args()
 
 LAY = {"T": sim.LAYOUTS_T, "C": sim.LAYOUTS_C, "R": sim.LAYOUTS_R}[a.layout]
@@ -235,9 +240,59 @@ for n, insts in tr:
     p, vg = build(n, insts, LAY[n]); tr_p.append(p); tr_vg.append(vg)
 
 
+def _snap_pen(x):
+    """Soft floor so conditional SNAP cannot collapse to QAOA-like."""
+    if a.snap_min <= 0 and a.fix_snap <= 0:
+        return 0.0, np.zeros_like(x, float)
+    X = np.asarray(x, float).reshape(-1, NP)
+    g = np.zeros_like(X)
+    if a.kind == "csnap":
+        s0 = X[:, NR:NR + S]; s1 = X[:, NR + S:NR + 2 * S]
+        diff = s0 - s1
+        mag = float(np.mean(np.abs(diff)))
+        if a.snap_min > 0 and mag < a.snap_min:
+            # push |diff| up: d/ds0 mean|d| = sign(d)/N , d/ds1 = -sign(d)/N
+            pen = a.snap_w * (a.snap_min - mag) ** 2
+            # gradient of mean|diff|
+            N = diff.size
+            sg = np.sign(diff); sg[sg == 0] = 1.0
+            # d pen / d mag = -2 snap_w (snap_min-mag); d mag / d diff_ij = sg_ij / N
+            dpen_dmag = -2.0 * a.snap_w * (a.snap_min - mag)
+            g[:, NR:NR + S] += dpen_dmag * sg / N
+            g[:, NR + S:NR + 2 * S] -= dpen_dmag * sg / N
+            return pen, g.reshape(-1)
+        return 0.0, g.reshape(-1)
+    else:
+        s = X[:, NR:NR + NS]
+        mag = float(np.mean(np.abs(s)))
+        if a.snap_min > 0 and mag < a.snap_min:
+            pen = a.snap_w * (a.snap_min - mag) ** 2
+            N = s.size
+            sg = np.sign(s); sg[sg == 0] = 1.0
+            dpen_dmag = -2.0 * a.snap_w * (a.snap_min - mag)
+            g[:, NR:NR + NS] += dpen_dmag * sg / N
+            return pen, g.reshape(-1)
+        return 0.0, g.reshape(-1)
+
+
 def f(x):
+    x = np.asarray(x, float)
+    if a.fix_snap > 0 and a.kind == "csnap":
+        X = x.reshape(-1, NP).copy()
+        v = np.full(S, a.fix_snap / max(np.sqrt(S), 1e-6))
+        X[:, NR:NR + S] = v
+        X[:, NR + S:NR + 2 * S] = -v
+        x = X.reshape(-1)
     vs = [vg(jnp.asarray(x, jnp.float32)) for vg in tr_vg]
-    return sum(float(v[0]) for v in vs) / len(vs), sum(np.asarray(v[1], float) for v in vs) / len(vs)
+    loss = sum(float(v[0]) for v in vs) / len(vs)
+    grad = sum(np.asarray(v[1], float) for v in vs) / len(vs)
+    if a.fix_snap > 0 and a.kind == "csnap":
+        G = grad.reshape(-1, NP)
+        G[:, NR:NR + 2 * S] = 0.0
+        grad = G.reshape(-1)
+        return loss, grad
+    pen, gpen = _snap_pen(x)
+    return loss + pen, grad + gpen
 
 
 rng = np.random.default_rng(a.seed)
@@ -303,10 +358,25 @@ for L in a.Ls:
         rows.append(r)
     cands.append(np.array(rows, float).reshape(-1))
     cands = cands[: max(a.restarts, 3)]
+
+    def _apply_fix_snap(x):
+        if a.fix_snap <= 0 or a.kind != "csnap":
+            return x
+        X = np.asarray(x, float).reshape(-1, NP).copy()
+        # set s0 = +v, s1 = -v with rms(|v|)=fix_snap
+        v = np.full(S, a.fix_snap / max(np.sqrt(S), 1e-6))
+        X[:, NR:NR + S] = v
+        X[:, NR + S:NR + 2 * S] = -v
+        return X.reshape(-1)
+
+    if a.fix_snap > 0:
+        cands = [_apply_fix_snap(c) for c in cands]
     best = None
     for i, c0 in enumerate(cands):
         l0 = f(c0)[0]
         r = minimize(f, c0, jac=True, method="L-BFGS-B", options={"maxiter": a.maxiter})
+        if a.fix_snap > 0:
+            r.x = _apply_fix_snap(r.x)
         fun = float(r.fun) if np.isfinite(r.fun) else 1e9
         log(f"  L={L} cand{i} loss {l0:.4f} -> {fun:.4f} ({r.nit} it)")
         if best is None or fun < best[1]:
