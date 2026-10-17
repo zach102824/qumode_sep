@@ -687,3 +687,17 @@ Running now (detached, ≤2×4 threads, deadline Mon 09:00 CST):
 - `NN_agn` queued: size-extrapolation ablation (n→params)
 
 Target: beat QAOA_raw n=20 L=4 (84.9/238.1) and L=8 (16.4/54.2). First table as soon as stage-8 L=4/8 tests land.
+
+## NN_best stage-8 L=4 early (Sat 09:25 CST) — transfer diagnosis
+
+cond+per_bit+rich2, trained only at n=8. |β| held at 0.25 (ECD not collapsed).
+
+| L | n=8 train | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| NN 4 | 5.5/10.2 | 12.4/29.3 | 92.5/687.3 | 158.9/1112.1 | 716307.1/3758644.0 |
+| QAOA 4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_qfe 4 | 5.4/9.9 | 9.2/20.5 | 14.6/37.6 | 22.8/57.5 | 103.5/358.6 |
+
+Reading: n=8 matches QAOA, but instance-δ overfits — n≥12 collapses. Next: curriculum +10/+12,
+shared (no δ), and tiny δ_scale=0.08. L=8 training in progress.
+
