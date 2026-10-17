@@ -1308,3 +1308,8 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing:
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 60.7 vs 84.9, B90 243.5 vs 238.1 -> no beat
+
+## Check-in (2026-10-17 22:19 CST)
+**A_g4 (Gray-X, L=4) is a second n=20 median beat vs QAOA L4**, slightly ahead of A_b4: winner scr34 tests at n=20 median/B90 1/p = 60.7/243.5 vs QAOA 84.9/238.1 (median ~29% better, B90 ~2% worse); its train-best scr49 finished its n=20 test at 22:17 with 61.0/242.8 (B90 within 2% of QAOA). Gray and binary L4 land in the same train basin (1.570) and give near-identical frozen transfer, so the mixer code is not the lever at L4; the remaining gap is the B90 tail at n>=12.
+**Reasoning for next steps:** the B90 gap is small, so L8 (A_g8 / A_b8 screens 70/200, best 1.307 / 1.385 vs 1.570 at L4) should clear both QAOA L8 targets only if transfer holds; the GNN L4 jobs from the A_g4 keep-list (B_g4_iii_A, B_g4_i_A) are now unblocked but wait behind the size-free-feature tests, which decide which features the L4/L8 GNN runs use. Queue unchanged.
+Running (4/4 slots): A_g8, A_b8 (L8 screens 70/200), B_g2_iii_A_f (started 21:39), B_g2_iii_A_tq (launched 22:18). MemAvail ~3 GiB. PID 2888494 untouched.
