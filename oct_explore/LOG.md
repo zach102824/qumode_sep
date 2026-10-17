@@ -1125,3 +1125,14 @@ Zach: remove the QAOA-start idea. All `--init qaoa` / `--init both` entries in q
 
 ## 15:12 CST restart (v2): Zach stopped everything and confirmed the plan
 Found structure (per layer: local ECD per cavity+transmon, then one joint U = cost phase · Gray-X; plus final ECD), trained from scratch at n=8 with BFGS, frozen and tested at n=10/12/14/20 vs QAOA at equal L. No QAOA init, nothing forced on ECD. Variations only on this setup: L (2/4/8/10), Gray vs binary, more restarts (16), objective (meanlog/CVaR/mix), n=12 validation for iterate selection, ECD2. Baseline G_fe (4 restarts): n=20 L4 116.1/387.7, L8 20.3/118.8 vs QAOA 84.9/238.1, 16.4/54.2. Queue: queue_v2.txt, runner watchdog_v2.sh (2 jobs x 4 threads).
+
+## 15:18 CST v3 build plan (approved)
+Zach approved the v3 build plan and asked to "explore how to improve once you find some data". v2 queue replaced (watchdog_v2.sh + R_g16/R_b16 killed at ~15:20 CST; partial results/R_*.json kept).
+Fixed circuit: per layer local R+ECD per (cavity, transmon) register, then ONE joint cavity U = X-mixer . exp(-i phase); plus final R+ECD. Training size n=8 only; validation n=10/12 (seeds 3.3e10) only selects among trained candidates; test n=8/10/12/14/20 (seeds 3.2e10). No QAOA init, ECD fully free.
+New code in `oct_explore/v3/`:
+- `v3core.py` batched simulator (per-instance params native; per-digit X mixers; weighted-clause phase). Verified bit-exact vs costgx on G_fe L4 (n=8,10 p agree to 1e-7).
+- `v3_plain.py` PLAN A: screen `--ninit 200` random inits (300 it, 128 inst) -> refine top 16 (L2) / 12 + 10 grown-from-previous-L (L4/8/10) to convergence (maxiter 2000) on 1000 inst -> keep top 10 by train loss -> winner by val n=10+12 (60 each) -> test.
+- `gnn_v3.py` PLAN B: bipartite var–clause graph, sign-typed edges, 3 rounds message passing (node-shared weights), heads: global (per-layer ECD/R/mixer/gamma deltas on a random base), per-clause weights w_{c,l} (phase = (n/m) sum_c w_{c,l}[c violated]), per-variable angles (cavity digit -> its Gray/binary digit X angle in U_l; transmon var -> its R theta in block l). Heads zero-init so each init starts as a random plain circuit. L-BFGS-B over all weights (H=64: 85k weights).
+Smoke timings (2 threads/job): plain n=8 1000 inst ~0.2 s/it L2, ~0.4 L4, ~0.8 L8; screening (128 inst) ~0.04 s/it L2; n=20 test 100 inst ~1 min/L. GNN L4 H64 1000 inst ~1.5-2 s/it.
+Scale-downs vs plan (runtime): screening uses 128 inst x 300 it (full 1000-inst BFGS only for the refined top 12-16 + grown); GNN uses 1000 train inst (not 2000) and 6 inits (L4) / 4 inits (L8), maxiter 1000, instead of 20 inits.
+Runner `v3/run_v3.sh` (4 jobs x 2 threads, MemAvailable >= 3000 MB gate, deps via `after`), queue `v3/queue_v3.txt`, logs `logs/v3/`, results `results/v3/`. Per-job table appended here automatically.
