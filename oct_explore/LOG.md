@@ -998,3 +998,61 @@ Fixed |β|=0.04 held. L8 n20 **29.6/208** vs QAOA 16.4/54 (no beat; ~1.8× med, 
 
 Next: NN_ebin (free diagonal cost, fixβ) running; queued soft-β ebin + binary. SNAP_cs4j L8 cand2 done (~4.53 best so far), cand3+/tests pending. No Zach ping.
 
+
+## Queue re-aim (2026-10-17 14:05 CST)
+
+S_bin L4 n20 **75.4/354** beat QAOA med (84.9) — ECD was ~0 there too; win is **binary X mixer**, not ECD.
+B90 gap is the target. Reordered:
+- SNAP: cs4jBm (binary+mix) → cs4jB → fix/min snap → ebin/rich
+- TU (idle-only): C_binmix / C_bincvar / S_bin0j (ecd=0) / S_binsnapj
+- NN: bin04 / ebinB next after ebin
+
+Alive: SNAP_cs4j (L8 cand3+), NN_ebin (L4), watchdogs nn/snap/tu. PID 2888494 untouched. No G_*/watchdog_cg.
+No n=20 QAOA beat yet → stay quiet.
+
+## Check-in (2026-10-17 14:14 CST)
+
+Alive: SNAP_cs4j (n20 tests after L8 train 18.95/33.61 snap_mag=0.15 collapsing; n20 L2=55264/580193 so far; L4/L8 pending), NN_ebin (L4 train 42.1/101 |β|=0.040; n10=51.7/145 n12=75.9/197 n14=154/468; n20/L8 pending), watchdog_nn+snap+tu. PID 2888494 untouched. MemAvail ~2.1 GiB — no new launch (OOM guard: ≤1 NN while SNAP). No G_*/watchdog_cg restart.
+
+No n=20 QAOA beat (need L4≤84.9/238 or L8≤16.4/54) → stay quiet.
+
+## SNAP_cs4j (Sat 14:18 CST)  [kind=csnap snap=4 layout=T nt2=[10, 12, 14]]
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| SNAP_cs4j 2 | 19.9/40.8 | 65.8/489.1 | 303.2/3125.2 | 324.6/1658.0 | 55264.0/580193.5 |
+| QAOA 2 | 9.0/18.8 | 18.4/55.0 | 28.7/84.0 | 54.8/166.2 | 336.4/971.4 |
+| G_qfe 2 | — | — | — | — | — |
+| SNAP_cs4j 4 | 17.0/33.2 | 59.4/456.0 | 286.9/2430.8 | 256.3/1282.5 | 48501.8/1067110.8 |
+| QAOA 4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_qfe 4 | 5.4/9.9 | 9.2/20.5 | 14.6/37.6 | 22.8/57.5 | 103.5/358.6 |
+| SNAP_cs4j 8 | 16.4/33.1 | 60.4/400.7 | 255.5/2554.1 | 249.7/1042.3 | 63827.1/631355.6 |
+| QAOA 8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| G_qfe 8 | 2.5/4.5 | 3.6/7.3 | 4.8/15.4 | 6.6/17.3 | 16.4/59.2 |
+
+L=2 snap_mag=0.4259 (mean |s0−s1| for csnap, else mean |s|).
+
+L=4 snap_mag=0.2600 (mean |s0−s1| for csnap, else mean |s|).
+
+L=8 snap_mag=0.1499 (mean |s0−s1| for csnap, else mean |s|).
+
+## SNAP_cs4j (Sat 14:18 CST)  [kind=csnap snap=4 layout=T nt2=[10, 12, 14]]
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| SNAP_cs4j 2 | 19.9/40.8 | 65.8/489.1 | 303.2/3125.2 | 324.6/1658.0 | 55264.0/580193.5 |
+| QAOA 2 | 9.0/18.8 | 18.4/55.0 | 28.7/84.0 | 54.8/166.2 | 336.4/971.4 |
+| G_qfe 2 | — | — | — | — | — |
+| SNAP_cs4j 4 | 17.0/33.2 | 59.4/456.0 | 286.9/2430.8 | 256.3/1282.5 | 48501.8/1067110.8 |
+| QAOA 4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_qfe 4 | 5.4/9.9 | 9.2/20.5 | 14.6/37.6 | 22.8/57.5 | 103.5/358.6 |
+| SNAP_cs4j 8 | 16.4/33.1 | 60.4/400.7 | 255.5/2554.1 | 249.7/1042.3 | 63827.1/631355.6 |
+| QAOA 8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| G_qfe 8 | 2.5/4.5 | 3.6/7.3 | 4.8/15.4 | 6.6/17.3 | 16.4/59.2 |
+
+L=2 snap_mag=0.4259 (mean |s0−s1| for csnap, else mean |s|).
+
+L=4 snap_mag=0.2600 (mean |s0−s1| for csnap, else mean |s|).
+
+L=8 snap_mag=0.1499 (mean |s0−s1| for csnap, else mean |s|).
+
