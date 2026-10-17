@@ -1056,3 +1056,21 @@ L=4 snap_mag=0.2600 (mean |s0−s1| for csnap, else mean |s|).
 
 L=8 snap_mag=0.1499 (mean |s0−s1| for csnap, else mean |s|).
 
+
+## SNAP_cs4j DONE (2026-10-17 14:18 CST)
+
+Joint csnap=4. Train OK (L2 25.0/56.4 snap_mag=0.43 → L4 19.6/34 mag=0.26 → L8 19.0/33.6 mag=0.15) but **transfer collapsed** — snap_mag shrinks with L; n20 useless.
+
+| L | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| 2 | 19.9/40.8 | 65.8/489 | 303/3125 | 325/1658 | 55264/580194 |
+| 4 | 17.0/33.2 | 59.4/456 | 287/2431 | 256/1283 | 48502/1067111 |
+| 8 | 16.4/33.1 | 60.4/401 | 256/2554 | 250/1042 | 63827/631356 |
+| QAOA 4 | | | | | **84.9/238** |
+| QAOA 8 | | | | | **16.4/54** |
+
+No beat. Watchdog already launched **SNAP_cs4jBm** (binary+mix, next queue priority). NN_ebin L4 n20=2821/9490 (also no beat; L8 training). PID 2888494 untouched.
+
+## Check-in (2026-10-17 14:22 CST)
+
+Alive: SNAP_cs4jBm (just started), NN_ebin (L4 done n20=2821/9490; L8+), watchdog_nn+snap+tu. MemAvail ~2.2 GiB. No G_*/watchdog_cg. No n=20 QAOA beat → stay quiet.

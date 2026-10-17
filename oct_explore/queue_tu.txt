@@ -1,6 +1,10 @@
-# TAG|script args — only launch when NN+SNAP idle (RAM). Non-QAOA.
-# S_bin n20 L4 med 75.4 < QAOA 84.9 but B90 354>238 → joint multi-n + mix/cvar for tail.
-S_binj|theory_u.py --tag S_binj --u_order cost_gx --code binary --ecd 1 --diag raw --nt2 10 12 14 --ntrain 80 --Ls 2 4 8 --restarts 4 --maxiter 300 --test 10 12 14 20
+# TAG|script args — only when NN+SNAP idle. Non-QAOA. S_bin L4 n20 med 75.4<QAOA 84.9 but B90 354>238.
+# Fix B90 via mix/cvar + joint multi-n. Prefer ecd=0 (ECD collapsed in S_bin anyway).
 C_binmix|costgx.py --tag C_binmix --code binary --init grow --obj mix --alpha 0.2 --w 1.5 --nt2 10 12 14 --nt2_count 40 --ntrain 80 --Ls 4 8 --restarts 3 --maxiter 300 --test 10 12 14 20
+C_bincvar|costgx.py --tag C_bincvar --code binary --init grow --obj cvar --alpha 0.15 --nt2 10 12 14 --nt2_count 40 --ntrain 80 --Ls 4 8 --restarts 3 --maxiter 300 --test 10 12 14 20
 C_binj|costgx.py --tag C_binj --code binary --init grow --nt2 10 12 14 --nt2_count 40 --ntrain 80 --Ls 4 8 --restarts 3 --maxiter 300 --test 10 12 14 20
+S_bin0j|theory_u.py --tag S_bin0j --u_order cost_gx --code binary --ecd 0 --diag raw --nt2 10 12 14 --ntrain 80 --Ls 2 4 8 --restarts 4 --maxiter 300 --test 10 12 14 20
+S_binj|theory_u.py --tag S_binj --u_order cost_gx --code binary --ecd 1 --diag raw --nt2 10 12 14 --ntrain 80 --Ls 2 4 8 --restarts 4 --maxiter 300 --test 10 12 14 20
+S_binsnapj|theory_u.py --tag S_binsnapj --u_order cost_gx --code binary --ecd 0 --snap 4 --diag raw --nt2 10 12 14 --ntrain 80 --Ls 2 4 8 --restarts 3 --maxiter 250 --test 10 12 14 20
 S_costgxj|theory_u.py --tag S_costgxj --u_order cost_gx --code gray --ecd 1 --diag raw --nt2 10 12 14 --ntrain 80 --Ls 2 4 8 --restarts 3 --maxiter 250 --test 10 12 14 20
+C_binmix2|costgx.py --tag C_binmix2 --code binary --init grow --obj mix --alpha 0.1 --w 2.0 --nt2 10 12 14 --nt2_count 40 --ntrain 100 --Ls 4 8 --restarts 4 --maxiter 400 --test 10 12 14 20

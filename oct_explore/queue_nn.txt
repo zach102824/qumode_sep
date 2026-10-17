@@ -1,16 +1,14 @@
 # TAG|args
-# Prefer fixed-|β| ECD + free ebin cost (more native / not near-QAOA).
-# Data: β→0 transfers better at n=20 (91.7/397) than fix04 (120/515); fix04 beats QAOA med at n=14.
-# S_bin binary med-win at n20 L4 → try binary code NN. B90 still the gap → ebin/mix later.
+# Prefer native/non-QAOA. S_bin binary med-win → binary NN. ebin = free diagonal cost.
+# Data: fix04 L8 n20=29.6/208 (no beat); v2b L4 91.7/397 best soft-β so far.
 NN_v2|--mode shared --joint --Ls 4 8 --stages 8 10 12 --per_bit --rich 1 --beta0 0.1 --beta_min 0.0 --beta_w 0.05 --bmax 0.15 --ntrain 80 --nt2_count 40 --maxiter 500 --restarts 3 --test 10 12 14 20
 NN_fix04|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 1 --fix_beta --phys_beta --beta0 0.04 --beta_min 0.0 --beta_w 0.0 --ntrain 100 --nt2_count 50 --maxiter 500 --restarts 3 --test 10 12 14 20
 NN_ebin|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --ebins 12 --fix_beta --phys_beta --beta0 0.04 --beta_min 0.0 --beta_w 0.0 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --test 10 12 14 20
-NN_ebin_soft|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --ebins 12 --beta0 0.05 --beta_min 0.0 --beta_w 0.0 --bmax 0.15 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --test 10 12 14 20
-NN_fix02|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 1 --fix_beta --phys_beta --beta0 0.02 --beta_min 0.0 --beta_w 0.0 --ntrain 100 --nt2_count 50 --maxiter 500 --restarts 3 --test 10 12 14 20
-NN_ebin02|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --ebins 12 --fix_beta --phys_beta --beta0 0.02 --beta_min 0.0 --beta_w 0.0 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --test 10 12 14 20
+# --- next ---
 NN_bin04|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 1 --code binary --fix_beta --phys_beta --beta0 0.04 --ntrain 100 --nt2_count 50 --maxiter 500 --restarts 3 --test 10 12 14 20
 NN_ebinB|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --ebins 12 --code binary --fix_beta --phys_beta --beta0 0.04 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --test 10 12 14 20
+NN_ebin_soft|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --ebins 12 --beta0 0.05 --beta_min 0.0 --beta_w 0.0 --bmax 0.15 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --test 10 12 14 20
 NN_ebinB_soft|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --ebins 12 --code binary --beta0 0.05 --bmax 0.15 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --test 10 12 14 20
-# lower priority
-#NN_fix06|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 1 --fix_beta --phys_beta --beta0 0.06 --beta_min 0.0 --beta_w 0.0 --ntrain 100 --nt2_count 50 --maxiter 500 --restarts 3 --test 10 12 14 20
-#NN_ccfix|--mode costcond --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 1 --fix_beta --phys_beta --beta0 0.04 --delta_scale 0.25 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --hidden 64 --depth 2 --test 10 12 14 20
+NN_bin_soft|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 1 --code binary --beta0 0.05 --bmax 0.15 --ntrain 100 --nt2_count 50 --maxiter 500 --restarts 3 --test 10 12 14 20
+NN_fix02|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --rich 1 --fix_beta --phys_beta --beta0 0.02 --beta_min 0.0 --beta_w 0.0 --ntrain 100 --nt2_count 50 --maxiter 500 --restarts 3 --test 10 12 14 20
+NN_ebin02|--mode shared --joint --Ls 4 8 --stages 8 10 12 14 --per_bit --ebins 12 --fix_beta --phys_beta --beta0 0.02 --beta_min 0.0 --beta_w 0.0 --ntrain 80 --nt2_count 40 --maxiter 400 --restarts 2 --test 10 12 14 20

@@ -1,5 +1,5 @@
 # TAG|args  — SNAP instead of ECD + cost·X. Prefer JOINT multi-n. Binary mixer beat QAOA med (S_bin 75.4).
-# Data: cs4 n8-only failed; cs4j joint running (L4 train 19.6/34 snap_mag=0.26 shrinking).
+# Data: cs4 n8-only failed; cs4j DONE n20 L4=48502/1e6 L8=63827/6e5 (snap_mag→0.15); cs4jBm running.
 # Priority: binary (+mix for B90), then snap_min/fix to stop collapse, then ebin/rich/free.
 SNAP_cs4|--kind csnap --snap 4 --Ls 2 4 8 --ntrain 80 --restarts 4 --maxiter 300 --test 10 12 14 20
 SNAP_cs4j|--kind csnap --snap 4 --Ls 2 4 8 --ntrain 80 --nt2 10 12 14 --nt2_count 40 --restarts 4 --maxiter 300 --test 10 12 14 20
