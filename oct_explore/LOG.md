@@ -1116,3 +1116,6 @@ Zach: don't force ECD to work. If it's useless, find a natural way. No more lock
 ## Check-in (2026-10-17 14:58 CST)
 
 Only C_binmix was alive (L=4 train cand1 loss 23.0→7.99), leaving ~4 cores idle. Relaunched **C_bincvar** (binary cost·X, CVaR α=0.15, ECD unforced) and started **S_bin0j** (binary cost·X, ECD off, joint n=8..14), the natural no-ECD test after Zach's "don't force ECD" note. NN_bin04/SNAP_cs4jB stay paused (forced-ECD dropped / held). PID 2888494 untouched. No finished n=20 this window; no QAOA beat → stay quiet.
+
+## NN back in (Sat 15:03 CST)
+Zach: keep trying versions, with the network involved. Un-held NN_bin_soft (binary mixer, ECD free, no lock) and NN_ebinB_soft (binary mixer + learned energy-bin cost, ECD free). watchdog_nn launches them when RAM allows.
