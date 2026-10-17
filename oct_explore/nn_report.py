@@ -7,7 +7,7 @@ for tag in sys.argv[1:]:
     a = d.get("args_last", d["args"])
     flags = " ".join(f"{k}={v}" for k, v in a.items()
                      if k in ("mode", "rich", "per_cav", "per_bit", "beta0", "beta_min", "beta_w",
-                              "hidden", "depth", "delta_scale", "ntrain", "stages", "final_ecd"))
+                              "hidden", "depth", "delta_scale", "ntrain", "stages", "final_ecd", "fix_beta", "phys_beta", "ebins", "bmax"))
     print(f"\n## {tag} ({time.strftime('%a %H:%M CST')})  [{flags}]\n")
     # collect by L -> n -> metrics from test keys like "8+10|L4|n20"
     from collections import defaultdict

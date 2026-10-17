@@ -56,8 +56,16 @@ ap.add_argument("--joint", action="store_true",
                 help="train on all --stages sizes at once (no curriculum)")
 ap.add_argument("--bmax", type=float, default=0.0,
                 help="if >0, ECD beta = bmax*tanh(raw) (caps displacement)")
+ap.add_argument("--fix_beta", action="store_true",
+                help="force |ECD beta|=beta0 (r[0]=phase only); stops collapse to 0")
+ap.add_argument("--phys_beta", action="store_true",
+                help="interpret beta as physical displacement α; undo per-cavity sqrt(2^k) scale")
+ap.add_argument("--ebins", type=int, default=0,
+                help="if >0, free diagonal cost with ebins phases on round(Cn) (overrides --rich)")
 a = ap.parse_args()
 if a.no_final_ecd: a.final_ecd = False
+if a.ebins > 0:
+    a.rich = a.ebins  # NG = ebins; phase_from switches below
 
 LAY = {"T": sim.LAYOUTS_T, "C": sim.LAYOUTS_C, "R": sim.LAYOUTS_R}[a.layout]
 tbit = a.layout in ("T", "R")
@@ -120,6 +128,7 @@ elif a.per_cav:
 else:
     NC = 1
 NG = a.rich
+USE_EBINS = a.ebins > 0
 NP = NB + NC + NG   # per layer
 NF = NB if a.final_ecd else 0
 
@@ -256,11 +265,22 @@ def build(n, insts, ks):
 
     def local(psi, r):
         R = Rm(r[2], r[3])
-        bre, bim = r[0], r[1]
-        if a.bmax > 0:
-            bre = a.bmax * jnp.tanh(bre); bim = a.bmax * jnp.tanh(bim)
+        if a.fix_beta:
+            # r[0] = phase of displacement; magnitude locked to beta0
+            phi = r[0]
+            bre = a.beta0 * jnp.cos(phi); bim = a.beta0 * jnp.sin(phi)
+        else:
+            bre, bim = r[0], r[1]
+            if a.bmax > 0:
+                bre = a.bmax * jnp.tanh(bre); bim = a.bmax * jnp.tanh(bim)
         for c in range(C):
-            psi = apply_M(R, psi, c); Dp = disp(c, bre, bim)
+            psi = apply_M(R, psi, c)
+            if a.phys_beta:
+                # cancel disp()'s *scales[c]/2 so (bre,bim) is physical α
+                s = scales[c] / 2.0
+                Dp = disp(c, bre / s, bim / s)
+            else:
+                Dp = disp(c, bre, bim)
             p0 = jnp.take(psi, 0, axis=c); p1 = jnp.take(psi, 1, axis=c); fa = C - 1 + c
             psi = jnp.stack([apply_M(Dp.conj().T, p1, fa), apply_M(Dp, p0, fa)], axis=c)
         return psi
@@ -268,6 +288,10 @@ def build(n, insts, ks):
     def phase_from(row, cn):
         # row[NB:NB+NC] = bc's; row[NB+NC:NB+NC+NG] = g's
         gs = row[NB + NC: NB + NC + NG]
+        if USE_EBINS:
+            # free diagonal: one phase per integer energy bin (Cn≈E*n/m ∈ [0,n])
+            idx = jnp.clip(jnp.round(cn).astype(jnp.int32), 0, NG - 1)
+            return gs[idx]
         ph = gs[0] * cn
         cnk = cn
         for j in range(1, NG):
@@ -302,6 +326,8 @@ def build(n, insts, ks):
 
     def beta_penalty(xv):
         # soft floor below beta_min + quadratic pull of |beta| toward beta0 (keeps ECD meaningful)
+        if a.fix_beta:
+            return jnp.asarray(0.0, jnp.float32)  # magnitude locked
         L = (xv.size - NF) // NP; X = xv[: L * NP].reshape(L, NP)
         bmag = jnp.sqrt(X[:, 0] ** 2 + X[:, 1] ** 2 + 1e-20)
         pen = jnp.sum(jnp.maximum(0.0, a.beta_min - bmag) ** 2) + jnp.sum((bmag - a.beta0) ** 2)
@@ -328,7 +354,10 @@ def init_params(L, variant=0):
     rows = []
     for li, t in enumerate(np.linspace(0, 1, L)):
         ang = 0.7 + 1.3 * t + 0.4 * variant
-        bre = a.beta0 * np.cos(ang); bim = a.beta0 * np.sin(ang)
+        if a.fix_beta:
+            bre, bim = ang, 0.0  # bre slot holds phase; mag locked to beta0
+        else:
+            bre = a.beta0 * np.cos(ang); bim = a.beta0 * np.sin(ang)
         if variant == 2:
             th = -np.pi + 0.3 * t; ph = 0.0   # near bit-flip on transmon (hardware-natural)
         else:
@@ -342,12 +371,21 @@ def init_params(L, variant=0):
         else:
             bcs = [bc0] * NC
         g0 = 0.25 + 0.7 * t
-        gs = [g0] + ([0.05 * (1 - 2 * t) * (variant + 1)] * (NG - 1) if NG > 1 else [])
+        if USE_EBINS:
+            # free energy-bin phases: linear ramp in bin index, scaled by schedule t
+            gs = [g0 * (1.0 - k / max(NG - 1, 1)) + 0.02 * (variant - 1) * ((k % 3) - 1)
+                  for k in range(NG)]
+        else:
+            gs = [g0] + ([0.05 * (1 - 2 * t) * (variant + 1)] * (NG - 1) if NG > 1 else [])
         rows.append([bre, bim, th, ph] + bcs + gs)
     x = np.array(rows, float).reshape(-1)
     if NF:
-        x = np.concatenate([x, [a.beta0 * 0.5, a.beta0 * 0.5,
-                                (-np.pi + 0.2) if variant == 2 else 0.5, 0.0]])
+        if a.fix_beta:
+            x = np.concatenate([x, [0.5 + 0.2 * variant, 0.0,
+                                    (-np.pi + 0.2) if variant == 2 else 0.5, 0.0]])
+        else:
+            x = np.concatenate([x, [a.beta0 * 0.5, a.beta0 * 0.5,
+                                    (-np.pi + 0.2) if variant == 2 else 0.5, 0.0]])
     return x.astype(np.float32)
 
 
@@ -550,6 +588,8 @@ def eval_params_fn(state, pack, n, insts, chunk=None):
 
 
 def beta_mags(xv, L):
+    if a.fix_beta:
+        return [float(a.beta0)] * L
     X = xv[: L * NP].reshape(L, NP)
     m = np.sqrt(X[:, 0] ** 2 + X[:, 1] ** 2)
     return m.tolist()

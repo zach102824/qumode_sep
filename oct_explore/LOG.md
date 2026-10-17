@@ -768,3 +768,16 @@ NN_v2 ALLDONE; NN_v2b (joint +14) running, watchdog starting NN_cc (costcond) ne
 | 8 | 3.5/9.8 | 4.9/27.2 | 6.8/34.3 | 21.6/122.0 |
 | QAOA 8 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
 | G_qfe 8 | 3.6/7.3 | 4.8/15.4 | 6.6/17.3 | 16.4/59.2 |
+
+## NN next (Sat 10:20 CST) — stop ECD collapse
+
+NN_v2 L=8 n=20 = 21.6/122 (no QAOA beat). Optimizer still drives |β|→0.01 (near-QAOA).
+Root cause: T layout n=20 is [6,6,5]; disp scales β by √(2^k)/2, so |β|=0.25 → α≈1 on k=6 and destroys transfer.
+
+New knobs in `nn_costgx.py`:
+- `--fix_beta`: lock |β|=beta0 (phase free) — ECD cannot collapse
+- `--phys_beta`: β is physical α (undo per-cavity √(2^k) scale) — same ECD across n
+- `--ebins K`: free diagonal cost, one phase per round(Cn) bin (not γ·H)
+
+Queued after NN_v2b / NN_cc: NN_fix04 (α=0.04), NN_fix06 (α=0.06), NN_ebin (12 bins + fix04), NN_ccfix.
+Target still QAOA n=20 L4 84.9/238 and L8 16.4/54. Stay quiet until a clear beat.
