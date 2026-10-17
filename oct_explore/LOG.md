@@ -1316,3 +1316,6 @@ Running (4/4 slots): A_g8, A_b8 (L8 screens 70/200), B_g2_iii_A_f (started 21:39
 
 ## Check-in (2026-10-17 22:40 CST)
 v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 / A_b8 L8 screens 80/200 (best train-subset 1.307 gray / 1.385 binary, p10 1.82 / 1.78; ~10 inits per 15-27 min wall, so screens finish ~03:00-05:00 CST, then refine/growth), B_g2_iii_A_f (formula features, since 21:39) and B_g2_iii_A_tq (tq features, since 22:18) still training, no epoch lines yet. Visible A_g8/A_b8 logs confirmed in sync with the live deleted fds. MemAvail ~2 GiB. No new finished jobs; no new n=20 result beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
+
+## Check-in (2026-10-17 22:59 CST)
+v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 / A_b8 L8 screens 80/200 (best 1.307 gray / 1.385 binary, p10 1.82 / 1.78), B_g2_iii_A_f (formula features) finished init 0 of 2 (train loss 2.289 -> 2.124 after 1000 it, 3763 s), B_g2_iii_A_tq (tq features, since 22:18) still on init 0. Load ~18-20 on 8 cores, MemAvail ~2 GiB, so no extra slot. No new finished jobs; no new n=20 result beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
