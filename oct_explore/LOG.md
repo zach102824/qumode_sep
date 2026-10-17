@@ -1196,3 +1196,6 @@ n=20 winner vs QAOA L=4: median 1509185.3 vs 84.9, B90 22838228.6 vs 238.1 -> no
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 1332162.3 vs 84.9, B90 20293751.1 vs 238.1 -> no beat
+
+## Check-in (2026-10-17 16:18 CST)
+v3 runner alive (run_v3.sh pid 3365113), 4 jobs on ~7.7 cores: A_g4 / A_b4 (L4 screen 20/200; screen best train-subset loss 1.839 / 1.840 vs L2 optimum 2.289), B_g2_iii_A / B_g2_i_A (GNN from the plain L2 keep-list, init 0 training). MemAvail ~2 GiB so the 3000 MB gate holds further launches; queue unchanged. No new finished jobs; no n=20 QAOA beat. Note: ps etime lags log wall-clock by ~6 min (box likely paused briefly ~16:09-16:15); jobs resumed fine. PID 2888494 untouched.
