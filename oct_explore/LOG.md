@@ -1386,3 +1386,6 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing:
 
 ## Check-in (2026-10-18 03:38 CST)
 v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 refining 22 cands on 1000 inst (first done: scr5 1.3255 -> 1.2732 in 289 it), A_b8 refining (first cand still running), B_g4_iii_A (GNN L4 full) on init 2 of 4 (1.354 / 1.351 so far), B_g4_i_A (angles-only) on init 2 of 3 (1.517 / 1.522). Load ~14-18 on 8 cores, MemAvail ~2 GiB (<3500 MB gate), caps hold, no new launches. No new finished jobs; no new n=20 beat beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
+
+## Check-in (2026-10-18 03:57 CST)
+v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 refining 22 cands on 1000 inst (scr5 1.3255 -> 1.2732; next cand in progress), A_b8 refining (first done: scr83 1.3495 -> 1.1517 in 641 it, the best L8 n=8 train loss so far, binary below gray's 1.273), B_g4_iii_A (GNN L4 full) finished init 2 with 1.570 -> 1.363 (three inits now 1.354 / 1.351 / 1.363, a stable basin), on init 3 of 4; B_g4_i_A (angles-only) on init 2 of 3 (1.517 / 1.522). Load ~20-27 on 8 cores, MemAvail ~2 GiB (<3500 MB gate), caps hold, no new launches. No new finished jobs; no new n=20 beat beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
