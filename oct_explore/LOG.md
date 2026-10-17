@@ -747,3 +747,13 @@ shared + per_bit GrayX + rich=1 + bmax=0.15. ECD collapsed to |β|≈0.01 (optim
 
 Joint multi-n training restored transfer (n=20 now 116/447 vs broken 1e5). Still ~1.4× QAOA median.
 L=8 training. Next: joint +14, QAOA-basin-free grow with more restarts, tiny instance δ on frozen shared base.
+
+## NN_v2 L=8 done (Sat 10:12 CST)
+
+| L | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|
+| NN_v2 8 (train 2.9/5.8) | 3.5/9.8 | 4.9/27.2 | 6.8/34.3 | 21.6/122.0 |
+| QAOA 8 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | **16.4/54.2** |
+
+Joint training transfers at L=8 too (n=20 21.6/122), but still 1.3× QAOA median, 2.3× B90. ECD |β|→0.012 again.
+NN_v2 ALLDONE; NN_v2b (joint +14) running, watchdog starting NN_cc (costcond) next.
