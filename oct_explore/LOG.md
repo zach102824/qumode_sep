@@ -1136,3 +1136,6 @@ New code in `oct_explore/v3/`:
 Smoke timings (2 threads/job): plain n=8 1000 inst ~0.2 s/it L2, ~0.4 L4, ~0.8 L8; screening (128 inst) ~0.04 s/it L2; n=20 test 100 inst ~1 min/L. GNN L4 H64 1000 inst ~1.5-2 s/it.
 Scale-downs vs plan (runtime): screening uses 128 inst x 300 it (full 1000-inst BFGS only for the refined top 12-16 + grown); GNN uses 1000 train inst (not 2000) and 6 inits (L4) / 4 inits (L8), maxiter 1000, instead of 20 inits.
 Runner `v3/run_v3.sh` (4 jobs x 2 threads, MemAvailable >= 3000 MB gate, deps via `after`), queue `v3/queue_v3.txt`, logs `logs/v3/`, results `results/v3/`. Per-job table appended here automatically.
+
+## Check-in (2026-10-17 15:34 CST)
+v3 runner alive (run_v3.sh), 4 jobs x 2 threads on 8 cores: A_g2 (screen 30/200), A_b2 (screen 20/200), B_g4_iii and B_g4_i (GNN building). MemAvail ~6 GiB. No finished jobs yet; no n=20 QAOA beat. PID 2888494 untouched.
