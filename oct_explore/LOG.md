@@ -1319,3 +1319,6 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing:
 
 ## Check-in (2026-10-17 22:59 CST)
 v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 / A_b8 L8 screens 80/200 (best 1.307 gray / 1.385 binary, p10 1.82 / 1.78), B_g2_iii_A_f (formula features) finished init 0 of 2 (train loss 2.289 -> 2.124 after 1000 it, 3763 s), B_g2_iii_A_tq (tq features, since 22:18) still on init 0. Load ~18-20 on 8 cores, MemAvail ~2 GiB, so no extra slot. No new finished jobs; no new n=20 result beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
+
+## Check-in (2026-10-17 23:10 CST)
+v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 L8 screen 90/200 (best 1.307, p10 1.82), A_b8 L8 screen 90/200 (best improved 1.385 -> 1.330, p10 1.78 -> 1.65; binary now close to gray at L8), B_g2_iii_A_f (formula features) on init 1 of 2 after init 0 2.289 -> 2.124, B_g2_iii_A_tq (tq features) still on init 0. Load ~17-20 on 8 cores, MemAvail ~2 GiB, so no extra slot. No new finished jobs; no new n=20 result beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
