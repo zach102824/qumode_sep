@@ -1569,3 +1569,15 @@ Two jobs finished, both finalized and pushed by the runner (run_v3.sh pid 356431
 - **A_g8** (plain gray L8, from scratch, val-selected grow_scr49, train 0.952): n=20 **14.6/113.1 vs QAOA L8 16.4/54.2**, which beats the median (-11%) but has a 2.1x worse B90. Same picture as A_b8 (14.6/119.3), so gray and binary land in the same shared L8 basin.
 **Reasoning:** clause-weights-only trains 0.03 worse at n=8 (1.435–1.440 vs 1.402–1.409 with mixer angles) yet ties at n=20. The n=20 B90 spread across inits of one config is large (iii 183.7–217.2, ii 197.2–253.4), so the L4 GNN variants differ by less than init-to-init noise at n=20, and val with 60 instances at n=10/12 does not reliably pick the n=20 tail. Next candidate improvement (rules allow it): a larger n=10/12 val set for selection among already-trained runs. The L8 plain tail problem is what B_g8_iii_A_f (now ready, queued) and B_b8_iii_A_f target.
 **Slots:** A_g10 launched 11:18 into the freed plain slot (grown from A_g8). Running: A_b10, A_g10, B_b4_iii_A_f (init 2/3), S_g4_snapP_f (since 11:02). GNN slots full, so B_g8_iii_A_f and the remaining SNAP jobs wait. PID 2888494 untouched.
+
+### B_b4_iii_A_f finished 2026-10-18 11:40 CST  (L=4)
+
+`code=binary L=4 hidden=64 rounds=3 clause_w=True var_mix=True ninit=3 ntrain=1000 maxiter=1000 init_from=results/v3/A_b4.json val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_b4_iii_A_f winner 0 (train 1.401, val 2.057) | 3.6/6.9 | 6.2/15.4 | 9.2/28.0 | 13.2/42.3 | 71.7/531.8 |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 71.7 vs 84.9, B90 531.8 vs 238.1 -> no beat
