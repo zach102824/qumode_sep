@@ -1965,3 +1965,16 @@ Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing (~134–195%
 - **N_g4_tf** (118524 params): ~11 min elapsed, still init 0 (CPU ~134%, RSS ~0.75 GB).
 
 **Queue next:** N_g4_ds, N_g4_mlp → R_arch_scan → A_arch_scan, then R_g4_snapF_val2 / L8 no-SNAP controls. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6** (both already logged/pushed). No WakeParent this check.
+
+### S_g4_snapL_f finished 2026-10-18 18:21 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 arch=mp clause_w=True var_mix=True snap=std snap_form=lin free_m=32 warm=results/v3/B_g4_iii_A_f.json warm_ids=[2, 0, 1] ninit=3 ntrain=1000 maxiter=1000 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| S_g4_snapL_f winner 2 (train 1.212, val 1.870) | 3.0/8.6 | 4.9/17.3 | 6.5/51.2 | 11.6/78.7 | 37.8/455.5 |
+| S_g4_snapL_f trainbest 1 (train 1.180, val 1.875) | 2.8/8.0 | 4.9/18.2 | 6.3/37.2 | 11.7/78.1 | - |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 37.8 vs 84.9, B90 455.5 vs 238.1 -> no beat
