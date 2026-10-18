@@ -5,7 +5,7 @@
 # queue line: tag|after|script args...   (after = tag whose results/v3/<after>.json must contain top-level "keep")
 set -u
 cd /workspace/qumode_sep/oct_explore
-DEADLINE=$(date -d '2026-10-19 09:00:00' +%s)
+DEADLINE=$(date -d '2026-12-31 00:00:00' +%s)  # Zach 07:40 CST Oct 19: no deadline, run until he says stop
 LOGW=logs/v3/runner.log; QF=v3/queue_v3.txt; PY=/usr/bin/python3.13; MAXJ=3; MINMEM=3500; MAXGNN=3
 say() { echo "$(date '+%F %T')" "$*" >> "$LOGW"; }
 n_run() { pgrep -f "$PY -u v3/" | wc -l; }
