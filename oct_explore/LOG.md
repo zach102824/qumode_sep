@@ -1881,3 +1881,16 @@ Runner alive (run_v3.sh pid 3688928), 4/4 slots busy, CPU advancing. MemAvailabl
 
 **Phase 1 arch scan** still at queue front (N_g4_mp128/attn/tf/ds/mlp → R_arch_scan → A_arch_scan); next free slot + ≥3500 MB launches N_g4_mp128 (s1 L4 should free first). Queue unchanged. No WakeParent (no new dual-beat / no crash).
 
+
+### S_g4_snapF_s1 finished 2026-10-18 17:14 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 clause_w=True var_mix=True snap=std snap_form=free free_m=32 warm=results/v3/B_g4_iii_A_f.json warm_ids=[2, 0, 1] ninit=3 ntrain=1000 maxiter=1000 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula seed=1 chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| S_g4_snapF_s1 winner 0 (train 1.191, val 1.882) | 2.9/8.9 | 5.2/17.9 | 6.4/38.9 | 11.1/80.8 | 37.5/182.7 |
+| S_g4_snapF_s1 trainbest 1 (train 1.161, val 1.897) | 2.9/9.6 | - | - | - | - |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 37.5 vs 84.9, B90 182.7 vs 238.1 -> **BEATS QAOA (both)**
