@@ -1894,3 +1894,10 @@ Runner alive (run_v3.sh pid 3688928), 4/4 slots busy, CPU advancing. MemAvailabl
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 37.5 vs 84.9, B90 182.7 vs 238.1 -> **BEATS QAOA (both)**
+
+## Check-in (2026-10-18 17:16 CST)
+Runner alive (run_v3.sh pid 3704086, restarted 16:59 with done_ fix), 4/4 slots busy (s1 process still finishing trainbest tests). MemAvailable ~2.7 GiB, load ~12–15 on 8 cores. PID 2888494 and *.STOP untouched.
+
+**New best dual-beat: S_g4_snapF_s1** (seed 1, warm B_g4 #2/0/1, winner init 0 picked on old n=10/12 val) n=20 L4 **37.5/182.7** vs QAOA 84.9/238.1 — B90 improves on S_g4_snapF_f (37.3/211.7) by ~14%, median about equal. Caveat: winner chosen by n=10/12 val, not the newer n=10/14/20 criterion; re-pick of s1 starts should be folded into R_arch_scan/reselect before calling it official.
+
+**Running:** S_g8_snapF_A_f (inits 0.673/0.686, init 2 of 3), S_b8_snapF_A_f (0.676/0.671, init 2 of 3), S_g4_snapL_f (lin SNAP, init 0). Phase 1 arch scan (N_g4_mp128 first) launches on next free slot + ≥3500 MB. Queue unchanged.
