@@ -2,3 +2,21 @@
 10-18 05:01:58 weights per model: 84700
 10-18 06:19:13   init 0: 1.5699 -> 1.5488 (1000 it, 4635s)
 10-18 07:23:14   init 1: 1.5699 -> 1.5485 (1000 it, 3841s)
+10-18 08:18:45   init 2: 1.5699 -> 1.5486 (1000 it, 3330s)
+10-18 08:18:50   init 0: train 1.5488 val ['1.997', '2.467']
+10-18 08:18:50   init 1: train 1.5485 val ['1.981', '2.467']
+10-18 08:18:50   init 2: train 1.5486 val ['1.987', '2.503']
+10-18 08:18:51 winner init 1 (train-best 1)
+10-18 08:18:53 test winner n=8 L=4 med1/p=4.3 B90=9.3 (2s)
+10-18 08:18:55 test winner n=10 L=4 med1/p=6.9 B90=21.5 (2s)
+E1018 08:31:28.225232 3512905 slow_operation_alarm.cc:73] 
+********************************
+[Compiling module jit_pr for CPU] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+E1018 08:31:32.149158 3512879 slow_operation_alarm.cc:140] The operation took 12m35.444311702s
+
+********************************
+[Compiling module jit_pr for CPU] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+10-18 08:31:34 test winner n=12 L=4 med1/p=10.4 B90=43.5 (759s)
+10-18 08:31:43 test winner n=14 L=4 med1/p=16.3 B90=70.6 (9s)
