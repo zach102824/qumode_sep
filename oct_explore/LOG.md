@@ -1466,3 +1466,15 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy. **B_g4_iii_A_f (GNN L4,
 
 ## Check-in (2026-10-18 08:33 CST)
 v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing. Plain refines moved on: A_g8 now 13 done (scr25 1.684 -> 1.355, scr188 1.709 -> 1.679) and the first grown cand grow_scr49 went 3.940 -> **0.952**, the best n=8 L8 train loss so far (previous best scr171 1.083). A_b8 13 done (scr81 1.358, scr141 1.388) with grown cands grow_grow_scr114 and grow_grow_scr25 both at **0.952** as well. Gray and binary landing on the identical 0.9519 from different seeds suggests one shared L8 basin reached by growth; its n=10/12 validation and n=20 test will show whether it carries over. B_g4_i_A_f (GNN L4 angles-only, formula features) is in its test phase (winner n=12 10.4/43.5); B_g4_ii_A_f (clause weights only, formula) training since 08:09. Synced A_g8/A_b8 visible logs from deleted fds. Load ~16 on 8 cores, MemAvail ~2 GiB (<3500 MB gate), caps hold, no new launches. No new finished jobs; the B_g4_iii_A_f n=20 beat was reported at 08:13. Queue unchanged. PID 2888494 untouched.
+
+### B_g4_i_A_f finished 2026-10-18 08:33 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 ninit=3 ntrain=1000 maxiter=1000 init_from=results/v3/A_g4.json val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_g4_i_A_f winner 1 (train 1.548, val 2.224) | 4.3/9.3 | 6.9/21.5 | 10.4/43.5 | 16.3/70.6 | 78.4/354.4 |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 78.4 vs 84.9, B90 354.4 vs 238.1 -> no beat
