@@ -1926,3 +1926,16 @@ Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing. MemAvailabl
 | G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
 
 n=20 winner vs QAOA L=8: median 9.1 vs 16.4, B90 51.6 vs 54.2 -> **BEATS QAOA (both)**
+
+### S_b8_snapF_A_f finished 2026-10-18 17:59 CST  (L=8)
+
+`code=binary L=8 hidden=64 rounds=3 clause_w=True var_mix=True snap=std snap_form=free free_m=32 init_from=results/v3/A_b8.json ninit=3 ntrain=1000 maxiter=1000 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| S_b8_snapF_A_f winner 1 (train 0.671, val 1.119) | 1.7/4.9 | 2.5/8.3 | 2.9/14.7 | 4.7/20.2 | 8.1/74.7 |
+| S_b8_snapF_A_f trainbest 2 (train 0.649, val 1.126) | 1.8/5.0 | 2.4/6.8 | 2.9/12.9 | 4.8/23.2 | - |
+| QAOA_raw L=8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
+
+n=20 winner vs QAOA L=8: median 8.1 vs 16.4, B90 74.7 vs 54.2 -> no beat
