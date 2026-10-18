@@ -67,7 +67,8 @@ SNAPKEYS = ("sa", "sc", "Ws", "Wp", "P0", "P1", "u0", "u1", "fq", "Wo", "T")
 
 # ---------- SNAP-aware layout helpers ----------
 _BT = {}
-def bits(lay):  # per register (k, nf) table of logical digit j of Fock level f (pads 0)
+def bits(lay):  # per register (k, nf) numpy table of logical digit j of Fock level f (pads 0).
+    # Cache numpy only: caching jnp arrays inside a jitted nf() leaked tracers under n>8 eval (S_g4_snapP_f crash 12:56).
     if id(lay) not in _BT:
         out = []
         for k, nf in zip(lay.ks, lay.nfs):
@@ -75,7 +76,7 @@ def bits(lay):  # per register (k, nf) table of logical digit j of Fock level f 
             for f in range(1 << k):
                 lg = V.gray_s(f) if lay.code == "gray" else f
                 for j in range(k): T[j, f] = (lg >> j) & 1
-            out.append(jnp.asarray(T))
+            out.append(T)
         _BT[id(lay)] = out
     return _BT[id(lay)]
 
@@ -197,7 +198,7 @@ def snap_args(lay, p, hv, B):
     out = []; cv = cvpad(lay)
     hd_all = None if hv is None else hv[:, jnp.asarray(cv)]                          # (B,C,kmax,H)
     for c, (k, nf) in enumerate(zip(lay.ks, lay.nfs)):
-        Bt = bits(lay)[c]                                                            # (k,nf)
+        Bt = jnp.asarray(bits(lay)[c])                                               # (k,nf)
         if LEVEL:
             T = p["T"][:, c, : 1 << k]; ph = jnp.concatenate([T, jnp.zeros((L, nf - (1 << k)))], 1)
             out.append(jnp.broadcast_to(ph[None], (B, L, nf))); continue

@@ -1,2 +1,44 @@
 10-18 11:43:55   init 0 (warm:B_g4_iii_A_f.json#2): 1.4152 -> 1.2115 (1000 it, 2485s) shared SNAP {'sa': [-0.005088876001536846, -0.007805886212736368, -0.01711931638419628, -0.025105375796556473], 'sc': [-0.030539825558662415, -0.03128376975655556, -0.0187199916690588, -0.021433614194393158]}
 10-18 12:15:43   init 1 (warm:B_g4_iii_A_f.json#0): 1.4085 -> 1.1852 (1000 it, 1908s) shared SNAP {'sa': [0.002630193019285798, -0.043052274733781815, -0.018112121149897575, -0.009927041828632355], 'sc': [-0.053391121327877045, -0.036721568554639816, -0.06244176626205444, 0.004996520467102528]}
+10-18 12:55:52   init 2 (warm:B_g4_iii_A_f.json#1): 1.4129 -> 1.2118 (1000 it, 2409s) shared SNAP {'sa': [-0.017742455005645752, -0.0034714604262262583, -0.009789267554879189, 0.01130583044141531], 'sc': [-0.06395044922828674, -0.06629771739244461, -0.04893827065825462, -0.02292909100651741]}
+10-18 12:55:58   init 0: train 1.2115 val ['1.746', '1.994']
+10-18 12:55:58   init 1: train 1.1852 val ['1.761', '1.996']
+10-18 12:55:59   init 2: train 1.2118 val ['1.774', '2.004']
+10-18 12:55:59 winner init 0 (train-best 1)
+10-18 12:56:02 test winner n=8 L=4 med1/p=2.8 B90=7.8 (2s) SNAP phase-rms/layer ['0.451', '0.210', '0.146', '0.172'] max|dev| ['1.85', '0.84', '0.53', '0.47']
+Traceback (most recent call last):
+  File "/workspace/qumode_sep/oct_explore/v3/gnn_snap.py", line 364, in <module>
+    t0 = time.time(); mg = {}; pp = eval_n(n, ins, p, b, ch, mg)
+                                    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/qumode_sep/oct_explore/v3/gnn_snap.py", line 251, in eval_n
+    sub = insts[i:i + chunk]; G, cls = batch_graph(n, sub, lay); bv, w, e, PH = nf(p, base, G)
+                                                                                ~~^^^^^^^^^^^^
+jax.errors.UnexpectedTracerError: Encountered an unexpected tracer. A function transformed by JAX had a side effect, allowing for a reference to an intermediate value with type float32[4,24] wrapped in a DynamicJaxprTracer to escape the scope of the transformation.
+JAX transformations require that functions explicitly return their outputs, and disallow saving intermediate values to global state.
+The function being traced when the value leaked was nf at /workspace/qumode_sep/oct_explore/v3/gnn_snap.py:246 traced for jit.
+------------------------------
+The leaked intermediate value was created on line /workspace/qumode_sep/oct_explore/v3/gnn_snap.py:78:23 (bits). 
+------------------------------
+When the value was created, the final 5 stack frames (most recent last) excluding JAX-internal frames were:
+------------------------------
+/workspace/qumode_sep/oct_explore/v3/gnn_snap.py:247:46 (eval_n.<locals>.nf)
+/workspace/qumode_sep/oct_explore/v3/gnn_snap.py:200:13 (snap_args)
+/workspace/qumode_sep/oct_explore/v3/gnn_snap.py:78:23 (bits)
+------------------------------
+
+To catch the leak earlier, try setting the environment variable JAX_CHECK_TRACER_LEAKS or using the `jax.checking_leaks` context manager.
+See https://docs.jax.dev/en/latest/errors.html#jax.errors.UnexpectedTracerError
+--------------------
+For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+10-18 13:21:16 SNAP-GNN snap=std form=pair plain=False L=4 H=64 clause_w=True var_mix=True code=gray inits=['warm:B_g4_iii_A_f.json#2', 'warm:B_g4_iii_A_f.json#0', 'warm:B_g4_iii_A_f.json#1']
+10-18 13:21:16 params per model: 85796
+10-18 13:21:21 test winner n=10 L=4 med1/p=5.1 B90=19.7 (3s) SNAP phase-rms/layer ['0.527', '0.235', '0.167', '0.208'] max|dev| ['1.72', '0.90', '0.69', '0.71']
+10-18 13:21:25 test winner n=12 L=4 med1/p=6.8 B90=50.7 (4s) SNAP phase-rms/layer ['0.554', '0.249', '0.183', '0.220'] max|dev| ['2.18', '1.00', '0.73', '0.83']
+10-18 13:21:31 test winner n=14 L=4 med1/p=11.7 B90=76.6 (6s) SNAP phase-rms/layer ['0.481', '0.227', '0.146', '0.184'] max|dev| ['2.11', '0.91', '0.80', '0.74']
+10-18 13:22:33 test winner n=20 L=4 med1/p=35.6 B90=398.3 (58s) SNAP phase-rms/layer ['0.621', '0.261', '0.207', '0.249'] max|dev| ['2.62', '1.06', '1.06', '1.02']
+10-18 13:22:36 test trainbest n=8 L=4 med1/p=2.8 B90=8.3 (2s) SNAP phase-rms/layer ['0.425', '0.236', '0.144', '0.152'] max|dev| ['1.31', '0.81', '0.45', '0.40']
+10-18 13:22:36 test trainbest n=10 L=4 med1/p=4.9 B90=17.0 (1s) SNAP phase-rms/layer ['0.483', '0.278', '0.167', '0.179'] max|dev| ['1.75', '1.08', '0.63', '0.61']
+10-18 13:22:37 test trainbest n=12 L=4 med1/p=6.5 B90=41.0 (1s) SNAP phase-rms/layer ['0.510', '0.282', '0.196', '0.196'] max|dev| ['1.87', '1.05', '0.91', '0.77']
+10-18 13:22:43 test trainbest n=14 L=4 med1/p=11.6 B90=76.6 (6s) SNAP phase-rms/layer ['0.439', '0.240', '0.155', '0.165'] max|dev| ['1.73', '1.05', '0.61', '0.58']
+10-18 13:23:52 test trainbest n=20 L=4 med1/p=35.1 B90=534.9 (65s) SNAP phase-rms/layer ['0.579', '0.295', '0.225', '0.215'] max|dev| ['2.41', '1.32', '1.00', '0.85']
+10-18 13:23:52 ALLDONE
