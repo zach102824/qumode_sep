@@ -2453,3 +2453,15 @@ Runner alive (run_v3.sh pid **3872547**, ~1h33m), MAXJ=3 / cores 0-5 (Zach 6-cor
 Finished since 02:00: none. Official Phase-2 L4 n=20 still waits on **R_attn_val** (needs r5). Wave-2 already queued behind that: N_g4_attn_n2k / s3 / fm64 / R_attn_val2.
 
 Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
+
+## Check-in (2026-10-19 02:39 CST)
+Runner alive (run_v3.sh pid **3872547**, ~1h39m), MAXJ=3 / cores 0-5 (Zach 6-core cap); all threads of the 3 live jobs re-pinned `taskset -c 0-5` (PSRs only 0–5). MemAvailable ~2.5 GiB (below MINMEM=3500 → no 4th launch). PID 2888494 and *.STOP untouched. No queue rewrite; no old-queue restart.
+
+**3/3 slots:**
+- **N_g4_attn_r5** (pid 3874429, ~96 min, rounds=5): 2/3 inits loss=[1.276, **1.262**] — still best n=8 train among attn variants; on init 2.
+- **S_g8_attn_A_f** (pid 3895655, ~68 min, L8 free-SNAP attn): 2/3 inits loss=[0.714, **0.703**]; on init 2. Train losses still behind prior mp **S_g8_snapF_A_f** (best train 0.651 → n=20 9.1/51.6).
+- **B_g4_iii_A_h128_f** (pid 3931759, ~40 min): no-SNAP H=128 control; weights started, no JSON runs yet.
+
+Finished since 02:18: none. Official Phase-2 L4 n=20 still waits on **R_attn_val** (needs r5). Wave-2 already queued behind that: N_g4_attn_n2k / s3 / fm64 / R_attn_val2.
+
+Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
