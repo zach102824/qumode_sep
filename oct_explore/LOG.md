@@ -2335,3 +2335,15 @@ Runner alive (run_v3.sh pid **3872547**), MAXJ=3 / cores 0-5 (Zach 6-core cap). 
 Finished since 23:23: **A_arch_scan** (23:25) — analysis only; runner finalized+pushed stub (`47daa390`). This check-in adds the probe table + pushes `analyze_arch_summary.json` / per-arch analyze_*.json.
 
 Queued next (unchanged): **S_g8_attn_A_f** (after a slot frees; dep A_g8 ready), then **R_attn_val** (after s1/s2/r5). Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
+
+## Check-in (2026-10-18 23:54 CST)
+Runner alive (run_v3.sh pid **3872547**), MAXJ=3 / cores 0-5 (Zach 6-core cap). Re-pinned all threads of the 3 live jobs to `taskset -c 0-5`. MemAvailable ~5.9 GiB. PID 2888494 and *.STOP untouched. No queue rewrite; no old-queue restart.
+
+**3/3 slots (Phase 2, still training):**
+- **N_g4_attn_s1** (pid 3843966, ~72 min): init 0 → 1.286, init 1 → 1.288; on init 2.
+- **N_g4_attn_s2** (pid 3872605, ~31 min): init 0 → **1.280** (best train so far among attn seeds; original N_g4_attn#1 was 1.308); on init 1+.
+- **N_g4_attn_r5** (pid 3874429, ~28 min, rounds=5, 302844 params): still on init 0 (no JSON yet).
+
+No finishes since 23:38. Next free slot → **S_g8_attn_A_f** (A_g8 ready); **R_attn_val** waits on s1/s2/r5. Behind that: B_g4_iii_A_h128_f.
+
+Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
