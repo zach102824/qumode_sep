@@ -2246,3 +2246,14 @@ n=20 winner vs QAOA L=4: median 55.9 vs 84.9, B90 277.5 vs 238.1 -> no beat
 | G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
 
 n=20 winner vs QAOA L=8: median 13.0 vs 16.4, B90 100.7 vs 54.2 -> no beat
+
+## Check-in (2026-10-18 22:56 CST)
+Runner alive (run_v3.sh pid 3845590), MAXJ=3 / cores 0-5 (Zach 6-core cap). After B_b8_iii_A_f exited, **3/3 slots** busy: B_g8_iii_A_f (init 2 of 3), B_g8_i_A_f (init 2 of 3), N_g4_attn_s1 (Phase-2 attn seed, training). MemAvailable ~6.1 GiB. PID 2888494 and *.STOP untouched. No queue rewrite; no kill of L8 no-SNAP controls (let them finish; next free slot → A_arch_scan then Phase-2).
+
+Finished since 22:45:
+- **B_g4_iii_A_h32_f** (22:39): n=20 **55.9/277.5** vs QAOA L4 84.9/238.1 — median-only, no dual-beat (already in LOG).
+- **B_b8_iii_A_f** (22:54): n=20 L8 **13.0/100.7** vs QAOA L8 16.4/54.2 — median beats QAOA, B90 loses badly; vs SNAP L8 best **9.1/51.6** much worse. Confirms L8 gain needs free SNAP. Runner finalized+pushed (`d79e6b79`).
+
+**A_arch_scan:** crashed 22:40 on missing `--tag` (pre-fix); `analyze_arch.py` fixed 22:49 (`a6f66fb7`). No result JSON yet — runner will relaunch when n_run < 3 (after a B_g8 finishes). Phase-2 still queued: N_g4_attn_s2, N_g4_attn_r5, S_g8_attn_A_f, R_attn_val.
+
+Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new dual-beat / no improve-over-best → no WakeParent.
