@@ -2537,3 +2537,15 @@ Queued next (wave-2): N_g4_attn_s3 / fm64 / R_attn_val2 (after n2k + deps). Best
 | G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
 
 n=20 winner vs QAOA L=8: median 9.0 vs 16.4, B90 56.6 vs 54.2 -> no beat
+
+## Check-in (2026-10-19 04:00 CST)
+Runner alive (run_v3.sh pid **3872547**, ~2h17m), MAXJ=3 / cores 0-5 (Zach 6-core cap); all threads of the 3 live jobs re-pinned `taskset -c 0-5`. Synced deleted log inode for S_g8_attn_A_f before exit. MemAvailable ~2.5 GiB (below MINMEM=3500 → no 4th launch). PID 2888494 and *.STOP untouched. No queue rewrite; no old-queue restart.
+
+**3/3 slots:**
+- **B_g4_iii_A_h128_f** (pid 3931759, ~109 min): no-SNAP H=128 control; 2/3 inits loss=[1.409, **1.406**]; on init 2.
+- **N_g4_attn_n2k** (pid 3954426, ~45 min, `--ntrain 2000`): wave-2; still on init 0 (no JSON yet; 2× train set → longer).
+- **N_g4_attn_s3** (pid 3961946, launched 03:54 after S_g8 freed a slot, seed 3): started, params 187900.
+
+Finished since 03:35: **S_g8_attn_A_f** (03:52, finalized+pushed `934976db`) — L8 free-SNAP attn. Winner init1 train 0.703 / val 1.127; trainbest init2 0.695. Official TEB n=20 **9.0/56.6** vs QAOA L8 16.4/54.2 → **median beats QAOA, B90 loses** (56.6 > 54.2). Median edges prior mp **S_g8_snapF_A_f 9.1/51.6** but B90 worse → L8 dual-beat best **unchanged** at 9.1/51.6. No WakeParent (not dual-beat QAOA).
+
+Queued next (wave-2): N_g4_attn_fm64 / R_attn_val2 (after n2k+s3+fm64). Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **R_attn_val (attn_s2#1) 42.9/167.2**; L8 **S_g8_snapF_A_f 9.1/51.6**.
