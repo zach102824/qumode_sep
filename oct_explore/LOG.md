@@ -1447,3 +1447,16 @@ v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing:
 
 ## Check-in (2026-10-18 07:56 CST)
 v3 runner alive (run_v3.sh pid 3419014), 4/4 slots busy with CPU time advancing: A_g8 refining 22 cands on 1000 inst (10 done, best still scr171 1.083), A_b8 refining (10 done; new scr48 1.514 -> 1.155, nearly tying the binary best scr83 1.152). B_g4_iii_A_f (GNN L4 full outputs, formula features) on init 2 of 3 (1.402 / 1.407), B_g4_i_A_f (angles-only, formula) on init 2 of 3 (1.549 / 1.549). Synced A_g8/A_b8 visible logs from deleted fds. Load ~15-19 on 8 cores, MemAvail ~2 GiB (<3500 MB gate), caps hold, no new launches. No new finished jobs; no new n=20 beat beyond A_b4/A_g4 (already reported). Queue unchanged. PID 2888494 untouched.
+
+### B_g4_iii_A_f finished 2026-10-18 08:09 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 clause_w=True var_mix=True ninit=3 ntrain=1000 maxiter=1000 init_from=results/v3/A_g4.json val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_g4_iii_A_f winner 2 (train 1.409, val 2.031) | 3.6/7.1 | 6.4/15.7 | 7.9/29.7 | 13.5/43.9 | 56.0/217.2 |
+| B_g4_iii_A_f trainbest 0 (train 1.402, val 2.040) | 3.5/7.2 | 6.5/14.8 | 8.4/28.2 | 13.8/40.5 | 53.5/183.7 |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 56.0 vs 84.9, B90 217.2 vs 238.1 -> **BEATS QAOA (both)**
