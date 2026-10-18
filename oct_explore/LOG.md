@@ -2049,3 +2049,10 @@ Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing. MemAvailabl
 Runner alive (run_v3.sh pid 3704086), 4/4 slots busy (mp128 ~193%, attn ~156%, tf ~137%, ds ~117% CPU). MemAvailable ~4 GiB but no free slot (MAXJ=4) — **N_g4_mlp** still queued. Load ~14 on 8 cores. PID 2888494 and *.STOP untouched. No new finish since S_g4_snapL_f (18:21); no new init lines since 19:54 check (mp128 init 2, attn/tf init 1, ds init 2 in progress). No queue rewrite; no restart.
 
 Queued next unchanged: N_g4_mlp → R_arch_scan → A_arch_scan, then R_g4_snapF_val2 / L8 no-SNAP controls. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6**. No WakeParent.
+
+## Check-in (2026-10-18 20:39 CST)
+Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing. MemAvailable ~2.4 GiB (below 3500 MB gate) and no free slot — **N_g4_mlp** still queued. Load ~14 on 8 cores. PID 2888494 and *.STOP untouched. No new finish since S_g4_snapL_f (18:21); no queue rewrite; no restart.
+
+New init line: **N_g4_attn** init 1 **1.570→1.308** (1000 it, 4994 s) — same as init 0 (1.304), still well behind mp64 ~1.18. Others unchanged: mp128 inits 1.149/1.160 (init 2 running), tf 1.405 (init 1 running), ds 1.438/1.441 (init 2 running, should finish soon).
+
+Queued next unchanged: N_g4_mlp → R_arch_scan → A_arch_scan, then R_g4_snapF_val2 / L8 no-SNAP controls. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6**. No WakeParent.
