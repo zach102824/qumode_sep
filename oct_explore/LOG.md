@@ -1594,3 +1594,19 @@ v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy with CPU advancing. MemA
 - **S_g4_snapP_f** (GNN standard SNAP, pair form, warm from B_g4_iii_A_f #2/#0/#1): **init 0 done** 1.4152 → **1.2115** (1000 it, 2485 s). Large n=8 train drop vs ECD warm (~1.40) and vs B_g4_iii_A_f train (~1.40); shared SNAP sa/sc nonzero (sa ≈ −0.005…−0.025, sc ≈ −0.019…−0.031). On init 1 of 3.
 - **S_g4_snapF_f** (GNN standard SNAP, free form): started 11:39, still on first warm init (89 596 params; no json yet).
 **Queue waiting (GNN slots full):** S_g4_ctrl_f, S_g4_plainL/P/F/Lev8, S_g4_snapL_f, B_b8_iii_A_f, B_g8_iii_A_f, B_g4_iii_A_h32/h128_f, B_g8_i_A_f, B_g10_iii_A_f (needs A_g10 keep). No new finished n=20 result this check. Best dual-beat still B_g4_iii_A_f **56.0/217.2** and B_g4_ii_A_f **58.2/197.2** vs QAOA L4 84.9/238.1 (already reported). PID 2888494 untouched.
+
+## Check-in (2026-10-18 12:11 CST)
+v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy with CPU advancing. MemAvail ~2.5 GiB (<3500 MB gate), load ~18–20 on 8 cores, caps hold, no new launches. Synced A_b10 visible log from deleted fd (still at screen 70/200).
+- **A_b10** (plain binary L10 grown from A_b8): screen **70/200**, best **1.332** (unchanged since 60/200). ~2–3 min/init under load → screen finish ~6–8 h more, then refine+grow.
+- **A_g10** (plain gray L10 grown from A_g8): screen **30/200**, best **1.568**.
+- **S_g4_snapP_f** (GNN standard SNAP, pair form, warm from B_g4_iii_A_f #2/#0/#1): init 0 done 1.4152 → **1.2115** (1000 it, 2485 s); still on init 1 of 3 (~27 min since init 0 finished; first init was ~41 min).
+- **S_g4_snapF_f** (GNN standard SNAP, free form, 89 596 params): started 11:39, still on first warm init, no json yet (~31 min elapsed; pair’s first init took ~41 min so this is on track).
+**Queue waiting (GNN slots full):** S_g4_ctrl_f, S_g4_plainL/P/F/Lev8, S_g4_snapL_f, B_b8_iii_A_f, B_g8_iii_A_f, B_g4_iii_A_h32/h128_f, B_g8_i_A_f, B_g10_iii_A_f (needs A_g10 keep). No new finished n=20 result this check. Best dual-beat still B_g4_iii_A_f **56.0/217.2** and B_g4_ii_A_f **58.2/197.2** vs QAOA L4 84.9/238.1 (already reported). PID 2888494 untouched.
+
+## Check-in (2026-10-18 12:16 CST)
+v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy with CPU advancing. MemAvail ~5.8 GiB, load ~21 on 8 cores, caps hold, no new launches. Synced A_b10 visible log from deleted fd.
+- **A_b10** (plain binary L10 grown from A_b8): screen **80/200**, best **1.332** (unchanged since 60/200). ~2–3 min/init under load → screen finish ~4–5 h more, then refine+grow.
+- **A_g10** (plain gray L10 grown from A_g8): screen **40/200**, best **1.568**.
+- **S_g4_snapP_f** (GNN standard SNAP, pair form, warm from B_g4_iii_A_f #2/#0/#1): init 0 done 1.4152 → **1.2115**; init 1 done 1.4085 → **1.1852** (1000 it, 1908 s); on init 2 of 3. Pair SNAP keeps lowering n=8 train well below the ECD warm (~1.40) and B_g4_iii_A_f (~1.40).
+- **S_g4_snapF_f** (GNN standard SNAP, free form): init 0 done 1.4152 → **1.1826** (1000 it, 1967 s); best SNAP n=8 train so far; on init 1 of 3.
+**Reasoning (interim, n=8 train only):** free and pair SNAP both move ~0.23 off the ECD warm basin in 1000 BFGS steps, so the extra diagonal terms are being used. Frozen n=20 tests after all 3 warm inits will say whether this transfers (or overfits like binary L4 / plain L8). Queue waiting unchanged (GNN slots full): S_g4_ctrl_f, S_g4_plainL/P/F/Lev8, S_g4_snapL_f, B_b8_iii_A_f, B_g8_iii_A_f, B_g4_iii_A_h32/h128_f, B_g8_i_A_f, B_g10_iii_A_f (needs A_g10 keep). No new finished n=20 result this check. Best dual-beat still B_g4_iii_A_f **56.0/217.2** and B_g4_ii_A_f **58.2/197.2** vs QAOA L4 84.9/238.1 (already reported). PID 2888494 untouched.
