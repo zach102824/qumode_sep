@@ -2113,3 +2113,24 @@ Queued next unchanged: R_arch_scan (after attn/tf/mlp) → A_arch_scan, then B_g
 | N_g4_attn trainbest 2 (train 1.300, val 1.886) | 3.1/7.6 | 5.3/14.3 | - | - |
 | QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
+
+## Classical baselines (Sun 21:45 CST)  [results/v3/classical_baselines.json, code v3/classical/]
+
+Exact v3 TEST instances: `sim.instances(n, N, TEB=32e9)` (N=200 at n=14, else 100) — same set as every v3 n=20 report. Target = all satisfying strings (E==0), same success set as `v3core.succ_D`. Per instance: mean over 200 independent runs of cost to first hit; then median/B90 across instances. Tuning only on TRAIN (base 31e9). WalkSAT = SKC, p=0.5 (best on n=20 train; n=8 train degenerate, prefers p=0.7). SA = single-flip Metropolis, linear beta, restart until hit.
+**Units differ:** quantum = 1/p (expected shots); classical flips = accepted single-var moves; evals = WalkSAT 1+4/step break-count evals, SA 1/proposal; random = 2^n/nsol samples.
+
+| method | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| GNN-SNAP L4 (shots) | 2.9/8.9 | 5.2/17.9 | 6.4/38.9 | 11.1/80.8 | **37.5/182.7** |
+| GNN-SNAP L8 (shots) | 1.7/3.8 | 2.3/7.1 | 3.1/10.6 | 4.5/18.8 | **9.1/51.6** |
+| QAOA L4 / L8 (shots) | 5.3/9.9 / 2.5/4.5 | 8.4/19.7 / 3.5/7.3 | 12.8/32.8 / 4.6/15.5 | 20.8/59.6 / 6.3/18.3 | 84.9/238.1 / 16.4/54.2 |
+| random guess (samples) | 128/256 | 512/1024 | 2048/4096 | 8192/16384 | 349525/1048576 |
+| WalkSAT p=.5 flips | 15.1/43.5 | 28.5/61.2 | 43.7/118.1 | 60.8/148.6 | 135.1/383.6 |
+| WalkSAT p=.5 evals | 61.4/175.0 | 115.1/245.7 | 175.8/473.2 | 244.2/595.4 | 541.5/1535.3 |
+| SA (n=8-train tuned) flips | 30.8/59.8 | 58.9/103.3 | 97.5/219.3 | 157.3/343.3 | 627.3/1519.7 |
+| SA (n=8-train tuned) evals | 84.7/173.9 | 163.2/309.7 | 282.8/658.7 | 458.1/1032.2 | 1900.9/4572.6 |
+| SA (n=20-train tuned) flips | 34.6/83.8 | 56.3/117.3 | 81.9/228.5 | 123.6/269.8 | 288.8/770.3 |
+| SA (n=20-train tuned) evals | 103.8/319.0 | 190.9/469.9 | 299.2/937.6 | 472.2/1239.8 | 1222.1/3567.4 |
+
+Per-instance Spearman at n=20 (GNN 1/p vs classical cost): L4 0.83 vs WalkSAT flips, 0.72 vs 1/nsol; L8 0.87 / 0.74 — the same instances are hard for both.
+Caveats: units are not equivalent (a shot is one full L-layer circuit + measurement; a flip is O(degree~40) clause updates). Only cost-to-solution counts compared, no wall-clock/hardware time. Scaling n=8→20 of median: WalkSAT flips ×9, GNN L8 ×5.4, GNN L4 ×13, QAOA L4 ×16. Earlier "SATLike 124/530 at n=20" row was a fit on a different instance family; WalkSAT here is measured on the actual test set (135/384 flips).
