@@ -1717,3 +1717,11 @@ n=20 winner vs QAOA L=4: median 59.1 vs 84.9, B90 234.1 vs 238.1 -> **BEATS QAOA
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 60.2 vs 84.9, B90 238.0 vs 238.1 -> **BEATS QAOA (both)**
+
+## Check-in (2026-10-18 14:35 CST)
+v3 runner alive (run_v3.sh pid 3646460), 4/4 slots busy with CPU advancing. Synced A_b10 / A_g10 / S_g4_ctrl_f visible logs from deleted fds. PID 2888494 untouched. MemAvail ~5 GiB, load ~19.4 on 8 cores, caps hold.
+- **S_g4_plainL / S_g4_plainP finished** (plain shared-angle standard SNAP, lin / pair form, from the A_g4 keep-list, 5 inits): BFGS converged in 15–21 its with SNAP phases only ~0.01–0.04 rad; train 1.5703 → 1.5701 / 1.5698 (all 5 inits collapse to the same point). n=20 **59.1/234.1** (lin) and **60.2/238.0** (pair) vs QAOA L4 84.9/238.1 → formally dual beats, but these are a tiny perturbation of plain A_g4 (60.7/243.5); the B90 margin (−1.7% / −0.04%) is inside instance noise. **Reading:** a single shared SNAP phase set gives almost nothing at L4; the SNAP gain needs per-instance phases from the network.
+- **S_g4_ctrl_f** (ECD control, same warm start, 1000 its, no SNAP): init 0 1.4086 → **1.3777** vs free SNAP 1.18 / pair SNAP 1.19–1.21 on the same warm start → the SNAP median gain is SNAP-specific, not just longer training. Inits 1–2 still running.
+- **S_g4_plainF** (plain free-form SNAP) launched 14:31.
+- **A_b10** screen 150/200, best 1.332. **A_g10** screen 120/200, best **1.331** (from 1.540).
+**Queue:** unchanged (S_g4_Lev8, S_g4_snapL_f, B_b8_iii_A_f, B_g8_iii_A_f, B_g4_iii_A_h32/h128_f, B_g8_i_A_f, B_g10_iii_A_f). Best dual-beat remains S_g4_snapF_f **37.3/211.7** (already reported). Next lever once ctrl finishes: network SNAP at L8 off the A_g8/B_g8 line, since the network-SNAP gain is the one that transfers.
