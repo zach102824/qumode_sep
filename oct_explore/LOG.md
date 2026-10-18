@@ -2056,3 +2056,13 @@ Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing. MemAvailabl
 New init line: **N_g4_attn** init 1 **1.570→1.308** (1000 it, 4994 s) — same as init 0 (1.304), still well behind mp64 ~1.18. Others unchanged: mp128 inits 1.149/1.160 (init 2 running), tf 1.405 (init 1 running), ds 1.438/1.441 (init 2 running, should finish soon).
 
 Queued next unchanged: N_g4_mlp → R_arch_scan → A_arch_scan, then R_g4_snapF_val2 / L8 no-SNAP controls. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6**. No WakeParent.
+
+### N_g4_ds finished 2026-10-18 20:43 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 arch=ds clause_w=True var_mix=True snap=std snap_form=free free_m=32 init_from=results/v3/A_g4.json ninit=3 ntrain=1000 maxiter=1000 val=[10, 12] val_count=60 test=[8, 10, 12, 14] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 |
+|---|---|---|---|---|
+| N_g4_ds winner 2 (train 1.436, val 2.020) | 4.1/8.1 | 6.1/18.8 | 9.2/32.4 | 14.2/58.2 |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
