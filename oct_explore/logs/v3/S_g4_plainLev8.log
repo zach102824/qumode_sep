@@ -1,0 +1,16 @@
+10-18 14:37:30 SNAP-GNN snap=std form=level plain=True L=4 H=64 clause_w=False var_mix=False code=gray inits=['init_from:A_g4.json#scr49', 'init_from:A_g4.json#scr131', 'init_from:A_g4.json#grow_scr48', 'init_from:A_g4.json#scr34', 'init_from:A_g4.json#grow_scr53']
+10-18 14:37:30 params per model: 92
+10-18 14:38:10   init 0 (init_from:A_g4.json#scr49): 1.5703 -> 1.5668 (20 it, 38s) shared SNAP {}
+10-18 14:38:56   init 1 (init_from:A_g4.json#scr131): 1.5703 -> 1.5668 (28 it, 45s) shared SNAP {}
+10-18 14:39:25   init 2 (init_from:A_g4.json#grow_scr48): 1.5703 -> 1.5668 (20 it, 29s) shared SNAP {}
+10-18 14:54:37   init 3 (init_from:A_g4.json#scr34): 1.5703 -> 1.5668 (25 it, 913s) shared SNAP {}
+10-18 14:55:32   init 4 (init_from:A_g4.json#grow_scr53): 1.5705 -> 1.5668 (33 it, 55s) shared SNAP {}
+10-18 14:55:34   init 0: train 1.5668 val ['1.483']
+10-18 14:55:34   init 1: train 1.5668 val ['1.483']
+10-18 14:55:34   init 2: train 1.5668 val ['1.483']
+10-18 14:55:34   init 3: train 1.5668 val ['1.483']
+10-18 14:55:34   init 4: train 1.5668 val ['1.483']
+10-18 14:55:34 winner init 0 (train-best 1)
+10-18 14:55:36 test winner n=8 L=4 med1/p=4.4 B90=8.7 (2s) SNAP phase-rms/layer ['0.034', '0.023', '0.027', '0.021'] max|dev| ['0.06', '0.05', '0.05', '0.06']
+10-18 14:55:36 test trainbest n=8 L=4 med1/p=4.4 B90=8.7 (0s) SNAP phase-rms/layer ['0.034', '0.023', '0.028', '0.021'] max|dev| ['0.07', '0.05', '0.05', '0.06']
+10-18 14:55:36 ALLDONE

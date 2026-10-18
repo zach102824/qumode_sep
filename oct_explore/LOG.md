@@ -1738,3 +1738,14 @@ v3 runner alive (run_v3.sh pid 3646460), 4/4 slots busy with CPU advancing. Sync
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 59.6 vs 84.9, B90 233.6 vs 238.1 -> **BEATS QAOA (both)**
+
+### S_g4_plainLev8 finished 2026-10-18 14:56 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 snap=std snap_form=level free_m=32 plain=True init_from=results/v3/A_g4.json ninit=5 ntrain=1000 maxiter=2000 val=[8] val_count=60 test=[8] feat=formula chunk=250`
+
+| row | n=8 |
+|---|---|
+| S_g4_plainLev8 winner 0 (train 1.567, val 1.483) | 4.4/8.7 |
+| S_g4_plainLev8 trainbest 1 (train 1.567, val 1.483) | 4.4/8.7 |
+| QAOA_raw L=4 | 5.3/9.9 |
+| G_fe L=4 | 5.4/9.8 |

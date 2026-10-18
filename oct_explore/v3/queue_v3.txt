@@ -9,6 +9,9 @@ S_g4_plainP||v3/gnn_snap.py --tag S_g4_plainP --snap_form pair --plain --L 4 --s
 S_g4_plainF||v3/gnn_snap.py --tag S_g4_plainF --snap_form free --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250
 S_g4_plainLev8||v3/gnn_snap.py --tag S_g4_plainLev8 --snap_form level --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250 --val 8 --test 8
 S_g4_snapL_f||v3/gnn_snap.py --tag S_g4_snapL_f --snap_form lin --L 4 --clause_w --var_mix --snap std --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
+# 14:56 CST: network SNAP gain is per-instance (plain shared SNAP L/P/F ~0 gain at L4; GNN free SNAP 37.3/211.7). Carry it to L8 from the from-scratch A_g8/A_b8 keep-lists (no QAOA), ahead of the no-SNAP L8 GNNs.
+S_g8_snapF_A_f|A_g8|v3/gnn_snap.py --tag S_g8_snapF_A_f --snap_form free --code gray --L 8 --clause_w --var_mix --snap std --init_from results/v3/A_g8.json --ninit 3 --maxiter 1000 --feat formula --chunk 125
+S_b8_snapF_A_f|A_b8|v3/gnn_snap.py --tag S_b8_snapF_A_f --snap_form free --code binary --L 8 --clause_w --var_mix --snap std --init_from results/v3/A_b8.json --ninit 3 --maxiter 1000 --feat formula --chunk 125
 # 09:38 CST: A_b8 plain L8 beats QAOA L8 n=20 median (14.6 vs 16.4) but B90 119.3 vs 54.2 (tail overfit to n=8, n=12 B90 already 21.4 vs 15.5). At L4 the formula GNN with full outputs cut B90 250->217 over plain; try the same on the binary L8 keep-list.
 B_b8_iii_A_f|A_b8|v3/gnn_v3.py --tag B_b8_iii_A_f --code binary --L 8 --hidden 64 --clause_w --var_mix --ninit 3 --init_from results/v3/A_b8.json --feat formula --chunk 125
 A_g2||v3/v3_plain.py --tag A_g2 --code gray --L 2 --ninit 200 --refine 16
