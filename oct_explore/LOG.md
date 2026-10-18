@@ -1651,3 +1651,11 @@ v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy. PID 2888494 untouched.
 
 **Reasoning:** pair SNAP clearly moves the typical-instance median (n=8 train 1.40→1.19–1.21 and n=20 median 56→35.6) via extra diagonal terms, but the hard-instance B90 blows out the same way as plain L8 / binary L4 GNN. Ctrl + free + plain SNAP forms already queued will say whether the median gain is SNAP-specific and whether any form keeps the B90. No new queue lines yet — wait for ctrl/free before changing direction. Best dual-beat remains B_g4_iii_A_f **56.0/217.2** and B_g4_ii_A_f **58.2/197.2**. MemAvail ~5.6 GiB, load ~20 on 8 cores, caps hold.
 
+
+## Check-in (2026-10-18 13:34 CST)
+v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy with CPU advancing. MemAvail ~2464 MB (<3500 MB gate), load ~19–20 on 8 cores, caps hold, no new launches. Synced A_b10 / A_g10 / S_g4_snapF_f visible logs from deleted fds. PID 2888494 untouched.
+- **A_b10** (plain binary L10 grown from A_b8): screen **120/200**, best **1.332** (unchanged since 60/200). ~2–3 min/init under load → screen finish ~3–4 h more, then refine+grow.
+- **A_g10** (plain gray L10 grown from A_g8): screen **80/200**, best **1.568**.
+- **S_g4_snapF_f** (GNN standard SNAP, free form; relaunched 13:21 after tracer fix with inits 0–1 saved): init 0 1.4152 → **1.1826**; init 1 1.4085 → **1.1546**; mid init 2 of 3 (~9 min into resume; free inits ~33–42 min). Best SNAP n=8 train so far (1.155).
+- **S_g4_ctrl_f** (ECD control, same warm / 1000 its, launched 13:24): still on first warm init, no json yet (~6 min).
+**Queue waiting (GNN slots full + mem gate):** S_g4_plainL/P/F/Lev8, S_g4_snapL_f, B_b8_iii_A_f, B_g8_iii_A_f, B_g4_iii_A_h32/h128_f, B_g8_i_A_f, B_g10_iii_A_f (needs A_g10 keep). No new finished n=20 result this check (snapP already reported: median 35.6, B90 398.3, no dual beat). Best dual-beat still B_g4_iii_A_f **56.0/217.2** and B_g4_ii_A_f **58.2/197.2** vs QAOA L4 84.9/238.1. Wait for free + ctrl n=20 before queue changes.
