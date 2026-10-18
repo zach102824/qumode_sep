@@ -47,7 +47,10 @@ while [[ $(date +%s) -lt $DEADLINE ]]; do
     finalize "$tag"; done_ "$tag" && continue; running "$tag" && continue
     ready "$after" || continue
     [[ $(n_run) -ge $MAXJ ]] && continue
-    [[ "$args" == *gnn_v3.py* && $(pgrep -f "$PY -u v3/gnn_v3.py" | wc -l) -ge $MAXGNN ]] && continue
+    # Count gnn_v3 and gnn_snap toward MAXGNN so SNAP front-of-queue cannot stack 4 neural jobs.
+    if [[ "$args" == *gnn_v3.py* || "$args" == *gnn_snap.py* ]]; then
+      [[ $(pgrep -f "$PY -u v3/gnn_" | wc -l) -ge $MAXGNN ]] && continue
+    fi
     m=$(mem_mb); [[ $m -lt $MINMEM ]] && { say "hold $tag mem=${m}MB"; continue; }
     say "LAUNCH $tag (mem=${m}MB)"
     setsid nohup env OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 XLA_PYTHON_CLIENT_PREALLOCATE=false \

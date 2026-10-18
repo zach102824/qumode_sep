@@ -1501,3 +1501,8 @@ n=20 winner vs QAOA L=4: median 78.4 vs 84.9, B90 354.4 vs 238.1 -> no beat
 - Gradients on SNAP at step 0 are nonzero: Ws 1.4–1.7, Wo 0.33–0.54.
 **Smoke (2 threads, loaded box):** GNN gradient on 200 instances 0.17–0.23 s/eval after a 3 s JIT. Plain 250 instances × 30 its: 7–9 s. Plain 30-it n=8 loss (250 inst) from 1.5717: lin 1.5689, pair 1.5687, free 1.5684, level 1.5553.
 **Queue (front, replaces the 08:48 S_g4_* lines; nothing had launched):** S_g4_snapP_f, S_g4_snapF_f, S_g4_ctrl_f, S_g4_plainL, S_g4_plainP, S_g4_plainF, S_g4_plainLev8, S_g4_snapL_f.
+
+## Check-in (2026-10-18 08:56 CST)
+v3 runner restarted (run_v3.sh new pid 3564313; previous 3419014 stopped cleanly). All 4 job processes survived the restart: A_g8 (PID 3405870), A_b8 (3406154), B_g4_ii_A_f (3544785), B_b4_iii_A_f (3551522).
+**Progress:** A_g8 / A_b8 still in the 22-cand refine+grow phase (screen done 03:01). Grown basin at n=8 train loss **0.9519** (gray grow_scr49 / binary grow_grow_scr114 and siblings); ~17/22 gray and ~19/22 binary cands done, so both should finish within ~1–2 h, then frozen val/test. B_g4_ii_A_f (clause_w only, formula) finished init 0: 1.570 -> 1.440 (2280 s), on init 1 of 3. B_b4_iii_A_f (binary full outputs, formula, since 08:33) still on init 0.
+**Runner fix:** MAXGNN now counts `gnn_snap.py` as well as `gnn_v3.py`, so the front-of-queue SNAP jobs cannot stack with the two running GNNs into 4 neural jobs when A_g8/A_b8 free slots. MemAvail ~5.6 GiB, load ~20 on 8 cores, caps hold. SNAP queue (S_g4_snapP_f / snapF_f / ctrl_f / plainL/P/F/Lev8 / snapL_f) still waiting for a GNN slot. No new finished n=20 result; B_g4_iii_A_f 56.0/217.2 vs QAOA L4 84.9/238.1 remains the best (already reported). PID 2888494 untouched.
