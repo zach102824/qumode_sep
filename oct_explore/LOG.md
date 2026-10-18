@@ -2233,3 +2233,16 @@ n=20 winner vs QAOA L=4: median 55.9 vs 84.9, B90 277.5 vs 238.1 -> no beat
 
 ## 22:49 CST fix A_arch_scan --tag crash
 - `v3/analyze_arch.py`: inject dummy `--tag _lib_analyze_arch` when execing gnn_snap lib (same as reselect_arch 21:58); smoke past arg parse OK; queue line unchanged, runner will relaunch.
+
+### B_b8_iii_A_f finished 2026-10-18 22:54 CST  (L=8)
+
+`code=binary L=8 hidden=64 rounds=3 clause_w=True var_mix=True ninit=3 ntrain=1000 maxiter=1000 init_from=results/v3/A_b8.json val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_b8_iii_A_f winner 0 (train 0.805, val 1.187) | 1.9/3.7 | 2.6/6.2 | 3.5/13.5 | 4.8/17.7 | 13.0/100.7 |
+| B_b8_iii_A_f trainbest 2 (train 0.789, val 1.188) | 1.9/3.6 | 2.6/6.1 | 3.3/12.6 | 4.7/20.7 | - |
+| QAOA_raw L=8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
+
+n=20 winner vs QAOA L=8: median 13.0 vs 16.4, B90 100.7 vs 54.2 -> no beat
