@@ -2573,3 +2573,16 @@ Runner alive (run_v3.sh pid **3872547**, ~2h31m), MAXJ=3 / cores 0-5 (Zach 6-cor
 Finished since 04:13: none. Queued next (wave-2): **N_g4_attn_fm64** when a slot frees (mem gate); then **R_attn_val2** after n2k+s3+fm64.
 
 Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **R_attn_val (attn_s2#1) 42.9/167.2**; L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
+
+### B_g4_iii_A_h128_f finished 2026-10-19 04:44 CST  (L=4)
+
+`code=gray L=4 hidden=128 rounds=3 clause_w=True var_mix=True ninit=3 ntrain=1000 maxiter=1000 init_from=results/v3/A_g4.json val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_g4_iii_A_h128_f winner 0 (train 1.409, val 2.030) | 3.5/7.2 | 6.1/14.4 | 8.3/31.9 | 13.7/40.8 | 53.1/166.3 |
+| B_g4_iii_A_h128_f trainbest 1 (train 1.406, val 2.040) | 3.6/7.1 | 6.4/14.6 | 8.9/32.2 | 13.7/42.7 | - |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 53.1 vs 84.9, B90 166.3 vs 238.1 -> **BEATS QAOA (both)**
