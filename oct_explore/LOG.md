@@ -2162,3 +2162,8 @@ Progress: N_g4_tf inits 1.405/1.414 (worst-but-ds fit), N_g4_mlp inits 1.424/1.4
 | N_g4_mlp trainbest 0 (train 1.424, val 1.995) | 3.9/7.3 | 6.2/16.9 | 8.8/31.3 | 15.0/45.4 |
 | QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
+
+## Check-in (2026-10-18 21:59 CST)
+Runner alive (run_v3.sh pid 3704086). N_g4_tf and N_g4_mlp finished 21:40, so all five Phase-1 arch jobs are done and R_arch_scan became ready, but all 4 runner slots had already gone to lower-priority controls (B_b8_iii_A_f, B_g8_iii_A_f, B_g8_i_A_f, B_g4_iii_A_h32_f, launched 21:34–21:37 while R_arch_scan was still blocked). Since R_arch_scan is the Phase-1 decision and MemAvailable was ~5.2 GB (>3500 gate), launched it manually (same detached setsid nohup env as the runner; runner sees it via `--tag`).
+Two crashes on launch, both in `v3/reselect_arch.py`, both fixed: (1) `import sim` failed because `sim.py` lives in `oct_explore/` and the script didn't add it to `sys.path`; (2) exec'ing the `gnn_snap.py` library part needs `--tag` (it was filtered out) — now passes a dummy `_lib_reselect_arch` tag (library only defines `save()`, never writes on import). Third launch 21:54 running fine: ~1 min per init, 18 inits, ETA ~22:15 then n=20 test of the winner; runner will finalize/push, then A_arch_scan.
+First rows (S_g4_snapF_f, mp): S = 3.243 / 3.267 / 3.290; n=20 val 33.2/201.6, 36.4/178.1, 34.8/195.3. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6**. PID 2888494 and *.STOP untouched. No WakeParent.

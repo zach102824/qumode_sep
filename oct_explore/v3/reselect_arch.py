@@ -11,6 +11,7 @@ Each source is loaded with ITS OWN args (different arches have different param t
 import argparse, json, os, sys, time, fcntl
 import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE); sys.path.insert(0, os.path.dirname(HERE))  # 21:55 fix: sim.py lives in oct_explore/
 ap = argparse.ArgumentParser()
 ap.add_argument("--tag", required=True); ap.add_argument("--src", nargs="+", required=True)
 ap.add_argument("--vn", type=int, nargs="*", default=[10, 14, 20])
@@ -50,6 +51,7 @@ def lib_for(a0):
         else: argv += [f"--{k}", str(v)]
     # older results lack --arch: default mp
     if "arch" not in a0: argv += ["--arch", "mp"]
+    argv += ["--tag", "_lib_reselect_arch"]  # 21:58 fix: gnn_snap requires --tag (dummy; lib part only defines save())
     path = os.path.join(HERE, "gnn_snap.py")
     code = open(path).read(); code = code[: code.index("# ---------- main ----------")]
     sys.argv = [path] + argv
