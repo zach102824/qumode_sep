@@ -2151,3 +2151,14 @@ Progress: N_g4_tf inits 1.405/1.414 (worst-but-ds fit), N_g4_mlp inits 1.424/1.4
 | N_g4_tf winner 0 (train 1.405, val 2.004) | 3.6/6.9 | 6.5/13.8 | 8.0/29.5 | 13.7/43.3 |
 | QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
+
+### N_g4_mlp finished 2026-10-18 21:40 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 arch=mlp clause_w=True var_mix=True snap=std snap_form=free free_m=32 init_from=results/v3/A_g4.json ninit=3 ntrain=1000 maxiter=1000 val=[10, 12] val_count=60 test=[8, 10, 12, 14] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 |
+|---|---|---|---|---|
+| N_g4_mlp winner 2 (train 1.439, val 1.984) | 3.8/7.9 | 6.1/17.0 | 8.9/29.7 | 14.0/48.2 |
+| N_g4_mlp trainbest 0 (train 1.424, val 1.995) | 3.9/7.3 | 6.2/16.9 | 8.8/31.3 | 15.0/45.4 |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
