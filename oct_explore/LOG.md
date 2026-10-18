@@ -2134,3 +2134,10 @@ Exact v3 TEST instances: `sim.instances(n, N, TEB=32e9)` (N=200 at n=14, else 10
 
 Per-instance Spearman at n=20 (GNN 1/p vs classical cost): L4 0.83 vs WalkSAT flips, 0.72 vs 1/nsol; L8 0.87 / 0.74 — the same instances are hard for both.
 Caveats: units are not equivalent (a shot is one full L-layer circuit + measurement; a flip is O(degree~40) clause updates). Only cost-to-solution counts compared, no wall-clock/hardware time. Scaling n=8→20 of median: WalkSAT flips ×9, GNN L8 ×5.4, GNN L4 ×13, QAOA L4 ×16. Earlier "SATLike 124/530 at n=20" row was a fit on a different instance family; WalkSAT here is measured on the actual test set (135/384 flips).
+
+## Check-in (2026-10-18 21:33 CST)
+Runner alive (run_v3.sh pid 3704086), 3/4 slots busy: N_g4_tf (init 2 of 3), N_g4_mlp (init 2 of 3), B_b8_iii_A_f (L8 binary no-SNAP control). MemAvailable ~2.5 GiB (below 3500 MB gate) — runner correctly holding B_g8_iii_A_f / B_g8_i_A_f / B_g4_iii_A_h32_f / B_g4_iii_A_h128_f. Load ~12.6 on 8 cores. PID 2888494 and *.STOP untouched. No queue rewrite; no restart.
+
+New finish since 21:12: **N_g4_attn** (21:16) winner init 1, train 1.308 (worse n=8 fit than mp64 ~1.18 / mp128 1.149), val 1.886 (best n=10/12 val of the scan so far). n=14 **12.8/50.2** vs QAOA L4 20.8/59.6 — beats QAOA on both at n=14 and has the best n=14 B90 of the scan (mp128 79.0, ds 58.2). Read so far: lower n=8 train loss does not translate to better large-n tails (mp128 fits best, generalizes worst); attention's weaker fit but better tail supports the overfit hunch. Official pick still waits for R_arch_scan (n=10/14/20 val).
+
+Progress: N_g4_tf inits 1.405/1.414 (worst-but-ds fit), N_g4_mlp inits 1.424/1.442. R_arch_scan launches after tf + mlp finish (~1–2 h). Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6**. No WakeParent.
