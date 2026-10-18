@@ -17,6 +17,15 @@ N_g4_mlp||v3/gnn_snap.py --tag N_g4_mlp --arch mlp --snap_form free --code gray 
 R_arch_scan|N_g4_mp128,N_g4_attn,N_g4_tf,N_g4_ds,N_g4_mlp|v3/reselect_arch.py --tag R_arch_scan --src S_g4_snapF_f N_g4_mp128 N_g4_attn N_g4_tf N_g4_ds N_g4_mlp --vn 10 14 20 --nval 600 300 100 --vbase 37000000000
 A_arch_scan|R_arch_scan|v3/analyze_arch.py --tags S_g4_snapF_f N_g4_mp128 N_g4_attn N_g4_tf N_g4_ds N_g4_mlp --nprobe 40 --ns 8 14 20
 #
+# --- Phase 2 (22:25 CST): improve Phase-1 winner = attention GNN past 37.3/211.7 ---
+# R_arch_scan TEB n=20: N_g4_attn#1 42.8/172.7 dual-beats QAOA L4 84.9/238.1 (B90 also beats s1 182.7; median behind s1 37.5).
+# Seeds + deeper attn (r=5) at L4; L8 attn free-SNAP; reselect on fresh VBASE=38e9 (disjoint from 37e9).
+N_g4_attn_s1||v3/gnn_snap.py --tag N_g4_attn_s1 --arch attn --snap_form free --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --seed 1 --test 8 10 12 14
+N_g4_attn_s2||v3/gnn_snap.py --tag N_g4_attn_s2 --arch attn --snap_form free --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --seed 2 --test 8 10 12 14
+N_g4_attn_r5||v3/gnn_snap.py --tag N_g4_attn_r5 --arch attn --snap_form free --code gray --L 4 --rounds 5 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --test 8 10 12 14
+S_g8_attn_A_f|A_g8|v3/gnn_snap.py --tag S_g8_attn_A_f --arch attn --snap_form free --code gray --L 8 --clause_w --var_mix --snap std --init_from results/v3/A_g8.json --ninit 3 --maxiter 1000 --feat formula --chunk 125
+R_attn_val|N_g4_attn_s1,N_g4_attn_s2,N_g4_attn_r5|v3/reselect_arch.py --tag R_attn_val --src N_g4_attn N_g4_attn_s1 N_g4_attn_s2 N_g4_attn_r5 --vn 10 14 20 --nval 600 300 100 --vbase 38000000000
+#
 # --- already-running / pending GNN-SNAP (refocus 15:29; do not kill running) ---
 R_g4_snapF_val||v3/reselect_snap.py --tag R_g4_snapF_val --src S_g4_snapF_f --nval 600
 S_g8_snapF_A_f|A_g8|v3/gnn_snap.py --tag S_g8_snapF_A_f --snap_form free --code gray --L 8 --clause_w --var_mix --snap std --init_from results/v3/A_g8.json --ninit 3 --maxiter 1000 --feat formula --chunk 125

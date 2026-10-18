@@ -2179,3 +2179,35 @@ First rows (S_g4_snapF_f, mp): S = 3.243 / 3.267 / 3.290; n=20 val 33.2/201.6, 3
 | G_fe L=4 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 42.8 vs 84.9, B90 172.7 vs 238.1 -> **BEATS QAOA (both)**
+
+## Phase 1 result (2026-10-18 22:22 CST) — attention wins
+
+Official pick = `R_arch_scan` (fixed score S = mean_n[(log median + log B90)/2] on fresh val n=10/14/20 @ 600/300/100, VBASE=37e9; TEB n=20 of winner only).
+
+**Winner:** cand 7 = **N_g4_attn#1** (arch=attn, train 1.308, S=3.1842).
+**TEB n=20 L4:** **42.8/172.7** vs QAOA L4 **84.9/238.1** → **dual-beat** (median and B90).
+vs prior best L4 dual-beat **S_g4_snapF_s1 37.5/182.7**: median worse (42.8 vs 37.5), **B90 better** (172.7 vs 182.7).
+
+**Best-S per arch (val):**
+| arch | best S | tag# | val n=20 |
+|---|---|---|---|
+| **attn** | **3.184** | N_g4_attn#1 | 34.2/149.4 |
+| mp (baseline) | 3.243 | S_g4_snapF_f#0 | 33.2/201.6 |
+| mp128 | 3.245 | N_g4_mp128#1 | 37.5/179.0 |
+| mlp | 3.256 | N_g4_mlp#2 | 42.1/143.5 |
+| tf | 3.262 | N_g4_tf#0 | 40.8/159.5 |
+| ds | 3.348 | N_g4_ds#2 | 47.3/165.6 |
+
+**Why attn:** top-3 leaderboard are all attn inits. Lower n=8 train loss (mp128 1.149, mp 1.18) did **not** win — attn's weaker fit (~1.30) generalizes to better n=14/20 tails (val B90 143–159 vs mp 178–202). mp128 overfits. ds/mlp/tf lag. Supports Phase-1 hypothesis that capacity≠generalization for free-SNAP heads.
+
+**Phase 2 queued (22:25 CST):** improve attn past 37.3/211.7 (and toward/past s1 37.5/182.7):
+- N_g4_attn_s1 / s2 (seeds 1/2, init_from A_g4, L4 free SNAP)
+- N_g4_attn_r5 (rounds=5 deeper attn)
+- S_g8_attn_A_f (L8 free SNAP attn from A_g8)
+- R_attn_val (reselect across N_g4_attn + s1/s2/r5 on VBASE=38e9)
+Rules unchanged: train n=8 only, no QAOA angles, SNAP zero-init, no forced ECD. Backup `v3/queue_v3.bak_2225` (or nearest).
+
+## Check-in (2026-10-18 22:25 CST)
+Runner alive (run_v3.sh pid 3704086). R_arch_scan finished 22:22, finalized+pushed by runner (`577265c6`). 4/4 slots still on L8/h32 no-SNAP controls (B_b8_iii_A_f init 0–1 done; B_g8_iii_A_f / B_g8_i_A_f / B_g4_iii_A_h32_f mid-train). MemAvailable ~5.0 GiB after R_arch_scan freed ~2 GB. Next free slot → **A_arch_scan**, then Phase-2 attn jobs. PID 2888494 and *.STOP untouched.
+
+**NEW dual-beat (WakeParent):** R_arch_scan TEB **N_g4_attn#1 42.8/172.7** vs QAOA L4 84.9/238.1. Best L4 dual-beats now: s1 **37.5/182.7** (best median), attn **42.8/172.7** (best B90). L8 unchanged **S_g8_snapF_A_f 9.1/51.6**.
