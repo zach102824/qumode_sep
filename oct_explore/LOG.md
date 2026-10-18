@@ -1639,3 +1639,15 @@ v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy with CPU time advancing.
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 35.6 vs 84.9, B90 398.3 vs 238.1 -> no beat
+
+## Check-in (2026-10-18 13:25 CST)
+v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy. PID 2888494 untouched.
+
+**S_g4_snapP_f finished 13:24** (GNN standard SNAP, pair form, warm from B_g4_iii_A_f #2/#0/#1, 1000 BFGS its): n=20 winner **35.6/398.3 vs QAOA L4 84.9/238.1** — median −58% (best L4 n=20 median so far, ahead of B_g4_iii_A_f 56.0) but B90 1.7× worse → **no dual beat** (runner finalized + pushed). Train losses 1.212 / 1.185 / 1.212; val-selected init 0. SNAP phase-rms/layer at n=20 ~0.62/0.26/0.21/0.25 (nonzero). Train-best init 1 is 35.1/534.9 (even worse tail).
+
+**Crash fix:** first snapP pass trained all 3 inits then died at test n=10 with `jax.errors.UnexpectedTracerError` — `bits()` had cached `jnp.asarray` tables inside jitted `nf()` for a new layout. Patched `v3/gnn_snap.py` to cache numpy only and `jnp.asarray` at use. Relaunched snapP (resumed tests from n=10) and killed/relaunched snapF (inits 0–1 saved; was mid init 2 under the old binary) so free-form would not hit the same leak on val. Fix rode along in the snapP results commit.
+
+**Slots now:** A_b10 (plain binary L10 screen ~110/200, best 1.332), A_g10 (plain gray L10 screen 80/200, best 1.568), S_g4_snapF_f (resumed at init 2 of 3 since 13:21), S_g4_ctrl_f (ECD control, same warm start / 1000 its, launched 13:24 — separates SNAP from simply training longer). Queue waiting: S_g4_plainL/P/F/Lev8, S_g4_snapL_f, B_b8_iii_A_f, B_g8_iii_A_f, B_g4_iii_A_h32/h128_f, B_g8_i_A_f, B_g10_iii_A_f (needs A_g10 keep).
+
+**Reasoning:** pair SNAP clearly moves the typical-instance median (n=8 train 1.40→1.19–1.21 and n=20 median 56→35.6) via extra diagonal terms, but the hard-instance B90 blows out the same way as plain L8 / binary L4 GNN. Ctrl + free + plain SNAP forms already queued will say whether the median gain is SNAP-specific and whether any form keeps the B90. No new queue lines yet — wait for ctrl/free before changing direction. Best dual-beat remains B_g4_iii_A_f **56.0/217.2** and B_g4_ii_A_f **58.2/197.2**. MemAvail ~5.6 GiB, load ~20 on 8 cores, caps hold.
+
