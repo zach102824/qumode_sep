@@ -1,0 +1,30 @@
+# v3 queue (approved 15:18 CST). tag|after|args. Plain = PLAN A (v3_plain.py), GNN = PLAN B (gnn_v3.py). n=8 training only. --chunk 125
+# 16:00 CST revision: random-base GNN cut to 1 init (val/test only); GNN now starts from the from-scratch plain keep-list (*_A tags). No QAOA anywhere.
+A_g2||v3/v3_plain.py --tag A_g2 --code gray --L 2 --ninit 200 --refine 16
+A_b2||v3/v3_plain.py --tag A_b2 --code binary --L 2 --ninit 200 --refine 16
+B_g4_iii||v3/gnn_v3.py --tag B_g4_iii --code gray --L 4 --hidden 64 --clause_w --var_mix --ninit 1 --chunk 125
+B_g4_i||v3/gnn_v3.py --tag B_g4_i --code gray --L 4 --hidden 64 --ninit 1 --chunk 125
+B_g2_iii_A|A_g2|v3/gnn_v3.py --tag B_g2_iii_A --code gray --L 2 --hidden 64 --clause_w --var_mix --ninit 4 --init_from results/v3/A_g2.json --chunk 125
+B_g2_i_A|A_g2|v3/gnn_v3.py --tag B_g2_i_A --code gray --L 2 --hidden 64 --ninit 4 --init_from results/v3/A_g2.json --chunk 125
+A_g4|A_g2|v3/v3_plain.py --tag A_g4 --code gray --L 4 --ninit 200 --refine 12 --grow_from A_g2
+A_b4|A_b2|v3/v3_plain.py --tag A_b4 --code binary --L 4 --ninit 200 --refine 12 --grow_from A_b2
+# 19:40 CST: GNN n=20 collapse traced to hardware-placement features: n=8 only has k=3 cavities, n=12 k=5 / n=20 k=6,6,5 are unseen (n=14 k=4,4,3 transfers). Test size-free features.
+B_g2_iii_A_f|A_g2|v3/gnn_v3.py --tag B_g2_iii_A_f --code gray --L 2 --hidden 64 --clause_w --var_mix --feat formula --ninit 2 --init_from results/v3/A_g2.json --chunk 125
+B_g2_iii_A_tq|A_g2|v3/gnn_v3.py --tag B_g2_iii_A_tq --code gray --L 2 --hidden 64 --clause_w --var_mix --feat tq --ninit 2 --init_from results/v3/A_g2.json --chunk 125
+B_g4_iii_A|A_g4|v3/gnn_v3.py --tag B_g4_iii_A --code gray --L 4 --hidden 64 --clause_w --var_mix --ninit 4 --init_from results/v3/A_g4.json --chunk 125
+B_g4_i_A|A_g4|v3/gnn_v3.py --tag B_g4_i_A --code gray --L 4 --hidden 64 --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+A_g8|A_g4|v3/v3_plain.py --tag A_g8 --code gray --L 8 --ninit 200 --refine 12 --grow_from A_g4
+A_b8|A_b4|v3/v3_plain.py --tag A_b8 --code binary --L 8 --ninit 200 --refine 12 --grow_from A_b4
+B_g8_iii_A_f|A_g8|v3/gnn_v3.py --tag B_g8_iii_A_f --code gray --L 8 --hidden 64 --clause_w --var_mix --ninit 3 --init_from results/v3/A_g8.json --feat formula --chunk 125
+# 04:30 CST: full (hardware-placement) features collapse at n=20 for every GNN so far (L2 i/iii, L4 i); only --feat formula transferred (L2 323.5/1475 vs QAOA 336.4/971). B_g4_ii_A (full) stopped 15 min in; all unstarted GNN jobs switched to formula.
+B_g4_iii_A_f|A_g4|v3/gnn_v3.py --tag B_g4_iii_A_f --code gray --L 4 --hidden 64 --clause_w --var_mix --feat formula --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+B_g4_i_A_f|A_g4|v3/gnn_v3.py --tag B_g4_i_A_f --code gray --L 4 --hidden 64 --feat formula --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+B_g4_ii_A_f|A_g4|v3/gnn_v3.py --tag B_g4_ii_A_f --code gray --L 4 --hidden 64 --clause_w --feat formula --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+#B_g4_ii_A|A_g4|v3/gnn_v3.py --tag B_g4_ii_A --code gray --L 4 --hidden 64 --clause_w --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+A_g10|A_g8|v3/v3_plain.py --tag A_g10 --code gray --L 10 --ninit 200 --refine 12 --grow_from A_g8
+A_b10|A_b8|v3/v3_plain.py --tag A_b10 --code binary --L 10 --ninit 200 --refine 12 --grow_from A_b8
+B_b4_iii_A_f|A_b4|v3/gnn_v3.py --tag B_b4_iii_A_f --code binary --L 4 --hidden 64 --clause_w --var_mix --ninit 3 --init_from results/v3/A_b4.json --feat formula --chunk 125
+B_g4_iii_A_h32_f|A_g4|v3/gnn_v3.py --tag B_g4_iii_A_h32_f --code gray --L 4 --hidden 32 --clause_w --var_mix --ninit 3 --init_from results/v3/A_g4.json --feat formula --chunk 125
+B_g4_iii_A_h128_f|A_g4|v3/gnn_v3.py --tag B_g4_iii_A_h128_f --code gray --L 4 --hidden 128 --clause_w --var_mix --ninit 3 --init_from results/v3/A_g4.json --feat formula --chunk 125
+B_g8_i_A_f|A_g8|v3/gnn_v3.py --tag B_g8_i_A_f --code gray --L 8 --hidden 64 --ninit 3 --init_from results/v3/A_g8.json --feat formula --chunk 125
+B_g10_iii_A_f|A_g10|v3/gnn_v3.py --tag B_g10_iii_A_f --code gray --L 10 --hidden 64 --clause_w --var_mix --ninit 2 --init_from results/v3/A_g10.json --feat formula --chunk 125

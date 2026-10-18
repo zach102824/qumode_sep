@@ -1509,3 +1509,16 @@ v3 runner restarted (run_v3.sh new pid 3564313; previous 3419014 stopped cleanly
 
 ## Check-in (2026-10-18 09:19 CST)
 v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy with CPU time advancing. A_g8 18/22 refine+grow cands done (latest grow_scr171 3.85 -> 1.011, grow_grow_scr53 -> 0.9522); A_b8 21/22 done (four more grown cands at 0.9519-0.9521, same shared L8 basin). Both should enter frozen val/test soon. B_g4_ii_A_f (clause_w only, formula) on init 1 of 3 (init 0 1.440). B_b4_iii_A_f (binary full outputs, formula) finished init 0: 1.570 -> **1.401** (1548 s), matching the gray full-output winner's train loss (1.402-1.409), on init 1 of 3. Load ~18.9 on 8 cores, MemAvail ~2.5 GiB (<3500 MB gate), caps hold, no new launches. SNAP queue (S_g4_snapP_f / snapF_f / ctrl_f / plainL/P/F/Lev8 / snapL_f) still waiting for a GNN slot. No new finished jobs; best n=20 still B_g4_iii_A_f 56.0/217.2 vs QAOA L4 84.9/238.1 (already reported). Queue unchanged. PID 2888494 untouched.
+
+### A_b8 finished 2026-10-18 09:21 CST  (L=8)
+
+`code=binary L=8 ninit=200 screen_n=128 screen_iter=300 refine=12 keep=10 ntrain=1000 maxiter=2000 grow_from=A_b4 grow_wait_h=8.0 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] obj=meanlog alpha=0.2 w=1.0 chunk=500`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| A_b8 winner grow_scr22 (train 0.952, val 1.323) | 2.0/4.9 | 2.9/8.4 | 4.0/21.4 | 5.7/33.4 | 14.6/119.3 |
+| A_b8 trainbest grow_grow_scr25 (train 0.952, val 1.324) | 2.0/4.9 | 2.9/8.4 | 4.0/21.3 | 5.7/33.1 | - |
+| QAOA_raw L=8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
+
+n=20 winner vs QAOA L=8: median 14.6 vs 16.4, B90 119.3 vs 54.2 -> no beat
