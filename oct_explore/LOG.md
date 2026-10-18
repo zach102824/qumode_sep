@@ -2603,10 +2603,10 @@ Queued next: **R_attn_val2** after n2k+s3+fm64. Best dual-beats now: L4 median *
 Runner alive (run_v3.sh pid **3872547**, ~2h50m), MAXJ=3 / cores 0-5 (Zach 6-core cap); all threads of the 3 live jobs confirmed affinity `0-5` (PSRs only 0–5). MemAvailable ~2.7 GiB (below MINMEM=3500 → no 4th launch). Runner stdout fd still on deleted `runner.log` inode (say→deleted; disk log last updated by check-ins); loop healthy (`sleep 60` child). PID 2888494 and *.STOP untouched. No queue rewrite; no old-queue restart.
 
 **3/3 slots (Phase 2 wave-2):**
-- **N_g4_attn_n2k** (pid 3954426, ~126 min wall since LAUNCH 03:14, `--ntrain 2000`): still on init 0 (no JSON yet; 2× train set → ~2× wall vs ntrain=1000; healthy CPU ~171%).
+- **N_g4_attn_n2k** (pid 3954426, ~126 min wall since LAUNCH 03:14, `--ntrain 2000`): init 0 → **1.3085** (1000 it, 7412s ≈2h4m; mid-check JSON at 05:18); on init 1+. Train loss ≈ baseline attn (1.30), behind s1/s2/r5 bests.
 - **N_g4_attn_s3** (pid 3961946, ~86 min, seed 3): init 0 → **1.310** (1000 it, ~50 min); on init 1+.
 - **N_g4_attn_fm64** (pid 3977567, ~28 min, `--free_m 64`): still on init 0; params 192220; healthy CPU ~178%.
 
-Finished since 04:54: none new. h128 JSON/log gained trainbest TEB n=20 after prior push (trainbest n=20 **53.1/229.9**, worse B90 than winner **53.1/166.3** — no change to bests). Queued next: **R_attn_val2** after n2k+s3+fm64.
+Finished since 04:54: none (jobs still mid-train). Mid-check: **N_g4_attn_n2k** init0 landed (1.3085). h128 JSON/log gained trainbest TEB n=20 after prior push (trainbest n=20 **53.1/229.9**, worse B90 than winner **53.1/166.3** — no change to bests). Queued next: **R_attn_val2** after n2k+s3+fm64.
 
 Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **B_g4_iii_A_h128_f 53.1/166.3** (attn dual-beat package still **R_attn_val 42.9/167.2**); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
