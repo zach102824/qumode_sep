@@ -2488,3 +2488,15 @@ Runner alive (run_v3.sh pid **3872547**, ~1h48m), MAXJ=3 / cores 0-5 (Zach 6-cor
 Finished since 02:39: **N_g4_attn_r5** (already finalized+pushed `b287a7ac`) — n=14 winner **13.5/54.2** vs QAOA L4 20.8/59.6; rounds=5 best n=8 train among attn variants (trainbest 1.222) but winner picked by old n=10/12 val. Official Phase-2 L4 n=20 now running via **R_attn_val**.
 
 Queued next (wave-2, after a slot frees): N_g4_attn_n2k / s3 / fm64 / R_attn_val2. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
+
+## Check-in (2026-10-19 03:11 CST)
+Runner alive (run_v3.sh pid **3872547**, ~1h56m), MAXJ=3 / cores 0-5 (Zach 6-core cap); all threads of the 3 live jobs confirmed affinity `0-5` (0 off-cap). MemAvailable ~2.5 GiB (below MINMEM=3500 → no 4th launch). PID 2888494 and *.STOP untouched. No queue rewrite; no old-queue restart.
+
+**3/3 slots:**
+- **S_g8_attn_A_f** (pid 3895655, ~85 min, L8 free-SNAP attn): 2/3 inits loss=[0.714, **0.703**]; on init 2. Train still behind prior mp **S_g8_snapF_A_f** (best train 0.651 → n=20 9.1/51.6).
+- **B_g4_iii_A_h128_f** (pid 3931759, ~33 min): no-SNAP H=128 control; 1/3 inits loss=[**1.409**]; on init 1+.
+- **R_attn_val** (pid 3946728, ~9 min): Phase-2 L4 reselect mid-flight — 10/12 cands done. Best val S so far **N_g4_attn_s2#1** S=3.2922 (val n=20 **47.2/161.6**); next are r5#1/#2 then TEB winner. Note: val n=20 is not official TEB.
+
+Finished since 02:54: none. Wave-2 still queued: N_g4_attn_n2k / s3 / fm64 / R_attn_val2.
+
+Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 TEB dual-beat improving on best → no WakeParent.
