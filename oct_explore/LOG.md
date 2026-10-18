@@ -1913,3 +1913,16 @@ Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing. MemAvailabl
 - **N_g4_mp128** (Phase 1 deeper/wider GNN): started 17:15, 539900 params, still on init 0 (no loss lines yet).
 
 **Queue:** Phase 1 continues (attn/tf/ds/mlp → R_arch_scan → A_arch_scan) ahead of R_g4_snapF_val2 and L8 no-SNAP controls. Best dual-beat remains **S_g4_snapF_s1 37.5/182.7** (caveat: old n=10/12 val pick). No queue rewrite. No WakeParent (s1 beat already logged/pushed at 17:14–17:16).
+
+### S_g8_snapF_A_f finished 2026-10-18 17:55 CST  (L=8)
+
+`code=gray L=8 hidden=64 rounds=3 clause_w=True var_mix=True snap=std snap_form=free free_m=32 init_from=results/v3/A_g8.json ninit=3 ntrain=1000 maxiter=1000 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| S_g8_snapF_A_f winner 1 (train 0.686, val 1.102) | 1.7/3.8 | 2.3/7.1 | 3.1/10.6 | 4.5/18.8 | 9.1/51.6 |
+| S_g8_snapF_A_f trainbest 2 (train 0.651, val 1.154) | 1.8/4.5 | 2.5/8.2 | 3.1/17.0 | 4.6/24.7 | - |
+| QAOA_raw L=8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
+
+n=20 winner vs QAOA L=8: median 9.1 vs 16.4, B90 51.6 vs 54.2 -> **BEATS QAOA (both)**
