@@ -2476,3 +2476,15 @@ Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.
 | N_g4_attn_r5 trainbest 2 (train 1.222, val 1.961) | 3.6/9.8 | 5.9/18.5 | 7.1/35.6 | - |
 | QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
+
+## Check-in (2026-10-19 02:54 CST)
+Runner alive (run_v3.sh pid **3872547**, ~1h48m), MAXJ=3 / cores 0-5 (Zach 6-core cap); all threads of the 3 live jobs re-pinned `taskset -c 0-5` (0 off-cap). Synced deleted log inode for S_g8_attn_A_f. MemAvailable ~5.0 GiB. PID 2888494 and *.STOP untouched. No queue rewrite; no old-queue restart.
+
+**3/3 slots:**
+- **S_g8_attn_A_f** (pid 3895655, ~77 min, L8 free-SNAP attn): 2/3 inits loss=[0.714, **0.703**]; on init 2. Train still behind prior mp **S_g8_snapF_A_f** (best train 0.651 → n=20 9.1/51.6).
+- **B_g4_iii_A_h128_f** (pid 3931759, ~56 min): no-SNAP H=128 control; 1/3 inits loss=[**1.409**]; on init 1+.
+- **R_attn_val** (pid 3946728, launched 02:54 when mem cleared past MINMEM after r5 exit): Phase-2 L4 reselect over N_g4_attn / s1 / s2 / r5 on fresh n=10/14/20 val (VBASE=38e9); will TEB-test winner at n=20.
+
+Finished since 02:39: **N_g4_attn_r5** (already finalized+pushed `b287a7ac`) — n=14 winner **13.5/54.2** vs QAOA L4 20.8/59.6; rounds=5 best n=8 train among attn variants (trainbest 1.222) but winner picked by old n=10/12 val. Official Phase-2 L4 n=20 now running via **R_attn_val**.
+
+Queued next (wave-2, after a slot frees): N_g4_attn_n2k / s3 / fm64 / R_attn_val2. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
