@@ -2441,3 +2441,15 @@ Finished since 01:33: none new (s2 already logged). Official Phase-2 L4 n=20 sti
 Tail-weighted loss / ensembles **not queued** (need code changes in `gnn_snap.py`); SNAP lin/pair-with-attn held (prior lin already lost to free on mp).
 
 Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
+
+## Check-in (2026-10-19 02:18 CST)
+Runner alive (run_v3.sh pid **3872547**, ~1h33m), MAXJ=3 / cores 0-5 (Zach 6-core cap); all threads of the 3 live jobs re-pinned `taskset -c 0-5` (0 off-cap). MemAvailable ~2.3 GiB (below MINMEM=3500 → no 4th launch). PID 2888494 and *.STOP untouched. No queue rewrite; no old-queue restart.
+
+**3/3 slots:**
+- **N_g4_attn_r5** (pid 3874429, ~90 min, rounds=5): 2/3 inits loss=[1.276, **1.262**] — still best n=8 train among attn variants; on init 2.
+- **S_g8_attn_A_f** (pid 3895655, ~63 min, L8 free-SNAP attn): 1/3 inits loss=[**0.714**]; on init 1+.
+- **B_g4_iii_A_h128_f** (pid 3931759, ~10 min): no-SNAP H=128 control; started (334364 weights), no JSON runs yet.
+
+Finished since 02:00: none. Official Phase-2 L4 n=20 still waits on **R_attn_val** (needs r5). Wave-2 already queued behind that: N_g4_attn_n2k / s3 / fm64 / R_attn_val2.
+
+Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
