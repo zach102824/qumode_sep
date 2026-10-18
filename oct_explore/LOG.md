@@ -2270,3 +2270,16 @@ Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.
 | G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
 
 n=20 winner vs QAOA L=8: median 19.1 vs 16.4, B90 229.2 vs 54.2 -> no beat
+
+### B_g8_iii_A_f finished 2026-10-18 23:19 CST  (L=8)
+
+`code=gray L=8 hidden=64 rounds=3 clause_w=True var_mix=True ninit=3 ntrain=1000 maxiter=1000 init_from=results/v3/A_g8.json val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_g8_iii_A_f winner 2 (train 0.798, val 1.182) | 1.9/3.6 | 2.6/6.2 | 3.4/13.8 | 4.7/19.3 | 11.3/136.1 |
+| B_g8_iii_A_f trainbest 1 (train 0.795, val 1.189) | 1.9/3.6 | 2.6/6.5 | 3.3/14.8 | 4.7/17.6 | - |
+| QAOA_raw L=8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
+
+n=20 winner vs QAOA L=8: median 11.3 vs 16.4, B90 136.1 vs 54.2 -> no beat
