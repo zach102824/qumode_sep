@@ -1,0 +1,76 @@
+10-18 22:40:27 analyze S_g4_snapF_f
+usage: gnn_snap.py [-h] --tag TAG [--code {gray,binary}] --L L
+                   [--hidden HIDDEN] [--rounds ROUNDS]
+                   [--arch {mp,mp64,mp128,attn,tf,ds,mlp}] [--clause_w]
+                   [--var_mix] [--snap {std,none}] [--snap_pair]
+                   [--snap_form {,lin,pair,free,level}] [--free_m FREE_M]
+                   [--plain] [--warm WARM] [--warm_ids [WARM_IDS ...]]
+                   [--init_from INIT_FROM] [--ninit NINIT] [--ntrain NTRAIN]
+                   [--maxiter MAXITER] [--val [VAL ...]]
+                   [--val_count VAL_COUNT] [--test [TEST ...]]
+                   [--feat {full,tq,formula}] [--seed SEED] [--chunk CHUNK]
+                   [--smoke SMOKE]
+gnn_snap.py: error: the following arguments are required: --tag
+10-18 23:18:15 analyze S_g4_snapF_f
+10-18 23:18:16 SNAP-GNN arch=mp snap=std form=free plain=False L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 23:18:16 params per model: 89596
+10-18 23:18:17   S_g4_snapF_f n=8: phase_rms 0.254±0.063 (max 0.371) w_rms 0.994 | corr(phase,deg)=+0.00
+10-18 23:18:18   S_g4_snapF_f n=14: phase_rms 0.244±0.042 (max 0.349) w_rms 1.022 | corr(phase,deg)=+0.00
+10-18 23:18:23   S_g4_snapF_f n=20: phase_rms 0.205±0.031 (max 0.282) w_rms 1.037 | corr(phase,deg)=+0.00
+10-18 23:18:29   S_g4_snapF_f n=20 tail: nsol 1.20 vs body 4.93; max_deg 50.5 vs 51.2
+10-18 23:18:29   wrote results/v3/analyze_S_g4_snapF_f.json (transfer_ratio_20/8=0.81)
+10-18 23:18:29 analyze N_g4_mp128
+10-18 23:18:30 SNAP-GNN arch=mp128 snap=std form=free plain=False L=4 H=128 rounds=5 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 23:18:30 params per model: 539900
+10-18 23:18:31   N_g4_mp128 n=8: phase_rms 0.233±0.056 (max 0.377) w_rms 1.206 | corr(phase,deg)=+0.00
+10-18 23:18:32   N_g4_mp128 n=14: phase_rms 0.227±0.046 (max 0.377) w_rms 1.243 | corr(phase,deg)=+0.00
+10-18 23:18:35   N_g4_mp128 n=20: phase_rms 0.194±0.039 (max 0.316) w_rms 1.249 | corr(phase,deg)=+0.00
+10-18 23:19:54   N_g4_mp128 n=20 tail: nsol 1.40 vs body 4.91; max_deg 51.7 vs 51.0
+10-18 23:19:54   wrote results/v3/analyze_N_g4_mp128.json (transfer_ratio_20/8=0.83)
+10-18 23:19:54 analyze N_g4_attn
+10-18 23:19:55 SNAP-GNN arch=attn snap=std form=free plain=False L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 23:19:55 params per model: 187900
+10-18 23:19:56   N_g4_attn n=8: phase_rms 0.198±0.064 (max 0.331) w_rms 1.149 | corr(phase,deg)=+0.00
+10-18 23:19:56   N_g4_attn n=14: phase_rms 0.179±0.036 (max 0.254) w_rms 1.167 | corr(phase,deg)=+0.00
+10-18 23:20:00   N_g4_attn n=20: phase_rms 0.149±0.029 (max 0.231) w_rms 1.181 | corr(phase,deg)=+0.00
+10-18 23:21:55   N_g4_attn n=20 tail: nsol 1.20 vs body 4.93; max_deg 50.9 vs 51.1
+10-18 23:21:55   wrote results/v3/analyze_N_g4_attn.json (transfer_ratio_20/8=0.75)
+10-18 23:21:55 analyze N_g4_tf
+10-18 23:21:55 SNAP-GNN arch=tf snap=std form=free plain=False L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 23:21:55 params per model: 118524
+10-18 23:21:56   N_g4_tf n=8: phase_rms 0.065±0.031 (max 0.218) w_rms 0.844 | corr(phase,deg)=+0.00
+10-18 23:21:56   N_g4_tf n=14: phase_rms 0.079±0.027 (max 0.229) w_rms 0.875 | corr(phase,deg)=+0.00
+10-18 23:22:00   N_g4_tf n=20: phase_rms 0.065±0.010 (max 0.112) w_rms 0.877 | corr(phase,deg)=+0.00
+10-18 23:22:01 analyze S_g4_snapF_f
+10-18 23:22:02 SNAP-GNN arch=mp snap=std form=free plain=False L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 23:22:02 params per model: 89596
+10-18 23:22:03   S_g4_snapF_f n=8: phase_rms 0.254±0.063 (max 0.371) w_rms 0.994 | corr(phase,deg)=+0.00
+10-18 23:22:05   S_g4_snapF_f n=14: phase_rms 0.244±0.042 (max 0.349) w_rms 1.022 | corr(phase,deg)=+0.00
+10-18 23:22:10   S_g4_snapF_f n=20: phase_rms 0.205±0.031 (max 0.282) w_rms 1.037 | corr(phase,deg)=+0.00
+10-18 23:22:16   S_g4_snapF_f n=20 tail: nsol 1.20 vs body 4.93; max_deg 50.5 vs 51.2
+10-18 23:22:16   wrote results/v3/analyze_S_g4_snapF_f.json (transfer_ratio_20/8=0.81)
+10-18 23:22:16 analyze N_g4_mp128
+10-18 23:22:16 SNAP-GNN arch=mp128 snap=std form=free plain=False L=4 H=128 rounds=5 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 23:22:16 params per model: 539900
+10-18 23:22:17   N_g4_mp128 n=8: phase_rms 0.233±0.056 (max 0.377) w_rms 1.206 | corr(phase,deg)=+0.00
+10-18 23:22:18   N_g4_mp128 n=14: phase_rms 0.227±0.046 (max 0.377) w_rms 1.243 | corr(phase,deg)=+0.00
+10-18 23:22:21   N_g4_mp128 n=20: phase_rms 0.194±0.039 (max 0.316) w_rms 1.249 | corr(phase,deg)=+0.00
+10-18 23:22:45   N_g4_tf n=20 tail: nsol 1.10 vs body 4.94; max_deg 50.3 vs 51.2
+10-18 23:22:45   wrote results/v3/analyze_N_g4_tf.json (transfer_ratio_20/8=1.00)
+10-18 23:22:45 analyze N_g4_ds
+10-18 23:22:45 SNAP-GNN arch=ds snap=std form=free plain=False L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 23:22:45 params per model: 40316
+10-18 23:22:45   N_g4_ds n=8: phase_rms 0.174±0.049 (max 0.280) w_rms 0.828 | corr(phase,deg)=+0.00
+10-18 23:22:45   N_g4_ds n=14: phase_rms 0.168±0.029 (max 0.230) w_rms 0.828 | corr(phase,deg)=+0.00
+10-18 23:22:49   N_g4_ds n=20: phase_rms 0.139±0.018 (max 0.172) w_rms 0.828 | corr(phase,deg)=+0.00
+10-18 23:23:49   N_g4_ds n=20 tail: nsol 1.50 vs body 4.90; max_deg 51.4 vs 51.1
+10-18 23:23:49   wrote results/v3/analyze_N_g4_ds.json (transfer_ratio_20/8=0.80)
+10-18 23:23:49 analyze N_g4_mlp
+10-18 23:23:49 SNAP-GNN arch=mlp snap=std form=free plain=False L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 23:23:49 params per model: 32508
+10-18 23:23:50   N_g4_mlp n=8: phase_rms 0.157±0.041 (max 0.242) w_rms 0.669 | corr(phase,deg)=+0.00
+10-18 23:23:51   N_g4_mlp n=14: phase_rms 0.148±0.025 (max 0.191) w_rms 0.670 | corr(phase,deg)=+0.00
+10-18 23:23:54   N_g4_mlp n=20: phase_rms 0.124±0.015 (max 0.158) w_rms 0.667 | corr(phase,deg)=+0.00
+10-18 23:24:44   N_g4_mlp n=20 tail: nsol 1.50 vs body 4.90; max_deg 50.4 vs 51.2
+10-18 23:24:44   wrote results/v3/analyze_N_g4_mlp.json (transfer_ratio_20/8=0.79)
+10-18 23:24:44 ALLDONE

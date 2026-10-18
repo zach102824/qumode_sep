@@ -2294,3 +2294,13 @@ Finished since 22:56:
 - **B_g8_iii_A_f** (23:19): n=20 L8 **11.3/136.1** vs QAOA 16.4/54.2 — median beats QAOA, B90 loses; vs SNAP L8 best **9.1/51.6** worse on both. Same story as B_b8: L8 needs free SNAP.
 
 Queued next: N_g4_attn_r5, S_g8_attn_A_f, R_attn_val (after s1/s2/r5). Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** / attn **42.8/172.7**; L8 **S_g8_snapF_A_f 9.1/51.6**. No new dual-beat improving on best → no WakeParent.
+
+### A_arch_scan finished 2026-10-18 23:25 CST  (L=4)
+
+`L=4 tags=['S_g4_snapF_f', 'N_g4_mp128', 'N_g4_attn', 'N_g4_tf', 'N_g4_ds', 'N_g4_mlp']`
+
+| row | n=8 |
+|---|---|
+| A_arch_scan winner 0 | 0.0/0.0 |
+| QAOA_raw L=4 | 5.3/9.9 |
+| G_fe L=4 | 5.4/9.8 |
