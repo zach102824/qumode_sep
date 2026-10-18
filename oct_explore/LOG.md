@@ -2370,3 +2370,13 @@ Runner alive (run_v3.sh pid **3872547**), MAXJ=3 / cores 0-5 (Zach 6-core cap). 
 Finished since 23:54: **N_g4_attn_s1** (23:58) — train n=8 only, test through n=14 (no TEB n=20 by design). Winner init1 train 1.288 / val 1.888; n=14 **12.9/48.7** vs QAOA L4 20.8/59.6. Slightly better n=8 train than Phase-1 N_g4_attn#1 (1.308). Runner finalized+pushed (`451fc993`). Official n=20 for Phase-2 L4 still waits on **R_attn_val** (needs s1/s2/r5).
 
 Queued next: **R_attn_val** after s2+r5 finish; then B_g4_iii_A_h128_f. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
+
+## Check-in (2026-10-19 00:30 CST)
+Runner alive (run_v3.sh pid **3872547**), MAXJ=3 / cores 0-5 (Zach 6-core cap); all 3 jobs' affinity confirmed `0-5`. MemAvailable ~5.4 GiB. PID 2888494 and *.STOP untouched. No queue rewrite; no old-queue restart.
+
+**3/3 slots (Phase 2, still training):**
+- **N_g4_attn_s2** (pid 3872605, ~58 min): init 0 → 1.280, init 1 → 1.299; on init 2.
+- **N_g4_attn_r5** (pid 3874429, ~55 min, rounds=5): init 0 → **1.276** (best n=8 train among attn variants so far); on init 1.
+- **S_g8_attn_A_f** (pid 3895655, ~27 min, L8): training init 0 (no JSON yet).
+
+No finishes since 00:15. Queued next: **R_attn_val** after s2+r5; then B_g4_iii_A_h128_f. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
