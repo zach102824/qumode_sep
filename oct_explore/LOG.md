@@ -2692,3 +2692,15 @@ Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **B_g4_i
 | N_g4_attn_fm64 trainbest 1 (train 1.272, val 1.916) | 3.4/8.0 | 5.7/16.8 | 7.9/36.7 | - |
 | QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
+
+## Check-in (2026-10-19 07:19 CST)
+Runner alive (run_v3.sh pid **3872547**, ~03:50:02), MAXJ=3 / cores 0-5 (Zach 6-core cap); n2k threads affinity `0-5` (PSRs   0,  1,  2,  3,  4,  5). MemAvailable ~2562 MiB (below MINMEM=3500 → no new launch). Synced deleted `runner.log` inode. Runner loop healthy (`sleep 60` child). PID 2888494 and *.STOP untouched. No queue rewrite; no old-queue restart. Campaign continues (deadline Mon Oct 19 09:00 CST; ~100m left).
+
+**1/3 slots (Phase 2 wave-2; s3+fm64 done):**
+- **N_g4_attn_n2k** (pid 3954426, ~01:50:40, `--ntrain 2000`): init 0 → **1.3085**; init 1 → **1.3021** (1000 it, 4811s); on init 2+ (JSON 2/3 runs). Train still ≈ baseline attn.
+- **N_g4_attn_s3**: finished 06:18, already finalized+pushed.
+- **N_g4_attn_fm64**: finished 07:00, already finalized+pushed (train-only test ≤n=14; no official n=20). Winner init0 1.292/val 1.889 → n=14 **13.2/50.0**; trainbest init1 1.272 → n=14 **13.9/46.5**. Official TEB deferred to **R_attn_val2**.
+
+Finished since 06:57: **N_g4_attn_fm64**. Only pending undone: **R_attn_val2** (holds for n2k; s3+fm64 ready). Nothing else eligible → 1/3 slots expected. Init2 ETA ~08:00 CST if ~80 min like init1, then R_attn_val2.
+
+Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **B_g4_iii_A_h128_f 53.1/166.3** (attn dual-beat package still **R_attn_val 42.9/167.2**); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.

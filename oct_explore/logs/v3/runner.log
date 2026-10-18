@@ -484,65 +484,13 @@ fatal: unable to access 'https://github.com/zach102824/qumode_sep.git/': GnuTLS,
 2026-10-18 23:23:07 LAUNCH N_g4_attn_s2 (mem=5933MB)
 2026-10-18 23:23:37 check-in 23:23 CST: fixed A_arch double-launch; killed dup; launched N_g4_attn_s2; B_g8_i 19.1/229.2 + B_g8_iii 11.3/136.1 no dual-beat
 2026-10-18 23:25:39 DONE A_arch_scan
-2026-10-18 23:25:46 LAUNCH N_g4_attn_r5 (mem=6356MB)
-2026-10-18 23:40:19 check-in 23:38 CST: 3/3 Phase-2 attn (s1 init2, s2/r5 init0); A_arch analysis logged; threads re-pinned 0-5; mem~2.4GiB
-2026-10-18 23:54:23 check-in 23:54 CST: Phase-2 attn 3/3 still training (s1 init2, s2 init0=1.280 then init1, r5 init0); mem~5.9GiB; cores 0-5
-2026-10-18 23:58:41 DONE N_g4_attn_s1
-2026-10-18 23:58:51 LAUNCH S_g8_attn_A_f (mem=6572MB)
-2026-10-19 00:15:10 check-in 00:15 CST: Phase-2 3/3 (s2/r5/S_g8_attn); s1 done+pushed; mem~5.8GiB; cores 0-5
-2026-10-19 00:54:05 check-in 00:53 CST: Phase-2 3/3 still training (s2 init2, r5 init1, S_g8 init0=0.714 then init1); mem~4.3GiB; cores 0-5
-2026-10-19 01:17:29 check-in 01:17 CST: 3/3 Phase-2 (s2 init2, r5 init2 loss1.262, L8-attn init1+); mem~2.3GiB; affinity 0-5 OK
-2026-10-19 01:19:48 DONE N_g4_attn_s2
-2026-10-19 01:19:58 hold B_g4_iii_A_h128_f mem=3085MB
-2026-10-19 01:21:02 hold B_g4_iii_A_h128_f mem=3098MB
-2026-10-19 01:34:04 hold B_g4_iii_A_h128_f mem=2456MB
-2026-10-19 01:35:08 hold B_g4_iii_A_h128_f mem=2578MB
-2026-10-19 01:35:31 check-in 01:33 CST: 2/3 Phase-2 (r5 init2 loss1.262, L8-attn init1+); s2 done+pushed; mem~2.5GiB hold h128; cores 0-5
-2026-10-19 01:36:11 hold B_g4_iii_A_h128_f mem=2609MB
-2026-10-19 01:37:15 hold B_g4_iii_A_h128_f mem=2667MB
-2026-10-19 01:38:19 hold B_g4_iii_A_h128_f mem=2693MB
-2026-10-19 01:58:36 LAUNCH B_g4_iii_A_h128_f (mem=6195MB)
-2026-10-19 02:00:57 check-in 02:00 CST: 3/3 (r5/L8-attn/h128); wave-2 queued n2k/s3/fm64/R_attn_val2; mem~5525MB; cores 0-5
-2026-10-19 02:18:00 check-in 02:18 CST: 3/3 (r5 init2 loss1.262, L8-attn init1+, h128 started); mem~2.3GiB; cores 0-5; no new finish
-2026-10-19 02:39:53 DONE N_g4_attn_r5
-2026-10-19 02:40:05 hold R_attn_val mem=3009MB
-2026-10-19 02:40:05 hold N_g4_attn_n2k mem=3040MB
-2026-10-19 02:40:05 hold N_g4_attn_s3 mem=3036MB
-2026-10-19 02:40:05 hold N_g4_attn_fm64 mem=3016MB
-2026-10-19 02:41:08 hold R_attn_val mem=3161MB
-2026-10-19 02:41:08 hold N_g4_attn_n2k mem=3177MB
-2026-10-19 02:41:08 hold N_g4_attn_s3 mem=3221MB
-2026-10-19 02:41:09 hold N_g4_attn_fm64 mem=3410MB
-2026-10-19 02:42:12 hold R_attn_val mem=3010MB
-2026-10-19 02:42:12 hold N_g4_attn_n2k mem=3050MB
-2026-10-19 02:42:12 hold N_g4_attn_s3 mem=3105MB
-2026-10-19 02:42:12 hold N_g4_attn_fm64 mem=3096MB
-2026-10-19 02:43:16 hold R_attn_val mem=3222MB
-2026-10-19 02:43:16 hold N_g4_attn_n2k mem=3237MB
-2026-10-19 02:43:16 hold N_g4_attn_s3 mem=3233MB
-2026-10-19 02:43:16 hold N_g4_attn_fm64 mem=3233MB
-2026-10-19 02:51:18 hold R_attn_val mem=2553MB
-2026-10-19 02:51:18 hold N_g4_attn_n2k mem=2523MB
-2026-10-19 02:51:19 hold N_g4_attn_s3 mem=2651MB
-2026-10-19 02:51:19 hold N_g4_attn_fm64 mem=2534MB
-2026-10-19 02:52:22 hold R_attn_val mem=2664MB
-2026-10-19 02:52:22 hold N_g4_attn_n2k mem=2563MB
-2026-10-19 02:52:22 hold N_g4_attn_s3 mem=2612MB
-2026-10-19 02:52:22 hold N_g4_attn_fm64 mem=2608MB
-2026-10-19 02:53:26 hold R_attn_val mem=2411MB
-2026-10-19 02:53:26 hold N_g4_attn_n2k mem=2439MB
-2026-10-19 02:53:26 hold N_g4_attn_s3 mem=2577MB
-2026-10-19 02:53:26 hold N_g4_attn_fm64 mem=2454MB
-2026-10-19 02:54:30 LAUNCH R_attn_val (mem=4392MB)
-2026-10-19 03:14:45 DONE R_attn_val
-2026-10-19 03:14:50 LAUNCH N_g4_attn_n2k (mem=6362MB)
-2026-10-19 03:52:05 DONE S_g8_attn_A_f
-2026-10-19 03:54:22 LAUNCH N_g4_attn_s3 (mem=6194MB)
-2026-10-19 04:41:00 check-in 04:41 CST: 3/3 (h128 init2 loss1.406, n2k init0, s3 init0); mem~2.6GiB; cores 0-5; no new finish
-2026-10-19 04:44:07 DONE B_g4_iii_A_h128_f
-2026-10-19 04:52:02 LAUNCH N_g4_attn_fm64 (mem=6352MB)
-2026-10-19 04:55:07 check-in 04:54 CST: 3/3 wave-2 (n2k init0, s3 init0→1.310, fm64 start); h128 TEB 53.1/166.3 dual-beat+B90 edge → WakeParent
-2026-10-19 05:20:38 check-in 05:20 CST: 3/3 wave-2 (n2k init0, s3 init0→1.310 on init1+, fm64 init0); mem~2.7GiB; cores 0-5; no new finish; no WakeParent
-2026-10-19 05:33:25 check-in 05:32 CST: 3/3 wave-2 (n2k init0=1.3085 on init1+, s3 init0=1.310 init1=1.293 on init2+, fm64 init0); mem~2.4GiB; cores 0-5; no new finish; no WakeParent
-2026-10-19 06:18:05 DONE N_g4_attn_s3
-2026-10-19 06:25:52 check-in 2026-10-19 06:25 CST: 2/3 after s3 done (n2k+fm64 mid-train); mem~2.6GiB; cores 0-5; no WakeParent
+Created autostash: 06af558f
+Applied autostash.
+Created autostash: db0303fb
+Created autostash: e52ae0ed
+Created autostash: 59ce65fe
+Created autostash: 185c2d3b
+Created autostash: aeed797b
+Created autostash: 111d1e48
+Created autostash: 4bd97e51
+Created autostash: a2bbae5c
