@@ -1757,3 +1757,9 @@ v3 runner alive (run_v3.sh pid 3646460), 4/4 slots busy (A_b10, A_g10, S_g4_ctrl
 - **S_g4_ctrl_f**: init 0 1.4086 → 1.3777 (vs free SNAP 1.18); inits 1–2 running (~1 h each).
 - **A_b10** screen 170/200 best 1.332; **A_g10** 130/200 best 1.331.
 **Queue change (backup `v3/queue_v3.bak_1456`):** the SNAP gain is per-instance (network) only, so carry network free SNAP to L8 from the from-scratch plain keep-lists (no QAOA, zero-init SNAP/heads, nothing forced): added `S_g8_snapF_A_f` (gray, after A_g8) and `S_b8_snapF_A_f` (binary, after A_b8) right after S_g4_snapL_f, ahead of the no-SNAP L8 GNNs (B_b8_iii_A_f / B_g8_iii_A_f stay queued as their controls). Targets QAOA L8 n=20 16.4/54.2; A_b8 plain already beats the L8 median (14.6) but misses B90 (119.3), which is where per-instance SNAP helped at L4 (median −33% vs B_g4_iii_A_f).
+
+## Check-in (2026-10-18 15:16 CST)
+v3 runner alive (run_v3.sh pid 3646460), 3/4 slots busy (A_b10, A_g10, S_g4_ctrl_f), CPU advancing. MemAvail ~2.7 GiB (box-wide use from other processes; our 3 jobs ~1.8 GiB RSS), below the 3500 MB launch floor, so the runner is correctly holding S_g4_snapL_f and the rest of the queue; floor left as is. PID 2888494 untouched.
+- **S_g4_ctrl_f** (ECD control, no SNAP): init 1 1.4016 → **1.3699** (init 0 1.3777) vs network free SNAP 1.18 on the same warm start — the SNAP gain stays SNAP-specific. Init 2 running.
+- **A_b10** screen 180/200, best 1.332 → **1.324**. **A_g10** 140/200, best 1.331.
+No new n=20 result; best dual-beat remains S_g4_snapF_f 37.3/211.7 (already reported). Queue unchanged.
