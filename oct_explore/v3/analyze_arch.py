@@ -38,6 +38,7 @@ def load_lib(a0):
         elif v is None or v == "": continue
         else: argv += [f"--{k}", str(v)]
     if "arch" not in a0: argv += ["--arch", "mp"]
+    argv += ["--tag", "_lib_analyze_arch"]  # same fix as reselect_arch 21:58: gnn_snap requires --tag (dummy; lib part only defines save())
     path = os.path.join(HERE, "gnn_snap.py")
     code = open(path).read(); code = code[: code.index("# ---------- main ----------")]
     sys.argv = [path] + argv
