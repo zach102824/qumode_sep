@@ -2257,3 +2257,16 @@ Finished since 22:45:
 **A_arch_scan:** crashed 22:40 on missing `--tag` (pre-fix); `analyze_arch.py` fixed 22:49 (`a6f66fb7`). No result JSON yet — runner will relaunch when n_run < 3 (after a B_g8 finishes). Phase-2 still queued: N_g4_attn_s2, N_g4_attn_r5, S_g8_attn_A_f, R_attn_val.
 
 Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new dual-beat / no improve-over-best → no WakeParent.
+
+### B_g8_i_A_f finished 2026-10-18 23:16 CST  (L=8)
+
+`code=gray L=8 hidden=64 rounds=3 ninit=3 ntrain=1000 maxiter=1000 init_from=results/v3/A_g8.json val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_g8_i_A_f winner 0 (train 0.927, val 1.401) | 2.0/5.3 | 2.7/9.0 | 4.1/26.2 | 5.7/36.9 | 19.1/229.2 |
+| B_g8_i_A_f trainbest 1 (train 0.917, val 1.430) | 2.0/5.5 | 2.9/9.7 | 4.3/24.2 | 5.9/44.7 | - |
+| QAOA_raw L=8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
+
+n=20 winner vs QAOA L=8: median 19.1 vs 16.4, B90 229.2 vs 54.2 -> no beat
