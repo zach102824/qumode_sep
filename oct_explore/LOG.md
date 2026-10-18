@@ -2211,3 +2211,16 @@ Rules unchanged: train n=8 only, no QAOA angles, SNAP zero-init, no forced ECD. 
 Runner alive (run_v3.sh pid 3704086). R_arch_scan finished 22:22, finalized+pushed by runner (`577265c6`). 4/4 slots still on L8/h32 no-SNAP controls (B_b8_iii_A_f init 0–1 done; B_g8_iii_A_f / B_g8_i_A_f / B_g4_iii_A_h32_f mid-train). MemAvailable ~5.0 GiB after R_arch_scan freed ~2 GB. Next free slot → **A_arch_scan**, then Phase-2 attn jobs. PID 2888494 and *.STOP untouched.
 
 **NEW dual-beat (WakeParent):** R_arch_scan TEB **N_g4_attn#1 42.8/172.7** vs QAOA L4 84.9/238.1. Best L4 dual-beats now: s1 **37.5/182.7** (best median), attn **42.8/172.7** (best B90). L8 unchanged **S_g8_snapF_A_f 9.1/51.6**.
+
+### B_g4_iii_A_h32_f finished 2026-10-18 22:39 CST  (L=4)
+
+`code=gray L=4 hidden=32 rounds=3 clause_w=True var_mix=True ninit=3 ntrain=1000 maxiter=1000 init_from=results/v3/A_g4.json val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| B_g4_iii_A_h32_f winner 2 (train 1.406, val 2.020) | 3.6/7.0 | 6.4/15.3 | 8.3/28.8 | 12.8/46.5 | 55.9/277.5 |
+| B_g4_iii_A_h32_f trainbest 1 (train 1.397, val 2.022) | 3.6/7.5 | 6.2/15.1 | 8.5/28.1 | 13.3/40.8 | - |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 55.9 vs 84.9, B90 277.5 vs 238.1 -> no beat
