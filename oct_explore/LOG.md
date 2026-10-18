@@ -2669,3 +2669,15 @@ Runner alive (run_v3.sh pid **3872547**, ~03:26:14), MAXJ=3 / cores 0-5 (Zach 6-
 Finished since 06:15: **N_g4_attn_s3**. Only pending undone: **R_attn_val2** (holds for n2k+fm64). Nothing else eligible → 2/3 slots expected.
 
 Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **B_g4_iii_A_h128_f 53.1/166.3** (attn dual-beat package still **R_attn_val 42.9/167.2**); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
+
+## Check-in (2026-10-19 06:57 CST)
+Runner alive (run_v3.sh pid **3872547**, ~03:40:34), MAXJ=3 / cores 0-5 (Zach 6-core cap); n2k+fm64 threads re-pinned `taskset -c 0-5`. MemAvailable ~2.6 GiB (below MINMEM=3500 → no new launch). Synced deleted `runner.log` inode. Runner loop healthy (`sleep 60` child). PID 2888494 and *.STOP untouched. No queue rewrite; no old-queue restart. Campaign continues (deadline Mon Oct 19 09:00 CST; ~2h left).
+
+**2/3 slots (Phase 2 wave-2; s3 already done):**
+- **N_g4_attn_n2k** (pid 3954426, ~01:41:12, `--ntrain 2000`): init 0 → **1.3085**; init 1 → **1.3021** (1000 it, 4811s; landed 06:38); on init 2+ (JSON 2/3 runs). Train still ≈ baseline attn.
+- **N_g4_attn_fm64** (pid 3977567, ~01:03:51, `--free_m 64`): init 0 → 1.2915; init 1 → **1.2717**; on init 2+ (JSON 2/3 runs). Best wave-2 n=8 train so far (still behind r5 trainbest ~1.222).
+- **N_g4_attn_s3**: finished 06:18, already finalized+pushed.
+
+Finished since 06:25: none new (both mid init 2). Only pending undone: **R_attn_val2** (holds for n2k+fm64). Nothing else eligible → 2/3 slots expected.
+
+Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **B_g4_iii_A_h128_f 53.1/166.3** (attn dual-beat package still **R_attn_val 42.9/167.2**); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
