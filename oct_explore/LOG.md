@@ -2205,7 +2205,7 @@ vs prior best L4 dual-beat **S_g4_snapF_s1 37.5/182.7**: median worse (42.8 vs 3
 - N_g4_attn_r5 (rounds=5 deeper attn)
 - S_g8_attn_A_f (L8 free SNAP attn from A_g8)
 - R_attn_val (reselect across N_g4_attn + s1/s2/r5 on VBASE=38e9)
-Rules unchanged: train n=8 only, no QAOA angles, SNAP zero-init, no forced ECD. Backup `v3/queue_v3.bak_2225` (or nearest).
+Rules unchanged: train n=8 only, no QAOA angles, SNAP zero-init, no forced ECD. Backup `v3/queue_v3.bak_2224`.
 
 ## Check-in (2026-10-18 22:25 CST)
 Runner alive (run_v3.sh pid 3704086). R_arch_scan finished 22:22, finalized+pushed by runner (`577265c6`). 4/4 slots still on L8/h32 no-SNAP controls (B_b8_iii_A_f init 0–1 done; B_g8_iii_A_f / B_g8_i_A_f / B_g4_iii_A_h32_f mid-train). MemAvailable ~5.0 GiB after R_arch_scan freed ~2 GB. Next free slot → **A_arch_scan**, then Phase-2 attn jobs. PID 2888494 and *.STOP untouched.
