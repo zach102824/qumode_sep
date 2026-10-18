@@ -1,0 +1,9 @@
+10-18 15:39:30 SNAP-GNN snap=std form=free plain=False L=4 H=64 clause_w=True var_mix=True code=gray inits=['warm:B_g4_iii_A_f.json#2', 'warm:B_g4_iii_A_f.json#0', 'warm:B_g4_iii_A_f.json#1']
+10-18 15:39:30 params per model: 89596
+10-18 15:39:31 reselect R_g4_snapF_val: 3 inits from ['S_g4_snapF_f']; min mean_n[(log median 1/p + log B90 1/p)/2] over fresh val n=[10, 12] (600 inst each, base 36000000000); tie-break mean -log p
+10-18 15:39:40   cand 0 S_g4_snapF_f#0 (warm:B_g4_iii_A_f.json#2): train 1.1826 old-val 1.887 | n=10 4.7/17.5 n=12 7.7/27.9 | S=2.4477 nll=1.9401 (9s)
+10-18 15:39:44   cand 1 S_g4_snapF_f#1 (warm:B_g4_iii_A_f.json#0): train 1.1546 old-val 1.919 | n=10 4.8/20.3 n=12 7.8/30.6 | S=2.5162 nll=1.9763 (5s)
+10-18 15:39:49   cand 2 S_g4_snapF_f#2 (warm:B_g4_iii_A_f.json#1): train 1.1771 old-val 1.911 | n=10 4.9/17.4 n=12 7.9/29.7 | S=2.4752 nll=1.9646 (5s)
+10-18 15:39:49 RE-PICK (fixed before n=20): cand 0 = S_g4_snapF_f#0 S=2.4477 (train-best cand 1)
+10-18 15:40:28 test re-picked cand 0 (S_g4_snapF_f#0) n=20 L=4 med1/p=37.3 B90=211.7 (35s)
+10-18 15:40:28 ALLDONE

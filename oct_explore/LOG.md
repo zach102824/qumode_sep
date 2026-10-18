@@ -1788,3 +1788,15 @@ Runner alive (run_v3.sh pid 3668898). Only job: S_g4_ctrl_f (pid 3630951), init 
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 63.3 vs 84.9, B90 253.0 vs 238.1 -> no beat
+
+### R_g4_snapF_val finished 2026-10-18 15:47 CST  (L=4)
+
+`L=4 src=['S_g4_snapF_f'] nval=600 vn=[10, 12] vbase=36000000000 criterion=min mean_n[(log median 1/p + log B90 1/p)/2] over fresh val n=[10, 12] (600 inst each, base 36000000000); tie-break mean -log p`
+
+| row | n=20 |
+|---|---|
+| R_g4_snapF_val winner 0 (train 1.183, val 2.448) | 37.3/211.7 |
+| QAOA_raw L=4 | 84.9/238.1 |
+| G_fe L=4 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 37.3 vs 84.9, B90 211.7 vs 238.1 -> **BEATS QAOA (both)**
