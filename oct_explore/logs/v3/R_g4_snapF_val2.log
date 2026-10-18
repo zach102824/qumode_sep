@@ -1,0 +1,14 @@
+10-18 20:58:11 SNAP-GNN arch=mp snap=std form=free plain=False L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray inits=['warm:B_g4_iii_A_f.json#2', 'warm:B_g4_iii_A_f.json#0', 'warm:B_g4_iii_A_f.json#1']
+10-18 20:58:11 params per model: 89596
+10-18 20:58:12 reselect R_g4_snapF_val2: 8 inits from ['S_g4_snapF_f', 'S_g4_snapF_s1', 'S_g4_snapF_s2']; min mean_n[(log median 1/p + log B90 1/p)/2] over fresh val n=[10, 12] (600 inst each, base 36000000000); tie-break mean -log p
+10-18 20:58:21   cand 0 S_g4_snapF_f#0 (warm:B_g4_iii_A_f.json#2): train 1.1826 old-val 1.887 | n=10 4.7/17.5 n=12 7.7/27.9 | S=2.4477 nll=1.9401 (9s)
+10-18 20:58:26   cand 1 S_g4_snapF_f#1 (warm:B_g4_iii_A_f.json#0): train 1.1546 old-val 1.919 | n=10 4.8/20.3 n=12 7.8/30.6 | S=2.5162 nll=1.9763 (5s)
+10-18 20:58:31   cand 2 S_g4_snapF_f#2 (warm:B_g4_iii_A_f.json#1): train 1.1771 old-val 1.911 | n=10 4.9/17.4 n=12 7.9/29.7 | S=2.4752 nll=1.9646 (5s)
+10-18 20:58:35   cand 3 S_g4_snapF_s1#0 (warm:B_g4_iii_A_f.json#2): train 1.1911 old-val 1.882 | n=10 4.7/16.9 n=12 7.8/27.9 | S=2.4396 nll=1.9435 (5s)
+10-18 20:58:40   cand 4 S_g4_snapF_s1#1 (warm:B_g4_iii_A_f.json#0): train 1.1613 old-val 1.897 | n=10 4.9/18.6 n=12 7.7/31.9 | S=2.5055 nll=1.9658 (5s)
+10-18 20:58:45   cand 5 S_g4_snapF_s1#2 (warm:B_g4_iii_A_f.json#1): train 1.1705 old-val 1.908 | n=10 4.8/17.6 n=12 7.6/28.6 | S=2.4555 nll=1.9434 (5s)
+10-18 20:58:50   cand 6 S_g4_snapF_s2#0 (warm:B_g4_iii_A_f.json#2): train 1.1925 old-val 1.904 | n=10 4.8/18.5 n=12 8.2/29.4 | S=2.4947 nll=1.9931 (5s)
+10-18 20:58:54   cand 7 S_g4_snapF_s2#1 (warm:B_g4_iii_A_f.json#0): train 1.1417 old-val 1.890 | n=10 4.8/19.0 n=12 7.7/31.8 | S=2.5037 nll=1.9724 (5s)
+10-18 20:58:54 RE-PICK (fixed before n=20): cand 3 = S_g4_snapF_s1#0 S=2.4396 (train-best cand 7)
+10-18 20:59:42 test re-picked cand 3 (S_g4_snapF_s1#0) n=20 L=4 med1/p=37.5 B90=182.7 (45s)
+10-18 20:59:42 ALLDONE

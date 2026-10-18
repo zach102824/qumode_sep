@@ -2081,3 +2081,15 @@ Running: mp128 init 2 (inits 1.149/1.160), attn init 2 (1.304/1.308), tf init 1 
 | N_g4_mp128 winner 0 (train 1.149, val 1.904) | 3.1/8.2 | 5.2/18.2 | 7.1/36.8 | 12.2/79.0 |
 | QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
+
+### R_g4_snapF_val2 finished 2026-10-18 21:00 CST  (L=4)
+
+`L=4 src=['S_g4_snapF_f', 'S_g4_snapF_s1', 'S_g4_snapF_s2'] nval=600 vn=[10, 12] vbase=36000000000 criterion=min mean_n[(log median 1/p + log B90 1/p)/2] over fresh val n=[10, 12] (600 inst each, base 36000000000); tie-break mean -log p`
+
+| row | n=20 |
+|---|---|
+| R_g4_snapF_val2 winner 3 (train 1.191, val 2.440) | 37.5/182.7 |
+| QAOA_raw L=4 | 84.9/238.1 |
+| G_fe L=4 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 37.5 vs 84.9, B90 182.7 vs 238.1 -> **BEATS QAOA (both)**
