@@ -2066,3 +2066,8 @@ Queued next unchanged: N_g4_mlp → R_arch_scan → A_arch_scan, then R_g4_snapF
 | N_g4_ds winner 2 (train 1.436, val 2.020) | 4.1/8.1 | 6.1/18.8 | 9.2/32.4 | 14.2/58.2 |
 | QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
+
+## Check-in (2026-10-18 20:56 CST)
+Runner alive (run_v3.sh pid 3704086), 4/4 slots busy. **N_g4_ds** finished 20:43 (winner init 2, train 1.436, val 2.020; n=14 14.2/58.2 vs QAOA L4 20.8/59.6 — beats QAOA at n≤14 but train loss clearly worst of the scan, ~1.44 vs mp64 ~1.18). Runner then launched **N_g4_mlp** at 20:43 (mem 5650 MB). MemAvailable ~5.2 GiB, load ~14.5 on 8 cores. PID 2888494 and *.STOP untouched. No queue rewrite; no restart.
+
+Running: mp128 init 2 (inits 1.149/1.160), attn init 2 (1.304/1.308), tf init 1 (1.405), mlp init 0. Queued next unchanged: R_arch_scan → A_arch_scan (n=10/14/20 val pick), then R_g4_snapF_val2 / L8 no-SNAP controls. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6**. No WakeParent.
