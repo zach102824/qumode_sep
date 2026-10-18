@@ -1,0 +1,18 @@
+10-19 03:54:24 SNAP-GNN arch=attn snap=std form=free plain=False L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray inits=['init_from:A_g4.json#scr49', 'init_from:A_g4.json#scr131', 'init_from:A_g4.json#grow_scr48']
+10-19 03:54:24 params per model: 187900
+10-19 04:44:19   init 0 (init_from:A_g4.json#scr49): 1.5703 -> 1.3101 (1000 it, 2993s) shared SNAP {}
+10-19 05:33:03   init 1 (init_from:A_g4.json#scr131): 1.5703 -> 1.2931 (1000 it, 2924s) shared SNAP {}
+10-19 06:17:22   init 2 (init_from:A_g4.json#grow_scr48): 1.5703 -> 1.2867 (1000 it, 2659s) shared SNAP {}
+10-19 06:17:28   init 0: train 1.3101 val ['1.696', '2.045']
+10-19 06:17:29   init 1: train 1.2931 val ['1.702', '2.084']
+10-19 06:17:30   init 2: train 1.2867 val ['1.716', '2.093']
+10-19 06:17:30 winner init 0 (train-best 2)
+10-19 06:17:33 test winner n=8 L=4 med1/p=3.1 B90=7.5 (3s) SNAP phase-rms/layer ['0.338', '0.180', '0.089', '0.136'] max|dev| ['1.09', '0.46', '0.53', '0.45']
+10-19 06:17:35 test winner n=10 L=4 med1/p=5.6 B90=16.4 (3s) SNAP phase-rms/layer ['0.295', '0.172', '0.100', '0.144'] max|dev| ['0.98', '0.56', '0.50', '0.44']
+10-19 06:17:39 test winner n=12 L=4 med1/p=7.3 B90=30.4 (3s) SNAP phase-rms/layer ['0.252', '0.148', '0.069', '0.104'] max|dev| ['0.97', '0.55', '0.31', '0.39']
+10-19 06:17:45 test winner n=14 L=4 med1/p=13.3 B90=51.6 (6s) SNAP phase-rms/layer ['0.298', '0.168', '0.092', '0.137'] max|dev| ['1.32', '0.64', '0.55', '0.47']
+10-19 06:17:46 test trainbest n=8 L=4 med1/p=3.1 B90=7.3 (1s) SNAP phase-rms/layer ['0.336', '0.173', '0.109', '0.148'] max|dev| ['1.44', '0.61', '0.55', '0.64']
+10-19 06:17:47 test trainbest n=10 L=4 med1/p=5.4 B90=16.9 (1s) SNAP phase-rms/layer ['0.295', '0.158', '0.100', '0.133'] max|dev| ['1.37', '0.57', '0.56', '0.64']
+10-19 06:17:48 test trainbest n=12 L=4 med1/p=7.5 B90=30.7 (1s) SNAP phase-rms/layer ['0.248', '0.141', '0.074', '0.100'] max|dev| ['1.10', '0.50', '0.38', '0.47']
+10-19 06:17:52 test trainbest n=14 L=4 med1/p=13.4 B90=56.5 (4s) SNAP phase-rms/layer ['0.298', '0.163', '0.096', '0.129'] max|dev| ['1.36', '0.66', '0.54', '0.69']
+10-19 06:17:52 ALLDONE

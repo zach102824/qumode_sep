@@ -2646,3 +2646,14 @@ Runner alive (run_v3.sh pid **3872547**, ~3h20m), MAXJ=3 / cores 0-5 (Zach 6-cor
 Finished since 05:55: none (jobs still mid-train). No new JSON losses since fm64 init0 / s3 init1. Queued next: **R_attn_val2** after n2k+s3+fm64 (only pending undones besides the 3 running).
 
 Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **B_g4_iii_A_h128_f 53.1/166.3** (attn dual-beat package still **R_attn_val 42.9/167.2**); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
+
+### N_g4_attn_s3 finished 2026-10-19 06:18 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 arch=attn clause_w=True var_mix=True snap=std snap_form=free free_m=32 init_from=results/v3/A_g4.json ninit=3 ntrain=1000 maxiter=1000 val=[10, 12] val_count=60 test=[8, 10, 12, 14] feat=formula seed=3 chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 |
+|---|---|---|---|---|
+| N_g4_attn_s3 winner 0 (train 1.310, val 1.871) | 3.1/7.5 | 5.6/16.4 | 7.3/30.4 | 13.3/51.6 |
+| N_g4_attn_s3 trainbest 2 (train 1.287, val 1.905) | 3.1/7.3 | 5.4/16.9 | 7.5/30.7 | 13.4/56.5 |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
