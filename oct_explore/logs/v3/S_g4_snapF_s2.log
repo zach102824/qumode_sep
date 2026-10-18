@@ -1,3 +1,11 @@
 10-18 15:55:52 SNAP-GNN snap=std form=free plain=False L=4 H=64 clause_w=True var_mix=True code=gray inits=['warm:B_g4_iii_A_f.json#2', 'warm:B_g4_iii_A_f.json#0']
 10-18 15:55:52 params per model: 89596
 10-18 16:16:48   init 0 (warm:B_g4_iii_A_f.json#2): 1.4152 -> 1.1925 (1000 it, 1253s) shared SNAP {}
+10-18 16:55:12   init 1 (warm:B_g4_iii_A_f.json#0): 1.4085 -> 1.1417 (1000 it, 2304s) shared SNAP {}
+10-18 16:55:17   init 0: train 1.1925 val ['1.756', '2.051']
+10-18 16:55:17   init 1: train 1.1417 val ['1.779', '2.001']
+10-18 16:55:18 winner init 1 (train-best 1)
+10-18 16:55:20 test winner n=8 L=4 med1/p=2.9 B90=8.5 (2s) SNAP phase-rms/layer ['0.441', '0.196', '0.181', '0.164'] max|dev| ['1.44', '0.57', '0.58', '0.55']
+10-18 16:55:22 test winner n=10 L=4 med1/p=5.3 B90=18.8 (2s) SNAP phase-rms/layer ['0.391', '0.178', '0.168', '0.147'] max|dev| ['1.24', '0.57', '0.61', '0.55']
+10-18 16:55:24 test winner n=12 L=4 med1/p=7.0 B90=33.4 (3s) SNAP phase-rms/layer ['0.330', '0.163', '0.144', '0.125'] max|dev| ['1.37', '0.53', '0.57', '0.54']
+10-18 16:55:30 test winner n=14 L=4 med1/p=12.3 B90=82.8 (6s) SNAP phase-rms/layer ['0.392', '0.176', '0.165', '0.148'] max|dev| ['1.37', '0.63', '0.72', '0.61']

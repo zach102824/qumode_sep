@@ -1854,3 +1854,13 @@ Runner alive (run_v3.sh pid 3688928), 4/4 slots busy, CPU advancing (~150% each)
 - **S_g4_snapF_s2** (seed 2): init 0 **1.415→1.193**; mid init 1 of 2.
 
 **Phase 1 arch scan** still at queue front (N_g4_mp128/attn/tf/ds/mlp → R_arch_scan → A_arch_scan). L4 seeds should free first (~16:55–17:05); L8 inits ~34 min each. Best dual-beat remains **S_g4_snapF_f 37.3/211.7** vs QAOA L4 84.9/238.1. No queue rewrite.
+
+### S_g4_snapF_s2 finished 2026-10-18 16:56 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 clause_w=True var_mix=True snap=std snap_form=free free_m=32 warm=results/v3/B_g4_iii_A_f.json warm_ids=[2, 0] ninit=2 ntrain=1000 maxiter=1000 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula seed=2 chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 |
+|---|---|---|---|---|
+| S_g4_snapF_s2 winner 1 (train 1.142, val 1.890) | 2.9/8.5 | 5.3/18.8 | 7.0/33.4 | 12.3/82.8 |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
