@@ -1954,3 +1954,14 @@ Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing. MemAvailabl
 - **N_g4_tf** (118524 params): launched 18:01, init 0.
 
 **Queue next:** N_g4_ds, N_g4_mlp → R_arch_scan → A_arch_scan, then R_g4_snapF_val2 / L8 no-SNAP controls. Best dual-beats: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6**. WakeParent for the new L8 dual-beat.
+
+## Check-in (2026-10-18 18:19 CST)
+Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing (~134–195% each). MemAvailable ~4.2 GiB (above 3500 MB gate; was ~2.5 GiB earlier this check), load high on 8 cores, MINMEM/MAXJ caps hold. PID 2888494 and *.STOP untouched. No new finish since 18:02 check-in; no queue rewrite; no restart.
+
+**Running:**
+- **S_g4_snapL_f** (lin SNAP, warm B_g4 #2/0/1): inits 0–1 done (1.218 / **1.180**); mid init 2 of 3 (~50 min elapsed). Train still near free-SNAP 1.18 on init 1; shared SNAP phases remain small in prior inits.
+- **N_g4_mp128** (Phase 1, 539900 params): init 0 **1.5703→1.1489** (1000 it, 2848 s); mid init 1 of 3. Train better than baseline free-SNAP ~1.18 so far — wait for all 3 inits + R_arch_scan before ranking.
+- **N_g4_attn** (187900 params): ~15 min elapsed, still init 0 (no loss line yet; CPU ~153%, RSS ~0.8 GB).
+- **N_g4_tf** (118524 params): ~11 min elapsed, still init 0 (CPU ~134%, RSS ~0.75 GB).
+
+**Queue next:** N_g4_ds, N_g4_mlp → R_arch_scan → A_arch_scan, then R_g4_snapF_val2 / L8 no-SNAP controls. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6** (both already logged/pushed). No WakeParent this check.
