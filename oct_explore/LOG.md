@@ -2304,3 +2304,34 @@ Queued next: N_g4_attn_r5, S_g8_attn_A_f, R_attn_val (after s1/s2/r5). Best dual
 | A_arch_scan winner 0 | 0.0/0.0 |
 | QAOA_raw L=4 | 5.3/9.9 |
 | G_fe L=4 | 5.4/9.8 |
+
+### A_arch_scan analysis (2026-10-18 23:25–23:38 CST)
+
+Probed all 6 Phase-1 nets (`analyze_arch_summary.json`; n_ok=6). Stub TEB row is placeholder (analysis job, not a circuit test).
+
+| arch | train loss | phase_rms n=20 | w_rms n=20 | transfer ph20/ph8 | TEB B90 (known) | tail nsol | body nsol |
+|---|---|---|---|---|---|---|---|
+| **attn** | 1.308 | **0.149** | 1.181 | **0.751** | **172.7** | 1.2 | 4.9 |
+| mp (baseline) | 1.183 | 0.205 | 1.037 | 0.809 | 211.7 | 1.2 | 4.9 |
+| mp128 | 1.149 | 0.194 | 1.249 | 0.834 | 242.7 | 1.4 | 4.9 |
+| tf | 1.405 | 0.065 | 0.877 | 0.998 | ~152–160 val | 1.1 | 4.9 |
+| ds | 1.436 | 0.139 | 0.828 | 0.799 | ~192 val | 1.5 | 4.9 |
+| mlp | 1.439 | 0.124 | 0.667 | 0.788 | ~189 val | 1.5 | 4.9 |
+
+**Takeaways (why keep attn for Phase 2):**
+1. **attn damps SNAP phases most when scaling n=8→20** (transfer 0.75) yet still uses them (ph20=0.15 ≫ tf’s 0.065). mp/mp128 keep larger phases and worse B90 — overconfident SNAP at large n.
+2. **Hard-tail instances are shared across arches** (tail mean nsol ~1.1–1.5 vs body ~4.9). Architecture does not invent easy tails; attn’s edge is better B90 on the same hard set.
+3. **tf under-uses SNAP** (phase collapse) — explains why low B90 on val did not win the fixed score (median suffers).
+4. Suggested ablations (degree-channel zero, sign shuffle, var permute, drop heads) recorded in summary; hold until after Phase-2 seed/r5/L8 attn + R_attn_val. Tail-weighted loss / more n=8 train still on the Phase-2 menu.
+
+## Check-in (2026-10-18 23:38 CST)
+Runner alive (run_v3.sh pid **3872547**), MAXJ=3 / cores 0-5 (Zach 6-core cap). Re-pinned all threads of the 3 live jobs to `taskset -c 0-5` (s1 had idle PSR reports on 6/7; affinity mask already 3f). MemAvailable ~2.4 GiB (tight but stable; MINMEM=3500 so no 4th launch). PID 2888494 and *.STOP untouched. No old-queue restart.
+
+**3/3 slots (Phase 2):**
+- **N_g4_attn_s1** (pid 3843966, ~53 min): init 0 → 1.286, init 1 → 1.288; on init 2. Params 187900.
+- **N_g4_attn_s2** (pid 3872605, ~13 min): training init 0.
+- **N_g4_attn_r5** (pid 3874429, ~10 min, rounds=5, 302844 params): training init 0.
+
+Finished since 23:23: **A_arch_scan** (23:25) — analysis only; runner finalized+pushed stub (`47daa390`). This check-in adds the probe table + pushes `analyze_arch_summary.json` / per-arch analyze_*.json.
+
+Queued next (unchanged): **S_g8_attn_A_f** (after a slot frees; dep A_g8 ready), then **R_attn_val** (after s1/s2/r5). Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.

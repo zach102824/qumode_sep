@@ -1,0 +1,488 @@
+{
+  "S_g4_snapF_f": {
+    "tag": "S_g4_snapF_f",
+    "arch": "mp",
+    "winner": 0,
+    "loss": 1.1825831979513168,
+    "transfer": {
+      "8": {
+        "phase_rms_mean": 0.2540275454521179,
+        "phase_rms_std": 0.06270192563533783,
+        "phase_rms_max": 0.3710786700248718,
+        "w_rms_mean": 0.9940394163131714,
+        "w_rms_max": 1.430417776107788
+      },
+      "14": {
+        "phase_rms_mean": 0.24380254745483398,
+        "phase_rms_std": 0.04221465438604355,
+        "phase_rms_max": 0.3494858741760254,
+        "w_rms_mean": 1.0221502780914307,
+        "w_rms_max": 1.3270893096923828
+      },
+      "20": {
+        "phase_rms_mean": 0.2054397612810135,
+        "phase_rms_std": 0.031013567000627518,
+        "phase_rms_max": 0.28239384293556213,
+        "w_rms_mean": 1.0374408960342407,
+        "w_rms_max": 1.2703214883804321
+      }
+    },
+    "corr": {
+      "8": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.21258207872507748,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.240266255446221
+      },
+      "14": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.4729729112851843,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.12728261740751398
+      },
+      "20": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.2613615059305883,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.4369920579503375
+      }
+    },
+    "tail": {
+      "B90_thr": 211.7394675507474,
+      "n_tail": 10,
+      "tail_mean_nsol": 1.2,
+      "body_mean_nsol": 4.933333333333334,
+      "tail_mean_max_deg": 50.5,
+      "body_mean_max_deg": 51.15555555555556,
+      "tail_mean_deg": 39.8,
+      "body_mean_deg": 39.80000000000001,
+      "tail_seeds": [
+        32200000040,
+        32200000041,
+        32200000045,
+        32200000066,
+        32200000076,
+        32200000081,
+        32200000097,
+        32200000130,
+        32200000133,
+        32200000154
+      ]
+    },
+    "ablate_plan": [
+      "zero fv pos/neg degree channels",
+      "shuffle clause signs (Ip/In swap random subset)",
+      "permute variable ids",
+      "drop clause_w head / drop var_mix head / drop SNAP head (one at a time)"
+    ],
+    "transfer_ratio_20_over_8": 0.808730253702889
+  },
+  "N_g4_mp128": {
+    "tag": "N_g4_mp128",
+    "arch": "mp128",
+    "winner": 0,
+    "loss": 1.148858979344368,
+    "transfer": {
+      "8": {
+        "phase_rms_mean": 0.23275676369667053,
+        "phase_rms_std": 0.05638774111866951,
+        "phase_rms_max": 0.37727922201156616,
+        "w_rms_mean": 1.2059332132339478,
+        "w_rms_max": 1.7692930698394775
+      },
+      "14": {
+        "phase_rms_mean": 0.2268187552690506,
+        "phase_rms_std": 0.046297576278448105,
+        "phase_rms_max": 0.3774920403957367,
+        "w_rms_mean": 1.2432981729507446,
+        "w_rms_max": 1.6459052562713623
+      },
+      "20": {
+        "phase_rms_mean": 0.19414439797401428,
+        "phase_rms_std": 0.03941715508699417,
+        "phase_rms_max": 0.31584781408309937,
+        "w_rms_mean": 1.2489017248153687,
+        "w_rms_max": 1.533742070198059
+      }
+    },
+    "corr": {
+      "8": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.10621924060290829,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.23436493380664952
+      },
+      "14": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.3954179065949167,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.07717669169921289
+      },
+      "20": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.29032506776067735,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.4199707684207902
+      }
+    },
+    "tail": {
+      "B90_thr": 242.748291015625,
+      "n_tail": 10,
+      "tail_mean_nsol": 1.4,
+      "body_mean_nsol": 4.911111111111111,
+      "tail_mean_max_deg": 51.7,
+      "body_mean_max_deg": 51.022222222222226,
+      "tail_mean_deg": 39.8,
+      "body_mean_deg": 39.80000000000001,
+      "tail_seeds": [
+        32200000015,
+        32200000040,
+        32200000041,
+        32200000045,
+        32200000047,
+        32200000097,
+        32200000107,
+        32200000126,
+        32200000130,
+        32200000133
+      ]
+    },
+    "ablate_plan": [
+      "zero fv pos/neg degree channels",
+      "shuffle clause signs (Ip/In swap random subset)",
+      "permute variable ids",
+      "drop clause_w head / drop var_mix head / drop SNAP head (one at a time)"
+    ],
+    "transfer_ratio_20_over_8": 0.8341085126403629
+  },
+  "N_g4_attn": {
+    "tag": "N_g4_attn",
+    "arch": "attn",
+    "winner": 1,
+    "loss": 1.3080146312713623,
+    "transfer": {
+      "8": {
+        "phase_rms_mean": 0.19779321551322937,
+        "phase_rms_std": 0.06377860903739929,
+        "phase_rms_max": 0.33100414276123047,
+        "w_rms_mean": 1.1492998600006104,
+        "w_rms_max": 1.9268285036087036
+      },
+      "14": {
+        "phase_rms_mean": 0.17926079034805298,
+        "phase_rms_std": 0.03611156344413757,
+        "phase_rms_max": 0.2542196214199066,
+        "w_rms_mean": 1.1674209833145142,
+        "w_rms_max": 1.7008893489837646
+      },
+      "20": {
+        "phase_rms_mean": 0.14850230515003204,
+        "phase_rms_std": 0.028959687799215317,
+        "phase_rms_max": 0.23061823844909668,
+        "w_rms_mean": 1.1807773113250732,
+        "w_rms_max": 1.4713788032531738
+      }
+    },
+    "corr": {
+      "8": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.11217982447680443,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.1827052045646926
+      },
+      "14": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.3663611939657489,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": -0.024892232531498294
+      },
+      "20": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.3544751764276546,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.4061227631864569
+      }
+    },
+    "tail": {
+      "B90_thr": 172.6896209716797,
+      "n_tail": 10,
+      "tail_mean_nsol": 1.2,
+      "body_mean_nsol": 4.933333333333334,
+      "tail_mean_max_deg": 50.9,
+      "body_mean_max_deg": 51.111111111111114,
+      "tail_mean_deg": 39.8,
+      "body_mean_deg": 39.80000000000001,
+      "tail_seeds": [
+        32200000015,
+        32200000040,
+        32200000041,
+        32200000045,
+        32200000076,
+        32200000097,
+        32200000107,
+        32200000130,
+        32200000133,
+        32200000154
+      ]
+    },
+    "ablate_plan": [
+      "zero fv pos/neg degree channels",
+      "shuffle clause signs (Ip/In swap random subset)",
+      "permute variable ids",
+      "drop clause_w head / drop var_mix head / drop SNAP head (one at a time)"
+    ],
+    "transfer_ratio_20_over_8": 0.750795747794997
+  },
+  "N_g4_tf": {
+    "tag": "N_g4_tf",
+    "arch": "tf",
+    "winner": 0,
+    "loss": 1.404595360159874,
+    "transfer": {
+      "8": {
+        "phase_rms_mean": 0.06463519483804703,
+        "phase_rms_std": 0.031302131712436676,
+        "phase_rms_max": 0.21753957867622375,
+        "w_rms_mean": 0.8437469601631165,
+        "w_rms_max": 1.353570818901062
+      },
+      "14": {
+        "phase_rms_mean": 0.07899092137813568,
+        "phase_rms_std": 0.027270851656794548,
+        "phase_rms_max": 0.2291460484266281,
+        "w_rms_mean": 0.8752029538154602,
+        "w_rms_max": 1.3018265962600708
+      },
+      "20": {
+        "phase_rms_mean": 0.06450416147708893,
+        "phase_rms_std": 0.010003939270973206,
+        "phase_rms_max": 0.11177066713571548,
+        "w_rms_mean": 0.8767992854118347,
+        "w_rms_max": 1.0828301906585693
+      }
+    },
+    "corr": {
+      "8": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": -0.056827763761191114,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.15416460796116663
+      },
+      "14": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.26476958205146517,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.09475475838440578
+      },
+      "20": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.1768891955433723,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.44740108558961733
+      }
+    },
+    "tail": {
+      "B90_thr": 152.50701904296875,
+      "n_tail": 10,
+      "tail_mean_nsol": 1.1,
+      "body_mean_nsol": 4.944444444444445,
+      "tail_mean_max_deg": 50.3,
+      "body_mean_max_deg": 51.17777777777778,
+      "tail_mean_deg": 39.8,
+      "body_mean_deg": 39.80000000000001,
+      "tail_seeds": [
+        32200000015,
+        32200000040,
+        32200000041,
+        32200000076,
+        32200000097,
+        32200000107,
+        32200000121,
+        32200000130,
+        32200000133,
+        32200000136
+      ]
+    },
+    "ablate_plan": [
+      "zero fv pos/neg degree channels",
+      "shuffle clause signs (Ip/In swap random subset)",
+      "permute variable ids",
+      "drop clause_w head / drop var_mix head / drop SNAP head (one at a time)"
+    ],
+    "transfer_ratio_20_over_8": 0.9979727242830099
+  },
+  "N_g4_ds": {
+    "tag": "N_g4_ds",
+    "arch": "ds",
+    "winner": 2,
+    "loss": 1.4356240630149841,
+    "transfer": {
+      "8": {
+        "phase_rms_mean": 0.1744391769170761,
+        "phase_rms_std": 0.0489422045648098,
+        "phase_rms_max": 0.2804933190345764,
+        "w_rms_mean": 0.8278416395187378,
+        "w_rms_max": 0.8298017978668213
+      },
+      "14": {
+        "phase_rms_mean": 0.1676637977361679,
+        "phase_rms_std": 0.02924439124763012,
+        "phase_rms_max": 0.22973430156707764,
+        "w_rms_mean": 0.8279174566268921,
+        "w_rms_max": 0.829306423664093
+      },
+      "20": {
+        "phase_rms_mean": 0.1393338143825531,
+        "phase_rms_std": 0.018096482381224632,
+        "phase_rms_max": 0.17230255901813507,
+        "w_rms_mean": 0.8279983401298523,
+        "w_rms_max": 0.8289341926574707
+      }
+    },
+    "corr": {
+      "8": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.05104723140437772,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.21703748648167806
+      },
+      "14": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.20471673296558085,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.289846358207534
+      },
+      "20": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.3420451098640785,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.24834975839392082
+      }
+    },
+    "tail": {
+      "B90_thr": 191.62863159179688,
+      "n_tail": 10,
+      "tail_mean_nsol": 1.5,
+      "body_mean_nsol": 4.9,
+      "tail_mean_max_deg": 51.4,
+      "body_mean_max_deg": 51.05555555555556,
+      "tail_mean_deg": 39.8,
+      "body_mean_deg": 39.80000000000001,
+      "tail_seeds": [
+        32200000015,
+        32200000040,
+        32200000041,
+        32200000045,
+        32200000071,
+        32200000076,
+        32200000097,
+        32200000126,
+        32200000130,
+        32200000133
+      ]
+    },
+    "ablate_plan": [
+      "zero fv pos/neg degree channels",
+      "shuffle clause signs (Ip/In swap random subset)",
+      "permute variable ids",
+      "drop clause_w head / drop var_mix head / drop SNAP head (one at a time)"
+    ],
+    "transfer_ratio_20_over_8": 0.7987529914153906
+  },
+  "N_g4_mlp": {
+    "tag": "N_g4_mlp",
+    "arch": "mlp",
+    "winner": 2,
+    "loss": 1.4393925964832306,
+    "transfer": {
+      "8": {
+        "phase_rms_mean": 0.15699544548988342,
+        "phase_rms_std": 0.041167374700307846,
+        "phase_rms_max": 0.24167653918266296,
+        "w_rms_mean": 0.6694261431694031,
+        "w_rms_max": 0.708199679851532
+      },
+      "14": {
+        "phase_rms_mean": 0.14779755473136902,
+        "phase_rms_std": 0.025492634624242783,
+        "phase_rms_max": 0.19144202768802643,
+        "w_rms_mean": 0.6700398325920105,
+        "w_rms_max": 0.7556175589561462
+      },
+      "20": {
+        "phase_rms_mean": 0.12378068268299103,
+        "phase_rms_std": 0.015440765768289566,
+        "phase_rms_max": 0.15777526795864105,
+        "w_rms_mean": 0.6674266457557678,
+        "w_rms_max": 0.7150765657424927
+      }
+    },
+    "corr": {
+      "8": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.009175390518818605,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.4014815741351579
+      },
+      "14": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.24938036135196806,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": -0.19841691019421615
+      },
+      "20": {
+        "phase_vs_mean_deg": 0.0,
+        "phase_vs_nsol": 0.2953554373549131,
+        "phase_vs_m": 0.0,
+        "w_vs_mean_deg": 0.0,
+        "w_vs_nsol": 0.34148638283091487
+      }
+    },
+    "tail": {
+      "B90_thr": 188.66763305664062,
+      "n_tail": 10,
+      "tail_mean_nsol": 1.5,
+      "body_mean_nsol": 4.9,
+      "tail_mean_max_deg": 50.4,
+      "body_mean_max_deg": 51.166666666666664,
+      "tail_mean_deg": 39.8,
+      "body_mean_deg": 39.80000000000001,
+      "tail_seeds": [
+        32200000015,
+        32200000040,
+        32200000041,
+        32200000066,
+        32200000076,
+        32200000097,
+        32200000126,
+        32200000130,
+        32200000133,
+        32200000154
+      ]
+    },
+    "ablate_plan": [
+      "zero fv pos/neg degree channels",
+      "shuffle clause signs (Ip/In swap random subset)",
+      "permute variable ids",
+      "drop clause_w head / drop var_mix head / drop SNAP head (one at a time)"
+    ],
+    "transfer_ratio_20_over_8": 0.7884348638060796
+  }
+}
