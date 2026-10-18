@@ -2524,3 +2524,16 @@ Runner alive (run_v3.sh pid **3872547**, ~2h02m), MAXJ=3 / cores 0-5 (Zach 6-cor
 Finished since 03:11: **R_attn_val** (03:14, already finalized+pushed `b1ac8bc0`) — Phase-2 L4 reselect winner **N_g4_attn_s2#1** (train 1.299, val S=3.292). Official TEB n=20 **42.9/167.2** vs QAOA L4 84.9/238.1 → **dual-beats QAOA**. Improves L4 B90 best (was Phase-1 attn 42.8/172.7); median still behind **S_g4_snapF_s1 37.5/182.7**. → **WakeParent**.
 
 Queued next (wave-2): N_g4_attn_s3 / fm64 / R_attn_val2 (after n2k + deps). Best dual-beats now: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **R_attn_val (attn_s2#1) 42.9/167.2**; L8 **S_g8_snapF_A_f 9.1/51.6**.
+
+### S_g8_attn_A_f finished 2026-10-19 03:52 CST  (L=8)
+
+`code=gray L=8 hidden=64 rounds=3 arch=attn clause_w=True var_mix=True snap=std snap_form=free free_m=32 init_from=results/v3/A_g8.json ninit=3 ntrain=1000 maxiter=1000 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| S_g8_attn_A_f winner 1 (train 0.703, val 1.127) | 1.8/4.2 | 2.4/6.7 | 3.0/14.3 | 4.9/21.3 | 9.0/56.6 |
+| S_g8_attn_A_f trainbest 2 (train 0.695, val 1.142) | 1.7/4.5 | 2.5/7.5 | 3.1/9.6 | - | - |
+| QAOA_raw L=8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
+
+n=20 winner vs QAOA L=8: median 9.0 vs 16.4, B90 56.6 vs 54.2 -> no beat
