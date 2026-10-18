@@ -1889,11 +1889,12 @@ Runner alive (run_v3.sh pid 3688928), 4/4 slots busy, CPU advancing. MemAvailabl
 | row | n=8 | n=10 | n=12 | n=14 | n=20 |
 |---|---|---|---|---|---|
 | S_g4_snapF_s1 winner 0 (train 1.191, val 1.882) | 2.9/8.9 | 5.2/17.9 | 6.4/38.9 | 11.1/80.8 | 37.5/182.7 |
-| S_g4_snapF_s1 trainbest 1 (train 1.161, val 1.897) | 2.9/9.6 | - | - | - | - |
+| S_g4_snapF_s1 trainbest 1 (train 1.161, val 1.897) | 2.9/9.6 | 5.4/20.5 | 6.5/40.3 | 12.2/72.2 | 37.2/234.7 |
 | QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 37.5 vs 84.9, B90 182.7 vs 238.1 -> **BEATS QAOA (both)**
+n=20 trainbest vs QAOA L=4: median 37.2 vs 84.9, B90 234.7 vs 238.1 -> median beat only (B90 close)
 
 ## Check-in (2026-10-18 17:16 CST)
 Runner alive (run_v3.sh pid 3704086, restarted 16:59 with done_ fix), 4/4 slots busy (s1 process still finishing trainbest tests). MemAvailable ~2.7 GiB, load ~12–15 on 8 cores. PID 2888494 and *.STOP untouched.
@@ -1901,3 +1902,14 @@ Runner alive (run_v3.sh pid 3704086, restarted 16:59 with done_ fix), 4/4 slots 
 **New best dual-beat: S_g4_snapF_s1** (seed 1, warm B_g4 #2/0/1, winner init 0 picked on old n=10/12 val) n=20 L4 **37.5/182.7** vs QAOA 84.9/238.1 — B90 improves on S_g4_snapF_f (37.3/211.7) by ~14%, median about equal. Caveat: winner chosen by n=10/12 val, not the newer n=10/14/20 criterion; re-pick of s1 starts should be folded into R_arch_scan/reselect before calling it official.
 
 **Running:** S_g8_snapF_A_f (inits 0.673/0.686, init 2 of 3), S_b8_snapF_A_f (0.676/0.671, init 2 of 3), S_g4_snapL_f (lin SNAP, init 0). Phase 1 arch scan (N_g4_mp128 first) launches on next free slot + ≥3500 MB. Queue unchanged.
+
+## Check-in (2026-10-18 17:34 CST)
+Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing. MemAvailable ~4.7 GiB, load high on 8 cores, MINMEM/MAXJ caps hold. PID 2888494 and *.STOP untouched. No new n=20 finish this check (s1 trainbest n=10–20 now complete on disk; winner unchanged 37.5/182.7).
+
+**Running:**
+- **S_g8_snapF_A_f**: inits 0–1 done (0.673 / 0.686); mid init 2 of 3. Train loss ~0.67 vs L4 ~1.18 — promising for L8 B90 gap.
+- **S_b8_snapF_A_f**: inits 0–1 done (0.676 / 0.671); mid init 2 of 3.
+- **S_g4_snapL_f** (lin SNAP): init 0 **1.415→1.218** (worse train than free SNAP ~1.18); shared SNAP sa ~0.003–0.019 rad (near-zero, like prior shared-SNAP controls). Mid init 1 of 3.
+- **N_g4_mp128** (Phase 1 deeper/wider GNN): started 17:15, 539900 params, still on init 0 (no loss lines yet).
+
+**Queue:** Phase 1 continues (attn/tf/ds/mlp → R_arch_scan → A_arch_scan) ahead of R_g4_snapF_val2 and L8 no-SNAP controls. Best dual-beat remains **S_g4_snapF_s1 37.5/182.7** (caveat: old n=10/12 val pick). No queue rewrite. No WakeParent (s1 beat already logged/pushed at 17:14–17:16).
