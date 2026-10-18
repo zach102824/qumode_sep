@@ -2411,3 +2411,14 @@ No finishes since 00:15 (s1). Queued next: **R_attn_val** after s2+r5; then B_g4
 | N_g4_attn_s2 trainbest 0 (train 1.280, val 1.894) | 3.2/7.7 | 5.4/17.0 | 7.7/29.6 | 12.9/51.6 |
 | QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
+
+## Check-in (2026-10-19 01:33 CST)
+Runner alive (run_v3.sh pid **3872547**), MAXJ=3 / cores 0-5 (Zach 6-core cap); all threads of live jobs re-pinned `taskset -c 0-5`. MemAvailable ~2.5 GiB (below MINMEM=3500 → runner holding **B_g4_iii_A_h128_f**). PID 2888494 and *.STOP untouched. No queue rewrite; no old-queue restart.
+
+**2/3 slots (Phase 2):**
+- **N_g4_attn_r5** (pid 3874429, ~76 min, rounds=5): init 0 → 1.276, init 1 → **1.262** (best n=8 train among attn variants); on init 2 (JSON has 2/3 runs; empty log file but CPU ~187% and JSON updates — healthy).
+- **S_g8_attn_A_f** (pid 3895655, ~48 min, L8 free-SNAP attn): init 0 → **0.714**; on init 1+ (JSON 1/3 runs).
+
+Finished since 01:17: **N_g4_attn_s2** (01:19) — train n=8 only, test through n=14. Winner init2 train 1.288 / val 1.880; n=14 **12.5/51.1** vs QAOA L4 20.8/59.6. Runner finalized+pushed (`8934dce6`). Official n=20 for Phase-2 L4 still waits on **R_attn_val** (needs r5).
+
+Queued next: **R_attn_val** after r5 finishes (s1+s2 ready); h128 held on mem. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
