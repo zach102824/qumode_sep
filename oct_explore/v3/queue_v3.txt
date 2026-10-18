@@ -9,6 +9,8 @@ S_g4_plainP||v3/gnn_snap.py --tag S_g4_plainP --snap_form pair --plain --L 4 --s
 S_g4_plainF||v3/gnn_snap.py --tag S_g4_plainF --snap_form free --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250
 S_g4_plainLev8||v3/gnn_snap.py --tag S_g4_plainLev8 --snap_form level --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250 --val 8 --test 8
 S_g4_snapL_f||v3/gnn_snap.py --tag S_g4_snapL_f --snap_form lin --L 4 --clause_w --var_mix --snap std --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
+# 09:38 CST: A_b8 plain L8 beats QAOA L8 n=20 median (14.6 vs 16.4) but B90 119.3 vs 54.2 (tail overfit to n=8, n=12 B90 already 21.4 vs 15.5). At L4 the formula GNN with full outputs cut B90 250->217 over plain; try the same on the binary L8 keep-list.
+B_b8_iii_A_f|A_b8|v3/gnn_v3.py --tag B_b8_iii_A_f --code binary --L 8 --hidden 64 --clause_w --var_mix --ninit 3 --init_from results/v3/A_b8.json --feat formula --chunk 125
 A_g2||v3/v3_plain.py --tag A_g2 --code gray --L 2 --ninit 200 --refine 16
 A_b2||v3/v3_plain.py --tag A_b2 --code binary --L 2 --ninit 200 --refine 16
 B_g4_iii||v3/gnn_v3.py --tag B_g4_iii --code gray --L 4 --hidden 64 --clause_w --var_mix --ninit 1 --chunk 125

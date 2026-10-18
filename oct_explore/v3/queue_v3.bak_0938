@@ -1,0 +1,39 @@
+# v3 queue (approved 15:18 CST). tag|after|args. Plain = PLAN A (v3_plain.py), GNN = PLAN B (gnn_v3.py). n=8 training only. --chunk 125
+# 16:00 CST revision: random-base GNN cut to 1 init (val/test only); GNN now starts from the from-scratch plain keep-list (*_A tags). No QAOA anywhere.
+# 08:52 CST SNAP-for-ECD final spec (Zach 08:43-08:48): STANDARD SNAP (cavity-only) replaces collapsed ECD; local block = SNAP -> R(th,ph) -> X(=ECD beta 0). Forms: lin (k/SNAP), pair (k+k(k-1)/2), free (deep-set MLP head over digit pattern, any per-level fn), level (plain n=8-only free table). Zero-init SNAP, warm from B_g4_iii_A_f (GNN) / A_g4 keep (plain). ctrl = same warm start, ECD circuit, same its.
+S_g4_snapP_f||v3/gnn_snap.py --tag S_g4_snapP_f --snap_form pair --L 4 --clause_w --var_mix --snap std --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
+S_g4_snapF_f||v3/gnn_snap.py --tag S_g4_snapF_f --snap_form free --L 4 --clause_w --var_mix --snap std --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
+S_g4_ctrl_f||v3/gnn_snap.py --tag S_g4_ctrl_f --L 4 --clause_w --var_mix --snap none --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
+S_g4_plainL||v3/gnn_snap.py --tag S_g4_plainL --snap_form lin --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250
+S_g4_plainP||v3/gnn_snap.py --tag S_g4_plainP --snap_form pair --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250
+S_g4_plainF||v3/gnn_snap.py --tag S_g4_plainF --snap_form free --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250
+S_g4_plainLev8||v3/gnn_snap.py --tag S_g4_plainLev8 --snap_form level --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250 --val 8 --test 8
+S_g4_snapL_f||v3/gnn_snap.py --tag S_g4_snapL_f --snap_form lin --L 4 --clause_w --var_mix --snap std --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
+A_g2||v3/v3_plain.py --tag A_g2 --code gray --L 2 --ninit 200 --refine 16
+A_b2||v3/v3_plain.py --tag A_b2 --code binary --L 2 --ninit 200 --refine 16
+B_g4_iii||v3/gnn_v3.py --tag B_g4_iii --code gray --L 4 --hidden 64 --clause_w --var_mix --ninit 1 --chunk 125
+B_g4_i||v3/gnn_v3.py --tag B_g4_i --code gray --L 4 --hidden 64 --ninit 1 --chunk 125
+B_g2_iii_A|A_g2|v3/gnn_v3.py --tag B_g2_iii_A --code gray --L 2 --hidden 64 --clause_w --var_mix --ninit 4 --init_from results/v3/A_g2.json --chunk 125
+B_g2_i_A|A_g2|v3/gnn_v3.py --tag B_g2_i_A --code gray --L 2 --hidden 64 --ninit 4 --init_from results/v3/A_g2.json --chunk 125
+A_g4|A_g2|v3/v3_plain.py --tag A_g4 --code gray --L 4 --ninit 200 --refine 12 --grow_from A_g2
+A_b4|A_b2|v3/v3_plain.py --tag A_b4 --code binary --L 4 --ninit 200 --refine 12 --grow_from A_b2
+# 19:40 CST: GNN n=20 collapse traced to hardware-placement features: n=8 only has k=3 cavities, n=12 k=5 / n=20 k=6,6,5 are unseen (n=14 k=4,4,3 transfers). Test size-free features.
+B_g2_iii_A_f|A_g2|v3/gnn_v3.py --tag B_g2_iii_A_f --code gray --L 2 --hidden 64 --clause_w --var_mix --feat formula --ninit 2 --init_from results/v3/A_g2.json --chunk 125
+B_g2_iii_A_tq|A_g2|v3/gnn_v3.py --tag B_g2_iii_A_tq --code gray --L 2 --hidden 64 --clause_w --var_mix --feat tq --ninit 2 --init_from results/v3/A_g2.json --chunk 125
+B_g4_iii_A|A_g4|v3/gnn_v3.py --tag B_g4_iii_A --code gray --L 4 --hidden 64 --clause_w --var_mix --ninit 4 --init_from results/v3/A_g4.json --chunk 125
+B_g4_i_A|A_g4|v3/gnn_v3.py --tag B_g4_i_A --code gray --L 4 --hidden 64 --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+A_g8|A_g4|v3/v3_plain.py --tag A_g8 --code gray --L 8 --ninit 200 --refine 12 --grow_from A_g4
+A_b8|A_b4|v3/v3_plain.py --tag A_b8 --code binary --L 8 --ninit 200 --refine 12 --grow_from A_b4
+B_g8_iii_A_f|A_g8|v3/gnn_v3.py --tag B_g8_iii_A_f --code gray --L 8 --hidden 64 --clause_w --var_mix --ninit 3 --init_from results/v3/A_g8.json --feat formula --chunk 125
+# 04:30 CST: full (hardware-placement) features collapse at n=20 for every GNN so far (L2 i/iii, L4 i); only --feat formula transferred (L2 323.5/1475 vs QAOA 336.4/971). B_g4_ii_A (full) stopped 15 min in; all unstarted GNN jobs switched to formula.
+B_g4_iii_A_f|A_g4|v3/gnn_v3.py --tag B_g4_iii_A_f --code gray --L 4 --hidden 64 --clause_w --var_mix --feat formula --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+B_g4_i_A_f|A_g4|v3/gnn_v3.py --tag B_g4_i_A_f --code gray --L 4 --hidden 64 --feat formula --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+B_g4_ii_A_f|A_g4|v3/gnn_v3.py --tag B_g4_ii_A_f --code gray --L 4 --hidden 64 --clause_w --feat formula --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+#B_g4_ii_A|A_g4|v3/gnn_v3.py --tag B_g4_ii_A --code gray --L 4 --hidden 64 --clause_w --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+A_g10|A_g8|v3/v3_plain.py --tag A_g10 --code gray --L 10 --ninit 200 --refine 12 --grow_from A_g8
+A_b10|A_b8|v3/v3_plain.py --tag A_b10 --code binary --L 10 --ninit 200 --refine 12 --grow_from A_b8
+B_b4_iii_A_f|A_b4|v3/gnn_v3.py --tag B_b4_iii_A_f --code binary --L 4 --hidden 64 --clause_w --var_mix --ninit 3 --init_from results/v3/A_b4.json --feat formula --chunk 125
+B_g4_iii_A_h32_f|A_g4|v3/gnn_v3.py --tag B_g4_iii_A_h32_f --code gray --L 4 --hidden 32 --clause_w --var_mix --ninit 3 --init_from results/v3/A_g4.json --feat formula --chunk 125
+B_g4_iii_A_h128_f|A_g4|v3/gnn_v3.py --tag B_g4_iii_A_h128_f --code gray --L 4 --hidden 128 --clause_w --var_mix --ninit 3 --init_from results/v3/A_g4.json --feat formula --chunk 125
+B_g8_i_A_f|A_g8|v3/gnn_v3.py --tag B_g8_i_A_f --code gray --L 8 --hidden 64 --ninit 3 --init_from results/v3/A_g8.json --feat formula --chunk 125
+B_g10_iii_A_f|A_g10|v3/gnn_v3.py --tag B_g10_iii_A_f --code gray --L 10 --hidden 64 --clause_w --var_mix --ninit 2 --init_from results/v3/A_g10.json --feat formula --chunk 125
