@@ -1749,3 +1749,11 @@ n=20 winner vs QAOA L=4: median 59.6 vs 84.9, B90 233.6 vs 238.1 -> **BEATS QAOA
 | S_g4_plainLev8 trainbest 1 (train 1.567, val 1.483) | 4.4/8.7 |
 | QAOA_raw L=4 | 5.3/9.9 |
 | G_fe L=4 | 5.4/9.8 |
+
+## Check-in (2026-10-18 14:57 CST)
+v3 runner alive (run_v3.sh pid 3646460), 4/4 slots busy (A_b10, A_g10, S_g4_ctrl_f, S_g4_plainLev8), CPU advancing; load ~26 on 8 cores, MemAvail ~2.5 GiB (below the 3500 MB launch floor, so new launches hold until a slot frees). Synced A_b10 / A_g10 / S_g4_ctrl_f visible logs from deleted fds. PID 2888494 untouched.
+- **S_g4_plainF** (14:36, above): plain free SNAP also ~0 gain (train 1.5703 → 1.569, n=20 59.6/233.6, ≈ plain A_g4 60.7/243.5). All three plain shared-SNAP forms (lin/pair/free) agree: shared SNAP phases add nothing at L4.
+- **S_g4_plainLev8** (n=8-only level table, val/test n=8 only): 4/5 inits done, all 1.5703 → 1.5668. Slightly more than lin/pair/free but it is an n=8 lookup table and cannot be tested at larger n; diagnostic only.
+- **S_g4_ctrl_f**: init 0 1.4086 → 1.3777 (vs free SNAP 1.18); inits 1–2 running (~1 h each).
+- **A_b10** screen 170/200 best 1.332; **A_g10** 130/200 best 1.331.
+**Queue change (backup `v3/queue_v3.bak_1456`):** the SNAP gain is per-instance (network) only, so carry network free SNAP to L8 from the from-scratch plain keep-lists (no QAOA, zero-init SNAP/heads, nothing forced): added `S_g8_snapF_A_f` (gray, after A_g8) and `S_b8_snapF_A_f` (binary, after A_b8) right after S_g4_snapL_f, ahead of the no-SNAP L8 GNNs (B_b8_iii_A_f / B_g8_iii_A_f stay queued as their controls). Targets QAOA L8 n=20 16.4/54.2; A_b8 plain already beats the L8 median (14.6) but misses B90 (119.3), which is where per-instance SNAP helped at L4 (median −33% vs B_g4_iii_A_f).
