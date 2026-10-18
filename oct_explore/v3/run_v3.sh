@@ -13,14 +13,18 @@ running() { pgrep -f -- "--tag ${1}( |$)" >/dev/null; }
 # Done if ALLDONE in log, OR result JSON has keep+winner and test.winner covers n=20 (survives deleted log fds).
 done_() {
   grep -q ALLDONE "logs/v3/${1}.log" 2>/dev/null && return 0
-  # Plain: keep+winner. GNN/SNAP: winner + test.winner with any n (Phase-1 arch jobs may omit n=20;
-  # official n=20 comes from R_arch_scan). Prefer '20' when present.
+  # Plain: keep+winner. GNN/SNAP: winner + test.winner. If args.test includes 20, require n=20
+  # in the result (avoids finalize racing mid-test). Phase-1 arch jobs use --test 8 10 12 14 only.
   $PY -c "import json,sys
 try:
  d=json.load(open('results/v3/$1.json'))
  te=d.get('test',{}).get('winner',{})
- ok=('winner' in d and any(k.isdigit() for k in te)) or ('keep' in d and 'winner' in d)
- sys.exit(0 if ok else 1)
+ want=d.get('args',{}).get('test') or []
+ need20=(20 in want) or ('20' in [str(x) for x in want])
+ has=any(k.isdigit() for k in te)
+ ok_gnn=('winner' in d and ((need20 and '20' in te) or ((not need20) and has)))
+ ok_plain=('keep' in d and 'winner' in d)
+ sys.exit(0 if (ok_gnn or ok_plain) else 1)
 except Exception:
  sys.exit(1)" 2>/dev/null
 }
