@@ -1973,8 +1973,24 @@ Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing (~134–195%
 | row | n=8 | n=10 | n=12 | n=14 | n=20 |
 |---|---|---|---|---|---|
 | S_g4_snapL_f winner 2 (train 1.212, val 1.870) | 3.0/8.6 | 4.9/17.3 | 6.5/51.2 | 11.6/78.7 | 37.8/455.5 |
-| S_g4_snapL_f trainbest 1 (train 1.180, val 1.875) | 2.8/8.0 | 4.9/18.2 | 6.3/37.2 | 11.7/78.1 | - |
+| S_g4_snapL_f trainbest 1 (train 1.180, val 1.875) | 2.8/8.0 | 4.9/18.2 | 6.3/37.2 | 11.7/78.1 | 37.1/441.4 |
 | QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 37.8 vs 84.9, B90 455.5 vs 238.1 -> no beat
+n=20 trainbest vs QAOA L=4: median 37.1 vs 84.9, B90 441.4 vs 238.1 -> median beat only (B90 ~2× QAOA)
+
+(Finalize raced: trainbest n=20 landed after report_v3; row patched 18:35 CST. Shared lin sa stayed ~0.01–0.04 rad; per-instance SNAP phase-rms at n=20 ~0.57 — lin form hurts B90 vs free SNAP.)
+
+## Check-in (2026-10-18 18:35 CST)
+Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing (~117–194% each). MemAvailable ~2.5 GiB (below 3500 MB gate) — correctly holding **N_g4_mlp**. Load ~18 on 8 cores. PID 2888494 and *.STOP untouched. No new dual-beat this check.
+
+**Finished (already tabled above; trainbest n=20 patched):** **S_g4_snapL_f** n=20 winner **37.8/455.5**, trainbest **37.1/441.4** — median beats QAOA L4 (84.9) but B90 ~2× worse (238.1). Worse than free-SNAP bests (s1 37.5/182.7, snapF_f 37.3/211.7). Lin SNAP not competitive on tail.
+
+**Phase 1 running (all L4 free SNAP, init A_g4, formula):**
+- **N_g4_mp128** (539900 params): init 0 **1.570→1.149** (1000 it, 2848 s); mid init 1 of 3 (~45 min elapsed on job; ~1.0 GB RSS).
+- **N_g4_attn** (187900): ~20 min, still init 0 (empty loss line; ~0.86 GB).
+- **N_g4_tf** (118524): ~16 min, still init 0 (~0.67 GB).
+- **N_g4_ds** (40316): launched 18:22, init 0 (~0.64 GB).
+
+**Queued next:** N_g4_mlp → R_arch_scan → A_arch_scan, then R_g4_snapF_val2 / L8 no-SNAP controls. Baseline for scan = S_g4_snapF_f ≡ mp64. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6**. No queue rewrite; no restart; no WakeParent.
