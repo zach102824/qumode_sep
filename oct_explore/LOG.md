@@ -1832,3 +1832,14 @@ Zach approved Phase 1 (network-architecture scan). Implemented and queued 2026-1
 
 **ETA:** first arch (N_g4_*) ~1–2 h after launch (3× BFGS @ n=8); full Phase-1 comparison overnight (~7–9 h wall with 1–2 concurrent jobs). Official pick = R_arch_scan leaderboard + TEB n=20 of winner only.
 
+
+## Check-in (2026-10-18 16:17 CST)
+Runner alive (run_v3.sh pid 3688928), 4/4 slots busy, CPU advancing. MemAvailable ~5.5 GiB, load ~14 on 8 cores, caps hold. PID 2888494 and *.STOP untouched. No new n=20 finish this check.
+
+**Running (all init 0 done → mid init 1):**
+- **S_g8_snapF_A_f** (gray L8 free SNAP from A_g8): init 0 **0.953→0.673** (1000 it, ~33 min). Promising vs L4 train ~1.18.
+- **S_b8_snapF_A_f** (binary L8): init 0 **0.953→0.676**.
+- **S_g4_snapF_s1** (seed 1, warm B_g4 #2/0/1): init 0 **1.415→1.191** (near S_g4_snapF_f's 1.183).
+- **S_g4_snapF_s2** (seed 2, warm #2/0): init 0 **1.415→1.193**.
+
+**Phase 1 arch scan** still at queue front (N_g4_mp128/attn/tf/ds/mlp → R_arch_scan → A_arch_scan); launches when a slot frees (s1/s2 L4 should finish first). Best dual-beat remains **S_g4_snapF_f 37.3/211.7** vs QAOA L4 84.9/238.1. No queue rewrite.
