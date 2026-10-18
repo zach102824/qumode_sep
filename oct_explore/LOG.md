@@ -1581,3 +1581,8 @@ Two jobs finished, both finalized and pushed by the runner (run_v3.sh pid 356431
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 71.7 vs 84.9, B90 531.8 vs 238.1 -> no beat
+
+## Check-in (2026-10-18 11:41 CST)
+v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy with CPU advancing.
+- **B_b4_iii_A_f finished 11:40** (binary L4 full outputs, formula): n=20 **71.7/531.8 vs QAOA L4 84.9/238.1**, median beat but B90 2.2x worse -> no beat (runner finalized + pushed). Train losses 1.401/1.404/1.403 match gray full-output, but the n=20 tail is far worse than gray B_g4_iii_A_f (56.0/217.2) or B_g4_ii_A_f (58.2/197.2). **Reasoning:** binary encoding + instance-adaptive GNN overfits the n=8 train basin the same way as plain L8; gray formula GNN remains the only solid L4 transfer. No new binary L4 GNN variants queued.
+- **Slots:** S_g4_snapF_f launched 11:39 into the freed GNN slot. Running: A_b10 (screen 50/200, best 1.380), A_g10 (screen 10/200, best 1.568), S_g4_snapP_f (~15 min on first warm init), S_g4_snapF_f (just started). B_g8_iii_A_f / B_b8_iii_A_f and remaining SNAP (ctrl, plainL/P/F/Lev8, snapL) wait for a GNN slot. MemAvail ~6 GiB, load ~21 on 8 cores, caps hold. Best n=20 dual-beat still B_g4_iii_A_f 56.0/217.2 / B_g4_ii_A_f 58.2/197.2 (already reported). PID 2888494 untouched.
