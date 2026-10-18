@@ -1693,3 +1693,15 @@ n=20 winner vs QAOA L=4: median 37.3 vs 84.9, B90 211.7 vs 238.1 -> **BEATS QAOA
 **S_g4_snapF_f finished** (report above): n=20 winner **37.3/211.7 vs QAOA L4 84.9/238.1** → **dual beat** (median −56%, B90 −11%). Beats prior dual-beat medians (B_g4_iii_A_f 56.0, B_g4_ii_A_f 58.2); B90 between B_g4_ii_A_f 197.2 and B_g4_iii_A_f 217.2. Free SNAP used nonzero phases (n=20 rms/layer ~0.35/0.18/0.13/0.11). Train-best 38.5/274.2 (B90 miss).
 **Runner glitch:** deleted log fd had no on-disk ALLDONE, so `done_` missed and runner relaunched snapF at 14:22 — killed the duplicate; wrote ALLDONE into `logs/v3/S_g4_snapF_f.log`. PID 2888494 untouched.
 **Slots now:** A_b10 (screen 130/200, best 1.332), A_g10 (100/200, best 1.540), S_g4_ctrl_f (ECD control, still training). One GNN slot free; MemAvail ~6039 MiB. Queue next: S_g4_plainL/P/F/Lev8, S_g4_snapL_f, then B_b8_iii_A_f / B_g8… Waiting on ctrl n=20 to separate SNAP from extra BFGS; no queue rewrite yet beyond letting the runner drain the existing SNAP/plain/lin block.
+
+### S_g4_plainL finished 2026-10-18 14:25 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 snap=std snap_form=lin free_m=32 plain=True init_from=results/v3/A_g4.json ninit=5 ntrain=1000 maxiter=2000 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=250`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| S_g4_plainL winner 0 (train 1.570, val 2.122) | 4.4/9.0 | 7.1/20.2 | 10.3/36.5 | 16.0/61.3 | 59.1/234.1 |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 59.1 vs 84.9, B90 234.1 vs 238.1 -> **BEATS QAOA (both)**
