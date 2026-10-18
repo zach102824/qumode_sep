@@ -2681,3 +2681,14 @@ Runner alive (run_v3.sh pid **3872547**, ~03:40:34), MAXJ=3 / cores 0-5 (Zach 6-
 Finished since 06:25: none new (both mid init 2). Only pending undone: **R_attn_val2** (holds for n2k+fm64). Nothing else eligible → 2/3 slots expected.
 
 Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **B_g4_iii_A_h128_f 53.1/166.3** (attn dual-beat package still **R_attn_val 42.9/167.2**); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
+
+### N_g4_attn_fm64 finished 2026-10-19 07:00 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 arch=attn clause_w=True var_mix=True snap=std snap_form=free free_m=64 init_from=results/v3/A_g4.json ninit=3 ntrain=1000 maxiter=1000 val=[10, 12] val_count=60 test=[8, 10, 12, 14] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 |
+|---|---|---|---|---|
+| N_g4_attn_fm64 winner 0 (train 1.292, val 1.889) | 3.1/7.8 | 5.5/17.2 | 7.3/30.8 | 13.2/50.0 |
+| N_g4_attn_fm64 trainbest 1 (train 1.272, val 1.916) | 3.4/8.0 | 5.7/16.8 | 7.9/36.7 | - |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
