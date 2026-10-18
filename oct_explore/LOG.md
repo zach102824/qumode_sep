@@ -2380,3 +2380,13 @@ Runner alive (run_v3.sh pid **3872547**), MAXJ=3 / cores 0-5 (Zach 6-core cap); 
 - **S_g8_attn_A_f** (pid 3895655, ~27 min, L8): training init 0 (no JSON yet).
 
 No finishes since 00:15. Queued next: **R_attn_val** after s2+r5; then B_g4_iii_A_h128_f. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
+
+## Check-in (2026-10-19 00:54 CST)
+Runner alive (run_v3.sh pid **3872547**), MAXJ=3 / cores 0-5 (Zach 6-core cap); all 3 jobs' affinity confirmed `0-5`. MemAvailable ~4.3 GiB. PID 2888494 and *.STOP untouched. No queue rewrite; no old-queue restart.
+
+**3/3 slots (Phase 2, still training):**
+- **N_g4_attn_s2** (pid 3872605, ~64 min): init 0 → 1.280, init 1 → 1.299; on init 2.
+- **N_g4_attn_r5** (pid 3874429, ~61 min, rounds=5): init 0 → **1.276**; on init 1 (no further JSON yet).
+- **S_g8_attn_A_f** (pid 3895655, ~34 min, L8): init 0 → **0.714** (1000 it, ~55 min); on init 1+.
+
+No finishes since 00:15 (s1). Queued next: **R_attn_val** after s2+r5; then B_g4_iii_A_h128_f. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
