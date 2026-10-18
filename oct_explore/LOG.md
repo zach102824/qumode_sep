@@ -2422,3 +2422,22 @@ Runner alive (run_v3.sh pid **3872547**), MAXJ=3 / cores 0-5 (Zach 6-core cap); 
 Finished since 01:17: **N_g4_attn_s2** (01:19) — train n=8 only, test through n=14. Winner init2 train 1.288 / val 1.880; n=14 **12.5/51.1** vs QAOA L4 20.8/59.6. Runner finalized+pushed (`8934dce6`). Official n=20 for Phase-2 L4 still waits on **R_attn_val** (needs r5).
 
 Queued next: **R_attn_val** after r5 finishes (s1+s2 ready); h128 held on mem. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
+
+## Check-in (2026-10-19 02:00 CST)
+Runner alive (run_v3.sh pid **3872547**), MAXJ=3 / cores 0-5 (Zach 6-core cap); all threads of live jobs re-pinned `taskset -c 0-5` (0 on cores 6–7). MemAvailable ~5.4Gi (load 11.58, 10.64, 11.25). PID 2888494 and *.STOP untouched. No old-queue restart.
+
+**3/3 slots:**
+- **N_g4_attn_r5** (pid 3874429, ~2026-10-19 02:00 CST): 2/3 inits loss=[1.276, 1.262] — best n=8 train among attn variants so far (init1 **1.262**).
+- **S_g8_attn_A_f** (pid 3895655): 1/3 inits loss=[0.714] — init0 **0.714**.
+- **B_g4_iii_A_h128_f** (pid 3931759, launched 01:58 when mem cleared past MINMEM=3500): no-SNAP H=128 control (queue order behind Phase-2; R_attn_val still blocked on r5).
+
+Finished since 01:33: none new (s2 already logged). Official Phase-2 L4 n=20 still waits on **R_attn_val** (needs r5).
+
+**Queue wave-2 appended** (backup `v3/queue_v3.bak_0159`) after R_attn_val — existing CLI only:
+- **N_g4_attn_n2k** (`--ntrain 2000`) more training instances
+- **N_g4_attn_s3** (seed 3)
+- **N_g4_attn_fm64** (`--free_m 64`) larger free-SNAP head
+- **R_attn_val2** (VBASE=39e9) reselect across wave-1+2 after those finish
+Tail-weighted loss / ensembles **not queued** (need code changes in `gnn_snap.py`); SNAP lin/pair-with-attn held (prior lin already lost to free on mp).
+
+Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** (median) / attn **42.8/172.7** (B90); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat improving on best → no WakeParent.
