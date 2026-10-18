@@ -1,10 +1,14 @@
 # v3 queue (approved 15:18 CST). tag|after|args. Plain = PLAN A (v3_plain.py), GNN = PLAN B (gnn_v3.py). n=8 training only. --chunk 125
 # 16:00 CST revision: random-base GNN cut to 1 init (val/test only); GNN now starts from the from-scratch plain keep-list (*_A tags). No QAOA anywhere.
-# 08:48 CST SNAP-for-ECD (Zach 08:43/08:44/08:45): STANDARD SNAP (cavity-only, theta_k = sum_j a_j b_j(k) + sum_{i<j} c_ij b_i b_j, Gray digits) replaces collapsed ECD; transmon R(th,ph)+flip kept; all SNAP params zero-init; warm from B_g4_iii_A_f (ECD beta dropped). Control = same warm start, ECD circuit, same iterations.
-S_g4_snap_f||v3/gnn_snap.py --tag S_g4_snap_f --L 4 --clause_w --var_mix --snap std --snap_pair --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
+# 08:52 CST SNAP-for-ECD final spec (Zach 08:43-08:48): STANDARD SNAP (cavity-only) replaces collapsed ECD; local block = SNAP -> R(th,ph) -> X(=ECD beta 0). Forms: lin (k/SNAP), pair (k+k(k-1)/2), free (deep-set MLP head over digit pattern, any per-level fn), level (plain n=8-only free table). Zero-init SNAP, warm from B_g4_iii_A_f (GNN) / A_g4 keep (plain). ctrl = same warm start, ECD circuit, same its.
+S_g4_snapP_f||v3/gnn_snap.py --tag S_g4_snapP_f --snap_form pair --L 4 --clause_w --var_mix --snap std --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
+S_g4_snapF_f||v3/gnn_snap.py --tag S_g4_snapF_f --snap_form free --L 4 --clause_w --var_mix --snap std --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
 S_g4_ctrl_f||v3/gnn_snap.py --tag S_g4_ctrl_f --L 4 --clause_w --var_mix --snap none --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
-S_g4_plainsnap||v3/gnn_snap.py --tag S_g4_plainsnap --plain --L 4 --snap std --snap_pair --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250
-S_g4_snap_fromP_f|S_g4_plainsnap|v3/gnn_snap.py --tag S_g4_snap_fromP_f --L 4 --clause_w --var_mix --snap std --snap_pair --init_from results/v3/S_g4_plainsnap.json --ninit 1 --maxiter 1000 --feat formula --chunk 125
+S_g4_plainL||v3/gnn_snap.py --tag S_g4_plainL --snap_form lin --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250
+S_g4_plainP||v3/gnn_snap.py --tag S_g4_plainP --snap_form pair --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250
+S_g4_plainF||v3/gnn_snap.py --tag S_g4_plainF --snap_form free --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250
+S_g4_plainLev8||v3/gnn_snap.py --tag S_g4_plainLev8 --snap_form level --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250 --val 8 --test 8
+S_g4_snapL_f||v3/gnn_snap.py --tag S_g4_snapL_f --snap_form lin --L 4 --clause_w --var_mix --snap std --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
 A_g2||v3/v3_plain.py --tag A_g2 --code gray --L 2 --ninit 200 --refine 16
 A_b2||v3/v3_plain.py --tag A_b2 --code binary --L 2 --ninit 200 --refine 16
 B_g4_iii||v3/gnn_v3.py --tag B_g4_iii --code gray --L 4 --hidden 64 --clause_w --var_mix --ninit 1 --chunk 125

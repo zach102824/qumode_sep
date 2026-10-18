@@ -13,6 +13,8 @@ ABSORBABILITY NOTE: S_c is cavity-diagonal and commutes with R/X on the transmon
    capability beyond "arbitrary diagonal"; what it adds is new *terms* (linear fields per variable, intra-cavity ZZ) that the
    clause-weight parameterisation of the cost phase cannot express. Placing it after the mixer is equivalent (commutes to the
    next layer's cost). Hence any gain = value of per-variable fields / digit couplings.
+SNAP forms (--snap_form): lin = per-digit linear; pair = + pairwise; free = deep-set MLP head over each level's digit pattern
+   (+ digit node embeddings in GNN), any per-level function, size-free; level = free 2^k table (plain, n=8 only).
 Parameters (all zero-init, nothing forced):
    shared: sa[l] (linear, all digits), sc[l] (pair, all digit pairs)       -> plain mode (--plain) trains only base + these
    GNN   : a_{v,l} = sa[l] + h_v.Ws[:,l]   (per variable / digit)
@@ -31,7 +33,12 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--tag", required=True); ap.add_argument("--code", default="gray", choices=["gray", "binary"])
 ap.add_argument("--L", type=int, required=True); ap.add_argument("--hidden", type=int, default=64); ap.add_argument("--rounds", type=int, default=3)
 ap.add_argument("--clause_w", action="store_true"); ap.add_argument("--var_mix", action="store_true")
-ap.add_argument("--snap", default="std", choices=["std", "none"]); ap.add_argument("--snap_pair", action="store_true")
+ap.add_argument("--snap", default="std", choices=["std", "none"]); ap.add_argument("--snap_pair", action="store_true", help="alias for --snap_form pair")
+ap.add_argument("--snap_form", default="", choices=["", "lin", "pair", "free", "level"],
+                help="lin: theta_k=sum_j a_j b_j(k) (k/SNAP); pair: + sum_{i<j} c_ij b_i b_j (k+k(k-1)/2); free: any per-level function via a "
+                     "deep-set MLP head over the level's digit pattern (+ digit node embeddings in the GNN), size-free; level: free table "
+                     "theta[l,c,k] (2^k/SNAP, plain only, n=8 only - not transferable)")
+ap.add_argument("--free_m", type=int, default=32)
 ap.add_argument("--plain", action="store_true", help="shared angles only (no network): base + sa/sc")
 ap.add_argument("--warm", default="", help="results/v3/<gnn tag>.json: warm-start from its trained thetas (runs --warm_ids)")
 ap.add_argument("--warm_ids", type=int, nargs="*", default=[])
@@ -43,6 +50,10 @@ ap.add_argument("--feat", default="formula", choices=["full", "tq", "formula"])
 ap.add_argument("--seed", type=int, default=0); ap.add_argument("--chunk", type=int, default=125)
 ap.add_argument("--smoke", type=int, default=0, help="smoke: step-0 equivalence check on this many n=8 instances, then exit")
 a = ap.parse_args()
+if not a.snap_form: a.snap_form = "pair" if a.snap_pair else "lin"
+a.snap_pair = a.snap_form == "pair"
+FREE, LEVEL = a.snap_form == "free", a.snap_form == "level"
+assert not (LEVEL and not a.plain), "level table only for plain"
 TRB, TEB, VAB = 31_000_000_000, 32_000_000_000, 33_000_000_000
 os.makedirs("results/v3", exist_ok=True); OUT = f"results/v3/{a.tag}.json"
 log = lambda *s: print(time.strftime("%m-%d %H:%M:%S"), *s, flush=True)
@@ -52,7 +63,7 @@ def save():
     if a.smoke: return
     json.dump(res, open(OUT + ".tmp", "w")); os.replace(OUT + ".tmp", OUT)
 FV = 7
-SNAPKEYS = ("sa", "sc", "Ws", "Wp")
+SNAPKEYS = ("sa", "sc", "Ws", "Wp", "P0", "P1", "u0", "u1", "fq", "Wo", "T")
 
 # ---------- SNAP-aware layout helpers ----------
 _BT = {}
@@ -69,36 +80,28 @@ def bits(lay):  # per register (k, nf) table of logical digit j of Fock level f 
     return _BT[id(lay)]
 
 
-def snap_phase(lay, c, A, Cm):  # A (B,kmax), Cm (B,kmax,kmax) or None -> (B,nf)
-    k = lay.ks[c]; Bt = bits(lay)[c]; ph = A[:, :k] @ Bt
-    if Cm is not None:
-        Cu = jnp.triu(Cm[:, :k, :k], 1); ph = ph + jnp.einsum("bij,if,jf->bf", Cu, Bt, Bt)
-    return ph
-
-
-def local_snap(lay, psi, lb, A, Cm):  # lb (B,C,4); A (B,C,kmax) or None
+def local_snap(lay, psi, lb, phs):  # lb (B,C,4); phs list over c of (B,nf_c) SNAP phases or None
     C = lay.C
     for c in range(C):
-        if A is not None:
-            ph = snap_phase(lay, c, A[:, c], None if Cm is None else Cm[:, c])
-            sh = [ph.shape[0]] + [1] * (psi.ndim - 1); sh[1 + C + c] = ph.shape[1]
+        if phs is not None:
+            ph = phs[c]; sh = [ph.shape[0]] + [1] * (psi.ndim - 1); sh[1 + C + c] = ph.shape[1]
             psi = psi * jnp.exp(-1j * ph).reshape(sh).astype(V.C64)
         psi = lay.bapply(lay.Rm(lb[:, c, 2], lb[:, c, 3]), psi, 1 + c)
         psi = jnp.flip(psi, axis=1 + c)                                   # == ECD(beta=0)
     return psi
 
 
-def probs_any(lay, loc, mix, phase_fn, succ, A, Cm):
-    """A (B,L,C,kmax) | None ; Cm (B,L,C,kmax,kmax) | None. SNAP=None -> original ECD local (v3core)."""
+def probs_any(lay, loc, mix, phase_fn, succ, PH):
+    """PH: list over c of (B,L,nf_c) SNAP phases | None. SNAP off -> original ECD local (v3core)."""
     B = succ.shape[0]
     psi = jnp.broadcast_to(lay.psi0, (B,) + tuple(lay.shape))
     for l in range(L):
-        if SNAP: psi = local_snap(lay, psi, loc[:, l], A[:, l], None if Cm is None else Cm[:, l])
+        if SNAP: psi = local_snap(lay, psi, loc[:, l], [P[:, l] for P in PH])
         else: psi = lay.local(psi, loc[:, l])
         psi = psi * jnp.exp(-1j * phase_fn(l)).astype(V.C64)
         for c in range(lay.C):
             psi = lay.bapply(lay.mixU(c, mix[:, l, c, : lay.ks[c]]), psi, 1 + lay.C + c)
-    psi = local_snap(lay, psi, loc[:, L], None, None) if SNAP else lay.local(psi, loc[:, L])
+    psi = local_snap(lay, psi, loc[:, L], None) if SNAP else lay.local(psi, loc[:, L])
     return jnp.sum((jnp.abs(psi) ** 2) * succ, axis=tuple(range(1, psi.ndim)))
 
 
@@ -133,10 +136,15 @@ def init_params(rng):
         p["G1"] = W(2 * H, H); p["g1"] = jnp.zeros(H); p["G2"] = jnp.zeros((H, NBASE))
         if a.clause_w: p["Wc"] = jnp.zeros((H, L))
         if a.var_mix: p["Wv"] = jnp.zeros((H, L + 1))
-        if SNAP: p["Ws"] = jnp.zeros((H, L))
+        if SNAP and not FREE: p["Ws"] = jnp.zeros((H, L))
         if SNAP and a.snap_pair: p["Wp"] = jnp.zeros((H, L))
-    if SNAP: p["sa"] = jnp.zeros(L)
+        if SNAP and FREE: p["P0"] = W(H, a.free_m, 2.0); p["P1"] = W(H, a.free_m, 2.0)
+    if SNAP and not (FREE or LEVEL): p["sa"] = jnp.zeros(L)
     if SNAP and a.snap_pair: p["sc"] = jnp.zeros(L)
+    if SNAP and FREE:  # head: theta_{f,l} = tanh(z_f + fq) . Wo[:,l];  Wo zero-init => identity SNAP at step 0
+        p["u0"] = jnp.asarray(rng.normal(0, 1, a.free_m).astype(np.float32)); p["u1"] = jnp.asarray(rng.normal(0, 1, a.free_m).astype(np.float32))
+        p["fq"] = jnp.zeros(a.free_m); p["Wo"] = jnp.zeros((a.free_m, L))
+    if SNAP and LEVEL: p["T"] = jnp.zeros((L, len(sim.LAYOUTS_T[8]), 1 << max(sim.LAYOUTS_T[8])))
     return p
 
 
@@ -182,15 +190,32 @@ def circuit_args(lay, bv, e):
 
 
 def snap_args(lay, p, hv, B):
-    """-> A (B,L,C,kmax), Cm (B,L,C,kmax,kmax)|None   (None,None if no SNAP)"""
-    if not SNAP: return None, None
-    A = jnp.broadcast_to(p["sa"][None, :, None, None], (B, L, lay.C, lay.kmax))
-    Cm = jnp.broadcast_to(p["sc"][None, :, None, None, None], (B, L, lay.C, lay.kmax, lay.kmax)) if a.snap_pair else None
-    if hv is not None:
-        hd = hv[:, jnp.asarray(cvpad(lay))]                                           # (B,C,kmax,H)
-        A = A + jnp.transpose(hd @ p["Ws"], (0, 3, 1, 2))
-        if a.snap_pair: Cm = Cm + jnp.einsum("bcih,bcjh,hl->blcij", hd, hd, p["Wp"]) / H
-    return A, Cm
+    """-> list over registers c of (B, L, nf_c) SNAP phases (pads 0), or None if SNAP off.
+    lin/pair: theta_f = sum_j a_j b_j(f) [+ sum_{i<j} c_ij b_i b_j];  free: deep-set MLP over the digit pattern of level f:
+    z_f = mean_j [ b_j(f) U1_j + (1-b_j(f)) U0_j ],  U{0,1}_j = u{0,1} (+ h_vj P{0,1} in the GNN);  theta_f = tanh(z_f + fq) . Wo."""
+    if not SNAP: return None
+    out = []; cv = cvpad(lay)
+    hd_all = None if hv is None else hv[:, jnp.asarray(cv)]                          # (B,C,kmax,H)
+    for c, (k, nf) in enumerate(zip(lay.ks, lay.nfs)):
+        Bt = bits(lay)[c]                                                            # (k,nf)
+        if LEVEL:
+            T = p["T"][:, c, : 1 << k]; ph = jnp.concatenate([T, jnp.zeros((L, nf - (1 << k)))], 1)
+            out.append(jnp.broadcast_to(ph[None], (B, L, nf))); continue
+        if FREE:
+            U0 = jnp.broadcast_to(p["u0"], (B, k, a.free_m)); U1 = jnp.broadcast_to(p["u1"], (B, k, a.free_m))
+            if hd_all is not None: hd = hd_all[:, c, :k]; U0 = U0 + hd @ p["P0"]; U1 = U1 + hd @ p["P1"]
+            z = (jnp.einsum("bjm,jf->bfm", U1, Bt) + jnp.einsum("bjm,jf->bfm", U0, 1 - Bt)) / k
+            mask = (jnp.arange(nf) < (1 << k)).astype(jnp.float32)
+            out.append(jnp.transpose(jnp.tanh(z + p["fq"]) @ p["Wo"], (0, 2, 1)) * mask[None, None]); continue
+        A = jnp.broadcast_to(p["sa"][None, :, None], (B, L, k))
+        if hd_all is not None: A = A + jnp.transpose(hd_all[:, c, :k] @ p["Ws"], (0, 2, 1))
+        ph = jnp.einsum("blj,jf->blf", A, Bt)
+        if a.snap_pair:
+            Cm = jnp.broadcast_to(p["sc"][None, :, None, None], (B, L, k, k))
+            if hd_all is not None: hd = hd_all[:, c, :k]; Cm = Cm + jnp.einsum("bih,bjh,hl->blij", hd, hd, p["Wp"]) / H
+            ph = ph + jnp.einsum("blij,if,jf->blf", jnp.triu(Cm, 1), Bt, Bt)
+        out.append(ph)
+    return out
 
 
 # ---------- training data / loss ----------
@@ -202,10 +227,10 @@ def prep8(insts):
 
 
 def probs8(p, base, G, Viol, S, nm):
-    bv, w, e, hv = net(p, base, G); loc, mix, g = circuit_args(lay8, bv, e); A, Cm = snap_args(lay8, p, hv, bv.shape[0])
+    bv, w, e, hv = net(p, base, G); loc, mix, g = circuit_args(lay8, bv, e); PH = snap_args(lay8, p, hv, bv.shape[0])
     if w is None: ph = lambda l: lay8.to_D(nm * g[:, l][:, None] * Viol.sum(1))
     else: ph = lambda l: lay8.to_D(nm * jnp.einsum("bc,bcx->bx", g[:, l][:, None] + w[:, :, l], Viol))
-    return probs_any(lay8, loc, mix, ph, S, A, Cm)
+    return probs_any(lay8, loc, mix, ph, S, PH)
 
 
 def lossf(theta, unr, G, Viol, S, nm):
@@ -217,18 +242,17 @@ _EV = {}
 def eval_n(n, insts, p, base, chunk, mags=None):
     if n not in _EV:
         lay = V.Layout(n, a.code)
-        def pr(loc, mix, phD, S, A, Cm): return probs_any(lay, loc, mix, lambda l: phD[:, l], S, A, Cm)
+        def pr(loc, mix, phD, S, PH): return probs_any(lay, loc, mix, lambda l: phD[:, l], S, PH)
         def nf(p, b, G):
-            bv, w, e, hv = net(p, b, G); A, Cm = snap_args(lay, p, hv, bv.shape[0]); return bv, w, e, A, Cm
+            bv, w, e, hv = net(p, b, G); PH = snap_args(lay, p, hv, bv.shape[0]); return bv, w, e, PH
         _EV[n] = (lay, jax.jit(pr), jax.jit(nf))
     lay, pr, nf = _EV[n]; out = []
     for i in range(0, len(insts), chunk):
-        sub = insts[i:i + chunk]; G, cls = batch_graph(n, sub, lay); bv, w, e, A, Cm = nf(p, base, G)
-        if mags is not None and A is not None:
+        sub = insts[i:i + chunk]; G, cls = batch_graph(n, sub, lay); bv, w, e, PH = nf(p, base, G)
+        if mags is not None and PH is not None:   # per layer: rms of the SNAP phase over used Fock levels (global phase removed), max |dev|
             for c in range(lay.C):
-                mags.setdefault("a", []).append(np.abs(np.asarray(A[:, :, c, : lay.ks[c]])).mean(axis=(0, 2)))   # per layer
-                ph = np.stack([np.asarray(snap_phase(lay, c, A[:, l, c], None if Cm is None else Cm[:, l, c]))[:, : 1 << lay.ks[c]] for l in range(L)], 1)
-                ph = ph - ph.mean(-1, keepdims=True); mags.setdefault("phase_rms", []).append(np.sqrt((ph ** 2).mean(axis=(0, 2))))
+                ph = np.asarray(PH[c])[:, :, : 1 << lay.ks[c]]; ph = ph - ph.mean(-1, keepdims=True)
+                mags.setdefault("phase_rms", []).append(np.sqrt((ph ** 2).mean(axis=(0, 2)))); mags.setdefault("phase_maxdev", []).append(np.abs(ph).max(axis=(0, 2)))
         loc, mix, g = circuit_args(lay, bv, e); g = np.asarray(g); w = None if w is None else np.asarray(w)
         nm = n / sub[0]["m"]; phs = []
         for b, ins in enumerate(sub):
@@ -239,7 +263,7 @@ def eval_n(n, insts, p, base, chunk, mags=None):
             phs.append(np.stack(rows))
         ph = np.stack(phs)
         phD = jnp.stack([lay.to_D(jnp.asarray(ph[:, l])) for l in range(L)], 1)
-        out += list(np.asarray(pr(loc, mix, phD, jnp.asarray(lay.succ_D(sub)), A, Cm)))
+        out += list(np.asarray(pr(loc, mix, phD, jnp.asarray(lay.succ_D(sub)), PH)))
     return np.array(out)
 
 
@@ -254,23 +278,26 @@ if a.warm:  # GNN thetas trained with the ECD circuit: unravel with the old stru
     pt = template[0]; old_p = {k: v for k, v in pt.items() if k not in SNAPKEYS}
     _, unr_old = ravel_pytree((old_p, template[1]))
     for k in ids[: a.ninit]:
-        po, bo = unr_old(jnp.asarray(W["runs"][k]["theta"], jnp.float32)); pn = dict(po)
-        for kk in SNAPKEYS:
-            if kk in pt: pn[kk] = jnp.zeros_like(pt[kk])
+        po, bo = unr_old(jnp.asarray(W["runs"][k]["theta"], jnp.float32)); pn = dict(po); fresh = init_params(rng)
+        for kk in SNAPKEYS:  # output-side SNAP params zero (identity SNAP); free-head input projections random (else dead gradient)
+            if kk in pt: pn[kk] = fresh[kk] if kk in ("P0", "P1", "u0", "u1") else jnp.zeros_like(pt[kk])
         inits.append((pn, bo)); origin.append(f"warm:{os.path.basename(a.warm)}#{k}")
 elif a.init_from:
     J = json.load(open(a.init_from)); ks = J["keep"]
     for k in ks[: a.ninit]:
         x = np.array(k["x"], np.float32); p = init_params(rng)
-        if J["args"].get("plain") and SNAP:  # plain-SNAP keep: x = theta of {sa[,sc]} + base
+        if J["args"].get("plain") and SNAP and J["args"].get("snap_form") == a.snap_form and a.snap_form in ("lin", "pair"):
+            # plain-SNAP keep: x = theta of ({sa[,sc]}, base); shared SNAP carried over, heads zero
             pp, bb = (ravel_pytree(({kk: jnp.zeros(L) for kk in ("sa", "sc") if kk in p}, jnp.zeros(NBASE)))[1])(jnp.asarray(x))
             p.update(pp); inits.append((p, bb))
+        elif J["args"].get("plain") and SNAP:
+            raise SystemExit("init_from plain-SNAP keep with a different/free form not supported")
         else: inits.append((p, jnp.asarray(x[:NBASE])))
         origin.append(f"init_from:{os.path.basename(a.init_from)}#{k['id']}")
 else:
     for i in range(a.ninit): inits.append((init_params(rng), jnp.asarray(rand_base(rng)))); origin.append(f"rand{i}")
 NI = len(inits)
-log(f"SNAP-GNN snap={a.snap} pair={a.snap_pair} plain={a.plain} L={L} H={H} clause_w={a.clause_w} var_mix={a.var_mix} code={a.code} inits={origin}")
+log(f"SNAP-GNN snap={a.snap} form={a.snap_form} plain={a.plain} L={L} H={H} clause_w={a.clause_w} var_mix={a.var_mix} code={a.code} inits={origin}")
 log(f"params per model: {template and theta_of(*inits[0]).size}")
 
 vg = jax.jit(jax.value_and_grad(lossf, argnums=0), static_argnums=1)
@@ -337,8 +364,8 @@ for role in ["winner", "trainbest"]:
         t0 = time.time(); mg = {}; pp = eval_n(n, ins, p, b, ch, mg)
         if lk: fcntl.flock(lk, fcntl.LOCK_UN); lk.close()
         s = V.summ(pp); te[role][str(n)] = s
-        if mg: sm[role][str(n)] = {"mean_abs_a_per_layer": np.mean(mg["a"], 0).tolist(), "phase_rms_per_layer": np.mean(mg["phase_rms"], 0).tolist()}
+        if mg: sm[role][str(n)] = {"phase_rms_per_layer": np.mean(mg["phase_rms"], 0).tolist(), "phase_maxdev_per_layer": np.max(mg["phase_maxdev"], 0).tolist()}
         save()
         log(f"test {role} n={n} L={L} med1/p={s['median_inv_p']:.1f} B90={s['B90_inv_p']:.1f} ({time.time()-t0:.0f}s)"
-            + (f" SNAP |a|/layer {['%.3f' % v for v in sm[role][str(n)]['mean_abs_a_per_layer']]} phase-rms {['%.3f' % v for v in sm[role][str(n)]['phase_rms_per_layer']]}" if mg else ""))
+            + (f" SNAP phase-rms/layer {['%.3f' % v for v in sm[role][str(n)]['phase_rms_per_layer']]} max|dev| {['%.2f' % v for v in sm[role][str(n)]['phase_maxdev_per_layer']]}" if mg else ""))
 log("ALLDONE")

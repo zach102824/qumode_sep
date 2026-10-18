@@ -1486,3 +1486,18 @@ n=20 winner vs QAOA L=4: median 78.4 vs 84.9, B90 354.4 vs 238.1 -> no beat
 **Step-0 check (200 n=8 train instances):** loss with SNAP=0 equals the ECD circuit with beta:=0 on the network output, to within 6e-7 for all 3 warm inits (#2 1.415793 vs 1.415793; #0 1.414651; #1 1.418105). Dropping the trained small beta costs +0.006 to +0.010 in loss (ECD trained beta: 1.407597 / 1.404765 / 1.412154). So beta~0.01 is not exactly useless, and the SNAP run starts slightly behind the ECD warm start. The SNAP-param gradients are nonzero at step 0 (|grad Ws| 1.4-1.7).
 **Smoke timing (2 threads, under load):** GNN 125 inst x 5 its = 4 s (+3 s JIT); n=20 eval of 100 test instances = 60 s. Plain 125 inst x 20 its = 2-4 s. 5-it smoke: n=20 48.8/175.6 (not a result, 125 inst).
 **Queue (front, 08:48):** S_g4_snap_f (main: GNN + standard SNAP + pairs, warm from B_g4_iii_A_f runs 2,0,1, 1000 its); S_g4_ctrl_f (control: same warm start, ECD circuit, 1000 its, which separates SNAP from simply training longer); S_g4_plainsnap (plain shared-angle SNAP from the A_g4 keep-list, 5 inits, 2000 its); S_g4_snap_fromP_f (GNN SNAP from the S_g4_plainsnap keep, after it). SNAP magnitude (mean |a| and phase rms per layer at each test n) is saved in results json "snap_mag" and logged.
+
+### 08:52 CST SNAP-for-ECD: final spec (Zach 08:43–08:48) — 3 SNAP parameterisations, queue replaced
+**Ordering:** SNAP_c -> R(th,ph) -> X on the transmon, per register, layers l<L; final block R + X. A cavity-only diagonal commutes with every transmon op and with the cost phase. The only non-diagonal cavity op is the X mixer inside the joint U, so every placement of a standard SNAP in the local block (before or after R, or after the mixer) folds into a cost phase. In the final block it is invisible to measurement. The only placement that cannot be absorbed is inside the mixer (between digit X rotations), which is not a local-block SNAP and not built. So all three forms test whether the extra diagonal terms they add help, beyond the clause-weight cost.
+**Forms, phases per SNAP (n=8 k=3 | n=20 k=6,6,5):**
+- (a) lin: k → 3 | 6,6,5.
+- (b) pair: k+k(k-1)/2 → 6 | 21,21,15.
+- (c) free: 2^k → 8 | 64,64,32, produced by a size-free deep-set MLP head: z_f = mean_j[b_j(f)U1_j + (1-b_j(f))U0_j], U = u + h_v·P (M=32), theta_f = tanh(z_f+q)·Wo, with Wo zero-init.
+- In plain mode (no node info) the free head can only depend on each level's Hamming weight (k+1 distinct values). That is why the non-transferable plain table "level" (8 phases × 2 cavities × 4 layers = 64 numbers, n=8 val/test only) is added to give the true free-SNAP n=8 train loss.
+- **Trainable params added:** GNN lin +260, pair +520, free +4,320 (85,276 → 85,536 / 85,796 / 89,596). Plain lin 32, pair 36, free 252, level 92 (28 base + SNAP).
+**Step-0 checks:**
+- GNN: B_g4_iii_A_f runs #2/#0/#1, 200 instances, all three forms: SNAP=0 equals ECD with β:=0 on the network output within 6e-7 (1.415793 / 1.414651 / 1.418105). The trained-β loss is 1.407597 / 1.404765 / 1.412154, so dropping β costs 0.006–0.010.
+- Plain: A_g4 keep top 5, 1,000 instances: SNAP=0 equals β:=0 within 6e-7 (1.570294…1.570454) vs trained β 1.569865–1.569950, so β costs only 0.0004 there.
+- Gradients on SNAP at step 0 are nonzero: Ws 1.4–1.7, Wo 0.33–0.54.
+**Smoke (2 threads, loaded box):** GNN gradient on 200 instances 0.17–0.23 s/eval after a 3 s JIT. Plain 250 instances × 30 its: 7–9 s. Plain 30-it n=8 loss (250 inst) from 1.5717: lin 1.5689, pair 1.5687, free 1.5684, level 1.5553.
+**Queue (front, replaces the 08:48 S_g4_* lines; nothing had launched):** S_g4_snapP_f, S_g4_snapF_f, S_g4_ctrl_f, S_g4_plainL, S_g4_plainP, S_g4_plainF, S_g4_plainLev8, S_g4_snapL_f.
