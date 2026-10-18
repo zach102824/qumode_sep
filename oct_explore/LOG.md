@@ -1537,3 +1537,15 @@ v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy with CPU advancing: A_g8
 
 ## Check-in (2026-10-18 10:59 CST)
 v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy with CPU advancing: A_g8 (plain gray L8; grow_grow_scr96 4.77 -> 1.492 at 10:36, best still the shared 0.952 grown basin, ~20/22 cands), A_b10 (plain binary L10 grown from A_b8, screen 20/200, best 1.860), B_g4_ii_A_f (clause_w only, formula; **all 3 inits trained**: 1.440 / 1.438 / 1.435, now in frozen val/test), B_b4_iii_A_f (binary full outputs, formula; inits 0/1 1.401/1.404, on init 2 of 3). Clause-weights-only stays ~0.03 above full outputs in train loss, so expect its n=20 test to land behind B_g4_iii_A_f. Synced A_g8 / B_g4_ii_A_f visible logs from deleted fds. Load ~18 on 8 cores, MemAvail ~2 GiB (<3500 MB gate), no new launches. SNAP queue and B_b8_iii_A_f still waiting for a GNN slot (one frees when B_g4_ii_A_f finishes its test). No new finished jobs; best n=20 still B_g4_iii_A_f 56.0/217.2 vs QAOA L4 84.9/238.1 (already reported). Queue unchanged. PID 2888494 untouched.
+
+### A_g8 finished 2026-10-18 11:18 CST  (L=8)
+
+`code=gray L=8 ninit=200 screen_n=128 screen_iter=300 refine=12 keep=10 ntrain=1000 maxiter=2000 grow_from=A_g4 grow_wait_h=8.0 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] obj=meanlog alpha=0.2 w=1.0 chunk=500`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| A_g8 winner grow_scr49 (train 0.952, val 1.327) | 2.1/4.9 | 2.8/8.2 | 4.0/20.3 | 5.6/32.2 | 14.6/113.1 |
+| QAOA_raw L=8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
+| G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
+
+n=20 winner vs QAOA L=8: median 14.6 vs 16.4, B90 113.1 vs 54.2 -> no beat
