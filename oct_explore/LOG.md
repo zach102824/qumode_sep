@@ -2093,3 +2093,12 @@ Running: mp128 init 2 (inits 1.149/1.160), attn init 2 (1.304/1.308), tf init 1 
 | G_fe L=4 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 37.5 vs 84.9, B90 182.7 vs 238.1 -> **BEATS QAOA (both)**
+
+## Check-in (2026-10-18 21:12 CST)
+Runner alive (run_v3.sh pid 3704086), 4/4 slots busy: N_g4_attn (init 2), N_g4_tf (init 1+), N_g4_mlp (init 0), B_b8_iii_A_f (L8 binary no-SNAP control, launched 21:00). MemAvailable ~2.8 GiB, load ~13 on 8 cores. PID 2888494 and *.STOP untouched. No queue rewrite; no restart.
+
+New finishes since 20:56:
+- **N_g4_mp128** (20:57): winner init 0, train **1.149** (best n=8 loss of the scan, below mp64 ~1.18), val 1.904. But it generalizes worse at larger n: n=14 **12.2/79.0** vs QAOA L4 20.8/59.6 (median better, B90 worse; ds got 14.2/58.2). Hunch: the wider/deeper net overfits n=8 structure, hurting the tail. Official comparison waits for R_arch_scan (n=10/14/20 val).
+- **R_g4_snapF_val2** (21:00): 600-instance n=10/12 re-pick across S_g4_snapF_f/s1/s2 picks the same start as before; n=20 **37.5/182.7** = existing best S_g4_snapF_s1 (not a new result).
+
+Queued next unchanged: R_arch_scan (after attn/tf/mlp) → A_arch_scan, then B_g8_iii_A_f / B_g8_i_A_f controls. Improvement idea held for after R_arch_scan: if mp128's tail problem holds at n=20, try mp64 depth/width in between or weight decay, within Phase 2. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6**. No WakeParent.
