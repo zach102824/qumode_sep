@@ -1806,3 +1806,29 @@ Runner alive (run_v3.sh pid 3668898). 3 GNN-SNAP jobs running since 15:40–15:4
 - **S_g4_ctrl_f** final (15:46, above): no-SNAP ECD control n=20 63.3/253.0 (no beat) vs GNN-SNAP 37.3/211.7 on the same warm start; confirms the gain is from per-instance SNAP.
 - **R_g4_snapF_val** (600-instance fresh val at n=10/12) re-picked init 0 = the same init as before, so n=20 stays **37.3/211.7** (beats QAOA L4 both; already reported, not a new result).
 No new n=20 result. Queue unchanged.
+
+## 16:09 CST architecture scan (approved)
+
+Zach approved Phase 1 (network-architecture scan). Implemented and queued 2026-10-18 ~16:14 CST.
+
+**Rules unchanged:** train only at n=8, L-BFGS-B, no QAOA-angle starts, SNAP zero-init nothing forced, formula features, free-SNAP + clause_w + var_mix heads.
+
+**Code**
+- `v3/arch_nets.py` — backbones: mp / mp128 / attn / tf / ds / mlp (same heads).
+- `v3/gnn_snap.py` — new `--arch` flag; default `mp` is code-identical to prior GNN-SNAP (89596 params; S_g4_snapF_f still loads).
+- `v3/reselect_arch.py` — multi-arch validation at n=10/14/20 (600/300/100), VBASE=37e9; criterion fixed before TEST; TEST = winner only on TEB n=20.
+- `v3/analyze_arch.py` — scaffolding: SNAP/weight correlations, transfer n=8→14/20, B90-tail traits, ablation hooks.
+- `v3/run_v3.sh` — `done_()` accepts winner+any test n (Phase-1 jobs omit n=20); runner restarted (jobs kept).
+
+**Queue** (backup `v3/queue_v3.bak_1609`); Phase 1 at FRONT:
+1. N_g4_mp128, N_g4_attn, N_g4_tf, N_g4_ds, N_g4_mlp (each 3 inits, init_from A_g4, Gray L=4, free SNAP)
+2. R_arch_scan (srcs include baseline **S_g4_snapF_f ≡ N_g4_mp64**)
+3. A_arch_scan (analysis)
+4. Then existing GNN-SNAP (L8 / L4 seeds / re-pick / lin SNAP / controls) — running jobs **not killed**
+
+**Smoke (16:12 CST):** all 6 arches SNAP≡ECD(β=0) at step 0; param counts mp=89596, attn=187900, tf=118524, ds=40316, mlp=32508, mp128=539900.
+
+**Running at queue rewrite:** S_g8_snapF_A_f, S_b8_snapF_A_f, S_g4_snapF_s1, S_g4_snapF_s2 (MAXJ=4). Phase-1 launches when a slot + ≥3500 MB free.
+
+**ETA:** first arch (N_g4_*) ~1–2 h after launch (3× BFGS @ n=8); full Phase-1 comparison overnight (~7–9 h wall with 1–2 concurrent jobs). Official pick = R_arch_scan leaderboard + TEB n=20 of winner only.
+

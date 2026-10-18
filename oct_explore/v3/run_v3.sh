@@ -1,5 +1,6 @@
 #!/bin/bash
 # v3 runner (approved plan 15:18 CST 2026-10-17): up to 4 jobs x 2 threads = 8 cores, until Mon 2026-10-19 09:00 CST.
+# 16:09 CST: Phase-1 architecture scan jobs (N_g4_*) use gnn_snap.py --arch; reselect_arch.py / analyze_arch.py are non-GNN.
 # queue line: tag|after|script args...   (after = tag whose results/v3/<after>.json must contain top-level "keep")
 set -u
 cd /workspace/qumode_sep/oct_explore
@@ -12,12 +13,14 @@ running() { pgrep -f -- "--tag ${1}( |$)" >/dev/null; }
 # Done if ALLDONE in log, OR result JSON has keep+winner and test.winner covers n=20 (survives deleted log fds).
 done_() {
   grep -q ALLDONE "logs/v3/${1}.log" 2>/dev/null && return 0
-  # Plain jobs write keep; GNN/SNAP write winner+test only. Either is enough once n=20 is in test.winner.
+  # Plain: keep+winner. GNN/SNAP: winner + test.winner with any n (Phase-1 arch jobs may omit n=20;
+  # official n=20 comes from R_arch_scan). Prefer '20' when present.
   $PY -c "import json,sys
 try:
  d=json.load(open('results/v3/$1.json'))
  te=d.get('test',{}).get('winner',{})
- sys.exit(0 if 'winner' in d and '20' in te else 1)
+ ok=('winner' in d and any(k.isdigit() for k in te)) or ('keep' in d and 'winner' in d)
+ sys.exit(0 if ok else 1)
 except Exception:
  sys.exit(1)" 2>/dev/null
 }

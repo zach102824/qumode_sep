@@ -28,10 +28,14 @@ import numpy as np, jax, jax.numpy as jnp
 from jax.flatten_util import ravel_pytree
 from scipy.optimize import minimize
 import sim, v3core as V
+import arch_nets as AN
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--tag", required=True); ap.add_argument("--code", default="gray", choices=["gray", "binary"])
 ap.add_argument("--L", type=int, required=True); ap.add_argument("--hidden", type=int, default=64); ap.add_argument("--rounds", type=int, default=3)
+ap.add_argument("--arch", default="mp", choices=["mp", "mp64", "mp128", "attn", "tf", "ds", "mlp"],
+                help="backbone: mp/mp64=message-passing H=64 R=3 (baseline); mp128=H=128 R=5; attn=attention GNN; "
+                     "tf=transformer over clauses; ds=DeepSets; mlp=hand-crafted features+MLP. All share free-SNAP heads.")
 ap.add_argument("--clause_w", action="store_true"); ap.add_argument("--var_mix", action="store_true")
 ap.add_argument("--snap", default="std", choices=["std", "none"]); ap.add_argument("--snap_pair", action="store_true", help="alias for --snap_form pair")
 ap.add_argument("--snap_form", default="", choices=["", "lin", "pair", "free", "level"],
@@ -54,6 +58,10 @@ if not a.snap_form: a.snap_form = "pair" if a.snap_pair else "lin"
 a.snap_pair = a.snap_form == "pair"
 FREE, LEVEL = a.snap_form == "free", a.snap_form == "level"
 assert not (LEVEL and not a.plain), "level table only for plain"
+# Phase-1 arch scan (16:09 CST): mp64 alias; mp128 forces capacity; non-mp cannot warm from B_g4 ECD GNN weights
+if a.arch == "mp64": a.arch = "mp"
+if a.arch == "mp128":
+    a.hidden, a.rounds = 128, 5
 TRB, TEB, VAB = 31_000_000_000, 32_000_000_000, 33_000_000_000
 os.makedirs("results/v3", exist_ok=True); OUT = f"results/v3/{a.tag}.json"
 log = lambda *s: print(time.strftime("%m-%d %H:%M:%S"), *s, flush=True)
@@ -131,9 +139,7 @@ def init_params(rng):
     def W(i, o, s=1.0): return jnp.asarray(rng.normal(0, s / np.sqrt(i), (i, o)).astype(np.float32))
     p = {}
     if not a.plain:
-        p = {"Ev": W(FV, H), "Ec": jnp.asarray(rng.normal(0, 1, (H,)).astype(np.float32)), "rounds": []}
-        for _ in range(a.rounds):
-            p["rounds"].append({k: W(H, H) for k in ["Uc", "Ap", "An", "Uv", "Bp", "Bn"]} | {"bc": jnp.zeros(H), "bv": jnp.zeros(H)})
+        p = AN.init_backbone(rng, a.arch, H, a.rounds, FV)
         p["G1"] = W(2 * H, H); p["g1"] = jnp.zeros(H); p["G2"] = jnp.zeros((H, NBASE))
         if a.clause_w: p["Wc"] = jnp.zeros((H, L))
         if a.var_mix: p["Wv"] = jnp.zeros((H, L + 1))
@@ -160,13 +166,7 @@ def net(p, base, G):
     """-> bv (B,NBASE), w (B,m,L)|None, e (B,n,L+1)|None, hv (B,n,H)|None"""
     B = G["Ip"].shape[0]
     if a.plain: return jnp.broadcast_to(base[None], (B, NBASE)), None, None, None
-    hv = jnp.tanh(G["fv"] @ p["Ev"]); m = G["Ip"].shape[1]
-    hc = jnp.broadcast_to(jnp.tanh(p["Ec"]), (B, m, H))
-    for r in p["rounds"]:
-        ac = (jnp.einsum("bcv,bvh->bch", G["Ip"], hv @ r["Ap"]) + jnp.einsum("bcv,bvh->bch", G["In"], hv @ r["An"])) / 4.0
-        hc = hc + jnp.tanh(hc @ r["Uc"] + ac + r["bc"])
-        av = (jnp.einsum("bcv,bch->bvh", G["Ip"], hc @ r["Bp"]) + jnp.einsum("bcv,bch->bvh", G["In"], hc @ r["Bn"])) / G["deg"][..., None]
-        hv = hv + jnp.tanh(hv @ r["Uv"] + av + r["bv"])
+    hv, hc = AN.run_backbone(p, G, a.arch, H)
     g = jnp.concatenate([hv.mean(1), hc.mean(1)], -1)
     bv = base[None] + jnp.tanh(g @ p["G1"] + p["g1"]) @ p["G2"]
     w = (hc @ p["Wc"]) if a.clause_w else None
@@ -275,6 +275,7 @@ _, unr = ravel_pytree(template)
 def theta_of(p, b): return np.asarray(ravel_pytree((p, jnp.asarray(b, jnp.float32)))[0], np.float64)
 inits, origin = [], []
 if a.warm:  # GNN thetas trained with the ECD circuit: unravel with the old structure, add zero SNAP params, drop ECD beta
+    assert a.arch in ("mp", "mp64"), f"--warm only for message-passing arch (got {a.arch}); use --init_from for other arches"
     W = json.load(open(a.warm)); ids = a.warm_ids or [r["i"] for r in W["runs"]]
     pt = template[0]; old_p = {k: v for k, v in pt.items() if k not in SNAPKEYS}
     _, unr_old = ravel_pytree((old_p, template[1]))
@@ -298,7 +299,7 @@ elif a.init_from:
 else:
     for i in range(a.ninit): inits.append((init_params(rng), jnp.asarray(rand_base(rng)))); origin.append(f"rand{i}")
 NI = len(inits)
-log(f"SNAP-GNN snap={a.snap} form={a.snap_form} plain={a.plain} L={L} H={H} clause_w={a.clause_w} var_mix={a.var_mix} code={a.code} inits={origin}")
+log(f"SNAP-GNN arch={a.arch} snap={a.snap} form={a.snap_form} plain={a.plain} L={L} H={H} rounds={a.rounds} clause_w={a.clause_w} var_mix={a.var_mix} code={a.code} inits={origin}")
 log(f"params per model: {template and theta_of(*inits[0]).size}")
 
 vg = jax.jit(jax.value_and_grad(lossf, argnums=0), static_argnums=1)
