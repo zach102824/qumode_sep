@@ -2283,3 +2283,14 @@ n=20 winner vs QAOA L=8: median 19.1 vs 16.4, B90 229.2 vs 54.2 -> no beat
 | G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
 
 n=20 winner vs QAOA L=8: median 11.3 vs 16.4, B90 136.1 vs 54.2 -> no beat
+
+## Check-in (2026-10-18 23:23 CST)
+Runner restarted 23:23 as pid **3872547** (was 3845590) after a double-launch bug: `running()` only matched `--tag`, so `A_arch_scan` (`analyze_arch.py`, no `--tag`) was relaunched at 23:22 while the 23:18 instance was still live. Patched `v3/run_v3.sh` (`bak_2322`): treat `pgrep analyze_arch.py` as running for tag `A_arch_scan`. Killed the duplicate (3872150); kept first A_arch (3869925). MAXJ=3 / cores 0-5 unchanged. PID 2888494 and *.STOP untouched.
+
+**3/3 slots now:** N_g4_attn_s1 (Phase-2 seed1, init 0 done 1.286 @23:06; inits 1–2), A_arch_scan (relaunch 23:18, past the 22:49 `--tag` fix; probing arches), **N_g4_attn_s2** (just launched). MemAvailable ~5.1 GiB.
+
+Finished since 22:56:
+- **B_g8_i_A_f** (23:16): n=20 L8 **19.1/229.2** vs QAOA 16.4/54.2 — loses both (no-SNAP gray L8 without clause_w/var_mix).
+- **B_g8_iii_A_f** (23:19): n=20 L8 **11.3/136.1** vs QAOA 16.4/54.2 — median beats QAOA, B90 loses; vs SNAP L8 best **9.1/51.6** worse on both. Same story as B_b8: L8 needs free SNAP.
+
+Queued next: N_g4_attn_r5, S_g8_attn_A_f, R_attn_val (after s1/s2/r5). Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7** / attn **42.8/172.7**; L8 **S_g8_snapF_A_f 9.1/51.6**. No new dual-beat improving on best → no WakeParent.

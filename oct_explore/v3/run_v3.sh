@@ -10,7 +10,12 @@ LOGW=logs/v3/runner.log; QF=v3/queue_v3.txt; PY=/usr/bin/python3.13; MAXJ=3; MIN
 say() { echo "$(date '+%F %T')" "$*" >> "$LOGW"; }
 n_run() { pgrep -f "$PY -u v3/" | wc -l; }
 mem_mb() { awk '/MemAvailable:/ {print int($2/1024)}' /proc/meminfo; }
-running() { pgrep -f -- "--tag ${1}( |$)" >/dev/null; }
+running() {
+  pgrep -f -- "--tag ${1}( |$)" >/dev/null && return 0
+  # analyze_arch.py has no --tag; otherwise runner double-launches A_arch_scan (seen 23:22).
+  [[ "$1" == "A_arch_scan" ]] && pgrep -af "$PY -u v3/analyze_arch.py" >/dev/null && return 0
+  return 1
+}
 # Done if ALLDONE in log, OR result JSON has keep+winner and test.winner covers n=20 (survives deleted log fds).
 done_() {
   grep -q ALLDONE "logs/v3/${1}.log" 2>/dev/null && return 0

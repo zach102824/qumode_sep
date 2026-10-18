@@ -1,0 +1,81 @@
+{
+  "tag": "S_g4_snapF_f",
+  "arch": "mp",
+  "winner": 0,
+  "loss": 1.1825831979513168,
+  "transfer": {
+    "8": {
+      "phase_rms_mean": 0.2540275454521179,
+      "phase_rms_std": 0.06270192563533783,
+      "phase_rms_max": 0.3710786700248718,
+      "w_rms_mean": 0.9940394163131714,
+      "w_rms_max": 1.430417776107788
+    },
+    "14": {
+      "phase_rms_mean": 0.24380254745483398,
+      "phase_rms_std": 0.04221465438604355,
+      "phase_rms_max": 0.3494858741760254,
+      "w_rms_mean": 1.0221502780914307,
+      "w_rms_max": 1.3270893096923828
+    },
+    "20": {
+      "phase_rms_mean": 0.2054397612810135,
+      "phase_rms_std": 0.031013567000627518,
+      "phase_rms_max": 0.28239384293556213,
+      "w_rms_mean": 1.0374408960342407,
+      "w_rms_max": 1.2703214883804321
+    }
+  },
+  "corr": {
+    "8": {
+      "phase_vs_mean_deg": 0.0,
+      "phase_vs_nsol": 0.21258207872507748,
+      "phase_vs_m": 0.0,
+      "w_vs_mean_deg": 0.0,
+      "w_vs_nsol": 0.240266255446221
+    },
+    "14": {
+      "phase_vs_mean_deg": 0.0,
+      "phase_vs_nsol": 0.4729729112851843,
+      "phase_vs_m": 0.0,
+      "w_vs_mean_deg": 0.0,
+      "w_vs_nsol": 0.12728261740751398
+    },
+    "20": {
+      "phase_vs_mean_deg": 0.0,
+      "phase_vs_nsol": 0.2613615059305883,
+      "phase_vs_m": 0.0,
+      "w_vs_mean_deg": 0.0,
+      "w_vs_nsol": 0.4369920579503375
+    }
+  },
+  "tail": {
+    "B90_thr": 211.7394675507474,
+    "n_tail": 10,
+    "tail_mean_nsol": 1.2,
+    "body_mean_nsol": 4.933333333333334,
+    "tail_mean_max_deg": 50.5,
+    "body_mean_max_deg": 51.15555555555556,
+    "tail_mean_deg": 39.8,
+    "body_mean_deg": 39.80000000000001,
+    "tail_seeds": [
+      32200000040,
+      32200000041,
+      32200000045,
+      32200000066,
+      32200000076,
+      32200000081,
+      32200000097,
+      32200000130,
+      32200000133,
+      32200000154
+    ]
+  },
+  "ablate_plan": [
+    "zero fv pos/neg degree channels",
+    "shuffle clause signs (Ip/In swap random subset)",
+    "permute variable ids",
+    "drop clause_w head / drop var_mix head / drop SNAP head (one at a time)"
+  ],
+  "transfer_ratio_20_over_8": 0.808730253702889
+}
