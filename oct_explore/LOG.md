@@ -1921,7 +1921,7 @@ Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing. MemAvailabl
 | row | n=8 | n=10 | n=12 | n=14 | n=20 |
 |---|---|---|---|---|---|
 | S_g8_snapF_A_f winner 1 (train 0.686, val 1.102) | 1.7/3.8 | 2.3/7.1 | 3.1/10.6 | 4.5/18.8 | 9.1/51.6 |
-| S_g8_snapF_A_f trainbest 2 (train 0.651, val 1.154) | 1.8/4.5 | 2.5/8.2 | 3.1/17.0 | 4.6/24.7 | - |
+| S_g8_snapF_A_f trainbest 2 (train 0.651, val 1.154) | 1.8/4.5 | 2.5/8.2 | 3.1/17.0 | 4.6/24.7 | 9.3/58.8 |
 | QAOA_raw L=8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
 | G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
 
@@ -1934,8 +1934,23 @@ n=20 winner vs QAOA L=8: median 9.1 vs 16.4, B90 51.6 vs 54.2 -> **BEATS QAOA (b
 | row | n=8 | n=10 | n=12 | n=14 | n=20 |
 |---|---|---|---|---|---|
 | S_b8_snapF_A_f winner 1 (train 0.671, val 1.119) | 1.7/4.9 | 2.5/8.3 | 2.9/14.7 | 4.7/20.2 | 8.1/74.7 |
-| S_b8_snapF_A_f trainbest 2 (train 0.649, val 1.126) | 1.8/5.0 | 2.4/6.8 | 2.9/12.9 | 4.8/23.2 | - |
+| S_b8_snapF_A_f trainbest 2 (train 0.649, val 1.126) | 1.8/5.0 | 2.4/6.8 | 2.9/12.9 | 4.8/23.2 | 9.2/87.7 |
 | QAOA_raw L=8 | 2.5/4.5 | 3.5/7.3 | 4.6/15.5 | 6.3/18.3 | 16.4/54.2 |
 | G_fe L=8 | 2.5/5.9 | 3.5/10.7 | 5.3/19.2 | 7.4/29.7 | 20.3/118.8 |
 
 n=20 winner vs QAOA L=8: median 8.1 vs 16.4, B90 74.7 vs 54.2 -> no beat
+
+## Check-in (2026-10-18 18:02 CST)
+Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing. MemAvailable ~4.0 GiB, load high on 8 cores, MINMEM/MAXJ caps hold. PID 2888494 and *.STOP untouched.
+
+**New L8 dual-beat: S_g8_snapF_A_f** (gray L8 free SNAP, warm A_g8 keep) n=20 **9.1/51.6** vs QAOA L8 **16.4/54.2** — beats both (median −44%, B90 −4.8%). Trainbest init 2 is 9.3/58.8 (median beat only). Closes the prior L8 B90 gap (plain A_b8 was 14.6/119.3 median-only). Winner picked on old n=10/12 val (init 1); trainbest lost B90 — same caveat as L4 s1.
+
+**S_b8_snapF_A_f** (binary L8 free SNAP, warm A_b8): n=20 **8.1/74.7** — beats QAOA median, loses B90 (74.7 vs 54.2). Better median than gray S_g8 but worse tail; improves on plain A_b8 B90 119.3 → 74.7 still short of QAOA. Trainbest 9.2/87.7.
+
+**Running:**
+- **S_g4_snapL_f** (lin SNAP): inits 0–1 done (1.218 / **1.180**); mid init 2. Shared sa still ~0.01–0.04 rad.
+- **N_g4_mp128** (Phase 1, 539900 params): still init 0 (~45+ min, no loss line yet — expected slower).
+- **N_g4_attn** (187900 params): launched 17:56, init 0.
+- **N_g4_tf** (118524 params): launched 18:01, init 0.
+
+**Queue next:** N_g4_ds, N_g4_mlp → R_arch_scan → A_arch_scan, then R_g4_snapF_val2 / L8 no-SNAP controls. Best dual-beats: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6**. WakeParent for the new L8 dual-beat.
