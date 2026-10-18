@@ -2224,3 +2224,9 @@ Runner alive (run_v3.sh pid 3704086). R_arch_scan finished 22:22, finalized+push
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 55.9 vs 84.9, B90 277.5 vs 238.1 -> no beat
+
+## 22:45 CST core cap 6 (Zach)
+- Zach: for the rest of the exploration use at most 6 cores (was 8) to leave room for other tasks.
+- v3/run_v3.sh (backup v3/run_v3.sh.bak_2245): MAXJ 4->3, MAXGNN 4->3 (3 jobs x 2 threads = 6); every newly launched job is wrapped in `taskset -c 0-5`.
+- The 4 jobs already running (B_b8_iii_A_f 3775185, B_g8_iii_A_f 3808009, B_g8_i_A_f 3808670, N_g4_attn_s1 3843966) were not killed; all their threads were pinned to cores 0-5 (`taskset -a -p -c 0-5`), so the campaign is on <=6 cores immediately. The runner will not launch again until fewer than 3 jobs run.
+- Runner restarted 22:46 CST as PID 3845590 (old 3704086 stopped; it recognises running jobs via pgrep on --tag).
