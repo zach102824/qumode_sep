@@ -1705,3 +1705,15 @@ n=20 winner vs QAOA L=4: median 37.3 vs 84.9, B90 211.7 vs 238.1 -> **BEATS QAOA
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 59.1 vs 84.9, B90 234.1 vs 238.1 -> **BEATS QAOA (both)**
+
+### S_g4_plainP finished 2026-10-18 14:31 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 snap=std snap_pair=True snap_form=pair free_m=32 plain=True init_from=results/v3/A_g4.json ninit=5 ntrain=1000 maxiter=2000 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=250`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| S_g4_plainP winner 3 (train 1.570, val 2.120) | 4.4/9.1 | 7.1/21.5 | 10.7/36.8 | 16.0/65.5 | 60.2/238.0 |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 60.2 vs 84.9, B90 238.0 vs 238.1 -> **BEATS QAOA (both)**
