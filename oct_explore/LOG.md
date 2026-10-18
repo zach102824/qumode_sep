@@ -1618,3 +1618,11 @@ v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy with CPU time advancing.
 - **S_g4_snapP_f** (GNN standard SNAP, pair form, warm from B_g4_iii_A_f #2/#0/#1): init 0 1.4152 → **1.2115**; init 1 1.4085 → **1.1852**; on init 2 of 3 (~19 min since init 1 finished).
 - **S_g4_snapF_f** (GNN standard SNAP, free form): init 0 1.4152 → **1.1826**; on init 1 of 3 (~22 min since init 0 finished; free first init was ~33 min).
 **Queue waiting (GNN slots full):** S_g4_ctrl_f, S_g4_plainL/P/F/Lev8, S_g4_snapL_f, B_b8_iii_A_f, B_g8_iii_A_f, B_g4_iii_A_h32/h128_f, B_g8_i_A_f, B_g10_iii_A_f (needs A_g10 keep). No new finished n=20 result this check. Best dual-beat still B_g4_iii_A_f **56.0/217.2** and B_g4_ii_A_f **58.2/197.2** vs QAOA L4 84.9/238.1 (already reported). PID 2888494 untouched.
+
+## Check-in (2026-10-18 12:52 CST)
+v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy with CPU time advancing. MemAvail ~2622 MB (<3500 MB gate), load ~20.13 20.79 20.63 on 8 cores, caps hold, no new launches. Synced A_b10 visible log from deleted fd.
+- **A_b10** (plain binary L10 grown from A_b8): screen **100/200**, best **1.332** (unchanged since 60/200). ~2–3 min/init under load → screen finish ~3–4 h more, then refine+grow.
+- **A_g10** (plain gray L10 grown from A_g8): screen **60/200**, best **1.568**.
+- **S_g4_snapP_f** (GNN standard SNAP, pair form, warm from B_g4_iii_A_f #2/#0/#1): init 0 1.4152 → **1.2115**; init 1 1.4085 → **1.1852**; on init 2 of 3 (~36 min since init 1 finished; pair inits ~32–41 min).
+- **S_g4_snapF_f** (GNN standard SNAP, free form): init 0 1.4152 → **1.1826**; on init 1 of 3 (~39 min since init 0 finished; free first init was ~33 min).
+**Queue waiting (GNN slots full):** S_g4_ctrl_f, S_g4_plainL/P/F/Lev8, S_g4_snapL_f, B_b8_iii_A_f, B_g8_iii_A_f, B_g4_iii_A_h32/h128_f, B_g8_i_A_f, B_g10_iii_A_f (needs A_g10 keep). No new finished n=20 result this check. Best dual-beat still B_g4_iii_A_f **56.0/217.2** and B_g4_ii_A_f **58.2/197.2** vs QAOA L4 84.9/238.1 (already reported). PID 2888494 untouched.
