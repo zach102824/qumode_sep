@@ -1775,3 +1775,16 @@ Zach approved refocusing the v3 queue on the working case and **named the approa
 
 ## Check-in (2026-10-18 15:37 CST)
 Runner alive (run_v3.sh pid 3668898). Only job: S_g4_ctrl_f (pid 3630951), init 2 of 3 running since 15:02 (init 1 took ~37 min, so it should finish within minutes). MemAvailable ~3.3 GB (box-wide; our job ~0.7 GB), just under the 3500 MB floor, so the GNN-SNAP queue (R_g4_snapF_val first) is correctly holding; it frees ~0.7 GB when ctrl ends, which should clear the gate. Floor left unchanged (shared 16 GB box, no swap). PID 2888494 and *.STOP untouched. No new n=20 result; best GNN-SNAP stays S_g4_snapF_f 37.3/211.7.
+
+### S_g4_ctrl_f finished 2026-10-18 15:46 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 clause_w=True var_mix=True snap=none snap_form=lin free_m=32 warm=results/v3/B_g4_iii_A_f.json warm_ids=[2, 0, 1] ninit=3 ntrain=1000 maxiter=1000 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| S_g4_ctrl_f winner 2 (train 1.378, val 2.086) | 3.6/7.2 | 6.6/15.9 | 9.5/30.0 | 14.2/42.7 | 63.3/253.0 |
+| S_g4_ctrl_f trainbest 1 (train 1.370, val 2.122) | 3.6/7.0 | 6.5/16.0 | 8.6/37.2 | 14.0/40.2 | 73.0/255.9 |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 63.3 vs 84.9, B90 253.0 vs 238.1 -> no beat
