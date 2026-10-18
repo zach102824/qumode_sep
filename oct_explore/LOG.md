@@ -2167,3 +2167,15 @@ Progress: N_g4_tf inits 1.405/1.414 (worst-but-ds fit), N_g4_mlp inits 1.424/1.4
 Runner alive (run_v3.sh pid 3704086). N_g4_tf and N_g4_mlp finished 21:40, so all five Phase-1 arch jobs are done and R_arch_scan became ready, but all 4 runner slots had already gone to lower-priority controls (B_b8_iii_A_f, B_g8_iii_A_f, B_g8_i_A_f, B_g4_iii_A_h32_f, launched 21:34–21:37 while R_arch_scan was still blocked). Since R_arch_scan is the Phase-1 decision and MemAvailable was ~5.2 GB (>3500 gate), launched it manually (same detached setsid nohup env as the runner; runner sees it via `--tag`).
 Two crashes on launch, both in `v3/reselect_arch.py`, both fixed: (1) `import sim` failed because `sim.py` lives in `oct_explore/` and the script didn't add it to `sys.path`; (2) exec'ing the `gnn_snap.py` library part needs `--tag` (it was filtered out) — now passes a dummy `_lib_reselect_arch` tag (library only defines `save()`, never writes on import). Third launch 21:54 running fine: ~1 min per init, 18 inits, ETA ~22:15 then n=20 test of the winner; runner will finalize/push, then A_arch_scan.
 First rows (S_g4_snapF_f, mp): S = 3.243 / 3.267 / 3.290; n=20 val 33.2/201.6, 36.4/178.1, 34.8/195.3. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6**. PID 2888494 and *.STOP untouched. No WakeParent.
+
+### R_arch_scan finished 2026-10-18 22:22 CST  (L=4)
+
+`L=4 src=['S_g4_snapF_f', 'N_g4_mp128', 'N_g4_attn', 'N_g4_tf', 'N_g4_ds', 'N_g4_mlp'] vn=[10, 14, 20] nval=[600, 300, 100] vbase=37000000000 criterion=min mean_n[(log median 1/p + log B90 1/p)/2] over fresh val n=[10, 14, 20] counts=[600, 300, 100] base=37000000000; tie-break mean -log p; TEST only winner on TEB n=20`
+
+| row | n=20 |
+|---|---|
+| R_arch_scan winner 7 (train 1.308, val 3.184) | 42.8/172.7 |
+| QAOA_raw L=4 | 84.9/238.1 |
+| G_fe L=4 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 42.8 vs 84.9, B90 172.7 vs 238.1 -> **BEATS QAOA (both)**

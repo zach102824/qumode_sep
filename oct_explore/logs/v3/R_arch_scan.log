@@ -1,0 +1,41 @@
+10-18 21:54:46 reselect_arch R_arch_scan: 18 inits from ['S_g4_snapF_f', 'N_g4_mp128', 'N_g4_attn', 'N_g4_tf', 'N_g4_ds', 'N_g4_mlp']; min mean_n[(log median 1/p + log B90 1/p)/2] over fresh val n=[10, 14, 20] counts=[600, 300, 100] base=37000000000; tie-break mean -log p; TEST only winner on TEB n=20
+10-18 21:54:46   val sizes: n=10:600, n=14:300, n=20:100
+10-18 21:54:46 SNAP-GNN arch=mp snap=std form=free plain=False L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 21:54:46 params per model: 89596
+10-18 21:54:46   loaded model arch=mp L=4 H=64 form=free params~OK
+10-18 21:55:58   cand 0 S_g4_snapF_f#0 arch=mp (warm:B_g4_iii_A_f.json#2): train 1.1826 | n=10 4.9/17.8 n=14 10.7/45.0 n=20 33.2/201.6 | S=3.2430 nll=2.6858 (71s)
+10-18 21:56:59   cand 1 S_g4_snapF_f#1 arch=mp (warm:B_g4_iii_A_f.json#0): train 1.1546 | n=10 4.9/18.8 n=14 10.8/50.4 n=20 36.4/178.1 | S=3.2670 nll=2.7159 (61s)
+10-18 21:58:02   cand 2 S_g4_snapF_f#2 arch=mp (warm:B_g4_iii_A_f.json#1): train 1.1771 | n=10 5.2/19.4 n=14 10.8/50.4 n=20 34.8/195.3 | S=3.2897 nll=2.7135 (63s)
+10-18 21:58:02 SNAP-GNN arch=mp128 snap=std form=free plain=False L=4 H=128 rounds=5 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 21:58:02 params per model: 539900
+10-18 21:58:02   loaded model arch=mp128 L=4 H=128 form=free params~OK
+10-18 21:59:08   cand 3 N_g4_mp128#0 arch=mp128 (init_from:A_g4.json#scr49): train 1.1489 | n=10 5.3/18.4 n=14 11.9/54.0 n=20 41.1/210.5 | S=3.3526 nll=2.7432 (66s)
+10-18 22:00:09   cand 4 N_g4_mp128#1 arch=mp128 (init_from:A_g4.json#scr131): train 1.1602 | n=10 5.2/17.1 n=14 10.6/45.3 n=20 37.5/179.0 | S=3.2450 nll=2.6956 (61s)
+10-18 22:01:06   cand 5 N_g4_mp128#2 arch=mp128 (init_from:A_g4.json#grow_scr48): train 1.1796 | n=10 5.2/19.0 n=14 12.1/45.8 n=20 38.2/162.6 | S=3.2739 nll=2.7409 (57s)
+10-18 22:01:06 SNAP-GNN arch=attn snap=std form=free plain=False L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 22:01:06 params per model: 187900
+10-18 22:01:06   loaded model arch=attn L=4 H=64 form=free params~OK
+10-18 22:02:11   cand 6 N_g4_attn#0 arch=attn (init_from:A_g4.json#scr49): train 1.3042 | n=10 5.4/17.3 n=14 11.6/41.6 n=20 33.9/143.2 | S=3.2008 nll=2.6942 (64s)
+10-18 22:10:30   cand 7 N_g4_attn#1 arch=attn (init_from:A_g4.json#scr131): train 1.3080 | n=10 5.3/16.2 n=14 11.2/40.0 n=20 34.2/149.4 | S=3.1842 nll=2.6806 (499s)
+10-18 22:11:37   cand 8 N_g4_attn#2 arch=attn (init_from:A_g4.json#grow_scr48): train 1.2997 | n=10 5.4/17.8 n=14 11.3/39.9 n=20 36.1/159.0 | S=3.2235 nll=2.6971 (66s)
+10-18 22:11:37 SNAP-GNN arch=tf snap=std form=free plain=False L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 22:11:37 params per model: 118524
+10-18 22:11:37   loaded model arch=tf L=4 H=64 form=free params~OK
+10-18 22:12:40   cand 9 N_g4_tf#0 arch=tf (init_from:A_g4.json#scr49): train 1.4046 | n=10 5.9/16.3 n=14 13.5/37.7 n=20 40.8/159.5 | S=3.2622 nll=2.7969 (63s)
+10-18 22:13:36   cand 10 N_g4_tf#1 arch=tf (init_from:A_g4.json#scr131): train 1.4135 | n=10 6.0/15.4 n=14 13.3/38.3 n=20 42.2/162.3 | S=3.2661 nll=2.8124 (56s)
+10-18 22:14:35   cand 11 N_g4_tf#2 arch=tf (init_from:A_g4.json#grow_scr48): train 1.4329 | n=10 6.3/16.4 n=14 13.9/42.4 n=20 40.9/161.3 | S=3.3020 nll=2.8653 (58s)
+10-18 22:14:35 SNAP-GNN arch=ds snap=std form=free plain=False L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 22:14:35 params per model: 40316
+10-18 22:14:35   loaded model arch=ds L=4 H=64 form=free params~OK
+10-18 22:15:37   cand 12 N_g4_ds#0 arch=ds (init_from:A_g4.json#scr49): train 1.4383 | n=10 6.3/17.6 n=14 13.8/44.0 n=20 49.1/193.9 | S=3.3808 nll=2.8844 (62s)
+10-18 22:16:37   cand 13 N_g4_ds#1 arch=ds (init_from:A_g4.json#scr131): train 1.4406 | n=10 6.0/18.0 n=14 13.8/46.2 n=20 48.3/203.8 | S=3.3907 nll=2.8718 (60s)
+10-18 22:17:36   cand 14 N_g4_ds#2 arch=ds (init_from:A_g4.json#grow_scr48): train 1.4356 | n=10 6.1/17.5 n=14 14.6/43.7 n=20 47.3/165.6 | S=3.3480 nll=2.8711 (59s)
+10-18 22:17:37 SNAP-GNN arch=mlp snap=std form=free plain=False L=4 H=64 rounds=3 clause_w=True var_mix=True code=gray inits=['rand0', 'rand1', 'rand2']
+10-18 22:17:37 params per model: 32508
+10-18 22:17:37   loaded model arch=mlp L=4 H=64 form=free params~OK
+10-18 22:18:42   cand 15 N_g4_mlp#0 arch=mlp (init_from:A_g4.json#scr49): train 1.4238 | n=10 6.0/17.0 n=14 13.5/42.0 n=20 42.1/149.9 | S=3.2863 nll=2.8263 (65s)
+10-18 22:19:43   cand 16 N_g4_mlp#1 arch=mlp (init_from:A_g4.json#scr131): train 1.4416 | n=10 6.9/19.9 n=14 16.3/51.7 n=20 51.3/174.3 | S=3.4588 nll=2.9826 (61s)
+10-18 22:20:44   cand 17 N_g4_mlp#2 arch=mlp (init_from:A_g4.json#grow_scr48): train 1.4394 | n=10 5.9/16.3 n=14 13.5/38.9 n=20 42.1/143.5 | S=3.2558 nll=2.8088 (61s)
+10-18 22:20:44 RE-PICK (fixed before TEST): cand 7 = N_g4_attn#1 arch=attn S=3.1842
+10-18 22:21:46 TEST re-picked cand 7 (N_g4_attn#1 arch=attn) n=20 L=4 med1/p=42.8 B90=172.7 (59s)
+10-18 22:21:46 ALLDONE
