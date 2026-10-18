@@ -1843,3 +1843,14 @@ Runner alive (run_v3.sh pid 3688928), 4/4 slots busy, CPU advancing. MemAvailabl
 - **S_g4_snapF_s2** (seed 2, warm #2/0): init 0 **1.415→1.193**.
 
 **Phase 1 arch scan** still at queue front (N_g4_mp128/attn/tf/ds/mlp → R_arch_scan → A_arch_scan); launches when a slot frees (s1/s2 L4 should finish first). Best dual-beat remains **S_g4_snapF_f 37.3/211.7** vs QAOA L4 84.9/238.1. No queue rewrite.
+
+## Check-in (2026-10-18 16:35 CST)
+Runner alive (run_v3.sh pid 3688928), 4/4 slots busy, CPU advancing (~150% each). MemAvailable ~2.4 GiB (below 3500 MB gate), load ~12–15 on 8 cores, caps hold — Phase-1 N_g4_* correctly waits until a slot frees. PID 2888494 and *.STOP untouched. No new n=20 finish this check.
+
+**Running:**
+- **S_g8_snapF_A_f** (gray L8 free SNAP from A_g8): init 0 **0.953→0.673** (1000 it); mid init 1 of 3. Json has 1 run.
+- **S_b8_snapF_A_f** (binary L8): init 0 **0.953→0.676**; mid init 1 of 3.
+- **S_g4_snapF_s1** (seed 1): init 0 **1.415→1.191**; init 1 **1.408→1.161** (near prior train-best 1.155); mid init 2 of 3.
+- **S_g4_snapF_s2** (seed 2): init 0 **1.415→1.193**; mid init 1 of 2.
+
+**Phase 1 arch scan** still at queue front (N_g4_mp128/attn/tf/ds/mlp → R_arch_scan → A_arch_scan). L4 seeds should free first (~16:55–17:05); L8 inits ~34 min each. Best dual-beat remains **S_g4_snapF_f 37.3/211.7** vs QAOA L4 84.9/238.1. No queue rewrite.
