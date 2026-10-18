@@ -1667,3 +1667,29 @@ v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy with CPU advancing. Sync
 - **S_g4_snapF_f** (GNN standard SNAP, free form; relaunched 13:21 after tracer fix with inits 0–1 saved): init 0 1.4152 → **1.1826**; init 1 1.4085 → **1.1546**; mid init 2 of 3 (~38 min into resume; free inits ~33–42 min). Best SNAP n=8 train so far (1.155). Json still has 2 runs (writes after each init).
 - **S_g4_ctrl_f** (ECD control, same warm / 1000 its, launched 13:24): still on first warm init, no json yet (~35 min; on track vs pair/free ~33–41 min).
 **Queue waiting (GNN slots full):** S_g4_plainL/P/F/Lev8, S_g4_snapL_f, B_b8_iii_A_f, B_g8_iii_A_f, B_g4_iii_A_h32/h128_f, B_g8_i_A_f, B_g10_iii_A_f (needs A_g10 keep). No new finished n=20 result this check (snapP already reported: median 35.6, B90 398.3, no dual beat). Best dual-beat still B_g4_iii_A_f **56.0/217.2** and B_g4_ii_A_f **58.2/197.2** vs QAOA L4 84.9/238.1. Wait for free + ctrl n=20 before queue changes.
+
+## Check-in (2026-10-18 14:19 CST)
+v3 runner alive (run_v3.sh pid 3564313), 4/4 slots busy with CPU time advancing. Synced A_b10 / A_g10 / S_g4_snapF_f visible logs from deleted fds. PID 2888494 untouched. MemAvail ~2429 MiB (<3500 MB gate), load ~19.70 on 8 cores, caps hold (slots full; no new launches needed).
+- **A_b10** (plain binary L10 grown from A_b8): screen **130/200**, best **1.332** (unchanged since 60/200). ~2–4 min/init under load → screen finish ~2–4 h more, then refine+grow. Last json write ~40 min ago (mid next 10-init batch; CPU still advancing).
+- **A_g10** (plain gray L10 grown from A_g8): screen **100/200**, best **1.540**.
+- **S_g4_snapF_f** (GNN standard SNAP, free form; resumed 13:21 after tracer fix with inits 0–1 saved): init 0 1.4152 → **1.1826**; init 1 1.4085 → **1.1546**; mid init 2 of 3 (~58 min into resume; free init 2 took 3452 s under load). Best SNAP n=8 train so far (1.155). Json still has 2 runs.
+- **S_g4_ctrl_f** (ECD control, same warm / 1000 its, launched 13:24): still on first warm init, no json yet (~55 min; on track vs pair/free ~33–41 min unloaded, slower under 4-way load).
+**Queue waiting (GNN slots full + mem gate):** S_g4_plainL/P/F/Lev8, S_g4_snapL_f, B_b8_iii_A_f, B_g8_iii_A_f, B_g4_iii_A_h32/h128_f, B_g8_i_A_f, B_g10_iii_A_f (needs A_g10 keep). No new finished n=20 result this check (snapP already reported: median 35.6, B90 398.3, no dual beat). Best dual-beat still B_g4_iii_A_f **56.0/217.2** and B_g4_ii_A_f **58.2/197.2** vs QAOA L4 84.9/238.1. Wait for free + ctrl n=20 before queue changes.
+
+### S_g4_snapF_f finished 2026-10-18 14:23 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 clause_w=True var_mix=True snap=std snap_form=free free_m=32 warm=results/v3/B_g4_iii_A_f.json warm_ids=[2, 0, 1] ninit=3 ntrain=1000 maxiter=1000 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=125`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| S_g4_snapF_f winner 0 (train 1.183, val 1.887) | 2.7/7.5 | 5.0/19.7 | 7.1/31.6 | 11.6/85.6 | 37.3/211.7 |
+| S_g4_snapF_f trainbest 1 (train 1.155, val 1.919) | 2.9/8.6 | 5.1/19.2 | 7.0/47.9 | 12.5/79.1 | 38.5/274.2 |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 37.3 vs 84.9, B90 211.7 vs 238.1 -> **BEATS QAOA (both)**
+
+## Check-in (2026-10-18 14:23 CST)
+**S_g4_snapF_f finished** (report above): n=20 winner **37.3/211.7 vs QAOA L4 84.9/238.1** → **dual beat** (median −56%, B90 −11%). Beats prior dual-beat medians (B_g4_iii_A_f 56.0, B_g4_ii_A_f 58.2); B90 between B_g4_ii_A_f 197.2 and B_g4_iii_A_f 217.2. Free SNAP used nonzero phases (n=20 rms/layer ~0.35/0.18/0.13/0.11). Train-best 38.5/274.2 (B90 miss).
+**Runner glitch:** deleted log fd had no on-disk ALLDONE, so `done_` missed and runner relaunched snapF at 14:22 — killed the duplicate; wrote ALLDONE into `logs/v3/S_g4_snapF_f.log`. PID 2888494 untouched.
+**Slots now:** A_b10 (screen 130/200, best 1.332), A_g10 (100/200, best 1.540), S_g4_ctrl_f (ECD control, still training). One GNN slot free; MemAvail ~6039 MiB. Queue next: S_g4_plainL/P/F/Lev8, S_g4_snapL_f, then B_b8_iii_A_f / B_g8… Waiting on ctrl n=20 to separate SNAP from extra BFGS; no queue rewrite yet beyond letting the runner drain the existing SNAP/plain/lin block.

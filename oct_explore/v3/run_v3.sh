@@ -12,11 +12,12 @@ running() { pgrep -f -- "--tag ${1}( |$)" >/dev/null; }
 # Done if ALLDONE in log, OR result JSON has keep+winner and test.winner covers n=20 (survives deleted log fds).
 done_() {
   grep -q ALLDONE "logs/v3/${1}.log" 2>/dev/null && return 0
+  # Plain jobs write keep; GNN/SNAP write winner+test only. Either is enough once n=20 is in test.winner.
   $PY -c "import json,sys
 try:
  d=json.load(open('results/v3/$1.json'))
  te=d.get('test',{}).get('winner',{})
- sys.exit(0 if 'keep' in d and 'winner' in d and '20' in te else 1)
+ sys.exit(0 if 'winner' in d and '20' in te else 1)
 except Exception:
  sys.exit(1)" 2>/dev/null
 }
