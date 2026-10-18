@@ -2044,3 +2044,8 @@ Runner alive (run_v3.sh pid 3704086), 4/4 slots busy, CPU advancing. MemAvailabl
 **Early train read (not official — wait for all 3 inits + R_arch_scan):** mp128 best so far; attn/tf/ds lag baseline on n=8 loss. Official pick remains R_arch_scan (n=10/14/20 val) + TEB n=20 of winner only.
 
 **Queued next:** N_g4_mlp (needs free slot + mem≥3500) → R_arch_scan → A_arch_scan, then R_g4_snapF_val2 / L8 no-SNAP controls. Baseline for scan = S_g4_snapF_f ≡ mp64. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6**. No WakeParent (no new n=20 dual-beat / no crash).
+
+## Check-in (2026-10-18 20:17 CST)
+Runner alive (run_v3.sh pid 3704086), 4/4 slots busy (mp128 ~193%, attn ~156%, tf ~137%, ds ~117% CPU). MemAvailable ~4 GiB but no free slot (MAXJ=4) — **N_g4_mlp** still queued. Load ~14 on 8 cores. PID 2888494 and *.STOP untouched. No new finish since S_g4_snapL_f (18:21); no new init lines since 19:54 check (mp128 init 2, attn/tf init 1, ds init 2 in progress). No queue rewrite; no restart.
+
+Queued next unchanged: N_g4_mlp → R_arch_scan → A_arch_scan, then R_g4_snapF_val2 / L8 no-SNAP controls. Best dual-beats unchanged: L4 **S_g4_snapF_s1 37.5/182.7**, L8 **S_g8_snapF_A_f 9.1/51.6**. No WakeParent.
