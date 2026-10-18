@@ -1725,3 +1725,16 @@ v3 runner alive (run_v3.sh pid 3646460), 4/4 slots busy with CPU advancing. Sync
 - **S_g4_plainF** (plain free-form SNAP) launched 14:31.
 - **A_b10** screen 150/200, best 1.332. **A_g10** screen 120/200, best **1.331** (from 1.540).
 **Queue:** unchanged (S_g4_Lev8, S_g4_snapL_f, B_b8_iii_A_f, B_g8_iii_A_f, B_g4_iii_A_h32/h128_f, B_g8_i_A_f, B_g10_iii_A_f). Best dual-beat remains S_g4_snapF_f **37.3/211.7** (already reported). Next lever once ctrl finishes: network SNAP at L8 off the A_g8/B_g8 line, since the network-SNAP gain is the one that transfers.
+
+### S_g4_plainF finished 2026-10-18 14:36 CST  (L=4)
+
+`code=gray L=4 hidden=64 rounds=3 snap=std snap_form=free free_m=32 plain=True init_from=results/v3/A_g4.json ninit=5 ntrain=1000 maxiter=2000 val=[10, 12] val_count=60 test=[8, 10, 12, 14, 20] feat=formula chunk=250`
+
+| row | n=8 | n=10 | n=12 | n=14 | n=20 |
+|---|---|---|---|---|---|
+| S_g4_plainF winner 2 (train 1.569, val 2.120) | 4.4/9.2 | 7.1/20.2 | 10.3/37.1 | 16.1/61.9 | 59.6/233.6 |
+| S_g4_plainF trainbest 0 (train 1.569, val 2.120) | 4.4/9.2 | 7.2/20.2 | 10.2/37.2 | 16.2/61.9 | - |
+| QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 | 84.9/238.1 |
+| G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 59.6 vs 84.9, B90 233.6 vs 238.1 -> **BEATS QAOA (both)**
