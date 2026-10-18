@@ -4,7 +4,7 @@
 set -u
 cd /workspace/qumode_sep/oct_explore
 DEADLINE=$(date -d '2026-10-19 09:00:00' +%s)
-LOGW=logs/v3/runner.log; QF=v3/queue_v3.txt; PY=/usr/bin/python3.13; MAXJ=4; MINMEM=3500; MAXGNN=2
+LOGW=logs/v3/runner.log; QF=v3/queue_v3.txt; PY=/usr/bin/python3.13; MAXJ=4; MINMEM=3500; MAXGNN=4
 say() { echo "$(date '+%F %T')" "$*" >> "$LOGW"; }
 n_run() { pgrep -f "$PY -u v3/" | wc -l; }
 mem_mb() { awk '/MemAvailable:/ {print int($2/1024)}' /proc/meminfo; }
@@ -21,7 +21,9 @@ try:
 except Exception:
  sys.exit(1)" 2>/dev/null
 }
-ready() { [[ -z "$1" ]] && return 0; $PY -c "import json,sys; d=json.load(open(\"results/v3/$1.json\")); sys.exit(0 if \"keep\" in d else 1)" 2>/dev/null; }
+# 15:30 CST: after may be a comma list; each dep ready if its JSON has "keep" (plain) OR the dep is done_ (GNN/SNAP/reselect jobs).
+ready() { [[ -z "$1" ]] && return 0; local d; for d in ${1//,/ }; do
+  $PY -c "import json,sys; d=json.load(open(\"results/v3/$d.json\")); sys.exit(0 if \"keep\" in d else 1)" 2>/dev/null || done_ "$d" || return 1; done; return 0; }
 # If a job's stdout still points at a deleted inode (log path recreated), refresh the visible log from the live fd.
 sync_deleted_logs() {
   local pid tgt path
@@ -48,7 +50,8 @@ while [[ $(date +%s) -lt $DEADLINE ]]; do
     finalize "$tag"; done_ "$tag" && continue; running "$tag" && continue
     ready "$after" || continue
     [[ $(n_run) -ge $MAXJ ]] && continue
-    # Count gnn_v3 and gnn_snap toward MAXGNN so SNAP front-of-queue cannot stack 4 neural jobs.
+    # Count gnn_v3 and gnn_snap toward MAXGNN. 15:30 CST GNN-SNAP refocus: queue is now all-GNN, so MAXGNN=4 (= MAXJ); the
+    # memory gate (MINMEM) is the real limiter, and the post-launch settle is 90 s so the next gate reading includes the new job.
     if [[ "$args" == *gnn_v3.py* || "$args" == *gnn_snap.py* ]]; then
       [[ $(pgrep -f "$PY -u v3/gnn_" | wc -l) -ge $MAXGNN ]] && continue
     fi
@@ -57,7 +60,7 @@ while [[ $(date +%s) -lt $DEADLINE ]]; do
     setsid nohup env OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 XLA_PYTHON_CLIENT_PREALLOCATE=false \
       XLA_FLAGS="--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=2" \
       $PY -u $args >>"logs/v3/${tag}.log" 2>&1 </dev/null &
-    sleep 30
+    sleep 90
   done < "$QF"
   sleep 60
 done
