@@ -1,0 +1,80 @@
+# v3 queue (approved 15:18 CST). tag|after|args. Plain = PLAN A (v3_plain.py), GNN = PLAN B (gnn_v3.py). n=8 training only. --chunk 125
+# 16:09 CST ARCHITECTURE SCAN (Zach approved Phase 1). Backup v3/queue_v3.bak_1609.
+#  Phase 1 at FRONT: compare backbones with SAME free-SNAP outputs (clause_w + var_mix + free SNAP).
+#  Baseline N_g4_mp64 ≡ S_g4_snapF_f (code-identical mp H=64 R=3; reused, not re-trained).
+#  Other arches: init_from A_g4 keep-list (plain bases; cannot warm from B_g4 ECD-GNN weights), ninit=3, Gray L=4.
+#  Validation (reselect_arch): fresh n=10/14/20 counts 600/300/100, VBASE=37e9 (disjoint from 31/32/33/36e9).
+#  Criterion FIXED before TEST: min mean_n[(log median 1/p + log B90 1/p)/2]; TEST = winner only on TEB n=20.
+#  Training jobs skip n=20 test (--test 8 10 12 14); official n=20 is R_arch_scan only.
+#  Running GNN-SNAP jobs (L8 gray/binary, L4 seeds) KEPT — do not kill. Non-scan work stays BEHIND Phase 1.
+#
+# --- Phase 1: architecture scan ---
+N_g4_mp128||v3/gnn_snap.py --tag N_g4_mp128 --arch mp128 --snap_form free --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --test 8 10 12 14
+N_g4_attn||v3/gnn_snap.py --tag N_g4_attn --arch attn --snap_form free --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --test 8 10 12 14
+N_g4_tf||v3/gnn_snap.py --tag N_g4_tf --arch tf --snap_form free --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --test 8 10 12 14
+N_g4_ds||v3/gnn_snap.py --tag N_g4_ds --arch ds --snap_form free --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --test 8 10 12 14
+N_g4_mlp||v3/gnn_snap.py --tag N_g4_mlp --arch mlp --snap_form free --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --test 8 10 12 14
+R_arch_scan|N_g4_mp128,N_g4_attn,N_g4_tf,N_g4_ds,N_g4_mlp|v3/reselect_arch.py --tag R_arch_scan --src S_g4_snapF_f N_g4_mp128 N_g4_attn N_g4_tf N_g4_ds N_g4_mlp --vn 10 14 20 --nval 600 300 100 --vbase 37000000000
+A_arch_scan|R_arch_scan|v3/analyze_arch.py --tags S_g4_snapF_f N_g4_mp128 N_g4_attn N_g4_tf N_g4_ds N_g4_mlp --nprobe 40 --ns 8 14 20
+#
+# --- Phase 2 (22:25 CST): improve Phase-1 winner = attention GNN past 37.3/211.7 ---
+# R_arch_scan TEB n=20: N_g4_attn#1 42.8/172.7 dual-beats QAOA L4 84.9/238.1 (B90 also beats s1 182.7; median behind s1 37.5).
+# Seeds + deeper attn (r=5) at L4; L8 attn free-SNAP; reselect on fresh VBASE=38e9 (disjoint from 37e9).
+N_g4_attn_s1||v3/gnn_snap.py --tag N_g4_attn_s1 --arch attn --snap_form free --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --seed 1 --test 8 10 12 14
+N_g4_attn_s2||v3/gnn_snap.py --tag N_g4_attn_s2 --arch attn --snap_form free --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --seed 2 --test 8 10 12 14
+N_g4_attn_r5||v3/gnn_snap.py --tag N_g4_attn_r5 --arch attn --snap_form free --code gray --L 4 --rounds 5 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --test 8 10 12 14
+S_g8_attn_A_f|A_g8|v3/gnn_snap.py --tag S_g8_attn_A_f --arch attn --snap_form free --code gray --L 8 --clause_w --var_mix --snap std --init_from results/v3/A_g8.json --ninit 3 --maxiter 1000 --feat formula --chunk 125
+R_attn_val|N_g4_attn_s1,N_g4_attn_s2,N_g4_attn_r5|v3/reselect_arch.py --tag R_attn_val --src N_g4_attn N_g4_attn_s1 N_g4_attn_s2 N_g4_attn_r5 --vn 10 14 20 --nval 600 300 100 --vbase 38000000000
+# --- Phase 2 wave-2 (01:59 CST): more train / seed / SNAP capacity (existing CLI only) ---
+# Hold until R_attn_val returns official n=20; then fill free slots. Tail-weighted loss + ensembles need code — not queued.
+# VBASE=39e9 for wave-2 reselect (disjoint from 37e9 Phase1 / 38e9 R_attn_val).
+N_g4_attn_n2k||v3/gnn_snap.py --tag N_g4_attn_n2k --arch attn --snap_form free --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --ntrain 2000 --feat formula --chunk 125 --test 8 10 12 14
+N_g4_attn_s3||v3/gnn_snap.py --tag N_g4_attn_s3 --arch attn --snap_form free --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --seed 3 --test 8 10 12 14
+N_g4_attn_fm64||v3/gnn_snap.py --tag N_g4_attn_fm64 --arch attn --snap_form free --free_m 64 --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --test 8 10 12 14
+R_attn_val2|R_attn_val,N_g4_attn_n2k,N_g4_attn_s3,N_g4_attn_fm64|v3/reselect_arch.py --tag R_attn_val2 --src N_g4_attn N_g4_attn_s1 N_g4_attn_s2 N_g4_attn_r5 N_g4_attn_n2k N_g4_attn_s3 N_g4_attn_fm64 --vn 10 14 20 --nval 600 300 100 --vbase 39000000000
+#
+# --- already-running / pending GNN-SNAP (refocus 15:29; do not kill running) ---
+R_g4_snapF_val||v3/reselect_snap.py --tag R_g4_snapF_val --src S_g4_snapF_f --nval 600
+S_g8_snapF_A_f|A_g8|v3/gnn_snap.py --tag S_g8_snapF_A_f --snap_form free --code gray --L 8 --clause_w --var_mix --snap std --init_from results/v3/A_g8.json --ninit 3 --maxiter 1000 --feat formula --chunk 125
+S_b8_snapF_A_f|A_b8|v3/gnn_snap.py --tag S_b8_snapF_A_f --snap_form free --code binary --L 8 --clause_w --var_mix --snap std --init_from results/v3/A_b8.json --ninit 3 --maxiter 1000 --feat formula --chunk 125
+S_g4_snapF_s1||v3/gnn_snap.py --tag S_g4_snapF_s1 --snap_form free --L 4 --clause_w --var_mix --snap std --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125 --seed 1
+S_g4_snapF_s2||v3/gnn_snap.py --tag S_g4_snapF_s2 --snap_form free --L 4 --clause_w --var_mix --snap std --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 --ninit 2 --maxiter 1000 --feat formula --chunk 125 --seed 2
+R_g4_snapF_val2|S_g4_snapF_s1,S_g4_snapF_s2|v3/reselect_snap.py --tag R_g4_snapF_val2 --src S_g4_snapF_f S_g4_snapF_s1 S_g4_snapF_s2 --nval 600
+S_g4_snapL_f||v3/gnn_snap.py --tag S_g4_snapL_f --snap_form lin --L 4 --clause_w --var_mix --snap std --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
+# no-SNAP L8 GNN controls for the L8 GNN-SNAP runs
+B_b8_iii_A_f|A_b8|v3/gnn_v3.py --tag B_b8_iii_A_f --code binary --L 8 --hidden 64 --clause_w --var_mix --ninit 3 --init_from results/v3/A_b8.json --feat formula --chunk 125
+B_g8_iii_A_f|A_g8|v3/gnn_v3.py --tag B_g8_iii_A_f --code gray --L 8 --hidden 64 --clause_w --var_mix --ninit 3 --init_from results/v3/A_g8.json --feat formula --chunk 125
+B_g8_i_A_f|A_g8|v3/gnn_v3.py --tag B_g8_i_A_f --code gray --L 8 --hidden 64 --ninit 3 --init_from results/v3/A_g8.json --feat formula --chunk 125
+# still-running ECD control (do not relaunch/kill); finished SNAP rows kept so the runner can finalize
+S_g4_ctrl_f||v3/gnn_snap.py --tag S_g4_ctrl_f --L 4 --clause_w --var_mix --snap none --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
+# behind GNN-SNAP: other ablations
+B_g4_iii_A_h32_f|A_g4|v3/gnn_v3.py --tag B_g4_iii_A_h32_f --code gray --L 4 --hidden 32 --clause_w --var_mix --ninit 3 --init_from results/v3/A_g4.json --feat formula --chunk 125
+B_g4_iii_A_h128_f|A_g4|v3/gnn_v3.py --tag B_g4_iii_A_h128_f --code gray --L 4 --hidden 128 --clause_w --var_mix --ninit 3 --init_from results/v3/A_g4.json --feat formula --chunk 125
+# --- history (done / parked) ---
+S_g4_snapP_f||v3/gnn_snap.py --tag S_g4_snapP_f --snap_form pair --L 4 --clause_w --var_mix --snap std --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
+S_g4_snapF_f||v3/gnn_snap.py --tag S_g4_snapF_f --snap_form free --L 4 --clause_w --var_mix --snap std --warm results/v3/B_g4_iii_A_f.json --warm_ids 2 0 1 --ninit 3 --maxiter 1000 --feat formula --chunk 125
+S_g4_plainL||v3/gnn_snap.py --tag S_g4_plainL --snap_form lin --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250
+S_g4_plainP||v3/gnn_snap.py --tag S_g4_plainP --snap_form pair --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250
+S_g4_plainF||v3/gnn_snap.py --tag S_g4_plainF --snap_form free --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250
+S_g4_plainLev8||v3/gnn_snap.py --tag S_g4_plainLev8 --snap_form level --plain --L 4 --snap std --init_from results/v3/A_g4.json --ninit 5 --maxiter 2000 --chunk 250 --val 8 --test 8
+A_g2||v3/v3_plain.py --tag A_g2 --code gray --L 2 --ninit 200 --refine 16
+A_b2||v3/v3_plain.py --tag A_b2 --code binary --L 2 --ninit 200 --refine 16
+B_g4_iii||v3/gnn_v3.py --tag B_g4_iii --code gray --L 4 --hidden 64 --clause_w --var_mix --ninit 1 --chunk 125
+B_g4_i||v3/gnn_v3.py --tag B_g4_i --code gray --L 4 --hidden 64 --ninit 1 --chunk 125
+B_g2_iii_A|A_g2|v3/gnn_v3.py --tag B_g2_iii_A --code gray --L 2 --hidden 64 --clause_w --var_mix --ninit 4 --init_from results/v3/A_g2.json --chunk 125
+B_g2_i_A|A_g2|v3/gnn_v3.py --tag B_g2_i_A --code gray --L 2 --hidden 64 --ninit 4 --init_from results/v3/A_g2.json --chunk 125
+A_g4|A_g2|v3/v3_plain.py --tag A_g4 --code gray --L 4 --ninit 200 --refine 12 --grow_from A_g2
+A_b4|A_b2|v3/v3_plain.py --tag A_b4 --code binary --L 4 --ninit 200 --refine 12 --grow_from A_b2
+B_g2_iii_A_f|A_g2|v3/gnn_v3.py --tag B_g2_iii_A_f --code gray --L 2 --hidden 64 --clause_w --var_mix --feat formula --ninit 2 --init_from results/v3/A_g2.json --chunk 125
+B_g2_iii_A_tq|A_g2|v3/gnn_v3.py --tag B_g2_iii_A_tq --code gray --L 2 --hidden 64 --clause_w --var_mix --feat tq --ninit 2 --init_from results/v3/A_g2.json --chunk 125
+B_g4_iii_A|A_g4|v3/gnn_v3.py --tag B_g4_iii_A --code gray --L 4 --hidden 64 --clause_w --var_mix --ninit 4 --init_from results/v3/A_g4.json --chunk 125
+B_g4_i_A|A_g4|v3/gnn_v3.py --tag B_g4_i_A --code gray --L 4 --hidden 64 --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+A_g8|A_g4|v3/v3_plain.py --tag A_g8 --code gray --L 8 --ninit 200 --refine 12 --grow_from A_g4
+A_b8|A_b4|v3/v3_plain.py --tag A_b8 --code binary --L 8 --ninit 200 --refine 12 --grow_from A_b4
+B_g4_iii_A_f|A_g4|v3/gnn_v3.py --tag B_g4_iii_A_f --code gray --L 4 --hidden 64 --clause_w --var_mix --feat formula --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+B_g4_i_A_f|A_g4|v3/gnn_v3.py --tag B_g4_i_A_f --code gray --L 4 --hidden 64 --feat formula --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+B_g4_ii_A_f|A_g4|v3/gnn_v3.py --tag B_g4_ii_A_f --code gray --L 4 --hidden 64 --clause_w --feat formula --ninit 3 --init_from results/v3/A_g4.json --chunk 125
+#PARKED-1529 A_g10|A_g8|v3/v3_plain.py --tag A_g10 --code gray --L 10 --ninit 200 --refine 12 --grow_from A_g8
+#PARKED-1529 A_b10|A_b8|v3/v3_plain.py --tag A_b10 --code binary --L 10 --ninit 200 --refine 12 --grow_from A_b8
+B_b4_iii_A_f|A_b4|v3/gnn_v3.py --tag B_b4_iii_A_f --code binary --L 4 --hidden 64 --clause_w --var_mix --ninit 3 --init_from results/v3/A_b4.json --feat formula --chunk 125
+#PARKED-1529 B_g10_iii_A_f|A_g10|v3/gnn_v3.py --tag B_g10_iii_A_f --code gray --L 10 --hidden 64 --clause_w --var_mix --ninit 2 --init_from results/v3/A_g10.json --feat formula --chunk 125

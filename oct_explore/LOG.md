@@ -2727,3 +2727,15 @@ Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **B_g4_i
 | N_g4_attn_n2k trainbest 1 (train 1.302, val 1.857) | 3.0/7.5 | 5.1/14.3 | 7.3/29.6 | 12.3/43.4 |
 | QAOA_raw L=4 | 5.3/9.9 | 8.4/19.7 | 12.8/32.8 | 20.8/59.6 |
 | G_fe L=4 | 5.4/9.8 | 9.3/20.4 | 14.9/39.1 | 22.9/57.3 |
+
+## Check-in (2026-10-19 08:00 CST)
+Found 0/3 slots busy: N_g4_attn_n2k finished 07:44 (finalized+pushed; winner init0 train 1.309 → n=14 12.5/44.0, best wave-2 n=14 tails), and the runner was holding **R_attn_val2** because box MemAvailable had fallen to ~2.3 GB with **zero** jobs running (≈130 platform node processes from other agents, ~6 GB RSS; not ours). PID 2888494 and *.STOP untouched; no old-queue restart.
+
+Fix (backups `v3/run_v3.sh.bak_0758`, `v3/queue_v3.bak_0758`): MINMEM 3500→**2000** MB (one job ≈1–1.5 GB; gate still re-read after each 90 s settle), and every job now runs under `choom -n 1000` so the OOM killer takes our job first, never another agent's process. Restarted runner (pid **4036406**), still MAXJ=3 × 2 threads pinned `taskset -c 0-5` (6-core cap), /usr/bin/python3.13, setsid nohup. Launched **R_attn_val2** 07:57 (VBASE 39e9, 21 cands incl. n2k/s3/fm64) and **S_g4_snapF_h128** 07:59.
+
+**Wave-3 queued (queue was about to run dry):** combine free SNAP with the larger hidden size, since the no-SNAP H=128 GNN has the best L4 B90 (53.1/166.3) and SNAP gave the best median (37.5):
+- **S_g4_snapF_h128**: mp H=128 R=3, free SNAP, warm from B_g4_iii_A_h128_f inits 0/1/2. Smoke (20 n=8 inst): step-0 loss with SNAP=0 equals the ECD net with beta:=0 (diff ≤6e-7), SNAP-head grads nonzero → nothing forced, trains from the h128 control. Default test incl. n=20.
+- **N_g4_attn_h128**: attention GNN at H=128 from A_g4 bases (ninit 3, test ≤n=14).
+- **R_wave3_val** (after R_attn_val2 + both): re-pick over S_g4_snapF_s1, N_g4_attn_s2, S_g4_snapF_h128, N_g4_attn_h128 on fresh VBASE=40e9 with the fixed rule, then TEB n=20.
+
+Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **B_g4_iii_A_h128_f 53.1/166.3** (attn package **R_attn_val 42.9/167.2**); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat → no WakeParent.

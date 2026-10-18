@@ -1,12 +1,13 @@
 #!/bin/bash
 # v3 runner (approved plan 15:18 CST 2026-10-17): up to 4 jobs x 2 threads = 8 cores, until Mon 2026-10-19 09:00 CST.
 # 22:45 CST (Zach): core cap 6 -> MAXJ=3 x 2 threads, every new job pinned with taskset -c 0-5.
+# 07:58 CST Oct 19: box baseline MemAvailable fell to ~2.3 GB with zero jobs (other agents' node procs), so MINMEM 3500->2000 and jobs run under choom -n 1000 (OOM victim first).
 # 16:09 CST: Phase-1 architecture scan jobs (N_g4_*) use gnn_snap.py --arch; reselect_arch.py / analyze_arch.py are non-GNN.
 # queue line: tag|after|script args...   (after = tag whose results/v3/<after>.json must contain top-level "keep")
 set -u
 cd /workspace/qumode_sep/oct_explore
 DEADLINE=$(date -d '2026-12-31 00:00:00' +%s)  # Zach 07:40 CST Oct 19: no deadline, run until he says stop
-LOGW=logs/v3/runner.log; QF=v3/queue_v3.txt; PY=/usr/bin/python3.13; MAXJ=3; MINMEM=3500; MAXGNN=3
+LOGW=logs/v3/runner.log; QF=v3/queue_v3.txt; PY=/usr/bin/python3.13; MAXJ=3; MINMEM=2000; MAXGNN=3
 say() { echo "$(date '+%F %T')" "$*" >> "$LOGW"; }
 n_run() { pgrep -f "$PY -u v3/" | wc -l; }
 mem_mb() { awk '/MemAvailable:/ {print int($2/1024)}' /proc/meminfo; }
@@ -70,7 +71,7 @@ while [[ $(date +%s) -lt $DEADLINE ]]; do
     fi
     m=$(mem_mb); [[ $m -lt $MINMEM ]] && { say "hold $tag mem=${m}MB"; continue; }
     say "LAUNCH $tag (mem=${m}MB)"
-    setsid nohup taskset -c 0-5 env OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 XLA_PYTHON_CLIENT_PREALLOCATE=false \
+    setsid nohup choom -n 1000 -- taskset -c 0-5 env OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 XLA_PYTHON_CLIENT_PREALLOCATE=false \
       XLA_FLAGS="--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=2" \
       $PY -u $args >>"logs/v3/${tag}.log" 2>&1 </dev/null &
     sleep 90
