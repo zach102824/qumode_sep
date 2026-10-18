@@ -1800,3 +1800,9 @@ n=20 winner vs QAOA L=4: median 63.3 vs 84.9, B90 253.0 vs 238.1 -> no beat
 | G_fe L=4 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 37.3 vs 84.9, B90 211.7 vs 238.1 -> **BEATS QAOA (both)**
+
+## Check-in (2026-10-18 15:55 CST)
+Runner alive (run_v3.sh pid 3668898). 3 GNN-SNAP jobs running since 15:40–15:44 (each ~0.7 GB RSS, ~1.8 cores): **S_g8_snapF_A_f** (pid 3675472, gray L8 warm A_g8 keep), **S_b8_snapF_A_f** (pid 3676022, binary L8 warm A_b8 keep), **S_g4_snapF_s1** (pid 3676466, seed 1). All on init 0, no iterations logged yet. Load ~10 on 8 cores; MemAvailable ~2.5 GB (box-wide), under the 3500 MB floor, so S_g4_snapF_s2 and the rest correctly hold. Floor unchanged. PID 2888494 and *.STOP untouched.
+- **S_g4_ctrl_f** final (15:46, above): no-SNAP ECD control n=20 63.3/253.0 (no beat) vs GNN-SNAP 37.3/211.7 on the same warm start; confirms the gain is from per-instance SNAP.
+- **R_g4_snapF_val** (600-instance fresh val at n=10/12) re-picked init 0 = the same init as before, so n=20 stays **37.3/211.7** (beats QAOA L4 both; already reported, not a new result).
+No new n=20 result. Queue unchanged.
