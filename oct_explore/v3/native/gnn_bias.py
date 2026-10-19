@@ -16,7 +16,7 @@ ap.add_argument("--proj", default="chain"); ap.add_argument("--assign", default=
 ap.add_argument("--bias", type=int, default=1); ap.add_argument("--bias_mlp", type=int, default=0, help="1: 2-layer MLP for p_v"); ap.add_argument("--clause_w", type=int, default=1); ap.add_argument("--pool_delta", type=int, default=1)
 ap.add_argument("--warm", default="results/v3/S_g4_snapF_s1.json#0"); ap.add_argument("--x0", default=""); ap.add_argument("--theta_from", default="", help="gnn_bias json: load theta_best")
 ap.add_argument("--steps", type=int, default=3000); ap.add_argument("--bs", type=int, default=32); ap.add_argument("--lr", type=float, default=3e-4)
-ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500)
+ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500); ap.add_argument("--npool20", type=int, default=400)
 ap.add_argument("--nval", type=int, default=200); ap.add_argument("--es", type=int, default=250); ap.add_argument("--es_metric", default="S", choices=["S","b90","med"]); ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--smoke", action="store_true"); ap.add_argument("--resw", type=float, default=0.0, help="loss weight 1+resw*(resid/mean resid)"); ap.add_argument("--Hb", type=int, default=0, help="bias MLP width (0=H)")
 a = ap.parse_args()
@@ -41,16 +41,28 @@ def perm_of(n, seed, cl, rng=None):
     if os.path.exists(f): return np.load(f)
     perm, _ = AS.anneal(n, cl, CP.LAYOUTS[n], iters=3000 if n < 16 else 5000); np.save(f, perm); return perm
 
+PACK = False; LAZY = False
+def lazy_instances(n, count, base):
+    """memory-lean sim.instances: yields one at a time (E dropped after build uses it)"""
+    k = c = 0
+    while c < count:
+        seed = int(base) + 10_000_000 * n + k; k += 1
+        m, cl, E = sim.gen_instance(n, seed)
+        if E.min() == 0: c += 1; yield dict(seed=seed, m=m, E=E)
+def unpackS(D, n):
+    if D["S"].dtype == np.uint8: D = dict(D); D["S"] = np.unpackbits(D["S"], axis=-1)[..., : 1 << n].astype(np.float32)
+    return D
 def build(n, insts, rng=None):
     gs, VP, BB, SS, PERM, RES = [], [], [], [], [], []
     for ins in insts:
         G, V, Bb, m, cl = graph(n, ins["seed"]); perm = perm_of(n, ins["seed"], cl, rng); pos = np.argsort(perm)
-        gs.append(G); VP.append(pos[V]); BB.append(Bb); PERM.append(perm)
+        gs.append(G); VP.append(pos[V]); BB.append(Bb); PERM.append(perm); m0 = ins["m"]
         cavp = np.repeat(np.arange(len(CP.LAYOUTS[n])), CP.LAYOUTS[n]); kk_, w2_ = AS.walsh_terms(n, cl)
         RES.append(1 - (w2_ * np.array([AS.rep_ok([cavp[pos[v]] for v in t]) for t in kk_])).sum() / w2_.sum())
-        E = ins["E"].astype(np.float64); SS.append((CP.permute_vars(E, n, perm) == 0).astype(np.float32))
+        E = ins["E"].astype(np.float64); Sv = (CP.permute_vars(E, n, perm) == 0)
+        SS.append(np.packbits(Sv) if PACK else Sv.astype(np.float32)); ins.pop("E", None) if LAZY else None
     D = {k: np.stack([g[k] for g in gs]) for k in gs[0]}; D["VP"] = np.stack(VP); D["BB"] = np.stack(BB)
-    D["S"] = np.stack(SS); D["PERM"] = np.stack(PERM); D["RES"] = np.array(RES, np.float32); D["nm"] = n / insts[0]["m"]; return D
+    D["S"] = np.stack(SS); D["PERM"] = np.stack(PERM); D["RES"] = np.array(RES, np.float32); D["nm"] = n / m0; return D
 
 XB = {}
 def bits(n):
@@ -158,7 +170,7 @@ if __name__ == "__main__":
         if n not in EVJ: EVJ[n] = jax.jit(lambda th, Dc: forward(unr(th), Dc, n))
         f = EVJ[n]; B = D["S"].shape[0]; ps, bs, gs, pvs = [], [], [], []
         for s in range(0, B, ch):
-            Dc = {k: (v[s:s + ch] if k != "nm" else v) for k, v in D.items()}; pr, bl, gl, pv = f(th, Dc)
+            Dc = unpackS({k: (v[s:s + ch] if k != "nm" else v) for k, v in D.items()}, n); pr, bl, gl, pv = f(th, Dc)
             ps.append(np.asarray(pr)); bs.append(np.asarray(bl)); gs.append(np.asarray(gl)); pvs.append(np.asarray(pv))
         return np.concatenate(ps).astype(float), np.concatenate(bs), np.concatenate(gs), np.concatenate(pvs)
     if a.smoke:
@@ -172,8 +184,9 @@ if __name__ == "__main__":
         sys.exit(0)
     pools = {}
     for n in a.train:
-        t = time.time(); pools[n] = build(n, sim.instances(n, a.npool, TRB)); log(f"pool n={n} {a.npool} built {time.time()-t:.0f}s")
-    nv = max(a.train); Dv = build(nv, sim.instances(nv, a.nval, VAB))
+        globals()["PACK"] = globals()["LAZY"] = n >= 18; npl = a.npool if n < 18 else min(a.npool, a.npool20)
+        t = time.time(); pools[n] = build(n, lazy_instances(n, npl, TRB)); log(f"pool n={n} {a.npool} built {time.time()-t:.0f}s")
+    nv = max(a.train); globals()["PACK"] = globals()["LAZY"] = nv >= 18; Dv = build(nv, lazy_instances(nv, a.nval, VAB)); globals()["PACK"] = globals()["LAZY"] = False
     def es_val(th):
         pr, _, _, pv = evaluate(th, Dv, nv, 50 if nv <= 12 else 10); s = NS.summ(pr); s["pv_mean"] = float(pv.mean()); return s
     @jax.jit
@@ -191,7 +204,7 @@ if __name__ == "__main__":
         lr = a.lr * (0.1 + 0.9 * 0.5 * (1 + np.cos(np.pi * t / a.steps))); gt = 0; vs = 0
         for n in a.train:
             P = pools[n]; idx = rb.choice(P["S"].shape[0], a.bs, replace=False)
-            Dn = {k: (v[idx] if k != "nm" else v) for k, v in P.items()}
+            Dn = unpackS({k: (v[idx] if k != "nm" else v) for k, v in P.items()}, n)
             v, g = vg(n)(x, Dn); gt = gt + g; vs += float(v)
         x, mom, vel = adam(x, mom, vel, gt, t, lr * LRM); rl.append(vs / len(a.train))
         if t % a.es == 0 or t == a.steps:

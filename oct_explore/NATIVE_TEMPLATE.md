@@ -187,3 +187,20 @@ Next: train at n=20 (31e9 pool), R=32, L8.
 - **Caveat:** "best-of-R" uses the largest p over the assignments, and you can only know which assignment has the largest p if you already know the solution. So it is an oracle number. The fair cost is round-robin over all R assignments, which stops at the first verified solution: 1/mean_r(p_r). The `mean` column gives this: R33 **337/3393** at n=20. A fair ensemble needs a formula-only selector.
 - New: `ensemble_eval2.py` saves per-assignment p plus formula-only selector features (uniform and bias-weighted projection residual). Smoke test at n=15: these features are only weakly correlated with p.
 - B32_resw (`--resw 1`, residual-weighted loss, + tail 2, ES b90): single-assignment n=15 35.6/323 (B32_b90: 39.1/251); n=20 309/7545 (B32_b90: 309/8034). The median improves but the tail does not.
+
+## FAIR-METRIC RULE (2026-10-19 23:00 UTC+8). Read this before any number above
+Best-of-R over assignments is an **oracle**: to pick the assignment with the largest p, you have to know the solution. It is **not** a valid comparison with QAOA. From now on only these count:
+(a) a single assignment (min-cut); (b) round-robin over R assignments, stopping at the first verified solution, giving 1/mean_r(p_r); (c) the assignment picked by a formula-only selector.
+Every "ens"/"best-of" figure earlier in this file is an oracle number and does NOT beat QAOA.
+
+Fair numbers (median/B90 of 1/p; QAOA L4: n=12 ?, n=16 34.8/98, n=20 84.5/227):
+| model | n | single min-cut | round-robin R=8 | round-robin R=16 | round-robin R=32 | (oracle best-of, for reference) |
+|---|---|---|---|---|---|---|
+| B16_chain_mc | 12 | 16.6/76 | 19.9/86 | | | 10.7/31 (R8) |
+| B16_chain_mc | 16 | 113/6341 | 139/1304 | 125/1603 | | 38/249 (R16) |
+| B32_chain_mc | 15 | 35.6/302 | 43.5/341 | | | 20.1/81 (R8) |
+| B32_chain_mc | 20 | 330/9835 | 363/3190 | 380/3163 | | 107/626 (R16) |
+| B32_b90 | 15 | 39.1/251 | | 40.1/248 | | 17.9/67 (R16) |
+| B32_b90 | 20 | 309/8034 | | 363/2969 | 337/3393 | 70/443 (R32) |
+| G16_full_w (all-to-all, NOT native) | 16 | 31.2/74 | | | | |
+Conclusion: on the fair metric the native chain is still about 3x behind QAOA on the median and 15-60x behind on B90 at n=16 and n=20. Round-robin swaps median for tail and does not close the gap.
