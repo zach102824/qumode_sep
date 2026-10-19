@@ -188,7 +188,7 @@ if __name__ == "__main__":
         t = time.time(); pools[n] = build(n, lazy_instances(n, npl, TRB)); log(f"pool n={n} {a.npool} built {time.time()-t:.0f}s")
     nv = max(a.train); globals()["PACK"] = globals()["LAZY"] = nv >= 18; Dv = build(nv, lazy_instances(nv, a.nval, VAB)); globals()["PACK"] = globals()["LAZY"] = False
     def es_val(th):
-        pr, _, _, pv = evaluate(th, Dv, nv, 50 if nv <= 12 else 10); s = NS.summ(pr); s["pv_mean"] = float(pv.mean()); return s
+        pr, _, _, pv = evaluate(th, Dv, nv, 50 if nv <= 12 else (10 if nv <= 16 else 1)); s = NS.summ(pr); s["pv_mean"] = float(pv.mean()); return s
     @jax.jit
     def adam(x, m, v, g, t, lr):
         m = 0.9 * m + 0.1 * g; v = 0.999 * v + 0.001 * g * g; return x - lr * (m / (1 - 0.9 ** t)) / (jnp.sqrt(v / (1 - 0.999 ** t)) + 1e-8), m, v

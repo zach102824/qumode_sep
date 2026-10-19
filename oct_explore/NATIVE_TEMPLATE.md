@@ -193,7 +193,7 @@ Best-of-R over assignments is an **oracle**: to pick the assignment with the lar
 (a) a single assignment (min-cut); (b) round-robin over R assignments, stopping at the first verified solution, giving 1/mean_r(p_r); (c) the assignment picked by a formula-only selector.
 Every "ens"/"best-of" figure earlier in this file is an oracle number and does NOT beat QAOA.
 
-Fair numbers (median/B90 of 1/p; QAOA L4: n=12 ?, n=16 34.8/98, n=20 84.5/227):
+Fair numbers (median/B90 of 1/p; QAOA L4: n=12 13.0/31.8, n=15 23.1/62.5, n=16 34.8/98, n=20 84.5/227):
 | model | n | single min-cut | round-robin R=8 | round-robin R=16 | round-robin R=32 | (oracle best-of, for reference) |
 |---|---|---|---|---|---|---|
 | B16_chain_mc | 12 | 16.6/76 | 19.9/86 | | | 10.7/31 (R8) |
@@ -204,3 +204,9 @@ Fair numbers (median/B90 of 1/p; QAOA L4: n=12 ?, n=16 34.8/98, n=20 84.5/227):
 | B32_b90 | 20 | 309/8034 | | 363/2969 | 337/3393 | 70/443 (R32) |
 | G16_full_w (all-to-all, NOT native) | 16 | 31.2/74 | | | | |
 Conclusion: on the fair metric the native chain is still about 3x behind QAOA on the median and 15-60x behind on B90 at n=16 and n=20. Round-robin swaps median for tail and does not close the gap.
+
+### Selector test, n=15 (B32_b90, min-cut + 8 random assignments; fair)
+single min-cut 39.1/251; round-robin over all 43.8/285; oracle 20.8/78; QAOA 23.1/62.5.
+- uniform-residual selector: Spearman correlation with -log p inside each formula is 0.18; top-1 39.1/251, top-2 round-robin 39.4/223.
+- bias-weighted-residual selector: correlation 0.30; top-1 35.4/268, **top-2 round-robin 32.2/190** (best fair number at n=15).
+- Even a perfect selector (the oracle, 20.8/78) loses to QAOA on B90 at n=15. Selection alone cannot win; single-assignment quality has to improve.
