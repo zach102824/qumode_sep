@@ -223,3 +223,17 @@ Fair single-assignment only:
 Residual variance (block assign, median over 100): n=16 chain 0.41, pairs 0.17, full 0; n=20 chain 0.40, pairs 0.16.
 Software escape hatch closed: L=1..8 of (chain-diag + bit-flip mixers) cannot match a 3-cavity phase on |+> (probe loss stuck at idle 0.708). Deeper L does not create non-neighbor diagonal support without new connectivity.
 B20_train2 still running (val B90 stuck ~6k). ens2 n=20 ~80/100. B16_L8 training.
+
+### 2026-10-20 00:20 UTC+8: landed (fair only)
+| model | n=12 | n=15 | n=16 | n=20 |
+|---|---|---|---|---|
+| B16_Hb_resw | 18.2/83 | | 121/4487 | |
+| B16_L8 (L8, Hb128, resw, tail2) | 13.7/83 | | 95.2/3932 | |
+| B16_pairs (any-2-cavity projection) | 16.1/51 | | 55.2/376 | |
+| B20_train2 (trained on n=15+20) | | 38.0/291 | | 312/8049 |
+| B32_b90 single (ref) | | 39.1/251 | | 309/8034 |
+| selector top-2 round-robin (bias-resid), B32_b90 | | 30.7/251 | | 290/4455 |
+| QAOA L4 | 13.0/32 | 23.1/62.5 | 34.8/98 | 84.5/227 |
+Selector at n=20: Spearman correlation 0.22 (bias residual) and 0.15 (uniform). It confirms the n=15 result: weak, and capped by the oracle (95.5/645 > 227).
+Nothing chain-native moved B90 by 10×. L8 helps ~1.15×; training directly at n=20 helps 0×. Only the connectivity change (pairs) gave ~12× at n=16.
+Running: B32_pairs and B32_full (n=10+15 train, test 15/20) for n=20 connectivity numbers.
