@@ -120,3 +120,15 @@ Mixer F ≥ 0.9988. Native transfer confirmed at 16 levels.
 ## B32_chain_mc in training (20:25)
 pool n=15 built (12 min mincut). step 750 val n=15 44.4/253 (from 197/5131); pv rising 0.19→0.50.
 ETA ~20:40 for 3k steps + test n=10/15/20.
+
+## B32_chain_mc DONE (20:38–20:48 CST) vs F32_qaoa
+| version | n=10 | n=15 | n=20 |
+|---|---|---|---|
+| F32_qaoa | 8.44/18.87 | 23.12/62.53 | **84.46/226.7** |
+| F32 fixed chain | 8.48/20.25 | 116/1047 | 1678/119790 |
+| B32 single mincut+bias | **8.07/17.29** | 35.58/302 | 330/9835 |
+| B32 best-of-9 ens | — | **20.10/80.93** | **110.6/764** |
+
+n=15 ens beats QAOA median (20.1 < 23.1), B90 close (81 vs 63).
+n=20 ens median 111 (~1.3× QAOA), B90 764 (~3.4×). vs fixed chain: 15× median, 157× B90 improvement.
+Native 32-level ens pending NF80. R=16 ens queued for B90.
