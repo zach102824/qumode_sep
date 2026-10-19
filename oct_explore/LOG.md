@@ -2739,3 +2739,12 @@ Fix (backups `v3/run_v3.sh.bak_0758`, `v3/queue_v3.bak_0758`): MINMEM 3500→**2
 - **R_wave3_val** (after R_attn_val2 + both): re-pick over S_g4_snapF_s1, N_g4_attn_s2, S_g4_snapF_h128, N_g4_attn_h128 on fresh VBASE=40e9 with the fixed rule, then TEB n=20.
 
 Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **B_g4_iii_A_h128_f 53.1/166.3** (attn package **R_attn_val 42.9/167.2**); L8 **S_g8_snapF_A_f 9.1/51.6**. No new n=20 dual-beat → no WakeParent.
+
+## Check-in (2026-10-19 08:10 CST)
+Runner alive (run_v3.sh pid **4036406**, ~8 min since restart), 3/3 slots busy, all pinned `taskset -c 0-5` (6-core cap), /usr/bin/python3.13 under `choom`. MemAvailable ~2.3 GB (≥ MINMEM 2000). PID 2888494 and *.STOP untouched; no old-queue restart; no queue change.
+- **R_attn_val2** (pid 4036477, started 07:57): re-pick over 7 attn runs on VBASE 39e9, then TEB n=20.
+- **S_g4_snapF_h128** (pid 4037011, started 07:59): free SNAP + H=128 warm from B_g4_iii_A_h128_f.
+- **N_g4_attn_h128** (pid 4037966, started ~08:00): attn H=128.
+- Pending: **R_wave3_val** (after the above).
+
+Finished since 08:00: none. Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **B_g4_iii_A_h128_f 53.1/166.3**; L8 **S_g8_snapF_A_f 9.1/51.6**. No WakeParent.
