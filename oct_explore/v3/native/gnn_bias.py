@@ -18,7 +18,7 @@ ap.add_argument("--warm", default="results/v3/S_g4_snapF_s1.json#0"); ap.add_arg
 ap.add_argument("--steps", type=int, default=3000); ap.add_argument("--bs", type=int, default=32); ap.add_argument("--lr", type=float, default=3e-4)
 ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500)
 ap.add_argument("--nval", type=int, default=200); ap.add_argument("--es", type=int, default=250); ap.add_argument("--es_metric", default="S", choices=["S","b90","med"]); ap.add_argument("--seed", type=int, default=0)
-ap.add_argument("--smoke", action="store_true")
+ap.add_argument("--smoke", action="store_true"); ap.add_argument("--resw", type=float, default=0.0, help="loss weight 1+resw*(resid/mean resid)"); ap.add_argument("--Hb", type=int, default=0, help="bias MLP width (0=H)")
 a = ap.parse_args()
 L, H, R, FV, FM = a.L, 64, 3, 7, 32; NPL = 6; NBASE = L * NPL + 4
 TRB, TEB, VAB = 31e9, 32e9, 33e9
@@ -42,13 +42,15 @@ def perm_of(n, seed, cl, rng=None):
     perm, _ = AS.anneal(n, cl, CP.LAYOUTS[n], iters=3000 if n < 16 else 5000); np.save(f, perm); return perm
 
 def build(n, insts, rng=None):
-    gs, VP, BB, SS, PERM = [], [], [], [], []
+    gs, VP, BB, SS, PERM, RES = [], [], [], [], [], []
     for ins in insts:
         G, V, Bb, m, cl = graph(n, ins["seed"]); perm = perm_of(n, ins["seed"], cl, rng); pos = np.argsort(perm)
         gs.append(G); VP.append(pos[V]); BB.append(Bb); PERM.append(perm)
+        cavp = np.repeat(np.arange(len(CP.LAYOUTS[n])), CP.LAYOUTS[n]); kk_, w2_ = AS.walsh_terms(n, cl)
+        RES.append(1 - (w2_ * np.array([AS.rep_ok([cavp[pos[v]] for v in t]) for t in kk_])).sum() / w2_.sum())
         E = ins["E"].astype(np.float64); SS.append((CP.permute_vars(E, n, perm) == 0).astype(np.float32))
     D = {k: np.stack([g[k] for g in gs]) for k in gs[0]}; D["VP"] = np.stack(VP); D["BB"] = np.stack(BB)
-    D["S"] = np.stack(SS); D["PERM"] = np.stack(PERM); D["nm"] = n / insts[0]["m"]; return D
+    D["S"] = np.stack(SS); D["PERM"] = np.stack(PERM); D["RES"] = np.array(RES, np.float32); D["nm"] = n / insts[0]["m"]; return D
 
 XB = {}
 def bits(n):
@@ -59,7 +61,7 @@ def init_params(rng):
     def W(i, o, s=1.0): return jnp.asarray(rng.normal(0, s / np.sqrt(i), (i, o)).astype(np.float32))
     p = AN.init_backbone(rng, "mp", H, R, FV); p["G1"] = W(2 * H, H); p["g1"] = jnp.zeros(H); p["G2"] = jnp.zeros((H, NBASE))
     p["Wc"] = jnp.zeros((H, L)); p["Wp"] = W(H, 1, 2.0).reshape(H); p["bp"] = jnp.zeros(());
-    if a.bias_mlp: p["Wb1"] = W(H, H); p["bb1"] = jnp.zeros(H); p["Wp2"] = W(H, 1, 2.0).reshape(H)
+    if a.bias_mlp: HB = a.Hb or H; p["Wb1"] = W(H, HB); p["bb1"] = jnp.zeros(HB); p["Wp2"] = W(HB, 1, 2.0).reshape(HB)
     p["base"] = jnp.zeros(NBASE); return p
 
 def old_template():
@@ -125,6 +127,7 @@ def forward(p, D, n):
 
 def lossf(th, D, n, unr):
     pr = forward(unr(th), D, n)[0]; nl = -jnp.log(pr + 1e-12); k = max(1, nl.shape[0] // 10)
+    if a.resw > 0: nl = nl * (1 + a.resw * D["RES"] / (jnp.mean(D["RES"]) + 1e-6))
     return jnp.mean(nl) + a.tailw * jnp.mean(jax.lax.top_k(nl, k)[0])
 
 
