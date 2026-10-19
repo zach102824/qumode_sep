@@ -2861,3 +2861,15 @@ New hardware design: ALL data bits in cavities (n=6: 2 cavities x 3 bits, Fock 0
 - Distillation (`--percase 1000 --pc_set train --pc_init plain --prox 0.03` -> per-case p 0.89 (1.11/1.19) near the shared solution; `--distill` supervised pretrain of the heads): supervised fit explains only ~36% of the target variance (norm. MSE 1.02 -> 0.64) and the distilled net starts WORSE than the plain init (loss 2.29 vs 1.775); after fine-tune best val S 2.19 -> killed. Per-case optima are too formula-specific to regress.
 - Tail-aware loss (`--tailw 1`, + mean of worst 10% -log p) with val early stopping (`--es`): val 5.61/11.62 S=2.088, test 5.58/11.10 (B90 better, median worse).
 - **Key fix = data**: minibatch Adam (`--adam`, bs 256, lr 1e-3 cosine->1e-4) over a 20k-40k fresh-instance pool (no instance reused often -> no overfitting), val early stopping every 200 steps: val S 2.24 (plain init) -> 1.855 by step 4800 and still improving (best L-BFGS run was 2.09-2.18).
+**13:50-14:40 (Adam/pool track, flat start, 1 SNAP+1 D per cavity per layer, S,D,C x L + final S,D, NF24, amax 1.5, snap_lin, init from plain):**
+| run | L | H | pool | tailw | best step | val med/B90 (S) | test med/B90 |
+|---|---|---|---|---|---|---|---|
+| G_adam_pool20k_tail1 | 4 | 64 | 20k | 1.0 | 6000 | 4.67/8.62 (1.848) | 4.73/9.55 |
+| G_adam_pool40k_tail05 | 4 | 64 | 40k | 0.5 | 7800 | 3.84/7.80 (1.699) | 4.05/8.73 |
+| G2_cont (warm G20k, +10k steps) | 4 | 64 | 40k | 0.5 | 10000 | 3.53/7.89 (1.663) | 3.83/8.40 |
+| **H_adam_H128_pool30k_tail05** | 4 | 128 | 30k | 0.5 | 11250 | **2.89/7.44 (1.534)** | **3.19/7.34** |
+| G8_adam_pool20k_tail1 | 8 | 64 | 20k | 1.0 | 5400 | 2.64/5.21 (1.311) | 2.84/5.45 |
+| QAOA L4 (ref) | 4 | - | 1000 | - | - | 3.48/7.02 (1.598) | 3.31/6.72 |
+| QAOA L8 (ref) | 8 | - | 1000 | - | - | 2.01/4.12 (1.059) | 1.96/3.68 |
+H128 L4 beats QAOA L4 on val S and on test median (3.19 < 3.31) but not test B90 (7.34 > 6.72). All NF=40 re-checks identical. Capacity matters (H64 -> H128: val S 1.70 -> 1.53); H=256 at lr 7e-4 diverged (restarted lr 3e-4); H128 R=5 slower to improve.
+Note: a `git pull --rebase --autostash` replaced the tracked live log files (running jobs kept writing to the deleted inodes; recovered from /proc/<pid>/fd/1 as *.log.recovered for H/G2; G40k/G8 live logs lost, results JSONs complete). Live logs now untracked; snapshots in `logs/v3/sd_n6_snap/`.
