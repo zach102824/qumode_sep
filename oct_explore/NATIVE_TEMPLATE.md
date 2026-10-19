@@ -143,3 +143,13 @@ Native 32-level ens pending NF80. R=16 ens queued for B90.
 
 More random perms: small median gain, B90 764→626. Diminishing returns — need smarter search / better model.
 NF80 k=32: Fmin **0.9909** (F@NF+40 same), leakmax 3.5e-3. Native ens eval launched.
+
+## R=16 ensemble (21:05 CST)
+| | n=16 (B16) | n=20 (B32) |
+|---|---|---|
+| QAOA L4 | 34.8/98.2 | 84.5/226.7 |
+| ens R=8 | 53.8/257 | 110.6/764 |
+| ens R=16 | **37.9/249** | **107.0/626** |
+
+n=16 median nearly matches QAOA (37.9 vs 34.8); B90 still 2.5×. Random ens saturates — SA variants + B90-retrain + native k32 queued.
+NF80 k=32 Fmin 0.9909 (usable). k=40 still sweeping.

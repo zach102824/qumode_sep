@@ -173,15 +173,12 @@ if __name__ == "__main__":
     nv = max(a.train); Dv = build(nv, sim.instances(nv, a.nval, VAB))
     def es_val(th):
         pr, _, _, pv = evaluate(th, Dv, nv, 50 if nv <= 12 else 10); s = NS.summ(pr); s["pv_mean"] = float(pv.mean()); return s
-def es_key(s):
-    if a.es_metric == "b90": return np.log(s["B90_inv_p"])
-    if a.es_metric == "med": return np.log(s["median_inv_p"])
-    return s["S"]
     @jax.jit
     def adam(x, m, v, g, t, lr):
         m = 0.9 * m + 0.1 * g; v = 0.999 * v + 0.001 * g * g; return x - lr * (m / (1 - 0.9 ** t)) / (jnp.sqrt(v / (1 - 0.999 ** t)) + 1e-8), m, v
     x = th0; mom = jnp.zeros_like(x); vel = jnp.zeros_like(x); rb = np.random.default_rng(77 + a.seed)
-    s0 = es_val(x); def es_key(s):
+    s0 = es_val(x)
+    def es_key(s):
         if a.es_metric == "b90": return float(np.log(s["B90_inv_p"]))
         if a.es_metric == "med": return float(np.log(s["median_inv_p"]))
         return s["S"]

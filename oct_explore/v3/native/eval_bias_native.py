@@ -26,10 +26,13 @@ if A.get("bias_mlp") and "Wb1" not in p0:
 th0, unr = ravel_pytree(p0); th = jnp.asarray(J["theta_best"], jnp.float32); assert th.size == th0.size
 p = unr(th); L = GB.L; kmap = {int(a.k.split(":")[0]): int(a.k.split(":")[1])}
 log = lambda *s: print(time.strftime("%H:%M:%S"), *s, flush=True)
-# mean betas from first test size
-n0 = a.tests[0]; D0 = GB.build(n0, sim.instances(n0, min(50, 100), 32e9))
-_, bl, _, _ = GB.forward(p, {k: (jnp.asarray(v) if k != "nm" else v) for k, v in D0.items()}, n0)
-bmean = np.asarray(bl).mean(0); log(f"mean betas {np.round(bmean, 3)}")
+# mean betas from shared base (avoids OOM at n=20); optional tiny probe
+b = np.asarray(p["base"]); bmean = b[4:L * GB.NPL:GB.NPL]
+log(f"base betas {np.round(bmean, 3)}")
+if min(a.tests) <= 15:
+    n0 = min(a.tests); D0 = GB.build(n0, sim.instances(n0, 4, 32e9))
+    _, bl, _, _ = GB.forward(p, {k: (jnp.asarray(v) if k != "nm" else v) for k, v in D0.items()}, n0)
+    bmean = np.asarray(bl).mean(0); log(f"probe betas {np.round(bmean, 3)}")
 import calib as CB
 CAL = {}
 for K, kk in kmap.items():
