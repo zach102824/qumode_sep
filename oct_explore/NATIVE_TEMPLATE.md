@@ -165,3 +165,19 @@ Per-beta fit of B32 strengths at k=32: F 0.995–0.996 (better than worst-grid).
 - nav_B32_ens8 (calibrated k=32, n=20 best-of-9)
 - ens_B32_SA (8 SA restarts + 4 random)
 - B32_b90 retrain queued (tailw=2, ES on B90)
+
+## Native + SA + B90-retrain (21:49–22:02 CST)
+| version | n=20 med/B90 |
+|---|---|
+| QAOA L4 | **84.5/226.7** |
+| B32 single | 330/9835 |
+| B32_b90 single (tailw=2, ES on B90) | 309/8034 |
+| ens R8 (B32) | 110.6/764 |
+| ens R16 (B32) | 107.0/626 |
+| ens SA8+4rand | 105.5/855 (B90 worse) |
+| **ens R16 (B32_b90)** | **95.5/645** |
+| native ens R8 k=32 (F~0.995) | 120.1/849 |
+
+Residual vs difficulty: corr(log 1/p, resid_mincut)=0.21; hard-tail mean resid 0.297 vs easy 0.283.
+=> B90 gap is NOT mostly "unrepresentable clauses" — software headroom remains (bias/schedule/depth/assignment).
+Next: train at n=20 (31e9 pool), R=32, L8.
