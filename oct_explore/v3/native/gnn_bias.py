@@ -14,10 +14,10 @@ ap = argparse.ArgumentParser(); ap.add_argument("--tag", required=True); ap.add_
 ap.add_argument("--test", type=int, nargs="+", default=[8, 12, 16]); ap.add_argument("--L", type=int, default=4)
 ap.add_argument("--proj", default="chain"); ap.add_argument("--assign", default="block", choices=["block", "mincut", "random"])
 ap.add_argument("--bias", type=int, default=1); ap.add_argument("--bias_mlp", type=int, default=0, help="1: 2-layer MLP for p_v"); ap.add_argument("--clause_w", type=int, default=1); ap.add_argument("--pool_delta", type=int, default=1)
-ap.add_argument("--warm", default="results/v3/S_g4_snapF_s1.json#0"); ap.add_argument("--x0", default="")
+ap.add_argument("--warm", default="results/v3/S_g4_snapF_s1.json#0"); ap.add_argument("--x0", default=""); ap.add_argument("--theta_from", default="", help="gnn_bias json: load theta_best")
 ap.add_argument("--steps", type=int, default=3000); ap.add_argument("--bs", type=int, default=32); ap.add_argument("--lr", type=float, default=3e-4)
 ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500)
-ap.add_argument("--nval", type=int, default=200); ap.add_argument("--es", type=int, default=250); ap.add_argument("--seed", type=int, default=0)
+ap.add_argument("--nval", type=int, default=200); ap.add_argument("--es", type=int, default=250); ap.add_argument("--es_metric", default="S", choices=["S","b90","med"]); ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--smoke", action="store_true")
 a = ap.parse_args()
 L, H, R, FV, FM = a.L, 64, 3, 7, 32; NPL = 6; NBASE = L * NPL + 4
@@ -139,6 +139,11 @@ if __name__ == "__main__":
         x = np.array(json.load(open(a.x0))["x"]); b = np.asarray(p0["base"]).copy(); b[4:L * NPL:NPL] = x[0::2]; b[5:L * NPL:NPL] = x[1::2]
         p0["base"] = jnp.asarray(b)
         if a.warm: p0["G2"] = jnp.zeros_like(p0["G2"])
+    if a.theta_from:
+            Jt = json.load(open(a.theta_from)); th_load = jnp.asarray(Jt["theta_best"], jnp.float32)
+            assert th_load.size == ravel_pytree(p0)[0].size, (th_load.size, ravel_pytree(p0)[0].size)
+            p0 = ravel_pytree(p0)[1](th_load); log(f"theta_from {a.theta_from}")
+    
     th0, unr = ravel_pytree(p0)
     LRM = ravel_pytree({k: jax.tree_util.tree_map(lambda u, k=k: jnp.full_like(jnp.asarray(u), a.lrbase if k == "base" else 1.0), v) for k, v in p0.items()})[0]
     log(f"gnn_bias tag={a.tag} train {a.train} proj={a.proj} assign={a.assign} bias={a.bias} clause_w={a.clause_w} params {th0.size}")
@@ -168,11 +173,19 @@ if __name__ == "__main__":
     nv = max(a.train); Dv = build(nv, sim.instances(nv, a.nval, VAB))
     def es_val(th):
         pr, _, _, pv = evaluate(th, Dv, nv, 50 if nv <= 12 else 10); s = NS.summ(pr); s["pv_mean"] = float(pv.mean()); return s
+def es_key(s):
+    if a.es_metric == "b90": return np.log(s["B90_inv_p"])
+    if a.es_metric == "med": return np.log(s["median_inv_p"])
+    return s["S"]
     @jax.jit
     def adam(x, m, v, g, t, lr):
         m = 0.9 * m + 0.1 * g; v = 0.999 * v + 0.001 * g * g; return x - lr * (m / (1 - 0.9 ** t)) / (jnp.sqrt(v / (1 - 0.999 ** t)) + 1e-8), m, v
     x = th0; mom = jnp.zeros_like(x); vel = jnp.zeros_like(x); rb = np.random.default_rng(77 + a.seed)
-    s0 = es_val(x); BEST = dict(S=s0["S"], x=np.asarray(x), it=0); HIST = [[0, s0]]; log(f"step 0 val n={nv} {s0['median_inv_p']:.2f}/{s0['B90_inv_p']:.2f} S {s0['S']:.4f} pv {s0['pv_mean']:.3f}")
+    s0 = es_val(x); def es_key(s):
+        if a.es_metric == "b90": return float(np.log(s["B90_inv_p"]))
+        if a.es_metric == "med": return float(np.log(s["median_inv_p"]))
+        return s["S"]
+    BEST = dict(S=es_key(s0), x=np.asarray(x), it=0, summ=s0); HIST = [[0, s0]]; log(f"step 0 val n={nv} {s0['median_inv_p']:.2f}/{s0['B90_inv_p']:.2f} S {s0['S']:.4f} pv {s0['pv_mean']:.3f} metric={a.es_metric}")
     rl = []; t0 = time.time()
     for t in range(1, a.steps + 1):
         lr = a.lr * (0.1 + 0.9 * 0.5 * (1 + np.cos(np.pi * t / a.steps))); gt = 0; vs = 0
@@ -183,7 +196,7 @@ if __name__ == "__main__":
         x, mom, vel = adam(x, mom, vel, gt, t, lr * LRM); rl.append(vs / len(a.train))
         if t % a.es == 0 or t == a.steps:
             s_ = es_val(x); HIST.append([t, s_])
-            if s_["S"] < BEST["S"]: BEST.update(S=s_["S"], x=np.asarray(x), it=t)
+            if es_key(s_) < BEST["S"]: BEST.update(S=es_key(s_), x=np.asarray(x), it=t, summ=s_)
             log(f"step {t} loss {np.mean(rl[-a.es:]):.4f} lr {lr:.1e} val {s_['median_inv_p']:.2f}/{s_['B90_inv_p']:.2f} S {s_['S']:.4f} pv {s_['pv_mean']:.3f} (best {BEST['S']:.4f} @ {BEST['it']}) [{(time.time()-t0)/t:.2f}s/step]")
             json.dump({"args": vars(a), "hist": HIST, "best_it": BEST["it"], "theta_best": BEST["x"].tolist()}, open(OUT, "w"))
     res = {"args": vars(a), "hist": HIST, "best_it": BEST["it"], "theta_best": BEST["x"].tolist(), "test": {}, "random": {}}

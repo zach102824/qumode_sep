@@ -132,3 +132,14 @@ ETA ~20:40 for 3k steps + test n=10/15/20.
 n=15 ens beats QAOA median (20.1 < 23.1), B90 close (81 vs 63).
 n=20 ens median 111 (~1.3× QAOA), B90 764 (~3.4×). vs fixed chain: 15× median, 157× B90 improvement.
 Native 32-level ens pending NF80. R=16 ens queued for B90.
+
+## Ensemble R scaling (21:05 CST)
+| | n=20 median/B90 |
+|---|---|
+| QAOA L4 | 84.5/226.7 |
+| B32 single | 330/9835 |
+| best-of-9 (R=8) | 110.6/764 |
+| best-of-17 (R=16) | **107.0/626** |
+
+More random perms: small median gain, B90 764→626. Diminishing returns — need smarter search / better model.
+NF80 k=32: Fmin **0.9909** (F@NF+40 same), leakmax 3.5e-3. Native ens eval launched.
