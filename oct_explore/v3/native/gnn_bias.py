@@ -13,7 +13,7 @@ import sim, compiler as CP, nsim as NS, assign as AS, arch_nets as AN
 ap = argparse.ArgumentParser(); ap.add_argument("--tag", required=True); ap.add_argument("--train", type=int, nargs="+", default=[8, 12])
 ap.add_argument("--test", type=int, nargs="+", default=[8, 12, 16]); ap.add_argument("--L", type=int, default=4)
 ap.add_argument("--proj", default="chain"); ap.add_argument("--assign", default="block", choices=["block", "mincut", "random"])
-ap.add_argument("--bias", type=int, default=1); ap.add_argument("--clause_w", type=int, default=1); ap.add_argument("--pool_delta", type=int, default=1)
+ap.add_argument("--bias", type=int, default=1); ap.add_argument("--bias_mlp", type=int, default=0, help="1: 2-layer MLP for p_v"); ap.add_argument("--clause_w", type=int, default=1); ap.add_argument("--pool_delta", type=int, default=1)
 ap.add_argument("--warm", default="results/v3/S_g4_snapF_s1.json#0"); ap.add_argument("--x0", default="")
 ap.add_argument("--steps", type=int, default=3000); ap.add_argument("--bs", type=int, default=32); ap.add_argument("--lr", type=float, default=3e-4)
 ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500)
@@ -58,7 +58,9 @@ def bits(n):
 def init_params(rng):
     def W(i, o, s=1.0): return jnp.asarray(rng.normal(0, s / np.sqrt(i), (i, o)).astype(np.float32))
     p = AN.init_backbone(rng, "mp", H, R, FV); p["G1"] = W(2 * H, H); p["g1"] = jnp.zeros(H); p["G2"] = jnp.zeros((H, NBASE))
-    p["Wc"] = jnp.zeros((H, L)); p["Wp"] = jnp.zeros(H); p["bp"] = jnp.zeros(()); p["base"] = jnp.zeros(NBASE); return p
+    p["Wc"] = jnp.zeros((H, L)); p["Wp"] = W(H, 1, 2.0).reshape(H); p["bp"] = jnp.zeros(());
+    if a.bias_mlp: p["Wb1"] = W(H, H); p["bb1"] = jnp.zeros(H); p["Wp2"] = W(H, 1, 2.0).reshape(H)
+    p["base"] = jnp.zeros(NBASE); return p
 
 def old_template():
     rng = np.random.default_rng(0)
@@ -104,7 +106,11 @@ def forward(p, D, n):
     X = bv[:, : L * NPL].reshape(B, L, NPL); bl, gl = X[:, :, 4], X[:, :, 5]
     w = hc @ p["Wc"] if a.clause_w else jnp.zeros(hc.shape[:2] + (L,))
     # p_v in formula-var order, then permute to chain order via PERM (chain pos q holds var PERM[q])
-    pv_f = jax.nn.sigmoid(hv @ p["Wp"] + p["bp"]) if a.bias else jnp.full_like(hv[..., 0], 0.5)   # (B,n)
+    if a.bias:
+        hpv = jnp.tanh(hv @ p["Wb1"] + p["bb1"]) if a.bias_mlp else hv
+        Wp = p["Wp2"] if a.bias_mlp else p["Wp"]
+        pv_f = jax.nn.sigmoid(hpv @ Wp + p["bp"])
+    else: pv_f = jnp.full_like(hv[..., 0], 0.5)
     pv = jnp.take_along_axis(pv_f, D["PERM"].astype(jnp.int32), axis=1) if a.bias else pv_f   # chain order
     xb = jnp.asarray(bits(n)); lit = xb[:, D["VP"]]; viol = jnp.prod((lit == D["BB"][None].astype(jnp.int8)).astype(jnp.float32), -1)
     psi = NS.uniform_psi0(ks, B)
@@ -121,75 +127,77 @@ def lossf(th, D, n, unr):
     pr = forward(unr(th), D, n)[0]; nl = -jnp.log(pr + 1e-12); k = max(1, nl.shape[0] // 10)
     return jnp.mean(nl) + a.tailw * jnp.mean(jax.lax.top_k(nl, k)[0])
 
-rng = np.random.default_rng(1000 + a.seed); p0 = init_params(rng)
-if a.warm:
-    pth, k = a.warm.split("#"); Jw = json.load(open(pth)); po, bo = ravel_pytree(old_template())[1](jnp.asarray(Jw["runs"][int(k)]["theta"], jnp.float32))
-    for kk in list(p0):
-        if kk in po: p0[kk] = po[kk]
-    p0["base"] = bo; log(f"warm from {a.warm}: base b {np.round(np.asarray(bo)[4:24:6], 3)} g {np.round(np.asarray(bo)[5:24:6], 3)}")
-if a.x0:
-    x = np.array(json.load(open(a.x0))["x"]); b = np.asarray(p0["base"]).copy(); b[4:L * NPL:NPL] = x[0::2]; b[5:L * NPL:NPL] = x[1::2]
-    p0["base"] = jnp.asarray(b)
-    if a.warm: p0["G2"] = jnp.zeros_like(p0["G2"])
-th0, unr = ravel_pytree(p0)
-LRM = ravel_pytree({k: jax.tree_util.tree_map(lambda u, k=k: jnp.full_like(jnp.asarray(u), a.lrbase if k == "base" else 1.0), v) for k, v in p0.items()})[0]
-log(f"gnn_bias tag={a.tag} train {a.train} proj={a.proj} assign={a.assign} bias={a.bias} clause_w={a.clause_w} params {th0.size}")
-VG = {}; EVJ = {}
-def vg(n):
-    if n not in VG: VG[n] = jax.jit(jax.value_and_grad(lambda th, D: lossf(th, D, n, unr)))
-    return VG[n]
-def evaluate(th, D, n, ch):
-    if n not in EVJ: EVJ[n] = jax.jit(lambda th, Dc: forward(unr(th), Dc, n))
-    f = EVJ[n]; B = D["S"].shape[0]; ps, bs, gs, pvs = [], [], [], []
-    for s in range(0, B, ch):
-        Dc = {k: (v[s:s + ch] if k != "nm" else v) for k, v in D.items()}; pr, bl, gl, pv = f(th, Dc)
-        ps.append(np.asarray(pr)); bs.append(np.asarray(bl)); gs.append(np.asarray(gl)); pvs.append(np.asarray(pv))
-    return np.concatenate(ps).astype(float), np.concatenate(bs), np.concatenate(gs), np.concatenate(pvs)
-if a.smoke:
+
+if __name__ == "__main__":
+    rng = np.random.default_rng(1000 + a.seed); p0 = init_params(rng)
+    if a.warm:
+        pth, k = a.warm.split("#"); Jw = json.load(open(pth)); po, bo = ravel_pytree(old_template())[1](jnp.asarray(Jw["runs"][int(k)]["theta"], jnp.float32))
+        for kk in list(p0):
+            if kk in po: p0[kk] = po[kk]
+        p0["base"] = bo; log(f"warm from {a.warm}: base b {np.round(np.asarray(bo)[4:24:6], 3)} g {np.round(np.asarray(bo)[5:24:6], 3)}")
+    if a.x0:
+        x = np.array(json.load(open(a.x0))["x"]); b = np.asarray(p0["base"]).copy(); b[4:L * NPL:NPL] = x[0::2]; b[5:L * NPL:NPL] = x[1::2]
+        p0["base"] = jnp.asarray(b)
+        if a.warm: p0["G2"] = jnp.zeros_like(p0["G2"])
+    th0, unr = ravel_pytree(p0)
+    LRM = ravel_pytree({k: jax.tree_util.tree_map(lambda u, k=k: jnp.full_like(jnp.asarray(u), a.lrbase if k == "base" else 1.0), v) for k, v in p0.items()})[0]
+    log(f"gnn_bias tag={a.tag} train {a.train} proj={a.proj} assign={a.assign} bias={a.bias} clause_w={a.clause_w} params {th0.size}")
+    VG = {}; EVJ = {}
+    def vg(n):
+        if n not in VG: VG[n] = jax.jit(jax.value_and_grad(lambda th, D: lossf(th, D, n, unr)))
+        return VG[n]
+    def evaluate(th, D, n, ch):
+        if n not in EVJ: EVJ[n] = jax.jit(lambda th, Dc: forward(unr(th), Dc, n))
+        f = EVJ[n]; B = D["S"].shape[0]; ps, bs, gs, pvs = [], [], [], []
+        for s in range(0, B, ch):
+            Dc = {k: (v[s:s + ch] if k != "nm" else v) for k, v in D.items()}; pr, bl, gl, pv = f(th, Dc)
+            ps.append(np.asarray(pr)); bs.append(np.asarray(bl)); gs.append(np.asarray(gl)); pvs.append(np.asarray(pv))
+        return np.concatenate(ps).astype(float), np.concatenate(bs), np.concatenate(gs), np.concatenate(pvs)
+    if a.smoke:
+        for n in a.train:
+            D = build(n, sim.instances(n, a.bs, TRB)); t = time.time(); v, g = vg(n)(th0, D); g.block_until_ready(); t1 = time.time() - t
+            t = time.time(); v, g = vg(n)(th0, D); g.block_until_ready()
+            log(f"smoke n={n}: loss {float(v):.4f} finite {bool(jnp.all(jnp.isfinite(g)))} compile {t1:.1f}s step {time.time()-t:.2f}s")
+        for n in a.test[:2]:
+            D = build(n, sim.instances(n, 4, TEB)); t = time.time(); pr, bl, gl, pv = evaluate(th0, D, n, 2)
+            log(f"smoke eval n={n}: p {np.round(pr, 4)} pv mean {pv.mean():.3f} ({time.time()-t:.1f}s)")
+        sys.exit(0)
+    pools = {}
     for n in a.train:
-        D = build(n, sim.instances(n, a.bs, TRB)); t = time.time(); v, g = vg(n)(th0, D); g.block_until_ready(); t1 = time.time() - t
-        t = time.time(); v, g = vg(n)(th0, D); g.block_until_ready()
-        log(f"smoke n={n}: loss {float(v):.4f} finite {bool(jnp.all(jnp.isfinite(g)))} compile {t1:.1f}s step {time.time()-t:.2f}s")
-    for n in a.test[:2]:
-        D = build(n, sim.instances(n, 4, TEB)); t = time.time(); pr, bl, gl, pv = evaluate(th0, D, n, 2)
-        log(f"smoke eval n={n}: p {np.round(pr, 4)} pv mean {pv.mean():.3f} ({time.time()-t:.1f}s)")
-    sys.exit(0)
-pools = {}
-for n in a.train:
-    t = time.time(); pools[n] = build(n, sim.instances(n, a.npool, TRB)); log(f"pool n={n} {a.npool} built {time.time()-t:.0f}s")
-nv = max(a.train); Dv = build(nv, sim.instances(nv, a.nval, VAB))
-def es_val(th):
-    pr, _, _, pv = evaluate(th, Dv, nv, 50 if nv <= 12 else 10); s = NS.summ(pr); s["pv_mean"] = float(pv.mean()); return s
-@jax.jit
-def adam(x, m, v, g, t, lr):
-    m = 0.9 * m + 0.1 * g; v = 0.999 * v + 0.001 * g * g; return x - lr * (m / (1 - 0.9 ** t)) / (jnp.sqrt(v / (1 - 0.999 ** t)) + 1e-8), m, v
-x = th0; mom = jnp.zeros_like(x); vel = jnp.zeros_like(x); rb = np.random.default_rng(77 + a.seed)
-s0 = es_val(x); BEST = dict(S=s0["S"], x=np.asarray(x), it=0); HIST = [[0, s0]]; log(f"step 0 val n={nv} {s0['median_inv_p']:.2f}/{s0['B90_inv_p']:.2f} S {s0['S']:.4f} pv {s0['pv_mean']:.3f}")
-rl = []; t0 = time.time()
-for t in range(1, a.steps + 1):
-    lr = a.lr * (0.1 + 0.9 * 0.5 * (1 + np.cos(np.pi * t / a.steps))); gt = 0; vs = 0
-    for n in a.train:
-        P = pools[n]; idx = rb.choice(P["S"].shape[0], a.bs, replace=False)
-        Dn = {k: (v[idx] if k != "nm" else v) for k, v in P.items()}
-        v, g = vg(n)(x, Dn); gt = gt + g; vs += float(v)
-    x, mom, vel = adam(x, mom, vel, gt, t, lr * LRM); rl.append(vs / len(a.train))
-    if t % a.es == 0 or t == a.steps:
-        s_ = es_val(x); HIST.append([t, s_])
-        if s_["S"] < BEST["S"]: BEST.update(S=s_["S"], x=np.asarray(x), it=t)
-        log(f"step {t} loss {np.mean(rl[-a.es:]):.4f} lr {lr:.1e} val {s_['median_inv_p']:.2f}/{s_['B90_inv_p']:.2f} S {s_['S']:.4f} pv {s_['pv_mean']:.3f} (best {BEST['S']:.4f} @ {BEST['it']}) [{(time.time()-t0)/t:.2f}s/step]")
-        json.dump({"args": vars(a), "hist": HIST, "best_it": BEST["it"], "theta_best": BEST["x"].tolist()}, open(OUT, "w"))
-res = {"args": vars(a), "hist": HIST, "best_it": BEST["it"], "theta_best": BEST["x"].tolist(), "test": {}, "random": {}}
-thb = jnp.asarray(BEST["x"])
-for n in a.test:
-    ins = sim.instances(n, 200 if n <= 8 else 100, TEB); D = build(n, ins); t = time.time()
-    pr, bl, gl, pv = evaluate(thb, D, n, 25 if n <= 12 else (4 if n <= 16 else 1))
-    # polarity accuracy vs a solution (diagnostic)
-    acc = []
-    for i, ins_i in enumerate(ins):
-        sol = np.flatnonzero(ins_i["E"] == 0)[0]; bits_s = np.array([(sol >> (n - 1 - v)) & 1 for v in range(n)])
-        acc.append(np.mean((pv[i] > 0.5) == (bits_s == 1)))
-    res["test"][str(n)] = NS.summ(pr) | {"p": pr.tolist(), "pv_mean": float(pv.mean()), "pv_acc": float(np.mean(acc)),
-                                          "b_mean": bl.mean(0).tolist(), "g_mean": gl.mean(0).tolist()}; res["random"][str(n)] = NS.rand_stats(ins, n)
-    log(f"TEST n={n}: {res['test'][str(n)]['median_inv_p']:.2f}/{res['test'][str(n)]['B90_inv_p']:.2f} pv_acc {np.mean(acc):.3f} ({time.time()-t:.0f}s)")
-    json.dump(res, open(OUT, "w"))
-log("DONE")
+        t = time.time(); pools[n] = build(n, sim.instances(n, a.npool, TRB)); log(f"pool n={n} {a.npool} built {time.time()-t:.0f}s")
+    nv = max(a.train); Dv = build(nv, sim.instances(nv, a.nval, VAB))
+    def es_val(th):
+        pr, _, _, pv = evaluate(th, Dv, nv, 50 if nv <= 12 else 10); s = NS.summ(pr); s["pv_mean"] = float(pv.mean()); return s
+    @jax.jit
+    def adam(x, m, v, g, t, lr):
+        m = 0.9 * m + 0.1 * g; v = 0.999 * v + 0.001 * g * g; return x - lr * (m / (1 - 0.9 ** t)) / (jnp.sqrt(v / (1 - 0.999 ** t)) + 1e-8), m, v
+    x = th0; mom = jnp.zeros_like(x); vel = jnp.zeros_like(x); rb = np.random.default_rng(77 + a.seed)
+    s0 = es_val(x); BEST = dict(S=s0["S"], x=np.asarray(x), it=0); HIST = [[0, s0]]; log(f"step 0 val n={nv} {s0['median_inv_p']:.2f}/{s0['B90_inv_p']:.2f} S {s0['S']:.4f} pv {s0['pv_mean']:.3f}")
+    rl = []; t0 = time.time()
+    for t in range(1, a.steps + 1):
+        lr = a.lr * (0.1 + 0.9 * 0.5 * (1 + np.cos(np.pi * t / a.steps))); gt = 0; vs = 0
+        for n in a.train:
+            P = pools[n]; idx = rb.choice(P["S"].shape[0], a.bs, replace=False)
+            Dn = {k: (v[idx] if k != "nm" else v) for k, v in P.items()}
+            v, g = vg(n)(x, Dn); gt = gt + g; vs += float(v)
+        x, mom, vel = adam(x, mom, vel, gt, t, lr * LRM); rl.append(vs / len(a.train))
+        if t % a.es == 0 or t == a.steps:
+            s_ = es_val(x); HIST.append([t, s_])
+            if s_["S"] < BEST["S"]: BEST.update(S=s_["S"], x=np.asarray(x), it=t)
+            log(f"step {t} loss {np.mean(rl[-a.es:]):.4f} lr {lr:.1e} val {s_['median_inv_p']:.2f}/{s_['B90_inv_p']:.2f} S {s_['S']:.4f} pv {s_['pv_mean']:.3f} (best {BEST['S']:.4f} @ {BEST['it']}) [{(time.time()-t0)/t:.2f}s/step]")
+            json.dump({"args": vars(a), "hist": HIST, "best_it": BEST["it"], "theta_best": BEST["x"].tolist()}, open(OUT, "w"))
+    res = {"args": vars(a), "hist": HIST, "best_it": BEST["it"], "theta_best": BEST["x"].tolist(), "test": {}, "random": {}}
+    thb = jnp.asarray(BEST["x"])
+    for n in a.test:
+        ins = sim.instances(n, 200 if n <= 8 else 100, TEB); D = build(n, ins); t = time.time()
+        pr, bl, gl, pv = evaluate(thb, D, n, 25 if n <= 12 else (4 if n <= 16 else 1))
+        # polarity accuracy vs a solution (diagnostic)
+        acc = []
+        for i, ins_i in enumerate(ins):
+            sol = np.flatnonzero(ins_i["E"] == 0)[0]; bits_s = np.array([(sol >> (n - 1 - v)) & 1 for v in range(n)])
+            acc.append(np.mean((pv[i] > 0.5) == (bits_s == 1)))
+        res["test"][str(n)] = NS.summ(pr) | {"p": pr.tolist(), "pv_mean": float(pv.mean()), "pv_acc": float(np.mean(acc)),
+                                              "b_mean": bl.mean(0).tolist(), "g_mean": gl.mean(0).tolist()}; res["random"][str(n)] = NS.rand_stats(ins, n)
+        log(f"TEST n={n}: {res['test'][str(n)]['median_inv_p']:.2f}/{res['test'][str(n)]['B90_inv_p']:.2f} pv_acc {np.mean(acc):.3f} ({time.time()-t:.0f}s)")
+        json.dump(res, open(OUT, "w"))
+    log("DONE")

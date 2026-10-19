@@ -92,3 +92,22 @@ Same pattern: 2-cavity sizes match QAOA; chain residual kills n≥15. Official n
 
 ## Still running (20:03)
 - mixcal NF80 K5 k32/k40; G16_local_w (bus-off). Bias 32-level family next.
+
+## Bus-off (G16_local_w) — DONE
+n=8 24.0/119, n=12 235/3143, n=16 2567/23032 (vs chain+GNN 35/302 / 408/13422). Bus contributes a lot.
+
+## Ensemble of assignments (classical best-of) — BIG B90 win
+B16_chain_mc checkpoint, ideal mixer, mincut + 8 random perms, keep best p per formula:
+| | n=12 | n=16 |
+|---|---|---|
+| single mincut (B16) | 16.6/76.2 | 113/6341 |
+| best-of-9 | **10.70/30.72** | **53.79/257.3** |
+| QAOA L4 | 12.97/31.76 | 34.82/98.20 |
+
+n=12 best-of-9 beats QAOA on median and B90. n=16 median 54 / B90 257 — past the ~500 B90 gate; calibrated-mixer ens eval launched.
+
+## Random-assign train (G16_chain_rand)
+n=8 ? / n=12 42.7/230 / n=16 519/10257 — worse than block (no bias). Assignment randomization alone without bias does not help.
+
+## Running (20:12)
+B32_chain_mc building n=15 mincut pool (~600/1500, shared with preperm); mixcal NF80 in sweeps; native ens eval of B16.
