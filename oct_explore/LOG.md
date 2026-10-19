@@ -2760,3 +2760,23 @@ Finished since 08:00: none. Best dual-beats unchanged: L4 median **S_g4_snapF_s1
 | G_fe L=4 | 116.1/387.7 |
 
 n=20 winner vs QAOA L=4: median 44.1 vs 84.9, B90 165.8 vs 238.1 -> **BEATS QAOA (both)**
+
+## Check-in (2026-10-19 08:35 CST)
+Runner alive (run_v3.sh pid **4036406**, ~21 min), MAXJ=3 / cores 0-5 (Zach 6-core cap); all live job threads pinned `taskset -c 0-5`, /usr/bin/python3.13 under `choom -n 1000`. MemAvailable ~4.9 GiB. PID 2888494 and *.STOP untouched; no old-queue restart. Campaign continues until Zach says stop (past old Mon 09:00 deadline).
+
+Finished since 08:10: **R_attn_val2** (08:35, finalized+pushed). Re-pick over 21 cands on VBASE 39e9 → winner **N_g4_attn_n2k#0** (val S=3.162). Official TEB n=20 L4 **44.1/165.8** vs QAOA 84.9/238.1 → **dual-beats QAOA**. Median behind **S_g4_snapF_s1 37.5** and prior attn package **42.9**; B90 **165.8** edges prior L4 B90 best **B_g4_iii_A_h128_f 166.3**. → **WakeParent**.
+
+**3/3 slots:**
+- **S_g4_snapF_h128** (pid 4037011, ~20 min, free SNAP + H=128 warm from B_g4_iii_A_h128_f): still mid init 0 (H=128 train ~50–60 min/init).
+- **N_g4_attn_h128** (pid 4037966, ~18 min): still mid init 0.
+- **N_g4_attn_n4k** (pid 4049340, launched 08:35 from wave-4, `--ntrain 4000`): started.
+
+**Wave-4 queued** (backup `v3/queue_v3.bak_0831`) so the queue never dries after R_wave3_val — n2k axis looked strong on val, combine with H=128 / more data / L8:
+- **N_g4_attn_h128_n2k** (after h128): attn H=128 + ntrain 2000
+- **N_g4_attn_n4k**: attn ntrain 4000 (now running)
+- **N_g4_attn_h128_s1** / **S_g4_snapF_h128_s1**: seeds after parents
+- **S_g8_snapF_h128**: L8 free SNAP H=128
+- **R_wave4_val** (VBASE 41e9): re-pick over s1 / n2k / h128 SNAP+attn / wave-4 trains, then TEB n=20
+
+Pending: **R_wave3_val** (after h128 pair). Best dual-beats now: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **R_attn_val2 (n2k#0) 44.1/165.8**; L8 **S_g8_snapF_A_f 9.1/51.6**. Attn dual-beat package median still better at **R_attn_val 42.9/167.2**, but B90 crown moves to n2k.
+
