@@ -1,0 +1,43 @@
+10-19 12:49:11 SD tag=P_sdcF_learn_i1 init=1 start=learned order=sdc final=True amax=1.5 NF=24 L=4 H=64 percase=0 params=183 train=1000 val=300 test=200 warm=
+10-19 12:49:11 random baseline test {'median_inv_p': 64.0, 'B90_inv_p': 64.0, 'mean_p': 0.028671875}
+10-19 12:49:14 loss0 4.8813 (first call incl. compile 5s)
+10-19 12:50:09   fev 100 loss 1.7916
+10-19 12:51:07   fev 200 loss 1.7753
+10-19 12:52:04   fev 300 loss 1.7744
+10-19 12:52:59   fev 400 loss 1.7736
+10-19 12:53:56   fev 500 loss 1.7732
+10-19 12:54:18 DONE P_sdcF_learn_i1: loss 4.8813 -> 1.7732 (462 it, 304s) | val 5.82/15.08 S=2.237 | test med/B90 5.53/15.07 mean p 0.197 leak 0.0332 |alpha|/layer ['0.757', '0.340', '0.280', '0.212', '0.130']
+Traceback (most recent call last):
+  File "/workspace/qumode_sep/oct_explore/v3/sd_n6.py", line 264, in <module>
+    _, unr_t = ravel_pytree((pt, b0)); pj, bj = unr_t(jnp.asarray(J["theta"], jnp.float32))
+                                                ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/lib/python3.13/site-packages/jax/_src/util.py", line 587, in __call__
+    return self.f(*self.args, *args, **self.kwargs, **kwargs)
+           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/lib/python3.13/site-packages/jax/_src/flatten_util.py", line 59, in unravel_pytree
+    return tree_unflatten(treedef, unravel_list(flat))
+                                   ~~~~~~~~~~~~^^^^^^
+  File "/home/box/.local/lib/python3.13/site-packages/jax/_src/util.py", line 587, in __call__
+    return self.f(*self.args, *args, **self.kwargs, **kwargs)
+           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/lib/python3.13/site-packages/jax/_src/flatten_util.py", line 86, in _unravel_list_single_dtype
+    chunks = lax.split(arr, sizes)
+  File "/home/box/.local/lib/python3.13/site-packages/jax/_src/lax/lax.py", line 2107, in split
+    return split_p.bind(operand, sizes=tuple(sizes),
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        axis=canonicalize_axis(axis, operand.ndim))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/lib/python3.13/site-packages/jax/_src/core.py", line 731, in bind
+    return self.bind_with_trace(prev_trace, args, avals, params)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/lib/python3.13/site-packages/jax/_src/core.py", line 739, in bind_with_trace
+    return trace.process_primitive(self, args, params)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/lib/python3.13/site-packages/jax/_src/core.py", line 1320, in process_primitive
+    return primitive.impl(*args, **params)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/box/.local/lib/python3.13/site-packages/jax/_src/dispatch.py", line 88, in apply_primitive
+    outs = fun(*args)
+ValueError: Sum of sizes 375 must be equal to dimension 0 of the operand shape [183]
+--------------------
+For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.

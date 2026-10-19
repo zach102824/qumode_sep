@@ -32,22 +32,37 @@ import sim, arch_nets as AN
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--tag", required=True); ap.add_argument("--L", type=int, default=4); ap.add_argument("--NF", type=int, default=20)
-ap.add_argument("--init", type=int, default=0); ap.add_argument("--start", default="flat", choices=["flat", "vac"])
+ap.add_argument("--init", type=int, default=0); ap.add_argument("--start", default="flat", choices=["flat", "vac", "learned"], help="learned = shared trainable fixed cavity start state (same on every cavity, init = flat prep); a fixed state prep, not per formula")
 ap.add_argument("--order", default="sdc", choices=["sdc", "csd"])
 ap.add_argument("--local", default="disp", choices=["disp", "mix"], help="mix = control: ideal Gray X-mixer per digit (angle per var/layer) instead of D(alpha) (old plan's in-cavity mixer, no leakage)")
 ap.add_argument("--ntrain", type=int, default=1000); ap.add_argument("--ntest", type=int, default=200); ap.add_argument("--maxiter", type=int, default=1000)
 ap.add_argument("--qaoa", action="store_true"); ap.add_argument("--smoke", action="store_true")
 ap.add_argument("--smoke_it", type=int, default=5)
+ap.add_argument("--final", action="store_true", help="extra final SNAP+D block on each cavity before measurement (no cost)")
+ap.add_argument("--amax", type=float, default=0.0, help=">0: bound |alpha| <= amax via amax*tanh(|a|/amax)")
+ap.add_argument("--H", type=int, default=64); ap.add_argument("--rounds", type=int, default=3)
+ap.add_argument("--warm", default="", help="same-structure json: start from its theta")
+ap.add_argument("--nval", type=int, default=300)
+ap.add_argument("--percase", type=int, default=0, help="ceiling diagnostic: free per-instance params on the first N val instances (no GNN)")
+ap.add_argument("--tailw", type=float, default=0.0, help="loss += tailw * mean of worst 10%% of -log p")
+ap.add_argument("--leakpen", type=float, default=0.0); ap.add_argument("--ainit", type=float, nargs=2, default=[0.2, 0.4])
+ap.add_argument("--ginit", type=float, nargs=2, default=[0.2, 1.5]); ap.add_argument("--seedoff", type=int, default=1000)
+ap.add_argument("--nfcheck", type=int, default=40)
+ap.add_argument("--pairs", type=int, default=1, help="SNAP+D pairs per cavity per layer (Zach base design = 1; 2 = fallback)")
+ap.add_argument("--snap_lin", action="store_true", help="GNN SNAP += sum_j a_{v(j),l} b_j(f), a = hv @ Ws (zero-init): explicit per-variable local fields")
+ap.add_argument("--plain", action="store_true", help="shared params only: SNAP table T0 (NB,NF), alpha A0 (NB,2), g (NB); no clause weights")
+ap.add_argument("--init_plain", default="", help="plain json: GNN base alpha/g and shared SNAP table T0 start from it")
 ap.add_argument("--eval_from", default="", help="re-evaluate a trained json at this --NF (truncation check; extra spare SNAP phases = 0)")
 a = ap.parse_args()
-n, K, C, L, NF, H, R, FV, FM = 6, 3, 2, a.L, a.NF, 64, 3, 7, 32
+n, K, C, L, NF, H, R, FV, FM = 6, 3, 2, a.L, a.NF, a.H, a.rounds, 7, 32
+NB = (L + (1 if a.final else 0)) * a.pairs   # SD units; layer l = units l*P..l*P+P-1; cost of layer l uses g/w column l*P
 NU = 1 << K
-TRB, TEB = 31_000_000_000, 32_000_000_000
+TRB, TEB, VAB = 31_000_000_000, 32_000_000_000, 33_000_000_000
 OUT = f"results/v3/sd_n6/{a.tag}.json"
 log = lambda *s: print(time.strftime("%m-%d %H:%M:%S"), *s, flush=True)
 gray = lambda i: i ^ (i >> 1)
 
-trs = sim.instances(n, a.ntrain, TRB); tes = sim.instances(n, a.ntest, TEB)
+trs = sim.instances(n, a.ntrain, TRB); tes = sim.instances(n, a.ntest, TEB); vas = sim.instances(n, a.nval, VAB)
 
 def clauses(ins):
     m, cl, E = sim.gen_instance(n, ins["seed"]); assert (E == ins["E"]).all(); return m, cl
@@ -80,7 +95,8 @@ for j in range(K):
         g2 = gray(f) ^ (1 << j); f2 = [h for h in range(NU) if gray(h) == g2][0]; P[f2, f] = 1
     M = np.eye(NF, dtype=np.complex128); M[:NU, :NU] = np.cos(np.pi / 4) * np.eye(NU) - 1j * np.sin(np.pi / 4) * P[:NU, :NU]
     Up = M @ Up
-e0 = np.zeros(NF, np.complex128); e0[0] = 1; v0 = Up @ e0 if a.start == "flat" else e0
+e0 = np.zeros(NF, np.complex128); e0[0] = 1; v0 = Up @ e0 if a.start in ("flat", "learned") else e0
+V0RI = np.stack([v0.real, v0.imag], 1).astype(np.float32)
 assert a.start == "vac" or np.allclose(np.abs(v0[:NU]) ** 2, 1 / NU)
 PSI0 = jnp.asarray(np.outer(v0, v0).astype(np.complex64))
 aa = np.diag(np.sqrt(np.arange(1, NF)), 1); LAM, VD = np.linalg.eigh(1j * (aa.T - aa))
@@ -126,51 +142,69 @@ def phaseD(wx):  # (B, 2^n) logical phase -> (B,NF,NF), spare = max
 
 def circuit(psi, A, PH, cost):
     """A (B,L,C,2) alpha re/im; PH (B,L,C,NF) SNAP phases; cost(l) -> (B,NF,NF) phase. Returns final psi."""
-    for l in range(L):
-        if a.order == "csd": psi = psi * jnp.exp(-1j * cost(l))
+    P = a.pairs
+    for l in range(NB):
+        ll, q = divmod(l, P)
+        if a.order == "csd" and ll < L and q == 0: psi = psi * jnp.exp(-1j * cost(ll * P))
         for c in range(C):
             psi = psi * (jnp.exp(-1j * PH[:, l, c])[:, :, None] if c == 0 else jnp.exp(-1j * PH[:, l, c])[:, None, :])
             Dm = disp(A[:, l, c, 0], A[:, l, c, 1]) if a.local == "disp" else mixU(A[:, l, c])
             psi = jnp.einsum("bij,bjk->bik", Dm, psi) if c == 0 else jnp.einsum("bkj,bij->bik", Dm, psi)
-        if a.order == "sdc": psi = psi * jnp.exp(-1j * cost(l))
+        if a.order == "sdc" and ll < L and q == P - 1: psi = psi * jnp.exp(-1j * cost(ll * P))
     return psi
 
 # ---------------- GNN-SNAP ----------------
 def init_params(rng):
     def W(i, o, s=1.0): return jnp.asarray(rng.normal(0, s / np.sqrt(i), (i, o)).astype(np.float32))
     p = AN.init_backbone(rng, "mp", H, R, FV)
-    p["G1"] = W(2 * H, H); p["g1"] = jnp.zeros(H); p["G2"] = jnp.zeros((H, 3 * L)); p["Wa"] = jnp.zeros((H, 2 * L))
+    p["G1"] = W(2 * H, H); p["g1"] = jnp.zeros(H); p["G2"] = jnp.zeros((H, 3 * NB)); p["Wa"] = jnp.zeros((H, 2 * NB))
     p["Wc"] = jnp.zeros((H, L)); p["P0"] = W(H, FM, 2.0); p["P1"] = W(H, FM, 2.0)
     p["u0"] = jnp.asarray(rng.normal(0, 1, FM).astype(np.float32)); p["u1"] = jnp.asarray(rng.normal(0, 1, FM).astype(np.float32))
-    p["fq"] = jnp.zeros(FM); p["Wo"] = jnp.zeros((FM, L)); p["Tsp"] = jnp.zeros((L, NF - NU))
+    p["fq"] = jnp.zeros(FM); p["Wo"] = jnp.zeros((FM, NB)); p["Tsp"] = jnp.zeros((NB, NF - NU))
+    if a.init_plain: p["T0"] = jnp.zeros((NB, NF))
+    if a.snap_lin: p["Ws"] = jnp.zeros((H, NB))
+    if a.start == "learned": p["s0"] = jnp.asarray(V0RI)
     return p
 
 def rand_base(rng):
-    r = rng.uniform(0.2, 0.4, L) if a.local == "disp" else rng.uniform(0.3, 1.5, L); ph = rng.uniform(0, 2 * np.pi, L) if a.local == "disp" else np.zeros(L); g = rng.uniform(0.2, 1.5, L)
+    r = rng.uniform(*a.ainit, NB) if a.local == "disp" else rng.uniform(0.3, 1.5, NB); ph = rng.uniform(0, 2 * np.pi, NB) if a.local == "disp" else np.zeros(NB); g = rng.uniform(*a.ginit, NB)
     return np.stack([r * np.cos(ph), r * np.sin(ph), g], 1).reshape(-1).astype(np.float32)
 
 CV = jnp.asarray(np.array([[K * c + j for j in range(K)] for c in range(C)]))
 def net(p, base, G):
     B = G["Ip"].shape[0]; hv, hc = AN.run_backbone(p, G, "mp", H)
     g = jnp.concatenate([hv.mean(1), hc.mean(1)], -1)
-    bv = (base[None] + jnp.tanh(g @ p["G1"] + p["g1"]) @ p["G2"]).reshape(B, L, 3)
+    bv = (base[None] + jnp.tanh(g @ p["G1"] + p["g1"]) @ p["G2"]).reshape(B, NB, 3)
     hd = hv[:, CV]                                                               # (B,C,K,H)
     if a.local == "disp":
-        A = jnp.broadcast_to(bv[:, :, None, :2], (B, L, C, 2)) + jnp.transpose((hd.mean(2) @ p["Wa"]).reshape(B, C, L, 2), (0, 2, 1, 3))
+        A = jnp.broadcast_to(bv[:, :, None, :2], (B, NB, C, 2)) + jnp.transpose((hd.mean(2) @ p["Wa"]).reshape(B, C, NB, 2), (0, 2, 1, 3))
     else:
-        A = bv[:, :, None, None, 0] + jnp.transpose((hd @ p["Wa"][:, :L]), (0, 3, 1, 2))     # (B,L,C,K)
+        A = bv[:, :, None, None, 0] + jnp.transpose((hd @ p["Wa"][:, :NB]), (0, 3, 1, 2))     # (B,L,C,K)
     U0 = p["u0"] + hd @ p["P0"]; U1 = p["u1"] + hd @ p["P1"]                     # (B,C,K,FM)
     z = (jnp.einsum("bcjm,jf->bcfm", U1, BT) + jnp.einsum("bcjm,jf->bcfm", U0, 1 - BT)) / K
     ph_u = jnp.transpose(jnp.tanh(z + p["fq"]) @ p["Wo"], (0, 3, 1, 2)) * MASKU         # (B,L,C,NF)
-    sp = jnp.concatenate([jnp.zeros((L, NU)), p["Tsp"]], 1)
-    PH = ph_u + sp[None, :, None, :]
+    sp = jnp.concatenate([jnp.zeros((NB, NU)), p["Tsp"]], 1)
+    PH = ph_u + sp[None, :, None, :] + (p["T0"][None, :, None, :] if "T0" in p else 0.0)
+    if "Ws" in p: PH = PH + jnp.einsum("bcjl,jf->blcf", hd @ p["Ws"], BT)
     w = hc @ p["Wc"]                                                             # (B,m,L)
     return A, PH, bv[:, :, 2], w
 
+def bound(A):
+    if a.amax <= 0 or a.local != "disp": return A
+    r = jnp.sqrt((A ** 2).sum(-1, keepdims=True) + 1e-20); return A * (a.amax * jnp.tanh(r / a.amax) / r)
+
 def run(p, base, G, Vi, S, nm):
-    A, PH, g, w = net(p, base, G); B = S.shape[0]
+    B = S.shape[0]
+    if a.plain:
+        A = jnp.broadcast_to(base[:, None, :2], (B, NB, C, 2)); PH = jnp.broadcast_to(p["T0"][None, :, None, :], (B, NB, C, NF))
+        g = jnp.broadcast_to(base[None, :, 2], (B, NB)); w = jnp.zeros((B, Vi.shape[1], NB))
+    else: A, PH, g, w = net(p, base, G) if not a.percase else (p["A"], p["PH"], p["g"], p["w"])
+    A = bound(A)
     cost = lambda l: phaseD(nm * jnp.einsum("bc,bcx->bx", g[:, l][:, None] + w[:, :, l], Vi))
-    psi = circuit(jnp.broadcast_to(PSI0, (B, NF, NF)), A, PH, cost); pr = jnp.abs(psi) ** 2
+    if a.start == "learned":
+        v = p["s0"][:, 0] + 1j * p["s0"][:, 1]; v = v / jnp.sqrt(jnp.sum(jnp.abs(v) ** 2)); ps0 = jnp.outer(v, v).astype(jnp.complex64)
+    else: ps0 = PSI0
+    psi = circuit(jnp.broadcast_to(ps0, (B, NF, NF)), A, PH, cost); pr = jnp.abs(psi) ** 2
     return jnp.sum(pr * S, (1, 2)), jnp.sum(pr * (1 - VALID.reshape(NF, NF)), (1, 2)), A
 
 def summ(p):
@@ -181,7 +215,7 @@ def rand_base_stats(insts):
     rg = np.array([2.0 ** n / i["nsol"] for i in insts]); return {"median_inv_p": float(np.median(rg)), "B90_inv_p": float(np.quantile(rg, 0.9)), "mean_p": float(np.mean(1 / rg))}
 
 t00 = time.time()
-Dtr, Dte = prep(trs), prep(tes)
+Dtr, Dte, Dva = prep(trs), prep(tes), prep(vas)
 res = {"args": vars(a), "random_test": rand_base_stats(tes), "random_train": rand_base_stats(trs)}
 
 if a.qaoa:
@@ -208,25 +242,47 @@ if a.qaoa:
     best = min(runs, key=lambda r: r["loss"]); res.update(runs=runs, best=best, sec=time.time() - t00)
     json.dump(res, open(OUT, "w")); log(f"QAOA best (train) loss {best['loss']:.4f} test {best['test']} ({time.time()-t00:.0f}s)"); sys.exit(0)
 
-rng = np.random.default_rng(1000 + a.init)
-p0, b0 = init_params(rng), jnp.asarray(rand_base(rng))
+rng = np.random.default_rng(a.seedoff + a.init)
+if a.percase:  # ceiling diagnostic: per-instance free circuit params on val[:N]
+    NPc = a.percase; Dtr = prep(vas[:NPc]); m0 = vas[0]["m"]
+    p0 = {"A": jnp.asarray(np.stack([rand_base(rng).reshape(NB, 3)[:, None, :2].repeat(C, 1) for _ in range(NPc)])),
+          "PH": jnp.zeros((NPc, NB, C, NF)), "g": jnp.asarray(rng.uniform(*a.ginit, (NPc, NB)).astype(np.float32)), "w": jnp.zeros((NPc, m0, NB))}
+    b0 = jnp.zeros(1)
+elif a.plain:
+    b0 = jnp.asarray(rand_base(rng).reshape(NB, 3)); p0 = {"T0": jnp.zeros((NB, NF))}
+    if a.start == "learned": p0["s0"] = jnp.asarray(V0RI)
+else:
+    p0, b0 = init_params(rng), jnp.asarray(rand_base(rng))
+    if a.init_plain and not a.eval_from:
+        Jp = json.load(open(a.init_plain)); b0 = jnp.asarray(np.array(Jp["base"], np.float32).reshape(-1)); p0["T0"] = jnp.asarray(np.array(Jp["T0"], np.float32))
+        if a.start == "learned" and "s0" in Jp: p0["s0"] = jnp.asarray(np.stack(Jp["s0"], 1).astype(np.float32))
 th0, unr = ravel_pytree((p0, b0))
+if a.warm:
+    th0 = jnp.asarray(json.load(open(a.warm))["theta"], jnp.float32); assert th0.size == ravel_pytree((p0, b0))[0].size
 if a.eval_from:
-    J = json.load(open(a.eval_from)); NFt = J["args"]["NF"]; pt = dict(p0); pt["Tsp"] = jnp.zeros((L, NFt - NU))
-    _, unr_t = ravel_pytree((pt, b0)); pj, bj = unr_t(jnp.asarray(J["theta"], jnp.float32))
-    pj = dict(pj); pj["Tsp"] = jnp.concatenate([pj["Tsp"], jnp.zeros((L, NF - NFt))], 1)[:, : NF - NU]
+    J = json.load(open(a.eval_from)); NFt = J["args"]["NF"]; pt = dict(p0)
+    padax = {"Tsp": 1, "T0": 1, "s0": 0}   # params with a Fock-level axis: zero-pad to the new NF
+    for k_, ax in padax.items():
+        if k_ in pt: sh = list(pt[k_].shape); sh[ax] += NFt - NF; pt[k_] = jnp.zeros(sh)
+    _, unr_t = ravel_pytree((pt, b0)); pj, bj = unr_t(jnp.asarray(J["theta"], jnp.float32)); pj = dict(pj)
+    for k_, ax in padax.items():
+        if k_ in pj:
+            sh = list(pj[k_].shape); sh[ax] = NF - NFt; pj[k_] = jnp.concatenate([pj[k_], jnp.zeros(sh)], ax)
     th = ravel_pytree((pj, bj))[0]
     ev = jax.jit(lambda th, G, Vi, S, nm: run(*unr(th), G, Vi, S, nm)); o = {}
-    for nmk, D in (("train", Dtr), ("test", Dte)):
+    for nmk, D in (("train", Dtr), ("val", Dva), ("test", Dte)):
         pr, lk, A = (np.asarray(v, float) for v in ev(th, *D)); o[nmk] = summ(pr) | {"mean_leak": float(lk.mean()), "loss": float(np.mean(-np.log(pr + 1e-12)))}
     J.setdefault("nf_check", {})[str(NF)] = o; json.dump(J, open(a.eval_from, "w"))
     log(f"NF-check {a.eval_from} NF {NFt}->{NF}: train loss {J['train']['loss']:.4f}->{o['train']['loss']:.4f} test med/B90 {J['test']['median_inv_p']:.2f}/{J['test']['B90_inv_p']:.2f} -> {o['test']['median_inv_p']:.2f}/{o['test']['B90_inv_p']:.2f} leak {o['test']['mean_leak']:.4f}")
     sys.exit(0)
-log(f"SD-GNN tag={a.tag} init={a.init} start={a.start} order={a.order} NF={NF} L={L} params={th0.size} train={len(trs)} test={len(tes)}")
+log(f"SD tag={a.tag} init={a.init} start={a.start} order={a.order} final={a.final} amax={a.amax} NF={NF} L={L} H={H} percase={a.percase} params={th0.size} train={Dtr[2].shape[0]} val={len(vas)} test={len(tes)} warm={a.warm}")
 log(f"random baseline test {res['random_test']}")
 
 def loss(th, G, Vi, S, nm):
-    p, b = unr(th); pr, lk, _ = run(p, b, G, Vi, S, nm); return -jnp.mean(jnp.log(pr + 1e-12))
+    p, b = unr(th); pr, lk, _ = run(p, b, G, Vi, S, nm); nl = -jnp.log(pr + 1e-12); out = jnp.mean(nl)
+    if a.tailw > 0: k = max(1, nl.shape[0] // 10); out = out + a.tailw * jnp.mean(jax.lax.top_k(nl, k)[0])
+    if a.leakpen > 0: out = out + a.leakpen * jnp.mean(lk)
+    return out
 vg = jax.jit(jax.value_and_grad(loss))
 it = [0]
 def f(th):
@@ -239,17 +295,26 @@ t0 = time.time()
 r = minimize(f, np.asarray(th0, np.float64), jac=True, method="L-BFGS-B", options={"maxiter": a.maxiter if not a.smoke else a.smoke_it, "maxfun": int(1.5 * a.maxiter)})
 th = jnp.asarray(r.x, jnp.float32)
 out = {}
-for nmk, D in (("train", Dtr), ("test", Dte)):
-    pr, lk, A = (np.asarray(v, float) for v in evalj(th, *D))
-    mag = np.sqrt((A ** 2).sum(-1)) if a.local == "disp" else np.abs(A).mean(-1)   # |alpha| (B,L,C); mix: mean |beta|
+sets = (("train", Dtr),) if a.percase else (("train", Dtr), ("val", Dva), ("test", Dte))
+for nmk, D in sets:
+    pr, lk, A = (np.asarray(v, float) for v in evalj(th, *D)); A = np.asarray(bound(jnp.asarray(A)))
+    mag = np.sqrt((A ** 2).sum(-1)) if a.local == "disp" else np.abs(A).mean(-1)   # |alpha| (B,NB,C); mix: mean |beta|
     out[nmk] = summ(pr) | {"mean_leak": float(lk.mean()), "max_leak": float(lk.max()), "loss": float(np.mean(-np.log(pr + 1e-12))),
                            "alpha_abs_mean_per_layer": mag.mean((0, 2)).tolist(), "alpha_abs_std_per_layer": mag.std((0, 2)).tolist(),
                            "alpha_abs_per_layer_cav": mag.mean(0).tolist()}
-    if nmk == "test": out[nmk]["p"] = pr.tolist(); out[nmk]["leak"] = lk.tolist()
+    out[nmk]["S"] = float((np.log(out[nmk]["median_inv_p"]) + np.log(out[nmk]["B90_inv_p"])) / 2)
+    if nmk in ("test", "train") : out[nmk]["p"] = pr.tolist(); out[nmk]["leak"] = lk.tolist()
 pb, bb = unr(th)
+if a.plain: res["T0"] = np.asarray(pb["T0"]).tolist()
+if "s0" in pb: v = np.asarray(pb["s0"]); v = v[:, 0] + 1j * v[:, 1]; v /= np.linalg.norm(v); res["s0"] = [v.real.tolist(), v.imag.tolist()]; res["s0_pops"] = (np.abs(v) ** 2).tolist()
+extra = {} if a.percase else dict(base=np.asarray(bb).reshape(NB, 3).tolist(), base_alpha_abs=np.sqrt((np.asarray(bb).reshape(NB, 3)[:, :2] ** 2).sum(1)).tolist(),
+           base_alpha_abs0=np.sqrt((np.asarray(b0).reshape(NB, 3)[:, :2] ** 2).sum(1)).tolist())
 res.update(init=a.init, loss0=l0, loss=float(r.fun), nit=int(r.nit), nfev=int(r.nfev), msg=str(r.message), train_sec=time.time() - t0, sec=time.time() - t00,
-           base=np.asarray(bb).reshape(L, 3).tolist(), base_alpha_abs=np.sqrt((np.asarray(bb).reshape(L, 3)[:, :2] ** 2).sum(1)).tolist(),
-           base_alpha_abs0=np.sqrt((np.asarray(b0).reshape(L, 3)[:, :2] ** 2).sum(1)).tolist(), **out, theta=r.x.tolist())
+           **extra, **out, theta=r.x.tolist())
 json.dump(res, open(OUT, "w"))
-log(f"DONE init {a.init}: loss {l0:.4f} -> {r.fun:.4f} ({r.nit} it, {time.time()-t0:.0f}s) | test med/B90 {out['test']['median_inv_p']:.2f}/{out['test']['B90_inv_p']:.2f} "
-    f"mean p {out['test']['mean_p']:.3f} leak {out['test']['mean_leak']:.4f} |alpha|/layer {['%.3f' % v for v in out['test']['alpha_abs_mean_per_layer']]} | random {res['random_test']}")
+k = "train" if a.percase else "test"
+log(f"DONE {a.tag}: loss {l0:.4f} -> {r.fun:.4f} ({r.nit} it, {time.time()-t0:.0f}s) | {'val' if not a.percase else 'percase'} " + ("" if a.percase else f"{out['val']['median_inv_p']:.2f}/{out['val']['B90_inv_p']:.2f} S={out['val']['S']:.3f} | test ")
+    + f"med/B90 {out[k]['median_inv_p']:.2f}/{out[k]['B90_inv_p']:.2f} mean p {out[k]['mean_p']:.3f} leak {out[k]['mean_leak']:.4f} |alpha|/layer {['%.3f' % v for v in out[k]['alpha_abs_mean_per_layer']]}")
+if not a.percase and a.nfcheck and not a.smoke:
+    import subprocess
+    subprocess.run([sys.executable] + sys.argv + ["--eval_from", OUT, "--NF", str(a.nfcheck)])
