@@ -2812,3 +2812,25 @@ Finished since 08:52: none new. No new n=20 TEB this check → **no WakeParent**
 **Queue:** wave-4/5 still pending after slots free (`R_wave3_val`, `N_g4_attn_h128_n2k`, `N_g4_attn_h128_s1`, `S_g4_snapF_h128_s1`, `S_g8_snapF_h128`, `R_wave4_val`, `N_g4_attn_n2k_s1`, `N_g4_attn_h128_fm64`, `S_g8_attn_h128`, `R_wave5_val`). Backlog sufficient → no wave-6 yet.
 
 Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **R_attn_val2 (n2k#0) 44.1/165.8**; L8 **S_g8_snapF_A_f 9.1/51.6**. Attn dual-beat package median still better at **R_attn_val 42.9/167.2**.
+
+## Vacuum-start test of S_g4_snapF_s1 (2026-10-19 09:30–10:23 CST)
+Zach 09:26 stopped all runners (run_v3.sh / queue stay paused). Question: start from the hardware-simple state (every cavity Fock |0>, every transmon |g>, i.e. x = 0…0) instead of the ideal uniform superposition, and see whether GNN-SNAP learns to spread the state itself.
+
+**Code.** `v3/gnn_snap.py`: `--psi0 {uniform (default), vac}` (`psi0_of(lay)`: amplitude 1 at index (0,…,0) = transmon g, Fock 0 = gray 0…0) and `--warm_same <json>` (start verbatim from a same-structure gnn_snap run; old jsons without `arch` = mp). `v3/reselect_arch.py`: `psi0` added to the structure key, `warm_same` skipped. Smoke (`v3/smoke_vac.py`, 1000 n=8 train inst): default reproduces S_g4_snapF_s1 losses exactly (1.191130 / 1.161281 / 1.170533); same thetas under vac start → 5.44 / 5.63 / 5.65. New analysis `v3/analyze_vac.py` (layer-1 params + overlap of |psi| after layer 1 with the flat state, F_mag = (Σ|ψ_x|/√2^n)²) → `results/v3/analysis/`.
+
+**Runs** (`v3/run_vac.sh`; cores 0-7 after Zach's 09:41 cap raise, threads 3/3/2, python3.13): S_g4_snapF_s1 args unchanged (free SNAP, L=4, mp64, formula feat, clause_w, var_mix, gray, ntrain 1000, BFGS maxiter 1000, seed 1) + `--psi0 vac`, warm from each of s1's 3 inits as separate jobs `S_g4_snapF_s1_vac_w{0,1,2}`; then `reselect_arch.py --tag S_g4_snapF_s1_vac` (fresh val n=10/14/20, 600/300/100, base 37e9, S = mean_n (log med + log B90)/2), TEST winner on TEB. Wall: training ~2020 s each in parallel (all hit maxiter 1000), whole pipeline 09:41→10:22 CST (~41 min).
+
+| init | n=8 train loss (vac0 → after) | uniform-start s1 loss | val S | n=10 / 14 / 20 TEB (med/B90 1/p) |
+|---|---|---|---|---|
+| w0 | 5.444 → 1.290 | 1.191 | 7.29 | 25.8/238.0 · 69.0/1713.9 · (val n=20 20016/1.3e6) |
+| w1 | 5.632 → 1.328 | 1.161 | 5.47 | 6.9/96.8 · 28.0/1029.1 · 434.7/33770.8 |
+| **w2 (winner)** | 5.645 → **1.038** | 1.171 | **4.55** | **4.9/51.4 · 16.2/362.1 · 117.9/4227.5** (n=8 2.5/16.1, n=12 10.5/193.7) |
+
+n=20 L4: **vac winner 117.9/4227.5** vs uniform-start S_g4_snapF_s1 **37.5/182.7** vs QAOA L4 **84.9/238.1** → **loses to both** (median 3×, B90 23× worse than uniform start). Best n=8 train loss is *lower* than uniform start (1.038 vs ~1.18), but generalisation collapses with n — an n=8-specific fit, not the flat-state structure.
+
+**Did it learn "vacuum → π/2 mixer = flat"? Partly.** Layer-1 means over instances (angles folded to [0,π]; flat needs π/2 = 1.571 everywhere):
+- per-digit cavity mixer β+e: n=8 1.24–1.64 (uniform-start model 1.01–1.13); n=20 1.10–1.97 → moved toward π/2.
+- block-0 transmon θ: n=8 0.71/0.81, n=20 0.99/1.27/1.16 (uniform model 0.21–0.36) → moved up, but well short of π/2.
+- layer-1 SNAP phase rms 0.72 (n=8) / ~0.57 (n=20) — irrelevant on vacuum (only Fock 0 populated → global phase).
+- overlap of |ψ| after layer 1 with the flat state: **n=8 F_mag 0.33 (min 0.07), n=20 0.073 (min 0.03)**; F (with phases) ≈ 0.007 / 3e-6. (Cost phase in layer 1 does not change magnitudes from vacuum: identical F without cost.) Reference uniform-start model: 0.66 / 0.52 after its layer 1.
+So the network spreads the cavities roughly (mixer ≈ π/2 on average) but leaves the transmons half-rotated and per-instance angles scattered; the state after layer 1 is far from flat, especially at n=20, and that is where the tail blows up. Next options (not run): fix layer-1 prep (vacuum + fixed π/2 mixer & transmon pulse = exact flat, my earlier proposal), or one shared trainable prep angle per register, or longer training/n-mix.

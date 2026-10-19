@@ -52,6 +52,11 @@ ap.add_argument("--val", type=int, nargs="*", default=[10, 12]); ap.add_argument
 ap.add_argument("--test", type=int, nargs="*", default=[8, 10, 12, 14, 20])
 ap.add_argument("--feat", default="formula", choices=["full", "tq", "formula"])
 ap.add_argument("--seed", type=int, default=0); ap.add_argument("--chunk", type=int, default=125)
+ap.add_argument("--psi0", default="uniform", choices=["uniform", "vac"],
+                help="start state: uniform = equal superposition over all valid strings (Layout.psi0, default); "
+                     "vac = every cavity in Fock |0> and every transmon in |g> (all-zero index = x all 0), Zach 09:4x CST 2026-10-19")
+ap.add_argument("--warm_same", default="", help="results/v3/<gnn_snap tag>.json with IDENTICAL structure: start from its trained thetas "
+                "verbatim (runs --warm_ids, default all)")
 ap.add_argument("--smoke", type=int, default=0, help="smoke: step-0 equivalence check on this many n=8 instances, then exit")
 a = ap.parse_args()
 if not a.snap_form: a.snap_form = "pair" if a.snap_pair else "lin"
@@ -100,10 +105,16 @@ def local_snap(lay, psi, lb, phs):  # lb (B,C,4); phs list over c of (B,nf_c) SN
     return psi
 
 
+def psi0_of(lay):
+    if a.psi0 == "uniform": return lay.psi0
+    z = np.zeros(lay.shape, np.complex64); z[(0,) * len(lay.shape)] = 1.0   # transmon idx 0 = g (bit 0), Fock 0 (gray 0..0)
+    return jnp.asarray(z)
+
+
 def probs_any(lay, loc, mix, phase_fn, succ, PH):
     """PH: list over c of (B,L,nf_c) SNAP phases | None. SNAP off -> original ECD local (v3core)."""
     B = succ.shape[0]
-    psi = jnp.broadcast_to(lay.psi0, (B,) + tuple(lay.shape))
+    psi = jnp.broadcast_to(psi0_of(lay), (B,) + tuple(lay.shape))
     for l in range(L):
         if SNAP: psi = local_snap(lay, psi, loc[:, l], [P[:, l] for P in PH])
         else: psi = lay.local(psi, loc[:, l])
@@ -274,7 +285,14 @@ template = (init_params(np.random.default_rng(0)), jnp.zeros(NBASE, jnp.float32)
 _, unr = ravel_pytree(template)
 def theta_of(p, b): return np.asarray(ravel_pytree((p, jnp.asarray(b, jnp.float32)))[0], np.float64)
 inits, origin = [], []
-if a.warm:  # GNN thetas trained with the ECD circuit: unravel with the old structure, add zero SNAP params, drop ECD beta
+if a.warm_same:
+    W = json.load(open(a.warm_same)); ids = a.warm_ids or [r["i"] for r in W["runs"]]
+    bad = [k for k in ("arch", "code", "L", "hidden", "rounds", "clause_w", "var_mix", "snap", "snap_form", "free_m", "plain", "feat")
+           if W["args"].get(k, "mp" if k == "arch" else None) != vars(a).get(k)]
+    assert not bad, f"--warm_same structure mismatch in {bad}"
+    for k in ids[: a.ninit]:
+        po, bo = unr(jnp.asarray(W["runs"][k]["theta"], jnp.float32)); inits.append((po, bo)); origin.append(f"warm_same:{os.path.basename(a.warm_same)}#{k}")
+elif a.warm:  # GNN thetas trained with the ECD circuit: unravel with the old structure, add zero SNAP params, drop ECD beta
     assert a.arch in ("mp", "mp64"), f"--warm only for message-passing arch (got {a.arch}); use --init_from for other arches"
     W = json.load(open(a.warm)); ids = a.warm_ids or [r["i"] for r in W["runs"]]
     pt = template[0]; old_p = {k: v for k, v in pt.items() if k not in SNAPKEYS}
@@ -299,7 +317,7 @@ elif a.init_from:
 else:
     for i in range(a.ninit): inits.append((init_params(rng), jnp.asarray(rand_base(rng)))); origin.append(f"rand{i}")
 NI = len(inits)
-log(f"SNAP-GNN arch={a.arch} snap={a.snap} form={a.snap_form} plain={a.plain} L={L} H={H} rounds={a.rounds} clause_w={a.clause_w} var_mix={a.var_mix} code={a.code} inits={origin}")
+log(f"psi0={a.psi0}"); log(f"SNAP-GNN arch={a.arch} snap={a.snap} form={a.snap_form} plain={a.plain} L={L} H={H} rounds={a.rounds} clause_w={a.clause_w} var_mix={a.var_mix} code={a.code} inits={origin}")
 log(f"params per model: {template and theta_of(*inits[0]).size}")
 
 vg = jax.jit(jax.value_and_grad(lossf, argnums=0), static_argnums=1)

@@ -32,7 +32,7 @@ for t, d in SRC.items():
 
 # Cache gnn_snap library namespaces keyed by structure (arch + snap heads + L/H/...)
 STRUCT = ("arch", "code", "L", "hidden", "rounds", "clause_w", "var_mix", "snap", "snap_form",
-          "free_m", "plain", "feat")
+          "free_m", "plain", "feat", "psi0")
 _LIB = {}
 
 
@@ -41,7 +41,7 @@ def lib_for(a0):
     if key in _LIB: return _LIB[key]
     argv = []
     for k, v in a0.items():
-        if k in ("smoke", "tag", "warm", "warm_ids", "init_from", "ninit", "ntrain", "maxiter",
+        if k in ("smoke", "tag", "warm", "warm_same", "warm_ids", "init_from", "ninit", "ntrain", "maxiter",
                  "val", "val_count", "test", "seed", "chunk"): continue
         if isinstance(v, bool):
             if v: argv.append(f"--{k}")
