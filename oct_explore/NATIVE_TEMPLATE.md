@@ -153,3 +153,15 @@ NF80 k=32: Fmin **0.9909** (F@NF+40 same), leakmax 3.5e-3. Native ens eval launc
 
 n=16 median nearly matches QAOA (37.9 vs 34.8); B90 still 2.5×. Random ens saturates — SA variants + B90-retrain + native k32 queued.
 NF80 k=32 Fmin 0.9909 (usable). k=40 still sweeping.
+
+## NF80 complete
+| k | Fmin (grid) | F@NF+40 | leakmax |
+|---|---|---|---|
+| 32 | 0.9909 | 0.9909 | 3.5e-3 |
+| 40 | **0.9983** | 0.9982 | 1.3e-3 |
+
+Per-beta fit of B32 strengths at k=32: F 0.995–0.996 (better than worst-grid). Native ens still running.
+## Still running (21:17)
+- nav_B32_ens8 (calibrated k=32, n=20 best-of-9)
+- ens_B32_SA (8 SA restarts + 4 random)
+- B32_b90 retrain queued (tailw=2, ES on B90)
