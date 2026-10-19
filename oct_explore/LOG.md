@@ -2748,3 +2748,15 @@ Runner alive (run_v3.sh pid **4036406**, ~8 min since restart), 3/3 slots busy, 
 - Pending: **R_wave3_val** (after the above).
 
 Finished since 08:00: none. Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **B_g4_iii_A_h128_f 53.1/166.3**; L8 **S_g8_snapF_A_f 9.1/51.6**. No WakeParent.
+
+### R_attn_val2 finished 2026-10-19 08:35 CST  (L=4)
+
+`L=4 src=['N_g4_attn', 'N_g4_attn_s1', 'N_g4_attn_s2', 'N_g4_attn_r5', 'N_g4_attn_n2k', 'N_g4_attn_s3', 'N_g4_attn_fm64'] vn=[10, 14, 20] nval=[600, 300, 100] vbase=39000000000 criterion=min mean_n[(log median 1/p + log B90 1/p)/2] over fresh val n=[10, 14, 20] counts=[600, 300, 100] base=39000000000; tie-break mean -log p; TEST only winner on TEB n=20`
+
+| row | n=20 |
+|---|---|
+| R_attn_val2 winner 12 (train 1.309, val 3.162) | 44.1/165.8 |
+| QAOA_raw L=4 | 84.9/238.1 |
+| G_fe L=4 | 116.1/387.7 |
+
+n=20 winner vs QAOA L=4: median 44.1 vs 84.9, B90 165.8 vs 238.1 -> **BEATS QAOA (both)**
