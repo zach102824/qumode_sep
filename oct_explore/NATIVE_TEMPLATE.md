@@ -181,3 +181,9 @@ Per-beta fit of B32 strengths at k=32: F 0.995–0.996 (better than worst-grid).
 Residual vs difficulty: corr(log 1/p, resid_mincut)=0.21; hard-tail mean resid 0.297 vs easy 0.283.
 => B90 gap is NOT mostly "unrepresentable clauses" — software headroom remains (bias/schedule/depth/assignment).
 Next: train at n=20 (31e9 pool), R=32, L8.
+
+### 2026-10-19 22:55 (UTC+8): best-of-33 at n=20 and a fairness caveat
+- B32_b90 assignment ensemble at n=20: best-of-17 95.5/645, **best-of-33 70.3/443** (median/B90 of 1/p). QAOA L4 is 84.5/227. Median now beats it; B90 is still 2x short.
+- **Caveat:** "best-of-R" uses the largest p over the assignments, and you can only know which assignment has the largest p if you already know the solution. So it is an oracle number. The fair cost is round-robin over all R assignments, which stops at the first verified solution: 1/mean_r(p_r). The `mean` column gives this: R33 **337/3393** at n=20. A fair ensemble needs a formula-only selector.
+- New: `ensemble_eval2.py` saves per-assignment p plus formula-only selector features (uniform and bias-weighted projection residual). Smoke test at n=15: these features are only weakly correlated with p.
+- B32_resw (`--resw 1`, residual-weighted loss, + tail 2, ES b90): single-assignment n=15 35.6/323 (B32_b90: 39.1/251); n=20 309/7545 (B32_b90: 309/8034). The median improves but the tail does not.
