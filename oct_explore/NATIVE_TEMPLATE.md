@@ -47,3 +47,18 @@ polarity-heuristic marginals: n=16 246-270 median, tail unchanged.
 - gnnw.py (GNN clause weights warm from S_g4_snapF_s1 + learned g/b): G16_chain_mc_w, then G16_chain_w, G16_full_w.
 - Next ideas: learned per-variable marginal head for product-measure projection; ancilla/transmon-mediated 3-cavity
   phases (hardware question); per-layer-different assignments are impossible (bits fixed) unless cavity SWAPs are native.
+
+## Software escape hatch closed (19:20 CST)
+Algebra: conjugating a diagonal by the Gray X-mixer never enlarges its Z-support. So any depth of
+(neighbour-pair diagonal + X mixer) stays inside the span of local + neighbour-pair terms. Numeric check
+at n=6 as 2/2/2 (resid 0.33): full-cost L4 2.77/5.63 vs chain-only L4 5.72/29.2. No software-only way to
+synthesize 3-cavity diagonal phases from the chain gate set.
+
+## Milestone 4 in progress (19:24 CST)
+- G16_chain_w (clause weights + learned g/b, block assign, warm S_g4 + x0 F16_gray_chain): step 250 val n=12
+  45.1/249.5 (from 70.8/725); ~0.22 s/step, ETA ~20:30 for 3000 steps + test.
+- G16_chain_mc_w: still building n=12 mincut pool (~3300/4500 perms); then trains.
+- G16_full_w queued behind G16_chain_w (q_g16b.sh).
+- Bus-off (G16_local_w), bias head (B16_chain_mc), random-assign (G16_chain_rand) queued in q_next.sh.
+- gnn_bias.py: GNN hv -> soft p_v, product-measure projection; smoke OK (compile 10/28 s at n=8/12).
+- F32: 4/5 starts each; mixcal NF80 K5 k32/k40 pass0 mid-grid.
