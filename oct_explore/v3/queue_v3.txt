@@ -51,6 +51,15 @@ S_g4_snapF_h128_s1|S_g4_snapF_h128|v3/gnn_snap.py --tag S_g4_snapF_h128_s1 --sna
 S_g8_snapF_h128|A_g8|v3/gnn_snap.py --tag S_g8_snapF_h128 --snap_form free --code gray --L 8 --hidden 128 --clause_w --var_mix --snap std --init_from results/v3/A_g8.json --ninit 3 --maxiter 1000 --feat formula --chunk 125
 R_wave4_val|R_wave3_val,N_g4_attn_h128_n2k,N_g4_attn_n4k,N_g4_attn_h128_s1,S_g4_snapF_h128_s1|v3/reselect_arch.py --tag R_wave4_val --src S_g4_snapF_s1 N_g4_attn_n2k N_g4_attn_h128 S_g4_snapF_h128 N_g4_attn_h128_n2k N_g4_attn_n4k N_g4_attn_h128_s1 S_g4_snapF_h128_s1 --vn 10 14 20 --nval 600 300 100 --vbase 41000000000
 #
+# --- Phase 2 wave-5 (08:50 CST Oct 19): prevent dry-out after R_wave4_val ---
+# R_attn_val2 official TEB: N_g4_attn_n2k#0 44.1/165.8 (L4 B90 crown). S_g4_snapF_h128 init0 train 1.198 looks strong mid-run.
+# Existing CLI only; train n=8; official n=20 via reselect. VBASE=42e9 (disjoint from 37/38/39/40/41e9).
+# L8 jobs (S_g8_snapF_h128 already in wave-4; S_g8_attn_h128 here) TEB themselves; not in L4 reselect src.
+N_g4_attn_n2k_s1||v3/gnn_snap.py --tag N_g4_attn_n2k_s1 --arch attn --snap_form free --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --ntrain 2000 --feat formula --chunk 125 --seed 1 --test 8 10 12 14
+N_g4_attn_h128_fm64|N_g4_attn_h128|v3/gnn_snap.py --tag N_g4_attn_h128_fm64 --arch attn --hidden 128 --snap_form free --free_m 64 --code gray --L 4 --clause_w --var_mix --snap std --init_from results/v3/A_g4.json --ninit 3 --maxiter 1000 --feat formula --chunk 125 --test 8 10 12 14
+S_g8_attn_h128|A_g8|v3/gnn_snap.py --tag S_g8_attn_h128 --arch attn --snap_form free --code gray --L 8 --hidden 128 --clause_w --var_mix --snap std --init_from results/v3/A_g8.json --ninit 3 --maxiter 1000 --feat formula --chunk 125
+R_wave5_val|R_wave4_val,N_g4_attn_n2k_s1,N_g4_attn_h128_fm64|v3/reselect_arch.py --tag R_wave5_val --src S_g4_snapF_s1 N_g4_attn_n2k S_g4_snapF_h128 N_g4_attn_h128 N_g4_attn_n4k N_g4_attn_n2k_s1 N_g4_attn_h128_fm64 --vn 10 14 20 --nval 600 300 100 --vbase 42000000000
+
 # --- already-running / pending GNN-SNAP (refocus 15:29; do not kill running) ---
 R_g4_snapF_val||v3/reselect_snap.py --tag R_g4_snapF_val --src S_g4_snapF_f --nval 600
 S_g8_snapF_A_f|A_g8|v3/gnn_snap.py --tag S_g8_snapF_A_f --snap_form free --code gray --L 8 --clause_w --var_mix --snap std --init_from results/v3/A_g8.json --ninit 3 --maxiter 1000 --feat formula --chunk 125
