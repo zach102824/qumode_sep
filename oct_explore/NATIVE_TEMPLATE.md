@@ -210,3 +210,16 @@ single min-cut 39.1/251; round-robin over all 43.8/285; oracle 20.8/78; QAOA 23.
 - uniform-residual selector: Spearman correlation with -log p inside each formula is 0.18; top-1 39.1/251, top-2 round-robin 39.4/223.
 - bias-weighted-residual selector: correlation 0.30; top-1 35.4/268, **top-2 round-robin 32.2/190** (best fair number at n=15).
 - Even a perfect selector (the oracle, 20.8/78) loses to QAOA on B90 at n=15. Selection alone cannot win; single-assignment quality has to improve.
+
+### 2026-10-19 23:50 UTC+8: B16_Hb_resw, pairs upper bound, L8, residual diagnosis
+Fair single-assignment only:
+| model | n=12 | n=16 | notes |
+|---|---|---|---|
+| B16_chain_mc | 16.6/76 | 113/6341 | prior best chain |
+| **B16_Hb_resw** (Hb=256, resw=1, tail=2) | **18.2/83** | **121/4487** | B90 ~1.4× better; median slightly worse. Far from 10×. |
+| **B16_pairs** (proj=pairs, any 2 cavities) | **16.1/51** | **55.2/376** | ~12× better B90 vs chain; still ~1.6×/3.8× behind QAOA 34.8/98 |
+| QAOA L4 | 13.0/32 | 34.8/98 | |
+
+Residual variance (block assign, median over 100): n=16 chain 0.41, pairs 0.17, full 0; n=20 chain 0.40, pairs 0.16.
+Software escape hatch closed: L=1..8 of (chain-diag + bit-flip mixers) cannot match a 3-cavity phase on |+> (probe loss stuck at idle 0.708). Deeper L does not create non-neighbor diagonal support without new connectivity.
+B20_train2 still running (val B90 stuck ~6k). ens2 n=20 ~80/100. B16_L8 training.

@@ -146,18 +146,25 @@ def lossf(th, D, n, unr):
 if __name__ == "__main__":
     rng = np.random.default_rng(1000 + a.seed); p0 = init_params(rng)
     if a.warm:
-        pth, k = a.warm.split("#"); Jw = json.load(open(pth)); po, bo = ravel_pytree(old_template())[1](jnp.asarray(Jw["runs"][int(k)]["theta"], jnp.float32))
-        for kk in list(p0):
-            if kk in po: p0[kk] = po[kk]
-        p0["base"] = bo; log(f"warm from {a.warm}: base b {np.round(np.asarray(bo)[4:24:6], 3)} g {np.round(np.asarray(bo)[5:24:6], 3)}")
+        pth, k = a.warm.split("#"); Jw = json.load(open(pth))
+        try:
+            po, bo = ravel_pytree(old_template())[1](jnp.asarray(Jw["runs"][int(k)]["theta"], jnp.float32))
+            for kk in list(p0):
+                if kk in po and jnp.asarray(p0[kk]).shape == jnp.asarray(po[kk]).shape: p0[kk] = po[kk]
+            if jnp.asarray(bo).shape == jnp.asarray(p0["base"]).shape: p0["base"] = bo
+            else:
+                b = np.asarray(p0["base"]).copy(); bs = np.asarray(bo); m = min(len(b), len(bs)); b[:m] = bs[:m]; p0["base"] = jnp.asarray(b)
+            log(f"warm from {a.warm}")
+        except Exception as e: log(f"warm skip: {e}")
     if a.x0:
         x = np.array(json.load(open(a.x0))["x"]); b = np.asarray(p0["base"]).copy(); b[4:L * NPL:NPL] = x[0::2]; b[5:L * NPL:NPL] = x[1::2]
         p0["base"] = jnp.asarray(b)
         if a.warm: p0["G2"] = jnp.zeros_like(p0["G2"])
     if a.theta_from:
             Jt = json.load(open(a.theta_from)); th_load = jnp.asarray(Jt["theta_best"], jnp.float32)
-            assert th_load.size == ravel_pytree(p0)[0].size, (th_load.size, ravel_pytree(p0)[0].size)
-            p0 = ravel_pytree(p0)[1](th_load); log(f"theta_from {a.theta_from}")
+            th0s, unr0 = ravel_pytree(p0)
+            if th_load.size == th0s.size: p0 = unr0(th_load); log(f"theta_from {a.theta_from}")
+            else: log(f"theta_from size mismatch {th_load.size} vs {th0s.size}; skip")
     
     th0, unr = ravel_pytree(p0)
     LRM = ravel_pytree({k: jax.tree_util.tree_map(lambda u, k=k: jnp.full_like(jnp.asarray(u), a.lrbase if k == "base" else 1.0), v) for k, v in p0.items()})[0]
