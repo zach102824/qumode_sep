@@ -19,8 +19,8 @@ for n in tests:
         CAL[K] = []
         for l in range(L):
             t = time.time(); r = CB.fit_beta(K, kmap[K], x[2 * l]); CAL[K].append(r["Vlog"].astype(np.complex64))
-            info["mixer"][f"K{K}_l{l}"] = {"beta": float(x[2 * l]), "F": r["F"], "leak": r["leak"], "k": kmap[K]}
-            log(f"K={K} k={kmap[K]} layer {l} beta {x[2*l]:.3f} -> F {r['F']:.5f} leak {r['leak']:.1e} ({time.time()-t:.0f}s)")
+            info["mixer"][f"K{K}_l{l}"] = {"beta": float(x[2 * l]), "F": r["F"], "F_NFplus40": r["F_NFplus40"], "leak": r["leak"], "k": kmap[K]}
+            log(f"K={K} k={kmap[K]} layer {l} beta {x[2*l]:.3f} -> F {r['F']:.5f} (NF+40 {r['F_NFplus40']:.5f}) leak {r['leak']:.1e} ({time.time()-t:.0f}s)")
         if a.ideal_prep: PREP[K] = None
         else:
             pr = CB.fit_prep(K, a.kp); PREP[K] = pr["amps_logical"]; info["prep"][f"K{K}"] = {"F": pr["F"], "leak": pr["leak"], "kp": a.kp}; log(f"prep K={K} kp={a.kp}: F {pr['F']:.6f} leak {pr['leak']:.1e}")

@@ -40,6 +40,7 @@ def rep_mask(ks, mode="chain"):
     pc = np.zeros_like(occ)
     for c in range(len(ks)): pc += (occ >> c) & 1
     if mode == "full": m = np.ones(1 << n, bool)
+    elif mode == "pairs": m = pc <= 2          # any two cavities (e.g. chain + cavity SWAP network)
     elif mode == "local": m = pc <= 1
     else:
         adj = np.zeros_like(occ, dtype=bool)
@@ -96,3 +97,20 @@ def reassemble(snaps, buses, const, ks):
     for c in range(len(ks)): out += snaps[c][lev[c]]
     for c in range(len(ks) - 1): out += buses[c][lev[c], lev[c + 1]]
     return out
+
+def project_product(E, ks, p, mode="chain"):
+    """least-squares projection of E (2^n,) under the PRODUCT measure mu(x) = prod_i p_i^{x_i} (1-p_i)^{1-x_i}
+    (p_i = P(x_i = 1), var i at bit n-1-i). Orthonormal biased parity basis phi_i = (s_i - m_i)/sqrt(1-m_i^2), s = 1-2x, m = 1-2p.
+    p = 1/2 recovers project(). Same representable mask (cavity support)."""
+    n = sum(ks); T = np.asarray(E, float).reshape((2,) * n)
+    for i in range(n):
+        pi = float(np.clip(p[i], 1e-4, 1 - 1e-4)); m = 1 - 2 * pi; sd = np.sqrt(1 - m * m)
+        ph0, ph1 = (1 - m) / sd, (-1 - m) / sd                     # phi at x=0 (s=+1), x=1 (s=-1)
+        A = np.array([[1 - pi, pi], [(1 - pi) * ph0, pi * ph1]])  # values -> (c0, c1)
+        T = np.moveaxis(np.tensordot(A, T, axes=([1], [i])), 0, i)
+    T = T.reshape(-1) * rep_mask(ks, mode); T = T.reshape((2,) * n)
+    for i in range(n):
+        pi = float(np.clip(p[i], 1e-4, 1 - 1e-4)); m = 1 - 2 * pi; sd = np.sqrt(1 - m * m); ph0, ph1 = (1 - m) / sd, (-1 - m) / sd
+        B = np.array([[1, ph0], [1, ph1]])                          # coeffs -> values
+        T = np.moveaxis(np.tensordot(B, T, axes=([1], [i])), 0, i)
+    return T.reshape(-1)

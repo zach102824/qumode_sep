@@ -14,8 +14,8 @@ import sim, compiler as CP, nsim as NS, assign as AS
 ap = argparse.ArgumentParser(); ap.add_argument("--tag", required=True); ap.add_argument("--train", type=int, nargs="+", default=[8, 12])
 ap.add_argument("--test", type=int, nargs="+", default=[8, 12, 16]); ap.add_argument("--L", type=int, default=4)
 ap.add_argument("--mixer", default="gray"); ap.add_argument("--proj", default="chain"); ap.add_argument("--ntrain", type=int, default=1000)
-ap.add_argument("--nval", type=int, default=200); ap.add_argument("--tailw", type=float, default=0.0); ap.add_argument("--maxiter", type=int, default=1000)
-ap.add_argument("--nstart", type=int, default=12); ap.add_argument("--assign", default="block", choices=["block", "mincut", "random"])
+ap.add_argument("--nval", type=int, default=200); ap.add_argument("--ntrain_big", type=int, default=500, help="train count for n>=15"); ap.add_argument("--tailw", type=float, default=0.0); ap.add_argument("--maxiter", type=int, default=1000)
+ap.add_argument("--nstart", type=int, default=12); ap.add_argument("--x0", default="", help="result json(s), comma-sep: use their x as the only starts"); ap.add_argument("--assign", default="block", choices=["block", "mincut", "random"])
 a = ap.parse_args()
 TRB, TEB, VAB = 31e9, 32e9, 33e9
 OUT = f"results/v3/native/fixed/{a.tag}.json"; os.makedirs(os.path.dirname(OUT), exist_ok=True)
@@ -30,6 +30,7 @@ PCACHE = "results/v3/native/perm_cache"; os.makedirs(PCACHE, exist_ok=True)
 def perm_of(ins, n):
     """min-cut (annealed) or random variable->chain-position permutation, cached per formula seed."""
     if a.assign == "random": return np.random.default_rng(ins["seed"] % (2**32)).permutation(n)
+    if len(CP.LAYOUTS[n]) <= 2: return np.arange(n)
     f = f"{PCACHE}/{ins['seed']}.npy"
     if os.path.exists(f): return np.load(f)
     m, cl, _ = sim.gen_instance(n, ins["seed"]); perm, _ = AS.anneal(n, cl, CP.LAYOUTS[n], iters=3000 if n < 16 else 5000); np.save(f, perm); return perm
@@ -49,7 +50,7 @@ def lossn(x, PE, S, n):
     return jnp.mean(nl)
 data = {}
 for n in a.train:
-    t = time.time(); data[n] = prepE(sim.instances(n, a.ntrain, TRB), n); log(f"train n={n} prepped {time.time()-t:.0f}s")
+    t = time.time(); data[n] = prepE(sim.instances(n, a.ntrain if n < 15 else a.ntrain_big, TRB), n); log(f"train n={n} prepped {time.time()-t:.0f}s")
 VG = {n: jax.jit(jax.value_and_grad(lambda x, PE, S, n=n: lossn(x, PE, S, n))) for n in a.train}
 CH = 250
 def f(x):
@@ -63,6 +64,7 @@ cands = [np.stack([np.linspace(0.8, 0.1, L), np.linspace(0.1, 0.8, L)], 1).resha
 cands += [np.stack([rng.uniform(0, np.pi, L), rng.uniform(0, 3, L)], 1).reshape(-1) for _ in range(a.nstart - 4)]
 q6 = "results/v3/sd_n6/QAOA_n6_L4.json"
 if L == 4 and os.path.exists(q6): cands.append(np.array(json.load(open(q6))["best"]["x"]))
+if a.x0: cands = [np.array(json.load(open(f))["x"]) for f in a.x0.split(",")]
 runs = []
 for c in cands:
     r = minimize(f, c, jac=True, method="L-BFGS-B", options={"maxiter": a.maxiter}); runs.append((float(r.fun), r.x)); log(f"start -> loss {r.fun:.4f} ({r.nit} it)")

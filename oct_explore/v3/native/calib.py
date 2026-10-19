@@ -11,7 +11,7 @@ def ungray(g):
     s = g >> 1
     while s: g ^= s; s >>= 1
     return g
-def nf_of(K): N = 1 << K; return N + max(16, N // 2 + 8)
+def nf_of(K): N = 1 << K; return 2 * N + 16 if K >= 5 else N + max(16, N // 2 + 8)   # K=5 at NF 56 exploited truncation (F@NF+40 0.95 vs 0.99)
 def target(K, b, kind="gray"):
     N = 1 << K
     if kind == "gray":
@@ -54,9 +54,12 @@ def fit_beta(K, k, b, kind="gray", starts=4, grid_dir="results/v3/native/mixcal"
         r = minimize(lambda x: tuple(np.asarray(v, float) for v in vg(x, U)), x0, jac=True, method="L-BFGS-B", options={"maxiter": maxiter, "maxfun": int(1.5 * maxiter)})
         if best is None or r.fun < best.fun: best = r
     Vp = np.asarray(seq(best.x)); F = abs(np.trace(np.asarray(U).conj().T @ Vp)) ** 2 / N ** 2; lk = 1 - np.sum(abs(Vp) ** 2) / N
+    seqB, _ = model(K, k, NF + 40); o = 2 * k; xb = np.asarray(best.x); Sn = xb[o:o + (k - 1) * NF].reshape(max(k - 1, 0), NF)
+    xb = np.concatenate([xb[:o], np.concatenate([Sn, np.zeros((max(k - 1, 0), 40))], 1).reshape(-1), xb[o + (k - 1) * NF:]])
+    VB = np.asarray(seqB(xb)); F_chk = abs(np.trace(np.asarray(U).conj().T @ VB)) ** 2 / N ** 2
     if neg: Vp = Vp.conj()
     perm = np.array([ungray(g) for g in range(N)]); Vlog = Vp[np.ix_(perm, perm)]   # Vlog[g', g] = V[ungray g', ungray g]
-    return dict(F=float(F), leak=float(lk), Vlog=Vlog, x=best.x.tolist(), beta_red=float(bb), conj=bool(neg))
+    return dict(F=float(F), F_NFplus40=float(F_chk), leak=float(lk), Vlog=Vlog, x=best.x.tolist(), beta_red=float(bb), conj=bool(neg))
 def fit_prep(K, k=3, starts=12, seed=0):
     """native prep: k x (D then SNAP) from vacuum; target |amp|^2 = 1/N on valid levels (phases removed by the merged SNAP).
     -> logical-order amplitudes on valid levels (real >= 0, norm^2 = 1 - leak), F."""
