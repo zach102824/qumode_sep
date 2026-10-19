@@ -7,7 +7,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); sys.path[:0] = [HERE, os.path
 _av=sys.argv; sys.argv=["gnn_bias.py","--tag","_nav"]; import gnn_bias as GB; sys.argv=_av
 import numpy as np, jax, jax.numpy as jnp
 from jax.flatten_util import ravel_pytree
-import sim, compiler as CP, nsim as NS, assign as AS, calib as CB
+import sim, compiler as CP, nsim as NS, assign as AS
 ap = argparse.ArgumentParser(); ap.add_argument("--src", required=True); ap.add_argument("--k", default="4:16")
 ap.add_argument("--tests", type=int, nargs="+", default=[12, 16]); ap.add_argument("--ens", type=int, default=0); ap.add_argument("--seed", type=int, default=0)
 a = ap.parse_args()
@@ -30,6 +30,7 @@ log = lambda *s: print(time.strftime("%H:%M:%S"), *s, flush=True)
 n0 = a.tests[0]; D0 = GB.build(n0, sim.instances(n0, min(50, 100), 32e9))
 _, bl, _, _ = GB.forward(p, {k: (jnp.asarray(v) if k != "nm" else v) for k, v in D0.items()}, n0)
 bmean = np.asarray(bl).mean(0); log(f"mean betas {np.round(bmean, 3)}")
+import calib as CB
 CAL = {}
 for K, kk in kmap.items():
     CAL[K] = []

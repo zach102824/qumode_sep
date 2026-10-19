@@ -111,3 +111,12 @@ n=8 ? / n=12 42.7/230 / n=16 519/10257 — worse than block (no bias). Assignmen
 
 ## Running (20:12)
 B32_chain_mc building n=15 mincut pool (~600/1500, shared with preperm); mixcal NF80 in sweeps; native ens eval of B16.
+
+## Calibrated mixer + ensemble (20:18 CST) — native ≈ ideal
+B16_chain_mc, k=16 SNAP+D pairs, mean betas, ensR8:
+n=12 **10.49/30.86** (ideal ens 10.70/30.72), n=16 **54.60/260.45** (ideal 53.79/257).
+Mixer F ≥ 0.9988. Native transfer confirmed at 16 levels.
+
+## B32_chain_mc in training (20:25)
+pool n=15 built (12 min mincut). step 750 val n=15 44.4/253 (from 197/5131); pv rising 0.19→0.50.
+ETA ~20:40 for 3k steps + test n=10/15/20.
