@@ -62,3 +62,33 @@ synthesize 3-cavity diagonal phases from the chain gate set.
 - Bus-off (G16_local_w), bias head (B16_chain_mc), random-assign (G16_chain_rand) queued in q_next.sh.
 - gnn_bias.py: GNN hv -> soft p_v, product-measure projection; smoke OK (compile 10/28 s at n=8/12).
 - F32: 4/5 starts each; mixcal NF80 K5 k32/k40 pass0 mid-grid.
+
+## Milestone 4 results (2026-10-19 20:02 CST) — GNN clause weights + bias head
+All L4, 16-level family train n=8+12, test median/B90 of 1/p. Ideal mixer.
+
+| version | n=8 | n=12 | n=16 |
+|---|---|---|---|
+| QAOA L4 (full-cost baseline) | 5.36/10.07 | 12.97/31.76 | 34.82/98.20 |
+| G16_full_w (GNN w + g/b, all-to-all phases) | **4.76/8.81** | **12.31/26.31** | **31.19/74.14** |
+| fixed chain (block) | 5.40/10.31 | 37.14/407 | 394/20998 |
+| G16_chain_w (GNN w + g/b, block) | 5.39/9.65 | 34.76/302 | 408/13422 |
+| fixed chain + mincut | 5.36/10.36 | 25.03/177 | 203/5684 |
+| G16_chain_mc_w (GNN w + g/b, mincut) | 5.02/9.67 | 22.20/128 | 193/4059 |
+| **B16_chain_mc (GNN w + learned p_v projection bias, mincut)** | **4.86/9.29** | **16.55/76.2** | **113/6341** |
+| random | 128/256 | 2048/4096 | 32768/65536 |
+
+Notes: G16_full_w beats QAOA on both median and B90 at every size (network helps when the cost is fully representable).
+Bias head pv_acc vs a solution ~0.66–0.69; median at n=16 improves 203→113 vs fixed mincut, but B90 still worse than QAOA by ~60×.
+Clause weights alone (no bias) only modestly beat fixed strengths.
+
+## Milestone 3b — 32-level family fixed strengths (train n=10+15)
+| version | n=10 | n=15 | n=20 |
+|---|---|---|---|
+| F32_qaoa (full) | 8.44/18.87 | 23.12/62.53 | 84.46/226.7 |
+| F32_gray_chain | 8.48/20.25 | 116/1047 | 1678/119790 |
+| random | — | 10923/32768 | 349525/1M |
+
+Same pattern: 2-cavity sizes match QAOA; chain residual kills n≥15. Official n=20 QAOA L4 was 84.9/238.1 — F32_qaoa (trained 10+15) matches (84.5/227).
+
+## Still running (20:03)
+- mixcal NF80 K5 k32/k40; G16_local_w (bus-off). Bias 32-level family next.
