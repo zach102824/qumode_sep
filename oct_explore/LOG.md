@@ -2798,3 +2798,17 @@ Finished since 08:35: none new. Prior **R_attn_val2** (08:35) already finalized+
 - **R_wave5_val** (VBASE 42e9): re-pick over s1 / n2k / h128 SNAP+attn / n4k / wave-5 trains, then TEB n=20
 
 Best dual-beats unchanged this check: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **R_attn_val2 (n2k#0) 44.1/165.8**; L8 **S_g8_snapF_A_f 9.1/51.6**. Attn dual-beat package median still better at **R_attn_val 42.9/167.2**.
+
+## Check-in (2026-10-19 09:13 CST)
+Runner alive (run_v3.sh pid **4036406**, ~01:16 since 07:57 restart), MAXJ=3 / cores 0-5 (Zach 6-core cap); all threads of the 3 live jobs confirmed affinity `0-5`, OMP/MKL/OPENBLAS=2, /usr/bin/python3.13 under `choom -n 1000`. MemAvailable ~4.9 GiB (≥ MINMEM 2000). Runner stdout fd still on deleted `runner_nohup.log` inode (disk `logs/v3/runner.log` is the live LOGW); loop healthy (`sleep 60` child). PID 2888494 and *.STOP untouched. No queue rewrite; no old-queue restart. Campaign continues until Zach says stop.
+
+**3/3 slots (Phase 2 wave-3/4):**
+- **S_g4_snapF_h128** (pid 4037011, ~35 min, free SNAP + H=128 warm from B_g4_iii_A_h128_f): init 0 → **1.1978** (1000 it, 2306s); on init 1+. Strong n=8 train (still mid-job; default test incl. n=20).
+- **N_g4_attn_h128** (pid 4037966, ~34 min): still mid init 0 (params 735996; no JSON yet).
+- **N_g4_attn_n4k** (pid 4049340, ~16 min since 08:35 LAUNCH, `--ntrain 4000`): mid init 0 (params 187900; no JSON yet).
+
+Finished since 08:52: none new. No new n=20 TEB this check → **no WakeParent**.
+
+**Queue:** wave-4/5 still pending after slots free (`R_wave3_val`, `N_g4_attn_h128_n2k`, `N_g4_attn_h128_s1`, `S_g4_snapF_h128_s1`, `S_g8_snapF_h128`, `R_wave4_val`, `N_g4_attn_n2k_s1`, `N_g4_attn_h128_fm64`, `S_g8_attn_h128`, `R_wave5_val`). Backlog sufficient → no wave-6 yet.
+
+Best dual-beats unchanged: L4 median **S_g4_snapF_s1 37.5/182.7** / B90 **R_attn_val2 (n2k#0) 44.1/165.8**; L8 **S_g8_snapF_A_f 9.1/51.6**. Attn dual-beat package median still better at **R_attn_val 42.9/167.2**.
