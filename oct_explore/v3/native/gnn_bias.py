@@ -250,9 +250,12 @@ if __name__ == "__main__":
             a.assign_head, a.corr, a.corr2, a.free_ph, a.bias, a.bias_mlp, a.Hb = saved
             if ths.size == th_load.size:
                 psrc = uns(th_load); ncopy = 0
-                for kk in psrc:
-                    if kk in p0 and jnp.asarray(p0[kk]).shape == jnp.asarray(psrc[kk]).shape:
-                        p0[kk] = psrc[kk]; ncopy += 1
+                for kk, v in psrc.items():
+                    if kk not in p0: continue
+                    try:
+                        a0, a1 = jnp.asarray(p0[kk]), jnp.asarray(v)
+                        if a0.shape == a1.shape: p0[kk] = a1; ncopy += 1
+                    except Exception: continue
                 log(f"theta_from key-wise {ncopy} keys from {a.theta_from}")
             else: log(f"theta_from size mismatch {th_load.size} vs {th0s.size} (src tree {ths.size}); skip")
     
