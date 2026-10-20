@@ -2,7 +2,7 @@
 # usage: CFG=16|32 CORES=5-6 ITER=200 ./run_net2.sh   (seeded from runs/net_smoke best)
 cd "$(dirname "$0")"; export PATH=$HOME/.local/bin:$PATH OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 XLA_FLAGS="--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1"
 : "${CURSOR_API_KEY:?CURSOR_API_KEY must be set}"
-if [ "$CFG" = 16 ]; then export OE_TRAIN_N=8,12 OE_VAL_N=16 OE_CHECK_N=16 OE_NVAL=${OE_NVAL:-60}; OUT=runs/${OUTN:-net16}; else export OE_TRAIN_N=10,15 OE_VAL_N=20 OE_CHECK_N=20 OE_NVAL=${OE_NVAL:-30}; OUT=runs/net32; fi
+if [ "$CFG" = 16 ]; then export OE_TRAIN_N=8,12 OE_VAL_N=16 OE_CHECK_N=16 OE_NVAL=${OE_NVAL:-60}; OUT=runs/${OUTN:-net16}; else export OE_TRAIN_N=10,15 OE_VAL_N=20 OE_CHECK_N=20 OE_NVAL=${OE_NVAL:-30}; OUT=runs/${OUTN:-net32}; fi
 export OE_BUDGET=${OE_BUDGET:-180} OE_NVAL=${OE_NVAL:-100}
 SEED=${SEED:-net/initial_net$CFG.py}; mkdir -p $OUT; cp $SEED $OUT/seed_program.py
 sed -i 's/bs.get(n, 8)/bs.get(n, 8)/; s/bs = {10: 8, 15: 4}/bs = {8: 16, 10: 8, 15: 4}/; s/idx = rng.choice(data\[n\]\["F"\], bs\[n\], replace=False)/idx = rng.choice(data[n]["F"], bs.get(n, 8), replace=False)/' $OUT/seed_program.py
