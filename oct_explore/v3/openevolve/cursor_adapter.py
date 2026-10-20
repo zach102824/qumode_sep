@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 import uvicorn
 
 ap = argparse.ArgumentParser(); ap.add_argument("--port", type=int, default=8765); ap.add_argument("--model", default="cursor-grok-4.6-high")
-ap.add_argument("--idea_model", default="claude-opus-5-5-high"); ap.add_argument("--code_model", default="cursor-grok-4.6-high"); ap.add_argument("--conc", type=int, default=2); ap.add_argument("--timeout", type=int, default=600)
+ap.add_argument("--idea_model", default="claude-opus-5-5-medium"); ap.add_argument("--code_model", default="cursor-grok-4.6-high"); ap.add_argument("--conc", type=int, default=2); ap.add_argument("--timeout", type=int, default=600)
 A = ap.parse_args()
 BIN = shutil.which("cursor-agent") or os.path.expanduser("~/.local/bin/cursor-agent")
 SEM = asyncio.Semaphore(A.conc); app = FastAPI()
@@ -32,6 +32,12 @@ async def run_agent(prompt, model):
         return o.decode()
     finally: shutil.rmtree(d, ignore_errors=True)
 
+def recent_ideas(k=5):
+    try:
+        L_ = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "ideas_raw.log")).read().strip().splitlines()[-k:]
+        return "\n".join("- " + l.split("\t", 2)[-1][:400] for l in L_) or "- (none yet)"
+    except Exception: return "- (none yet)"
+
 def compact(msgs, cap_sys=2500, cap_user=6000):
     """Stage-1 prompt: goal (system, truncated) + user prompt with code blocks replaced by a def-signature summary."""
     sysm = "".join(m.get("content", "") if isinstance(m.get("content"), str) else "" for m in msgs if m.get("role") == "system")[:cap_sys]
@@ -41,8 +47,18 @@ def compact(msgs, cap_sys=2500, cap_user=6000):
         return "[code omitted; defs: " + "; ".join(d.strip()[:90] for d in defs[:20]) + "]"
     user = re.sub(r"```.*?```", summ, user, flags=re.S)[-cap_user:]
     return ("### GOAL\n" + sysm + "\n\n### CONTEXT (parent metrics, top programs, history; code omitted)\n" + user +
-            "\n\n### TASK\nPropose ONE concrete change to the network/training (not the frozen circuit) most likely to raise the fair score. "
-            "Answer in 3-6 short lines, plain text, no code, max ~150 words. Do NOT use tools.")
+            "\n\n### ALREADY FAILED - BANNED (do not propose these or close variants)\n"
+            "- additive dS/dB SNAP/bus correction tables (post-hoc or trained jointly)\n"
+            "- free SNAP/bus tables that REPLACE the projected cost\n- residual Walsh terms on the compiler support\n"
+            "- clamping / two-round pinning of variables\n- KD / distillation from the global-cost teacher\n"
+            "- assignment-head / placement selectors\n- minor tweaks of width, depth, learning rate or step count\n"
+            "\n### RECENT IDEAS (do NOT repeat; yours must be structurally different from these and from the parent)\n" + recent_ideas() +
+            "\n\n### PICK ONE CATEGORY\nnew features / formula encodings; layer-wise angle schedules; per-clause weights chosen to compensate "
+            "the dropped 3-cavity / non-neighbour terms; placement-aware outputs; loss shaping on the hard tail; multi-placement training objectives; "
+            "curriculum over n; equivariant architectures; new output parameterizations of gamma/beta/w/p_v.\n"
+            "Rules: frozen gate sequence/compiler/simulator untouched; no classical solving; p_v must not encode a solution.\n"
+            "\n### TASK\nPropose ONE concrete, structurally new change to the network/training. Start with 'CATEGORY: <name>'. "
+            "Then 3-6 short lines, plain text, no code, max ~150 words. Do NOT use tools.")
 
 @app.get("/v1/models")
 async def models(): return {"object": "list", "data": [{"id": A.model, "object": "model"}]}
