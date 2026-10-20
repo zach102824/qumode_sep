@@ -72,7 +72,7 @@ def _evaluate_inner(program_path):
     try:
         spec.loader.exec_module(mod); tt = time.time(); predict = mod.train(API(sets), BUDGET); ttrain = time.time() - tt
         if ttrain > BUDGET * 2.0: return {"combined_score": -20.0, "error": f"train over budget {ttrain:.0f}s"}
-        r15 = score_set(predict, get_set(VAL_N, NVAL, FC.VAB, R), 25)
+        r15 = score_set(predict, get_set(VAL_N, NVAL, FC.VAB, R), 25 if VAL_N <= 15 else (8 if VAL_N <= 16 else 1))  # selection set (VAB base)
     except Exception as e: return {"combined_score": -20.0, "error": f"{type(e).__name__}: {str(e)[:300]}"}
     try: verify_frozen()
     except Exception as e: return {"combined_score": -30.0, "error": str(e)}
@@ -81,7 +81,7 @@ def _evaluate_inner(program_path):
     out = {"combined_score": float(sc), "rr_median_inv_p": med, "rr_B90_inv_p": b90, "single_median_inv_p": r15["single"][0], "single_B90_inv_p": r15["single"][1],
            "pv_acc": r15["pv_acc"], "train_s": ttrain, "eval_s": time.time() - t0}
     if os.environ.get("OE_N20") == "1":
-        r20 = score_set(predict, get_set(CHECK_N, NVAL, FC.VAB, R), 1 if CHECK_N >= 18 else 10)
+        r20 = score_set(predict, get_set(CHECK_N, int(os.environ.get("OE_NTEST", "100")), FC.TEB, R), 1 if CHECK_N >= 18 else 10)  # DIFFERENT held-out set (test base)
         out.update(check_n=CHECK_N, n20_rr_median=r20["rr"][0], n20_rr_B90=r20["rr"][1], n20_single_median=r20["single"][0], n20_single_B90=r20["single"][1], n20_pv_acc=r20["pv_acc"])
     return out
 MEM_MB = int(os.environ.get("OE_MEM_MB", "3500"))
