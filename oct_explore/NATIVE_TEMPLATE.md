@@ -295,3 +295,11 @@ The box has 16 GB, and about 8 GB is held by other services, so my jobs get abou
 | KD16_dist | #4 distill (KL readout, λ=1, init=teacher) | 16 | 140.9/4436 | — | 34.8/98.2 |
 | B32_RR4 | #1 round-robin loss | 20 | 314.3/11260 | 264.3/4639 | 84.5/226.7 |
 Notes: KD16_dist trades median for B90 (4436 vs 7363) but is still ~45× short of QAOA on B90. KD16_marg is running. Other services hold ~8 GB of RAM, so I launch only when ≥3.2 GB is free.
+
+### Oct 20 16:20 (UTC+8) strict-split TEST n=16 (train 8+12; QAOA L4 34.82/98.20)
+| Run | Idea | single med/B90 | rr4 med/B90 |
+|---|---|---|---|
+| KD16_marg | #4 KD on per-bit marginals | 131.98/4371.6 | – |
+| COR16 | #3 SNAP correction (mean-embedding table) | 96.68/7468.5 | 117.35/3052.3 |
+Goal now: make the chain-applied cost act like the global cost (global teacher 33.8/79). OpenEvolve net16c: optional additive
+dS (SNAP) / dB (neighbour-bus) tables, same gate sequence; teacher via api.p_from(glob=True). Hand run CB16: --corr2 SNAP+bus pattern tables.

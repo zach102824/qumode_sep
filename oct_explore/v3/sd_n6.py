@@ -40,6 +40,7 @@ ap.add_argument("--qaoa", action="store_true"); ap.add_argument("--smoke", actio
 ap.add_argument("--smoke_it", type=int, default=5)
 ap.add_argument("--final", action="store_true", help="extra final SNAP+D block on each cavity before measurement (no cost)")
 ap.add_argument("--amax", type=float, default=0.0, help=">0: bound |alpha| <= amax via amax*tanh(|a|/amax)")
+ap.add_argument("--sizefree", action="store_true", help="no per-level shared SNAP table T0 (not size-free); SNAP = free digit-pattern head + snap_lin + spare offsets")
 ap.add_argument("--arch", default="mp", choices=["mp", "attn", "tf", "ds"]); ap.add_argument("--H", type=int, default=64); ap.add_argument("--rounds", type=int, default=3)
 ap.add_argument("--warm", default="", help="same-structure json: start from its theta")
 ap.add_argument("--nval", type=int, default=300)
@@ -182,7 +183,7 @@ def init_params(rng):
     p["Wc"] = jnp.zeros((H, L)); p["P0"] = W(H, FM, 2.0); p["P1"] = W(H, FM, 2.0)
     p["u0"] = jnp.asarray(rng.normal(0, 1, FM).astype(np.float32)); p["u1"] = jnp.asarray(rng.normal(0, 1, FM).astype(np.float32))
     p["fq"] = jnp.zeros(FM); p["Wo"] = jnp.zeros((FM, NB)); p["Tsp"] = jnp.zeros((NB, NF - NU))
-    if a.init_plain: p["T0"] = jnp.zeros((NB, NF))
+    if a.init_plain and not a.sizefree: p["T0"] = jnp.zeros((NB, NF))
     if a.snap_lin: p["Ws"] = jnp.zeros((H, NB))
     if a.start == "learned": p["s0"] = jnp.asarray(V0RI)
     return p
@@ -280,7 +281,9 @@ elif a.plain:
 else:
     p0, b0 = init_params(rng), jnp.asarray(rand_base(rng))
     if a.init_plain and not a.eval_from:
-        Jp = json.load(open(a.init_plain)); b0 = jnp.asarray(np.array(Jp["base"], np.float32).reshape(-1)); p0["T0"] = jnp.asarray(np.array(Jp["T0"], np.float32))
+        Jp = json.load(open(a.init_plain)); b0 = jnp.asarray(np.array(Jp["base"], np.float32).reshape(-1))
+        if a.sizefree: p0.pop("T0", None)   # size-free: only base alpha/g from plain; SNAP fully from the free digit-pattern head (+ spare offsets)
+        else: p0["T0"] = jnp.asarray(np.array(Jp["T0"], np.float32))
         if a.start == "learned" and "s0" in Jp: p0["s0"] = jnp.asarray(np.stack(Jp["s0"], 1).astype(np.float32))
 th0, unr = ravel_pytree((p0, b0))
 if a.warm and not a.eval_from:
