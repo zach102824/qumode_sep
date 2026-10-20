@@ -286,3 +286,12 @@ The box has 16 GB, and about 8 GB is held by other services, so my jobs get abou
 - Paused OpenEvolve net32 (n=20 children peak about 4–5 GB) until RAM frees up. It restarts with a lean config after B32_RR4 finishes.
 - Running: B32_RR4 (cores 0-1, about 2.8 GB), A16_full teacher (core 2, about 0.6 GB), OpenEvolve net16 (cores 6-7, child about 1 GB).
 - Implemented #4 distillation in gnn_bias: `--teacher <full-proj json> --kd λ --kd_mode dist|marg`. Loss = -log p (+ tail term) + λ·KL(teacher readout ‖ student readout). The teacher is A16_full (proj=full, train 8+12, selection on n=16).
+
+### Strict-split fair held-out TEST results (train 8+12 → test 16; train 10+15 → test 20; separate selection set)
+| run | idea | n | single | round-robin R=4 | QAOA L4 |
+|---|---|---|---|---|---|
+| A16_RR4 | #1 round-robin loss | 16 | 103.1/7363 | 130.3/2647 | 34.8/98.2 |
+| A16_full (teacher, global cost, NOT native) | — | 16 | 33.8/79.1 | — | 34.8/98.2 |
+| KD16_dist | #4 distill (KL readout, λ=1, init=teacher) | 16 | 140.9/4436 | — | 34.8/98.2 |
+| B32_RR4 | #1 round-robin loss | 20 | 314.3/11260 | 264.3/4639 | 84.5/226.7 |
+Notes: KD16_dist trades median for B90 (4436 vs 7363) but is still ~45× short of QAOA on B90. KD16_marg is running. Other services hold ~8 GB of RAM, so I launch only when ≥3.2 GB is free.
