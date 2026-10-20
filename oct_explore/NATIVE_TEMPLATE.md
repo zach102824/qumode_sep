@@ -268,3 +268,7 @@ Launched: OpenEvolve net16_n8 (train 8, val 12 with rr4 over 100 formulas, check
 Model/candidate selection uses a fixed held-out SELECTION set (seed base 33e9). Final numbers come from a DIFFERENT held-out TEST set (base 32e9, the standard 100 formulas).
 Earlier runs that early-stopped on n=15 / n=12 (a training size) are **not strictly controlled (train/val overlap)**.
 Launched: OpenEvolve net16 (selection 60 n=16 formulas, rr4; test-set check every 10 iterations; cores 5-6) and net32 (selection 30 n=20 formulas, rr4; cores 3-4). Hand runs: A16_RR4 (train 8+12, early stopping on 60 n=16 selection formulas, test n=16) and B32_RR4 (train 10+15, early stopping on 30 n=20 selection formulas, test n=20).
+
+### Core budget (Zach 2026-10-20 14:45 UTC+8): calculation jobs capped at **6 cores** total.
+Map: A16_RR4 cores 0-1; B32_RR4 core 2; OpenEvolve net32 cores 3-4; OpenEvolve net16 core 5. Adapter is idle-wait only.
+Measured OE iteration times so far: net16 ~3–5.5 min/candidate (selection 60×n=16 rr4); net32 first candidates OOM at 3.5GB — mem cap raised to 4.5GB.

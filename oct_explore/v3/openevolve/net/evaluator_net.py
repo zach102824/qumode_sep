@@ -84,7 +84,7 @@ def _evaluate_inner(program_path):
         r20 = score_set(predict, get_set(CHECK_N, int(os.environ.get("OE_NTEST", "100")), FC.TEB, R), 1 if CHECK_N >= 18 else 10)  # DIFFERENT held-out set (test base)
         out.update(check_n=CHECK_N, n20_rr_median=r20["rr"][0], n20_rr_B90=r20["rr"][1], n20_single_median=r20["single"][0], n20_single_B90=r20["single"][1], n20_pv_acc=r20["pv_acc"])
     return out
-MEM_MB = int(os.environ.get("OE_MEM_MB", "3500"))
+MEM_MB = int(os.environ.get("OE_MEM_MB", "4500"))
 def evaluate(program_path):
     """run the candidate in a child process with an RSS watchdog (OOM safety for the shared box)."""
     import subprocess, tempfile
