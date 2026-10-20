@@ -38,6 +38,7 @@ async def models(): return {"object": "list", "data": [{"id": A.model, "object":
 @app.post("/v1/chat/completions")
 async def chat(req: Request):
     b = await req.json(); model = b.get("model") or A.model
+    if "fable" in model: print(f"[adapter] remap {model} -> claude-opus-5-5-high (Opus-only)", flush=True); model = "claude-opus-5-5-high"
     if model.startswith("gpt-") and model not in ("gpt-5.2",) and "codex" not in model and "5.6" not in model: model = A.model  # map unknown openai names
     t = time.time()
     async with SEM:
