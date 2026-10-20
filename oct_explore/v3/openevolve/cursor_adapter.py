@@ -57,6 +57,10 @@ async def chat(req: Request):
             if "opus" in model:   # two-stage: Opus idea (compact) -> grok-4.6 code (full prompt + idea)
                 cp = compact(msgs); idea = (await run_agent(cp, A.idea_model)).strip()[:4000]; t1 = time.time()
                 print(f"[adapter] stage1 {A.idea_model} {t1-t:.1f}s in={len(cp)}ch out={len(idea)}ch (~{(len(cp)+len(idea))//4} tok)", flush=True)
+                try:
+                    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "ideas_raw.log"), "a") as f_:
+                        f_.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')}\t{uuid.uuid4().hex[:8]}\t" + idea.replace("\n", " | ") + "\n")
+                except Exception: pass
                 full = render(msgs + [{"role": "user", "content": "IMPLEMENT THIS IDEA (from a senior reviewer) in your answer, following the exact output format requested above:\n" + idea}])
                 txt = await run_agent(full, A.code_model)
                 print(f"[adapter] stage2 {A.code_model} {time.time()-t1:.1f}s in={len(full)}ch out={len(txt)}ch (~{(len(full)+len(txt))//4} tok)", flush=True)
