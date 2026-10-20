@@ -255,34 +255,6 @@ if __name__ == "__main__":
                         p0[kk] = psrc[kk]; ncopy += 1
                 log(f"theta_from key-wise {ncopy} keys from {a.theta_from}")
             else: log(f"theta_from size mismatch {th_load.size} vs {th0s.size} (src tree {ths.size}); skip")
-    if a.corr2 > 0 or a.free_ph > 0:
-        q_ = unr(th); wreg = a.corr2 if a.corr2 > 0 else a.free_ph
-        reg = reg + wreg * (jnp.mean(q_["acs"] ** 2) + jnp.mean(q_["acb"] ** 2)) * 1e2
-    return jnp.mean(nl) + a.tailw * jnp.mean(jax.lax.top_k(nl, k)[0]) + kd_term + reg
-
-
-if __name__ == "__main__":
-    rng = np.random.default_rng(1000 + a.seed); p0 = init_params(rng)
-    if a.warm:
-        pth, k = a.warm.split("#"); Jw = json.load(open(pth))
-        try:
-            po, bo = ravel_pytree(old_template())[1](jnp.asarray(Jw["runs"][int(k)]["theta"], jnp.float32))
-            for kk in list(p0):
-                if kk in po and jnp.asarray(p0[kk]).shape == jnp.asarray(po[kk]).shape: p0[kk] = po[kk]
-            if jnp.asarray(bo).shape == jnp.asarray(p0["base"]).shape: p0["base"] = bo
-            else:
-                b = np.asarray(p0["base"]).copy(); bs = np.asarray(bo); m = min(len(b), len(bs)); b[:m] = bs[:m]; p0["base"] = jnp.asarray(b)
-            log(f"warm from {a.warm}")
-        except Exception as e: log(f"warm skip: {e}")
-    if a.x0:
-        x = np.array(json.load(open(a.x0))["x"]); b = np.asarray(p0["base"]).copy(); b[4:L * NPL:NPL] = x[0::2]; b[5:L * NPL:NPL] = x[1::2]
-        p0["base"] = jnp.asarray(b)
-        if a.warm: p0["G2"] = jnp.zeros_like(p0["G2"])
-    if a.theta_from:
-            Jt = json.load(open(a.theta_from)); th_load = jnp.asarray(Jt["theta_best"], jnp.float32)
-            th0s, unr0 = ravel_pytree(p0)
-            if th_load.size == th0s.size: p0 = unr0(th_load); log(f"theta_from {a.theta_from}")
-            else: log(f"theta_from size mismatch {th_load.size} vs {th0s.size}; skip")
     
     if a.corr2 > 0 or a.free_ph > 0:
         r_ = np.random.default_rng(77); p0["Acs"] = jnp.asarray(r_.normal(0, 1 / np.sqrt(H), (H, H)), jnp.float32); p0["Acb"] = jnp.asarray(r_.normal(0, 1 / np.sqrt(H), (H, H)), jnp.float32)
