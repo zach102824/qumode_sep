@@ -279,3 +279,10 @@ Measured OE iteration times so far: net16 ~3–5.5 min/candidate (selection 60×
 - QAOA L4 n=16: **34.8 / 98**
 - Selection (60 formulas) looked much better (~88/736 at best S), so B90 on the official test is still dominated by a hard tail. Not close to QAOA.
 - Core map (cap 8): B32_RR4 0-2; OE net32 3-5; OE net16 6-7. OE parents are parent+worker trees, not duplicates.
+
+### Memory policy (2026-10-20 15:15 UTC+8)
+The box has 16 GB, and about 8 GB is held by other services, so my jobs get about 5 GB with at least 3.2 GB (20%) kept free.
+- Every hand run uses `gq_bias.sh` with an RSS watchdog (MEMMB; it kills only that job). OpenEvolve children have their own RSS cap (OE_MEM_MB).
+- Paused OpenEvolve net32 (n=20 children peak about 4–5 GB) until RAM frees up. It restarts with a lean config after B32_RR4 finishes.
+- Running: B32_RR4 (cores 0-1, about 2.8 GB), A16_full teacher (core 2, about 0.6 GB), OpenEvolve net16 (cores 6-7, child about 1 GB).
+- Implemented #4 distillation in gnn_bias: `--teacher <full-proj json> --kd λ --kd_mode dist|marg`. Loss = -log p (+ tail term) + λ·KL(teacher readout ‖ student readout). The teacher is A16_full (proj=full, train 8+12, selection on n=16).
