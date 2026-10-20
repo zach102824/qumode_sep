@@ -45,7 +45,7 @@ def static_check(src):
 def check_outs(o, F, n, m):
     o = {k: jnp.asarray(o[k], jnp.float32) for k in ("gamma", "beta", "w", "pv")}
     assert o["gamma"].shape == (F, FC.L) and o["beta"].shape == (F, FC.L) and o["w"].shape == (F, m, FC.L) and o["pv"].shape == (F, n), {k: v.shape for k, v in o.items()}
-    for k, v in o.items(): assert bool(jnp.all(jnp.isfinite(v))), k
+    for k, v in o.items(): assert bool(jnp.all(jnp.isfinite(v))), f"output {k} has NaN/inf (training diverged: lower lr, clip grads, bound outputs)"
     assert bool(jnp.all((o["pv"] > 0) & (o["pv"] < 1))), "pv in (0,1)"
     return o
 def score_set(predict, D, chunk):

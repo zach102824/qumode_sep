@@ -245,3 +245,11 @@ Running: B32_pairs and B32_full (n=10+15 train, test 15/20) for n=20 connectivit
 - QAOA L4: n=15 23.1/62.5; n=20 84.5/227
 
 **Recommendation:** software paths are used up on the chain (selector, residual/tail loss, wider bias, L8, training at n=20, theory check that depth cannot synthesize 3-cavity phases). Beating QAOA fairly at n=20 needs applying cost phases across 3+ cavities (the full-projection model beats QAOA: 77/195 vs 84.5/227). Any-pair connectivity alone gets about 10× on B90 but still loses (116/810).
+
+## 2026-10-20 13:40 UTC+8: gate lock, round-robin training (idea #1), OpenEvolve on the network only
+- **Gate lock:** `v3/openevolve/net/frozen_hashes.json` holds SHA-256 hashes of compiler.py, nsim.py, calib.py, assign.py, sim.py, frozen_circuit.py and evaluator_net.py. They are checked before and after every candidate. Candidates may only import numpy/jax/math/etc. and get a restricted API (data / batch / differentiable p). Output shapes are checked: gamma, beta (L), w (m, L), pv (n). `frozen_circuit.py` reproduces gnn_bias.forward and the numpy evaluator exactly.
+- **Idea #1 (gnn_bias `--rr R`, loss -log mean_r p_r + tail term), fair test numbers:**
+  - B32_RR4_t2 (early stopping on B90; it chose step 0, so this equals B32_b90): n=15 single 39.1/251, rr4 37.7/228; n=20 single 309/8034, rr4 303/3916.
+  - B32_RR4_S (early stopping on S): n=15 single 37.4/247, **rr4 36.6/188**; n=20 pending.
+  - QAOA L4: n=15 23.1/62.5, n=20 84.5/227.
+- **OpenEvolve network smoke (10 iterations, composer-2.5 + gpt-5.3-codex):** 5/10 candidates valid. Best is still the initial net: held-out n=15 rr4 49.3/225, single 39.9/283. Failures were NaN outputs and np-on-tracer; the prompt now warns about both. A 120-iteration long run has been launched (runs/net_long) with an n=20 check of the best program every 10 iterations (n20_watch.sh).
