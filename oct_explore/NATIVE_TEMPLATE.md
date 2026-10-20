@@ -314,3 +314,5 @@ OpenEvolve net16o ckpt_10 OFFICIAL TEST n=16 (TEB): single 111.7/7991 | rr4 113.
 | AH16 | formula-only assign_head selector over R=4 (warm key-wise from A16_RR4) | 99.01/6645.6 | 134.34/2614.0 | sel 99.01/6645.6 |
 OpenEvolve net16o official TEST n=16 (TEB): ckpt_10 single 111.7/7991 rr 113.7/3685; ckpt_20 single 111.0/8166 rr 111.3/3957.
 | HY16 | hybrid: projected cost + residual SNAP/bus on compiler support (non-zero init, L2 0.01), warm A16_RR4 | 108.27/7153 | 107.22/4196 |
+OpenEvolve net32o official TEST n=20 (chunked checker, verified = frozen score_set to 7e-7; QAOA L4 84.46/226.7):
+ckpt_10 single 284.2/8939 | rr4 251.3/4930 ; ckpt_20 single 282.1/8807 | rr4 241.9/3414 (selection n=15 rr 27.6/104.2).
