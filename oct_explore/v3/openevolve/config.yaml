@@ -1,0 +1,49 @@
+# OpenEvolve config: LLMs are Cursor models via the local adapter (cursor_adapter.py on 127.0.0.1:8765).
+max_iterations: 5
+checkpoint_interval: 5
+log_level: INFO
+random_seed: 42
+diff_based_evolution: true
+max_code_length: 20000
+llm:
+  api_base: "http://127.0.0.1:8765/v1"
+  api_key: "local-adapter-no-key"     # real Cursor key stays in env CURSOR_API_KEY, read by cursor-agent only
+  models:
+    - name: "composer-2.5"
+      weight: 0.7
+    - name: "gpt-5.3-codex"
+      weight: 0.3
+  temperature: 0.7
+  max_tokens: 16000
+  timeout: 900
+  retries: 1
+prompt:
+  system_message: |
+    You are improving a Python module that maps a 4-SAT formula (n=15 variables, ~149 clauses of 4 literals) to the
+    gate parameters of a NATIVE bosonic-cavity circuit (this is NOT QAOA; QAOA is only the baseline):
+    3 cavities x 5 bits (Gray-coded Fock levels), chain-connected (cavity 0-1 and 1-2 buses only).
+    Per layer l: diagonal phase = least-squares projection (under a product measure with per-variable probabilities pv)
+    of nm*gamma_l*sum_j w_jl*[clause j violated] onto functions of one cavity or two NEIGHBOUR cavities (anything spanning
+    cavities 0 and 2 is lost), plus optional extra per-cavity SNAP phase tables; then per-cavity one-bit-flip mixer with angle beta.
+    Start state uniform. Score = success probability p of measuring a satisfying assignment; fitness uses median and 90th-percentile
+    of 1/p over validation formulas (higher combined_score is better). Product-state solutions with p~1 exist in principle,
+    so a smart formula->parameter mapping (placement of variables into cavities = perm, projection measure pv, per-layer
+    gamma/beta (per-cavity beta allowed), clause weights w (m,L), per-cavity SNAP tables, L up to 8) can improve a lot.
+    HARD RULES: only numpy/math/itertools/functools/collections; no file/system access; design() must run < 1.5 s per formula;
+    do NOT solve the formula classically (no brute force over 2^n, no SAT search / WalkSAT / exhaustive enumeration) and do not
+    push pv toward a found solution; pv must come from cheap local statistics of the formula (literal counts, polarities, etc.).
+    Programs whose pv matches a true solution too well are penalised. Keep the design() interface and return keys.
+  num_top_programs: 3
+  num_diverse_programs: 2
+database:
+  population_size: 60
+  archive_size: 20
+  num_islands: 2
+  elite_selection_ratio: 0.2
+  exploitation_ratio: 0.7
+evaluator:
+  timeout: 300
+  max_retries: 1
+  cascade_evaluation: false
+  parallel_evaluations: 2
+  use_llm_feedback: false
