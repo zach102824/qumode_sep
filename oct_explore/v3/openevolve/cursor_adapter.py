@@ -1,14 +1,14 @@
 """Minimal OpenAI-compatible chat-completions adapter -> Cursor Agent CLI (print mode).
 Key: read by cursor-agent from env CURSOR_API_KEY (never logged). Bind 127.0.0.1 only.
-Run: python3.13 cursor_adapter.py --port 8765 --model composer-2.5
+Run: python3.13 cursor_adapter.py --port 8765 --model claude-opus-5-5-high
 """
-import argparse, asyncio, os, shutil, tempfile, time, uuid
+import argparse, asyncio, os, re, shutil, tempfile, time, uuid
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import uvicorn
 
-ap = argparse.ArgumentParser(); ap.add_argument("--port", type=int, default=8765); ap.add_argument("--model", default="composer-2.5")
-ap.add_argument("--conc", type=int, default=2); ap.add_argument("--timeout", type=int, default=600)
+ap = argparse.ArgumentParser(); ap.add_argument("--port", type=int, default=8765); ap.add_argument("--model", default="cursor-grok-4.6-high")
+ap.add_argument("--idea_model", default="claude-opus-5-5-high"); ap.add_argument("--code_model", default="cursor-grok-4.6-high"); ap.add_argument("--conc", type=int, default=2); ap.add_argument("--timeout", type=int, default=600)
 A = ap.parse_args()
 BIN = shutil.which("cursor-agent") or os.path.expanduser("~/.local/bin/cursor-agent")
 SEM = asyncio.Semaphore(A.conc); app = FastAPI()
@@ -32,19 +32,39 @@ async def run_agent(prompt, model):
         return o.decode()
     finally: shutil.rmtree(d, ignore_errors=True)
 
+def compact(msgs, cap_sys=2500, cap_user=6000):
+    """Stage-1 prompt: goal (system, truncated) + user prompt with code blocks replaced by a def-signature summary."""
+    sysm = "".join(m.get("content", "") if isinstance(m.get("content"), str) else "" for m in msgs if m.get("role") == "system")[:cap_sys]
+    user = "\n".join(m.get("content", "") if isinstance(m.get("content"), str) else "" for m in msgs if m.get("role") != "system")
+    def summ(mo):
+        code = mo.group(0); defs = re.findall(r"^\s*def [^\n]*", code, re.M)
+        return "[code omitted; defs: " + "; ".join(d.strip()[:90] for d in defs[:20]) + "]"
+    user = re.sub(r"```.*?```", summ, user, flags=re.S)[-cap_user:]
+    return ("### GOAL\n" + sysm + "\n\n### CONTEXT (parent metrics, top programs, history; code omitted)\n" + user +
+            "\n\n### TASK\nPropose ONE concrete change to the network/training (not the frozen circuit) most likely to raise the fair score. "
+            "Answer in 3-6 short lines, plain text, no code, max ~150 words. Do NOT use tools.")
+
 @app.get("/v1/models")
 async def models(): return {"object": "list", "data": [{"id": A.model, "object": "model"}]}
 
 @app.post("/v1/chat/completions")
 async def chat(req: Request):
     b = await req.json(); model = b.get("model") or A.model
-    if "fable" in model: print(f"[adapter] remap {model} -> claude-opus-5-5-high (Opus-only)", flush=True); model = "claude-opus-5-5-high"
-    if model.startswith("gpt-") and model not in ("gpt-5.2",) and "codex" not in model and "5.6" not in model: model = A.model  # map unknown openai names
-    t = time.time()
+    if "fable" in model: print(f"[adapter] remap {model} -> opus-idea+grok46-code", flush=True); model = "claude-opus-5-5-high"
+    t = time.time(); msgs = b.get("messages", [])
     async with SEM:
-        try: txt = await run_agent(render(b.get("messages", [])), model)
+        try:
+            if "opus" in model:   # two-stage: Opus idea (compact) -> grok-4.6 code (full prompt + idea)
+                cp = compact(msgs); idea = (await run_agent(cp, A.idea_model)).strip()[:4000]; t1 = time.time()
+                print(f"[adapter] stage1 {A.idea_model} {t1-t:.1f}s in={len(cp)}ch out={len(idea)}ch (~{(len(cp)+len(idea))//4} tok)", flush=True)
+                full = render(msgs + [{"role": "user", "content": "IMPLEMENT THIS IDEA (from a senior reviewer) in your answer, following the exact output format requested above:\n" + idea}])
+                txt = await run_agent(full, A.code_model)
+                print(f"[adapter] stage2 {A.code_model} {time.time()-t1:.1f}s in={len(full)}ch out={len(txt)}ch (~{(len(full)+len(txt))//4} tok)", flush=True)
+                model = "opus-idea+grok46-code"
+            else:
+                model = A.code_model; full = render(msgs); txt = await run_agent(full, model)
+                print(f"[adapter] {model} {time.time()-t:.1f}s in={len(full)}ch out={len(txt)}ch", flush=True)
         except Exception as ex: return JSONResponse({"error": {"message": str(ex)}}, status_code=500)
-    print(f"[adapter] {model} {time.time()-t:.1f}s out={len(txt)}ch", flush=True)
     return {"id": "chatcmpl-" + uuid.uuid4().hex, "object": "chat.completion", "created": int(time.time()), "model": model,
             "choices": [{"index": 0, "message": {"role": "assistant", "content": txt}, "finish_reason": "stop"}],
             "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}}
