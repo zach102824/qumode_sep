@@ -16,7 +16,7 @@ ap.add_argument("--proj", default="chain"); ap.add_argument("--assign", default=
 ap.add_argument("--bias", type=int, default=1); ap.add_argument("--bias_mlp", type=int, default=0, help="1: 2-layer MLP for p_v"); ap.add_argument("--clause_w", type=int, default=1); ap.add_argument("--pool_delta", type=int, default=1)
 ap.add_argument("--warm", default="results/v3/S_g4_snapF_s1.json#0"); ap.add_argument("--x0", default=""); ap.add_argument("--theta_from", default="", help="gnn_bias json: load theta_best")
 ap.add_argument("--steps", type=int, default=3000); ap.add_argument("--bs", type=int, default=32); ap.add_argument("--lr", type=float, default=3e-4)
-ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500); ap.add_argument("--npool20", type=int, default=400); ap.add_argument("--rr", type=int, default=1, help="fair round-robin: R placements per formula (mincut+R-1 random), loss -log mean_r p_r")
+ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500); ap.add_argument("--npool20", type=int, default=400); ap.add_argument("--val_n", type=int, default=0, help="validation size (default max(train))"); ap.add_argument("--rr", type=int, default=1, help="fair round-robin: R placements per formula (mincut+R-1 random), loss -log mean_r p_r")
 ap.add_argument("--nval", type=int, default=200); ap.add_argument("--es", type=int, default=250); ap.add_argument("--es_metric", default="S", choices=["S","b90","med"]); ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--smoke", action="store_true"); ap.add_argument("--resw", type=float, default=0.0, help="loss weight 1+resw*(resid/mean resid)"); ap.add_argument("--Hb", type=int, default=0, help="bias MLP width (0=H)")
 a = ap.parse_args()
@@ -200,7 +200,7 @@ if __name__ == "__main__":
     for n in a.train:
         globals()["PACK"] = globals()["LAZY"] = n >= 18; npl = a.npool if n < 18 else min(a.npool, a.npool20)
         t = time.time(); pools[n] = build(n, lazy_instances(n, npl, TRB)); log(f"pool n={n} {a.npool} built {time.time()-t:.0f}s")
-    nv = max(a.train); globals()["PACK"] = globals()["LAZY"] = nv >= 18; Dv = build(nv, lazy_instances(nv, a.nval, VAB)); globals()["PACK"] = globals()["LAZY"] = False
+    nv = a.val_n or max(a.train); globals()["PACK"] = globals()["LAZY"] = nv >= 18; Dv = build(nv, lazy_instances(nv, a.nval, VAB)); globals()["PACK"] = globals()["LAZY"] = False
     def es_val(th):
         pr, _, _, pv = evaluate(th, Dv, nv, 50 if nv <= 12 else (10 if nv <= 16 else 1)); s = NS.summ(pr.reshape(-1, a.rr).mean(1)); s["single"] = NS.summ(pr[:: a.rr]); s["pv_mean"] = float(pv.mean()); return s
     @jax.jit

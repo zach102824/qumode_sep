@@ -15,7 +15,8 @@ def verify_frozen():
 verify_frozen()
 import jax, jax.numpy as jnp
 import frozen_circuit as FC
-R = 4; NTR = {10: int(os.environ.get("OE_NTR10", "600")), 15: int(os.environ.get("OE_NTR15", "400"))}; NVAL = int(os.environ.get("OE_NVAL", "100"))
+R = 4; TRAIN_N = [int(x) for x in os.environ.get("OE_TRAIN_N", "10,15").split(",")]; VAL_N = int(os.environ.get("OE_VAL_N", "15")); CHECK_N = int(os.environ.get("OE_CHECK_N", "20"))
+NTR = {n: int(os.environ.get("OE_NTR", "600")) for n in TRAIN_N}; NVAL = int(os.environ.get("OE_NVAL", "100"))
 BUDGET = float(os.environ.get("OE_BUDGET", "420")); PVACC_MAX = 0.85
 CACHE = os.path.join(HERE, "..", "runs", "datacache"); os.makedirs(CACHE, exist_ok=True)
 def get_set(n, count, base, R_):
@@ -66,12 +67,12 @@ def _evaluate_inner(program_path):
     except Exception as e: return {"combined_score": -30.0, "error": str(e)}
     src = open(program_path).read(); bad = static_check(src)
     if bad: return {"combined_score": -20.0, "error": f"forbidden: {sorted(set(bad))}"}
-    sets = {n: get_set(n, NTR[n], FC.TRB, R) for n in (10, 15)}
+    sets = {n: get_set(n, NTR[n], FC.TRB, R) for n in TRAIN_N}
     spec = importlib.util.spec_from_file_location("cand", program_path); mod = importlib.util.module_from_spec(spec)
     try:
         spec.loader.exec_module(mod); tt = time.time(); predict = mod.train(API(sets), BUDGET); ttrain = time.time() - tt
         if ttrain > BUDGET * 2.0: return {"combined_score": -20.0, "error": f"train over budget {ttrain:.0f}s"}
-        r15 = score_set(predict, get_set(15, NVAL, FC.VAB, R), 25)
+        r15 = score_set(predict, get_set(VAL_N, NVAL, FC.VAB, R), 25)
     except Exception as e: return {"combined_score": -20.0, "error": f"{type(e).__name__}: {str(e)[:300]}"}
     try: verify_frozen()
     except Exception as e: return {"combined_score": -30.0, "error": str(e)}
@@ -80,8 +81,8 @@ def _evaluate_inner(program_path):
     out = {"combined_score": float(sc), "rr_median_inv_p": med, "rr_B90_inv_p": b90, "single_median_inv_p": r15["single"][0], "single_B90_inv_p": r15["single"][1],
            "pv_acc": r15["pv_acc"], "train_s": ttrain, "eval_s": time.time() - t0}
     if os.environ.get("OE_N20") == "1":
-        r20 = score_set(predict, get_set(20, NVAL, FC.VAB, R), 1)
-        out.update(n20_rr_median=r20["rr"][0], n20_rr_B90=r20["rr"][1], n20_single_median=r20["single"][0], n20_single_B90=r20["single"][1], n20_pv_acc=r20["pv_acc"])
+        r20 = score_set(predict, get_set(CHECK_N, NVAL, FC.VAB, R), 1 if CHECK_N >= 18 else 10)
+        out.update(check_n=CHECK_N, n20_rr_median=r20["rr"][0], n20_rr_B90=r20["rr"][1], n20_single_median=r20["single"][0], n20_single_B90=r20["single"][1], n20_pv_acc=r20["pv_acc"])
     return out
 MEM_MB = int(os.environ.get("OE_MEM_MB", "3500"))
 def evaluate(program_path):

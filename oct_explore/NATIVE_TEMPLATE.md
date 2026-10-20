@@ -1,5 +1,8 @@
 # Templated native cavity-chain ansatz (Zach plan 2026-10-19) — running summary
 
+> **STRICT-CONTROL RULE (2026-10-20 14:30 UTC+8, Zach):** a result counts only if the training size is strictly smaller than the validation/test size (16-level: train n=8 -> val n=12 -> test n=16; 32-level: train n=10 -> val n=15 -> test n=20). Every earlier number from training on n=10+15 (or n=8+12) with validation/early stopping on n=15 (or n=12) is **not strictly controlled (train/val overlap)**. That includes F32_*, B32_*, B20_*, G16_*, B16_*, the RR4/RR8 runs, and the OpenEvolve net_smoke/net_long runs (which trained on n=10+15). Treat those as indicative only.
+
+
 Method (own terms, QAOA is only the baseline): all data in cavities (Gray code, <=5 bits/cavity), chain of neighbour buses.
 Per layer: compiled clause phases (SNAP per cavity + neighbour bus tables, computed from the formula; terms spanning
 non-neighbour / 3+ cavities least-squares projected) -> calibrated one-bit-flip mixer per cavity (short native SNAP+D
@@ -253,3 +256,9 @@ Running: B32_pairs and B32_full (n=10+15 train, test 15/20) for n=20 connectivit
   - B32_RR4_S (early stopping on S): n=15 single 37.4/247, **rr4 36.6/188**; n=20 pending.
   - QAOA L4: n=15 23.1/62.5, n=20 84.5/227.
 - **OpenEvolve network smoke (10 iterations, composer-2.5 + gpt-5.3-codex):** 5/10 candidates valid. Best is still the initial net: held-out n=15 rr4 49.3/225, single 39.9/283. Failures were NaN outputs and np-on-tracer; the prompt now warns about both. A 120-iteration long run has been launched (runs/net_long) with an n=20 check of the best program every 10 iterations (n20_watch.sh).
+
+
+## 2026-10-20 14:30 UTC+8: strictly controlled restart
+> **STRICT-CONTROL RULE (2026-10-20 14:30 UTC+8, Zach):** a result counts only if the training size is strictly smaller than the validation/test size (16-level: train n=8 -> val n=12 -> test n=16; 32-level: train n=10 -> val n=15 -> test n=20). Every earlier number from training on n=10+15 (or n=8+12) with validation/early stopping on n=15 (or n=12) is **not strictly controlled (train/val overlap)**. That includes F32_*, B32_*, B20_*, G16_*, B16_*, the RR4/RR8 runs, and the OpenEvolve net_smoke/net_long runs (which trained on n=10+15). Treat those as indicative only.
+
+Launched: OpenEvolve net16_n8 (train 8, val 12 with rr4 over 100 formulas, check 16 every 10 iterations, cores 5-6) and net32_n10 (train 10, val 15, check 20, cores 3-4). Both are seeded from the initial network; the gamma/beta init comes from the *other* family's fixed schedule so no tested size was ever seen. Hand runs: A16_n8_RR4 (train 8, early stopping on n=12, test 12/16) and B32_n10_RR4 (train 10, early stopping on n=15, test 15/20). B32_RR8 was killed (not strictly controlled).
