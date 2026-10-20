@@ -7,7 +7,7 @@ mkdir -p $RUN/check
 while pgrep -f "openevolve.cli.*$RUN" >/dev/null; do
   for c in $RUN/checkpoints/checkpoint_*; do
     [ -f $c/best_program.py ] || continue; k=$(basename $c); [ -f $RUN/check/$k.json ] && continue
-    avail=$(free -m | awk '/Mem:/{print $7}'); [ "$avail" -lt ${NEED:-6800} ] && continue   # need 2.5GB job + 3.2GB headroom
+    avail=$(free -m | awk '/Mem:/{print $7}'); [ "$avail" -lt ${NEED:-6800} ] && continue
     taskset -c $CORE python3.13 net/evaluator_net.py $c/best_program.py > $RUN/check/$k.json 2> $RUN/check/$k.err
   done; sleep 120
 done
