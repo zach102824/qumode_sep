@@ -16,7 +16,7 @@ ap.add_argument("--proj", default="chain"); ap.add_argument("--assign", default=
 ap.add_argument("--bias", type=int, default=1); ap.add_argument("--bias_mlp", type=int, default=0, help="1: 2-layer MLP for p_v"); ap.add_argument("--clause_w", type=int, default=1); ap.add_argument("--pool_delta", type=int, default=1)
 ap.add_argument("--warm", default="results/v3/S_g4_snapF_s1.json#0"); ap.add_argument("--x0", default=""); ap.add_argument("--theta_from", default="", help="gnn_bias json: load theta_best")
 ap.add_argument("--steps", type=int, default=3000); ap.add_argument("--bs", type=int, default=32); ap.add_argument("--lr", type=float, default=3e-4)
-ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500); ap.add_argument("--npool20", type=int, default=400)
+ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500); ap.add_argument("--npool20", type=int, default=400); ap.add_argument("--rr", type=int, default=1, help="fair round-robin: R placements per formula (mincut+R-1 random), loss -log mean_r p_r")
 ap.add_argument("--nval", type=int, default=200); ap.add_argument("--es", type=int, default=250); ap.add_argument("--es_metric", default="S", choices=["S","b90","med"]); ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--smoke", action="store_true"); ap.add_argument("--resw", type=float, default=0.0, help="loss weight 1+resw*(resid/mean resid)"); ap.add_argument("--Hb", type=int, default=0, help="bias MLP width (0=H)")
 a = ap.parse_args()
@@ -52,15 +52,20 @@ def lazy_instances(n, count, base):
 def unpackS(D, n):
     if D["S"].dtype == np.uint8: D = dict(D); D["S"] = np.unpackbits(D["S"], axis=-1)[..., : 1 << n].astype(np.float32)
     return D
-def build(n, insts, rng=None):
-    gs, VP, BB, SS, PERM, RES = [], [], [], [], [], []
+def _entries(insts, n, rng, R):
     for ins in insts:
-        G, V, Bb, m, cl = graph(n, ins["seed"]); perm = perm_of(n, ins["seed"], cl, rng); pos = np.argsort(perm)
+        for r in range(R): yield ins, r, (r == R - 1)
+def build(n, insts, rng=None, R=None):
+    R = R or a.rr; gs, VP, BB, SS, PERM, RES = [], [], [], [], [], []
+    for ins, r, last in _entries(insts, n, rng, R):
+        G, V, Bb, m, cl = graph(n, ins["seed"])
+        perm = perm_of(n, ins["seed"], cl, rng) if r == 0 else np.random.default_rng(int(ins["seed"]) * 31 + r).permutation(n)
+        pos = np.argsort(perm)
         gs.append(G); VP.append(pos[V]); BB.append(Bb); PERM.append(perm); m0 = ins["m"]
         cavp = np.repeat(np.arange(len(CP.LAYOUTS[n])), CP.LAYOUTS[n]); kk_, w2_ = AS.walsh_terms(n, cl)
         RES.append(1 - (w2_ * np.array([AS.rep_ok([cavp[pos[v]] for v in t]) for t in kk_])).sum() / w2_.sum())
         E = ins["E"].astype(np.float64); Sv = (CP.permute_vars(E, n, perm) == 0)
-        SS.append(np.packbits(Sv) if PACK else Sv.astype(np.float32)); ins.pop("E", None) if LAZY else None
+        SS.append(np.packbits(Sv) if PACK else Sv.astype(np.float32)); ins.pop("E", None) if (LAZY and last) else None
     D = {k: np.stack([g[k] for g in gs]) for k in gs[0]}; D["VP"] = np.stack(VP); D["BB"] = np.stack(BB)
     D["S"] = np.stack(SS); D["PERM"] = np.stack(PERM); D["RES"] = np.array(RES, np.float32); D["nm"] = n / m0; return D
 
@@ -138,8 +143,10 @@ def forward(p, D, n):
     return jnp.sum(jnp.abs(psi.reshape(B, -1)) ** 2 * D["S"], 1), bl, gl, pv_f
 
 def lossf(th, D, n, unr):
-    pr = forward(unr(th), D, n)[0]; nl = -jnp.log(pr + 1e-12); k = max(1, nl.shape[0] // 10)
-    if a.resw > 0: nl = nl * (1 + a.resw * D["RES"] / (jnp.mean(D["RES"]) + 1e-6))
+    pr = forward(unr(th), D, n)[0]
+    if a.rr > 1: pr = pr.reshape(-1, a.rr).mean(1)
+    nl = -jnp.log(pr + 1e-12); k = max(1, nl.shape[0] // 10)
+    if a.resw > 0 and a.rr == 1: nl = nl * (1 + a.resw * D["RES"] / (jnp.mean(D["RES"]) + 1e-6))
     return jnp.mean(nl) + a.tailw * jnp.mean(jax.lax.top_k(nl, k)[0])
 
 
@@ -195,7 +202,7 @@ if __name__ == "__main__":
         t = time.time(); pools[n] = build(n, lazy_instances(n, npl, TRB)); log(f"pool n={n} {a.npool} built {time.time()-t:.0f}s")
     nv = max(a.train); globals()["PACK"] = globals()["LAZY"] = nv >= 18; Dv = build(nv, lazy_instances(nv, a.nval, VAB)); globals()["PACK"] = globals()["LAZY"] = False
     def es_val(th):
-        pr, _, _, pv = evaluate(th, Dv, nv, 50 if nv <= 12 else (10 if nv <= 16 else 1)); s = NS.summ(pr); s["pv_mean"] = float(pv.mean()); return s
+        pr, _, _, pv = evaluate(th, Dv, nv, 50 if nv <= 12 else (10 if nv <= 16 else 1)); s = NS.summ(pr.reshape(-1, a.rr).mean(1)); s["single"] = NS.summ(pr[:: a.rr]); s["pv_mean"] = float(pv.mean()); return s
     @jax.jit
     def adam(x, m, v, g, t, lr):
         m = 0.9 * m + 0.1 * g; v = 0.999 * v + 0.001 * g * g; return x - lr * (m / (1 - 0.9 ** t)) / (jnp.sqrt(v / (1 - 0.999 ** t)) + 1e-8), m, v
@@ -210,7 +217,7 @@ if __name__ == "__main__":
     for t in range(1, a.steps + 1):
         lr = a.lr * (0.1 + 0.9 * 0.5 * (1 + np.cos(np.pi * t / a.steps))); gt = 0; vs = 0
         for n in a.train:
-            P = pools[n]; idx = rb.choice(P["S"].shape[0], a.bs, replace=False)
+            P = pools[n]; fi = rb.choice(P["S"].shape[0] // a.rr, a.bs, replace=False); idx = (fi[:, None] * a.rr + np.arange(a.rr)[None]).ravel()
             Dn = unpackS({k: (v[idx] if k != "nm" else v) for k, v in P.items()}, n)
             v, g = vg(n)(x, Dn); gt = gt + g; vs += float(v)
         x, mom, vel = adam(x, mom, vel, gt, t, lr * LRM); rl.append(vs / len(a.train))
@@ -222,15 +229,16 @@ if __name__ == "__main__":
     res = {"args": vars(a), "hist": HIST, "best_it": BEST["it"], "theta_best": BEST["x"].tolist(), "test": {}, "random": {}}
     thb = jnp.asarray(BEST["x"])
     for n in a.test:
-        ins = sim.instances(n, 200 if n <= 8 else 100, TEB); D = build(n, ins); t = time.time()
+        ins = sim.instances(n, 200 if n <= 8 else 100, TEB); globals()["PACK"] = n >= 18; D = build(n, ins); globals()["PACK"] = False; t = time.time()
         pr, bl, gl, pv = evaluate(thb, D, n, 25 if n <= 12 else (4 if n <= 16 else 1))
+        pr_all = pr; pr = pr_all[:: a.rr]; bl, gl, pv = bl[:: a.rr], gl[:: a.rr], pv[:: a.rr]; rrs = NS.summ(pr_all.reshape(-1, a.rr).mean(1))
         # polarity accuracy vs a solution (diagnostic)
         acc = []
         for i, ins_i in enumerate(ins):
             sol = np.flatnonzero(ins_i["E"] == 0)[0]; bits_s = np.array([(sol >> (n - 1 - v)) & 1 for v in range(n)])
             acc.append(np.mean((pv[i] > 0.5) == (bits_s == 1)))
         res["test"][str(n)] = NS.summ(pr) | {"p": pr.tolist(), "pv_mean": float(pv.mean()), "pv_acc": float(np.mean(acc)),
-                                              "b_mean": bl.mean(0).tolist(), "g_mean": gl.mean(0).tolist()}; res["random"][str(n)] = NS.rand_stats(ins, n)
-        log(f"TEST n={n}: {res['test'][str(n)]['median_inv_p']:.2f}/{res['test'][str(n)]['B90_inv_p']:.2f} pv_acc {np.mean(acc):.3f} ({time.time()-t:.0f}s)")
+                                              "b_mean": bl.mean(0).tolist(), "g_mean": gl.mean(0).tolist(), "rr": rrs, "p_all": pr_all.tolist()}; res["random"][str(n)] = NS.rand_stats(ins, n)
+        log(f"TEST n={n}: single {res['test'][str(n)]['median_inv_p']:.2f}/{res['test'][str(n)]['B90_inv_p']:.2f} | rr{a.rr} {rrs['median_inv_p']:.2f}/{rrs['B90_inv_p']:.2f} pv_acc {np.mean(acc):.3f} ({time.time()-t:.0f}s)")
         json.dump(res, open(OUT, "w"))
     log("DONE")
