@@ -272,3 +272,10 @@ Launched: OpenEvolve net16 (selection 60 n=16 formulas, rr4; test-set check ever
 ### Core budget (Zach 2026-10-20 14:45 UTC+8): calculation jobs capped at **6 cores** total.
 Map: A16_RR4 cores 0-1; B32_RR4 core 2; OpenEvolve net32 cores 3-4; OpenEvolve net16 core 5. Adapter is idle-wait only.
 Measured OE iteration times so far: net16 ~3–5.5 min/candidate (selection 60×n=16 rr4); net32 first candidates OOM at 3.5GB — mem cap raised to 4.5GB.
+
+### First fair held-out n=16 (A16_RR4 hand, train 8+12, early-stop on n=16 selection base 33e9, TEST base 32e9)
+- single min-cut: **103.1 / 7363**
+- fair round-robin R=4: **130.3 / 2647**
+- QAOA L4 n=16: **34.8 / 98**
+- Selection (60 formulas) looked much better (~88/736 at best S), so B90 on the official test is still dominated by a hard tail. Not close to QAOA.
+- Core map (cap 8): B32_RR4 0-2; OE net32 3-5; OE net16 6-7. OE parents are parent+worker trees, not duplicates.
