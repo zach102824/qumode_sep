@@ -16,7 +16,7 @@ ap.add_argument("--proj", default="chain"); ap.add_argument("--assign", default=
 ap.add_argument("--bias", type=int, default=1); ap.add_argument("--bias_mlp", type=int, default=0, help="1: 2-layer MLP for p_v"); ap.add_argument("--clause_w", type=int, default=1); ap.add_argument("--pool_delta", type=int, default=1)
 ap.add_argument("--warm", default="results/v3/S_g4_snapF_s1.json#0"); ap.add_argument("--x0", default=""); ap.add_argument("--theta_from", default="", help="gnn_bias json: load theta_best")
 ap.add_argument("--steps", type=int, default=3000); ap.add_argument("--bs", type=int, default=32); ap.add_argument("--lr", type=float, default=3e-4)
-ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500); ap.add_argument("--npool20", type=int, default=400); ap.add_argument("--teacher", default=""); ap.add_argument("--kd", type=float, default=0.0); ap.add_argument("--kd_mode", default="dist"); ap.add_argument("--val_n", type=int, default=0, help="validation size (default max(train))"); ap.add_argument("--rr", type=int, default=1, help="fair round-robin: R placements per formula (mincut+R-1 random), loss -log mean_r p_r")
+ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500); ap.add_argument("--npool20", type=int, default=400); ap.add_argument("--two_round", type=int, default=0, help="#5: half shots round 1; round-2 params from round-1 marginals (fed as var features); p_eff=(p1+p2)/2"); ap.add_argument("--shots", type=int, default=0, help="#5: if >0, round-1 marginals estimated from shots/2 samples (binomial noise)"); ap.add_argument("--corr", type=float, default=0.0, help="#3 learned per-cavity SNAP correction, L2 reg weight (0=off)"); ap.add_argument("--teacher", default=""); ap.add_argument("--kd", type=float, default=0.0); ap.add_argument("--kd_mode", default="dist"); ap.add_argument("--val_n", type=int, default=0, help="validation size (default max(train))"); ap.add_argument("--rr", type=int, default=1, help="fair round-robin: R placements per formula (mincut+R-1 random), loss -log mean_r p_r")
 ap.add_argument("--nval", type=int, default=200); ap.add_argument("--es", type=int, default=250); ap.add_argument("--es_metric", default="S", choices=["S","b90","med"]); ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--smoke", action="store_true"); ap.add_argument("--resw", type=float, default=0.0, help="loss weight 1+resw*(resid/mean resid)"); ap.add_argument("--Hb", type=int, default=0, help="bias MLP width (0=H)")
 a = ap.parse_args()
@@ -119,6 +119,19 @@ def fwht_j(v, n):
     return t.reshape(B, -1)
 
 def forward(p, D, n, proj=None, ret_psi=False):
+    if a.two_round and not D.get("_r2", False):
+        o1 = forward_one(p, D, n, proj, True); q1 = o1[-1]
+        mc = q1 @ jnp.asarray(bits(n), jnp.float32)                                   # chain-order marginals P(x=1)
+        if a.shots > 0:
+            key = jax.random.PRNGKey(0); mc = jnp.clip(mc + jax.random.normal(key, mc.shape) * jnp.sqrt(mc * (1 - mc) / (a.shots / 2)), 0, 1)
+        mv = jnp.take_along_axis(mc, jnp.argsort(D["PERM"].astype(jnp.int32), 1), 1)   # var order
+        mv = jax.lax.stop_gradient(mv)
+        fv2 = D["fv"].at[..., 3].set(mv).at[..., 4].set((2 * mv - 1) ** 2)
+        o2 = forward_one(p, dict(D, fv=fv2, _r2=True), n, proj, True)
+        peff = 0.5 * (o1[0] + o2[0])
+        return (peff,) + tuple(o2[1:4]) + ((0.5 * (o1[-1] + o2[-1]),) if ret_psi else ())
+    return forward_one(p, D, n, proj, ret_psi)
+def forward_one(p, D, n, proj=None, ret_psi=False):
     proj = proj or a.proj
     ks = CP.LAYOUTS[n]; G = {k: D[k] for k in ("Ip", "In", "fv", "deg")}; B = D["S"].shape[0]
     hv, hc = AN.run_backbone(p, G, "mp", H); g_ = jnp.concatenate([hv.mean(1), hc.mean(1)], -1)
@@ -140,6 +153,12 @@ def forward(p, D, n, proj=None, ret_psi=False):
             if a.bias: Ew = project_product_j(Ew, pv, n, proj, ks)
             else: Ew = fwht_j(fwht_j(Ew, n) * jnp.asarray(CP.rep_mask(ks, proj).astype(np.float32))[None], n) / (1 << n)
         psi = psi * jnp.exp(-1j * Ew.reshape(psi.shape)).astype(jnp.complex64)
+        if "Wsn" in p:
+            hvc = jnp.take_along_axis(hv, D["PERM"].astype(jnp.int32)[..., None], axis=1); off = 0
+            for c, k in enumerate(ks):
+                tab = (hvc[:, off:off + k].mean(1) @ p["Wsn"][l])[:, : 1 << k]; off += k
+                sh = [B] + [1] * len(ks); sh[c + 1] = 1 << k
+                psi = psi * jnp.exp(-1j * tab.reshape(sh)).astype(jnp.complex64)
         for c, k in enumerate(ks): psi = NS.apply_cav(MIXK[k](bl[:, l]), psi, c, len(ks))
     pr_ = jnp.abs(psi.reshape(B, -1)) ** 2
     if ret_psi: return jnp.sum(pr_ * D["S"], 1), bl, gl, pv_f, pr_
@@ -160,7 +179,8 @@ def lossf(th, D, n, unr):
     if a.rr > 1: pr = pr.reshape(-1, a.rr).mean(1)
     nl = -jnp.log(pr + 1e-12); k = max(1, nl.shape[0] // 10)
     if a.resw > 0 and a.rr == 1: nl = nl * (1 + a.resw * D["RES"] / (jnp.mean(D["RES"]) + 1e-6))
-    return jnp.mean(nl) + a.tailw * jnp.mean(jax.lax.top_k(nl, k)[0]) + kd_term
+    reg = a.corr * jnp.mean(unr(th)["Wsn"] ** 2) * 1e3 if a.corr > 0 else 0.0
+    return jnp.mean(nl) + a.tailw * jnp.mean(jax.lax.top_k(nl, k)[0]) + kd_term + reg
 
 
 if __name__ == "__main__":
@@ -186,6 +206,7 @@ if __name__ == "__main__":
             if th_load.size == th0s.size: p0 = unr0(th_load); log(f"theta_from {a.theta_from}")
             else: log(f"theta_from size mismatch {th_load.size} vs {th0s.size}; skip")
     
+    if a.corr > 0: p0["Wsn"] = jnp.zeros((L, H, 32), jnp.float32); log(f"#3 SNAP correction on, reg {a.corr}")
     th0, unr = ravel_pytree(p0)
     if a.teacher:
         Jt_ = json.load(open(a.teacher)); tt_ = jnp.asarray(Jt_["theta_best"], jnp.float32); assert tt_.size == th0.size, ("teacher arch mismatch", tt_.size, th0.size)
