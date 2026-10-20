@@ -16,7 +16,7 @@ ap.add_argument("--proj", default="chain"); ap.add_argument("--assign", default=
 ap.add_argument("--bias", type=int, default=1); ap.add_argument("--bias_mlp", type=int, default=0, help="1: 2-layer MLP for p_v"); ap.add_argument("--clause_w", type=int, default=1); ap.add_argument("--pool_delta", type=int, default=1)
 ap.add_argument("--warm", default="results/v3/S_g4_snapF_s1.json#0"); ap.add_argument("--x0", default=""); ap.add_argument("--theta_from", default="", help="gnn_bias json: load theta_best")
 ap.add_argument("--steps", type=int, default=3000); ap.add_argument("--bs", type=int, default=32); ap.add_argument("--lr", type=float, default=3e-4)
-ap.add_argument("--corr2", type=float, default=0.0); ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500); ap.add_argument("--npool20", type=int, default=400); ap.add_argument("--two_round", type=int, default=0, help="#5: half shots round 1; round-2 params from round-1 marginals (fed as var features); p_eff=(p1+p2)/2"); ap.add_argument("--shots", type=int, default=0, help="#5: if >0, round-1 marginals estimated from shots/2 samples (binomial noise)"); ap.add_argument("--corr", type=float, default=0.0, help="#3 learned per-cavity SNAP correction, L2 reg weight (0=off)"); ap.add_argument("--teacher", default=""); ap.add_argument("--kd", type=float, default=0.0); ap.add_argument("--kd_mode", default="dist"); ap.add_argument("--val_n", type=int, default=0, help="validation size (default max(train))"); ap.add_argument("--rr", type=int, default=1, help="fair round-robin: R placements per formula (mincut+R-1 random), loss -log mean_r p_r")
+ap.add_argument("--clamp", type=int, default=0); ap.add_argument("--gaux", type=float, default=0.0); ap.add_argument("--corr2", type=float, default=0.0); ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500); ap.add_argument("--npool20", type=int, default=400); ap.add_argument("--two_round", type=int, default=0, help="#5: half shots round 1; round-2 params from round-1 marginals (fed as var features); p_eff=(p1+p2)/2"); ap.add_argument("--shots", type=int, default=0, help="#5: if >0, round-1 marginals estimated from shots/2 samples (binomial noise)"); ap.add_argument("--corr", type=float, default=0.0, help="#3 learned per-cavity SNAP correction, L2 reg weight (0=off)"); ap.add_argument("--teacher", default=""); ap.add_argument("--kd", type=float, default=0.0); ap.add_argument("--kd_mode", default="dist"); ap.add_argument("--val_n", type=int, default=0, help="validation size (default max(train))"); ap.add_argument("--rr", type=int, default=1, help="fair round-robin: R placements per formula (mincut+R-1 random), loss -log mean_r p_r")
 ap.add_argument("--nval", type=int, default=200); ap.add_argument("--es", type=int, default=250); ap.add_argument("--es_metric", default="S", choices=["S","b90","med"]); ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--smoke", action="store_true"); ap.add_argument("--resw", type=float, default=0.0, help="loss weight 1+resw*(resid/mean resid)"); ap.add_argument("--Hb", type=int, default=0, help="bias MLP width (0=H)")
 a = ap.parse_args()
@@ -127,7 +127,11 @@ def forward(p, D, n, proj=None, ret_psi=False):
         mv = jnp.take_along_axis(mc, jnp.argsort(D["PERM"].astype(jnp.int32), 1), 1)   # var order
         mv = jax.lax.stop_gradient(mv)
         fv2 = D["fv"].at[..., 3].set(mv).at[..., 4].set((2 * mv - 1) ** 2)
-        o2 = forward_one(p, dict(D, fv=fv2, _r2=True), n, proj, True)
+        D2 = dict(D, fv=fv2, _r2=True)
+        if a.clamp > 0:   # RQAOA-style: the clamp most-confident vars (by round-1 marginal) are pinned in the round-2 bias p_v
+            conf = jnp.abs(2 * mv - 1); thr = jax.lax.top_k(conf, a.clamp)[0][:, -1:]
+            D2["_cm"] = (conf >= thr).astype(jnp.float32); D2["_cv"] = jnp.where(mv > 0.5, 0.95, 0.05)
+        o2 = forward_one(p, D2, n, proj, True)
         peff = 0.5 * (o1[0] + o2[0])
         return (peff,) + tuple(o2[1:4]) + ((0.5 * (o1[-1] + o2[-1]),) if ret_psi else ())
     return forward_one(p, D, n, proj, ret_psi)
@@ -144,6 +148,7 @@ def forward_one(p, D, n, proj=None, ret_psi=False):
         Wp = p["Wp2"] if a.bias_mlp else p["Wp"]
         pv_f = jax.nn.sigmoid(hpv @ Wp + p["bp"])
     else: pv_f = jnp.full_like(hv[..., 0], 0.5)
+    if "_cm" in D: pv_f = D["_cm"] * D["_cv"] + (1 - D["_cm"]) * pv_f
     pv = jnp.take_along_axis(pv_f, D["PERM"].astype(jnp.int32), axis=1) if a.bias else pv_f   # chain order
     xb = jnp.asarray(bits(n)); lit = xb[:, D["VP"]]; viol = jnp.prod((lit == D["BB"][None].astype(jnp.int8)).astype(jnp.float32), -1)
     psi = NS.uniform_psi0(ks, B)
@@ -159,7 +164,7 @@ def forward_one(p, D, n, proj=None, ret_psi=False):
                 tab = (hvc[:, off:off + k].mean(1) @ p["Wsn"][l])[:, : 1 << k]; off += k
                 sh = [B] + [1] * len(ks); sh[c + 1] = 1 << k
                 psi = psi * jnp.exp(-1j * tab.reshape(sh)).astype(jnp.complex64)
-        if "Acs" in p:   # SNAP + neighbour-bus correction from signed digit patterns of the cavity's variables (size-free)
+        if "Acs" in p and proj != "full":   # SNAP + neighbour-bus correction from signed digit patterns of the cavity's variables (size-free)
             if l == 0:
                 hvc = jnp.take_along_axis(hv, D["PERM"].astype(jnp.int32)[..., None], axis=1); k0 = ks[0]
                 ib = np.arange(1 << k0)[:, None]; ST = jnp.asarray((1.0 - 2.0 * ((ib >> (k0 - 1 - np.arange(k0))[None]) & 1)).astype(np.float32))
@@ -189,6 +194,9 @@ def lossf(th, D, n, unr):
         kd_term = a.kd * jnp.mean(kl)
     else:
         pr = forward(unr(th), D, n)[0]; kd_term = 0.0
+    if a.gaux > 0:   # global-cost p (same network, unprojected, no corrections) as an auxiliary gap signal
+        pg = forward(unr(th), D, n, proj="full")[0]
+        kd_term = kd_term + a.gaux * (jnp.mean(-jnp.log(pg + 1e-12)) * 0.5 + jnp.mean(jax.nn.softplus(jax.lax.stop_gradient(jnp.log(pg + 1e-12)) - jnp.log(pr + 1e-12))))
     if a.rr > 1: pr = pr.reshape(-1, a.rr).mean(1)
     nl = -jnp.log(pr + 1e-12); k = max(1, nl.shape[0] // 10)
     if a.resw > 0 and a.rr == 1: nl = nl * (1 + a.resw * D["RES"] / (jnp.mean(D["RES"]) + 1e-6))
