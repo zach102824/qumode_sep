@@ -1,0 +1,30 @@
+--- ensemble.py.orig	2026-10-20 20:43:19.218216228 +0800
++++ /home/box/.local/lib/python3.13/site-packages/openevolve/llm/ensemble.py	2026-10-20 20:43:19.230216255 +0800
+@@ -84,7 +84,7 @@
+         """Generate text using a randomly selected model based on weights"""
+         model = self._sample_model()
+         res = await model.generate(prompt, **kwargs)
+-        self.last_usage = getattr(model, "last_usage", None)
++        self.last_usage = getattr(model, "last_usage", None); self.last_model = getattr(model, "model", None)
+         return res
+ 
+     async def generate_with_context(
+@@ -93,7 +93,7 @@
+         """Generate text using a system message and conversational context"""
+         model = self._sample_model()
+         res = await model.generate_with_context(system_message, messages, **kwargs)
+-        self.last_usage = getattr(model, "last_usage", None)
++        self.last_usage = getattr(model, "last_usage", None); self.last_model = getattr(model, "model", None)
+         return res
+ 
+     def _sample_model(self) -> LLMInterface:
+--- process_parallel.py.orig	2026-10-20 20:43:19.218216228 +0800
++++ /home/box/.local/lib/python3.13/site-packages/openevolve/process_parallel.py	2026-10-20 20:43:19.230216255 +0800
+@@ -380,6 +380,7 @@
+                 "parent_metrics": parent.metrics,
+                 "island": parent_island,
+                 "token_usage": token_usage,
++                "llm_model": getattr(_worker_llm_ensemble, "last_model", None),
+             },
+         )
+ 

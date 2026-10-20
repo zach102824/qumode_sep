@@ -10,7 +10,9 @@ llm:
   api_key: "local-adapter-no-key"     # real Cursor key stays in env CURSOR_API_KEY, read by cursor-agent only
   models:
     - name: "claude-opus-5-5-high"
-      weight: 1.0
+      weight: 0.5
+    - name: "claude-fable-5-thinking-high"
+      weight: 0.5
   temperature: 0.7
   max_tokens: 16000
   timeout: 1800
