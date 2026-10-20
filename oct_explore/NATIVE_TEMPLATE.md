@@ -303,3 +303,6 @@ Notes: KD16_dist trades median for B90 (4436 vs 7363) but is still ~45× short o
 | COR16 | #3 SNAP correction (mean-embedding table) | 96.68/7468.5 | 117.35/3052.3 |
 Goal now: make the chain-applied cost act like the global cost (global teacher 33.8/79). OpenEvolve net16c: optional additive
 dS (SNAP) / dB (neighbour-bus) tables, same gate sequence; teacher via api.p_from(glob=True). Hand run CB16: --corr2 SNAP+bus pattern tables.
+| TR16 | #5 two-round feedback, 200 shots split | 89.38/5540.1 | 87.34/2851.9 |
+| CB16 | SNAP+bus signed-pattern correction (--corr2 0.01) | 87.24/7328.2 | 108.81/4986.1 |
+OpenEvolve: from 16:59 (UTC+8) LLM = claude-opus-5-5-high only (run net16o, phase-correction goal; net16c stopped, DB kept).
