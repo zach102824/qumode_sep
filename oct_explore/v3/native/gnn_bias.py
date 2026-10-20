@@ -231,6 +231,54 @@ if __name__ == "__main__":
         p0["base"] = jnp.asarray(b)
         if a.warm: p0["G2"] = jnp.zeros_like(p0["G2"])
     if a.theta_from:
+        Jt = json.load(open(a.theta_from)); th_load = jnp.asarray(Jt["theta_best"], jnp.float32)
+        th0s, unr0 = ravel_pytree(p0)
+        if th_load.size == th0s.size:
+            p0 = unr0(th_load); log(f"theta_from {a.theta_from}")
+        else:
+            asrc = Jt.get("args", {}) or {}
+            saved = (a.assign_head, a.corr, a.corr2, a.free_ph, a.bias, a.bias_mlp, a.Hb)
+            a.assign_head = int(asrc.get("assign_head", 0) or 0); a.corr = float(asrc.get("corr", 0) or 0)
+            a.corr2 = float(asrc.get("corr2", 0) or 0); a.free_ph = float(asrc.get("free_ph", 0) or 0)
+            a.bias = int(asrc.get("bias", a.bias)); a.bias_mlp = int(asrc.get("bias_mlp", a.bias_mlp)); a.Hb = int(asrc.get("Hb", a.Hb) or 0)
+            psrc = init_params(np.random.default_rng(0))
+            if a.corr > 0: psrc["Wsn"] = jnp.zeros((L, H, 32), jnp.float32)
+            if a.corr2 > 0 or a.free_ph > 0:
+                psrc["Acs"] = jnp.zeros((H, H)); psrc["Acb"] = jnp.zeros((H, H)); psrc["acs"] = jnp.zeros((L, H)); psrc["acb"] = jnp.zeros((L, H))
+            if a.assign_head: psrc["Was"] = jnp.zeros((2 * H, 8)); psrc["bas"] = jnp.zeros(8)
+            ths, uns = ravel_pytree(psrc)
+            a.assign_head, a.corr, a.corr2, a.free_ph, a.bias, a.bias_mlp, a.Hb = saved
+            if ths.size == th_load.size:
+                psrc = uns(th_load); ncopy = 0
+                for kk in psrc:
+                    if kk in p0 and jnp.asarray(p0[kk]).shape == jnp.asarray(psrc[kk]).shape:
+                        p0[kk] = psrc[kk]; ncopy += 1
+                log(f"theta_from key-wise {ncopy} keys from {a.theta_from}")
+            else: log(f"theta_from size mismatch {th_load.size} vs {th0s.size} (src tree {ths.size}); skip")
+    if a.corr2 > 0 or a.free_ph > 0:
+        q_ = unr(th); wreg = a.corr2 if a.corr2 > 0 else a.free_ph
+        reg = reg + wreg * (jnp.mean(q_["acs"] ** 2) + jnp.mean(q_["acb"] ** 2)) * 1e2
+    return jnp.mean(nl) + a.tailw * jnp.mean(jax.lax.top_k(nl, k)[0]) + kd_term + reg
+
+
+if __name__ == "__main__":
+    rng = np.random.default_rng(1000 + a.seed); p0 = init_params(rng)
+    if a.warm:
+        pth, k = a.warm.split("#"); Jw = json.load(open(pth))
+        try:
+            po, bo = ravel_pytree(old_template())[1](jnp.asarray(Jw["runs"][int(k)]["theta"], jnp.float32))
+            for kk in list(p0):
+                if kk in po and jnp.asarray(p0[kk]).shape == jnp.asarray(po[kk]).shape: p0[kk] = po[kk]
+            if jnp.asarray(bo).shape == jnp.asarray(p0["base"]).shape: p0["base"] = bo
+            else:
+                b = np.asarray(p0["base"]).copy(); bs = np.asarray(bo); m = min(len(b), len(bs)); b[:m] = bs[:m]; p0["base"] = jnp.asarray(b)
+            log(f"warm from {a.warm}")
+        except Exception as e: log(f"warm skip: {e}")
+    if a.x0:
+        x = np.array(json.load(open(a.x0))["x"]); b = np.asarray(p0["base"]).copy(); b[4:L * NPL:NPL] = x[0::2]; b[5:L * NPL:NPL] = x[1::2]
+        p0["base"] = jnp.asarray(b)
+        if a.warm: p0["G2"] = jnp.zeros_like(p0["G2"])
+    if a.theta_from:
             Jt = json.load(open(a.theta_from)); th_load = jnp.asarray(Jt["theta_best"], jnp.float32)
             th0s, unr0 = ravel_pytree(p0)
             if th_load.size == th0s.size: p0 = unr0(th_load); log(f"theta_from {a.theta_from}")
