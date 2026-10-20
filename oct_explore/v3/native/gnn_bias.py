@@ -16,7 +16,7 @@ ap.add_argument("--proj", default="chain"); ap.add_argument("--assign", default=
 ap.add_argument("--bias", type=int, default=1); ap.add_argument("--bias_mlp", type=int, default=0, help="1: 2-layer MLP for p_v"); ap.add_argument("--clause_w", type=int, default=1); ap.add_argument("--pool_delta", type=int, default=1)
 ap.add_argument("--warm", default="results/v3/S_g4_snapF_s1.json#0"); ap.add_argument("--x0", default=""); ap.add_argument("--theta_from", default="", help="gnn_bias json: load theta_best")
 ap.add_argument("--steps", type=int, default=3000); ap.add_argument("--bs", type=int, default=32); ap.add_argument("--lr", type=float, default=3e-4)
-ap.add_argument("--free_ph", type=float, default=0.0, help="replace projected cost with free SNAP+bus tables; value=L2 reg weight"); ap.add_argument("--assign_head", type=int, default=0, help="formula-only placement selector over R placements (fair selector metric)"); ap.add_argument("--clamp", type=int, default=0); ap.add_argument("--gaux", type=float, default=0.0); ap.add_argument("--corr2", type=float, default=0.0); ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500); ap.add_argument("--npool20", type=int, default=400); ap.add_argument("--two_round", type=int, default=0, help="#5: half shots round 1; round-2 params from round-1 marginals (fed as var features); p_eff=(p1+p2)/2"); ap.add_argument("--shots", type=int, default=0, help="#5: if >0, round-1 marginals estimated from shots/2 samples (binomial noise)"); ap.add_argument("--corr", type=float, default=0.0, help="#3 learned per-cavity SNAP correction, L2 reg weight (0=off)"); ap.add_argument("--teacher", default=""); ap.add_argument("--kd", type=float, default=0.0); ap.add_argument("--kd_mode", default="dist"); ap.add_argument("--val_n", type=int, default=0, help="validation size (default max(train))"); ap.add_argument("--rr", type=int, default=1, help="fair round-robin: R placements per formula (mincut+R-1 random), loss -log mean_r p_r")
+ap.add_argument("--hyb", type=float, default=0.0, help="hybrid: projected cost + residual SNAP/bus on compiler support; value=L2; non-zero init; train -log p"); ap.add_argument("--free_ph", type=float, default=0.0, help="replace projected cost with free SNAP+bus tables; value=L2 reg weight"); ap.add_argument("--assign_head", type=int, default=0, help="formula-only placement selector over R placements (fair selector metric)"); ap.add_argument("--clamp", type=int, default=0); ap.add_argument("--gaux", type=float, default=0.0); ap.add_argument("--corr2", type=float, default=0.0); ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500); ap.add_argument("--npool20", type=int, default=400); ap.add_argument("--two_round", type=int, default=0, help="#5: half shots round 1; round-2 params from round-1 marginals (fed as var features); p_eff=(p1+p2)/2"); ap.add_argument("--shots", type=int, default=0, help="#5: if >0, round-1 marginals estimated from shots/2 samples (binomial noise)"); ap.add_argument("--corr", type=float, default=0.0, help="#3 learned per-cavity SNAP correction, L2 reg weight (0=off)"); ap.add_argument("--teacher", default=""); ap.add_argument("--kd", type=float, default=0.0); ap.add_argument("--kd_mode", default="dist"); ap.add_argument("--val_n", type=int, default=0, help="validation size (default max(train))"); ap.add_argument("--rr", type=int, default=1, help="fair round-robin: R placements per formula (mincut+R-1 random), loss -log mean_r p_r")
 ap.add_argument("--nval", type=int, default=200); ap.add_argument("--es", type=int, default=250); ap.add_argument("--es_metric", default="S", choices=["S","b90","med"]); ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--smoke", action="store_true"); ap.add_argument("--resw", type=float, default=0.0, help="loss weight 1+resw*(resid/mean resid)"); ap.add_argument("--Hb", type=int, default=0, help="bias MLP width (0=H)")
 a = ap.parse_args()
@@ -166,7 +166,7 @@ def forward_one(p, D, n, proj=None, ret_psi=False):
                 tab = (hvc[:, off:off + k].mean(1) @ p["Wsn"][l])[:, : 1 << k]; off += k
                 sh = [B] + [1] * len(ks); sh[c + 1] = 1 << k
                 psi = psi * jnp.exp(-1j * tab.reshape(sh)).astype(jnp.complex64)
-        if "Acs" in p and (a.free_ph > 0 or a.corr2 > 0) and proj != "full":   # free SNAP+bus (free_ph) or additive correction (corr2); size-free digit patterns
+        if "Acs" in p and (a.free_ph > 0 or a.corr2 > 0 or a.hyb > 0) and proj != "full":   # free SNAP+bus (free_ph) or additive correction (corr2); size-free digit patterns
             if l == 0:
                 hvc = jnp.take_along_axis(hv, D["PERM"].astype(jnp.int32)[..., None], axis=1); k0 = ks[0]
                 ib = np.arange(1 << k0)[:, None]; ST = jnp.asarray((1.0 - 2.0 * ((ib >> (k0 - 1 - np.arange(k0))[None]) & 1)).astype(np.float32))
@@ -207,8 +207,8 @@ def lossf(th, D, n, unr):
     nl = -jnp.log(pr + 1e-12); k = max(1, nl.shape[0] // 10)
     if a.resw > 0 and a.rr == 1: nl = nl * (1 + a.resw * D["RES"] / (jnp.mean(D["RES"]) + 1e-6))
     reg = a.corr * jnp.mean(unr(th)["Wsn"] ** 2) * 1e3 if a.corr > 0 else 0.0
-    if a.corr2 > 0 or a.free_ph > 0:
-        q_ = unr(th); wreg = a.corr2 if a.corr2 > 0 else a.free_ph
+    if a.corr2 > 0 or a.free_ph > 0 or a.hyb > 0:
+        q_ = unr(th); wreg = a.corr2 if a.corr2 > 0 else (a.free_ph if a.free_ph > 0 else a.hyb)
         reg = reg + wreg * (jnp.mean(q_["acs"] ** 2) + jnp.mean(q_["acb"] ** 2)) * 1e2
     return jnp.mean(nl) + a.tailw * jnp.mean(jax.lax.top_k(nl, k)[0]) + kd_term + reg
 
@@ -237,17 +237,17 @@ if __name__ == "__main__":
             p0 = unr0(th_load); log(f"theta_from {a.theta_from}")
         else:
             asrc = Jt.get("args", {}) or {}
-            saved = (a.assign_head, a.corr, a.corr2, a.free_ph, a.bias, a.bias_mlp, a.Hb)
+            saved = (a.assign_head, a.corr, a.corr2, a.free_ph, a.hyb, a.bias, a.bias_mlp, a.Hb)
             a.assign_head = int(asrc.get("assign_head", 0) or 0); a.corr = float(asrc.get("corr", 0) or 0)
-            a.corr2 = float(asrc.get("corr2", 0) or 0); a.free_ph = float(asrc.get("free_ph", 0) or 0)
+            a.corr2 = float(asrc.get("corr2", 0) or 0); a.free_ph = float(asrc.get("free_ph", 0) or 0); a.hyb = float(asrc.get("hyb", 0) or 0)
             a.bias = int(asrc.get("bias", a.bias)); a.bias_mlp = int(asrc.get("bias_mlp", a.bias_mlp)); a.Hb = int(asrc.get("Hb", a.Hb) or 0)
             psrc = init_params(np.random.default_rng(0))
             if a.corr > 0: psrc["Wsn"] = jnp.zeros((L, H, 32), jnp.float32)
-            if a.corr2 > 0 or a.free_ph > 0:
+            if a.corr2 > 0 or a.free_ph > 0 or a.hyb > 0:
                 psrc["Acs"] = jnp.zeros((H, H)); psrc["Acb"] = jnp.zeros((H, H)); psrc["acs"] = jnp.zeros((L, H)); psrc["acb"] = jnp.zeros((L, H))
             if a.assign_head: psrc["Was"] = jnp.zeros((2 * H, 8)); psrc["bas"] = jnp.zeros(8)
             ths, uns = ravel_pytree(psrc)
-            a.assign_head, a.corr, a.corr2, a.free_ph, a.bias, a.bias_mlp, a.Hb = saved
+            a.assign_head, a.corr, a.corr2, a.free_ph, a.hyb, a.bias, a.bias_mlp, a.Hb = saved
             if ths.size == th_load.size:
                 psrc = uns(th_load); ncopy = 0
                 for kk, v in psrc.items():
@@ -259,12 +259,15 @@ if __name__ == "__main__":
                 log(f"theta_from key-wise {ncopy} keys from {a.theta_from}")
             else: log(f"theta_from size mismatch {th_load.size} vs {th0s.size} (src tree {ths.size}); skip")
     
-    if a.corr2 > 0 or a.free_ph > 0:
+    if a.corr2 > 0 or a.free_ph > 0 or a.hyb > 0:
         r_ = np.random.default_rng(77); p0["Acs"] = jnp.asarray(r_.normal(0, 1 / np.sqrt(H), (H, H)), jnp.float32); p0["Acb"] = jnp.asarray(r_.normal(0, 1 / np.sqrt(H), (H, H)), jnp.float32)
-        # free_ph: non-zero init so tables aren't stuck at 0 (they REPLACE the cost, not correct it)
         if a.free_ph > 0:
             p0["acs"] = jnp.asarray(r_.normal(0, 0.1, (L, H)), jnp.float32); p0["acb"] = jnp.asarray(r_.normal(0, 0.1, (L, H)), jnp.float32)
             log(f"FREE SNAP+bus phase tables (replace projected cost), L2 reg {a.free_ph}")
+        elif a.hyb > 0:
+            # residual on compiler support (SNAP+neighbour-bus = representable Walsh), non-zero init, on TOP of projected cost
+            p0["acs"] = jnp.asarray(r_.normal(0, 0.05, (L, H)), jnp.float32); p0["acb"] = jnp.asarray(r_.normal(0, 0.05, (L, H)), jnp.float32)
+            log(f"HYBRID projected + residual SNAP/bus (variational on support), L2 {a.hyb}")
         else:
             p0["acs"] = jnp.zeros((L, H)); p0["acb"] = jnp.zeros((L, H)); log(f"SNAP+bus pattern correction on, reg {a.corr2}")
     if a.corr > 0: p0["Wsn"] = jnp.zeros((L, H, 32), jnp.float32); log(f"#3 SNAP correction on, reg {a.corr}")

@@ -42,7 +42,7 @@ def train(api, budget_s):
     from jax.flatten_util import ravel_pytree
     th, unr = ravel_pytree(p); mo = jnp.zeros_like(th); ve = jnp.zeros_like(th)
     data = {n: api.data(n) for n in api.n_list}; feats = {n: features(n, d["V"], d["SG"], d["m"]) for n, d in data.items()}
-    bs = {8: 16, 10: 8, 12: 8, 15: 4}
+    bs = {8: 8, 10: 4, 12: 4, 15: 2}
     def loss(th, n, fx, b):
         P = api.p_from(n, apply(unr(th), *fx), b); nl = -jnp.log(P.mean(1) + 1e-12)
         k = max(1, nl.shape[0] // 4); return nl.mean() + 0.5 * jax.lax.top_k(nl, k)[0].mean()
