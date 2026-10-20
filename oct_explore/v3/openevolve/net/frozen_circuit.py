@@ -39,16 +39,38 @@ def project_product_j(E, p, n, ks):
         c0, c1 = T[:, 0], T[:, 1]
         T = jnp.moveaxis(jnp.stack([c0 + ph0_ * c1, c0 + ph1_ * c1], 1), 1, i + 1)
     return T.reshape(E.shape[0], -1)
-def circuit_p(n, gamma, beta, w, pv, VP, BB, PERM, S, nm):
+_IDX = {}
+def cav_idx(n):
+    """per cavity c: (2^n,) integer of that cavity's bits (chain order, MSB first) -> SNAP/bus table index."""
+    if n not in _IDX:
+        ks = CP.LAYOUTS[n]; xb = bits(n).astype(np.int64); out = []; o = 0
+        for k in ks: out.append((xb[:, o:o + k] * (1 << np.arange(k - 1, -1, -1))[None]).sum(1)); o += k
+        _IDX[n] = np.stack(out).astype(np.int32)
+    return _IDX[n]
+def cavities(n, PERM):
+    """(B,C,KMAX=5) variable index in each cavity slot (chain order, -1 = unused slot) for placements PERM (B,n)."""
+    ks = CP.LAYOUTS[n]; PERM = np.asarray(PERM); out = -np.ones((PERM.shape[0], len(ks), 5), np.int32); o = 0
+    for c, k in enumerate(ks): out[:, c, :k] = PERM[:, o:o + k]; o += k
+    return out
+def circuit_p(n, gamma, beta, w, pv, VP, BB, PERM, S, nm, dS=None, dB=None, glob=False):
     """batched (B entries). gamma,beta (B,L); w (B,m,L); pv (B,n) var order; VP chain positions (B,m,4); BB (B,m,4) violating bit;
-    PERM (B,n); S (B,2^n) chain-order sat indicator. Returns p (B,)."""
+    PERM (B,n); S (B,2^n) chain-order sat indicator. Returns p (B,).
+    OPTIONAL additive phase corrections (same gates: still one SNAP per cavity + one bus phase per neighbour pair per layer,
+    only the phase VALUES change): dS (B,L,C,32) SNAP table per cavity indexed by cav_idx; dB (B,L,C-1,32,32) bus table for
+    neighbour pair (c,c+1). glob=True: NO chain projection (global all-to-all cost; NOT implementable, teacher signal only)."""
     ks = CP.LAYOUTS[n]; B = S.shape[0]
     pvc = jnp.take_along_axis(pv, PERM.astype(jnp.int32), axis=1)
     xb = jnp.asarray(bits(n)); lit = xb[:, VP]; viol = jnp.prod((lit == BB[None].astype(jnp.int8)).astype(jnp.float32), -1)
     psi = NS.uniform_psi0(ks, B)
     for l in range(L):
         Ew = nm * jnp.einsum("xbm,bm->bx", viol, gamma[:, l][:, None] + w[:, :, l])
-        Ew = project_product_j(Ew, pvc, n, ks)
+        if not glob: Ew = project_product_j(Ew, pvc, n, ks)
+        if dS is not None:
+            I = cav_idx(n)
+            for c in range(len(ks)): Ew = Ew + jnp.take(dS[:, l, c], jnp.asarray(I[c]), axis=1)
+        if dB is not None:
+            I = cav_idx(n)
+            for a in range(len(ks) - 1): Ew = Ew + jnp.take(dB[:, l, a].reshape(B, -1), jnp.asarray(I[a] * 32 + I[a + 1]), axis=1)
         psi = psi * jnp.exp(-1j * Ew.reshape(psi.shape)).astype(jnp.complex64)
         for c, k in enumerate(ks): psi = NS.apply_cav(MIXK[k](beta[:, l]), psi, c, len(ks))
     return jnp.sum(jnp.abs(psi.reshape(B, -1)) ** 2 * S, 1)

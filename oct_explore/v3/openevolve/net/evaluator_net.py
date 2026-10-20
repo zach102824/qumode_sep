@@ -1,5 +1,7 @@
 """OpenEvolve evaluator for the NETWORK (the gate sequence/compiler/simulator/readout are frozen and hash-locked).
-Candidate program must define  train(api, budget_s) -> predict,  predict(n, V, SG, m) -> dict(gamma (F,L), beta (F,L), w (F,m,L), pv (F,n)).
+Candidate program must define  train(api, budget_s) -> predict,  predict(n, V, SG, m[, place]) -> dict(gamma (F,L), beta (F,L), w (F,m,L), pv (F,n)
+[, dS (F,R,L,C,32), dB (F,R,L,C-1,32,32)]). If predict takes `place`, it receives api.place-style placement info for the scored formulas.
+dS/dB are OPTIONAL additive SNAP / neighbour-bus phase tables (same frozen gate sequence; only phase values change).
 Score: fair round-robin over R=4 placements (min-cut + 3 seeded random): median/B90 of 1/mean_r p_r on 100 held-out n=15 formulas.
 combined_score = -(ln med + ln B90)/2. pv_acc>0.85 vs a true solution => -20 penalty (classical solving).
 Env: OE_N20=1 also evaluates held-out n=20 (slow; used every 10 iterations on top programs).
@@ -32,11 +34,25 @@ class API:
         """static (non-differentiable) circuit inputs for formulas fidx; pass to p_from inside your jit."""
         D = self._s[n]; z = dict(gamma=np.zeros((len(fidx), FC.L)), beta=np.zeros((len(fidx), FC.L)), w=np.zeros((len(fidx), D["m"], FC.L)), pv=np.zeros((len(fidx), n)))
         return FC.entries(D, fidx, z)[4:]
-    def p_from(self, n, outs, b):
-        """differentiable: outs per formula (F,...) jnp; b from batch(). returns p (F, R) (column 0 = min-cut placement)."""
+    def place(self, n, fidx):
+        """placement info for formulas fidx: dict(cav (F,R,C,5) variable index per cavity slot (-1 unused), ks cavity sizes).
+        Use it to build OPTIONAL per-entry correction tables dS (F,R,L,C,32), dB (F,R,L,C-1,32,32)."""
+        return place_of(self._s[n], fidx)
+    def p_from(self, n, outs, b, glob=False):
+        """differentiable: outs per formula (F,...) jnp (+ optional dS/dB per entry (F,R,...)); b from batch(). returns p (F, R).
+        glob=True: same circuit with the GLOBAL (unprojected, all-to-all) cost: a teacher signal only, never scored."""
         rep = lambda x: jnp.repeat(x, R, 0); VP, BB, PERM, S, nm = b
-        p = FC.circuit_p(n, rep(outs["gamma"]), rep(outs["beta"]), rep(outs["w"]), rep(outs["pv"]), VP, BB, PERM, S, nm)
+        dS, dB = _corr(outs, n)
+        p = FC.circuit_p(n, rep(outs["gamma"]), rep(outs["beta"]), rep(outs["w"]), rep(outs["pv"]), VP, BB, PERM, S, nm, dS, dB, glob)
         return p.reshape(-1, R)
+def place_of(D, fidx):
+    n = D["n"]; fidx = np.asarray(fidx); PERM = D["PERM"][fidx].reshape(-1, n)
+    return dict(cav=FC.cavities(n, PERM).reshape(len(fidx), R, -1, 5), ks=tuple(FC.CP.LAYOUTS[n]))
+def _corr(o, n):
+    C = len(FC.CP.LAYOUTS[n]); dS = dB = None
+    if o.get("dS") is not None: dS = jnp.asarray(o["dS"], jnp.float32).reshape((-1, FC.L, C, 32))
+    if o.get("dB") is not None: dB = jnp.asarray(o["dB"], jnp.float32).reshape((-1, FC.L, C - 1, 32, 32))
+    return dS, dB
 def static_check(src):
     imps = re.findall(r"^\s*(?:import|from)\s+([A-Za-z_][\w\.]*)", src, re.M)
     bad = [x for x in imps if x.split(".")[0] not in ("numpy", "jax", "math", "functools", "itertools", "collections", "time")]
@@ -44,19 +60,25 @@ def static_check(src):
         if tok in src: bad.append(tok)
     return bad
 def check_outs(o, F, n, m):
-    o = {k: jnp.asarray(o[k], jnp.float32) for k in ("gamma", "beta", "w", "pv")}
+    C = len(FC.CP.LAYOUTS[n]); ex = {}
+    if o.get("dS") is not None: ex["dS"] = jnp.asarray(o["dS"], jnp.float32); assert ex["dS"].shape == (F, R, FC.L, C, 32), ex["dS"].shape
+    if o.get("dB") is not None: ex["dB"] = jnp.asarray(o["dB"], jnp.float32); assert ex["dB"].shape == (F, R, FC.L, C - 1, 32, 32), ex["dB"].shape
+    o = {k: jnp.asarray(o[k], jnp.float32) for k in ("gamma", "beta", "w", "pv")}; o.update(ex)
     assert o["gamma"].shape == (F, FC.L) and o["beta"].shape == (F, FC.L) and o["w"].shape == (F, m, FC.L) and o["pv"].shape == (F, n), {k: v.shape for k, v in o.items()}
     for k, v in o.items(): assert bool(jnp.all(jnp.isfinite(v))), f"output {k} has NaN/inf (training diverged: lower lr, clip grads, bound outputs)"
     assert bool(jnp.all((o["pv"] > 0) & (o["pv"] < 1))), "pv in (0,1)"
     return o
 def score_set(predict, D, chunk):
     n, F, m = D["n"], D["V"].shape[0], D["m"]
-    o = check_outs(predict(n, D["V"].copy(), D["SG"].copy(), m), F, n, m)
-    f = jax.jit(lambda g, b_, w, pv, VP, BB, PERM, S: FC.circuit_p(n, g, b_, w, pv, VP, BB, PERM, S, n / m))
+    import inspect
+    kw = dict(place=place_of(D, np.arange(F))) if "place" in inspect.signature(predict).parameters else {}
+    o = check_outs(predict(n, D["V"].copy(), D["SG"].copy(), m, **kw), F, n, m)
+    f = jax.jit(lambda g, b_, w, pv, VP, BB, PERM, S, dS, dB: FC.circuit_p(n, g, b_, w, pv, VP, BB, PERM, S, n / m, dS, dB))
     ps = []
     for s in range(0, F, chunk):
-        idx = np.arange(s, min(F, s + chunk)); args = FC.entries(D, idx, {k: np.asarray(v)[idx] for k, v in o.items()})
-        ps.append(np.asarray(f(*args[:8])).reshape(-1, R))
+        idx = np.arange(s, min(F, s + chunk)); args = FC.entries(D, idx, {k: np.asarray(o[k])[idx] for k in ("gamma", "beta", "w", "pv")})
+        dS, dB = _corr({k: (o[k][idx] if k in o else None) for k in ("dS", "dB")}, n)
+        ps.append(np.asarray(f(*args[:8], dS, dB)).reshape(-1, R))
     P = np.concatenate(ps); pv = np.asarray(o["pv"])
     acc = float(np.mean([max(np.mean((pv[i] > .5) == (s_ == 1)) for s_ in D["sol"][i]) for i in range(F)]))
     def summ(p): ip = 1 / np.maximum(p, 1e-12); return float(np.median(ip)), float(np.quantile(ip, .9))

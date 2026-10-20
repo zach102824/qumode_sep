@@ -1,0 +1,63 @@
+# OpenEvolve config: LLMs are Cursor models via the local adapter (cursor_adapter.py on 127.0.0.1:8765).
+max_iterations: 200
+checkpoint_interval: 10
+log_level: INFO
+random_seed: 42
+diff_based_evolution: true
+max_code_length: 20000
+llm:
+  api_base: "http://127.0.0.1:8765/v1"
+  api_key: "local-adapter-no-key"     # real Cursor key stays in env CURSOR_API_KEY, read by cursor-agent only
+  models:
+    - name: "composer-2.5"
+      weight: 0.7
+    - name: "gpt-5.3-codex"
+      weight: 0.3
+  temperature: 0.7
+  max_tokens: 16000
+  timeout: 900
+  retries: 1
+prompt:
+  system_message: |
+    You are improving a JAX NETWORK that maps a 4-SAT formula to the control parameters of a FIXED native bosonic-cavity
+    chain circuit (NOT QAOA; QAOA L4 n=16 is only the baseline: 34.82/98.20 = median/B90 of 1/p).
+    KEY GOAL OF THIS RUN: make the CHAIN-APPLIED cost phase behave like the GLOBAL cost phase. With the global (all-to-all,
+    unprojected) cost the same circuit reaches 33.8/79 on held-out n=16; on the chain it is ~100/1000+. Why: cavities hold 4 bits
+    (n=16: 4 cavities, chain buses only). Per layer the compiler applies the least-squares projection (product measure pv) of
+    nm*sum_j (gamma_l + w_jl)[clause j violated] onto one-cavity + neighbour-pair functions. A clause whose variables span 3 cavities
+    or non-neighbour cavities (e.g. vars 3,12,18 in cavities 0,2,3) LOSES its non-local Walsh terms (z3 z12, z3 z18, z3 z12 z18, ...);
+    only the representable parts survive. Do NOT try to mimic the projection or the global cost term by term: learn phases that
+    MAXIMISE the final success probability p on the chain.
+    Fixed gate sequence (you cannot change it): flat prep; per layer l=1..4: one SNAP per cavity + one bus phase per neighbour pair
+    (their values = compiled projection above), then per-cavity one-bit-flip mixer beta_l; readout p = P(satisfying assignment).
+    Network outputs per formula via predict(n, V, SG, m, place): gamma (F,L), beta (F,L), w (F,m,L), pv (F,n), and OPTIONAL additive
+    phase tables added to the compiled phases on the same gates: dS (F,R,L,C,32) SNAP table per cavity and dB (F,R,L,C-1,32,32)
+    bus table per neighbour pair (c,c+1). Table index = integer of the cavity's bits, MSB first, bit j <-> variable place["cav"][f,r,c,j]
+    (-1 = unused slot; for 4-bit cavities only indices 0..15 matter). place = dict(cav (F,R,C,5), ks cavity sizes) per R=4 placements;
+    in training get it with api.place(n, idx). Tables must be built SIZE-FREE (from per-variable / clause / digit-pattern features of the
+    variables in each cavity, e.g. which clauses touch the cavity, how many of their literals lie in this vs the neighbour cavity, the
+    lost non-local energy), so the network transfers zero-shot to n=16 (4 cavities) from training n=8 (2 cavities) and n=12 (3).
+    The seed already has zero-initialised correction heads (asl, bsl); improve them.
+    train(api, budget_s) must train within budget_s seconds (2 CPU cores) using api.data / api.batch / api.place / api.p_from
+    (differentiable p (F,R) over R=4 placements). TEACHER SIGNAL (optional): api.p_from(n, outs, b, glob=True) gives p of the same
+    circuit with the GLOBAL cost (not implementable, never scored): use it e.g. to distil, to pick a curriculum, or as a target gap.
+    Fitness = FAIR round-robin: median and 90th percentile of 1/mean_r p_r on held-out n=16 selection formulas
+    (combined_score = -(ln med + ln B90)/2, higher better). A separate held-out n=16 test set is checked at checkpoints.
+    HARD RULES: only numpy/jax/math/functools/itertools/collections/time imports; no file/os/sys access, no dunder access, never touch api internals;
+    do NOT solve formulas classically (no SAT search, brute force, enumeration); pv must not encode a found solution (pv_acc>0.85 is penalised).
+    Inside jitted/differentiated code use jnp (never np) on traced arrays. Clip gradients and keep lr modest: NaN outputs score -20.
+    Keep memory modest (child RSS cap ~2.5-3 GB): small batches, dB is 1024 entries per pair per layer.
+  num_top_programs: 3
+  num_diverse_programs: 2
+database:
+  population_size: 60
+  archive_size: 20
+  num_islands: 2
+  elite_selection_ratio: 0.2
+  exploitation_ratio: 0.7
+evaluator:
+  timeout: 900
+  max_retries: 1
+  cascade_evaluation: false
+  parallel_evaluations: 1
+  use_llm_feedback: false
