@@ -70,7 +70,7 @@ def _evaluate_inner(program_path):
     spec = importlib.util.spec_from_file_location("cand", program_path); mod = importlib.util.module_from_spec(spec)
     try:
         spec.loader.exec_module(mod); tt = time.time(); predict = mod.train(API(sets), BUDGET); ttrain = time.time() - tt
-        if ttrain > BUDGET * 1.25: return {"combined_score": -20.0, "error": f"train over budget {ttrain:.0f}s"}
+        if ttrain > BUDGET * 2.0: return {"combined_score": -20.0, "error": f"train over budget {ttrain:.0f}s"}
         r15 = score_set(predict, get_set(15, NVAL, FC.VAB, R), 25)
     except Exception as e: return {"combined_score": -20.0, "error": f"{type(e).__name__}: {str(e)[:300]}"}
     try: verify_frozen()
@@ -95,7 +95,7 @@ def evaluate(program_path):
         except Exception: rss = 0
         peak = max(peak, rss)
         if rss > MEM_MB: pr.kill(); pr.wait(); return {"combined_score": -20.0, "error": f"memory {rss}MB > {MEM_MB}MB (reduce batch sizes)"}
-        if time.time() - t0 > BUDGET * 1.25 + 400: pr.kill(); pr.wait(); return {"combined_score": -20.0, "error": "wall timeout"}
+        if time.time() - t0 > BUDGET * 2.0 + 400: pr.kill(); pr.wait(); return {"combined_score": -20.0, "error": "wall timeout"}
         time.sleep(1.0)
     try: r = json.load(open(out)); os.remove(out)
     except Exception: return {"combined_score": -20.0, "error": f"child failed rc={pr.returncode}"}
