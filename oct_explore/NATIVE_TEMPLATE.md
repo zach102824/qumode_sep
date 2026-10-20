@@ -306,3 +306,6 @@ dS (SNAP) / dB (neighbour-bus) tables, same gate sequence; teacher via api.p_fro
 | TR16 | #5 two-round feedback, 200 shots split | 89.38/5540.1 | 87.34/2851.9 |
 | CB16 | SNAP+bus signed-pattern correction (--corr2 0.01) | 87.24/7328.2 | 108.81/4986.1 |
 OpenEvolve: from 16:59 (UTC+8) LLM = claude-opus-5-5-high only (run net16o, phase-correction goal; net16c stopped, DB kept).
+| JC16 | SNAP+bus tables trained jointly from F16_gray_chain_mc angles, tailw 1, global-p aux 0.5 | 102.28/9965.4 | 119.06/4779.7 |
+| TC16 | #5 two-round + clamp 3 most-confident vars, 200 shots | 88.09/5294.1 | 85.15/3130.8 |
+QAOA L4 refs: F16_qaoa fitted on n=8+12, F32_qaoa on n=10+15 (same train sizes as the networks).
