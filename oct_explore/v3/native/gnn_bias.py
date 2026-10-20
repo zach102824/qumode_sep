@@ -16,7 +16,7 @@ ap.add_argument("--proj", default="chain"); ap.add_argument("--assign", default=
 ap.add_argument("--bias", type=int, default=1); ap.add_argument("--bias_mlp", type=int, default=0, help="1: 2-layer MLP for p_v"); ap.add_argument("--clause_w", type=int, default=1); ap.add_argument("--pool_delta", type=int, default=1)
 ap.add_argument("--warm", default="results/v3/S_g4_snapF_s1.json#0"); ap.add_argument("--x0", default=""); ap.add_argument("--theta_from", default="", help="gnn_bias json: load theta_best")
 ap.add_argument("--steps", type=int, default=3000); ap.add_argument("--bs", type=int, default=32); ap.add_argument("--lr", type=float, default=3e-4)
-ap.add_argument("--clamp", type=int, default=0); ap.add_argument("--gaux", type=float, default=0.0); ap.add_argument("--corr2", type=float, default=0.0); ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500); ap.add_argument("--npool20", type=int, default=400); ap.add_argument("--two_round", type=int, default=0, help="#5: half shots round 1; round-2 params from round-1 marginals (fed as var features); p_eff=(p1+p2)/2"); ap.add_argument("--shots", type=int, default=0, help="#5: if >0, round-1 marginals estimated from shots/2 samples (binomial noise)"); ap.add_argument("--corr", type=float, default=0.0, help="#3 learned per-cavity SNAP correction, L2 reg weight (0=off)"); ap.add_argument("--teacher", default=""); ap.add_argument("--kd", type=float, default=0.0); ap.add_argument("--kd_mode", default="dist"); ap.add_argument("--val_n", type=int, default=0, help="validation size (default max(train))"); ap.add_argument("--rr", type=int, default=1, help="fair round-robin: R placements per formula (mincut+R-1 random), loss -log mean_r p_r")
+ap.add_argument("--free_ph", type=float, default=0.0, help="replace projected cost with free SNAP+bus tables; value=L2 reg weight"); ap.add_argument("--assign_head", type=int, default=0, help="formula-only placement selector over R placements (fair selector metric)"); ap.add_argument("--clamp", type=int, default=0); ap.add_argument("--gaux", type=float, default=0.0); ap.add_argument("--corr2", type=float, default=0.0); ap.add_argument("--lrbase", type=float, default=0.1); ap.add_argument("--tailw", type=float, default=0.5); ap.add_argument("--npool", type=int, default=2500); ap.add_argument("--npool20", type=int, default=400); ap.add_argument("--two_round", type=int, default=0, help="#5: half shots round 1; round-2 params from round-1 marginals (fed as var features); p_eff=(p1+p2)/2"); ap.add_argument("--shots", type=int, default=0, help="#5: if >0, round-1 marginals estimated from shots/2 samples (binomial noise)"); ap.add_argument("--corr", type=float, default=0.0, help="#3 learned per-cavity SNAP correction, L2 reg weight (0=off)"); ap.add_argument("--teacher", default=""); ap.add_argument("--kd", type=float, default=0.0); ap.add_argument("--kd_mode", default="dist"); ap.add_argument("--val_n", type=int, default=0, help="validation size (default max(train))"); ap.add_argument("--rr", type=int, default=1, help="fair round-robin: R placements per formula (mincut+R-1 random), loss -log mean_r p_r")
 ap.add_argument("--nval", type=int, default=200); ap.add_argument("--es", type=int, default=250); ap.add_argument("--es_metric", default="S", choices=["S","b90","med"]); ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--smoke", action="store_true"); ap.add_argument("--resw", type=float, default=0.0, help="loss weight 1+resw*(resid/mean resid)"); ap.add_argument("--Hb", type=int, default=0, help="bias MLP width (0=H)")
 a = ap.parse_args()
@@ -79,6 +79,7 @@ def init_params(rng):
     p = AN.init_backbone(rng, "mp", H, R, FV); p["G1"] = W(2 * H, H); p["g1"] = jnp.zeros(H); p["G2"] = jnp.zeros((H, NBASE))
     p["Wc"] = jnp.zeros((H, L)); p["Wp"] = W(H, 1, 2.0).reshape(H); p["bp"] = jnp.zeros(());
     if a.bias_mlp: HB = a.Hb or H; p["Wb1"] = W(H, HB); p["bb1"] = jnp.zeros(HB); p["Wp2"] = W(HB, 1, 2.0).reshape(HB)
+    if a.assign_head: p["Was"] = W(2 * H, 8, 0.05); p["bas"] = jnp.zeros(8)
     p["base"] = jnp.zeros(NBASE); return p
 
 def old_template():
@@ -153,18 +154,19 @@ def forward_one(p, D, n, proj=None, ret_psi=False):
     xb = jnp.asarray(bits(n)); lit = xb[:, D["VP"]]; viol = jnp.prod((lit == D["BB"][None].astype(jnp.int8)).astype(jnp.float32), -1)
     psi = NS.uniform_psi0(ks, B)
     for l in range(L):
-        Ew = D["nm"] * jnp.einsum("xbm,bm->bx", viol, gl[:, l][:, None] + w[:, :, l])
-        if proj != "full":
-            if a.bias: Ew = project_product_j(Ew, pv, n, proj, ks)
-            else: Ew = fwht_j(fwht_j(Ew, n) * jnp.asarray(CP.rep_mask(ks, proj).astype(np.float32))[None], n) / (1 << n)
-        psi = psi * jnp.exp(-1j * Ew.reshape(psi.shape)).astype(jnp.complex64)
+        if a.free_ph <= 0:
+            Ew = D["nm"] * jnp.einsum("xbm,bm->bx", viol, gl[:, l][:, None] + w[:, :, l])
+            if proj != "full":
+                if a.bias: Ew = project_product_j(Ew, pv, n, proj, ks)
+                else: Ew = fwht_j(fwht_j(Ew, n) * jnp.asarray(CP.rep_mask(ks, proj).astype(np.float32))[None], n) / (1 << n)
+            psi = psi * jnp.exp(-1j * Ew.reshape(psi.shape)).astype(jnp.complex64)
         if "Wsn" in p:
             hvc = jnp.take_along_axis(hv, D["PERM"].astype(jnp.int32)[..., None], axis=1); off = 0
             for c, k in enumerate(ks):
                 tab = (hvc[:, off:off + k].mean(1) @ p["Wsn"][l])[:, : 1 << k]; off += k
                 sh = [B] + [1] * len(ks); sh[c + 1] = 1 << k
                 psi = psi * jnp.exp(-1j * tab.reshape(sh)).astype(jnp.complex64)
-        if "Acs" in p and proj != "full":   # SNAP + neighbour-bus correction from signed digit patterns of the cavity's variables (size-free)
+        if "Acs" in p and (a.free_ph > 0 or a.corr2 > 0) and proj != "full":   # free SNAP+bus (free_ph) or additive correction (corr2); size-free digit patterns
             if l == 0:
                 hvc = jnp.take_along_axis(hv, D["PERM"].astype(jnp.int32)[..., None], axis=1); k0 = ks[0]
                 ib = np.arange(1 << k0)[:, None]; ST = jnp.asarray((1.0 - 2.0 * ((ib >> (k0 - 1 - np.arange(k0))[None]) & 1)).astype(np.float32))
@@ -197,11 +199,17 @@ def lossf(th, D, n, unr):
     if a.gaux > 0:   # global-cost p (same network, unprojected, no corrections) as an auxiliary gap signal
         pg = forward(unr(th), D, n, proj="full")[0]
         kd_term = kd_term + a.gaux * (jnp.mean(-jnp.log(pg + 1e-12)) * 0.5 + jnp.mean(jax.nn.softplus(jax.lax.stop_gradient(jnp.log(pg + 1e-12)) - jnp.log(pr + 1e-12))))
-    if a.rr > 1: pr = pr.reshape(-1, a.rr).mean(1)
+    if a.assign_head and a.rr > 1 and "Was" in unr(th):
+        P = unr(th); F = pr.shape[0] // a.rr; G0 = {k: D[k][::a.rr] for k in ("Ip", "In", "fv", "deg")}
+        hv0, hc0 = AN.run_backbone(P, G0, "mp", H); sc = jnp.concatenate([hv0.mean(1), hc0.mean(1)], -1) @ P["Was"][:, :a.rr] + P["bas"][:a.rr]
+        pr = jnp.sum(jax.nn.softmax(sc, 1) * pr.reshape(F, a.rr), 1)
+    elif a.rr > 1: pr = pr.reshape(-1, a.rr).mean(1)
     nl = -jnp.log(pr + 1e-12); k = max(1, nl.shape[0] // 10)
     if a.resw > 0 and a.rr == 1: nl = nl * (1 + a.resw * D["RES"] / (jnp.mean(D["RES"]) + 1e-6))
     reg = a.corr * jnp.mean(unr(th)["Wsn"] ** 2) * 1e3 if a.corr > 0 else 0.0
-    if a.corr2 > 0: q_ = unr(th); reg = reg + a.corr2 * (jnp.mean(q_["acs"] ** 2) + jnp.mean(q_["acb"] ** 2)) * 1e2
+    if a.corr2 > 0 or a.free_ph > 0:
+        q_ = unr(th); wreg = a.corr2 if a.corr2 > 0 else a.free_ph
+        reg = reg + wreg * (jnp.mean(q_["acs"] ** 2) + jnp.mean(q_["acb"] ** 2)) * 1e2
     return jnp.mean(nl) + a.tailw * jnp.mean(jax.lax.top_k(nl, k)[0]) + kd_term + reg
 
 
@@ -228,9 +236,14 @@ if __name__ == "__main__":
             if th_load.size == th0s.size: p0 = unr0(th_load); log(f"theta_from {a.theta_from}")
             else: log(f"theta_from size mismatch {th_load.size} vs {th0s.size}; skip")
     
-    if a.corr2 > 0:
+    if a.corr2 > 0 or a.free_ph > 0:
         r_ = np.random.default_rng(77); p0["Acs"] = jnp.asarray(r_.normal(0, 1 / np.sqrt(H), (H, H)), jnp.float32); p0["Acb"] = jnp.asarray(r_.normal(0, 1 / np.sqrt(H), (H, H)), jnp.float32)
-        p0["acs"] = jnp.zeros((L, H)); p0["acb"] = jnp.zeros((L, H)); log(f"SNAP+bus pattern correction on, reg {a.corr2}")
+        # free_ph: non-zero init so tables aren't stuck at 0 (they REPLACE the cost, not correct it)
+        if a.free_ph > 0:
+            p0["acs"] = jnp.asarray(r_.normal(0, 0.1, (L, H)), jnp.float32); p0["acb"] = jnp.asarray(r_.normal(0, 0.1, (L, H)), jnp.float32)
+            log(f"FREE SNAP+bus phase tables (replace projected cost), L2 reg {a.free_ph}")
+        else:
+            p0["acs"] = jnp.zeros((L, H)); p0["acb"] = jnp.zeros((L, H)); log(f"SNAP+bus pattern correction on, reg {a.corr2}")
     if a.corr > 0: p0["Wsn"] = jnp.zeros((L, H, 32), jnp.float32); log(f"#3 SNAP correction on, reg {a.corr}")
     th0, unr = ravel_pytree(p0)
     if a.teacher:
@@ -299,8 +312,18 @@ if __name__ == "__main__":
         for i, ins_i in enumerate(ins):
             sol = np.flatnonzero(ins_i["E"] == 0)[0]; bits_s = np.array([(sol >> (n - 1 - v)) & 1 for v in range(n)])
             acc.append(np.mean((pv[i] > 0.5) == (bits_s == 1)))
-        res["test"][str(n)] = NS.summ(pr) | {"p": pr.tolist(), "pv_mean": float(pv.mean()), "pv_acc": float(np.mean(acc)),
-                                              "b_mean": bl.mean(0).tolist(), "g_mean": gl.mean(0).tolist(), "rr": rrs, "p_all": pr_all.tolist()}; res["random"][str(n)] = NS.rand_stats(ins, n)
-        log(f"TEST n={n}: single {res['test'][str(n)]['median_inv_p']:.2f}/{res['test'][str(n)]['B90_inv_p']:.2f} | rr{a.rr} {rrs['median_inv_p']:.2f}/{rrs['B90_inv_p']:.2f} pv_acc {np.mean(acc):.3f} ({time.time()-t:.0f}s)")
+        sel = None
+        if a.assign_head and a.rr > 1:
+            P = unr(thb); G0 = {k: D[k][::a.rr] for k in ("Ip", "In", "fv", "deg")}
+            hv0, hc0 = AN.run_backbone(P, G0, "mp", H); sc = np.asarray(jnp.concatenate([hv0.mean(1), hc0.mean(1)], -1) @ P["Was"][:, :a.rr] + P["bas"][:a.rr])
+            pick = sc.argmax(1); psel = pr_all.reshape(-1, a.rr)[np.arange(len(pick)), pick]; sel = NS.summ(psel)
+            res["test"][str(n)] = NS.summ(pr) | {"p": pr.tolist(), "pv_mean": float(pv.mean()), "pv_acc": float(np.mean(acc)),
+                                                  "b_mean": bl.mean(0).tolist(), "g_mean": gl.mean(0).tolist(), "rr": rrs, "sel": sel, "p_all": pr_all.tolist()}
+            log(f"TEST n={n}: single {res['test'][str(n)]['median_inv_p']:.2f}/{res['test'][str(n)]['B90_inv_p']:.2f} | rr{a.rr} {rrs['median_inv_p']:.2f}/{rrs['B90_inv_p']:.2f} | sel {sel['median_inv_p']:.2f}/{sel['B90_inv_p']:.2f} pv_acc {np.mean(acc):.3f} ({time.time()-t:.0f}s)")
+        else:
+            res["test"][str(n)] = NS.summ(pr) | {"p": pr.tolist(), "pv_mean": float(pv.mean()), "pv_acc": float(np.mean(acc)),
+                                                  "b_mean": bl.mean(0).tolist(), "g_mean": gl.mean(0).tolist(), "rr": rrs, "p_all": pr_all.tolist()}
+            log(f"TEST n={n}: single {res['test'][str(n)]['median_inv_p']:.2f}/{res['test'][str(n)]['B90_inv_p']:.2f} | rr{a.rr} {rrs['median_inv_p']:.2f}/{rrs['B90_inv_p']:.2f} pv_acc {np.mean(acc):.3f} ({time.time()-t:.0f}s)")
+        res["random"][str(n)] = NS.rand_stats(ins, n)
         json.dump(res, open(OUT, "w"))
     log("DONE")
