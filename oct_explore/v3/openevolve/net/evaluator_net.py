@@ -60,7 +60,7 @@ def score_set(predict, D, chunk):
     acc = float(np.mean([max(np.mean((pv[i] > .5) == (s_ == 1)) for s_ in D["sol"][i]) for i in range(F)]))
     def summ(p): ip = 1 / np.maximum(p, 1e-12); return float(np.median(ip)), float(np.quantile(ip, .9))
     return dict(rr=summ(P.mean(1)), single=summ(P[:, 0]), pv_acc=acc)
-def evaluate(program_path):
+def _evaluate_inner(program_path):
     t0 = time.time()
     try: verify_frozen()
     except Exception as e: return {"combined_score": -30.0, "error": str(e)}
@@ -83,5 +83,24 @@ def evaluate(program_path):
         r20 = score_set(predict, get_set(20, NVAL, FC.VAB, R), 1)
         out.update(n20_rr_median=r20["rr"][0], n20_rr_B90=r20["rr"][1], n20_single_median=r20["single"][0], n20_single_B90=r20["single"][1], n20_pv_acc=r20["pv_acc"])
     return out
+MEM_MB = int(os.environ.get("OE_MEM_MB", "3500"))
+def evaluate(program_path):
+    """run the candidate in a child process with an RSS watchdog (OOM safety for the shared box)."""
+    import subprocess, tempfile
+    out = tempfile.mktemp(suffix=".json")
+    pr = subprocess.Popen([sys.executable, os.path.abspath(__file__), "--inner", program_path, out], env=os.environ.copy())
+    peak = 0; t0 = time.time()
+    while pr.poll() is None:
+        try: rss = int(open(f"/proc/{pr.pid}/status").read().split("VmRSS:")[1].split()[0]) // 1024
+        except Exception: rss = 0
+        peak = max(peak, rss)
+        if rss > MEM_MB: pr.kill(); pr.wait(); return {"combined_score": -20.0, "error": f"memory {rss}MB > {MEM_MB}MB (reduce batch sizes)"}
+        if time.time() - t0 > BUDGET * 1.25 + 400: pr.kill(); pr.wait(); return {"combined_score": -20.0, "error": "wall timeout"}
+        time.sleep(1.0)
+    try: r = json.load(open(out)); os.remove(out)
+    except Exception: return {"combined_score": -20.0, "error": f"child failed rc={pr.returncode}"}
+    r["peak_rss_mb"] = peak; return r
+if __name__ == "__main__" and len(sys.argv) > 1 and sys.argv[1] == "--inner":
+    json.dump(_evaluate_inner(sys.argv[2]), open(sys.argv[3], "w")); sys.exit(0)
 if __name__ == "__main__":
     print(json.dumps(evaluate(sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "initial_net.py")), indent=1))
