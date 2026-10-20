@@ -7,8 +7,8 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import uvicorn
 
-ap = argparse.ArgumentParser(); ap.add_argument("--port", type=int, default=8765); ap.add_argument("--model", default="cursor-grok-4.6-high")
-ap.add_argument("--idea_model", default="claude-opus-5-5-medium"); ap.add_argument("--code_model", default="cursor-grok-4.6-high"); ap.add_argument("--conc", type=int, default=2); ap.add_argument("--timeout", type=int, default=600)
+ap = argparse.ArgumentParser(); ap.add_argument("--port", type=int, default=8765); ap.add_argument("--model", default="claude-opus-5-5-high")
+ap.add_argument("--idea_model", default="claude-opus-5-5-medium"); ap.add_argument("--code_model", default="composer-2.5"); ap.add_argument("--conc", type=int, default=2); ap.add_argument("--timeout", type=int, default=600)
 A = ap.parse_args()
 BIN = shutil.which("cursor-agent") or os.path.expanduser("~/.local/bin/cursor-agent")
 SEM = asyncio.Semaphore(A.conc); app = FastAPI()
@@ -66,7 +66,7 @@ async def models(): return {"object": "list", "data": [{"id": A.model, "object":
 @app.post("/v1/chat/completions")
 async def chat(req: Request):
     b = await req.json(); model = b.get("model") or A.model
-    if "fable" in model: print(f"[adapter] remap {model} -> opus-idea+grok46-code", flush=True); model = "claude-opus-5-5-high"
+    if "fable" in model: print(f"[adapter] remap {model} -> opus-idea+composer25-code", flush=True); model = "claude-opus-5-5-high"
     t = time.time(); msgs = b.get("messages", [])
     async with SEM:
         try:
@@ -80,7 +80,7 @@ async def chat(req: Request):
                 full = render(msgs + [{"role": "user", "content": "IMPLEMENT THIS IDEA (from a senior reviewer) in your answer, following the exact output format requested above:\n" + idea}])
                 txt = await run_agent(full, A.code_model)
                 print(f"[adapter] stage2 {A.code_model} {time.time()-t1:.1f}s in={len(full)}ch out={len(txt)}ch (~{(len(full)+len(txt))//4} tok)", flush=True)
-                model = "opus-idea+grok46-code"
+                model = "opus-idea+composer25-code"
             else:
                 model = A.code_model; full = render(msgs); txt = await run_agent(full, model)
                 print(f"[adapter] {model} {time.time()-t:.1f}s in={len(full)}ch out={len(txt)}ch", flush=True)
