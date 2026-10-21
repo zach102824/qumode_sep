@@ -318,3 +318,11 @@ OpenEvolve net32o official TEST n=20 (chunked checker, verified = frozen score_s
 ckpt_10 single 284.2/8939 | rr4 251.3/4930 ; ckpt_20 single 282.1/8807 | rr4 241.9/3414 (selection n=15 rr 27.6/104.2).
 net16r ckpt_10 (2026-10-21 13:56 UTC+8) fair TEST n=16 rr 83.1/4943.9 single 78.5/12676.2 pv_acc 0.72 | selection 61.0/490.2 | stall 0 (QAOA L4 34.82/98.20)
 net16r ckpt_20 (2026-10-21 15:02 UTC+8) fair TEST n=16 rr 94.3/6215.7 single 80.9/15707.0 pv_acc 0.72 | selection 53.9/543.4 | stall 1 (QAOA L4 34.82/98.20)
+
+## net16r v2 (native framing), from 2026-10-21 15:10 UTC+8
+Framing (Zach, FRAMING_NATIVE.md): do NOT imitate QAOA's global cost; use the hardware-native control space (arbitrary per-Fock-level SNAP dS / neighbour-bus dB phases on multi-bit cavities; only the final bit string counts).
+net16r v1 (archived runs/net16r_v1, 20 iterations, 5 islands loss/architecture/features/curriculum/placement): fair TEST n=16 ckpt_10 rr 83.1/4943.9, ckpt_20 rr 94.3/6215.7 (selection 61.0/490.2 and 53.9/543.4).
+v2 islands = Opus path families (OPUS_PATHS_1500.md), starting directions only (Opus may add/combine/retire families; wildcard every 3rd idea; Opus picks new families at stagnation):
+1 conditional pair messages, 2 clause-local optimistic tables, 3 rank level shaping, 4 role-specialised layers, 5 cavity-local Grover (capped candidate set); hardness add-on shared.
+Seeds = v1 ckpt_20 best + zero-initialised native-family gates (start at parent function); loss 0.5 mean + 0.5 median + CVaR-10% of log(1/p); LAM_GLOB 0.
+Stage 1 s1 = -(ln med + 2 ln B90)/3 on 30 held-out n=12; static guard rejects full-assignment enumeration / argmin / >1 pair table at once; pv_acc>0.85 -> -20 kept.
