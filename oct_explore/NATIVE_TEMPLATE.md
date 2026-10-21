@@ -328,3 +328,4 @@ Seeds = v1 ckpt_20 best + zero-initialised native-family gates (start at parent 
 Stage 1 s1 = -(ln med + 2 ln B90)/3 on 30 held-out n=12; static guard rejects full-assignment enumeration / argmin / >1 pair table at once; pv_acc>0.85 -> -20 kept.
 net16r ckpt_10 (2026-10-21 17:02 UTC+8) fair TEST n=16 rr 83.9/2607.0 single 87.1/8869.9 pv_acc 0.72 | selection 60.9/511.4 | stall 0 (QAOA L4 34.82/98.20)
 net16r ckpt_20 (2026-10-21 17:54 UTC+8) fair TEST n=16 rr 93.7/3128.8 single 102.6/9069.6 pv_acc 0.72 | selection 60.9/463.7 | stall 1 (QAOA L4 34.82/98.20)
+net16r ckpt_50 (2026-10-21 18:59 UTC+8) fair TEST n=16 rr 93.4/4045.5 single 88.1/10691.4 pv_acc 0.72 | selection 60.9/463.7 | stall 2 (QAOA L4 34.82/98.20)
