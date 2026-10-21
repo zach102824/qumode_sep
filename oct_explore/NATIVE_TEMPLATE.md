@@ -326,3 +326,4 @@ v2 islands = Opus path families (OPUS_PATHS_1500.md), starting directions only (
 1 conditional pair messages, 2 clause-local optimistic tables, 3 rank level shaping, 4 role-specialised layers, 5 cavity-local Grover (capped candidate set); hardness add-on shared.
 Seeds = v1 ckpt_20 best + zero-initialised native-family gates (start at parent function); loss 0.5 mean + 0.5 median + CVaR-10% of log(1/p); LAM_GLOB 0.
 Stage 1 s1 = -(ln med + 2 ln B90)/3 on 30 held-out n=12; static guard rejects full-assignment enumeration / argmin / >1 pair table at once; pv_acc>0.85 -> -20 kept.
+net16r ckpt_10 (2026-10-21 17:02 UTC+8) fair TEST n=16 rr 83.9/2607.0 single 87.1/8869.9 pv_acc 0.72 | selection 60.9/511.4 | stall 0 (QAOA L4 34.82/98.20)
