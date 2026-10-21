@@ -80,6 +80,12 @@ def _child(stage, prog, mem_mb, wall):
         time.sleep(1.0)
     try: r = json.load(open(out)); os.remove(out); return r, peak
     except Exception: return {"combined_score": -20.0, "error": f"{stage} child failed rc={pr.returncode}"}, peak
+def _child_retry(stage, prog, mem, wall):
+    """crash (child died / OOM / wall) -> retry once, then mark failed."""
+    r, pk = _child(stage, prog, mem, wall)
+    if "error" in r and any(x in str(r["error"]) for x in ("child failed", "memory", "wall timeout")):
+        r2, pk2 = _child(stage, prog, mem, wall); r2["retried"] = 1; return r2, max(pk, pk2)
+    return r, pk
 def _state():
     try: return json.load(open(S1_STATE))
     except Exception: return {"best": None, "n": 0, "cut": 0}
@@ -98,7 +104,7 @@ def diag_text(r1, r2=None):
 def evaluate(program_path):
     from openevolve.evaluation_result import EvaluationResult
     mem = int(os.environ.get("OE_MEM_MB", "4500")); t0 = time.time()
-    r1, pk1 = _child("s1", program_path, mem, S1_BUDGET * 2 + 400)
+    r1, pk1 = _child_retry("s1", program_path, mem, S1_BUDGET * 2 + 400)
     if "s1" not in r1:
         r1["stage"] = 1; r1["peak_rss_mb"] = pk1; return EvaluationResult(metrics=r1, artifacts={"diagnostics": "stage 1 failed: " + str(r1.get("error"))})
     import fcntl; os.makedirs(os.path.dirname(S1_STATE), exist_ok=True); lk = open(S1_STATE + ".lock", "w"); fcntl.flock(lk, fcntl.LOCK_EX)
@@ -110,7 +116,7 @@ def evaluate(program_path):
         return EvaluationResult(metrics=m, artifacts={"diagnostics": diag_text(r1) + f"\nCUT AT STAGE 1: s1 {r1['s1']:.3f} < best {best:.3f} - {S1_MARGIN}"})
     if best is None or r1["s1"] > best: st["best"] = r1["s1"]
     _save_state(st); lk.close()
-    r2, pk2 = _child("s2", program_path, mem, EV.BUDGET * 2 + 400)
+    r2, pk2 = _child_retry("s2", program_path, mem, EV.BUDGET * 2 + 400)
     m = dict(flat); m.update(r2); m.update(stage=2, cut_at_stage1=0, peak_rss_mb=max(pk1, pk2), eval_s=time.time() - t0)
     return EvaluationResult(metrics=m, artifacts={"diagnostics": diag_text(r1, r2)})
 if __name__ == "__main__" and len(sys.argv) > 1 and sys.argv[1] == "--inner":

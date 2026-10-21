@@ -16,20 +16,16 @@ def kids():
     return sorted(out)
 def avail(): return int([l for l in open("/proc/meminfo") if l.startswith("MemAvailable")][0].split()[1]) // 1024
 log = lambda s: print(time.strftime("%Y-%m-%d %H:%M:%S"), s, flush=True)
-seen = set(); last = 0
-while True:
+last = 0; last_cont = 0.0
+while True:   # non-blocking loop (never sleeps long): over-slot children are paused youngest-first within ~0.3 s
     K = kids(); run = [p for _, p, s in K if s != "T"]; stp = [p for _, p, s in K if s == "T"]; a = avail()
-    for _, p, s in K:
-        if p in seen: continue
-        seen.add(p)
-        if s != "T" and (len(run) > SLOTS or a < FLOOR + NEED or (len(run) > 1 and run.index(p) >= SLOTS)):
-            if len(run) > 1 or a < FLOOR + NEED:
-                try: os.kill(p, signal.SIGSTOP); run.remove(p); stp.append(p); log(f"STOP new {p} (running={len(run)}, avail={a}MB)")
-                except Exception: pass
-    if len(run) > 1 and a < FLOOR:
-        p = run[-1]; os.kill(p, signal.SIGSTOP); log(f"STOP {p}: avail {a}MB < floor {FLOOR}")
-    elif stp and len(run) < SLOTS and a >= FLOOR + NEED:
-        p = stp[0]; os.kill(p, signal.SIGCONT); log(f"CONT {p} (avail={a}MB)"); time.sleep(60)
-    seen &= {p for _, p, _ in K}
+    while len(run) > SLOTS or (len(run) > 1 and a < FLOOR):
+        p = run.pop()   # youngest
+        try: os.kill(p, signal.SIGSTOP); stp.append(p); log(f"STOP {p} (running={len(run)}, slots={SLOTS}, avail={a}MB)")
+        except Exception: pass
+    if stp and len(run) < SLOTS and a >= FLOOR + NEED and time.time() - last_cont > 60:
+        p = sorted(stp)[0] if False else [q for _, q, s in K if q in stp][0]   # oldest stopped
+        try: os.kill(p, signal.SIGCONT); last_cont = time.time(); log(f"CONT {p} (avail={a}MB)")
+        except Exception: pass
     if time.time() - last > 600: last = time.time(); log(f"heartbeat running={len(run)} stopped={len(stp)} avail={a}MB")
     time.sleep(0.3)

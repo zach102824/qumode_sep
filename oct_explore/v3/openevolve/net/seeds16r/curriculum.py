@@ -9,7 +9,7 @@ Fair objective = round-robin: mean over the R placements. Allowed imports: numpy
 import time, numpy as np, jax, jax.numpy as jnp
 
 # EVOLVE-BLOCK-START
-# FAMILY: curriculum - curriculum over n and formulas: batch mix n=8/12, hard-formula replay, schedules
+# FAMILY: curriculum - curriculum over n and formulas: batch mix n=8/12, hard-formula replay, schedules (fallback: copy of features seed; the bs={8:8,12:16} variant trained over budget)
 # parent: (net16o ckpt_60 best fd65b9be: selection 56.9/599, fair TEB n=16 84.4/5229)
 H = 32
 LAM_GLOB = 0.0   # OPTIONAL training-only pull of chain p toward the global-cost p (api.p_from(..., glob=True)); never part of fitness.
@@ -93,7 +93,7 @@ def train(api, budget_s):
     from jax.flatten_util import ravel_pytree
     th, unr = ravel_pytree(p); mo = jnp.zeros_like(th); ve = jnp.zeros_like(th)
     data = {n: api.data(n) for n in api.n_list}; feats = {n: features(n, d["V"], d["SG"], d["m"]) for n, d in data.items()}
-    bs = {8: 8, 10: 8, 12: 16, 15: 4}
+    bs = {8: 12, 10: 8, 12: 12, 15: 4}
     def loss(th, n, fx, pl, b):
         pp = unr(th); out = apply(pp, *fx, place=pl)
         P = api.p_from(n, out, b); nl = -jnp.log(P.mean(1) + 1e-12)
