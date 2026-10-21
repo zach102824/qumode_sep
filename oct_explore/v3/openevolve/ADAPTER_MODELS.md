@@ -1,7 +1,7 @@
 # Adapter models (2026-10-21 Asia/Shanghai)
 
 - stage1 ideas: `claude-opus-5-5-medium` (Zach: Opus only for ideas)
-- stage2 code: `composer-2.5` (exact cursor-agent id)
+- stage2 code: `cursor-grok-4.6-high` (Zach 2026-10-21 09:11 CST; restarted after reboot from ckpt_60)
 - net32o remains paused (see NET32O_PAUSED.md)
 - floor 3.2 GB MemAvailable + `eval_governor.py` unchanged
 
