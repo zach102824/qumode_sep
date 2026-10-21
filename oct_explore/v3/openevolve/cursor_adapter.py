@@ -103,6 +103,17 @@ def _txt(msgs): return "\n".join(m.get("content", "") if isinstance(m.get("conte
 def _best_s2():
     try: import json as _j; return float(_j.load(open(os.path.join(HERE_, A.run_dir, "best_s2.json")))["combined_score"])
     except Exception: return None
+def compute_block(T):
+    """COMPUTE & NOVELTY block (Zach 17:2x CST): budget from env (same source as net/evaluator_net16r.py), parent train time from prompt metrics."""
+    b2 = float(os.environ.get("OE_BUDGET", "420")); b1 = float(os.environ.get("OE_S1_BUDGET", "60"))
+    m2 = re.search(r"\btrain_s\W{0,3}\s*(\d+(?:\.\d+)?)", T); m1 = re.search(r"s1_train_s\W{0,3}\s*(\d+(?:\.\d+)?)", T)
+    par = ", ".join(x for x in [f"stage-1 train {float(m1.group(1)):.0f}s" if m1 else "", f"stage-2 train {float(m2.group(1)):.0f}s" if m2 else ""] if x) or "not reported"
+    return ("### COMPUTE & NOVELTY (hard rules)\n"
+            f"- Training time budget: stage 1 = {b1:.0f}s, stage 2 = {b2:.0f}s (train(api, budget) gets this number). Training that runs past 2x budget "
+            f"is 'train over budget' and scores -20 no matter how good the idea is. Parent's training time: {par}.\n"
+            "- Keep added compute within ~1.5x the parent's: no big increases in layers, training steps, message-passing rounds, or table sizes.\n"
+            "- Priority is exploring genuinely NEW ideas. A new mechanism must REPLACE an existing component, not stack on top of it. "
+            "Do NOT just add more layers or more of an old idea.\n")
 def net16r_plan(msgs):
     """returns (kind, extra_text_for_code_model, idea_prompt_or_None)."""
     import hashlib
@@ -113,9 +124,9 @@ def net16r_plan(msgs):
     tgt = (re.search(r"CHECKABLE TARGET: [^\n]*", T) or [""])[0]
     if m2 and best is not None and float(m2.group(1)) < best - 0.05 and st["repairs"].get(h, 0) < 2:
         st["repairs"][h] = st["repairs"].get(h, 0) + 1; _sv(st)
-        return ("repair", "REPAIR EDIT (%d/2): the current program passed the n=12 screen but lost on the n=16 selection set (score %s vs best %.3f). "
+        return ("repair", ("REPAIR EDIT (%d/2): the current program passed the n=12 screen but lost on the n=16 selection set (score %s vs best %.3f). "
                 "Do NOT add a new idea. Read its DIAGNOSTICS above (chain vs global-cost p, worst formulas, dropped-cost fraction) and make the smallest "
-                "change that fixes why it loses at n=16 (transfer from n=12 to n=16, hard tail, stability). %s" % (st["repairs"][h], m2.group(1), best, tgt), None)
+                "change that fixes why it loses at n=16 (transfer from n=12 to n=16, hard tail, stability). %s" % (st["repairs"][h], m2.group(1), best, tgt)) + "\n" + compute_block(T), None)
     if st["calls"] % A.idea_every == 0:
         forced = st.get("batch") or []
         tech = forced.pop(0) if forced else TECH[st["tech"] % len(TECH)]
@@ -123,7 +134,7 @@ def net16r_plan(msgs):
         st = _st(); st["ideas"] = st.get("ideas", 0) + 1; _sv(st)
         ip = compact16r(msgs, fam, tech, tgt, wild=(st["ideas"] % 3 == 0)); return ("idea", None, ip)
     _sv(st)
-    return ("code", "FRAMING: " + FRAMING + "\nIsland path family of this program: %s: %s (stay within this family; do not imitate the global cost). %s" % (fam, PATHS.get(fam, fam), tgt), None)
+    return ("code", compute_block(T) + "FRAMING: " + FRAMING + "\nIsland path family of this program: %s: %s (stay within this family; do not imitate the global cost). %s" % (fam, PATHS.get(fam, fam), tgt), None)
 def run_summary(k_recent=12):
     """recent run data for Opus: per-island best/latest scores + family, recent outcomes (cut/failed/errors)."""
     import json as _j, glob as _g
@@ -154,7 +165,7 @@ def compact16r(msgs, fam, tech, tgt, wild=False, cap_sys=2500, cap_user=6000):
     user = "\n".join(m.get("content", "") if isinstance(m.get("content"), str) else "" for m in msgs if m.get("role") != "system")
     user = re.sub(r"```.*?```", lambda mo: "[code omitted; defs: " + "; ".join(d.strip()[:90] for d in re.findall(r"^\s*def [^\n]*", mo.group(0), re.M)[:20]) + "]", user, flags=re.S)[-cap_user:]
     fam_txt = PATHS.get(fam, fam)
-    return ("### FRAMING (Zach)\n" + FRAMING + "\n\n### GOAL\n" + sysm + "\n\n### CONTEXT (parent metrics + DIAGNOSTICS, top programs; code omitted)\n" + user +
+    return ("### TOP INSTRUCTION (Zach)\nPropose a genuinely NEW mechanism or direction (new path families are welcome). NOT an elaboration, NOT more layers, NOT more of an existing method. The idea must REPLACE an existing component and stay cheap (<=~1.5x parent compute).\n\n### FRAMING (Zach)\n" + FRAMING + "\n\n### GOAL\n" + sysm + "\n\n### CONTEXT (parent metrics + DIAGNOSTICS, top programs; code omitted)\n" + user +
             "\n\n### RECENT IDEAS (do NOT repeat)\n" + recent_ideas() +
             "\n\n### RECENT RUN DATA (per-island scores, outcomes)\n" + run_summary() +
             (f"\n\n### WILDCARD SLOT\nPropose ANYTHING consistent with the FRAMING and the locked gates / anti-cheat rules: a new path family, a combination, "
@@ -162,6 +173,7 @@ def compact16r(msgs, fam, tech, tgt, wild=False, cap_sys=2500, cap_user=6000):
              f"\n\n### ISLAND PATH FAMILY (starting direction, not a limit): {fam}: {fam_txt}\n### SUGGESTED DIRECTION: {tech}\n"
              "Strengthen this island's route, OR propose a NEW path family beyond the starting six, combine families, or retire a weak component, "
              "if the run data says so.\n") +
+            "\n" + compute_block(user) + "Favour NEW, CHEAP mechanisms that replace a component over elaborations (more layers/steps/rounds/tables) of existing ideas.\n" +
             "Do NOT propose imitating/reproducing the global QAOA cost. Say exactly what changes in the network/training. If you introduce a new "
             "family, start a line 'NEW FAMILY: <short_name> - <one line>'.\n"
             f"### CHECKABLE SUBGOAL\n{tgt or 'raise chain p on the 5 worst n=12 screen formulas listed in DIAGNOSTICS without lowering the median.'}\n"
@@ -212,7 +224,7 @@ async def chat(req: Request):
                         with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "ideas_raw.log"), "a") as f_:
                             f_.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')}\t{uuid.uuid4().hex[:8]}\t" + idea.replace("\n", " | ") + "\n")
                     except Exception: pass
-                    extra = "IMPLEMENT THIS IDEA (from a senior reviewer) in your answer, following the exact output format requested above:\n" + idea
+                    extra = "IMPLEMENT THIS IDEA (from a senior reviewer) in your answer, following the exact output format requested above:\n" + idea + "\n\n" + compute_block(_txt(msgs))
                 full = render(msgs + [{"role": "user", "content": extra}]); txt = await run_agent(full, A.code_model)
                 def _ok(t_):
                     a_, b_, c_ = (len(re.findall(r"^<<<<<<< SEARCH\s*$", t_, re.M)), len(re.findall(r"^=======\s*$", t_, re.M)), len(re.findall(r"^>>>>>>> REPLACE\s*$", t_, re.M)))
