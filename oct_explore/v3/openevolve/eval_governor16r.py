@@ -3,7 +3,7 @@ A new child is SIGSTOPped within ~0.3 s of spawn (before training starts) unless
 Stopped children are resumed oldest-first when both hold. If MemAvailable drops below FLOOR while >1 child runs, the youngest is paused.
 (Child wall timeouts in evaluator_net16r count only non-stopped time.)"""
 import os, signal, time, sys
-SLOTS = int(os.environ.get("GOV_SLOTS", "2")); FLOOR = int(os.environ.get("GOV_FLOOR_MB", "3200")); NEED = int(os.environ.get("GOV_NEED_MB", "2300"))
+SLOTS = int(os.environ.get("GOV_SLOTS", "1")); FLOOR = int(os.environ.get("GOV_FLOOR_MB", "2800")); NEED = int(os.environ.get("GOV_NEED_MB", "2300"))
 def kids():
     out = []
     for pid in os.listdir("/proc"):
