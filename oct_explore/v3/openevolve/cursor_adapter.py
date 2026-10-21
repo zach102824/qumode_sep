@@ -32,11 +32,27 @@ async def run_agent(prompt, model):
         return o.decode()
     finally: shutil.rmtree(d, ignore_errors=True)
 
-def recent_ideas(k=5):
+def recent_ideas(k=8):
     try:
         L_ = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "ideas_raw.log")).read().strip().splitlines()[-k:]
         return "\n".join("- " + l.split("\t", 2)[-1][:400] for l in L_) or "- (none yet)"
     except Exception: return "- (none yet)"
+
+CATS = ["new features / formula encodings", "layer-wise angle schedules", "lost-fraction clause weights (compensate dropped 3-cavity / non-neighbour terms)",
+        "placement-aware outputs", "loss shaping on the hard tail", "multi-placement training objectives", "curriculum over n",
+        "sign-equivariant / literal-graph architectures", "attention / transformer over clauses",
+        "physics-inspired priors (adiabatic / QAOA-limit / mean-field)", "per-cavity SNAP-level structure via Gray code",
+        "meta-learning / hypernetworks", "ensembles / averaging over seeds"]
+_CNT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "idea_counter.txt")
+def forced_category():
+    try: n = int(open(_CNT).read().strip())
+    except Exception: n = 0
+    open(_CNT, "w").write(str(n + 1))
+    if n % 4 == 3:
+        return ("### FORCED CATEGORY: WILDCARD\nPropose an idea that fits NONE of these categories: " + "; ".join(CATS) +
+                ". Write 'CATEGORY: wildcard - <your own name>'.")
+    c = CATS[(n - n // 4) % len(CATS)]
+    return "### FORCED CATEGORY (round-robin; you MUST use this one)\n" + c + ". Write 'CATEGORY: " + c + "'."
 
 def compact(msgs, cap_sys=2500, cap_user=6000):
     """Stage-1 prompt: goal (system, truncated) + user prompt with code blocks replaced by a def-signature summary."""
@@ -53,11 +69,10 @@ def compact(msgs, cap_sys=2500, cap_user=6000):
             "- clamping / two-round pinning of variables\n- KD / distillation from the global-cost teacher\n"
             "- assignment-head / placement selectors\n- minor tweaks of width, depth, learning rate or step count\n"
             "\n### RECENT IDEAS (do NOT repeat; yours must be structurally different from these and from the parent)\n" + recent_ideas() +
-            "\n\n### PICK ONE CATEGORY\nnew features / formula encodings; layer-wise angle schedules; per-clause weights chosen to compensate "
-            "the dropped 3-cavity / non-neighbour terms; placement-aware outputs; loss shaping on the hard tail; multi-placement training objectives; "
-            "curriculum over n; equivariant architectures; new output parameterizations of gamma/beta/w/p_v.\n"
-            "Rules: frozen gate sequence/compiler/simulator untouched; no classical solving; p_v must not encode a solution.\n"
-            "\n### TASK\nPropose ONE concrete, structurally new change to the network/training. Start with 'CATEGORY: <name>'. "
+            "\n\n" + forced_category() +
+            "\nRules: frozen gate sequence/compiler/simulator untouched; no classical solving; p_v must not encode a solution.\n"
+            "\n### TASK\nPropose ONE concrete, structurally new change to the network/training. Be bold and divergent: prefer an unusual "
+            "mechanism over a safe tweak. Start with 'CATEGORY: <name>'. "
             "Then 3-6 short lines, plain text, no code, max ~150 words. Do NOT use tools.")
 
 @app.get("/v1/models")
