@@ -9,7 +9,7 @@ echo $$ > $OUT/driver.pid; log "driver start pid $$"
 latest(){ ls -d $OUT/checkpoints/checkpoint_* 2>/dev/null | sort -t_ -k2 -n | tail -1; }
 fails=0
 while [ ! -f $STOP ]; do
-  bash net16r_services.sh
+  bash net16r_services.sh; protect16r
   source $ST; CK=$(latest); LAST=${CK##*_}
   if [ -z "$CK" ]; then log "no checkpoint_0: run bootstrap16r.py first"; sleep 600; continue; fi
   if [ "$LAST" -ge "$END" ]; then

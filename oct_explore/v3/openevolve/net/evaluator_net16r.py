@@ -84,7 +84,7 @@ def _state():
     try: return json.load(open(S1_STATE))
     except Exception: return {"best": None, "n": 0, "cut": 0}
 def _save_state(st):
-    os.makedirs(os.path.dirname(S1_STATE), exist_ok=True); tmp = S1_STATE + ".tmp"; json.dump(st, open(tmp, "w")); os.replace(tmp, S1_STATE)
+    os.makedirs(os.path.dirname(S1_STATE), exist_ok=True); import threading; tmp = S1_STATE + f".{os.getpid()}.{threading.get_ident()}.tmp"; json.dump(st, open(tmp, "w")); os.replace(tmp, S1_STATE)
 def diag_text(r1, r2=None):
     L_ = [f"STAGE-1 (60 s train, 30 unseen n=12 screen formulas): s1={r1['s1']:.3f} (med 1/p {r1['s1_med']:.1f}, B90 {r1['s1_B90']:.1f}), pv_acc {r1['s1_pv_acc']:.2f}",
           f"geo-mean p  CHAIN vs GLOBAL-COST (same outputs): n=8 {r1['n8_chain_p']:.4f} vs {r1['n8_glob_p']:.4f};  n=12 {r1['n12_chain_p']:.4f} vs {r1['n12_glob_p']:.4f}",
@@ -101,14 +101,15 @@ def evaluate(program_path):
     r1, pk1 = _child("s1", program_path, mem, S1_BUDGET * 2 + 400)
     if "s1" not in r1:
         r1["stage"] = 1; r1["peak_rss_mb"] = pk1; return EvaluationResult(metrics=r1, artifacts={"diagnostics": "stage 1 failed: " + str(r1.get("error"))})
+    import fcntl; os.makedirs(os.path.dirname(S1_STATE), exist_ok=True); lk = open(S1_STATE + ".lock", "w"); fcntl.flock(lk, fcntl.LOCK_EX)
     st = _state(); best = st.get("best"); st["n"] = st.get("n", 0) + 1
     flat = {k: v for k, v in r1.items() if k != "worst"}; flat["s1_best_before"] = best if best is not None else -99.0
     if best is not None and r1["s1"] < best - S1_MARGIN:
-        st["cut"] = st.get("cut", 0) + 1; _save_state(st)
+        st["cut"] = st.get("cut", 0) + 1; _save_state(st); lk.close()
         m = dict(flat, combined_score=-12.0 + 0.1 * max(r1["s1"], -30.0), stage=1, cut_at_stage1=1, peak_rss_mb=pk1, eval_s=time.time() - t0)
         return EvaluationResult(metrics=m, artifacts={"diagnostics": diag_text(r1) + f"\nCUT AT STAGE 1: s1 {r1['s1']:.3f} < best {best:.3f} - {S1_MARGIN}"})
     if best is None or r1["s1"] > best: st["best"] = r1["s1"]
-    _save_state(st)
+    _save_state(st); lk.close()
     r2, pk2 = _child("s2", program_path, mem, EV.BUDGET * 2 + 400)
     m = dict(flat); m.update(r2); m.update(stage=2, cut_at_stage1=0, peak_rss_mb=max(pk1, pk2), eval_s=time.time() - t0)
     return EvaluationResult(metrics=m, artifacts={"diagnostics": diag_text(r1, r2)})

@@ -9,8 +9,15 @@ from openevolve.database import ProgramDatabase, Program
 FAMS = ["loss", "architecture", "features", "curriculum", "placement"]
 cfg = load_config("config_net16r.yaml"); cfg.database.db_path = None
 res = {}
+from openevolve.evaluation_result import EvaluationResult
 def ev(f):
-    t = time.time(); r = E.evaluate(f"net/seeds16r/{f}.py"); print(time.strftime("%H:%M:%S"), f, f"{time.time()-t:.0f}s", json.dumps({k: r.metrics.get(k) for k in ("combined_score", "s1", "rr_median_inv_p", "rr_B90_inv_p", "pv_acc", "s1_s", "train_s", "eval_s", "peak_rss_mb", "error")}), flush=True)
+    cf_ = os.path.join(RUN, f"seed_{f}.json")
+    if os.path.exists(cf_): d = json.load(open(cf_)); return f, EvaluationResult(metrics=d["metrics"], artifacts=d["artifacts"])
+    for a in range(2):   # one retry (e.g. host stall -> train over budget)
+        t = time.time(); r = E.evaluate(f"net/seeds16r/{f}.py")
+        if r.metrics.get("combined_score", -20) > -19: break
+    if r.metrics.get("combined_score", -20) > -19: json.dump({"metrics": r.metrics, "artifacts": r.artifacts}, open(cf_, "w"))
+    _ = None; print(time.strftime("%H:%M:%S"), f, f"{time.time()-t:.0f}s", json.dumps({k: r.metrics.get(k) for k in ("combined_score", "s1", "rr_median_inv_p", "rr_B90_inv_p", "pv_acc", "s1_s", "train_s", "eval_s", "peak_rss_mb", "error")}), flush=True)
     return f, r
 with cf.ThreadPoolExecutor(int(os.environ.get("BOOT_PAR", "2"))) as ex:
     for f, r in ex.map(ev, FAMS): res[f] = r
