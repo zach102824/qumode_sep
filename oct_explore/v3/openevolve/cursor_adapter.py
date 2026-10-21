@@ -90,6 +90,9 @@ TECH = [PATHS[k] for k in ("pair", "optimistic", "rank", "role", "grover")] + [
         "WILDCARD named technique: threshold-QAOA style phase separators (Th-QAOA) on local levels",
         "WILDCARD named technique: multi-angle QAOA (ma-QAOA) generalised to per-level phases"]
 FAMS = ["pair", "optimistic", "rank", "role", "grover"]
+try:
+    import json as _jj; PATHS.update(_jj.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "net16r_adapter_state.json"))).get("extra_paths", {}))
+except Exception: pass
 _ST = os.path.join(HERE_, "logs", "net16r_adapter_state.json")
 def _st():
     try: import json as _j; return _j.load(open(_ST))
@@ -117,22 +120,69 @@ def net16r_plan(msgs):
         forced = st.get("batch") or []
         tech = forced.pop(0) if forced else TECH[st["tech"] % len(TECH)]
         st["tech"] += 0 if forced else 1; st["batch"] = forced; _sv(st)
-        ip = compact16r(msgs, fam, tech, tgt); return ("idea", None, ip)
+        st = _st(); st["ideas"] = st.get("ideas", 0) + 1; _sv(st)
+        ip = compact16r(msgs, fam, tech, tgt, wild=(st["ideas"] % 3 == 0)); return ("idea", None, ip)
     _sv(st)
     return ("code", "FRAMING: " + FRAMING + "\nIsland path family of this program: %s: %s (stay within this family; do not imitate the global cost). %s" % (fam, PATHS.get(fam, fam), tgt), None)
-def compact16r(msgs, fam, tech, tgt, cap_sys=2500, cap_user=6000):
+def run_summary(k_recent=12):
+    """recent run data for Opus: per-island best/latest scores + family, recent outcomes (cut/failed/errors)."""
+    import json as _j, glob as _g
+    try:
+        cks = sorted(_g.glob(os.path.join(HERE_, A.run_dir, "checkpoints", "checkpoint_*")), key=lambda c: int(c.rsplit("_", 1)[1]))
+        if not cks: return "(no checkpoint yet)"
+        progs = [_j.load(open(f)) for f in _g.glob(os.path.join(cks[-1], "programs", "*.json"))]
+        isl = {}
+        for pr in progs:
+            i = pr.get("metadata", {}).get("island", -1); fam = (re.search(r"# FAMILY: (\S+)", pr.get("code", "")) or [0, "?"])[1]
+            sc = pr.get("metrics", {}).get("combined_score", -99); isl.setdefault(i, []).append((sc, fam, pr.get("iteration_found", 0), pr.get("metrics", {})))
+        L_ = [f"latest checkpoint {os.path.basename(cks[-1])}; {len(progs)} programs"]
+        for i in sorted(isl):
+            v = sorted(isl[i], key=lambda x: -x[0]); b = v[0]
+            L_.append(f"island {i}: family {b[1]}, best {b[0]:.3f} (n16 sel {b[3].get('rr_median_inv_p', 0):.1f}/{b[3].get('rr_B90_inv_p', 0):.1f}, s1 {b[3].get('s1', 0):.3f}), "
+                      f"{len(v)} progs, cut@s1 {sum(1 for x in v if x[3].get('cut_at_stage1') == 1)}, failed {sum(1 for x in v if x[0] <= -19)}")
+        rec = sorted(progs, key=lambda pr: -pr.get("iteration_found", 0))[:k_recent]
+        for pr in rec:
+            m = pr.get("metrics", {}); fam = (re.search(r"# FAMILY: (\S+)", pr.get("code", "")) or [0, "?"])[1]
+            out = "FAILED " + str(m.get("error", ""))[:90] if m.get("combined_score", 0) <= -19 else ("cut@s1" if m.get("cut_at_stage1") == 1 else f"score {m.get('combined_score', 0):.3f}")
+            L_.append(f"  it{pr.get('iteration_found')} [{fam}] {out}; change: {' '.join(str(pr.get('changes_description') or pr.get('metadata', {}).get('changes', '')).split())[:140]}")
+        try: L_.append("fair TEST history: " + " | ".join(l.split("fair TEST n=16 ")[1][:40] for l in open(os.path.join(HERE_, A.run_dir, "events.log")) if "fair TEST" in l)[-600:])
+        except Exception: pass
+        return "\n".join(L_)[:4000]
+    except Exception as e: return f"(summary unavailable: {e})"
+def compact16r(msgs, fam, tech, tgt, wild=False, cap_sys=2500, cap_user=6000):
     sysm = "".join(m.get("content", "") if isinstance(m.get("content"), str) else "" for m in msgs if m.get("role") == "system")[:cap_sys]
     user = "\n".join(m.get("content", "") if isinstance(m.get("content"), str) else "" for m in msgs if m.get("role") != "system")
     user = re.sub(r"```.*?```", lambda mo: "[code omitted; defs: " + "; ".join(d.strip()[:90] for d in re.findall(r"^\s*def [^\n]*", mo.group(0), re.M)[:20]) + "]", user, flags=re.S)[-cap_user:]
     fam_txt = PATHS.get(fam, fam)
     return ("### FRAMING (Zach)\n" + FRAMING + "\n\n### GOAL\n" + sysm + "\n\n### CONTEXT (parent metrics + DIAGNOSTICS, top programs; code omitted)\n" + user +
             "\n\n### RECENT IDEAS (do NOT repeat)\n" + recent_ideas() +
-            f"\n\n### ISLAND PATH FAMILY (fixed by the human): {fam}: {fam_txt}\n### DIRECTION FOR THIS IDEA: {tech}\n"
-            "Propose a concrete step that strengthens THIS island's native path family (use the direction above if it fits the family; named "
-            "published techniques are wildcards). Do NOT propose imitating/reproducing the global QAOA cost. Say exactly what changes in the network/training.\n"
+            "\n\n### RECENT RUN DATA (per-island scores, outcomes)\n" + run_summary() +
+            (f"\n\n### WILDCARD SLOT\nPropose ANYTHING consistent with the FRAMING and the locked gates / anti-cheat rules: a new path family, a combination, "
+             f"or a radical change. (current island: {fam})\n" if wild else
+             f"\n\n### ISLAND PATH FAMILY (starting direction, not a limit): {fam}: {fam_txt}\n### SUGGESTED DIRECTION: {tech}\n"
+             "Strengthen this island's route, OR propose a NEW path family beyond the starting six, combine families, or retire a weak component, "
+             "if the run data says so.\n") +
+            "Do NOT propose imitating/reproducing the global QAOA cost. Say exactly what changes in the network/training. If you introduce a new "
+            "family, start a line 'NEW FAMILY: <short_name> - <one line>'.\n"
             f"### CHECKABLE SUBGOAL\n{tgt or 'raise chain p on the 5 worst n=12 screen formulas listed in DIAGNOSTICS without lowering the median.'}\n"
             "Rules: frozen gate sequence/compiler/simulator untouched; only dS/dB phase VALUES and angles change; size-free; no classical solving, "
             "no full-assignment enumeration/argmin, never more than one 256-entry pair table at once; p_v must not encode a solution.\n### TASK\nStart with 'TECHNIQUE: <name>'. Then 3-6 short lines, plain text, no code, max ~150 words. Do NOT use tools.")
+async def new_families(k=2):
+    """stagnation reseed: Opus picks the new family for each reseeded island from the run data."""
+    import json as _j
+    q = ("### FRAMING\n" + FRAMING + "\n\n### RUN DATA\n" + run_summary() + "\n\n### TASK\nThe run has stalled. %d weakest islands will be reseeded from the "
+         "best programs. For each, name a NEW native path family (may be new, a combination, or a refined one; not global-cost imitation; locked gates; "
+         "no classical solving / full enumeration). Output exactly %d lines: '<short_name> - <one-line mechanism>'. No tools." % (k, k))
+    out = await run_agent(q, A.idea_model); L_ = []
+    for l in out.splitlines():
+        m = re.match(r"\s*[-*\d.)]*\s*([A-Za-z][\w-]{1,30})\s*[-:]\s*(.+)", l)
+        if m: L_.append({"name": m.group(1).replace("-", "_"), "desc": m.group(2).strip()[:300]})
+    L_ = L_[:k]
+    for f_ in L_: PATHS[f_["name"]] = f_["desc"]
+    st = _st(); st.setdefault("extra_paths", {}).update({f_["name"]: f_["desc"] for f_ in L_}); _sv(st)
+    _j.dump(L_, open(os.path.join(HERE_, A.run_dir, "opus_families.json"), "w"), indent=1); return L_
+@app.post("/v1/new_families")
+async def new_families_ep(): return {"families": await new_families()}
 async def ideas_batch(k=5):
     """stagnation: ask Opus for k DISTINCT named techniques; stored as the next forced techniques."""
     q = ("List %d DISTINCT, published, named techniques (not in this list: %s) that could help a network choose phases/angles for a FIXED "

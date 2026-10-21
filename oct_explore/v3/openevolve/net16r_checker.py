@@ -5,7 +5,7 @@ n=12 screen set; big jump (fair score up > 0.3) -> recheck with frozen score_set
 import os, sys, json, time, subprocess, glob, urllib.request, numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__)); os.chdir(HERE); OUT = "runs/net16r"; CH = f"{OUT}/check"; os.makedirs(CH, exist_ok=True)
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..")); MD = os.path.join(REPO, "oct_explore", "NATIVE_TEMPLATE.md"); STF = f"{OUT}/checker_state.json"
-FLOOR, NEED = 3200, 2600
+FLOOR, NEED = 0, 2600   # 14:57 monitor: RAM floor removed per Zach (was 3200); only wait for the check's own need
 def ev(s): open(f"{OUT}/events.log", "a").write(time.strftime("%F %T ") + s + "\n")
 def avail(): return int([l for l in open("/proc/meminfo") if l.startswith("MemAvailable")][0].split()[1]) // 1024
 def fair(r): return -(np.log(r["n20_rr_median"]) + np.log(r["n20_rr_B90"])) / 2
@@ -21,7 +21,7 @@ def git(paths, msg):
     except subprocess.CalledProcessError as e: ev(f"git error: {e.stderr.decode()[-200:]}")
     return False
 def run_check(prog, out, verify=0):
-    while avail() < FLOOR + NEED + 400: time.sleep(30)
+    while avail() < FLOOR + NEED: time.sleep(30)
     env = dict(os.environ, OMP_NUM_THREADS="1", OE_N20="1", OE_NTEST="100")
     with open(out, "w") as fo, open(out[:-5] + ".err", "w") as fe:
         subprocess.run(["python3.13", "net/chunked_check.py", prog] + ([str(verify)] if verify else []), stdout=fo, stderr=fe, env=env)
@@ -51,6 +51,8 @@ def main():
                 f"{sel.get('rr_B90_inv_p', float('nan')):.1f} | stall {st['stall']}{tag} (QAOA L4 34.82/98.20)")
         open(MD, "a").write(line + "\n"); ev(line + f" [check {dt:.0f}s]")
         if st["stall"] and st["stall"] % 3 == 0:
+            try: ev("Opus new island families: " + urllib.request.urlopen(urllib.request.Request("http://127.0.0.1:8765/v1/new_families", method="POST"), timeout=900).read().decode()[:800])
+            except Exception as e: ev(f"new_families failed: {e}")
             open(f"{OUT}/reseed.pending", "w").write(str(k)); ev(f"ckpt {k}: {st['stall']} stalled checkpoints -> reseed weakest 2 islands + Opus 5 techniques")
             try: ev("techniques: " + urllib.request.urlopen(urllib.request.Request("http://127.0.0.1:8765/v1/ideas_batch", method="POST"), timeout=900).read().decode()[:1500])
             except Exception as e: ev(f"ideas_batch failed: {e}")

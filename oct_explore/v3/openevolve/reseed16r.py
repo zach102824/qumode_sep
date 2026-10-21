@@ -10,10 +10,14 @@ sc = lambda p: float(p.metrics.get("combined_score", -99))
 best_of = [max([sc(db.programs[i]) for i in isl if i in db.programs] or [-99]) for isl in db.islands]
 weak = sorted(range(len(db.islands)), key=lambda i: best_of[i])[:2]
 top = sorted(db.programs.values(), key=sc, reverse=True)[:2]
-for i in weak:
+import json, os
+try: newf = json.load(open(os.path.join(os.path.dirname(os.path.dirname(ck.rstrip("/"))), "opus_families.json")))
+except Exception: newf = []
+for wi, i in enumerate(weak):
+    fam_name, fam_desc = (newf[wi]["name"], newf[wi]["desc"]) if wi < len(newf) else (FAMS[i], "reseeded")
     for t in top:
-        code = re.sub(r"# FAMILY: [^\n]*", f"# FAMILY: {FAMS[i]} - reseeded from best ({t.id[:8]}, score {sc(t):.3f})", t.code, count=1)
+        code = re.sub(r"# FAMILY: [^\n]*", f"# FAMILY: {fam_name} - {fam_desc} (Opus-chosen at stagnation; body reseeded from best {t.id[:8]}, score {sc(t):.3f})", t.code, count=1)
         p = Program(id=str(uuid.uuid4()), code=code, metrics=dict(t.metrics), parent_id=None, generation=t.generation, iteration_found=db.last_iteration,
-                    metadata={"island": i, "family": FAMS[i], "reseed": True})
+                    metadata={"island": i, "family": fam_name, "reseed": True})
         db.add(p, iteration=db.last_iteration, target_island=i)
 db.save(ck, iteration=db.last_iteration); print("reseeded islands", weak, "island bests were", [round(b, 3) for b in best_of])
