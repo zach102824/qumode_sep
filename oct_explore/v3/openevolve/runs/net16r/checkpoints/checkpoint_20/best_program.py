@@ -9,11 +9,11 @@ Fair objective = round-robin: mean over the R placements. Allowed imports: numpy
 import time, numpy as np, jax, jax.numpy as jnp
 
 # EVOLVE-BLOCK-START
-# FAMILY: architecture - network architecture: message passing depth/width, attention, heads
+# FAMILY: grover - role-staged capped Grover + hop-2 demotion (L1 opt, L2-3 π, L4 graded)
 # parent: (net16o ckpt_60 best fd65b9be: selection 56.9/599, fair TEB n=16 84.4/5229)
 H = 32
-LAM_GLOB = 0.0   # OPTIONAL training-only pull of chain p toward the global-cost p (api.p_from(..., glob=True)); never part of fitness.
-TAIL_W = 0.5     # weight of the worst-quarter (hard tail) term in the loss
+LAM_GLOB = 0.0   # global-cost imitation is NOT the goal; kept available but off
+TAIL_W = 1.0     # weight of the CVaR-10% tail term in the loss
 G0 = np.array([-3.1275, -6.49, 9.6225, 8.4856], np.float32); B0 = np.array([1.1305, 0.3672, -0.5844, -0.3928], np.float32)  # F32_gray_chain (trained n=10+15 only)
 
 def features(n, V, SG, m):
@@ -96,6 +96,83 @@ def corr(p, he, ho, place, lv, lvs, lost, cidx):
     dB = dB + jnp.einsum("frp,l,frpk,frpq->frlpkq", sl, p["rb"], zL, zR)
     return dS, dB
 
+# ---------------- NATIVE PHASE PROGRAMS (framing: do NOT imitate the global cost; build local Fock-level phase programs) ----------------
+# Families (gate index): 0 clause-local optimistic tables, 1 conditional pair messages (alternating chain sweep), 2 rank level shaping,
+# 3 cavity-local Grover (pi on a capped soft candidate set). Gates gS/gB are zero-initialised => the seed starts at the parent's function.
+# Hardness add-on (family 6): intensive formula features modulate each family's gate. Only dS/dB phase VALUES change (locked gate sequence).
+FAMILIES = ("grover",)   # enabled native families on this island
+ROLE = [[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1], [0, 1, 1, 0]]  # L1 opt / off / L4 rank / L2-3 grover
+NAT_TAU = 0.5      # temperature of the soft chain messages
+GROVER_QMAX = 0.25 # candidate set capped at <= 25% of a cavity's levels (keeps it far from a pv-like single answer)
+def native_init(rng):
+    W = lambda i, o, s: jnp.asarray(rng.normal(0, s / np.sqrt(i), (i, o)).astype(np.float32))
+    # all grover-island gates start at 0 => exact parent circuit at step 0
+    return dict(nr1=W(H + 2, 16, 0.5), nr2=jnp.zeros((16,), jnp.float32), nrb=jnp.asarray(1.0, jnp.float32),
+                gS=jnp.zeros((4, 4), jnp.float32), gB=jnp.zeros((4, 4), jnp.float32), rq=jnp.asarray(0.0, jnp.float32),
+                Wh=jnp.zeros((3, 4), jnp.float32),
+                gopt=jnp.zeros((4,), jnp.float32),   # L1 optimistic SNAP
+                ghop=jnp.asarray(0.0, jnp.float32),  # hop-2 energy penalty
+                gfin=jnp.asarray(0.0, jnp.float32),  # L4 rank-graded SNAP
+                bref=jnp.zeros((4,), jnp.float32))   # last-layer beta refocus
+def local_tables(p, hc, V, sgn, place, n):
+    """per-cavity clause-local tables E1 (F,R,C,32) and neighbour-pair tables Ep (F,R,C-1,32,32) from in-scope literals only,
+    each clause discounted by a learned keep = 1 - rescue probability (out-of-scope literals may satisfy it)."""
+    cav = jnp.asarray(place["cav"]); F, R, C, _ = cav.shape; k = place["ks"][0]; m = V.shape[1]
+    lsg = jnp.take_along_axis(sgn, V, axis=2); vbit = (lsg < 0).astype(jnp.float32)                 # (F,m,4) violating value
+    eq = (cav[..., None] == jnp.arange(n)).astype(jnp.float32).reshape(F, R, C, 5, n)
+    A = jnp.einsum("frcjn,fmtn->frmtcj", eq, jax.nn.one_hot(V, n, dtype=jnp.float32))              # literal -> (cavity, slot)
+    i = np.arange(32)[:, None]; j = np.arange(5)[None]
+    BT = jnp.asarray(np.where(j < k, (i >> np.maximum(k - 1 - j, 0)) & 1, 0).astype(np.float32))   # (32,5) slot bit per level
+    match = jnp.einsum("frmtcj,ij->frmtci", A, BT) * vbit[:, None, :, :, None, None] + \
+            jnp.einsum("frmtcj,ij->frmtci", A, 1.0 - BT) * (1.0 - vbit)[:, None, :, :, None, None]
+    inc = A.sum(-1)                                                                                 # (F,R,m,4,C)
+    Lc = jnp.prod(1.0 - inc[..., None] + match, axis=3)                                             # (F,R,m,C,32)
+    cnt = inc.sum(3); o = 4.0 - cnt                                                                  # in-scope count per cavity
+    def keep(oo):
+        x = jnp.concatenate([jnp.broadcast_to(hc[:, None, :, None, :], oo.shape + (H,)), (oo / 4.0)[..., None], (oo > 0)[..., None].astype(jnp.float32)], -1)
+        return 1.0 - jax.nn.sigmoid(jnp.tanh(x @ p["nr1"]) @ p["nr2"] + p["nrb"] * (oo - 2.0))
+    valid = jnp.asarray((np.arange(32) < (1 << k)).astype(np.float32))
+    E1 = (n / m) * jnp.einsum("frmc,frmci->frci", (cnt > 0) * keep(o), Lc) * valid
+    _, _, cidx = geom(V, place, n)
+    hop2 = ((cidx.max(-1) - cidx.min(-1)) > 1.5).astype(jnp.float32)  # skip-cavity clauses (F,R,m)
+    # (F,R,C,32): extra energy iff a level falsifies in-cavity literals of a hop-2 clause
+    hop_pen = (n / m) * jnp.einsum("frm,frmc,frmci->frci", hop2, (cnt > 0).astype(jnp.float32), 1.0 - Lc) * valid
+    return E1, hop_pen, valid
+def chain_messages(E1, Ep, valid):
+    """soft min-sum sweeps along the chain over local (optimistic) tables: fwd[c] = message INTO cavity c from the left, bwd from the right."""
+    C = E1.shape[2]; big = 1e3 * (1.0 - valid); z = jnp.zeros_like(E1[:, :, 0])
+    def norm(x): return (x - (x * valid).sum(-1, keepdims=True) / valid.sum()) * valid
+    fwd = [z]
+    for c in range(C - 1):
+        x = (E1[:, :, c] + fwd[-1] + big)[..., :, None] + Ep[:, :, c]
+        fwd.append(norm(-NAT_TAU * jax.nn.logsumexp(-x / NAT_TAU, axis=-2)))
+    bwd = [z]
+    for c in range(C - 1, 0, -1):
+        x = (E1[:, :, c] + bwd[-1] + big)[..., None, :] + Ep[:, :, c - 1]
+        bwd.append(norm(-NAT_TAU * jax.nn.logsumexp(-x / NAT_TAU, axis=-1)))
+    return jnp.stack(fwd, 2), jnp.stack(bwd[::-1], 2)
+def soft_rank(E, valid, t=0.3):
+    d = (E[..., None, :] - E[..., :, None]) / t                                                    # [a, a'] = E(a') - E(a)
+    return (jax.nn.sigmoid(-d) * valid).sum(-1) / valid.sum() * valid                              # fraction of levels below a
+def native(p, hc, V, sgn, place, n, dS, dB, hard):
+    """Role-staged grover on SNAP only (no pair tables): L1 broad optimistic dS;
+    L2–L3 π on a ≤25% set; L4 rank-graded phase. Energy = E1 + hop-2 demotion."""
+    E1, hop_pen, valid = local_tables(p, hc, V, sgn, place, n)
+    on = jnp.float32(1.0 if "grover" in FAMILIES else 0.0)
+    mod = 1.0 + jnp.tanh(hard @ p["Wh"])
+    E = E1 + p["ghop"] * hop_pen
+    r = soft_rank(E, valid)
+    q = GROVER_QMAX * jax.nn.sigmoid(p["rq"])
+    mark = jax.nn.sigmoid((q - r) / 0.03) * valid
+    grade = jnp.clip((q - r) / (q + 1e-6), 0.0, 1.0) * valid
+    grole = on * jnp.asarray(ROLE[3], jnp.float32)
+    m1 = jnp.asarray([1.0, 0.0, 0.0, 0.0], jnp.float32)
+    m4 = jnp.asarray([0.0, 0.0, 0.0, 1.0], jnp.float32)
+    dS = dS + jnp.einsum("f,l,frci->frlci", mod[:, 0], on * p["gopt"] * m1, E1)
+    dS = dS + jnp.einsum("f,l,frci->frlci", mod[:, 3], p["gS"][3] * grole, jnp.pi * mark)
+    dS = dS + jnp.einsum("f,l,frci->frlci", mod[:, 3], on * p["gfin"] * m4, jnp.pi * grade)
+    return dS, dB
+
 def apply(p, xe, xo, inc, sgn, V, place=None):
     """3-round shared-weight MP. Sign flip of var i: e unchanged, o_i -> -o_i, pv_i -> 1-pv_i, gamma/beta/w fixed."""
     e = jnp.tanh(xe @ p["We"]); o = jnp.tanh(xo @ p["Wo"]); vd = inc.sum(1)[..., None] + 1.0
@@ -113,12 +190,15 @@ def apply(p, xe, xo, inc, sgn, V, place=None):
         geo = jnp.zeros(V.shape[:2] + (4,), jnp.float32); lost = cidx = lvs = None
     gb = jnp.tanh(e.mean(1) @ p["Wg"] + geo.mean(1) @ p["Wgg"])
     w = hc @ p["wc"] + jnp.tanh(jnp.concatenate([hc, geo], -1) @ p["Wq1"]) @ p["Wq2"] + geo[..., 3, None] * p["wsk"]
-    out = dict(gamma=p["g"][None] + gb[:, :4], beta=p["b"][None] + gb[:, 4:], w=w, pv=jax.nn.sigmoid(o @ p["wp"]))
-    if place is not None: out["dS"], out["dB"] = corr(p, e, o, place, lv, lvs, lost, cidx)
+    bref = p["bref"] * jnp.asarray([0.0, 0.0, 0.0, 1.0], jnp.float32)  # L4 refocus only; 0 => parent β
+    out = dict(gamma=p["g"][None] + gb[:, :4], beta=p["b"][None] + gb[:, 4:] + bref[None], w=w, pv=jax.nn.sigmoid(o @ p["wp"]))
+    if place is not None:
+        out["dS"], out["dB"] = corr(p, e, o, place, lv, lvs, lost, cidx)
+        out["dS"], out["dB"] = native(p, hc, V, sgn, place, inc.shape[2], out["dS"], out["dB"], geo.mean(1)[:, :3])
     return out
 
 def train(api, budget_s):
-    t0 = time.time(); rng = np.random.default_rng(0); p = init(rng)
+    t0 = time.time(); rng = np.random.default_rng(0); p = init(rng); p.update(native_init(rng))
 
     from jax.flatten_util import ravel_pytree
     th, unr = ravel_pytree(p); mo = jnp.zeros_like(th); ve = jnp.zeros_like(th)
@@ -130,10 +210,10 @@ def train(api, budget_s):
         xe, xo, inc, sgn, V = fx; of = apply(pp, xe, -xo, inc, -sgn, V, place=pl)  # all-sign flip: pv->1-pv, even heads fixed
         pen = ((out["gamma"] - of["gamma"]) ** 2).mean() + ((out["beta"] - of["beta"]) ** 2).mean()
         pen = pen + ((out["w"] - of["w"]) ** 2).mean() + ((out["pv"] + of["pv"] - 1.0) ** 2).mean()
-        k = max(1, nl.shape[0] // 4)
         _, Lst, _ = geom(V, pl, inc.shape[2])
-        lw = 1.0 + jax.lax.stop_gradient(Lst.mean((1, 2)))  # upweight skip-clause formulas (screen tail)
-        tot = (nl * lw).mean() + TAIL_W * jax.lax.top_k(nl, k)[0].mean() + 0.05 * pen
+        lw = 1.0 + 1.5 * jax.lax.stop_gradient(Lst.mean((1, 2)))  # upweight skip-clause formulas (screen tail)
+        kc = max(1, int(np.ceil(0.1 * nl.shape[0])))   # CVaR-10% of log(1/p) (tail) + smooth median/mean terms
+        tot = 0.5 * (nl * lw).mean() + 0.5 * jnp.median(nl) + TAIL_W * jax.lax.top_k(nl, kc)[0].mean() + 0.05 * pen
         if LAM_GLOB > 0:  # Bernoulli KL(p_glob || p_chain) per (formula, placement); global p is a stop-gradient target
             Pg = jax.lax.stop_gradient(jnp.clip(api.p_from(n, out, b, glob=True), 1e-6, 1 - 1e-6)); Pc = jnp.clip(P, 1e-6, 1 - 1e-6)
             tot = tot + LAM_GLOB * (Pg * jnp.log(Pg / Pc) + (1 - Pg) * jnp.log((1 - Pg) / (1 - Pc))).mean()
