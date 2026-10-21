@@ -58,7 +58,7 @@ def _stage1_inner(prog):
         Pc8, Pg8, _ = p_both(predict, D8)
     except Exception as e: return {"combined_score": -20.0, "error": f"stage1 {type(e).__name__}: {str(e)[:300]}"}
     pv = np.asarray(o["pv"]); acc = float(np.mean([max(np.mean((pv[i] > .5) == (s_ == 1)) for s_ in D12["sol"][i]) for i in range(len(pv))]))
-    med, b90 = summ(Pc.mean(1)); s1 = -(np.log(med) + np.log(b90)) / 2 - (20.0 if acc > EV.PVACC_MAX else 0.0)
+    med, b90 = summ(Pc.mean(1)); s1 = -(np.log(med) + 2.0 * np.log(b90)) / 3   # v2: held-out n=12 B90 weighted 2:1 - (20.0 if acc > EV.PVACC_MAX else 0.0)
     worst = np.argsort(Pc.mean(1))[:5]
     W = [dict(idx=int(i), seed=int(D12["seed"][i]), chain_p=float(Pc[i].mean()), glob_p=float(Pg[i].mean()), dropped_frac=dropped_frac(D12, o, int(i))) for i in worst]
     gm = lambda P: float(np.exp(np.mean(np.log(np.maximum(P.mean(1), 1e-12)))))
@@ -92,7 +92,7 @@ def _state():
 def _save_state(st):
     os.makedirs(os.path.dirname(S1_STATE), exist_ok=True); import threading; tmp = S1_STATE + f".{os.getpid()}.{threading.get_ident()}.tmp"; json.dump(st, open(tmp, "w")); os.replace(tmp, S1_STATE)
 def diag_text(r1, r2=None):
-    L_ = [f"STAGE-1 (60 s train, 30 unseen n=12 screen formulas): s1={r1['s1']:.3f} (med 1/p {r1['s1_med']:.1f}, B90 {r1['s1_B90']:.1f}), pv_acc {r1['s1_pv_acc']:.2f}",
+    L_ = [f"STAGE-1 (60 s train, 30 unseen n=12 screen formulas; s1 = -(ln med + 2 ln B90)/3): s1={r1['s1']:.3f} (med 1/p {r1['s1_med']:.1f}, B90 {r1['s1_B90']:.1f}), pv_acc {r1['s1_pv_acc']:.2f}",
           f"geo-mean p  CHAIN vs GLOBAL-COST (same outputs): n=8 {r1['n8_chain_p']:.4f} vs {r1['n8_glob_p']:.4f};  n=12 {r1['n12_chain_p']:.4f} vs {r1['n12_glob_p']:.4f}",
           "5 WORST n=12 screen formulas (chain p | global p | dropped-cost fraction):"]
     L_ += [f"  #{w['idx']}: {w['chain_p']:.4f} | {w['glob_p']:.4f} | {w['dropped_frac']:.2f}" for w in r1["worst"]]
@@ -101,7 +101,17 @@ def diag_text(r1, r2=None):
               f"(global-cost reaches {np.mean([w['glob_p'] for w in tgt]):.4f}) without lowering the n=12 median.")
     if r2: L_.append(f"STAGE-2 n=16 selection: score {r2.get('combined_score')}, rr med {r2.get('rr_median_inv_p')}, B90 {r2.get('rr_B90_inv_p')}, pv_acc {r2.get('pv_acc')}")
     return "\n".join(L_)
+import re as _re
+GUARD = [r"\b1\s*<<\s*n\b", r"\b2\s*\*\*\s*n\b", r"\*\*\s*n\b", r"<<\s*n\s*\)", r"itertools\.product", r"\bargmin\b", r"65536", r"\b1\s*<<\s*1[6-9]\b",
+         r"\(\s*256\s*,\s*256", r"\b256\s*\*\s*256\b", r"\bproduct\s*\(\s*\[?\s*\(?\s*0\s*,\s*1"]
+def guard_check(src):
+    """v2 anti-classical-solving guard: no full-assignment enumeration / argmin, no tables larger than one 256-entry pair table at once."""
+    return [g for g in GUARD if _re.search(g, src)]
 def evaluate(program_path):
+    gb = guard_check(open(program_path).read())
+    if gb:
+        from openevolve.evaluation_result import EvaluationResult
+        return EvaluationResult(metrics={"combined_score": -20.0, "error": f"guard: full-assignment enumeration / argmin / >1 pair table at once: {gb}"}, artifacts={"diagnostics": "rejected by guard " + str(gb)})
     from openevolve.evaluation_result import EvaluationResult
     mem = int(os.environ.get("OE_MEM_MB", "4500")); t0 = time.time()
     r1, pk1 = _child_retry("s1", program_path, mem, S1_BUDGET * 2 + 400)

@@ -78,15 +78,18 @@ def compact(msgs, cap_sys=2500, cap_user=6000):
 
 # ---------------- net16r mode (model name "net16r"): Grok 4.6 Fast code edits; Opus idea every --idea_every calls; repair edits ----------
 HERE_ = os.path.dirname(os.path.abspath(__file__))
-TECH = ["QAOA parameter transfer / concentration (angles transferred across n, fixed-angle conjecture)", "warm-start QAOA (biased initial/mixer from a relaxation, without encoding a solution)",
-        "counterdiabatic / approximate adiabatic gauge potential corrections (CD-QAOA, ADAPT-style terms on the allowed gates)",
-        "Walsh/Fourier compensation of the dropped non-local terms (re-weight the representable low-order terms so their effect matches)",
-        "recursive / layerwise parameter fixing (INTERP / layerwise-learned schedules)", "Trotterised annealing schedule priors (linear-ramp QAOA)",
-        "mean-field / product-state approximation (mean-field AOA) to set per-variable fields", "graph neural network parameter prediction for QAOA (GNN-predicted angles, edge-aware)",
-        "CVaR / Gibbs objective / tail-focused losses (CVaR-QAOA, Gibbs objective)", "meta-learning of variational parameters (MAML / LSTM optimiser / hypernetwork)",
-        "symmetry-aware / equivariant parameterisation (literal-flip and relabelling equivariance)", "threshold / grover-mixer style phase shaping (Th-QAOA) within the fixed gate set",
-        "curriculum learning / self-paced learning on hard instances", "multi-angle QAOA (ma-QAOA: per-clause / per-term angles)"]
-FAMS = ["loss", "architecture", "features", "curriculum", "placement"]
+FRAMING = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "FRAMING_NATIVE.md")).read().strip()
+PATHS = {"pair": "conditional pair messages: dB(a,b) = cavity A's preferred levels given B in level b, soft chain sweeps alternating L->R / R->L per layer, strength gated per layer",
+         "optimistic": "clause-local optimistic tables: a clause enters dS/dB only through its in-scope literals, discounted by a learned rescue probability",
+         "rank": "rank / nonlinear level shaping: learned monotone map (soft-rank, best-k vs rest) of local energy tables before they become phases, to separate near-degenerate low levels",
+         "role": "role-specialised layer program: L1 broad weak local phases, L2-3 pair consensus / optimistic dB, L4 sharp rank phases + small refocusing beta",
+         "grover": "cavity-local Grover: phase pi on a capped learned candidate set of levels per cavity/pair, beta near a reflection; candidate set must stay capped (pv-like outputs are penalised)"}
+TECH = [PATHS[k] for k in ("pair", "optimistic", "rank", "role", "grover")] + [
+        "hardness-adaptive schedule (shared add-on): intensive formula features modulate gamma/beta and family gates",
+        "WILDCARD named technique: counterdiabatic / gauge-potential-inspired local phase corrections",
+        "WILDCARD named technique: threshold-QAOA style phase separators (Th-QAOA) on local levels",
+        "WILDCARD named technique: multi-angle QAOA (ma-QAOA) generalised to per-level phases"]
+FAMS = ["pair", "optimistic", "rank", "role", "grover"]
 _ST = os.path.join(HERE_, "logs", "net16r_adapter_state.json")
 def _st():
     try: import json as _j; return _j.load(open(_ST))
@@ -116,19 +119,20 @@ def net16r_plan(msgs):
         st["tech"] += 0 if forced else 1; st["batch"] = forced; _sv(st)
         ip = compact16r(msgs, fam, tech, tgt); return ("idea", None, ip)
     _sv(st)
-    return ("code", "Island family of this program: %s (stay within this family). %s" % (fam, tgt), None)
+    return ("code", "FRAMING: " + FRAMING + "\nIsland path family of this program: %s: %s (stay within this family; do not imitate the global cost). %s" % (fam, PATHS.get(fam, fam), tgt), None)
 def compact16r(msgs, fam, tech, tgt, cap_sys=2500, cap_user=6000):
     sysm = "".join(m.get("content", "") if isinstance(m.get("content"), str) else "" for m in msgs if m.get("role") == "system")[:cap_sys]
     user = "\n".join(m.get("content", "") if isinstance(m.get("content"), str) else "" for m in msgs if m.get("role") != "system")
     user = re.sub(r"```.*?```", lambda mo: "[code omitted; defs: " + "; ".join(d.strip()[:90] for d in re.findall(r"^\s*def [^\n]*", mo.group(0), re.M)[:20]) + "]", user, flags=re.S)[-cap_user:]
-    return ("### GOAL\n" + sysm + "\n\n### CONTEXT (parent metrics + DIAGNOSTICS, top programs; code omitted)\n" + user +
+    fam_txt = PATHS.get(fam, fam)
+    return ("### FRAMING (Zach)\n" + FRAMING + "\n\n### GOAL\n" + sysm + "\n\n### CONTEXT (parent metrics + DIAGNOSTICS, top programs; code omitted)\n" + user +
             "\n\n### RECENT IDEAS (do NOT repeat)\n" + recent_ideas() +
-            f"\n\n### ISLAND FAMILY (fixed by the human): {fam}\n### NAMED TECHNIQUE TO ADAPT: {tech}\n"
-            "Adapt THIS known technique (as published) to our fixed native cavity chain + network, inside the island family. Say which paper/method "
-            "it comes from and exactly what changes in the network/training.\n"
+            f"\n\n### ISLAND PATH FAMILY (fixed by the human): {fam}: {fam_txt}\n### DIRECTION FOR THIS IDEA: {tech}\n"
+            "Propose a concrete step that strengthens THIS island's native path family (use the direction above if it fits the family; named "
+            "published techniques are wildcards). Do NOT propose imitating/reproducing the global QAOA cost. Say exactly what changes in the network/training.\n"
             f"### CHECKABLE SUBGOAL\n{tgt or 'raise chain p on the 5 worst n=12 screen formulas listed in DIAGNOSTICS without lowering the median.'}\n"
-            "Rules: frozen gate sequence/compiler/simulator untouched; no classical solving; p_v must not encode a solution; the global-cost pull "
-            "(LAM_GLOB) is optional and never part of fitness.\n### TASK\nStart with 'TECHNIQUE: <name>'. Then 3-6 short lines, plain text, no code, max ~150 words. Do NOT use tools.")
+            "Rules: frozen gate sequence/compiler/simulator untouched; only dS/dB phase VALUES and angles change; size-free; no classical solving, "
+            "no full-assignment enumeration/argmin, never more than one 256-entry pair table at once; p_v must not encode a solution.\n### TASK\nStart with 'TECHNIQUE: <name>'. Then 3-6 short lines, plain text, no code, max ~150 words. Do NOT use tools.")
 async def ideas_batch(k=5):
     """stagnation: ask Opus for k DISTINCT named techniques; stored as the next forced techniques."""
     q = ("List %d DISTINCT, published, named techniques (not in this list: %s) that could help a network choose phases/angles for a FIXED "

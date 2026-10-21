@@ -3,7 +3,7 @@
 cd "$(dirname "$0")"; export PATH=$HOME/.local/bin:$PATH OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 XLA_FLAGS="--xla_cpu_multi_thread_eigen=false intra_op_parallelism_threads=1"
 : "${CURSOR_API_KEY:?CURSOR_API_KEY must be set}"
 if [ "$CFG" = 16r ]; then   # rebuilt non-stop run -> runs/net16r (3-stage evaluator_net16r, 5 family islands, explore/exploit cycles)
-  mkdir -p runs/net16r logs; cp net/initial_net16r.py runs/net16r/seed_program.py
+  mkdir -p runs/net16r logs; cp net/seeds16r2/4_role.py runs/net16r/seed_program.py
   [ -f runs/net16r/checkpoints/checkpoint_0/metadata.json ] || { source env16r.sh; bash net16r_services.sh; python3.13 bootstrap16r.py runs/net16r > runs/net16r/bootstrap.log 2>&1 || exit 1; }
   pgrep -f net16r_watchdog.sh >/dev/null || setsid nohup bash net16r_watchdog.sh > /dev/null 2>&1 < /dev/null &
   exit 0

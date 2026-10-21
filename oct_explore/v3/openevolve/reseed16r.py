@@ -3,7 +3,7 @@
 import sys, re, uuid, copy
 from openevolve.config import load_config
 from openevolve.database import ProgramDatabase, Program
-FAMS = ["loss", "architecture", "features", "curriculum", "placement"]
+FAMS = ["pair", "optimistic", "rank", "role", "grover"]
 ck = sys.argv[1]; cfg = load_config("config_net16r.yaml"); cfg.database.db_path = None
 db = ProgramDatabase(cfg.database); db.load(ck)
 sc = lambda p: float(p.metrics.get("combined_score", -99))

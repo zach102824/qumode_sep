@@ -16,70 +16,59 @@ llm:
   timeout: 1200
   retries: 1
 prompt:
-  system_message: 'You are improving a JAX NETWORK that maps a 4-SAT formula to the control parameters of a FIXED native bosonic-cavity
+  system_message: '# Framing (Zach, 2026-10-21 15:00 CST): do NOT imitate QAOA''s global cost
 
-    chain circuit (NOT QAOA; QAOA L4 n=16 is only the baseline: 34.82/98.20 = median/B90 of 1/p).
+    Standard QAOA assumes the full cost phase incl. long-range high-weight Z strings (e.g. arbitrary ZZZZ), which are hard in hardware; much literature approximates/reproduces them. Our cavity chain has
+    three advantages:
 
-    KEY GOAL OF THIS RUN: make the CHAIN-APPLIED cost phase behave like the GLOBAL cost phase. With the global (all-to-all,
+    1. Neighbouring cavities instead of neighbouring qubits: each cavity holds several bits, so one nearest-neighbour cavity-cavity interaction couples many more bit strings at once.
 
-    unprojected) cost the same circuit reaches 33.8/79 on held-out n=16; on the chain it is ~100/1000+. Why: cavities hold 4 bits
+    2. Much richer cost phase: on a cavity or neighbouring cavity pair we can apply an ARBITRARY phase to each Fock level (SNAP dS tables, neighbour-bus dB tables), not just Pauli-Z products. E.g. 00 and
+    11 in one cavity can get different phases; Z1Z2 cannot distinguish them.
 
-    (n=16: 4 cavities, chain buses only). Per layer the compiler applies the least-squares projection (product measure pv) of
+    3. Only the final answer matters: classical optimisation, so the circuit need not reproduce the ZZZZ cost evolution. Any path that concentrates probability on the ground-state bit string is fine. Relative
+    phases still drive interference mid-circuit, but at readout only the bit string counts.
 
-    nm*sum_j (gamma_l + w_jl)[clause j violated] onto one-cavity + neighbour-pair functions. A clause whose variables span 3 cavities
+    Goal: search the larger hardware-native control space for a route QAOA''s Z-term picture cannot express, that still reaches the ground state. Imitating the global cost is NOT the goal.
 
-    or non-neighbour cavities (e.g. vars 3,12,18 in cavities 0,2,3) LOSES its non-local Walsh terms (z3 z12, z3 z18, z3 z12 z18, ...);
 
-    only the representable parts survive. Do NOT try to mimic the projection or the global cost term by term: learn phases that
+    YOU EDIT a JAX NETWORK that maps a 4-SAT formula to control values of a FIXED native bosonic-cavity chain circuit (4 layers; per layer one SNAP
 
-    MAXIMISE the final success probability p on the chain.
+    per cavity + one bus phase per neighbour cavity pair, then per-cavity one-bit-flip mixer beta_l; readout p = P(ground state / satisfying string)).
 
-    Fixed gate sequence (you cannot change it): flat prep; per layer l=1..4: one SNAP per cavity + one bus phase per neighbour pair
+    Cavities hold 4 bits (n=8: 2 cavities, n=12: 3, n=16: 4). The circuit''s phase tables are: compiled projection of nm*sum_j (gamma_l + w_jl)[clause j
 
-    (their values = compiled projection above), then per-cavity one-bit-flip mixer beta_l; readout p = P(satisfying assignment).
+    violated] (product measure pv) PLUS your additive tables dS (F,R,L,C,32) per cavity and dB (F,R,L,C-1,32,32) per neighbour pair (index = integer of
 
-    Network outputs per formula via predict(n, V, SG, m, place): gamma (F,L), beta (F,L), w (F,m,L), pv (F,n), and OPTIONAL additive
+    the cavity''s bits, MSB first, bit j <-> variable place["cav"][f,r,c,j]; -1 unused; only 0..15 matter). The tables can give ARBITRARY phases per Fock level.
 
-    phase tables added to the compiled phases on the same gates: dS (F,R,L,C,32) SNAP table per cavity and dB (F,R,L,C-1,32,32)
+    GOAL: the native route: local phase programs (per-cavity / per-pair tables designed for amplification), NOT reproducing the global cost.
 
-    bus table per neighbour pair (c,c+1). Table index = integer of the cavity''s bits, MSB first, bit j <-> variable place["cav"][f,r,c,j]
+    The program has NATIVE PHASE PROGRAM families (FAMILIES / ROLE, zero-initialised gates gS/gB): optimistic clause-local tables, conditional pair
 
-    (-1 = unused slot; for 4-bit cavities only indices 0..15 matter). place = dict(cav (F,R,C,5), ks cavity sizes) per R=4 placements;
+    messages (chain sweeps), rank level shaping, cavity-local Grover (capped candidate set), plus a hardness add-on. Each program has a
 
-    in training get it with api.place(n, idx). Tables must be built SIZE-FREE (from per-variable / clause / digit-pattern features of the
+    ''# FAMILY: <name>'' line (pair / optimistic / rank / role / grover): KEEP it and develop THAT island''s path family.
 
-    variables in each cavity, e.g. which clauses touch the cavity, how many of their literals lie in this vs the neighbour cavity, the
+    Fitness = FAIR round-robin over R=4 placements on held-out n=16 selection formulas: combined_score = -(ln median + ln B90)/2 of 1/p (higher better).
 
-    lost non-local energy), so the network transfers zero-shot to n=16 (4 cavities) from training n=8 (2 cavities) and n=12 (3).
+    Stage 1 = train(api, 60) then 30 unseen n=12 formulas, s1 = -(ln med + 2 ln B90)/3; clearly worse candidates are cut (score ~ -12) before stage 2
 
-    The seed is the net16o best (sign-equivariant MP + chain-geometry features + correction heads).
+    (train(api, 180), n=16). So train() must already work at 60 s. Default loss: 0.5 mean + 0.5 median + CVaR-10% of log(1/p).
 
-    train(api, budget_s) must train within budget_s seconds (2 CPU cores) using api.data / api.batch / api.place / api.p_from
+    train(api, budget_s) uses api.data / api.batch / api.place / api.p_from (differentiable p (F,R)). Teacher api.p_from(..., glob=True) exists but
 
-    (differentiable p (F,R) over R=4 placements). TEACHER SIGNAL (optional): api.p_from(n, outs, b, glob=True) gives p of the same
+    imitating the global cost is NOT the goal (LAM_GLOB stays 0 unless clearly justified).
 
-    circuit with the GLOBAL cost (not implementable, never scored): use it e.g. to distil, to pick a curriculum, or as a target gap.
+    DIAGNOSTICS of the parent (chain p vs global-cost p at n=8/12, 5 worst n=12 formulas + dropped-cost fraction, a CHECKABLE TARGET) are shown: use them.
 
-    Fitness = FAIR round-robin: median and 90th percentile of 1/mean_r p_r on held-out n=16 selection formulas
+    HARD RULES: size-free (transfer zero-shot from n=8/12 to n=16); only numpy/jax/math/functools/itertools/collections/time imports; no file/os/sys,
 
-    (combined_score = -(ln med + ln B90)/2, higher better). A separate held-out n=16 test set is checked at checkpoints.
+    no dunder, never touch api internals; NO classical solving: no full-assignment enumeration (no 1<<n / 2**n tables), no argmin over assignments,
 
-    HARD RULES: only numpy/jax/math/functools/itertools/collections/time imports; no file/os/sys access, no dunder access, never touch api internals;
+    never build more than one 256-entry pair table per pair at once (guard rejects); pv must not encode a solution (pv_acc>0.85 => -20).
 
-    do NOT solve formulas classically (no SAT search, brute force, enumeration); pv must not encode a found solution (pv_acc>0.85 is penalised).
-
-    Inside jitted/differentiated code use jnp (never np) on traced arrays. Clip gradients and keep lr modest: NaN outputs score -20.
-
-    Keep memory modest (child RSS cap ~2.5-3 GB): small batches, dB is 1024 entries per pair per layer.
-
-    SCORING IS STAGED: stage 1 = train(api, 60) then 30 unseen n=12 screen formulas; a candidate clearly worse than the best stage-1 score is cut (combined_score about -12) before stage 2 (full train(api,
-    180), n=16 selection). So train() must already be good at a 60 s budget.
-
-    Each program carries a ''# FAMILY: <name>'' comment (loss / architecture / features / curriculum / placement): KEEP that line unchanged and stay in that family.
-
-    DIAGNOSTICS of the parent (chain p vs global-cost p at n=8/n=12, 5 worst screen formulas with dropped-cost fraction, a CHECKABLE TARGET) are shown with its metrics: use them.
-
-    The global-cost distribution is NOT the target: only the ground-state probability on the chain counts; a different route to the same answer is fine.
+    jnp (not np) on traced arrays; clip grads, modest lr (NaN => -20); keep memory modest (child RSS cap ~3 GB).
 
     '
   num_top_programs: 3
