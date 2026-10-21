@@ -3,7 +3,7 @@ A new child is SIGSTOPped within ~0.3 s of spawn (before training starts) unless
 Stopped children are resumed oldest-first when both hold. If MemAvailable drops below FLOOR while >1 child runs, the youngest is paused.
 (Child wall timeouts in evaluator_net16r count only non-stopped time.)"""
 import os, signal, time, sys
-SLOTS = int(os.environ.get("GOV_SLOTS", "2")); FLOOR = int(os.environ.get("GOV_FLOOR_MB", "3200")); NEED = int(os.environ.get("GOV_NEED_MB", "2600"))
+SLOTS = int(os.environ.get("GOV_SLOTS", "2")); FLOOR = int(os.environ.get("GOV_FLOOR_MB", "3200")); NEED = int(os.environ.get("GOV_NEED_MB", "2300"))
 def kids():
     out = []
     for pid in os.listdir("/proc"):
@@ -29,7 +29,7 @@ while True:
     if len(run) > 1 and a < FLOOR:
         p = run[-1]; os.kill(p, signal.SIGSTOP); log(f"STOP {p}: avail {a}MB < floor {FLOOR}")
     elif stp and len(run) < SLOTS and a >= FLOOR + NEED:
-        p = stp[0]; os.kill(p, signal.SIGCONT); log(f"CONT {p} (avail={a}MB)"); time.sleep(5)
+        p = stp[0]; os.kill(p, signal.SIGCONT); log(f"CONT {p} (avail={a}MB)"); time.sleep(60)
     seen &= {p for _, p, _ in K}
     if time.time() - last > 600: last = time.time(); log(f"heartbeat running={len(run)} stopped={len(stp)} avail={a}MB")
     time.sleep(0.3)
