@@ -316,3 +316,4 @@ OpenEvolve net16o official TEST n=16 (TEB): ckpt_10 single 111.7/7991 rr 113.7/3
 | HY16 | hybrid: projected cost + residual SNAP/bus on compiler support (non-zero init, L2 0.01), warm A16_RR4 | 108.27/7153 | 107.22/4196 |
 OpenEvolve net32o official TEST n=20 (chunked checker, verified = frozen score_set to 7e-7; QAOA L4 84.46/226.7):
 ckpt_10 single 284.2/8939 | rr4 251.3/4930 ; ckpt_20 single 282.1/8807 | rr4 241.9/3414 (selection n=15 rr 27.6/104.2).
+net16r ckpt_10 (2026-10-21 13:56 UTC+8) fair TEST n=16 rr 83.1/4943.9 single 78.5/12676.2 pv_acc 0.72 | selection 61.0/490.2 | stall 0 (QAOA L4 34.82/98.20)
