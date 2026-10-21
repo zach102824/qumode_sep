@@ -160,6 +160,12 @@ async def chat(req: Request):
                     except Exception: pass
                     extra = "IMPLEMENT THIS IDEA (from a senior reviewer) in your answer, following the exact output format requested above:\n" + idea
                 full = render(msgs + [{"role": "user", "content": extra}]); txt = await run_agent(full, A.code_model)
+                def _ok(t_):
+                    a_, b_, c_ = (len(re.findall(r"^<<<<<<< SEARCH\s*$", t_, re.M)), len(re.findall(r"^=======\s*$", t_, re.M)), len(re.findall(r"^>>>>>>> REPLACE\s*$", t_, re.M)))
+                    return a_ > 0 and a_ == b_ == c_
+                if not _ok(txt):   # malformed SEARCH/REPLACE: one retry with a strict format reminder
+                    print(f"[adapter] net16r malformed diff, retrying", flush=True)
+                    txt = await run_agent(full + "\n\n### FORMAT (strict)\nOutput ONLY SEARCH/REPLACE blocks, each exactly:\n<<<<<<< SEARCH\n<exact existing lines>\n=======\n<new lines>\n>>>>>>> REPLACE\nEach marker on its own line, no other '<<<<<<<', '=======' or '>>>>>>>' lines anywhere.", A.code_model)
                 print(f"[adapter] net16r {kind} {A.code_model} {time.time()-t:.1f}s in={len(full)}ch out={len(txt)}ch", flush=True)
                 model = f"net16r-{kind}"
             elif "opus" in model:   # two-stage: Opus idea (compact) -> grok-4.6 code (full prompt + idea)
