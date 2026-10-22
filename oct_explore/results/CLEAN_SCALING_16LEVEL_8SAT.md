@@ -9,7 +9,7 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 | method | n=8† median | n=12† median | n=16 median | n=20 median |
 |---|---|---|---|---|
 | QAOA L4 (shots) | **7.33** [7.33–7.33] | **25.5** [25.5–25.5] | **105** [105–105] | **257** [257–257] |
-| Global cost L4 (shots) | **7.46** [7.46–7.46] | **25.8** [25.7–25.8] | **98.1** [98.1–98.1] | **245** [244–245] |
+| Global cost L4 (shots) | **7.46** [7.41–7.46] | **25.8** [25.6–25.8] | **98.1** [97.3–98.1] | **245** [244–250] |
 | WalkSATlm (lookups) | **74.8** | **223** | **833** | **1.81e+03** |
 | ref: paper's published angles p=4, no training (shots) | **8.65** | **28.2** | **109** | **275** |
 | ref: paper's published angles p=14, no training (shots) | **2.63** | **6.45** | **13.2** | **26** |
@@ -19,7 +19,7 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 | method | n=8† B90 | n=12† B90 | n=16 B90 | n=20 B90 |
 |---|---|---|---|---|
 | QAOA L4 (shots) | **17.7** [17.7–17.7] | **68.9** [68.9–68.9] | **269** [269–269] | **850** [850–850] |
-| Global cost L4 (shots) | **16.9** [16.7–16.9] | **64.8** [64.8–65.1] | **233** [233–242] | **809** [809–825] |
+| Global cost L4 (shots) | **16.9** [16.7–17.3] | **64.8** [62.3–65.1] | **233** [233–242] | **809** [796–825] |
 | WalkSATlm (lookups) | **149** | **616** | **1.74e+03** | **4.19e+03** |
 | ref: paper's published angles p=4, no training (shots) | **19** | **70.8** | **246** | **805** |
 | ref: paper's published angles p=14, no training (shots) | **8.15** | **28.5** | **63.6** | **131** |
@@ -32,8 +32,8 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 |---|---|---|---|---|---|---|
 | QAOA L4 (shots) | median | **1.353** | [1.331, 1.383] | 1.353–1.353 | 0.436 | 0.69 |
 | QAOA L4 (shots) | B90 | **1.383** | [1.338, 1.426] | 1.383–1.383 | 0.468 | 1.38 |
-| Global cost L4 (shots) | median | **1.343** | [1.327, 1.374] | 1.343–1.343 | 0.426 | 0.743 |
-| Global cost L4 (shots) | B90 | **1.380** | [1.332, 1.414] | 1.380–1.384 | 0.465 | 1.31 |
+| Global cost L4 (shots) | median | **1.343** | [1.327, 1.374] | 1.343–1.346 | 0.426 | 0.743 |
+| Global cost L4 (shots) | B90 | **1.380** | [1.332, 1.414] | 1.378–1.384 | 0.465 | 1.31 |
 | WalkSATlm (lookups) | median | **1.313** | [1.286, 1.333] | — | 0.392 | 8.84 |
 | WalkSATlm (lookups) | B90 | **1.318** | [1.292, 1.346] | — | 0.398 | 18.9 |
 | ref: paper's published angles p=4, no training (shots) | median | **1.341** | [1.321, 1.365] | — | 0.423 | 0.858 |
@@ -48,7 +48,7 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 ## Seed selection (validation n=12, 200 formulas)
 
 - QAOA L4 (shots): winner seed 0; val med/B90 s0 24.77/62.96, s1 24.77/62.96, s2 24.77/62.96
-- Global cost L4 (shots): winner seed 0; val med/B90 s0 25.04/58.79, s1 25.14/59.39
+- Global cost L4 (shots): winner seed 0; val med/B90 s0 25.04/58.79, s1 25.14/59.39, s2 25.08/58.92
 
 ## Methods, code and deviations (8-SAT)
 
@@ -61,3 +61,10 @@ Code: `oct_explore/clean16_8sat/` (`common.py`, `qaoa.py`, `gcost.py`, `wsat.py`
 - **WalkSATlm** = `qaoa_ksat/walksatlm_c/wslm.c` k=8, p=0.30, w1=6, w2=5, n-flip tries with restarts, 500 runs/formula; lookups = tries + flips; the paper's unit (tries) is also reported.
 - **Reference rows**: the paper's published fixed angles (PhaseCraft qaoa_ksat_paper_data, key (8,176.54)), evaluated untrained on the same test formulas with exp(+iγE/2), RX(β).
 - Ideal one-bit-flip mixer (= qubit RX) for every quantum method.
+
+## Verdict: neither the paper nor our 4-SAT table is wrong; they measure different things
+
+1. **The paper's numbers reproduce.** Their published angles on fresh formulas from their ensemble give α(p) that tracks their analytic c(p)=0.69p^-0.32 within a few hundredths, and their one raw checkpoint (n=12, p=60 mean p_succ 0.56; we get 0.52 on our 100 test formulas and 0.57 on val). Our medians are *better* than their Table II fits at p=14/60 (0.27 / 0.15 here vs 0.326 / 0.302). As in `qaoa_ksat/results/N20_CHECK.md`, their median fit is conservative, not optimistic. Their WalkSATlm exponent (0.325 per try) is reproduced by our calibrated solver: 0.316 over n=8..22 in the earlier reproduction, 0.285 [0.26, 0.31] on these 4 sizes.
+2. **The advantage comes from depth.** At the depth we use (L=4), QAOA's exponent at k=8 is 0.42–0.44 (the paper's own p=4 angles: 0.423; our trained QAOA L4: 0.436). That is clearly **worse** than WalkSATlm's 0.29–0.33 per try. QAOA only matches WalkSATlm at **p ≈ 13** (paper: ≈14) and wins only for p ≳ 14 (p=30: 0.19, p=60: 0.15). The paper's own Fig. 2 theory says the same at p=4 (0.44). So a 4-layer QAOA never had an advantage in their data either.
+3. **Unit choice shifts the crossover by a large factor.** The paper charges WalkSATlm one unit per *try* (fresh start + n flips), and charges QAOA one unit per shot. Charging per lookup (tries + flips, as in our clean tables) raises WalkSATlm's α to 0.39. That moves the crossover down to p ≈ 5. Neither unit is wrong, but the "≈14 layers" headline depends on counting a whole n-flip try as one evaluation.
+4. **k matters.** At k=4 (our 4-SAT table), WalkSATlm is much stronger relative to QAOA: 0.25 per lookup vs QAOA L4 0.32. The paper's theory also gives c(4)=0.57·4^-0.51 ≈ 0.28 at k=4, p=4. At k=8 the clause density (176.5n) makes local search slow while QAOA's exponent barely changes, which is why the paper chose k=8. Our 4-SAT result ("WalkSATlm flatter") and their 8-SAT result ("deep QAOA flatter") are therefore consistent.
