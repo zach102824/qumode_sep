@@ -336,3 +336,4 @@ net16r ckpt_90 (2026-10-22 00:54 UTC+8) fair TEST n=16 rr 87.4/4149.1 single 86.
 net16r ckpt_100 (2026-10-22 02:59 UTC+8) fair TEST n=16 rr 91.0/4208.5 single 89.2/9768.9 pv_acc 0.72 | selection 60.9/463.7 | stall 7 (QAOA L4 34.82/98.20)
 net16r ckpt_110 (2026-10-22 04:58 UTC+8) fair TEST n=16 rr 82.6/4374.7 single 77.4/9910.8 pv_acc 0.72 | selection 60.9/463.7 | stall 8 (QAOA L4 34.82/98.20)
 net16r ckpt_120 (2026-10-22 07:24 UTC+8) fair TEST n=16 rr 85.5/3850.8 single 86.4/10716.8 pv_acc 0.72 | selection 60.9/463.7 | stall 9 (QAOA L4 34.82/98.20)
+net16r ckpt_130 (2026-10-22 08:39 UTC+8) fair TEST n=16 rr 114.7/3781.8 single 97.9/7332.4 pv_acc 0.70 | selection 60.9/463.7 | stall 10 (QAOA L4 34.82/98.20)
