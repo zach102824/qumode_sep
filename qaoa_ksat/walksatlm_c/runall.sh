@@ -1,0 +1,1 @@
+for n in $(seq 8 22); do for mode in "1 1" "2 1" "4 1" "0 0"; do echo "$n $mode"; done; done | xargs -P6 -L1 sh -c 'n=$0; c=$1; r=$2; if [ $c = 0 ]; then mf=4000000000; else mf=$((c*n)); fi; ./wslm run $mf $r $((7+n)) 0.15 6 5 < inst/n$n.txt > out/n${n}_c${c}_r${r}.txt'
