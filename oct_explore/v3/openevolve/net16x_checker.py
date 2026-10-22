@@ -32,7 +32,7 @@ def main():
     cks = sorted(glob.glob(f"{OUT}/checkpoints/checkpoint_*"), key=lambda c: int(c.rsplit("_", 1)[1]))
     for ck in cks:
         k = int(ck.rsplit("_", 1)[1]); jf = f"{CH}/checkpoint_{k}.json"
-        if k == 0 or os.path.exists(jf) or not os.path.exists(f"{ck}/best_program.py"): continue
+        if k == 0 or k % 10 or os.path.exists(jf) or not os.path.exists(f"{ck}/best_program.py"): continue
         info = json.load(open(f"{ck}/best_program_info.json")); sel = info.get("metrics", {})
         json.dump({"combined_score": sel.get("combined_score"), "id": info.get("id"), "ckpt": k}, open(f"{OUT}/best_s2.json", "w"))
         t = time.time(); r = run_check(f"{ck}/best_program.py", jf); dt = time.time() - t
