@@ -15,7 +15,7 @@ def load(pref):
         if "val" not in T:   # gcost (gnnw): val n=12 (200) summary of the early-stopped checkpoint used for testing
             h = dict((it, v) for it, v in J["hist"])[J["best_it"]]; out[s]["valmb"] = (h["median_inv_p"], h["B90_inv_p"])
     return out
-M = {"QAOA L4 (shots)": load("Q"), "Global cost L4 (shots)": load("G"), }
+M = {"QAOA L4 (shots)": load("Q"), "Global cost L4 (shots)": load("G"), "Native-projected cost L4, QAOA-style 8 params (shots)": load("QC"), "Native-projected cost L4 + GNN clause weights (shots)": load("GC")}
 W = {}
 for n in NS_:
     f = f"{CM.RES}/W_n{n}.json"
@@ -60,7 +60,7 @@ L = ["# CLEAN controlled scaling table: 16-level cavity chain, **8-SAT** (fresh 
      "**Setup.** 16-level cavities (4 bits each), chain of K=n/4 cavities (n=8→2, 12→3, 16→4, 20→5). L=4 for all quantum methods. "
      "Random 8-SAT in the PAPER's ensemble (PRX Quantum 5, 030348, Def. 1 / Table 1): m ~ Poisson(176.54 n), 8 literals drawn with replacement, satisfiable only, no unique-solution filter "
      "(clauses at n=8/12/16/20 ≈ 1412/2118/2825/3531). Cost phase normalised by nm=1/176.54. NEW bases: train 61e9, test 62e9, val 63e9 (never used before). "
-     "Native ckpt_110 is NOT included: see notes. Train n=8+12; validation n=12 (200 formulas, seed selection only); test n=8,12,16,20, 100 unseen formulas each. "
+     "Native ckpt_110 itself is NOT included (k=4 hard-coded, see notes); the two 'Native-projected' rows are the k=8 native baselines (same chain gate structure). Train n=8+12; validation n=12 (200 formulas, seed selection only); test n=8,12,16,20, 100 unseen formulas each. "
      "Cost = exact 1/p from the simulated state (p clipped at 1e-12); median and B90 over the 100 test formulas. Quantum = shots, WalkSATlm = lookups (fresh starts + flips). "
      "n=8 and n=12 are **training sizes** (marked †) but their test formulas are unseen.", "",
      "Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, with [min–max over the 3 training seeds].", ""]

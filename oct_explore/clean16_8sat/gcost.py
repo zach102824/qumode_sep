@@ -113,7 +113,8 @@ def forward(p, D, n, mixmats=None):
     bv = p["base"][None] + (jnp.tanh(g_ @ p["G1"] + p["g1"]) @ p["G2"] if a.pool_delta else 0.0)
     X = bv[:, : L * NPL].reshape(B, L, NPL); bl, gl = X[:, :, 4], X[:, :, 5]
     w = hc @ p["Wc"] if a.clause_w else jnp.zeros(hc.shape[:2] + (L,))
-    assert a.proj == "full"
+    N = 1 << n
+    if a.proj != "full": mask = tables(n)[1]   # chain projection mask (SNAP + neighbour-bus Walsh support), uniform measure
     N = 1 << n; Wx = jax.vmap(lambda wb, cj, xs: jax.ops.segment_sum(wb[cj.astype(jnp.int32)], xs, N + 1)[:N])(w, D["CJ"], D["XS"])   # (B, 2^n, L) = sum_j w_jl viol_j(x)
     psi = NS.uniform_psi0(ks, B)
     for l in range(L):
