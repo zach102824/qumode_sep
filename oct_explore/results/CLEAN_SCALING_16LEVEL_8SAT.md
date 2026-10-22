@@ -11,7 +11,7 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 | QAOA L4 (shots) | **7.33** [7.33–7.33] | **25.5** [25.5–25.5] | **105** [105–105] | **257** [257–257] |
 | Global cost L4 (shots) | **7.46** [7.41–7.46] | **25.8** [25.6–25.8] | **98.1** [97.3–98.1] | **245** [244–250] |
 | Native-projected cost L4, QAOA-style 8 params (shots) | **8.78** [7.44–8.78] | **158** [158–180] | **4.9e+03** [4.9e+03–5.53e+03] | **7.79e+04** [7.79e+04–9.54e+04] |
-| Native-projected cost L4 + GNN clause weights (shots) | **9.04** [8.98–9.04] | **186** [178–186] | **4.94e+03** [4.84e+03–4.94e+03] | **8.28e+04** [7.7e+04–8.28e+04] |
+| Native-projected cost L4 + GNN clause weights (shots) | **9.04** [8.98–9.04] | **186** [178–195] | **4.94e+03** [4.84e+03–5e+03] | **8.28e+04** [7.7e+04–8.28e+04] |
 | WalkSATlm (lookups) | **74.8** | **223** | **833** | **1.81e+03** |
 | ref: paper's published angles p=4, no training (shots) | **8.65** | **28.2** | **109** | **275** |
 | ref: paper's published angles p=14, no training (shots) | **2.63** | **6.45** | **13.2** | **26** |
@@ -23,7 +23,7 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 | QAOA L4 (shots) | **17.7** [17.7–17.7] | **68.9** [68.9–68.9] | **269** [269–269] | **850** [850–850] |
 | Global cost L4 (shots) | **16.9** [16.7–17.3] | **64.8** [62.3–65.1] | **233** [233–242] | **809** [796–825] |
 | Native-projected cost L4, QAOA-style 8 params (shots) | **18.9** [17.8–18.9] | **2.14e+03** [2.14e+03–2.98e+03] | **4.76e+04** [4.76e+04–8.66e+04] | **7.75e+05** [7.75e+05–2.53e+06] |
-| Native-projected cost L4 + GNN clause weights (shots) | **16.3** [16.3–16.9] | **982** [982–1.03e+03] | **2.28e+04** [2.24e+04–2.28e+04] | **4.17e+05** [4.17e+05–4.45e+05] |
+| Native-projected cost L4 + GNN clause weights (shots) | **16.3** [16.2–16.9] | **982** [932–1.03e+03] | **2.28e+04** [2.24e+04–2.3e+04] | **4.17e+05** [4.17e+05–4.45e+05] |
 | WalkSATlm (lookups) | **149** | **616** | **1.74e+03** | **4.19e+03** |
 | ref: paper's published angles p=4, no training (shots) | **19** | **70.8** | **246** | **805** |
 | ref: paper's published angles p=14, no training (shots) | **8.15** | **28.5** | **63.6** | **131** |
@@ -41,7 +41,7 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 | Native-projected cost L4, QAOA-style 8 params (shots) | median | **2.155** | [2.079, 2.280] | 2.155–2.215 | 1.108 | 0.0183 |
 | Native-projected cost L4, QAOA-style 8 params (shots) | B90 | **2.397** | [2.293, 2.635] | 2.397–2.648 | 1.261 | 0.0301 |
 | Native-projected cost L4 + GNN clause weights (shots) | median | **2.151** | [2.079, 2.220] | 2.142–2.151 | 1.105 | 0.02 |
-| Native-projected cost L4 + GNN clause weights (shots) | B90 | **2.315** | [2.225, 2.528] | 2.315–2.318 | 1.211 | 0.0276 |
+| Native-projected cost L4 + GNN clause weights (shots) | B90 | **2.315** | [2.225, 2.528] | 2.315–2.327 | 1.211 | 0.0276 |
 | WalkSATlm (lookups) | median | **1.313** | [1.286, 1.333] | — | 0.392 | 8.84 |
 | WalkSATlm (lookups) | B90 | **1.318** | [1.289, 1.345] | — | 0.398 | 18.9 |
 | ref: paper's published angles p=4, no training (shots) | median | **1.341** | [1.322, 1.366] | — | 0.423 | 0.858 |
@@ -58,7 +58,7 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 - QAOA L4 (shots): winner seed 0; val med/B90 s0 24.77/62.96, s1 24.77/62.96, s2 24.77/62.96
 - Global cost L4 (shots): winner seed 0; val med/B90 s0 25.04/58.79, s1 25.14/59.39, s2 25.08/58.92
 - Native-projected cost L4, QAOA-style 8 params (shots): winner seed 0; val med/B90 s0 184.82/2314.42, s1 167.76/2673.83, s2 184.82/2314.42
-- Native-projected cost L4 + GNN clause weights (shots): winner seed 0; val med/B90 s0 209.27/1461.76, s1 206.66/1487.65
+- Native-projected cost L4 + GNN clause weights (shots): winner seed 0; val med/B90 s0 209.27/1461.76, s1 206.66/1487.65, s2 224.08/1402.26
 
 ## Methods, code and deviations (8-SAT)
 
@@ -76,3 +76,21 @@ Code: `oct_explore/clean16_8sat/` (`common.py`, `qaoa.py`, `gcost.py`, `wsat.py`
 - **Why no faithful ckpt_110 port.** The frozen `circuit_p` is generic in the number of literals, but it builds the dense violation tensor (2^n × entries × m). At k=8, m≈3500, and with R=4 placements that is ≈15 GB per n=20 formula, so it cannot run here. The OpenEvolve program is also k=4-specific in its core: `geom` enumerates the 15 literal subsets (255 at k=8, giving (F,R,m,255,8) tensors), and the clause-head shapes, `local_tables` and `wc` are (…,4). Porting it means redesigning the program and the frozen simulator, so it would no longer be "what OpenEvolve found". It was therefore not run.
 - **Native-projected cost L4, QAOA-style** (`qaoa.py --proj chain`, tag QC): the clause cost nm·γ_l·E is least-squares projected (uniform measure) onto the chain's native support: per-cavity SNAP terms plus neighbour-pair bus terms, with every other Walsh term dropped. Mixer: ideal one-bit-flip. 8 shared angles, block assignment, same training as QAOA L4 (1000/n, 12 L-BFGS starts, 3 seeds).
 - **Native-projected cost L4 + GNN clause weights** (`gcost.py --proj chain`, tag GC): the G16_full_w recipe with the same chain projection applied to the GNN-weighted cost. This is the clean16 native-GNN analogue. x0 = the fresh full-QAOA winner, 3 seeds. The ckpt_110 Grover/rank dS/dB families are **not** included, because they rely on the k=4 tables above.
+
+### Why the native-projected cost scales as ~2.1^n at k=8 (`projloss.py`, 20 test formulas per n, block assignment)
+| n | cavities | clauses in 1 cavity or a neighbour pair | var(E) kept by projection | corr(projected E, E) | P(argmin of projected E is a solution) | random guess 2^n/nsol (median) |
+|---|---|---|---|---|---|---|
+| 8 | 2 | 1.000 | 1.000 | 1.000 | 1.00 | 256 |
+| 12 | 3 | 0.078 | 0.514 | 0.716 | 0.00 | 4.1e+03 |
+| 16 | 4 | 0.012 | 0.330 | 0.574 | 0.05 | 6.55e+04 |
+| 20 | 5 | 0.003 | 0.238 | 0.487 | 0.00 | 5.24e+05 |
+
+The SNAP and neighbour-bus gates can represent only Walsh terms that sit inside one cavity or inside a neighbour pair. An 8-literal clause touches ~6–8 distinct variables, so from n=12 on it almost always spans non-adjacent cavities. Only 7.8% / 1.2% / 0.3% of clauses are exactly representable at n=12/16/20, and what the projection keeps is mainly their low-order part. The projected cost keeps 51% → 24% of the variance of the true cost, and its correlation with the true cost drops from 0.72 to 0.49. Its minimum essentially never lands on a solution: the argmin of the projected E is a solution in ≤5% of formulas. The circuit therefore follows a smoothed surrogate whose optima are *not* the solutions. Its cost grows faster than blind guessing (b≈2.1 vs ≈2 for 2^n/nsol), yet it stays below the random-guess level of 2^n/nsol over n≤20 because at n=8 (2 cavities) the projection is exact (fraction 1.0, corr 1.0). At k=4 the same projection keeps far more, because 4-literal clauses span ≤2 cavities much more often, which is why native ckpt_110 was competitive in the 4-SAT table.
+
+
+## Verdict: neither the paper nor our 4-SAT table is wrong; they measure different things
+
+1. **The paper's numbers reproduce.** Their published angles on fresh formulas from their ensemble give α(p) that tracks their analytic c(p)=0.69p^-0.32 within a few hundredths, and their one raw checkpoint (n=12, p=60 mean p_succ 0.56; we get 0.52 on our 100 test formulas and 0.57 on val). Our medians are *better* than their Table II fits at p=14/60 (0.27 / 0.15 here vs 0.326 / 0.302). As in `qaoa_ksat/results/N20_CHECK.md`, their median fit is conservative, not optimistic. Their WalkSATlm exponent (0.325 per try) is reproduced by our calibrated solver: 0.316 over n=8..22 in the earlier reproduction, 0.285 [0.26, 0.31] on these 4 sizes.
+2. **The advantage comes from depth.** At the depth we use (L=4), QAOA's exponent at k=8 is 0.42–0.44 (the paper's own p=4 angles: 0.423; our trained QAOA L4: 0.436). That is clearly **worse** than WalkSATlm's 0.29–0.33 per try. QAOA only matches WalkSATlm at **p ≈ 13** (paper: ≈14) and wins only for p ≳ 14 (p=30: 0.19, p=60: 0.15). The paper's own Fig. 2 theory says the same at p=4 (0.44). So a 4-layer QAOA never had an advantage in their data either.
+3. **Unit choice shifts the crossover by a large factor.** The paper charges WalkSATlm one unit per *try* (fresh start + n flips), and charges QAOA one unit per shot. Charging per lookup (tries + flips, as in our clean tables) raises WalkSATlm's α to 0.39. That moves the crossover down to p ≈ 5. Neither unit is wrong, but the "≈14 layers" headline depends on counting a whole n-flip try as one evaluation.
+4. **k matters.** At k=4 (our 4-SAT table), WalkSATlm is much stronger relative to QAOA: 0.25 per lookup vs QAOA L4 0.32. The paper's theory also gives c(4)=0.57·4^-0.51 ≈ 0.28 at k=4, p=4. At k=8 the clause density (176.5n) makes local search slow while QAOA's exponent barely changes, which is why the paper chose k=8. Our 4-SAT result ("WalkSATlm flatter") and their 8-SAT result ("deep QAOA flatter") are therefore consistent.

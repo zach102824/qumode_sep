@@ -81,7 +81,7 @@ for name, (fw, ci, fr) in fits.items():
 L += ["", "## Seed selection (validation n=12, 200 formulas)", ""]
 for name, (win, v) in info.items():
     L.append(f"- {name}: winner seed {win}; val med/B90 " + ", ".join(f"s{s} {m:.2f}/{b:.2f}" for s, (m, b) in sorted(v.items())))
-open(f"{CM.ROOT}/results/CLEAN_SCALING_16LEVEL_8SAT.md", "w").write("\n".join(L) + "\n\n" + open(f"{CM.HERE}/NOTES.md").read())
+open(f"{CM.ROOT}/results/CLEAN_SCALING_16LEVEL_8SAT.md", "w").write("\n".join(L) + "\n\n" + open(f"{CM.HERE}/NOTES.md").read() + "\n\n" + open(f"{CM.HERE}/VERDICT.md").read())
 fig, ax = plt.subplots(1, 2, figsize=(11, 4.2))
 for name, R_ in rows.items():
     ns = sorted(R_)
