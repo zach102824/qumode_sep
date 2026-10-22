@@ -20,6 +20,10 @@ static void seedr(uint64_t x){s[0]=x*0x9E3779B97F4A7C15ULL+1;s[1]=(x^0xD1B54A32D
 #define MAXN 32
 int n,m,k; int lit[MAXM][K]; /* lit = +/-(v+1) */
 int poisson(double lam){ /* normal approx not used: exact via sum of exps */ double L=0;int c=0; while(1){L+= -log(1-urand()); if(L>lam) return c; c++;}}
+int count_sat(void){
+  uint32_t neg[MAXM],pos[MAXM]; for(int c=0;c<m;c++){neg[c]=pos[c]=0;for(int j=0;j<k;j++){int l=lit[c][j];if(l>0)pos[c]|=1u<<(l-1);else neg[c]|=1u<<(-l-1);}}
+  int cnt=0; for(uint32_t x=0;x<(1u<<n);x++){int ok=1;for(int c=0;c<m;c++){ if(!((x&pos[c])|(~x&neg[c]))){ok=0;break;} } cnt+=ok;}
+  return cnt;}
 int brute_sat(void){
   uint32_t neg[MAXM],pos[MAXM]; for(int c=0;c<m;c++){neg[c]=pos[c]=0;for(int j=0;j<k;j++){int l=lit[c][j];if(l>0)pos[c]|=1u<<(l-1);else neg[c]|=1u<<(-l-1);}}
   for(uint32_t x=0;x<(1u<<n);x++){int ok=1;for(int c=0;c<m;c++){ if(!((x&pos[c])|(~x&neg[c]))){ok=0;break;} } if(ok) return 1;}
@@ -39,13 +43,13 @@ static inline void add_unsat(int c){upos[c]=nu;unsat[nu++]=c;}
 void flip(int v){ int tl= sol[v]? 2*v:2*v+1; int fl=tl^1; sol[v]^=1;
   for(int i=0;i<occn[tl];i++){int c=occ[tl][i]; if(--satc[c]==0) add_unsat(c);}
   for(int i=0;i<occn[fl];i++){int c=occ[fl][i]; if(satc[c]++==0) rm_unsat(c);} }
-double wp; int A,B;
+double wp; int A,B; int TIE=0, NOISEALL=0;
 int brk(int v){int tl= sol[v]?2*v:2*v+1;int b=0;for(int i=0;i<occn[tl];i++)if(satc[occ[tl][i]]==1)b++;return b;}
 int gmk(int v){int fl= sol[v]?2*v+1:2*v;int g=0;for(int i=0;i<occn[fl];i++){int s2=satc[occ[fl][i]];if(s2==0)g+=A;else if(s2==1)g+=B;}return g;}
 int pick(void){ int c=unsat[rnd()%nu]; int best[K],nb=0,bb=1<<30;
   for(int j=0;j<k;j++){int v=abs(lit[c][j])-1; int b=brk(v); if(b<bb){bb=b;nb=0;best[nb++]=v;} else if(b==bb) best[nb++]=v;}
-  if(bb!=0 && urand()<wp) return abs(lit[c][rnd()%k])-1;
-  if(nb>1){int bg=-1,nb2=0; int b2[K]; for(int i=0;i<nb;i++){int g=gmk(best[i]); if(g>bg){bg=g;nb2=0;b2[nb2++]=best[i];} else if(g==bg) b2[nb2++]=best[i];} return b2[rnd()%nb2];}
+  if((bb!=0||NOISEALL) && urand()<wp) return abs(lit[c][rnd()%k])-1;
+  if(nb>1 && !TIE){int bg=-1,nb2=0; int b2[K]; for(int i=0;i<nb;i++){int g=gmk(best[i]); if(g>bg){bg=g;nb2=0;b2[nb2++]=best[i];} else if(g==bg) b2[nb2++]=best[i];} return b2[rnd()%nb2];}
   return best[rnd()%nb]; }
 int readinst(void){ if(scanf("%d %d %d",&n,&k,&m)!=3) return 0; for(int c=0;c<m;c++)for(int j=0;j<k;j++)scanf("%d",&lit[c][j]); return 1;}
 int main(int argc,char**argv){
@@ -53,6 +57,8 @@ int main(int argc,char**argv){
     while(got<want){ m=poisson(r*n); tried++; for(int c=0;c<m;c++)for(int j=0;j<k;j++){int v=rnd()%n;lit[c][j]=(rnd()&1)?(v+1):-(v+1);}
       if(brute_sat()){printf("%d %d %d",n,k,m);for(int c=0;c<m;c++)for(int j=0;j<k;j++)printf(" %d",lit[c][j]);printf("\n");got++;}}
     fprintf(stderr,"n=%d sat %d/%d\n",n,got,tried); return 0;}
+  if(!strcmp(argv[1],"count")){ while(readinst()) printf("%d\n",count_sat()); return 0; }
+  if(getenv("TIE")) TIE=atoi(getenv("TIE")); if(getenv("NOISEALL")) NOISEALL=atoi(getenv("NOISEALL"));
   /* run */
   long long maxflips=atoll(argv[2]); int restart=atoi(argv[3]); seedr(atoll(argv[4])); wp=atof(argv[5]); A=atoi(argv[6]); B=atoi(argv[7]);
   while(readinst()){ build_occ(); evals=0; long long tries=0,flips=0; init_assign();
