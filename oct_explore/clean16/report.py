@@ -10,8 +10,10 @@ def load(pref):
         f = f"{CM.RES}/{pref}_s{s}.json"
         if not os.path.exists(f): continue
         J = json.load(open(f)); T = J.get("test", {})
-        if "val" not in T: continue
-        out[s] = {k: cost(v["p"]) for k, v in T.items()}
+        if "val" not in T and "val_S" not in J: continue
+        out[s] = {k: cost(v["p"]) for k, v in T.items() if "p" in v}
+        if "val" not in T:   # gcost (gnnw): val n=12 (200) summary of the early-stopped checkpoint used for testing
+            h = dict((it, v) for it, v in J["hist"])[J["best_it"]]; out[s]["valmb"] = (h["median_inv_p"], h["B90_inv_p"])
     return out
 M = {"QAOA L4 (shots)": load("Q"), "Global cost L4 (shots)": load("G"), "Native ckpt_110 (shots, round-robin)": load("N")}
 W = {}
@@ -28,7 +30,8 @@ def boot(costs):   # costs: dict n -> array; returns 95% CI of b for median and 
 rows = {}; fits = {}; info = {}
 for name, S in M.items():
     if not S: continue
-    win = min(S, key=lambda s: sum(np.log(mb(S[s]["val"]))) / 2); info[name] = (win, {s: mb(S[s]["val"]) for s in S})
+    vm = lambda s: S[s]["valmb"] if "valmb" in S[s] else mb(S[s]["val"])
+    win = min(S, key=lambda s: sum(np.log(vm(s))) / 2); info[name] = (win, {s: vm(s) for s in S})
     rows[name] = {}
     for n in NS_:
         k = str(n)

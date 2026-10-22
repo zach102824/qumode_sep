@@ -9,12 +9,14 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 | method | n=8† median | n=12† median | n=16 median | n=20 median |
 |---|---|---|---|---|
 | QAOA L4 (shots) | **5.78** [5.37–5.78] | **12.8** [12–12.8] | **34.1** [30.6–34.1] | **77.6** [66.9–77.6] |
+| Global cost L4 (shots) | **5.27** [5.23–5.28] | **11.5** [11.1–11.5] | **31.7** [31.6–31.7] | **66.1** [65.9–66.3] |
 | Native ckpt_110 (shots, round-robin) | **4.39** [4.39–4.65] | **13.7** [13.7–14.1] | **49.3** [48.9–49.7] | **244** [240–272] |
 | WalkSATlm (lookups) | **14** | **32.5** | **71** | **110** |
 
 | method | n=8† B90 | n=12† B90 | n=16 B90 | n=20 B90 |
 |---|---|---|---|---|
 | QAOA L4 (shots) | **10.3** [10.2–10.3] | **33.1** [32.5–33.1] | **84.9** [84.9–86.1] | **198** [171–198] |
+| Global cost L4 (shots) | **9.12** [8.96–9.15] | **26.5** [26.3–26.5] | **69.7** [69–71.2] | **172** [171–173] |
 | Native ckpt_110 (shots, round-robin) | **9.37** [9.05–9.42] | **106** [97.1–106] | **831** [730–862] | **9.28e+03** [7.87e+03–9.41e+03] |
 | WalkSATlm (lookups) | **29.4** | **76.1** | **147** | **290** |
 
@@ -24,14 +26,17 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 |---|---|---|---|---|---|---|
 | QAOA L4 (shots) | median | **1.245** | [1.212, 1.271] | 1.237–1.245 | 0.316 | 0.978 |
 | QAOA L4 (shots) | B90 | **1.278** | [1.249, 1.327] | 1.266–1.278 | 0.354 | 1.57 |
-| Native ckpt_110 (shots, round-robin) | median | **1.396** | [1.330, 1.461] | 1.387–1.403 | 0.481 | 0.274 |
-| Native ckpt_110 (shots, round-robin) | B90 | **1.766** | [1.632, 2.049] | 1.742–1.778 | 0.821 | 0.103 |
-| WalkSATlm (lookups) | median | **1.191** | [1.162, 1.215] | — | 0.252 | 3.78 |
-| WalkSATlm (lookups) | B90 | **1.207** | [1.173, 1.231] | — | 0.271 | 7.09 |
+| Global cost L4 (shots) | median | **1.240** | [1.211, 1.265] | 1.240–1.241 | 0.310 | 0.929 |
+| Global cost L4 (shots) | B90 | **1.277** | [1.244, 1.311] | 1.276–1.280 | 0.353 | 1.35 |
+| Native ckpt_110 (shots, round-robin) | median | **1.396** | [1.331, 1.456] | 1.387–1.403 | 0.481 | 0.274 |
+| Native ckpt_110 (shots, round-robin) | B90 | **1.766** | [1.626, 2.051] | 1.742–1.778 | 0.821 | 0.103 |
+| WalkSATlm (lookups) | median | **1.191** | [1.163, 1.214] | — | 0.252 | 3.78 |
+| WalkSATlm (lookups) | B90 | **1.207** | [1.171, 1.231] | — | 0.271 | 7.09 |
 
 ## Seed selection (validation n=12, 200 formulas)
 
 - QAOA L4 (shots): winner seed 0; val med/B90 s0 13.66/30.30, s1 13.66/30.30, s2 13.24/32.41
+- Global cost L4 (shots): winner seed 2; val med/B90 s0 12.72/26.32, s1 12.77/25.96, s2 12.80/25.70
 - Native ckpt_110 (shots, round-robin): winner seed 2; val med/B90 s0 15.75/90.76, s1 15.51/90.44, s2 15.40/84.53
 
 ## Methods, code and deviations
@@ -44,3 +49,6 @@ Code: `oct_explore/clean16/` (`common.py`, `qaoa.py`, `gcost.py`, `native.py` + 
 - **Native best** = net16r ckpt_110 `best_program.py`, copied to `native_prog.py`; the only edit is exposing the training-RNG seed (`default_rng(0)` → `default_rng(SEED)`, seed 0 = original). The program needed no change to run on 2–5 cavities. Trained with its own `train(api, 180 s)` exactly like the net16r evaluator (OE_TRAIN_N=8,12, 600 formulas per n, R=4 placements: min-cut + 3 seeded random). Scored round-robin 1/mean_r p_r with the unchanged frozen `circuit_p`; at n=20 entries are simulated one at a time to bound memory (same math).
 - **WalkSATlm** = `qaoa_ksat/walksatlm_c/wslm.c`, p=0.30, w1=6, w2=5, n-flip tries with restarts, 500 runs per formula averaged; lookups = tries + flips.
 - **Train-set sizes** follow each method's recipe (QAOA 1000, global cost 5000, native 600 per n), all drawn from the same fresh base 51e9 (nested prefixes of one stream).
+- **Mixer (all quantum methods): the IDEAL one-bit-flip mixer** M(β) = ∏_j exp(−iβX_j/2) on each cavity's 4 Gray digits (`nsim.Mixer(4, "gray")`), i.e. the target unitary the calibrated SNAP-D-SNAP sequence is fitted to. No calibrated/native SNAP-D-SNAP mixer matrices are used anywhere in this table (QAOA, global cost and native alike), so mixer calibration error is not included.
+- Bug caught during the run: the first QAOA launch omitted `--proj full` (fixed.py default is `chain`), giving the chain-projected baseline (n=16 450/7796); it was discarded (`results/clean16/discard/`) and QAOA was rerun with `--proj full` (now the default in `qaoa.py`).
+- QAOA seeds 0 and 1 converged to identical angles (same best start); seed 2 found a different optimum.
