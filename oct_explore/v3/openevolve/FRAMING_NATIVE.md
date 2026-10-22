@@ -1,0 +1,6 @@
+# Framing (Zach, 2026-10-21 15:00 CST): do NOT imitate QAOA's global cost
+Standard QAOA assumes the full cost phase incl. long-range high-weight Z strings (e.g. arbitrary ZZZZ), which are hard in hardware; much literature approximates/reproduces them. Our cavity chain has three advantages:
+1. Neighbouring cavities instead of neighbouring qubits: each cavity holds several bits, so one nearest-neighbour cavity-cavity interaction couples many more bit strings at once.
+2. Much richer cost phase: on a cavity or neighbouring cavity pair we can apply an ARBITRARY phase to each Fock level (SNAP dS tables, neighbour-bus dB tables), not just Pauli-Z products. E.g. 00 and 11 in one cavity can get different phases; Z1Z2 cannot distinguish them.
+3. Only the final answer matters: classical optimisation, so the circuit need not reproduce the ZZZZ cost evolution. Any path that concentrates probability on the ground-state bit string is fine. Relative phases still drive interference mid-circuit, but at readout only the bit string counts.
+Goal: search the larger hardware-native control space for a route QAOA's Z-term picture cannot express, that still reaches the ground state. Imitating the global cost is NOT the goal.

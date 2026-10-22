@@ -1,0 +1,300 @@
+"""net16x adapter (copy of cursor_adapter.py net16r mode; model name net16x): island mandates (reencode / grover / nondiag protected,
+wildcard opens with runs/net16x/wildcard.open), pair-unitary gate doc, failure-analysis summary, COMPUTE & NOVELTY rules.
+Original doc: Minimal OpenAI-compatible chat-completions adapter -> Cursor Agent CLI (print mode).
+Key: read by cursor-agent from env CURSOR_API_KEY (never logged). Bind 127.0.0.1 only.
+Run: python3.13 cursor_adapter.py --port 8765 --model claude-opus-5-5-high
+"""
+import argparse, asyncio, os, re, shutil, tempfile, time, uuid
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+import uvicorn
+
+ap = argparse.ArgumentParser(); ap.add_argument("--port", type=int, default=8765); ap.add_argument("--model", default="claude-opus-5-5-high")
+ap.add_argument("--idea_model", default="claude-opus-5-5-medium"); ap.add_argument("--code_model", default="cursor-grok-4.6-high-fast"); ap.add_argument("--idea_every", type=int, default=5); ap.add_argument("--run_dir", default="runs/net16x"); ap.add_argument("--conc", type=int, default=2); ap.add_argument("--timeout", type=int, default=600)
+A = ap.parse_args()
+BIN = shutil.which("cursor-agent") or os.path.expanduser("~/.local/bin/cursor-agent")
+SEM = asyncio.Semaphore(A.conc); app = FastAPI()
+
+def render(msgs):
+    out = []
+    for m in msgs:
+        c = m.get("content", "")
+        if isinstance(c, list): c = "".join(p.get("text", "") for p in c if isinstance(p, dict))
+        out.append(f"### {m.get('role','user').upper()}\n{c}")
+    out.append("### INSTRUCTION\nAnswer the conversation above directly as plain text in your reply. Do NOT use tools, do NOT read or edit files, do NOT run commands.")
+    return "\n\n".join(out)
+
+async def run_agent(prompt, model):
+    d = tempfile.mkdtemp(prefix="ca_")   # empty sandbox cwd: agent sees no repo files
+    try:
+        if len(prompt.encode()) > 100000:   # Linux MAX_ARG_STRLEN=128KB per argv: spill long prompts to a file
+            open(os.path.join(d, "PROMPT.md"), "w").write(prompt)
+            prompt = ("The full task is in the file PROMPT.md in the current directory (too long to pass inline). "
+                      "Read PROMPT.md completely (it is the only file you may read; read it in chunks if needed), then follow its final INSTRUCTION: "
+                      "answer it directly as plain text in your reply. Do not edit files or run commands.")
+        p = await asyncio.create_subprocess_exec(BIN, "-p", "--trust", "--model", model, "--output-format", "text", prompt,
+                                                 cwd=d, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE, env=os.environ.copy())
+        o, e = await asyncio.wait_for(p.communicate(), A.timeout)
+        if p.returncode != 0: raise RuntimeError(f"cursor-agent rc={p.returncode}: {e.decode()[-300:]}")
+        return o.decode()
+    finally: shutil.rmtree(d, ignore_errors=True)
+
+_TRANSIENT = ("Model not available", "not supported in your region", "rate limit", "429", "500", "502", "503", "timeout", "ECONN", "network")
+async def run_agent_retry(prompt, model, tries=4, waits=(20, 60, 180)):
+    """idea-model calls: retry with backoff on transient failures (e.g. intermittent 'Model not available ... region' rc=1)."""
+    last = None
+    for k in range(tries):
+        try: return await run_agent(prompt, model)
+        except Exception as ex:
+            last = ex; msg = f"{type(ex).__name__}: {ex}"
+            print(f"[adapter] {model} attempt {k+1}/{tries} failed: {msg[-200:]}", flush=True)
+            if k < tries - 1: await asyncio.sleep(waits[min(k, len(waits) - 1)])
+    raise last
+def recent_ideas(k=8):
+    try:
+        L_ = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "ideas16x_raw.log")).read().strip().splitlines()[-k:]
+        return "\n".join("- " + l.split("\t", 2)[-1][:400] for l in L_) or "- (none yet)"
+    except Exception: return "- (none yet)"
+
+CATS = ["new features / formula encodings", "layer-wise angle schedules", "lost-fraction clause weights (compensate dropped 3-cavity / non-neighbour terms)",
+        "placement-aware outputs", "loss shaping on the hard tail", "multi-placement training objectives", "curriculum over n",
+        "sign-equivariant / literal-graph architectures", "attention / transformer over clauses",
+        "physics-inspired priors (adiabatic / QAOA-limit / mean-field)", "per-cavity SNAP-level structure via Gray code",
+        "meta-learning / hypernetworks", "ensembles / averaging over seeds"]
+_CNT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "idea_counter.txt")
+def forced_category():
+    try: n = int(open(_CNT).read().strip())
+    except Exception: n = 0
+    open(_CNT, "w").write(str(n + 1))
+    if n % 4 == 3:
+        return ("### FORCED CATEGORY: WILDCARD\nPropose an idea that fits NONE of these categories: " + "; ".join(CATS) +
+                ". Write 'CATEGORY: wildcard - <your own name>'.")
+    c = CATS[(n - n // 4) % len(CATS)]
+    return "### FORCED CATEGORY (round-robin; you MUST use this one)\n" + c + ". Write 'CATEGORY: " + c + "'."
+
+def compact(msgs, cap_sys=2500, cap_user=6000):
+    """Stage-1 prompt: goal (system, truncated) + user prompt with code blocks replaced by a def-signature summary."""
+    sysm = "".join(m.get("content", "") if isinstance(m.get("content"), str) else "" for m in msgs if m.get("role") == "system")[:cap_sys]
+    user = "\n".join(m.get("content", "") if isinstance(m.get("content"), str) else "" for m in msgs if m.get("role") != "system")
+    def summ(mo):
+        code = mo.group(0); defs = re.findall(r"^\s*def [^\n]*", code, re.M)
+        return "[code omitted; defs: " + "; ".join(d.strip()[:90] for d in defs[:20]) + "]"
+    user = re.sub(r"```.*?```", summ, user, flags=re.S)[-cap_user:]
+    return ("### GOAL\n" + sysm + "\n\n### CONTEXT (parent metrics, top programs, history; code omitted)\n" + user +
+            "\n\n### ALREADY FAILED - BANNED (do not propose these or close variants)\n"
+            "- additive dS/dB SNAP/bus correction tables (post-hoc or trained jointly)\n"
+            "- free SNAP/bus tables that REPLACE the projected cost\n- residual Walsh terms on the compiler support\n"
+            "- clamping / two-round pinning of variables\n- KD / distillation from the global-cost teacher\n"
+            "- assignment-head / placement selectors\n- minor tweaks of width, depth, learning rate or step count\n"
+            "\n### RECENT IDEAS (do NOT repeat; yours must be structurally different from these and from the parent)\n" + recent_ideas() +
+            "\n\n" + forced_category() +
+            "\nRules: frozen gate sequence/compiler/simulator untouched; no classical solving; p_v must not encode a solution.\n"
+            "\n### TASK\nPropose ONE concrete, structurally new change to the network/training. Be bold and divergent: prefer an unusual "
+            "mechanism over a safe tweak. Start with 'CATEGORY: <name>'. "
+            "Then 3-6 short lines, plain text, no code, max ~150 words. Do NOT use tools.")
+
+
+# ---------------- net16r mode (model name "net16r"): Grok 4.6 Fast code edits; Opus idea every --idea_every calls; repair edits ----------
+HERE_ = os.path.dirname(os.path.abspath(__file__))
+FRAMING = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "FRAMING_NATIVE.md")).read().strip()
+PATHS = {"reencode": "per-layer learned bit-to-cavity map / Gray relabel realised by pair PERMUTATION unitaries between cost phase and mixer (slot 1 = P, slot 2 = P^dag) so a clause split across cavities is local for the mixer in some layer; mapped back before the next cost phase / readout",
+         "grover": "a few Grover-like REFLECTIONS built from local clause oracles (phases weighted toward strings passing most clauses) and pair diffusion reflections exp(-i th pi |s><s|) on neighbour pairs (pair unitaries)",
+         "nondiag": "NON-DIAGONAL pair-unitary mixer between neighbouring cavities (beam-splitter-like / correlated XX, YY, flip-flop generators) replacing or augmenting the in-cavity SNAP-D-SNAP mixer so correlated bits across the boundary flip together",
+         "wildcard": "COMBINATIONS of the three net16x directions (reencode, grover reflections, non-diagonal pair mixers) or a new pair-unitary mechanism"}
+TECH = ["reencode: learned Gray / CNOT relabel per layer (pair permutation conjugating the mixer)",
+        "grover: oracle + pair diffusion reflections, amplitude amplification weighted by clauses passed",
+        "nondiag: correlated cross-boundary XX/YY generator replacing part of the in-cavity mixer",
+        "named technique: Grover-mixer QAOA (GM-QAOA) adapted to pair diffusions",
+        "named technique: XY / flip-flop (Hamming-weight-preserving) mixers adapted across cavity boundaries",
+        "named technique: swap networks / fermionic-swap style relabelling between layers",
+        "named technique: fixed-point / oblivious amplitude amplification (pi/3-style phases) for unknown overlap",
+        "named technique: counterdiabatic non-diagonal driving terms on neighbour pairs"]
+FAMS = ["reencode", "grover", "nondiag", "wildcard"]
+PROTECTED = ("reencode", "grover", "nondiag")
+OLD16R = "pair-message chain sweeps, optimistic clause tables, rank level shaping, role-specialised layers, cavity-local Grover on SNAP tables only"
+def _wild_open(): return os.path.exists(os.path.join(HERE_, A.run_dir, "wildcard.open"))
+try: FAIL = open(os.path.join(HERE_, A.run_dir, "FAILURE_SUMMARY_16x.txt")).read().strip()
+except Exception: FAIL = "(failure summary missing)"
+GATE = ("NEW GATE (the ONLY change to the locked hardware model): neighbour PAIR UNITARY U = exp(-i H) on two adjacent 16-level cavities "
+        "(256 joint levels, index 16*i_a + i_b, i_c = integer of cavity c's 4 bits MSB first). predict()/apply() may return: "
+        "pslots = python tuple of slots used from {0: before cost phase, 1: between cost phase and mixer, 2: after mixer}; "
+        "pHr/pHi = SHARED generator real/imag part (L, S=len(pslots), A, 256, 256) with A = C-1 (one per pair) or A = 1 (same on every pair, size-free, cheapest); "
+        "or STRUCTURED per-formula: pG/pGi (K<=16, 256, 256) shared basis + pc (F, R, L, S, C-1, K) coefficients. The evaluator Hermitises and exponentiates. "
+        "COST: one 256x256 expm per block (~15 ms fwd, ~45 ms grad); per-formula blocks cost F*R times more - keep shared generators unless per-formula is essential. "
+        "Report: n_pair_unitaries is counted automatically (nonzero blocks per circuit). Shared keys must NOT be chunk-concatenated in predict.")
+def mandate(fam, calls=0):
+    if fam not in FAMS: fam = "wildcard"
+    if _wild_open():
+        return ("ISLAND DIRECTION (protection over): %s: %s. Develop it; combinations with the other net16x directions are allowed. "
+                "Do not drift back to the old net16r families (%s) as the main mechanism." % (fam, PATHS[fam], OLD16R))
+    f2 = fam if fam in PROTECTED else PROTECTED[calls % 3]
+    return ("PROTECTED ISLAND MANDATE (first 40 evaluations; Zach): this program's island is '%s': %s. Develop ONLY this mechanism. "
+            "Keep the pair-unitary head and make it central; improve how its generator/parameters are chosen (e.g. formula-conditioned, layer-specific, "
+            "learned relabels, better oracles), or replace an old component with it. FORBIDDEN: reverting to or elaborating the old net16r families "
+            "(%s) as the main mechanism; removing the pair unitaries; global-cost imitation. Keep the '# FAMILY: %s ...' line." % (f2, PATHS[f2], OLD16R, f2))
+_ST = os.path.join(HERE_, "logs", "net16x_adapter_state.json")
+def _st():
+    try: import json as _j; return _j.load(open(_ST))
+    except Exception: return {"calls": 0, "tech": 0, "repairs": {}, "batch": []}
+def _sv(st):
+    import json as _j; tmp = _ST + ".tmp"; _j.dump(st, open(tmp, "w")); os.replace(tmp, _ST)
+def _txt(msgs): return "\n".join(m.get("content", "") if isinstance(m.get("content"), str) else "" for m in msgs)
+def _best_s2():
+    try: import json as _j; return float(_j.load(open(os.path.join(HERE_, A.run_dir, "best_s2.json")))["combined_score"])
+    except Exception: return None
+def compute_block(T):
+    """COMPUTE & NOVELTY block (Zach 17:2x CST): budget from env (same source as net/evaluator_net16r.py), parent train time from prompt metrics."""
+    b2 = float(os.environ.get("OE_BUDGET", "420")); b1 = float(os.environ.get("OE_S1_BUDGET", "60"))
+    m2 = re.search(r"\btrain_s\W{0,3}\s*(\d+(?:\.\d+)?)", T); m1 = re.search(r"s1_train_s\W{0,3}\s*(\d+(?:\.\d+)?)", T)
+    par = ", ".join(x for x in [f"stage-1 train {float(m1.group(1)):.0f}s" if m1 else "", f"stage-2 train {float(m2.group(1)):.0f}s" if m2 else ""] if x) or "not reported"
+    return ("### COMPUTE & NOVELTY (hard rules)\n"
+            f"- Training time budget: stage 1 = {b1:.0f}s, stage 2 = {b2:.0f}s (train(api, budget) gets this number). Training that runs past 2x budget "
+            f"is 'train over budget' and scores -20 no matter how good the idea is. Parent's training time: {par}.\n"
+            "- Keep added compute within ~1.5x the parent's: no big increases in layers, training steps, message-passing rounds, or table sizes.\n"
+            "- Priority is exploring genuinely NEW ideas. A new mechanism must REPLACE an existing component, not stack on top of it. "
+            "Do NOT just add more layers or more of an old idea.\n")
+def net16r_plan(msgs):
+    """returns (kind, extra_text_for_code_model, idea_prompt_or_None)."""
+    import hashlib
+    st = _st(); st["calls"] += 1; T = _txt(msgs)
+    fam = (re.search(r"# FAMILY: (\w+)", T) or [None, "wildcard"])[1]
+    cur = re.search(r"# Current Program\s*```\w*\n(.*?)```", T, re.S); h = hashlib.sha1((cur.group(1) if cur else T[-3000:]).encode()).hexdigest()[:12]
+    m2 = re.search(r"STAGE-2 n=16 selection: score (-?[\d.]+)", T); best = _best_s2()
+    tgt = (re.search(r"CHECKABLE TARGET: [^\n]*", T) or [""])[0]
+    if m2 and best is not None and float(m2.group(1)) < best - 0.05 and st["repairs"].get(h, 0) < 2:
+        st["repairs"][h] = st["repairs"].get(h, 0) + 1; _sv(st)
+        return ("repair", ("REPAIR EDIT (%d/2): the current program passed the n=12 screen but lost on the n=16 selection set (score %s vs best %.3f). "
+                "Do NOT add a new idea. Read its DIAGNOSTICS above (chain vs global-cost p, worst formulas, dropped-cost fraction) and make the smallest "
+                "change that fixes why it loses at n=16 (transfer from n=12 to n=16, hard tail, stability). %s" % (st["repairs"][h], m2.group(1), best, tgt)) + "\n" + compute_block(T) + GATE + "\n" + mandate(fam, st["calls"]), None)
+    if st["calls"] % A.idea_every == 0:
+        forced = st.get("batch") or []
+        tech = forced.pop(0) if forced else TECH[st["tech"] % len(TECH)]
+        st["tech"] += 0 if forced else 1; st["batch"] = forced; _sv(st)
+        st = _st(); st["ideas"] = st.get("ideas", 0) + 1; _sv(st)
+        ip = compact16r(msgs, fam, tech, tgt, wild=(st["ideas"] % 3 == 0)); return ("idea", None, ip)
+    _sv(st)
+    return ("code", compute_block(T) + "FRAMING: " + FRAMING + "\n" + GATE + "\n" + FAIL + "\n" + mandate(fam, st["calls"]) + "\n" + tgt, None)
+def run_summary(k_recent=12):
+    """recent run data for Opus: per-island best/latest scores + family, recent outcomes (cut/failed/errors)."""
+    import json as _j, glob as _g
+    try:
+        cks = sorted(_g.glob(os.path.join(HERE_, A.run_dir, "checkpoints", "checkpoint_*")), key=lambda c: int(c.rsplit("_", 1)[1]))
+        if not cks: return "(no checkpoint yet)"
+        progs = [_j.load(open(f)) for f in _g.glob(os.path.join(cks[-1], "programs", "*.json"))]
+        isl = {}
+        for pr in progs:
+            i = pr.get("metadata", {}).get("island", -1); fam = (re.search(r"# FAMILY: (\S+)", pr.get("code", "")) or [0, "?"])[1]
+            sc = pr.get("metrics", {}).get("combined_score", -99); isl.setdefault(i, []).append((sc, fam, pr.get("iteration_found", 0), pr.get("metrics", {})))
+        L_ = [f"latest checkpoint {os.path.basename(cks[-1])}; {len(progs)} programs"]
+        for i in sorted(isl):
+            v = sorted(isl[i], key=lambda x: -x[0]); b = v[0]
+            L_.append(f"island {i}: family {b[1]}, best {b[0]:.3f} (n16 sel {b[3].get('rr_median_inv_p', 0):.1f}/{b[3].get('rr_B90_inv_p', 0):.1f}, s1 {b[3].get('s1', 0):.3f}), "
+                      f"{len(v)} progs, cut@s1 {sum(1 for x in v if x[3].get('cut_at_stage1') == 1)}, failed {sum(1 for x in v if x[0] <= -19)}")
+        rec = sorted(progs, key=lambda pr: -pr.get("iteration_found", 0))[:k_recent]
+        for pr in rec:
+            m = pr.get("metrics", {}); fam = (re.search(r"# FAMILY: (\S+)", pr.get("code", "")) or [0, "?"])[1]
+            out = "FAILED " + str(m.get("error", ""))[:90] if m.get("combined_score", 0) <= -19 else ("cut@s1" if m.get("cut_at_stage1") == 1 else f"score {m.get('combined_score', 0):.3f}")
+            L_.append(f"  it{pr.get('iteration_found')} [{fam}] {out}; change: {' '.join(str(pr.get('changes_description') or pr.get('metadata', {}).get('changes', '')).split())[:140]}")
+        try: L_.append("fair TEST history: " + " | ".join(l.split("fair TEST n=16 ")[1][:40] for l in open(os.path.join(HERE_, A.run_dir, "events.log")) if "fair TEST" in l)[-600:])
+        except Exception: pass
+        return "\n".join(L_)[:4000]
+    except Exception as e: return f"(summary unavailable: {e})"
+def compact16r(msgs, fam, tech, tgt, wild=False, cap_sys=2500, cap_user=6000):
+    sysm = "".join(m.get("content", "") if isinstance(m.get("content"), str) else "" for m in msgs if m.get("role") == "system")[:cap_sys]
+    user = "\n".join(m.get("content", "") if isinstance(m.get("content"), str) else "" for m in msgs if m.get("role") != "system")
+    user = re.sub(r"```.*?```", lambda mo: "[code omitted; defs: " + "; ".join(d.strip()[:90] for d in re.findall(r"^\s*def [^\n]*", mo.group(0), re.M)[:20]) + "]", user, flags=re.S)[-cap_user:]
+    fam_txt = PATHS.get(fam, fam)
+    return ("### TOP INSTRUCTION (Zach)\nPropose a genuinely NEW mechanism within this island's net16x direction (re-encoding per layer / Grover-like reflections / non-diagonal pair-unitary mixers). NOT an elaboration, NOT more layers, NOT more of an existing method. The idea must REPLACE an existing component and stay cheap (<=~1.5x parent compute).\n\n### FRAMING (Zach)\n" + FRAMING + "\n\n### " + GATE + "\n\n### " + FAIL + "\n\n### " + mandate(fam) + "\n\n### GOAL\n" + sysm + "\n\n### CONTEXT (parent metrics + DIAGNOSTICS, top programs; code omitted)\n" + user +
+            "\n\n### RECENT IDEAS (do NOT repeat)\n" + recent_ideas() +
+            "\n\n### RECENT RUN DATA (per-island scores, outcomes)\n" + run_summary() +
+            (f"\n\n### WILDCARD SLOT\nPropose ANYTHING consistent with the FRAMING and the locked gates / anti-cheat rules: a new path family, a combination, "
+             f"or a radical change. (current island: {fam})\n" if wild else
+             f"\n\n### ISLAND PATH FAMILY (starting direction, not a limit): {fam}: {fam_txt}\n### SUGGESTED DIRECTION: {tech}\n"
+             "Strengthen this island's direction with a concrete new mechanism that attacks the failure analysis (unique-GS tail, far false basins, flat late layers).\n") +
+            "\n" + compute_block(user) + "Favour NEW, CHEAP mechanisms that replace a component over elaborations (more layers/steps/rounds/tables) of existing ideas.\n" +
+            "Do NOT propose imitating/reproducing the global QAOA cost. Say exactly what changes in the network/training. If you introduce a new "
+            "family, start a line 'NEW FAMILY: <short_name> - <one line>'.\n"
+            f"### CHECKABLE SUBGOAL\n{tgt or 'raise chain p on the 5 worst n=12 screen formulas listed in DIAGNOSTICS without lowering the median.'}\n"
+            "Rules: frozen gate sequence/compiler/simulator untouched except the ONE new pair-unitary gate; size-free; no classical solving, "
+            "no full-assignment enumeration/argmin, no solution lookup; p_v must not encode a solution.\n### TASK\nStart with 'TECHNIQUE: <name>'. Then 3-6 short lines, plain text, no code, max ~150 words. Do NOT use tools.")
+async def new_families(k=2):
+    """stagnation reseed: Opus picks the new family for each reseeded island from the run data."""
+    import json as _j
+    q = ("### FRAMING\n" + FRAMING + "\n\n### RUN DATA\n" + run_summary() + "\n\n### TASK\nThe run has stalled. %d weakest islands will be reseeded from the "
+         "best programs. For each, name a NEW pair-unitary mechanism within / combining the net16x directions (re-encoding per layer, Grover-like reflections, "
+         "non-diagonal pair mixers), guided by this failure analysis: " + FAIL.replace("\n", " ") + " (not global-cost imitation; locked gates + the pair unitary; no classical solving / full enumeration). Output exactly %d lines: '<short_name> - <one-line mechanism>'. No tools." % (k, k))
+    q = q[-12000:] if len(q) > 12000 else q
+    out = await run_agent_retry(q, A.idea_model); L_ = []
+    for l in out.splitlines():
+        m = re.match(r"\s*[-*\d.)]*\s*([A-Za-z][\w-]{1,30})\s*[-:]\s*(.+)", l)
+        if m: L_.append({"name": m.group(1).replace("-", "_"), "desc": m.group(2).strip()[:300]})
+    L_ = L_[:k]
+    for f_ in L_: PATHS[f_["name"]] = f_["desc"]
+    st = _st(); st.setdefault("extra_paths", {}).update({f_["name"]: f_["desc"] for f_ in L_}); _sv(st)
+    _j.dump(L_, open(os.path.join(HERE_, A.run_dir, "opus_families.json"), "w"), indent=1); return L_
+@app.post("/v1/new_families")
+async def new_families_ep(): return {"families": await new_families()}
+async def ideas_batch(k=5):
+    """stagnation: ask Opus for k DISTINCT named techniques; stored as the next forced techniques."""
+    q = ("List %d DISTINCT, published, named techniques (not in this list: %s) that could help a network choose phases/angles for a FIXED "
+         "QAOA-like cavity-chain circuit that now also has arbitrary neighbour-pair unitaries exp(-iH), to maximise ground-state probability on hard unique-ground-state formulas "
+         "(focus: re-encoding per layer, Grover-like reflections, non-diagonal pair mixers). "
+         "One per line, format '<name> - <one-line how to adapt>'. No tools." % (k, "; ".join(TECH)))
+    out = await run_agent_retry(q, A.idea_model); L_ = [l.strip("-* ").strip() for l in out.splitlines() if l.strip()][:k]
+    st = _st(); st["batch"] = L_; _sv(st); return L_
+@app.post("/v1/ideas_batch")
+async def ideas_batch_ep(): return {"techniques": await ideas_batch()}
+
+@app.get("/v1/models")
+async def models(): return {"object": "list", "data": [{"id": A.model, "object": "model"}]}
+
+@app.post("/v1/chat/completions")
+async def chat(req: Request):
+    b = await req.json(); model = b.get("model") or A.model
+    if "fable" in model: print(f"[adapter] remap {model} -> opus-idea+grok46-code", flush=True); model = "claude-opus-5-5-high"
+    t = time.time(); msgs = b.get("messages", [])
+    async with SEM:
+        try:
+            if model == "net16x":
+                kind, extra, ip = net16r_plan(msgs)
+                if kind == "idea":
+                    try: idea = (await run_agent_retry(ip, A.idea_model, tries=3, waits=(15, 45))).strip()[:4000]
+                    except Exception as ex_:   # idea call failed after retries: re-queue the idea slot for the next step, code step now
+                        st_ = _st(); st_["calls"] -= 1; _sv(st_); idea = ""; print(f"[adapter] net16r idea failed, deferring to next step: {str(ex_)[-150:]}", flush=True)
+                    t1 = time.time()
+                    print(f"[adapter] net16r idea {A.idea_model} {t1-t:.1f}s", flush=True)
+                    try:
+                        if idea:
+                          with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "ideas16x_raw.log"), "a") as f_:
+                            f_.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')}\t{uuid.uuid4().hex[:8]}\t" + idea.replace("\n", " | ") + "\n")
+                    except Exception: pass
+                    extra = ("IMPLEMENT THIS IDEA (from a senior reviewer) in your answer, following the exact output format requested above:\n" + idea + "\n\n" + compute_block(_txt(msgs)) + GATE + "\n" + mandate((re.search(r"# FAMILY: (\w+)", _txt(msgs)) or [None, "wildcard"])[1])) if idea else (compute_block(_txt(msgs)) + "FRAMING: " + FRAMING + "\n" + GATE + "\n" + mandate("wildcard"))
+                full = render(msgs + [{"role": "user", "content": extra}]); txt = await run_agent(full, A.code_model)
+                def _ok(t_):
+                    a_, b_, c_ = (len(re.findall(r"^<<<<<<< SEARCH\s*$", t_, re.M)), len(re.findall(r"^=======\s*$", t_, re.M)), len(re.findall(r"^>>>>>>> REPLACE\s*$", t_, re.M)))
+                    return a_ > 0 and a_ == b_ == c_
+                if not _ok(txt):   # malformed SEARCH/REPLACE: one retry with a strict format reminder
+                    print(f"[adapter] net16r malformed diff, retrying", flush=True)
+                    txt = await run_agent(full + "\n\n### FORMAT (strict)\nOutput ONLY SEARCH/REPLACE blocks, each exactly:\n<<<<<<< SEARCH\n<exact existing lines>\n=======\n<new lines>\n>>>>>>> REPLACE\nEach marker on its own line, no other '<<<<<<<', '=======' or '>>>>>>>' lines anywhere.", A.code_model)
+                print(f"[adapter] net16r {kind} {A.code_model} {time.time()-t:.1f}s in={len(full)}ch out={len(txt)}ch", flush=True)
+                model = f"net16x-{kind}"
+            elif "opus" in model:   # two-stage: Opus idea (compact) -> grok-4.6 code (full prompt + idea)
+                cp = compact(msgs); idea = (await run_agent(cp, A.idea_model)).strip()[:4000]; t1 = time.time()
+                print(f"[adapter] stage1 {A.idea_model} {t1-t:.1f}s in={len(cp)}ch out={len(idea)}ch (~{(len(cp)+len(idea))//4} tok)", flush=True)
+                try:
+                    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "ideas16x_raw.log"), "a") as f_:
+                        f_.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')}\t{uuid.uuid4().hex[:8]}\t" + idea.replace("\n", " | ") + "\n")
+                except Exception: pass
+                full = render(msgs + [{"role": "user", "content": "IMPLEMENT THIS IDEA (from a senior reviewer) in your answer, following the exact output format requested above:\n" + idea}])
+                txt = await run_agent(full, A.code_model)
+                print(f"[adapter] stage2 {A.code_model} {time.time()-t1:.1f}s in={len(full)}ch out={len(txt)}ch (~{(len(full)+len(txt))//4} tok)", flush=True)
+                model = "opus-idea+grok46-code"
+            else:
+                model = A.code_model; full = render(msgs); txt = await run_agent(full, model)
+                print(f"[adapter] {model} {time.time()-t:.1f}s in={len(full)}ch out={len(txt)}ch", flush=True)
+        except Exception as ex: return JSONResponse({"error": {"message": str(ex)}}, status_code=500)
+    return {"id": "chatcmpl-" + uuid.uuid4().hex, "object": "chat.completion", "created": int(time.time()), "model": model,
+            "choices": [{"index": 0, "message": {"role": "assistant", "content": txt}, "finish_reason": "stop"}],
+            "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}}
+
+if __name__ == "__main__": uvicorn.run(app, host="127.0.0.1", port=A.port, log_level="warning")

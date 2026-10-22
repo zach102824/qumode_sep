@@ -1,0 +1,22 @@
+Common rules for all three seeds:
+- Every new parameter starts at zero, so the circuit starts exactly at the parent.
+- The same parameters are used on every neighbouring cavity pair, so the seeds transfer from 1 pair (n=8) and 2 pairs (n=12) to 3 pairs (n=16).
+- Generators are shared and fixed, so each block needs one 256x256 expm.
+
+1 reencode
+Basis: G_kl = i(|..0_k..1_l..><..1_k..0_l..| - h.c.), where bit k is in cavity a and bit l is in cavity b. G_kl is real antisymmetric, so at angle pi/2 it is an exact bit swap with no phase.
+Parameters: global, per layer, 16 angles per pair (one per k,l). Per-formula logits may only gate which swaps are used.
+Slots: slot1 = P = exp(-i sum theta G), slot2 = P^dag, with tied parameters.
+Pitfall: the gradient can vanish at theta=0. The input state is swap-symmetric, and if bits k and l get equal mixer weights, theta has no effect to first order. Check the parent's beta/w asymmetry first.
+
+2 grover
+Basis: a diagonal pair oracle O = sum_x s(x)|x><x|, where s(x) is the weighted count of clauses passed by joint state x, counting only clauses fully inside the pair. A pair diffusion |s><s|, with |s> the local uniform state.
+Parameters: per formula, alpha and phi from new zero-initialised GNN heads. O is diagonal, so it is cheap.
+Slots: oracle at slot0, diffusion at slot2, in layers 3-4 only.
+Pitfall: about 86% of clauses are not between neighbouring cavities, so pair oracles cannot see them. This boosts the E~2 false basins as much as the true ground state. Use soft weights, not projectors.
+
+3 nondiag
+Basis: bit-level correlated flips across the boundary, XX_kl and YY_kl between cavity a and cavity b.
+Parameters: global, per layer, with an optional per-formula scalar.
+Slots: slot1, added alongside the in-cavity mixer.
+Pitfall: do not use the bosonic beam splitter a^dag b + h.c. It conserves total photon number, which mixes bits through integer carries, and it breaks at the 16-level truncation. It does not flip correlated bits together.

@@ -1,0 +1,11 @@
+FAILURE ANALYSIS (net16r ckpt_10 on 100 n=16 TEB formulas; worst 10 vs rest):
+- Tail = unique-ground-state formulas (GS degeneracy 1.2 vs 3.6); p there is only 0.3-15x uniform (1/65536).
+- pv points to the WRONG basin on the tail: pv_acc 0.49 (vs 0.77); Spearman(pv_acc, p) = +0.79.
+- Amplitude ends in DISTANT false basins: top wrong states have E~2 but are ~8 bit flips from the solution (4 elsewhere);
+  mass is spread (~260 effective states, 74% on E>=3), not trapped in one state.
+- Layers 3-4 add nothing on the tail (p gain L2->L4 1.05x vs 3.1x): single-bit in-cavity mixing cannot move amplitude
+  ~8 correlated flips across cavities in 4 layers.
+- Chain geometry does not discriminate (all clauses cross cavities, ~86% non-neighbour, in both groups); per-placement p
+  varies 9x-36000x on the tail.
+=> TARGET: correlated multi-bit moves ACROSS cavity boundaries (pair unitaries / mixer re-encoding) and reflections that
+   escape far false basins on unique-GS formulas, raising the B90 tail; do not just retune phases or trust pv.

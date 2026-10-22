@@ -1,0 +1,61 @@
+# net16x PROTECTED phase (driver: protected until iteration 160 = 40 evals/island, then explore 60 / exploit 40 alternating). LLM net16x = cursor_adapter16x.py on :8766.
+max_iterations: 60
+checkpoint_interval: 10
+log_level: INFO
+random_seed: 1617
+diff_based_evolution: true
+max_code_length: 30000
+llm:
+  api_base: http://127.0.0.1:8766/v1
+  api_key: local-adapter-no-key
+  models:
+  - name: net16x
+    weight: 1.0
+  temperature: 0.7
+  max_tokens: 16000
+  timeout: 1200
+  retries: 1
+prompt:
+  system_message: "# Framing (Zach, 2026-10-21 15:00 CST): do NOT imitate QAOA's global cost\nStandard QAOA assumes the full cost phase incl. long-range high-weight Z strings (e.g. arbitrary ZZZZ), which\
+    \ are hard in hardware; much literature approximates/reproduces them. Our cavity chain has three advantages:\n1. Neighbouring cavities instead of neighbouring qubits: each cavity holds several bits,\
+    \ so one nearest-neighbour cavity-cavity interaction couples many more bit strings at once.\n2. Much richer cost phase: on a cavity or neighbouring cavity pair we can apply an ARBITRARY phase to each\
+    \ Fock level (SNAP dS tables, neighbour-bus dB tables), not just Pauli-Z products. E.g. 00 and 11 in one cavity can get different phases; Z1Z2 cannot distinguish them.\n3. Only the final answer matters:\
+    \ classical optimisation, so the circuit need not reproduce the ZZZZ cost evolution. Any path that concentrates probability on the ground-state bit string is fine. Relative phases still drive interference\
+    \ mid-circuit, but at readout only the bit string counts.\nGoal: search the larger hardware-native control space for a route QAOA's Z-term picture cannot express, that still reaches the ground state.\
+    \ Imitating the global cost is NOT the goal.\n\nYOU EDIT a JAX NETWORK that maps a 4-SAT formula to control values of the native bosonic-cavity chain circuit (4 layers; per layer\none SNAP per cavity\
+    \ + one bus phase per neighbour cavity pair, per-cavity one-bit-flip mixer beta_l; readout p = P(ground state)).\nCavities hold 4 bits (n=8: 2 cavities, n=12: 3, n=16: 4). Phase tables = compiled projection\
+    \ of nm*sum_j (gamma_l + w_jl)[clause j violated]\n(product measure pv) PLUS additive tables dS (F,R,L,C,32) / dB (F,R,L,C-1,32,32) (index = integer of the cavity's bits, MSB first).\nnet16x NEW GATE\
+    \ (the only unlocked change): neighbour PAIR UNITARY U = exp(-i H) on two adjacent cavities (256 joint levels, index 16*i_a+i_b),\nany Hermitian H. Outputs: pslots (python tuple from {0 before cost,\
+    \ 1 between cost and mixer, 2 after mixer}); shared pHr/pHi (L,S,A,256,256),\nA = C-1 or 1 (same on every pair); or per-formula pG/pGi (K<=16,256,256) + pc (F,R,L,S,C-1,K). One 256x256 expm per block:\
+    \ keep it cheap.\nISLANDS (net16x, Zach): reencode (per-layer bit-to-cavity relabel by pair permutations conjugating the mixer), grover (Grover-like reflections:\nlocal clause oracles + pair diffusion),\
+    \ nondiag (non-diagonal pair-unitary mixer, correlated cross-boundary flips), wildcard (combinations,\nopens after 40 evaluations per island). Each program has a '# FAMILY: <name>' line: KEEP it and\
+    \ develop THAT island's direction only.\nDo NOT revert to the old net16r families (pair messages, optimistic tables, rank shaping, role layers, SNAP-only Grover) as the main mechanism.\nFAILURE ANALYSIS\
+    \ (net16r ckpt_10 on 100 n=16 TEB formulas; worst 10 vs rest):\n- Tail = unique-ground-state formulas (GS degeneracy 1.2 vs 3.6); p there is only 0.3-15x uniform (1/65536).\n- pv points to the WRONG\
+    \ basin on the tail: pv_acc 0.49 (vs 0.77); Spearman(pv_acc, p) = +0.79.\n- Amplitude ends in DISTANT false basins: top wrong states have E~2 but are ~8 bit flips from the solution (4 elsewhere);\n\
+    \  mass is spread (~260 effective states, 74% on E>=3), not trapped in one state.\n- Layers 3-4 add nothing on the tail (p gain L2->L4 1.05x vs 3.1x): single-bit in-cavity mixing cannot move amplitude\n\
+    \  ~8 correlated flips across cavities in 4 layers.\n- Chain geometry does not discriminate (all clauses cross cavities, ~86% non-neighbour, in both groups); per-placement p\n  varies 9x-36000x on the\
+    \ tail.\n=> TARGET: correlated multi-bit moves ACROSS cavity boundaries (pair unitaries / mixer re-encoding) and reflections that\n   escape far false basins on unique-GS formulas, raising the B90 tail;\
+    \ do not just retune phases or trust pv.\n\nFitness = FAIR round-robin over R=4 placements on held-out n=16 selection formulas: combined_score = -(ln median + ln B90)/2 of 1/p.\nStage 1 = train(api,\
+    \ 60) then 30 unseen n=12 formulas; clearly worse candidates are cut before stage 2 (train(api, 180), n=16).\ntrain() must already work at 60 s. Default loss: 0.5 mean + 0.5 median + CVaR-10% of log(1/p).\
+    \ api.p_from(n, outs, b) is differentiable\nand includes the pair unitaries. Teacher api.p_from(..., glob=True) exists but imitating the global cost is NOT the goal.\nHARD RULES: size-free (zero-shot\
+    \ n=8/12 -> n=16); only numpy/jax/math/functools/itertools/collections/time imports; no file/os/sys,\nno dunder, never touch api internals; NO classical solving: no full-assignment enumeration (no 1<<n\
+    \ / 2**n tables), no argmin over\nassignments, no solution lookup; pv must not encode a solution (pv_acc>0.85 => -20). jnp on traced arrays; clip grads (NaN => -20);\nchild RSS cap ~3 GB.\n"
+  num_top_programs: 3
+  num_diverse_programs: 2
+  include_artifacts: true
+  max_artifact_bytes: 4096
+database:
+  population_size: 100
+  archive_size: 25
+  num_islands: 4
+  elite_selection_ratio: 0.15
+  exploitation_ratio: 0.3
+  exploration_ratio: 0.5
+  migration_interval: 100000
+  migration_rate: 0.0
+evaluator:
+  timeout: 2400
+  max_retries: 0
+  cascade_evaluation: false
+  parallel_evaluations: 2
+  use_llm_feedback: false
