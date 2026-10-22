@@ -8,26 +8,31 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 
 | method | n=8† median | n=12† median | n=16 median | n=20 median |
 |---|---|---|---|---|
-| Native ckpt_110 (shots, round-robin) | **4.54** [4.54–4.65] | **13.7** [13.7–14.1] | **48.9** [48.9–49.7] | **272** [240–272] |
+| QAOA L4 (shots) | **5.78** [5.37–5.78] | **12.8** [12–12.8] | **34.1** [30.6–34.1] | **77.6** [66.9–77.6] |
+| Native ckpt_110 (shots, round-robin) | **4.39** [4.39–4.65] | **13.7** [13.7–14.1] | **49.3** [48.9–49.7] | **244** [240–272] |
 | WalkSATlm (lookups) | **14** | **32.5** | **71** | **110** |
 
 | method | n=8† B90 | n=12† B90 | n=16 B90 | n=20 B90 |
 |---|---|---|---|---|
-| Native ckpt_110 (shots, round-robin) | **9.05** [9.05–9.42] | **97.1** [97.1–97.4] | **862** [730–862] | **9.41e+03** [7.87e+03–9.41e+03] |
+| QAOA L4 (shots) | **10.3** [10.2–10.3] | **33.1** [32.5–33.1] | **84.9** [84.9–86.1] | **198** [171–198] |
+| Native ckpt_110 (shots, round-robin) | **9.37** [9.05–9.42] | **106** [97.1–106] | **831** [730–862] | **9.28e+03** [7.87e+03–9.41e+03] |
 | WalkSATlm (lookups) | **29.4** | **76.1** | **147** | **290** |
 
 ## Growth fit cost ≈ C·bⁿ over n=8,12,16,20 (least squares on log2 cost)
 
 | method | stat | b (winner) | 95% bootstrap CI on b (test formulas) | 3-seed range of b | α=log2 b | C |
 |---|---|---|---|---|---|---|
-| Native ckpt_110 (shots, round-robin) | median | **1.403** | [1.331, 1.480] | 1.387–1.403 | 0.489 | 0.263 |
-| Native ckpt_110 (shots, round-robin) | B90 | **1.778** | [1.644, 2.051] | 1.742–1.778 | 0.830 | 0.0919 |
-| WalkSATlm (lookups) | median | **1.191** | [1.163, 1.217] | — | 0.252 | 3.78 |
-| WalkSATlm (lookups) | B90 | **1.207** | [1.172, 1.231] | — | 0.271 | 7.09 |
+| QAOA L4 (shots) | median | **1.245** | [1.212, 1.271] | 1.237–1.245 | 0.316 | 0.978 |
+| QAOA L4 (shots) | B90 | **1.278** | [1.249, 1.327] | 1.266–1.278 | 0.354 | 1.57 |
+| Native ckpt_110 (shots, round-robin) | median | **1.396** | [1.330, 1.461] | 1.387–1.403 | 0.481 | 0.274 |
+| Native ckpt_110 (shots, round-robin) | B90 | **1.766** | [1.632, 2.049] | 1.742–1.778 | 0.821 | 0.103 |
+| WalkSATlm (lookups) | median | **1.191** | [1.162, 1.215] | — | 0.252 | 3.78 |
+| WalkSATlm (lookups) | B90 | **1.207** | [1.173, 1.231] | — | 0.271 | 7.09 |
 
 ## Seed selection (validation n=12, 200 formulas)
 
-- Native ckpt_110 (shots, round-robin): winner seed 1; val med/B90 s0 15.75/90.76, s1 15.51/90.44
+- QAOA L4 (shots): winner seed 0; val med/B90 s0 13.66/30.30, s1 13.66/30.30, s2 13.24/32.41
+- Native ckpt_110 (shots, round-robin): winner seed 2; val med/B90 s0 15.75/90.76, s1 15.51/90.44, s2 15.40/84.53
 
 ## Methods, code and deviations
 
