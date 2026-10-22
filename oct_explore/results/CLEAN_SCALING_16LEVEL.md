@@ -52,3 +52,17 @@ Code: `oct_explore/clean16/` (`common.py`, `qaoa.py`, `gcost.py`, `native.py` + 
 - **Mixer (all quantum methods): the IDEAL one-bit-flip mixer** M(β) = ∏_j exp(−iβX_j/2) on each cavity's 4 Gray digits (`nsim.Mixer(4, "gray")`), i.e. the target unitary the calibrated SNAP-D-SNAP sequence is fitted to. No calibrated/native SNAP-D-SNAP mixer matrices are used anywhere in this table (QAOA, global cost and native alike), so mixer calibration error is not included.
 - Bug caught during the run: the first QAOA launch omitted `--proj full` (fixed.py default is `chain`), giving the chain-projected baseline (n=16 450/7796); it was discarded (`results/clean16/discard/`) and QAOA was rerun with `--proj full` (now the default in `qaoa.py`).
 - QAOA seeds 0 and 1 converged to identical angles (same best start); seed 2 found a different optimum.
+
+## WalkSATlm with Cai's 4-SAT settings (w1=3, w2=1), noise scan
+
+Same 100 clean16 test formulas per n, same binary (`qaoa_ksat/walksatlm_c/wslm.c`), same counting (lookups = fresh starts + flips; try = fresh random string + n flips; 500 runs/formula averaged), same median/B90 and log2-linear fit C·bⁿ with 95% bootstrap CI (2000 formula resamples). Scripts: `clean16/wsat4.py` (args n p w1 w2), `clean16/wsat4_fit.py`; raw `results/clean16/W4_p{P}_n{n}.json`.
+
+| setting | median n=8/12/16/20 | b (median) [95% CI] | C | B90 n=8/12/16/20 | b (B90) [95% CI] | C |
+|---|---|---|---|---|---|---|
+| **old: p=0.30, w1=6, w2=5** | **14 / 32.5 / 71 / 110** | **1.191 [1.163, 1.214]** | 3.78 | 29.4 / 76.1 / 147 / 290 | 1.207 [1.171, 1.231] | 7.09 |
+| **p=0.40, w1=3, w2=1 (best of scan)** | **14.3 / 33.9 / 70.4 / 116** | **1.192 [1.169, 1.218]** | 3.83 | 29.1 / 74.1 / 161 / 315 | 1.219 [1.178, 1.241] | 6.39 |
+| p=0.45, w1=3, w2=1 | 14.4 / 35.6 / 74.5 / 120 | 1.194 [1.171, 1.220] | 3.85 | 31.4 / 75.4 / 165 / 327 | 1.216 [1.188, 1.244] | 6.89 |
+| p=0.51, w1=3, w2=1 (Cai default) | 14.6 / 36.3 / 78.3 / 130 | 1.201 [1.175, 1.225] | 3.72 | 30.0 / 77.4 / 164 / 343 | 1.223 [1.191, 1.250] | 6.37 |
+| p=0.55, w1=3, w2=1 | 14.8 / 36.7 / 82.2 / 135 | 1.204 [1.176, 1.228] | 3.68 | 31.2 / 76.7 / 174 / 330 | 1.218 [1.196, 1.250] | 6.82 |
+
+**Conclusion.** At these small n the 4-SAT-tuned settings do not beat the original row: lower noise is better across the scan (p=0.40 best), and every growth rate falls within the old row's CI. The old p=0.30/w1=6/w2=5 row stays as the WalkSATlm baseline; the choice of settings does not change any comparison in the table.
