@@ -1,5 +1,41 @@
 # Fig. 3 WalkSATlm reproduction (Boulebnane & Montanaro, PRX Quantum 5, 030348)
 
+## Final, calibrated (2026-10-22)
+**Our paper-matched WalkSATlm:** the C solver `walksatlm_c/wslm.c` with Cai's lmake pick rule,
+**noise p=0.30** (calibrated; the paper states 0.15, see the variant diagnosis below), w1=6, w2=5.
+Each try is n flips from a fresh uniform random string, and the cost is the number of tries until SAT.
+That is the paper's unit: `num_trials` with max_flips=n in their Zenodo data. Instances are fresh,
+built with Definition 1 (k=8, r=176.54, Poisson m, literals with replacement) and filtered to SAT
+by brute force. Each instance gets one run, as in the paper, with 3 independent seeds pooled. The
+statistic is the median over instances.
+
+**Fit n=12..20: log2(median) = -0.146 + 0.316 n.** The paper's raw data gives -0.3085 + 0.3246 n.
+Every per-n median for n=12..20 is within ±2 tries of their raw median.
+
+| n | instances | ours p=0.30 median tries | paper raw median | Table II fit |
+|---|---|---|---|---|
+| 8 | 2000 | 5 | — | 4.9 |
+| 9 | 2000 | 6 | — | 6.1 |
+| 10 | 2000 | 8 | — | 7.7 |
+| 11 | 2000 | 10 | — | 9.6 |
+| 12 | 2000 | 12 | 12.0 | 12.0 |
+| 13 | 2000 | 16 | 14.0 | 15.0 |
+| 14 | 2000 | 19 | 19.0 | 18.8 |
+| 15 | 2000 | 25 | 24.0 | 23.6 |
+| 16 | 2000 | 30 | 31.0 | 29.6 |
+| 17 | 2000 | 37 | 39.0 | 37.0 |
+| 18 | 2000 | 47 | 47.0 | 46.3 |
+| 19 | 2000 | 57 | 58.0 | 58.0 |
+| 20 | 1459 | 71 | 68.0 | 72.7 |
+| 21 | 751 | 88 | — | 91.0 |
+| 22 | 340 | 112 | — | 114.0 |
+
+Plot: `fig3_walksatlm_repro.png`. Analysis script: `walksatlm_c/final_p030.py`. It needs
+`walksatlm_rows.json`, which is extracted from the Zenodo tarball and not committed.
+
+---
+# History: first pass and diagnosis
+
 ## What the paper says, and what it leaves out
 - Ensemble: random k-SAT, Definition 1. m ~ Poisson(r n), k literals per clause drawn uniformly
   with replacement, k=8, r=176.54 (Table 1). Only satisfiable instances are kept.

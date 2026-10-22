@@ -1,5 +1,22 @@
 # Paper-protocol WalkSATlm on the fair TEB test formulas (2026-10-22)
 
+## Final: paper-matched noise p=0.30
+p=0.30 with w1=6, w2=5 reproduces the Fig. 3 medians (see `qaoa_ksat/results/FIG3_WALKSATLM_REPRO.md`).
+Same formulas and statistics as below: 500 runs per formula, averaged, then median / B90 over 100
+formulas.
+
+| n | tries (paper unit) med/B90 | lookups med/B90 | flips med/B90 | QAOA L4 1/p med/B90 | net16r ckpt_110 rr med/B90 |
+|---|---|---|---|---|---|
+| 12 | 3.11 / 7.32 | 34.8 / 89.8 | 31.7 / 82.4 | 12.97 / 31.76 | — |
+| 16 | **4.58 / 10.98** | **71.4 / 179.4** | 66.8 / 168.4 | **34.82 / 98.20** | **82.6 / 4374.7** |
+| 20 | 6.01 / 15.26 | 118.1 / 312.1 | 112.1 / 296.9 | 84.9 / 238.1 (make_json table) | — |
+
+Note that the TEB formulas are 4-SAT at m=round(9.93n), not the paper's 8-SAT.
+At n=16, lookups: QAOA L4 34.8 < ckpt_110 82.6 ≈ WalkSATlm 71.4.
+Tries: WalkSATlm 4.6, but each try costs n=16 flips.
+
+## Earlier run, p=0.15 (as stated in the paper)
+
 **Solver.** `qaoa_ksat/walksatlm_c/wslm.c`, the same C WalkSATlm as in
 `qaoa_ksat/results/FIG3_WALKSATLM_REPRO.md`. It uses Cai's min-break / linear-make pick rule with
 p=0.15, w1=6, w2=5. Each try starts from a fresh uniform random string and makes n flips. Tries
