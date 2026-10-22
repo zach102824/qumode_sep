@@ -8,6 +8,10 @@ Diagnostics (from the stage-1 model, returned as metrics + artifact 'diagnostics
 (glob=True) at n=8 (train slice) and n=12 (screen set), 5 worst n=12 screen formulas with their dropped-cost fraction
 (share of the per-layer cost-phase variance removed by the chain projection, placement 0)."""
 import os, sys, json, time, numpy as np
+if len(sys.argv) > 1 and sys.argv[1] == "--inner":   # persistent XLA cache: the frozen circuit/readout jits are identical across candidates
+    _cd = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "runs", "jaxcache16r"); os.makedirs(_cd, exist_ok=True)
+    os.environ.setdefault("JAX_COMPILATION_CACHE_DIR", _cd); os.environ.setdefault("JAX_PERSISTENT_CACHE_MIN_COMPILE_TIME_SECS", "0.5")
+    os.environ.setdefault("JAX_PERSISTENT_CACHE_MIN_ENTRY_SIZE_BYTES", "0")
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import evaluator_net as EV
 import frozen_circuit as FC, jax, jax.numpy as jnp
@@ -105,6 +109,10 @@ def _child_retry(stage, prog, mem, wall):
     if "error" in r and any(x in str(r["error"]) for x in ("child failed", "memory", "wall timeout")):
         r2, pk2 = _child(stage, prog, mem, wall); r2["retried"] = 1; return r2, max(pk, pk2)
     return r, pk
+def s1_margin():
+    """live-tunable stage-1 cut margin (file runs/net16r/s1_margin overrides env). Calibrated 2026-10-22 on 46 stage-2 programs: 0.20."""
+    try: return float(open(os.path.join(RUN, "s1_margin")).read().strip())
+    except Exception: return S1_MARGIN
 def _state():
     try: return json.load(open(S1_STATE))
     except Exception: return {"best": None, "n": 0, "cut": 0}
@@ -139,10 +147,11 @@ def evaluate(program_path):
     import fcntl; os.makedirs(os.path.dirname(S1_STATE), exist_ok=True); lk = open(S1_STATE + ".lock", "w"); fcntl.flock(lk, fcntl.LOCK_EX)
     st = _state(); best = st.get("best"); st["n"] = st.get("n", 0) + 1
     flat = {k: v for k, v in r1.items() if k != "worst"}; flat["s1_best_before"] = best if best is not None else -99.0
-    if best is not None and r1["s1"] < best - S1_MARGIN:
+    M = s1_margin(); flat["s1_margin"] = M
+    if best is not None and r1["s1"] < best - M:
         st["cut"] = st.get("cut", 0) + 1; _save_state(st); lk.close()
         m = dict(flat, combined_score=-12.0 + 0.1 * max(r1["s1"], -30.0), stage=1, cut_at_stage1=1, peak_rss_mb=pk1, eval_s=time.time() - t0)
-        return EvaluationResult(metrics=m, artifacts={"diagnostics": diag_text(r1) + f"\nCUT AT STAGE 1: s1 {r1['s1']:.3f} < best {best:.3f} - {S1_MARGIN}"})
+        return EvaluationResult(metrics=m, artifacts={"diagnostics": diag_text(r1) + f"\nCUT AT STAGE 1: s1 {r1['s1']:.3f} < best {best:.3f} - {M}"})
     if best is None or r1["s1"] > best: st["best"] = r1["s1"]
     _save_state(st); lk.close()
     r2, pk2 = _child_retry("s2", program_path, mem, EV.BUDGET * 2 + 400)
@@ -153,6 +162,5 @@ if __name__ == "__main__" and len(sys.argv) > 1 and sys.argv[1] == "--inner":
     _clk = _FreezeClock(); EV.time = _clk   # freeze-aware evaluator clock (see _FreezeClock); EV's file itself is unchanged
     _r = _stage1_inner(prog) if stage == "s1" else EV._evaluate_inner(prog); _r["frozen_s"] = float(_clk.frozen)
     json.dump(_r, open(out, "w")); sys.exit(0)
-    json.dump(_stage1_inner(prog) if stage == "s1" else EV._evaluate_inner(prog), open(out, "w")); sys.exit(0)
 if __name__ == "__main__":
     r = evaluate(sys.argv[1]); print(json.dumps({"metrics": r.metrics, "artifacts": r.artifacts}, indent=1, default=str))
