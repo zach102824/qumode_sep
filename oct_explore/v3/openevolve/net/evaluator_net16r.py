@@ -14,6 +14,25 @@ import frozen_circuit as FC, jax, jax.numpy as jnp
 RUN = os.environ.get("OE_RUN_DIR", os.path.join(HERE, "..", "runs", "net16r"))
 S1_BUDGET = float(os.environ.get("OE_S1_BUDGET", "60")); S1_MARGIN = float(os.environ.get("OE_S1_MARGIN", "0.35"))
 S1_STATE = os.environ.get("OE_S1_STATE", os.path.join(RUN, "s1_state.json"))
+class _FreezeClock:
+    """Training-clock shim for the evaluator's OWN timing only (train_s / over-budget check). A daemon thread ticks every 0.5 s;
+    any wall gap > 5 s between ticks means the whole box was paused/frozen (seen 2026-10-22: 15-25 min host stalls freeze every
+    process at once), so that gap is not training. The candidate's own clock (its budget loop) is untouched, budget unchanged."""
+    def __init__(self):
+        import threading
+        self.frozen = 0.0; self._last = time.time(); self._lk = threading.Lock()
+        threading.Thread(target=self._run, daemon=True).start()
+    def _run(self):
+        while True:
+            time.sleep(0.5); now = time.time()
+            with self._lk:
+                g = now - self._last
+                if g > 5.0: self.frozen += g - 0.5
+                self._last = now
+    def time(self):
+        with self._lk: return time.time() - self.frozen
+    def __getattr__(self, k): return getattr(time, k)
+_clk = time
 def screen_base():
     try: return float(json.load(open(os.path.join(RUN, "screen.json")))["base"])
     except Exception: return float(os.environ.get("OE_SCREEN_BASE", "34e9"))
@@ -51,7 +70,7 @@ def _stage1_inner(prog):
     sets = {n: EV.get_set(n, EV.NTR[n], FC.TRB, EV.R) for n in EV.TRAIN_N}
     spec = importlib.util.spec_from_file_location("cand", prog); mod = importlib.util.module_from_spec(spec)
     try:
-        spec.loader.exec_module(mod); tt = time.time(); predict = mod.train(EV.API(sets), S1_BUDGET); ttr = time.time() - tt
+        spec.loader.exec_module(mod); tt = _clk.time(); predict = mod.train(EV.API(sets), S1_BUDGET); ttr = _clk.time() - tt
         if ttr > S1_BUDGET * 2.0: return {"combined_score": -20.0, "error": f"stage-1 train over budget {ttr:.0f}s"}
         D12 = EV.get_set(12, 30, screen_base(), EV.R); Pc, Pg, o = p_both(predict, D12)
         D8 = EV.get_set(8, EV.NTR[8], FC.TRB, EV.R); D8 = {**D8, **{k: D8[k][:30] for k in ("V", "SG", "PERM", "S", "seed")}, "sol": D8["sol"][:30]}
@@ -131,6 +150,9 @@ def evaluate(program_path):
     return EvaluationResult(metrics=m, artifacts={"diagnostics": diag_text(r1, r2)})
 if __name__ == "__main__" and len(sys.argv) > 1 and sys.argv[1] == "--inner":
     stage, prog, out = sys.argv[2:5]
+    _clk = _FreezeClock(); EV.time = _clk   # freeze-aware evaluator clock (see _FreezeClock); EV's file itself is unchanged
+    _r = _stage1_inner(prog) if stage == "s1" else EV._evaluate_inner(prog); _r["frozen_s"] = float(_clk.frozen)
+    json.dump(_r, open(out, "w")); sys.exit(0)
     json.dump(_stage1_inner(prog) if stage == "s1" else EV._evaluate_inner(prog), open(out, "w")); sys.exit(0)
 if __name__ == "__main__":
     r = evaluate(sys.argv[1]); print(json.dumps({"metrics": r.metrics, "artifacts": r.artifacts}, indent=1, default=str))

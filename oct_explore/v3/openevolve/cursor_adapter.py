@@ -25,6 +25,11 @@ def render(msgs):
 async def run_agent(prompt, model):
     d = tempfile.mkdtemp(prefix="ca_")   # empty sandbox cwd: agent sees no repo files
     try:
+        if len(prompt.encode()) > 100000:   # Linux MAX_ARG_STRLEN=128KB per argv: spill long prompts to a file
+            open(os.path.join(d, "PROMPT.md"), "w").write(prompt)
+            prompt = ("The full task is in the file PROMPT.md in the current directory (too long to pass inline). "
+                      "Read PROMPT.md completely (it is the only file you may read; read it in chunks if needed), then follow its final INSTRUCTION: "
+                      "answer it directly as plain text in your reply. Do not edit files or run commands.")
         p = await asyncio.create_subprocess_exec(BIN, "-p", "--trust", "--model", model, "--output-format", "text", prompt,
                                                  cwd=d, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE, env=os.environ.copy())
         o, e = await asyncio.wait_for(p.communicate(), A.timeout)
@@ -32,6 +37,17 @@ async def run_agent(prompt, model):
         return o.decode()
     finally: shutil.rmtree(d, ignore_errors=True)
 
+_TRANSIENT = ("Model not available", "not supported in your region", "rate limit", "429", "500", "502", "503", "timeout", "ECONN", "network")
+async def run_agent_retry(prompt, model, tries=4, waits=(20, 60, 180)):
+    """idea-model calls: retry with backoff on transient failures (e.g. intermittent 'Model not available ... region' rc=1)."""
+    last = None
+    for k in range(tries):
+        try: return await run_agent(prompt, model)
+        except Exception as ex:
+            last = ex; msg = f"{type(ex).__name__}: {ex}"
+            print(f"[adapter] {model} attempt {k+1}/{tries} failed: {msg[-200:]}", flush=True)
+            if k < tries - 1: await asyncio.sleep(waits[min(k, len(waits) - 1)])
+    raise last
 def recent_ideas(k=8):
     try:
         L_ = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "ideas_raw.log")).read().strip().splitlines()[-k:]
@@ -185,7 +201,8 @@ async def new_families(k=2):
     q = ("### FRAMING\n" + FRAMING + "\n\n### RUN DATA\n" + run_summary() + "\n\n### TASK\nThe run has stalled. %d weakest islands will be reseeded from the "
          "best programs. For each, name a NEW native path family (may be new, a combination, or a refined one; not global-cost imitation; locked gates; "
          "no classical solving / full enumeration). Output exactly %d lines: '<short_name> - <one-line mechanism>'. No tools." % (k, k))
-    out = await run_agent(q, A.idea_model); L_ = []
+    q = q[-12000:] if len(q) > 12000 else q
+    out = await run_agent_retry(q, A.idea_model); L_ = []
     for l in out.splitlines():
         m = re.match(r"\s*[-*\d.)]*\s*([A-Za-z][\w-]{1,30})\s*[-:]\s*(.+)", l)
         if m: L_.append({"name": m.group(1).replace("-", "_"), "desc": m.group(2).strip()[:300]})
@@ -200,7 +217,7 @@ async def ideas_batch(k=5):
     q = ("List %d DISTINCT, published, named techniques (not in this list: %s) that could help a network choose phases/angles for a FIXED "
          "QAOA-like circuit whose cost phase is a chain-projected (lossy) version of the global cost, to maximise ground-state probability. "
          "One per line, format '<name> - <one-line how to adapt>'. No tools." % (k, "; ".join(TECH)))
-    out = await run_agent(q, A.idea_model); L_ = [l.strip("-* ").strip() for l in out.splitlines() if l.strip()][:k]
+    out = await run_agent_retry(q, A.idea_model); L_ = [l.strip("-* ").strip() for l in out.splitlines() if l.strip()][:k]
     st = _st(); st["batch"] = L_; _sv(st); return L_
 @app.post("/v1/ideas_batch")
 async def ideas_batch_ep(): return {"techniques": await ideas_batch()}
@@ -218,13 +235,17 @@ async def chat(req: Request):
             if model == "net16r":
                 kind, extra, ip = net16r_plan(msgs)
                 if kind == "idea":
-                    idea = (await run_agent(ip, A.idea_model)).strip()[:4000]; t1 = time.time()
+                    try: idea = (await run_agent_retry(ip, A.idea_model, tries=3, waits=(15, 45))).strip()[:4000]
+                    except Exception as ex_:   # idea call failed after retries: re-queue the idea slot for the next step, code step now
+                        st_ = _st(); st_["calls"] -= 1; _sv(st_); idea = ""; print(f"[adapter] net16r idea failed, deferring to next step: {str(ex_)[-150:]}", flush=True)
+                    t1 = time.time()
                     print(f"[adapter] net16r idea {A.idea_model} {t1-t:.1f}s", flush=True)
                     try:
-                        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "ideas_raw.log"), "a") as f_:
+                        if idea:
+                          with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "ideas_raw.log"), "a") as f_:
                             f_.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')}\t{uuid.uuid4().hex[:8]}\t" + idea.replace("\n", " | ") + "\n")
                     except Exception: pass
-                    extra = "IMPLEMENT THIS IDEA (from a senior reviewer) in your answer, following the exact output format requested above:\n" + idea + "\n\n" + compute_block(_txt(msgs))
+                    extra = ("IMPLEMENT THIS IDEA (from a senior reviewer) in your answer, following the exact output format requested above:\n" + idea + "\n\n" + compute_block(_txt(msgs))) if idea else (compute_block(_txt(msgs)) + "FRAMING: " + FRAMING)
                 full = render(msgs + [{"role": "user", "content": extra}]); txt = await run_agent(full, A.code_model)
                 def _ok(t_):
                     a_, b_, c_ = (len(re.findall(r"^<<<<<<< SEARCH\s*$", t_, re.M)), len(re.findall(r"^=======\s*$", t_, re.M)), len(re.findall(r"^>>>>>>> REPLACE\s*$", t_, re.M)))

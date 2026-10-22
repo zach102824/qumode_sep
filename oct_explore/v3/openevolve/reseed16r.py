@@ -11,6 +11,12 @@ best_of = [max([sc(db.programs[i]) for i in isl if i in db.programs] or [-99]) f
 weak = sorted(range(len(db.islands)), key=lambda i: best_of[i])[:2]
 top = sorted(db.programs.values(), key=sc, reverse=True)[:2]
 import json, os
+OUTD = os.path.dirname(os.path.dirname(ck.rstrip("/"))); FJ = os.path.join(OUTD, "opus_families.json"); PJ = os.path.join(OUTD, "reseed.pending")
+if os.path.exists(PJ) and (not os.path.exists(FJ) or os.path.getmtime(FJ) < os.path.getmtime(PJ)):   # stale families: ask Opus now (adapter retries)
+    import urllib.request, time as _t
+    for k in range(3):
+        try: print("fresh Opus families:", urllib.request.urlopen(urllib.request.Request("http://127.0.0.1:8765/v1/new_families", method="POST"), timeout=1200).read().decode()[:600]); break
+        except Exception as e: print("new_families attempt", k + 1, "failed:", e); _t.sleep(120)
 try: newf = json.load(open(os.path.join(os.path.dirname(os.path.dirname(ck.rstrip("/"))), "opus_families.json")))
 except Exception: newf = []
 for wi, i in enumerate(weak):
