@@ -28,6 +28,7 @@
 | `p2_gray_L15_ntr500` | `shared` | 15 | `500,200` | **1.29 / 3.07** (★T) | **1.82 / 8.18** (✓L) | **2.58 / 13.62** (✓L) | **3.82 / 14.39** (✓L) | **`1.0946^n / 1.1373^n`** | `1791` / `350234` | 1.44% |
 | `p2_gray_L15` | `shared` | 15 | `2000,500` | **1.29 / 3.08** (★T) | **1.83 / 8.25** (✓L) | **2.60 / 13.73** (✓L) | **3.87 / 14.52** (✓L) | **`1.0955^n / 1.1376^n`** | `1791` / `351532` | 1.44% |
 | `p2_gray_L15_ntr5000` | `shared` | 15 | `5000,1000` | **1.29 / 3.08** (★T) | **1.83 / 8.31** (✓L) | **2.58 / 13.65** (✓L) | **3.84 / 14.54** (✓L) | **`1.0946^n / 1.1375^n`** | `1794` / `347289` | 1.44% |
+| `p2_gray_L15_ntr10000` | `shared` | 15 | `10000,1000` | **1.29 / 3.08** (★T) | **1.83 / 8.27** (✓L) | **2.58 / 13.67** (✓L) | **3.85 / 14.53** (✓L) | **`1.0947^n / 1.1376^n`** | `1794` / `347169` | 1.44% |
 
 ## 1A-ii. Ideal Cavity Gray Mixer `U_gray(β_{c,l})` + Per-Cavity `0..15` SNAP Phases + Factor-Graph GNN
 
@@ -66,7 +67,7 @@
 
 ## 2. Direct Physical `SNAP+D` Factor-Graph GNN Scaling (`relabel = none`, Trained on `n = 8, 12` -> Zero-Shot `n = 16, 20`)
 
-> **Median & B90 vs `p2_shared_L15_k3`:** While `k = 2` GNNs (`L=12, 15`) beat `p2_shared_L15_k3` on medians at all `n` (`62.45` at `n=20`, **1.2573ⁿ**) while trailing on B90 at `n = 12, 16, 20`, stepping up to **`L = 15, k = 3`** (`p2_gnn_L15_k3_mp128_cw` and `p2_gnn_L15_k3_mp64_cw`) fixes the tail completely: both `L = 15, k = 3` GNNs **dual-beat `p2_shared_L15_k3` (and `ntr10000`) on BOTH Median and B90 at every `n = 8, 12, 16, 20`** (`p2_gnn_L15_k3_mp64_cw`: **3.42/9.73, 8.00/34.98, 20.33/92.82, 43.91/181.65**, growth **1.2395ⁿ / 1.2762ⁿ**, leak `8.00%` at `n=20`), and **both achieve dual WalkSATlm lookup beats (✓L) across all `n = 8, 12, 16, 20`**.
+> **Median & B90 vs `p2_shared_L15_k3`:** While `k = 2` GNNs (`L=12, 15`) beat `p2_shared_L15_k3` on medians at all `n` (`62.45` at `n=20`, **1.2573ⁿ**) while trailing on B90 at `n = 12, 16, 20`, stepping up to **`L = 15, k = 3`** (`p2_gnn_L15_k3_mp64_nocw`, `p2_gnn_L15_k3_mp64_cw`, and `p2_gnn_L15_k3_mp128_cw`) fixes the tail completely: all three `L = 15, k = 3` GNNs **dual-beat `p2_shared_L15_k3` (and `ntr10000`) on BOTH Median and B90 at every `n = 8, 12, 16, 20`** (`p2_gnn_L15_k3_mp64_nocw` without `clause_w`: **3.17/10.86, 7.40/38.29, 18.60/124.33, 42.88/185.02**, growth **1.2441ⁿ / 1.2739ⁿ**, leak `7.57%`; `p2_gnn_L15_k3_mp64_cw`: **3.42/9.73, 8.00/34.98, 20.33/92.82, 43.91/181.65**, growth **1.2395ⁿ / 1.2762ⁿ**, leak `8.00%`), and **all three achieve dual WalkSATlm lookup beats (✓L) across all `n = 8, 12, 16, 20`**.
 
 | Tag | `L` | `k` | Arch (`H`) | `clause_w` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
