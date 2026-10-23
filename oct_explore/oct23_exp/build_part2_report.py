@@ -52,20 +52,38 @@ def fmt_cell(m, n):
         return f"**{s}**"
     return s
 
-if gray_shared or gray_gnn:
-    lines.append("## 1A. Stage-1 Ideal Cavity Gray Mixer `U_gray(β)` + Global Cost Only (`2L` params `(β_l, γ_l)`; no free SNAP θ)")
+if gray_shared:
+    lines.append("## 1A-i. Stage-1 Ideal Cavity Gray Mixer `U_gray(β_l)` + Global Cost Only (`2L` shared params `(β_l, γ_l)`; no free SNAP θ)")
     lines.append("")
-    lines.append("> **Stage-1 only (for `shared` rows):** exact `U_gray(β_l)` + cost phase `γ_l` in the computational subspace (`2L` schedule parameters). This is **not** physical per-cavity `0..15` SNAP synthesis — that is Stage-2 / §1B. (For `gnn` rows below, the GNN modulates `U_gray(β_{c,l})` and per-cavity `0..15` SNAP phases.) ★T = dual-beats WalkSATlm tries (Med **and** B90); ✓L = dual-beats WalkSATlm lookups. `p2_gray_L15` at `n=20` is **not** ★T (`B90 = 14.52 ≰ 14.2`).")
+    lines.append("> **Stage-1 shared (`2L` parameters):** exact computational-subspace `U_gray(β_l)` + cost phase `γ_l` with **no** free per-layer SNAP phases (`θ = 0`). State preparation uses `k_prep = 2` physical `0..15` `SNAP+D` blocks (`n=20` state-prep leakage `1 - (1 - 0.002887)^5 = 1.44%`). ★T = dual-beats WalkSATlm tries (Med **and** B90); ✓L = dual-beats WalkSATlm lookups. `p2_gray_L15` at `n=20` is **not** ★T (`B90 = 14.52 ≰ 14.2`).")
     lines.append("")
-    lines.append("| Tag | Mode | Arch / Init | `L` | `N_tr(8,12)` | `cw` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | Zero-Oracle `n=12 / n=20` |")
-    lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
-    for r in gray_shared + gray_gnn:
+    lines.append("| Tag | Mode | `L` | `N_tr(8,12)` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | Zero-Oracle `n=12 / n=20` | `n=20` Leak% |")
+    lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
+    for r in gray_shared:
         a = r["args"]; te = r["test"]; sc = r["scaling"]
-        arch = "Shared-2L" if a.get("mode") == "shared" else f"{a.get('arch', 'mp')} (H={a.get('H',64)})"
+        ntr = f"{a.get('ntrain8',2000)},{a.get('ntrain12',500)}"
+        z_str = f"`{te['12']['zero_oracle_med']:.0f}` / `{te['20']['zero_oracle_med']:.0f}`"
+        lk20 = f"{te['20']['mean_leak']*100:.2f}%"
+        lines.append(f"| `{a['tag']}` | `shared` | {a['L']} | `{ntr}` | {fmt_cell(te['8'],8)} | {fmt_cell(te['12'],12)} | {fmt_cell(te['16'],16)} | {fmt_cell(te['20'],20)} | **`{sc['b_median']:.4f}^n / {sc['b_B90']:.4f}^n`** | {z_str} | {lk20} |")
+    lines.append("")
+
+if gray_gnn:
+    lines.append("## 1A-ii. Ideal Cavity Gray Mixer `U_gray(β_{c,l})` + Per-Cavity `0..15` SNAP Phases + Factor-Graph GNN")
+    lines.append("")
+    lines.append("> **Gray + `0..15` SNAP + GNN (`relabel = none`):** per cavity `c` and layer `l`, the GNN outputs `β_{c,l}` and **two** computational-subspace `0..15` diagonal SNAP gates (`Vp = exp(-i sout_{c,l}) · U_gray(β_{c,l}) · exp(-i θ_{c,l})`), plus optional per-clause cost weights `w_b` (`clause_w`). State prep uses the same `k_prep = 2` physical `0..15` `SNAP+D` blocks (`n=20` leak `1.44%`).")
+    lines.append(">")
+    lines.append("> **Finite-size ★T vs asymptotic B90 slope (verified by `@qumode_checker`):** `p2_gnn_gray_L15_mp64_cw` achieves ★T dual-beat vs WalkSATlm tries at every tested size `n = 8, 12, 16, 20` (**1.32/2.27, 1.90/4.10, 2.76/7.88, 3.95/12.18** vs **2.01/3.74, 2.92/6.28, 4.55/9.09, 5.63/14.2**), with median growth **1.0957ⁿ** matching WalkSATlm tries (**1.092ⁿ**). However, its B90 growth is **1.1530ⁿ** vs WalkSATlm tries B90 **1.116ⁿ** (and bare `p2_gray_L15` **1.1376ⁿ**): the GNN wins `n ≤ 20` via a ~36% lower B90 prefactor (`C_B90 = 0.72` vs `1.12`), not a flatter B90 exponent (extrapolating the fit crosses WalkSATlm tries B90 just above `n ≈ 24`).")
+    lines.append("")
+    lines.append("| Tag | Arch (`H`) | `L` | `N_tr(8,12)` | `cw` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | Zero-Oracle `n=12 / n=20` | `n=20` Leak% |")
+    lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
+    for r in gray_gnn:
+        a = r["args"]; te = r["test"]; sc = r["scaling"]
+        arch = f"{a.get('arch', 'mp')} (H={a.get('H',64)}, r={a.get('rounds',3)})"
         ntr = f"{a.get('ntrain8',2000)},{a.get('ntrain12',500)}"
         cw = "yes" if a.get("clause_w") else "no"
         z_str = f"`{te['12']['zero_oracle_med']:.0f}` / `{te['20']['zero_oracle_med']:.0f}`"
-        lines.append(f"| `{a['tag']}` | `{a.get('mode')}` | `{arch}` | {a['L']} | `{ntr}` | {cw} | {fmt_cell(te['8'],8)} | {fmt_cell(te['12'],12)} | {fmt_cell(te['16'],16)} | {fmt_cell(te['20'],20)} | **`{sc['b_median']:.4f}^n / {sc['b_B90']:.4f}^n`** | {z_str} |")
+        lk20 = f"{te['20']['mean_leak']*100:.2f}%"
+        lines.append(f"| `{a['tag']}` | `{arch}` | {a['L']} | `{ntr}` | {cw} | {fmt_cell(te['8'],8)} | {fmt_cell(te['12'],12)} | {fmt_cell(te['16'],16)} | {fmt_cell(te['20'],20)} | **`{sc['b_median']:.4f}^n / {sc['b_B90']:.4f}^n`** | {z_str} | {lk20} |")
     lines.append("")
 
 lines.append("## 1B. Direct Physical `k = 1, 2, 3` `SNAP+D` Blocks per Layer — Shared Parameters (L-BFGS-B on `n = 8 + 12`)")
@@ -80,9 +98,9 @@ for r in sd_shared:
     lines.append(f"| `{a['tag']}` | {L} | {k} | {blk} | `{ntr}` | {fmt_cell(te['8'],8)} | {fmt_cell(te['12'],12)} | {fmt_cell(te['16'],16)} | {fmt_cell(te['20'],20)} | **`{sc['b_median']:.4f}^n / {sc['b_B90']:.4f}^n`** | `{z12}` | {lk20} |")
 lines.append("")
 
-lines.append("## 2. Pure Factor-Graph GNN Scaling (`relabel = none`, Trained on `n = 8, 12` -> Zero-Shot `n = 16, 20`)")
+lines.append("## 2. Direct Physical `SNAP+D` Factor-Graph GNN Scaling (`relabel = none`, Trained on `n = 8, 12` -> Zero-Shot `n = 16, 20`)")
 lines.append("")
-lines.append("> **Median vs B90 vs `p2_shared_L15_k3` (verified by `@qumode_checker`):** `p2_gnn_L12_k2_mp128_cw` beats `p2_shared_L15_k3` on **medians** at every `n` (3.97, 11.31, 31.59, 69.85 vs 5.63, 16.43, 40.39, 112.56; median growth **1.272ⁿ** vs **1.280ⁿ**) and beats WalkSATlm **median** lookups through `n=20` (69.85 < 110), **but** loses to `shared_L15_k3` on **B90 at every `n`** (14.43, 53.15, 223.14, 420.19 vs 13.29, 48.39, 127.98, 345.85; B90 growth **1.335ⁿ** vs **1.308ⁿ**) and drops dual-lookup ✓L at `n=16` (223 > 147, while `shared_L15_k3` holds 128 < 147). Watch whether `L=15` GNN fixes the tail blow-up.")
+lines.append("> **Median vs B90 vs `p2_shared_L15_k3` (verified by `@qumode_checker`):** `p2_gnn_L12_k2_mp128_cw` and `p2_gnn_L15_k2_mp128_cw` beat `p2_shared_L15_k3` on **medians** at every `n` (`L=15, k=2` reaches **4.19, 10.58, 30.34, 62.45** with median growth **1.2573ⁿ**, vs `shared_L15_k3` **5.63, 16.43, 40.39, 112.56** / **1.2803ⁿ**) and beat WalkSATlm **median** lookups through `n=20` (`62.45 < 110`). On **B90**, `p2_gnn_L15_k2_mp128_cw` beats `shared_L15_k3` at `n=8` (`11.62 < 13.29`), **but** both `k=2` GNNs still trail `shared_L15_k3` on B90 at `n = 12, 16, 20` (`55.08, 177.24, 422.58` vs `48.39, 127.98, 345.85`; B90 growth **1.3481ⁿ** vs **1.3083ⁿ**) and drop dual-lookup ✓L at `n=16` (`177.24 > 147`, whereas `shared_L15_k3` holds `127.98 < 147`).")
 lines.append("")
 lines.append("| Tag | `L` | `k` | Arch (`H`) | `clause_w` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |")
 lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")

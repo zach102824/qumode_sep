@@ -14,21 +14,31 @@
 | **WalkSATlm Clause Lookups** (`p = 0.30`, 500 runs/inst) | `13.99 / 29.40` | `32.5 / 76.1` | `71.0 / 147` | `110 / 290` | **`1.191^n / 1.207^n`** |
 | **Uniform Random Guessing (`2^n` / Solutions)** | `42.67 / 128.00` | `585.14 / 2048.00` | `9362.29 / 32768.00` | `149796.6 / 524288.0` | **`1.970^n / 2.000^n`** |
 
-## 1A. Stage-1 Ideal Cavity Gray Mixer `U_gray(β)` + Global Cost Only (`2L` params `(β_l, γ_l)`; no free SNAP θ)
+## 1A-i. Stage-1 Ideal Cavity Gray Mixer `U_gray(β_l)` + Global Cost Only (`2L` shared params `(β_l, γ_l)`; no free SNAP θ)
 
-> **Stage-1 only (for `shared` rows):** exact `U_gray(β_l)` + cost phase `γ_l` in the computational subspace (`2L` schedule parameters). This is **not** physical per-cavity `0..15` SNAP synthesis — that is Stage-2 / §1B. (For `gnn` rows below, the GNN modulates `U_gray(β_{c,l})` and per-cavity `0..15` SNAP phases.) ★T = dual-beats WalkSATlm tries (Med **and** B90); ✓L = dual-beats WalkSATlm lookups. `p2_gray_L15` at `n=20` is **not** ★T (`B90 = 14.52 ≰ 14.2`).
+> **Stage-1 shared (`2L` parameters):** exact computational-subspace `U_gray(β_l)` + cost phase `γ_l` with **no** free per-layer SNAP phases (`θ = 0`). State preparation uses `k_prep = 2` physical `0..15` `SNAP+D` blocks (`n=20` state-prep leakage `1 - (1 - 0.002887)^5 = 1.44%`). ★T = dual-beats WalkSATlm tries (Med **and** B90); ✓L = dual-beats WalkSATlm lookups. `p2_gray_L15` at `n=20` is **not** ★T (`B90 = 14.52 ≰ 14.2`).
 
-| Tag | Mode | Arch / Init | `L` | `N_tr(8,12)` | `cw` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | Zero-Oracle `n=12 / n=20` |
+| Tag | Mode | `L` | `N_tr(8,12)` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | Zero-Oracle `n=12 / n=20` | `n=20` Leak% |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| `p2_gray_L4` | `shared` | 4 | `2000,500` | **4.60 / 9.59** (✓L) | **9.89 / 32.42** (✓L) | **25.87 / 85.59** (✓L) | **56.94 / 208.55** (✓L) | **`1.2370^n / 1.2907^n`** | `1822` / `346864` | 1.44% |
+| `p2_gray_L6` | `shared` | 6 | `2000,500` | **3.11 / 7.72** (✓L) | **5.57 / 20.02** (✓L) | **12.05 / 51.68** (✓L) | **22.76 / 120.70** (✓L) | **`1.1835^n / 1.2585^n`** | `1826` / `327164` | 1.44% |
+| `p2_gray_L8` | `shared` | 8 | `2000,500` | **2.19 / 6.35** (✓L) | **3.42 / 14.44** (✓L) | **6.46 / 32.25** (✓L) | **12.28 / 53.36** (✓L) | **`1.1564^n / 1.1969^n`** | `2016` / `312150` | 1.44% |
+| `p2_gray_L10` | `shared` | 10 | `2000,500` | **1.77 / 4.54** (✓L) | **2.63 / 17.02** (✓L) | **4.11 / 29.43** (✓L) | **8.07 / 33.41** (✓L) | **`1.1331^n / 1.1774^n`** | `1834` / `345337` | 1.44% |
+| `p2_gray_L12` | `shared` | 12 | `2000,500` | **1.50 / 3.92** (✓L) | **2.24 / 11.66** (✓L) | **3.16 / 20.20** (✓L) | **5.92 / 22.91** (✓L) | **`1.1180^n / 1.1575^n`** | `2018` / `311066` | 1.44% |
+| `p2_gray_L15_ntr500` | `shared` | 15 | `500,200` | **1.29 / 3.07** (★T) | **1.82 / 8.18** (✓L) | **2.58 / 13.62** (✓L) | **3.82 / 14.39** (✓L) | **`1.0946^n / 1.1373^n`** | `1791` / `350234` | 1.44% |
+| `p2_gray_L15` | `shared` | 15 | `2000,500` | **1.29 / 3.08** (★T) | **1.83 / 8.25** (✓L) | **2.60 / 13.73** (✓L) | **3.87 / 14.52** (✓L) | **`1.0955^n / 1.1376^n`** | `1791` / `351532` | 1.44% |
+
+## 1A-ii. Ideal Cavity Gray Mixer `U_gray(β_{c,l})` + Per-Cavity `0..15` SNAP Phases + Factor-Graph GNN
+
+> **Gray + `0..15` SNAP + GNN (`relabel = none`):** per cavity `c` and layer `l`, the GNN outputs `β_{c,l}` and **two** computational-subspace `0..15` diagonal SNAP gates (`Vp = exp(-i sout_{c,l}) · U_gray(β_{c,l}) · exp(-i θ_{c,l})`), plus optional per-clause cost weights `w_b` (`clause_w`). State prep uses the same `k_prep = 2` physical `0..15` `SNAP+D` blocks (`n=20` leak `1.44%`).
+>
+> **Finite-size ★T vs asymptotic B90 slope (verified by `@qumode_checker`):** `p2_gnn_gray_L15_mp64_cw` achieves ★T dual-beat vs WalkSATlm tries at every tested size `n = 8, 12, 16, 20` (**1.32/2.27, 1.90/4.10, 2.76/7.88, 3.95/12.18** vs **2.01/3.74, 2.92/6.28, 4.55/9.09, 5.63/14.2**), with median growth **1.0957ⁿ** matching WalkSATlm tries (**1.092ⁿ**). However, its B90 growth is **1.1530ⁿ** vs WalkSATlm tries B90 **1.116ⁿ** (and bare `p2_gray_L15` **1.1376ⁿ**): the GNN wins `n ≤ 20` via a ~36% lower B90 prefactor (`C_B90 = 0.72` vs `1.12`), not a flatter B90 exponent (extrapolating the fit crosses WalkSATlm tries B90 just above `n ≈ 24`).
+
+| Tag | Arch (`H`) | `L` | `N_tr(8,12)` | `cw` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | Zero-Oracle `n=12 / n=20` | `n=20` Leak% |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| `p2_gray_L4` | `shared` | `Shared-2L` | 4 | `2000,500` | no | **4.60 / 9.59** (✓L) | **9.89 / 32.42** (✓L) | **25.87 / 85.59** (✓L) | **56.94 / 208.55** (✓L) | **`1.2370^n / 1.2907^n`** | `1822` / `346864` |
-| `p2_gray_L6` | `shared` | `Shared-2L` | 6 | `2000,500` | no | **3.11 / 7.72** (✓L) | **5.57 / 20.02** (✓L) | **12.05 / 51.68** (✓L) | **22.76 / 120.70** (✓L) | **`1.1835^n / 1.2585^n`** | `1826` / `327164` |
-| `p2_gray_L8` | `shared` | `Shared-2L` | 8 | `2000,500` | no | **2.19 / 6.35** (✓L) | **3.42 / 14.44** (✓L) | **6.46 / 32.25** (✓L) | **12.28 / 53.36** (✓L) | **`1.1564^n / 1.1969^n`** | `2016` / `312150` |
-| `p2_gray_L10` | `shared` | `Shared-2L` | 10 | `2000,500` | no | **1.77 / 4.54** (✓L) | **2.63 / 17.02** (✓L) | **4.11 / 29.43** (✓L) | **8.07 / 33.41** (✓L) | **`1.1331^n / 1.1774^n`** | `1834` / `345337` |
-| `p2_gray_L12` | `shared` | `Shared-2L` | 12 | `2000,500` | no | **1.50 / 3.92** (✓L) | **2.24 / 11.66** (✓L) | **3.16 / 20.20** (✓L) | **5.92 / 22.91** (✓L) | **`1.1180^n / 1.1575^n`** | `2018` / `311066` |
-| `p2_gray_L15_ntr500` | `shared` | `Shared-2L` | 15 | `500,200` | no | **1.29 / 3.07** (★T) | **1.82 / 8.18** (✓L) | **2.58 / 13.62** (✓L) | **3.82 / 14.39** (✓L) | **`1.0946^n / 1.1373^n`** | `1791` / `350234` |
-| `p2_gray_L15` | `shared` | `Shared-2L` | 15 | `2000,500` | no | **1.29 / 3.08** (★T) | **1.83 / 8.25** (✓L) | **2.60 / 13.73** (✓L) | **3.87 / 14.52** (✓L) | **`1.0955^n / 1.1376^n`** | `1791` / `351532` |
-| `p2_gnn_gray_L12_mp64_cw` | `gnn` | `mp (H=64)` | 12 | `2000,500` | yes | **1.44 / 2.84** (★T) | **2.21 / 4.55** (★T) | **3.21 / 10.07** (✓L) | **4.79 / 19.08** (✓L) | **`1.1043^n / 1.1768^n`** | `587` / `42808` |
-| `p2_gnn_gray_L15_mp64_cw` | `gnn` | `mp (H=64)` | 15 | `2000,500` | yes | **1.32 / 2.27** (★T) | **1.90 / 4.10** (★T) | **2.76 / 7.88** (★T) | **3.95 / 12.18** (★T) | **`1.0957^n / 1.1530^n`** | `1066` / `118489` |
+| `p2_gnn_gray_L12_mp64_nocw` | `mp (H=64, r=3)` | 12 | `2000,500` | no | **1.55 / 3.00** (★T) | **2.33 / 4.89** (★T) | **3.65 / 11.74** (✓L) | **5.48 / 19.65** (✓L) | **`1.1120^n / 1.1769^n`** | `925` / `92260` | 1.44% |
+| `p2_gnn_gray_L12_mp64_cw` | `mp (H=64, r=3)` | 12 | `2000,500` | yes | **1.44 / 2.84** (★T) | **2.21 / 4.55** (★T) | **3.21 / 10.07** (✓L) | **4.79 / 19.08** (✓L) | **`1.1043^n / 1.1768^n`** | `587` / `42808` | 1.44% |
+| `p2_gnn_gray_L15_mp64_cw` | `mp (H=64, r=3)` | 15 | `2000,500` | yes | **1.32 / 2.27** (★T) | **1.90 / 4.10** (★T) | **2.76 / 7.88** (★T) | **3.95 / 12.18** (★T) | **`1.0957^n / 1.1530^n`** | `1066` / `118489` | 1.44% |
 
 ## 1B. Direct Physical `k = 1, 2, 3` `SNAP+D` Blocks per Layer — Shared Parameters (L-BFGS-B on `n = 8 + 12`)
 | Tag | `L` | `k` (`SNAP+D`/layer) | Blocks/Cav (`k_p + L*k`) | `N_tr(8,12)` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |
@@ -46,9 +56,9 @@
 | `p2_shared_L15_k2` | 15 | 2 | 32 | `2000,500` | **7.16 / 17.62** (✓L) | **24.13 / 62.53** (✓L) | **64.56 / 231.25** | 220.68 / 675.62 | **`1.3255^n / 1.3582^n`** | `2244/57090` | 18.91% |
 | `p2_shared_L15_k3` | 15 | 3 | 48 | `2000,500` | **5.63 / 13.29** (✓L) | **16.43 / 48.39** (✓L) | **40.39 / 127.98** (✓L) | 112.56 / 345.85 | **`1.2803^n / 1.3083^n`** | `2786/65516` | 13.91% |
 
-## 2. Pure Factor-Graph GNN Scaling (`relabel = none`, Trained on `n = 8, 12` -> Zero-Shot `n = 16, 20`)
+## 2. Direct Physical `SNAP+D` Factor-Graph GNN Scaling (`relabel = none`, Trained on `n = 8, 12` -> Zero-Shot `n = 16, 20`)
 
-> **Median vs B90 vs `p2_shared_L15_k3` (verified by `@qumode_checker`):** `p2_gnn_L12_k2_mp128_cw` beats `p2_shared_L15_k3` on **medians** at every `n` (3.97, 11.31, 31.59, 69.85 vs 5.63, 16.43, 40.39, 112.56; median growth **1.272ⁿ** vs **1.280ⁿ**) and beats WalkSATlm **median** lookups through `n=20` (69.85 < 110), **but** loses to `shared_L15_k3` on **B90 at every `n`** (14.43, 53.15, 223.14, 420.19 vs 13.29, 48.39, 127.98, 345.85; B90 growth **1.335ⁿ** vs **1.308ⁿ**) and drops dual-lookup ✓L at `n=16` (223 > 147, while `shared_L15_k3` holds 128 < 147). Watch whether `L=15` GNN fixes the tail blow-up.
+> **Median vs B90 vs `p2_shared_L15_k3` (verified by `@qumode_checker`):** `p2_gnn_L12_k2_mp128_cw` and `p2_gnn_L15_k2_mp128_cw` beat `p2_shared_L15_k3` on **medians** at every `n` (`L=15, k=2` reaches **4.19, 10.58, 30.34, 62.45** with median growth **1.2573ⁿ**, vs `shared_L15_k3` **5.63, 16.43, 40.39, 112.56** / **1.2803ⁿ**) and beat WalkSATlm **median** lookups through `n=20` (`62.45 < 110`). On **B90**, `p2_gnn_L15_k2_mp128_cw` beats `shared_L15_k3` at `n=8` (`11.62 < 13.29`), **but** both `k=2` GNNs still trail `shared_L15_k3` on B90 at `n = 12, 16, 20` (`55.08, 177.24, 422.58` vs `48.39, 127.98, 345.85`; B90 growth **1.3481ⁿ** vs **1.3083ⁿ**) and drop dual-lookup ✓L at `n=16` (`177.24 > 147`, whereas `shared_L15_k3` holds `127.98 < 147`).
 
 | Tag | `L` | `k` | Arch (`H`) | `clause_w` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
