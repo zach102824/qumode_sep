@@ -1,6 +1,6 @@
 # Oct 23 Part 1: Two-Cavity Experimental Circuit (`n = 6` and `n = 8`, <= 5 Blocks Total)
 
-*Last updated: 2026-10-23 20:51:56 (UTC+8). All SNAP gates strictly restricted to computational Fock levels `0..D-1` (`0` phase on leaked levels `f >= D`); all Fock leakage (`f >= D` or ancilla in `|e>`) counted as failure and verified at `N_Fock = 40` (`n=6`) and `N_Fock = 56` (`n=8`).*
+*Last updated: 2026-10-23 21:26:51 (UTC+8). All SNAP gates strictly restricted to computational Fock levels `0..D-1` (`0` phase on leaked levels `f >= D`); all Fock leakage (`f >= D` or ancilla in `|e>`) counted as failure and verified at `N_Fock = 40` (`n=6`) and `N_Fock = 56` (`n=8`).*
 
 ## 1. Classical WalkSATlm Baselines on the 100 Unseen Test Formulas (`TEB = 52e9`)
 
@@ -28,18 +28,22 @@
 | Tag | `n` | Schedule | Gate | `N_train` | Relabel | Val Med / B90 | Test Med / B90 (`1/p`) | `NF_chk` Med / B90 | Mean Leak |
 |---|---|---|---|---|---|---|---|---|---|
 | `gnn5_n6_0p5x1_sdc_bpdec_pcap` | 6 | `0p5x1` (`sdc`) | `None` | 10000 | `bpdec` | 1.06 / 4.38 | **1.06 / 3.71** | 1.06 / 3.71 | 0.59% |
-| `gnn5_n6_1p4x1_none_pcap` | 6 | `1p4x1` (`csd`) | `None` | 10000 | `none` | 1.37 / 7.79 | **1.38 / 5.90** | 1.38 / 5.90 | 4.80% |
+| `gnn5_n6_0p5x1_sdc_prod` | 6 | `0p5x1` (`sdc`) | `None` | 10000 | `bpdec` | 1.04 / 4.14 | **1.04 / 2.72** (RR4: 2.00/3.63, best4: 1.04/1.21) | 1.04 / 2.72 | 0.42% |
+| `gnn5_n6_1p4x1_bpfeat_canonical` | 6 | `1p4x1` (`csd`) | `None` | 10000 | `bpfeat_canon` | 1.37 / 7.79 | **1.38 / 5.90** | 1.38 / 5.90 | 4.80% |
 | `gnn5_n6_2p3x1_bpdec_pcap` | 6 | `2p3x1` (`csd`) | `None` | 10000 | `bpdec` | 1.20 / 5.32 | **1.20 / 3.97** | 1.20 / 3.97 | 4.57% |
-| `gnn5_n6_none_cw` | 6 | `2p3x1` (`csd`) | `None` | 10000 | `none` | 2.28 / 12.40 | **2.00 / 11.09** | 2.00 / 11.09 | 8.91% |
+| `gnn5_n6_2p3x1_bpfeat_canonical` | 6 | `2p3x1` (`csd`) | `None` | 10000 | `bpfeat_canon` | 2.28 / 12.40 | **2.00 / 11.09** | 2.00 / 11.09 | 8.91% |
 | `n6_0p5x1_csd_bpdec` | 6 | `0p5x1` (`csd`) | `sd` | 10000 | `bpdec` | 1.92 / 16.61 | **1.91 / 7.32** | 1.91 / 7.32 | 2.49% |
 | `n6_0p5x1_csd_none` | 6 | `0p5x1` (`csd`) | `sd` | 10000 | `none` | 6.15 / 16.45 | **7.10 / 13.12** | 7.10 / 13.12 | 5.36% |
 | `n6_0p5x1_sdc_bpdec` | 6 | `0p5x1` (`sdc`) | `sd` | 10000 | `bpdec` | 2.01 / 16.17 | **2.01 / 7.57** | 2.01 / 7.57 | 2.86% |
+| `n6_0p5x1_sdc_mpw4` | 6 | `0p5x1` (`sdc`) | `sd` | 10000 | `mpw4` | 1.10 / 1.18 | **1.09 / 1.20** | 1.09 / 1.20 | 0.20% |
 | `n6_0p5x1_sdc_none` | 6 | `0p5x1` (`sdc`) | `sd` | 10000 | `none` | 6.17 / 16.24 | **7.07 / 13.13** | 7.07 / 13.13 | 5.46% |
 | `n6_1p2x2_csd_bpdec` | 6 | `1p2x2` (`csd`) | `sd` | 10000 | `bpdec` | 1.83 / 42.01 | **1.80 / 17.11** | 1.80 / 17.11 | 1.31% |
 | `n6_1p2x2_csd_none` | 6 | `1p2x2` (`csd`) | `sd` | 10000 | `none` | 8.03 / 18.26 | **8.15 / 17.83** | 8.15 / 17.83 | 5.62% |
 | `n6_1p4x1_bias` | 6 | `1p4x1` (`csd`) | `sd` | 10000 | `bias` | 6.26 / 15.31 | **7.23 / 15.75** | 7.23 / 15.75 | 6.74% |
 | `n6_1p4x1_biaspol` | 6 | `1p4x1` (`csd`) | `sd` | 10000 | `biaspol` | 5.26 / 14.38 | **5.98 / 14.40** | 5.98 / 14.40 | 6.11% |
 | `n6_1p4x1_bppol` | 6 | `1p4x1` (`csd`) | `sd` | 10000 | `bppol` | 2.16 / 10.69 | **2.19 / 9.01** | 2.19 / 9.01 | 3.32% |
+| `n6_1p4x1_ecd_bpdec` | 6 | `1p4x1` (`csd`) | `ecd` | 2000 | `bpdec` | 1.61 / 266.93 | **1.64 / 125.37** | 1.64 / 125.30 | 6.49% |
+| `n6_1p4x1_ecdt_bpdec` | 6 | `1p4x1` (`csd`) | `ecdt` | 2000 | `bpdec` | 1.97 / 27.86 | **2.00 / 13.94** | 2.00 / 13.94 | 1.63% |
 | `n6_1p4x1_msdec_sdir` | 6 | `1p4x1` (`csd`) | `sd` | 2000 | `bpdec` | 2.17 / 14.62 | **2.15 / 10.09** | 2.15 / 10.09 | 1.05% |
 | `n6_2p3x1_csd_bpdec` | 6 | `2p3x1` (`csd`) | `sd` | 10000 | `bpdec` | 1.93 / 29.36 | **1.92 / 13.26** | 1.92 / 13.26 | 4.49% |
 | `n6_2p3x1_csd_none` | 6 | `2p3x1` (`csd`) | `sd` | 10000 | `none` | 7.32 / 17.41 | **7.66 / 14.11** | 7.66 / 14.11 | 7.92% |
@@ -68,8 +72,14 @@
 | `smoke_n6_none_gnn_metrics` | 6 | `2p3x1` (`csd`) | `sd` | 2000 | `none` | 5.06 / 15.71 | **5.78 / 12.43** | 5.78 / 12.43 | 10.52% |
 | `smoke_n6_none_sdir` | 6 | `2p3x1` (`csd`) | `sd` | 2000 | `none` | 7.33 / 17.19 | **7.75 / 14.14** | 7.75 / 14.14 | 8.35% |
 | `smoke_n6_rr4` | 6 | `1p4x1` (`csd`) | `sd` | 500 | `rr4` | 5.06 / 7.76 | **5.50 / 8.02** (r0: 2.04/35.80, best4: 1.96/2.28) | 5.50 / 8.02 | 4.75% |
+| `gnn5_n8_0p5x1_sdc_bpdec_prod` | 8 | `0p5x1` (`sdc`) | `None` | 10000 | `bpdec` | 1.87 / 44.26 | **1.74 / 43.90** (RR4: 4.54/27.98, best4: 1.73/15.71) | 1.74 / 43.90 | 1.58% |
 | `gnn5_n8_1p4x1_bpdec_pcap` | 8 | `1p4x1` (`csd`) | `None` | 10000 | `bpdec` | 1.58 / 55.88 | **1.59 / 44.81** | 1.59 / 44.81 | 4.64% |
 | `gnn5_n8_2p3x1_bpdec_pcap` | 8 | `2p3x1` (`csd`) | `None` | 10000 | `bpdec` | 1.61 / 70.00 | **1.60 / 64.17** | 1.60 / 63.91 | 7.79% |
-| `gnn5_n8_2p3x1_none_pcap` | 8 | `2p3x1` (`csd`) | `None` | 10000 | `none` | 2.01 / 33.28 | **2.12 / 48.02** | 2.12 / 48.02 | 4.68% |
+| `gnn5_n8_2p3x1_bpfeat_canonical` | 8 | `2p3x1` (`csd`) | `None` | 10000 | `bpfeat_canon` | 2.01 / 33.28 | **2.12 / 48.02** | 2.12 / 48.02 | 4.68% |
+| `gnn5_n8_2p3x1_bpfeat_prod` | 8 | `2p3x1` (`csd`) | `None` | 10000 | `bpfeat_canon` | 4.80 / 33.66 | **5.64 / 46.16** | 5.64 / 46.16 | 3.74% |
 | `n8_0p5x1_sdc_msdec_sdir` | 8 | `0p5x1` (`sdc`) | `sd` | 2000 | `bpdec` | 2.50 / 182.02 | **2.51 / 178.55** | 2.51 / 178.55 | 1.74% |
 | `n8_1p4x1_msdec_sdir` | 8 | `1p4x1` (`csd`) | `sd` | 2000 | `bpdec` | 2.67 / 181.94 | **2.69 / 128.71** | 2.69 / 128.71 | 1.96% |
+| `n8_ntrain2000_none` | 8 | `1p4x1` (`csd`) | `sd` | 2000 | `none` | 20.42 / 47.37 | **20.24 / 54.07** | 20.24 / 54.07 | 4.15% |
+| `n8_ntrain5000_none` | 8 | `1p4x1` (`csd`) | `sd` | 5000 | `none` | 20.34 / 46.60 | **20.14 / 52.49** | 20.14 / 52.49 | 4.00% |
+| `n8_ntrain500_bpdec` | 8 | `1p4x1` (`csd`) | `sd` | 500 | `bpdec` | 2.66 / 918.70 | **2.66 / 459.05** | 2.66 / 459.05 | 5.26% |
+| `n8_ntrain500_none` | 8 | `1p4x1` (`csd`) | `sd` | 500 | `none` | 20.21 / 50.35 | **19.79 / 50.47** | 19.79 / 50.47 | 4.18% |

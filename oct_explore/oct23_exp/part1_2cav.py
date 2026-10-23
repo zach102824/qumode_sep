@@ -53,7 +53,7 @@ ap.add_argument("--chunk", type=int, default=5000)
 ap.add_argument("--NF", type=int, default=0, help="0 -> 24 for n=6, 36 for n=8")
 ap.add_argument("--nfcheck", type=int, default=0, help="0 -> 40 for n=6, 56 for n=8")
 ap.add_argument("--amax", type=float, default=1.8)
-ap.add_argument("--relabel", default="none", choices=["none", "bias", "biaspol", "bppol", "bpdec", "bpcenter", "rr4"])
+ap.add_argument("--relabel", default="none", choices=["none", "bias", "biaspol", "bppol", "bpdec", "bpcenter", "mpw4", "rr4"])
 ap.add_argument("--asym", action="store_true", help="Allow distinct shared parameters per cavity c=0,1")
 ap.add_argument("--tailw", type=float, default=0.25, help="CVaR top-10% tail weight in loss")
 ap.add_argument("--obj", default="logp", choices=["logp", "invp", "s_direct"])
@@ -67,6 +67,17 @@ ap.add_argument("--init_from", default="", help="Warm-start shared base from a f
 ap.add_argument("--wd", type=float, default=1e-4)
 ap.add_argument("--seed", type=int, default=0)
 a = ap.parse_args()
+if a.gate in ("ecd", "ecdt"):
+    a.ntrain = min(a.ntrain, 2000)
+    a.nstarts = min(a.nstarts, 8)
+    a.screen_it = min(a.screen_it, 40)
+    a.refine_top = 1
+    a.maxiter = min(a.maxiter, 80)
+elif a.n == 8:
+    a.nstarts = min(a.nstarts, 10)
+    a.screen_it = min(a.screen_it, 60)
+    a.refine_top = 1
+    a.maxiter = min(a.maxiter, 120)
 
 n = a.n
 C = 2
@@ -154,7 +165,7 @@ def build_perm_and_flip(pos, neg, h_bp, mode, r_idx=0):
         pref = (h_bp >= 0).astype(np.int64)[order]
         target_bits = np.array(center_bits * C, dtype=np.int64)
         return order, pref ^ target_bits
-    if mode in ("bppol", "bpdec"):
+    if mode in ("bppol", "bpdec", "mpw4"):
         score = np.abs(h_bp)
         var_by_conf = np.argsort(score, kind="stable")
         order = np.empty(n, dtype=np.int64)
@@ -210,7 +221,7 @@ def prepare_split(split_name, max_count=None, relabel_mode=None, r_idx=0):
     nsols = DATA[f"{split_name}_nsol"]
     cls_v = DATA[f"{split_name}_cls_v"]
     cls_s = DATA[f"{split_name}_cls_s"]
-    h_bp = BP_DATA[f"{split_name}_h_bp4"][r_idx] if rmode_use == "rr4" else (BP_DATA[f"{split_name}_h_dec"] if rmode_use in ("bpdec", "bpcenter") else BP_DATA[f"{split_name}_h_bp"])
+    h_bp = BP_DATA[f"{split_name}_h_bp4"][r_idx] if rmode_use == "rr4" else (BP_DATA[f"{split_name}_h_mpw4"] if rmode_use == "mpw4" else (BP_DATA[f"{split_name}_h_dec"] if rmode_use in ("bpdec", "bpcenter") else BP_DATA[f"{split_name}_h_bp"]))
     pos = BP_DATA[f"{split_name}_pos"]
     neg = BP_DATA[f"{split_name}_neg"]
     if max_count is not None:
@@ -254,7 +265,7 @@ def prepare_split(split_name, max_count=None, relabel_mode=None, r_idx=0):
             fv[b, :, 0] = 1.0
             fv[b, :, 1] = Ip[b].sum(0) / (2.0 * m_clauses / n)
             fv[b, :, 2] = In[b].sum(0) / (2.0 * m_clauses / n)
-            fv[b, :, 3] = h_bp[b, order] * (1.0 - 2.0 * flip)
+            fv[b, :, 3] = 0.0 if rmode_use in ("none", "bias", "biaspol") else (h_bp[b, order] * (1.0 - 2.0 * flip))
             deg[b] = np.maximum(Ip[b].sum(0) + In[b].sum(0), 1.0)
 
     G = {"Ip": jnp.asarray(Ip), "In": jnp.asarray(In), "fv": jnp.asarray(fv), "deg": jnp.asarray(deg)} if need_graph else None
@@ -483,7 +494,7 @@ def rand_shared_init(rng, idx=0):
         # If 0p5x1, first block from vacuum needs larger displacement to populate Fock 0..NU-1
         if K_PREP == 0:
             pr1 = PREPS[f"sd_K{K_cav}_k1"]
-            if a.relabel in ("bppol", "bpdec", "biaspol", "rr4"):
+            if a.relabel in ("bppol", "bpdec", "mpw4", "biaspol", "rr4"):
                 # Solutions are concentrated in low Fock levels f=0..4; initialize Block 0 with moderate displacement
                 r0 = rng.uniform(0.5, 1.3, size=(nc,))
                 p0 = rng.uniform(0, 2 * np.pi, size=(nc,))

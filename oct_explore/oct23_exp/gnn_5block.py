@@ -24,8 +24,9 @@ ap.add_argument("--tag", required=True)
 ap.add_argument("--n", type=int, default=6, choices=[6, 8])
 ap.add_argument("--sched", default="2p3x1", choices=["0p5x1", "1p4x1", "2p3x1", "1p2x2"])
 ap.add_argument("--order", default="csd", choices=["csd", "sdc"])
-ap.add_argument("--relabel", default="none", choices=["none", "bias", "biaspol", "bppol", "bpdec", "bpcenter"])
+ap.add_argument("--relabel", default="none", choices=["none", "bias", "biaspol", "bppol", "bpdec", "bpcenter", "mpw4"])
 ap.add_argument("--clause_w", action="store_true")
+ap.add_argument("--pure_gnn", action="store_true", help="Use only raw factor-graph degrees in fv[:,:,0:3] (fv[:,:,3:7]=0, no BP/decimation features)")
 ap.add_argument("--arch", default="mp", choices=["mp", "attn", "ds", "mlp"])
 ap.add_argument("--H", type=int, default=64)
 ap.add_argument("--rounds", type=int, default=3)
@@ -111,7 +112,7 @@ def build_perm_and_flip(pos, neg, h_bp, mode):
         pref = (h_bp >= 0).astype(np.int64)[order]
         target_bits = np.array(center_bits * C, dtype=np.int64)
         return order, pref ^ target_bits
-    if mode in ("bppol", "bpdec"):
+    if mode in ("bppol", "bpdec", "mpw4"):
         var_by_conf = np.argsort(np.abs(h_bp), kind="stable")
         order = np.empty(n, dtype=np.int64)
         for rank, v_orig in enumerate(var_by_conf):
@@ -129,7 +130,7 @@ def prepare_split(split_name, max_count=None, r_branch=None):
     if r_branch is not None:
         h_bp = BP_DATA[f"{split_name}_h_bp4"][r_branch]
     else:
-        h_bp = BP_DATA[f"{split_name}_h_dec"] if a.relabel in ("bpdec", "bpcenter") else BP_DATA[f"{split_name}_h_bp"]
+        h_bp = BP_DATA[f"{split_name}_h_mpw4"] if a.relabel == "mpw4" else (BP_DATA[f"{split_name}_h_dec"] if a.relabel in ("bpdec", "bpcenter") else BP_DATA[f"{split_name}_h_bp"])
     if max_count is not None:
         Es = Es[:max_count]; cls_v = cls_v[:max_count]; cls_s = cls_s[:max_count]
         pos = pos[:max_count]; neg = neg[:max_count]; h_bp = h_bp[:max_count]
@@ -180,10 +181,11 @@ def prepare_split(split_name, max_count=None, r_branch=None):
     fv[:, :, 0] = 1.0
     fv[:, :, 1] = Ip.sum(1) / (2.0 * m_clauses / n)
     fv[:, :, 2] = In.sum(1) / (2.0 * m_clauses / n)
-    fv[:, :, 3] = BP_DATA[f"{split_name}_h_bp"][:B][b_v, orders] * sgn
-    fv[:, :, 4] = BP_DATA[f"{split_name}_h_dec"][:B][b_v, orders] * sgn
-    fv[:, :, 5] = BP_DATA[f"{split_name}_h_bp4"][1, :B][b_v, orders] * sgn
-    fv[:, :, 6] = BP_DATA[f"{split_name}_h_bp4"][2, :B][b_v, orders] * sgn
+    if not a.pure_gnn and a.relabel not in ("none", "bias", "biaspol"):
+        fv[:, :, 3] = BP_DATA[f"{split_name}_h_bp"][:B][b_v, orders] * sgn
+        fv[:, :, 4] = BP_DATA[f"{split_name}_h_dec"][:B][b_v, orders] * sgn
+        fv[:, :, 5] = BP_DATA[f"{split_name}_h_bp4"][1, :B][b_v, orders] * sgn
+        fv[:, :, 6] = BP_DATA[f"{split_name}_h_mpw4"][:B][b_v, orders] * sgn
     deg[:] = np.maximum(Ip.sum(1) + In.sum(1), 1.0)
 
     return {
@@ -292,11 +294,12 @@ def init_net(rng):
     p["bcav1"] = jnp.zeros(H)
     p["Wfock"] = jnp.zeros((H, NB_ACT * NU))
     wbit_np = np.array(W(H + 7, FM, 1.0), np.float32, copy=True)
-    for m_i in range(4):
-        wbit_np[:, m_i] *= 0.1
-        wbit_np[H + 3 + m_i, m_i] = 6.0
-        wbit_np[:, 4 + m_i] *= 0.2
-        wbit_np[H + 3 + m_i, 4 + m_i] = 2.0
+    if not a.pure_gnn and a.relabel not in ("none", "bias", "biaspol"):
+        for m_i in range(4):
+            wbit_np[:, m_i] *= 0.1
+            wbit_np[H + 3 + m_i, m_i] = 6.0
+            wbit_np[:, 4 + m_i] *= 0.2
+            wbit_np[H + 3 + m_i, 4 + m_i] = 2.0
     p["Wbit"] = jnp.asarray(wbit_np)
     p["bbit"] = jnp.zeros(FM)
     p["Wprod"] = jnp.zeros((9, FM, NB_ACT))
@@ -317,7 +320,7 @@ def init_net(rng):
         A0 = np.stack([r * np.cos(ph), r * np.sin(ph)], -1).astype(np.float32)
         TH0 = np.zeros((C, NB_ACT, NU), np.float32)
         if K_PREP == 0:
-            if a.relabel in ("bppol", "bpdec", "biaspol"):
+            if a.relabel in ("bppol", "bpdec", "mpw4", "biaspol"):
                 A0[:, 0, 0] = 0.85; A0[:, 0, 1] = 0.0
             else:
                 pr1 = PREPS[f"sd_K{K}_k1"]
@@ -490,7 +493,7 @@ def main():
     p_chk, lk_chk = ev_chk(th_best, D_te)
     m_chk = eval_metrics(p_chk, lk_chk)
 
-    if a.relabel in ("bpdec", "bpcenter", "bppol"):
+    if a.relabel in ("bpdec", "bpcenter", "mpw4", "bppol"):
         ps_r, lks_r = [np.asarray(p_chk, float)], [np.asarray(lk_chk, float)]
         for r_b in [1, 2, 3]:
             D_r = prepare_split("test", r_branch=r_b)
