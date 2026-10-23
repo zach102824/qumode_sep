@@ -10,46 +10,34 @@ LOGDIR="/workspace/qumode_sep/oct_explore/logs/oct23_exp_part2"
 RESDIR="/workspace/qumode_sep/oct_explore/results/oct23_exp_part2"
 mkdir -p "$LOGDIR" "$RESDIR"
 
-# Pre-cache train/val/test datasets for n=8, 12, 16, 20 in a single process first so workers don't race
-taskset -c 0-5 python3 -c '
-import sys
-sys.argv = ["part2_multicav.py", "--tag", "precache"]
-sys.path.insert(0, "/workspace/qumode_sep/oct_explore/oct23_exp")
-import part2_multicav as P2
-P2.get_instances(8, 5000, P2.TRB, "train")
-P2.get_instances(12, 1000, P2.TRB, "train")
-P2.get_instances(12, 200, P2.VAB, "val")
-for n in [8, 12, 16, 20]:
-    P2.get_instances(n, 100, P2.TEB, "test")
-print("All Part 2 datasets cached!")
-'
-
 WAVE1_SHARED=(
-  "--tag p2_shared_L4_k2  --mode shared --L 4  --pairs 2 --kprep 2 --ntrain8 5000 --ntrain12 1000 --nstarts 8 --screen_it 60 --maxiter 180"
-  "--tag p2_shared_L6_k1  --mode shared --L 6  --pairs 1 --kprep 2 --ntrain8 5000 --ntrain12 1000 --nstarts 8 --screen_it 60 --maxiter 180"
-  "--tag p2_shared_L6_k2  --mode shared --L 6  --pairs 2 --kprep 2 --ntrain8 5000 --ntrain12 1000 --nstarts 8 --screen_it 60 --maxiter 180"
-  "--tag p2_shared_L8_k1  --mode shared --L 8  --pairs 1 --kprep 2 --ntrain8 5000 --ntrain12 1000 --nstarts 8 --screen_it 60 --maxiter 180"
-  "--tag p2_shared_L8_k2  --mode shared --L 8  --pairs 2 --kprep 2 --ntrain8 5000 --ntrain12 1000 --nstarts 8 --screen_it 60 --maxiter 180"
-  "--tag p2_shared_L10_k1 --mode shared --L 10 --pairs 1 --kprep 2 --ntrain8 5000 --ntrain12 1000 --nstarts 8 --screen_it 60 --maxiter 180"
-  "--tag p2_shared_L10_k2 --mode shared --L 10 --pairs 2 --kprep 2 --ntrain8 5000 --ntrain12 1000 --nstarts 6 --screen_it 50 --maxiter 160"
-  "--tag p2_shared_L12_k1 --mode shared --L 12 --pairs 1 --kprep 2 --ntrain8 5000 --ntrain12 1000 --nstarts 6 --screen_it 50 --maxiter 160"
-  "--tag p2_shared_L12_k2 --mode shared --L 12 --pairs 2 --kprep 2 --ntrain8 5000 --ntrain12 1000 --nstarts 6 --screen_it 50 --maxiter 160"
-  "--tag p2_shared_L15_k1 --mode shared --L 15 --pairs 1 --kprep 2 --ntrain8 5000 --ntrain12 1000 --nstarts 6 --screen_it 50 --maxiter 160"
-  "--tag p2_shared_L15_k2 --mode shared --L 15 --pairs 2 --kprep 2 --ntrain8 5000 --ntrain12 1000 --nstarts 6 --screen_it 50 --maxiter 160"
+  "--tag p2_shared_L4_k2  --mode shared --L 4  --pairs 2 --kprep 2 --ntrain8 2000 --ntrain12 500 --maxiter 120"
+  "--tag p2_shared_L6_k1  --mode shared --L 6  --pairs 1 --kprep 2 --ntrain8 2000 --ntrain12 500 --maxiter 120"
+  "--tag p2_shared_L6_k2  --mode shared --L 6  --pairs 2 --kprep 2 --ntrain8 2000 --ntrain12 500 --maxiter 120"
+  "--tag p2_shared_L8_k1  --mode shared --L 8  --pairs 1 --kprep 2 --ntrain8 2000 --ntrain12 500 --maxiter 120"
+  "--tag p2_shared_L8_k2  --mode shared --L 8  --pairs 2 --kprep 2 --ntrain8 2000 --ntrain12 500 --maxiter 120"
+  "--tag p2_shared_L10_k1 --mode shared --L 10 --pairs 1 --kprep 2 --ntrain8 2000 --ntrain12 500 --maxiter 120"
+  "--tag p2_shared_L10_k2 --mode shared --L 10 --pairs 2 --kprep 2 --ntrain8 2000 --ntrain12 500 --maxiter 120"
+  "--tag p2_shared_L12_k1 --mode shared --L 12 --pairs 1 --kprep 2 --ntrain8 2000 --ntrain12 500 --maxiter 120"
+  "--tag p2_shared_L12_k2 --mode shared --L 12 --pairs 2 --kprep 2 --ntrain8 2000 --ntrain12 500 --maxiter 120"
+  "--tag p2_shared_L15_k1 --mode shared --L 15 --pairs 1 --kprep 2 --ntrain8 2000 --ntrain12 500 --maxiter 120"
+  "--tag p2_shared_L15_k2 --mode shared --L 15 --pairs 2 --kprep 2 --ntrain8 2000 --ntrain12 500 --maxiter 120"
+  "--tag p2_shared_L15_k3 --mode shared --L 15 --pairs 3 --kprep 3 --ntrain8 2000 --ntrain12 500 --maxiter 120"
 )
 
 WAVE2_GNN=(
-  "--tag p2_gnn_L6_k2_mp64_nocw  --mode gnn --L 6  --pairs 2 --kprep 2 --arch mp64  --steps 1000 --init_shared $RESDIR/p2_shared_L6_k2.json"
-  "--tag p2_gnn_L6_k2_mp64_cw    --mode gnn --L 6  --pairs 2 --kprep 2 --arch mp64  --clause_w --steps 1000 --init_shared $RESDIR/p2_shared_L6_k2.json"
-  "--tag p2_gnn_L6_k2_mp128_cw   --mode gnn --L 6  --pairs 2 --kprep 2 --arch mp128 --clause_w --steps 1000 --init_shared $RESDIR/p2_shared_L6_k2.json"
-  "--tag p2_gnn_L6_k2_attn_cw    --mode gnn --L 6  --pairs 2 --kprep 2 --arch attn  --clause_w --steps 1000 --init_shared $RESDIR/p2_shared_L6_k2.json"
-  "--tag p2_gnn_L6_k2_ds_cw      --mode gnn --L 6  --pairs 2 --kprep 2 --arch ds    --clause_w --steps 1000 --init_shared $RESDIR/p2_shared_L6_k2.json"
-  "--tag p2_gnn_L6_k2_mlp_cw     --mode gnn --L 6  --pairs 2 --kprep 2 --arch mlp   --clause_w --steps 1000 --init_shared $RESDIR/p2_shared_L6_k2.json"
-  "--tag p2_gnn_L8_k2_mp128_nocw --mode gnn --L 8  --pairs 2 --kprep 2 --arch mp128 --steps 1000 --init_shared $RESDIR/p2_shared_L8_k2.json"
-  "--tag p2_gnn_L8_k2_mp128_cw   --mode gnn --L 8  --pairs 2 --kprep 2 --arch mp128 --clause_w --steps 1000 --init_shared $RESDIR/p2_shared_L8_k2.json"
-  "--tag p2_gnn_L10_k2_mp128_cw  --mode gnn --L 10 --pairs 2 --kprep 2 --arch mp128 --clause_w --steps 1000 --init_shared $RESDIR/p2_shared_L10_k2.json"
-  "--tag p2_gnn_L12_k2_mp128_cw  --mode gnn --L 12 --pairs 2 --kprep 2 --arch mp128 --clause_w --steps 1000 --init_shared $RESDIR/p2_shared_L12_k2.json"
-  "--tag p2_gnn_L15_k2_mp128_cw  --mode gnn --L 15 --pairs 2 --kprep 2 --arch mp128 --clause_w --steps 1000 --init_shared $RESDIR/p2_shared_L15_k2.json"
+  "--tag p2_gnn_L6_k2_mp64_nocw  --mode gnn --L 6  --pairs 2 --kprep 2 --arch mp64  --steps 800 --init_shared $RESDIR/p2_shared_L6_k2.json"
+  "--tag p2_gnn_L6_k2_mp64_cw    --mode gnn --L 6  --pairs 2 --kprep 2 --arch mp64  --clause_w --steps 800 --init_shared $RESDIR/p2_shared_L6_k2.json"
+  "--tag p2_gnn_L6_k2_mp128_cw   --mode gnn --L 6  --pairs 2 --kprep 2 --arch mp128 --clause_w --steps 800 --init_shared $RESDIR/p2_shared_L6_k2.json"
+  "--tag p2_gnn_L6_k2_attn_cw    --mode gnn --L 6  --pairs 2 --kprep 2 --arch attn  --clause_w --steps 800 --init_shared $RESDIR/p2_shared_L6_k2.json"
+  "--tag p2_gnn_L6_k2_ds_cw      --mode gnn --L 6  --pairs 2 --kprep 2 --arch ds    --clause_w --steps 800 --init_shared $RESDIR/p2_shared_L6_k2.json"
+  "--tag p2_gnn_L6_k2_mlp_cw     --mode gnn --L 6  --pairs 2 --kprep 2 --arch mlp   --clause_w --steps 800 --init_shared $RESDIR/p2_shared_L6_k2.json"
+  "--tag p2_gnn_L8_k2_mp128_nocw --mode gnn --L 8  --pairs 2 --kprep 2 --arch mp128 --steps 800 --init_shared $RESDIR/p2_shared_L8_k2.json"
+  "--tag p2_gnn_L8_k2_mp128_cw   --mode gnn --L 8  --pairs 2 --kprep 2 --arch mp128 --clause_w --steps 800 --init_shared $RESDIR/p2_shared_L8_k2.json"
+  "--tag p2_gnn_L10_k2_mp128_cw  --mode gnn --L 10 --pairs 2 --kprep 2 --arch mp128 --clause_w --steps 800 --init_shared $RESDIR/p2_shared_L10_k2.json"
+  "--tag p2_gnn_L12_k2_mp128_cw  --mode gnn --L 12 --pairs 2 --kprep 2 --arch mp128 --clause_w --steps 800 --init_shared $RESDIR/p2_shared_L12_k2.json"
+  "--tag p2_gnn_L15_k2_mp128_cw  --mode gnn --L 15 --pairs 2 --kprep 2 --arch mp128 --clause_w --steps 800 --init_shared $RESDIR/p2_shared_L15_k2.json"
+  "--tag p2_gnn_L15_k3_mp128_cw  --mode gnn --L 15 --pairs 3 --kprep 3 --arch mp128 --clause_w --steps 800 --init_shared $RESDIR/p2_shared_L15_k3.json"
 )
 
 run_one() {
