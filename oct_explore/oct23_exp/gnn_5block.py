@@ -24,7 +24,7 @@ ap.add_argument("--tag", required=True)
 ap.add_argument("--n", type=int, default=6, choices=[6, 8])
 ap.add_argument("--sched", default="2p3x1", choices=["0p5x1", "1p4x1", "2p3x1", "1p2x2"])
 ap.add_argument("--order", default="csd", choices=["csd", "sdc"])
-ap.add_argument("--relabel", default="none", choices=["none", "bias", "biaspol", "bppol", "bpdec"])
+ap.add_argument("--relabel", default="none", choices=["none", "bias", "biaspol", "bppol", "bpdec", "bpcenter"])
 ap.add_argument("--clause_w", action="store_true")
 ap.add_argument("--arch", default="mp", choices=["mp", "attn", "ds", "mlp"])
 ap.add_argument("--H", type=int, default=64)
@@ -36,6 +36,7 @@ ap.add_argument("--steps", type=int, default=4000)
 ap.add_argument("--bs", type=int, default=250)
 ap.add_argument("--lr", type=float, default=1.5e-3)
 ap.add_argument("--tailw", type=float, default=0.5)
+ap.add_argument("--p_cap", type=float, default=0.0, help=">0: downweight gradient once p_succ > p_cap so optimizer focuses on B90 tail")
 ap.add_argument("--leakpen", type=float, default=0.1)
 ap.add_argument("--wd", type=float, default=1e-4)
 ap.add_argument("--amax", type=float, default=1.8)
@@ -94,6 +95,21 @@ def build_perm_and_flip(pos, neg, h_bp, mode):
             order[slots_by_speed[rank]] = v_orig
         flip = np.zeros(n, dtype=np.int64) if mode == "bias" else (diff >= 0).astype(np.int64)[order]
         return order, flip
+    if mode == "bpcenter":
+        K_c = n // 2
+        fc = (1 << (K_c - 1)) - 1  # f_c = 3 for n=6 (K=3), f_c = 7 for n=8 (K=4)
+        g_center = gray(fc)
+        center_bits = [(g_center >> j) & 1 for j in range(K_c)]
+        df_per_j = [abs([i for i in range(1 << K_c) if gray(i) == (g_center ^ (1 << j))][0] - fc) for j in range(K_c)]
+        j_by_speed = np.argsort(df_per_j, kind="stable")
+        slots_c = [K_c * c + int(j) for j in j_by_speed for c in range(C)]
+        var_by_conf = np.argsort(np.abs(h_bp), kind="stable")
+        order = np.empty(n, dtype=np.int64)
+        for rank, v_orig in enumerate(var_by_conf):
+            order[slots_c[rank]] = v_orig
+        pref = (h_bp >= 0).astype(np.int64)[order]
+        target_bits = np.array(center_bits * C, dtype=np.int64)
+        return order, pref ^ target_bits
     if mode in ("bppol", "bpdec"):
         var_by_conf = np.argsort(np.abs(h_bp), kind="stable")
         order = np.empty(n, dtype=np.int64)
@@ -109,7 +125,7 @@ def prepare_split(split_name, max_count=None):
     cls_s = DATA[f"{split_name}_cls_s"]
     pos = BP_DATA[f"{split_name}_pos"]
     neg = BP_DATA[f"{split_name}_neg"]
-    h_bp = BP_DATA[f"{split_name}_h_dec"] if a.relabel == "bpdec" else BP_DATA[f"{split_name}_h_bp"]
+    h_bp = BP_DATA[f"{split_name}_h_dec"] if a.relabel in ("bpdec", "bpcenter") else BP_DATA[f"{split_name}_h_bp"]
     if max_count is not None:
         Es = Es[:max_count]; cls_v = cls_v[:max_count]; cls_s = cls_s[:max_count]
         pos = pos[:max_count]; neg = neg[:max_count]; h_bp = h_bp[:max_count]
@@ -125,8 +141,13 @@ def prepare_split(split_name, max_count=None):
     x_grid_flat = GRID_TO_X.reshape(-1)  # (NU*NU,)
     slot_bits = np.array([[(x_val >> (n - 1 - s)) & 1 for x_val in x_grid_flat] for s in range(n)], dtype=np.uint8)  # (n, NU*NU)
 
+    orders = np.zeros((B, n), dtype=np.int64)
+    flips = np.zeros((B, n), dtype=np.int64)
+    inv_orders = np.zeros((B, n), dtype=np.int64)
     for b in range(B):
         order, flip = build_perm_and_flip(pos[b], neg[b], h_bp[b], a.relabel)
+        orders[b] = order; flips[b] = flip
+        inv_orders[b, order] = np.arange(n)
         x_old = np.zeros_like(GRID_TO_X)
         for s in range(n):
             bit_s = ((GRID_TO_X >> (n - 1 - s)) & 1) ^ int(flip[s])
@@ -136,28 +157,30 @@ def prepare_split(split_name, max_count=None):
         Cn_rel[b] = c_grid - np.max(c_grid)
         Succ[b] = (E_grid == 0).astype(np.float32)
 
-        inv_order = np.empty(n, dtype=np.int64)
-        inv_order[order] = np.arange(n)
-        for c_i in range(m_clauses):
-            v0, v1, v2, v3 = [int(inv_order[int(cls_v[b, c_i, k_i])]) for k_i in range(4)]
-            s0, s1, s2, s3 = [int(cls_s[b, c_i, k_i]) * (1 if flip[int(inv_order[int(cls_v[b, c_i, k_i])])] == 0 else -1) for k_i in range(4)]
-            for s_new, sign_new in ((v0, s0), (v1, s1), (v2, s2), (v3, s3)):
-                if sign_new > 0: Ip[b, c_i, s_new] = 1.0
-                else: In[b, c_i, s_new] = 1.0
-            if a.clause_w:
-                # Clause is violated iff all 4 literals are false
-                viol_c = (
-                    (slot_bits[v0] == (0 if s0 > 0 else 1)) &
-                    (slot_bits[v1] == (0 if s1 > 0 else 1)) &
-                    (slot_bits[v2] == (0 if s2 > 0 else 1)) &
-                    (slot_bits[v3] == (0 if s3 > 0 else 1))
-                )
-                Viol[b, c_i] = viol_c
-        fv[b, :, 0] = 1.0
-        fv[b, :, 1] = Ip[b].sum(0) / (2.0 * m_clauses / n)
-        fv[b, :, 2] = In[b].sum(0) / (2.0 * m_clauses / n)
-        fv[b, :, 3] = h_bp[b, order] * (1.0 - 2.0 * flip)
-        deg[b] = np.maximum(Ip[b].sum(0) + In[b].sum(0), 1.0)
+    b_idx = np.arange(B)[:, None, None]
+    c_idx = np.arange(m_clauses)[None, :, None]
+    v_new = inv_orders[b_idx, cls_v]  # (B, m, 4)
+    s_new = cls_s * (1 - 2 * flips[b_idx, v_new])  # (B, m, 4)
+    np.add.at(Ip, (b_idx, c_idx, v_new), (s_new > 0).astype(np.float32))
+    np.add.at(In, (b_idx, c_idx, v_new), (s_new < 0).astype(np.float32))
+    if a.clause_w:
+        need_val = (s_new < 0).astype(np.uint8)[..., None]  # (B, m, 4, 1): literal is false when bit == (s_new < 0)
+        Viol[:] = (
+            (slot_bits[v_new[:, :, 0]] == need_val[:, :, 0]) &
+            (slot_bits[v_new[:, :, 1]] == need_val[:, :, 1]) &
+            (slot_bits[v_new[:, :, 2]] == need_val[:, :, 2]) &
+            (slot_bits[v_new[:, :, 3]] == need_val[:, :, 3])
+        )
+    b_v = np.arange(B)[:, None]
+    sgn = (1.0 - 2.0 * flips).astype(np.float32)
+    fv[:, :, 0] = 1.0
+    fv[:, :, 1] = Ip.sum(1) / (2.0 * m_clauses / n)
+    fv[:, :, 2] = In.sum(1) / (2.0 * m_clauses / n)
+    fv[:, :, 3] = BP_DATA[f"{split_name}_h_bp"][:B][b_v, orders] * sgn
+    fv[:, :, 4] = BP_DATA[f"{split_name}_h_dec"][:B][b_v, orders] * sgn
+    fv[:, :, 5] = BP_DATA[f"{split_name}_h_bp4"][1, :B][b_v, orders] * sgn
+    fv[:, :, 6] = BP_DATA[f"{split_name}_h_bp4"][2, :B][b_v, orders] * sgn
+    deg[:] = np.maximum(Ip.sum(1) + In.sum(1), 1.0)
 
     return {
         "B": B,
@@ -261,6 +284,7 @@ def init_net(rng):
     p["u1"] = jnp.asarray(rng.normal(0, 0.5, FM).astype(np.float32))
     p["fq"] = jnp.zeros(FM)
     p["Wo"] = jnp.zeros((FM, NB_ACT))
+    p["Wfock"] = jnp.zeros((K * H, NB_ACT * NU))
     if a.clause_w:
         p["Wc"] = jnp.zeros((H, L_ACT))
 
@@ -277,9 +301,12 @@ def init_net(rng):
         A0 = np.stack([r * np.cos(ph), r * np.sin(ph)], -1).astype(np.float32)
         TH0 = np.zeros((C, NB_ACT, NU), np.float32)
         if K_PREP == 0:
-            pr1 = PREPS[f"sd_K{K}_k1"]
-            A0[:, 0, :] = np.array(pr1["alphas"][0])[None, :]
-            TH0[:, 0, :] = np.array(pr1["thetas"][0])[None, :]
+            if a.relabel in ("bppol", "bpdec", "biaspol"):
+                A0[:, 0, 0] = 0.85; A0[:, 0, 1] = 0.0
+            else:
+                pr1 = PREPS[f"sd_K{K}_k1"]
+                A0[:, 0, :] = np.array(pr1["alphas"][0])[None, :]
+                TH0[:, 0, :] = np.array(pr1["thetas"][0])[None, :]
         g0 = np.linspace(1.5, 4.5, L_ACT).astype(np.float32)
 
     p["A0"] = jnp.asarray(A0)
@@ -303,7 +330,8 @@ def forward_net(p, G):
     z = (jnp.einsum("bcjm,jf->bcfm", U1, BT) + jnp.einsum("bcjm,jf->bcfm", U0, 1.0 - BT)) / K
     ph_free = jnp.transpose(jnp.tanh(z + p["fq"]) @ p["Wo"], (0, 1, 3, 2))  # (B, C, NB_ACT, NU)
     ph_lin = jnp.einsum("bcjl,jf->bclf", hd @ p["Ws"], BT)
-    TH_b = p["TH0"][None] + ph_free + ph_lin
+    ph_fock = (hd.reshape(B, C, K * a.H) @ p["Wfock"]).reshape(B, C, NB_ACT, NU)
+    TH_b = p["TH0"][None] + ph_free + ph_lin + ph_fock
     w_b = (hc @ p["Wc"]) if a.clause_w else jnp.zeros((B, 1, L_ACT), jnp.float32)
     return A_b, TH_b, dg, w_b
 
@@ -341,14 +369,19 @@ def main():
         A_b, TH_b, dg, w_b = forward_net(p, G)
         p_s, p_l = SIM_MAIN(A_b, TH_b, dg, w_b, Cn_rel, Succ, Viol)
         nl = -jnp.log(p_s + 1e-12)
-        out = jnp.mean(nl)
+        if a.p_cap > 0:
+            cap_nl = -np.log(a.p_cap)
+            nl_eff = jnp.where(nl < cap_nl, cap_nl + 0.08 * (nl - cap_nl), nl)
+        else:
+            nl_eff = nl
+        out = jnp.mean(nl_eff)
         if a.tailw > 0:
-            k = max(1, nl.shape[0] // 10)
+            k = max(1, int(round(0.15 * nl.shape[0])))
             out = out + a.tailw * jnp.mean(jax.lax.top_k(nl, k)[0])
         if a.leakpen > 0:
             out = out + a.leakpen * jnp.mean(p_l)
         if a.wd > 0:
-            keys = ("G2_a", "G2_g", "Wa", "Ws", "Wo") + (("Wc",) if a.clause_w else ())
+            keys = ("G2_a", "G2_g", "Wa", "Ws", "Wo", "Wfock") + (("Wc",) if a.clause_w else ())
             out = out + a.wd * sum(jnp.sum(p[k_] ** 2) for k_ in keys)
         return out
 

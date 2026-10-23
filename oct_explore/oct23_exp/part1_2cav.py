@@ -53,7 +53,7 @@ ap.add_argument("--chunk", type=int, default=5000)
 ap.add_argument("--NF", type=int, default=0, help="0 -> 24 for n=6, 36 for n=8")
 ap.add_argument("--nfcheck", type=int, default=0, help="0 -> 40 for n=6, 56 for n=8")
 ap.add_argument("--amax", type=float, default=1.8)
-ap.add_argument("--relabel", default="none", choices=["none", "bias", "biaspol", "bppol", "bpdec", "rr4"])
+ap.add_argument("--relabel", default="none", choices=["none", "bias", "biaspol", "bppol", "bpdec", "bpcenter", "rr4"])
 ap.add_argument("--asym", action="store_true", help="Allow distinct shared parameters per cavity c=0,1")
 ap.add_argument("--tailw", type=float, default=0.25, help="CVaR top-10% tail weight in loss")
 ap.add_argument("--obj", default="logp", choices=["logp", "invp", "s_direct"])
@@ -139,6 +139,21 @@ def build_perm_and_flip(pos, neg, h_bp, mode, r_idx=0):
         flip = pref[order]
         return order, flip
 
+    if mode == "bpcenter":
+        K_c = n // 2
+        fc = (1 << (K_c - 1)) - 1  # f_c = 3 for n=6 (K=3), f_c = 7 for n=8 (K=4)
+        g_center = gray(fc)
+        center_bits = [(g_center >> j) & 1 for j in range(K_c)]
+        df_per_j = [abs([i for i in range(1 << K_c) if gray(i) == (g_center ^ (1 << j))][0] - fc) for j in range(K_c)]
+        j_by_speed = np.argsort(df_per_j, kind="stable")
+        slots_c = [K_c * c + int(j) for j in j_by_speed for c in range(C)]
+        var_by_conf = np.argsort(np.abs(h_bp), kind="stable")
+        order = np.empty(n, dtype=np.int64)
+        for rank, v_orig in enumerate(var_by_conf):
+            order[slots_c[rank]] = v_orig
+        pref = (h_bp >= 0).astype(np.int64)[order]
+        target_bits = np.array(center_bits * C, dtype=np.int64)
+        return order, pref ^ target_bits
     if mode in ("bppol", "bpdec"):
         score = np.abs(h_bp)
         var_by_conf = np.argsort(score, kind="stable")
@@ -195,7 +210,7 @@ def prepare_split(split_name, max_count=None, relabel_mode=None, r_idx=0):
     nsols = DATA[f"{split_name}_nsol"]
     cls_v = DATA[f"{split_name}_cls_v"]
     cls_s = DATA[f"{split_name}_cls_s"]
-    h_bp = BP_DATA[f"{split_name}_h_bp4"][r_idx] if rmode_use == "rr4" else (BP_DATA[f"{split_name}_h_dec"] if rmode_use == "bpdec" else BP_DATA[f"{split_name}_h_bp"])
+    h_bp = BP_DATA[f"{split_name}_h_bp4"][r_idx] if rmode_use == "rr4" else (BP_DATA[f"{split_name}_h_dec"] if rmode_use in ("bpdec", "bpcenter") else BP_DATA[f"{split_name}_h_bp"])
     pos = BP_DATA[f"{split_name}_pos"]
     neg = BP_DATA[f"{split_name}_neg"]
     if max_count is not None:
@@ -468,10 +483,18 @@ def rand_shared_init(rng, idx=0):
         # If 0p5x1, first block from vacuum needs larger displacement to populate Fock 0..NU-1
         if K_PREP == 0:
             pr1 = PREPS[f"sd_K{K_cav}_k1"]
-            A[:, 0, 0] = pr1["alphas"][0][0] * rng.uniform(0.85, 1.15, size=(nc,))
-            A[:, 0, 1] = pr1["alphas"][0][1] * rng.uniform(0.85, 1.15, size=(nc,))
-            TH = rng.uniform(-0.3, 0.3, (nc, NB_ACT, NU))
-            TH[:, 0, :] = np.array(pr1["thetas"][0])[None, :] + rng.normal(0, 0.15, (nc, NU))
+            if a.relabel in ("bppol", "bpdec", "biaspol", "rr4"):
+                # Solutions are concentrated in low Fock levels f=0..4; initialize Block 0 with moderate displacement
+                r0 = rng.uniform(0.5, 1.3, size=(nc,))
+                p0 = rng.uniform(0, 2 * np.pi, size=(nc,))
+                A[:, 0, 0] = r0 * np.cos(p0)
+                A[:, 0, 1] = r0 * np.sin(p0)
+                TH = rng.normal(0, 0.3, (nc, NB_ACT, NU))
+            else:
+                A[:, 0, 0] = pr1["alphas"][0][0] * rng.uniform(0.85, 1.15, size=(nc,))
+                A[:, 0, 1] = pr1["alphas"][0][1] * rng.uniform(0.85, 1.15, size=(nc,))
+                TH = rng.uniform(-0.3, 0.3, (nc, NB_ACT, NU))
+                TH[:, 0, :] = np.array(pr1["thetas"][0])[None, :] + rng.normal(0, 0.15, (nc, NU))
         else:
             TH = rng.normal(0, 0.4, (nc, NB_ACT, NU))
         g = np.linspace(0.8, g_scale, L_ACT) * rng.uniform(0.7, 1.3, L_ACT)

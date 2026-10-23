@@ -1,6 +1,6 @@
 # Oct 23 Part 1: Two-Cavity Experimental Circuit (`n = 6` and `n = 8`, <= 5 Blocks Total)
 
-*Last updated: 2026-10-23 19:21:58 (UTC+8). All SNAP gates strictly restricted to computational Fock levels `0..D-1` (`0` phase on leaked levels `f >= D`); all Fock leakage (`f >= D` or ancilla in `|e>`) counted as failure and verified at `N_Fock = 40` (`n=6`) and `N_Fock = 56` (`n=8`).*
+*Last updated: 2026-10-23 19:57:42 (UTC+8). All SNAP gates strictly restricted to computational Fock levels `0..D-1` (`0` phase on leaked levels `f >= D`); all Fock leakage (`f >= D` or ancilla in `|e>`) counted as failure and verified at `N_Fock = 40` (`n=6`) and `N_Fock = 56` (`n=8`).*
 
 ## 1. Classical WalkSATlm Baselines on the 100 Unseen Test Formulas (`TEB = 52e9`)
 
@@ -28,6 +28,9 @@
 | Tag | `n` | Schedule | Gate | `N_train` | Relabel | Val Med / B90 | Test Med / B90 (`1/p`) | `NF_chk` Med / B90 | Mean Leak |
 |---|---|---|---|---|---|---|---|---|---|
 | `gnn5_n6_none_cw` | 6 | `2p3x1` (`csd`) | `None` | 10000 | `none` | 2.28 / 12.40 | **2.00 / 11.09** | 2.00 / 11.09 | 8.91% |
+| `n6_1p4x1_msdec_sdir` | 6 | `1p4x1` (`csd`) | `sd` | 2000 | `bpdec` | 2.17 / 14.62 | **2.15 / 10.09** | 2.15 / 10.09 | 1.05% |
+| `n6_ntrain10000_bpdec` | 6 | `1p4x1` (`csd`) | `sd` | 10000 | `bpdec` | 2.07 / 15.48 | **2.08 / 7.46** | 2.08 / 7.46 | 2.84% |
+| `n6_ntrain10000_none` | 6 | `1p4x1` (`csd`) | `sd` | 10000 | `none` | 6.23 / 16.26 | **7.09 / 13.12** | 7.09 / 13.12 | 6.08% |
 | `n6_ntrain2000_bpdec` | 6 | `1p4x1` (`csd`) | `sd` | 2000 | `bpdec` | 2.03 / 17.45 | **2.06 / 15.97** | 2.06 / 15.97 | 3.74% |
 | `n6_ntrain2000_none` | 6 | `1p4x1` (`csd`) | `sd` | 2000 | `none` | 6.08 / 17.11 | **7.14 / 12.83** | 7.14 / 12.83 | 4.70% |
 | `n6_ntrain5000_bpdec` | 6 | `1p4x1` (`csd`) | `sd` | 5000 | `bpdec` | 2.19 / 16.69 | **2.23 / 13.68** | 2.23 / 13.68 | 3.08% |
@@ -44,7 +47,12 @@
 | `smoke_n6_ecd` | 6 | `1p4x1` (`csd`) | `ecd` | 500 | `none` | 8.30 / 49.97 | **7.92 / 35.62** | 7.92 / 35.62 | 1.61% |
 | `smoke_n6_ecdt` | 6 | `1p4x1` (`csd`) | `ecdt` | 500 | `none` | 15.07 / 37.18 | **15.44 / 34.33** | 15.44 / 34.33 | 8.57% |
 | `smoke_n6_gnn` | 6 | `1p4x1` (`csd`) | `sd` | 2000 | `bpdec` | 1.26 / 13.88 | **1.26 / 11.30** | 1.26 / 11.30 | 2.73% |
+| `smoke_n6_gnn_metrics` | 6 | `1p4x1` (`csd`) | `sd` | 2000 | `bpdec` | 1.26 / 13.88 | **1.26 / 11.30** | 1.26 / 11.30 | 2.73% |
 | `smoke_n6_gnn_rr4` | 6 | `1p4x1` (`csd`) | `sd` | 2000 | `rr4` | 1.26 / 13.88 | **1.26 / 11.30** (RR4: 2.59/10.48, best4: 1.25/8.28) | 1.26 / 11.30 | 2.73% |
+| `smoke_n6_gnn_rr4_metrics` | 6 | `1p4x1` (`csd`) | `sd` | 2000 | `rr4` | 1.26 / 13.88 | **1.26 / 11.30** (RR4: 2.59/10.48, best4: 1.25/8.28) | 1.26 / 11.30 | 2.73% |
 | `smoke_n6_none_gnn` | 6 | `2p3x1` (`csd`) | `sd` | 2000 | `none` | 5.06 / 15.71 | **5.78 / 12.43** | 5.78 / 12.43 | 10.52% |
+| `smoke_n6_none_gnn_metrics` | 6 | `2p3x1` (`csd`) | `sd` | 2000 | `none` | 5.06 / 15.71 | **5.78 / 12.43** | 5.78 / 12.43 | 10.52% |
 | `smoke_n6_none_sdir` | 6 | `2p3x1` (`csd`) | `sd` | 2000 | `none` | 7.33 / 17.19 | **7.75 / 14.14** | 7.75 / 14.14 | 8.35% |
 | `smoke_n6_rr4` | 6 | `1p4x1` (`csd`) | `sd` | 500 | `rr4` | 5.06 / 7.76 | **5.50 / 8.02** (r0: 2.04/35.80, best4: 1.96/2.28) | 5.50 / 8.02 | 4.75% |
+| `n8_0p5x1_sdc_msdec_sdir` | 8 | `0p5x1` (`sdc`) | `sd` | 2000 | `bpdec` | 2.50 / 182.02 | **2.51 / 178.55** | 2.51 / 178.55 | 1.74% |
+| `n8_1p4x1_msdec_sdir` | 8 | `1p4x1` (`csd`) | `sd` | 2000 | `bpdec` | 2.67 / 181.94 | **2.69 / 128.71** | 2.69 / 128.71 | 1.96% |
