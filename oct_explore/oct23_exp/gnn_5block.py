@@ -119,13 +119,16 @@ def build_perm_and_flip(pos, neg, h_bp, mode):
         return order, flip
     raise ValueError(mode)
 
-def prepare_split(split_name, max_count=None):
+def prepare_split(split_name, max_count=None, r_branch=None):
     Es = DATA[f"{split_name}_E"]
     cls_v = DATA[f"{split_name}_cls_v"]
     cls_s = DATA[f"{split_name}_cls_s"]
     pos = BP_DATA[f"{split_name}_pos"]
     neg = BP_DATA[f"{split_name}_neg"]
-    h_bp = BP_DATA[f"{split_name}_h_dec"] if a.relabel in ("bpdec", "bpcenter") else BP_DATA[f"{split_name}_h_bp"]
+    if r_branch is not None:
+        h_bp = BP_DATA[f"{split_name}_h_bp4"][r_branch]
+    else:
+        h_bp = BP_DATA[f"{split_name}_h_dec"] if a.relabel in ("bpdec", "bpcenter") else BP_DATA[f"{split_name}_h_bp"]
     if max_count is not None:
         Es = Es[:max_count]; cls_v = cls_v[:max_count]; cls_s = cls_s[:max_count]
         pos = pos[:max_count]; neg = neg[:max_count]; h_bp = h_bp[:max_count]
@@ -284,7 +287,18 @@ def init_net(rng):
     p["u1"] = jnp.asarray(rng.normal(0, 0.5, FM).astype(np.float32))
     p["fq"] = jnp.zeros(FM)
     p["Wo"] = jnp.zeros((FM, NB_ACT))
-    p["Wfock"] = jnp.zeros((K * H, NB_ACT * NU))
+    p["Mcav1"] = W(K * (H + 7), H, 1.0)
+    p["bcav1"] = jnp.zeros(H)
+    p["Wfock"] = jnp.zeros((H, NB_ACT * NU))
+    wbit_np = np.asarray(W(H + 7, FM, 1.0), np.float32)
+    for m_i in range(4):
+        wbit_np[:, m_i] *= 0.1
+        wbit_np[H + 3 + m_i, m_i] = 6.0
+        wbit_np[:, 4 + m_i] *= 0.2
+        wbit_np[H + 3 + m_i, 4 + m_i] = 2.0
+    p["Wbit"] = jnp.asarray(wbit_np)
+    p["bbit"] = jnp.zeros(FM)
+    p["Wprod"] = jnp.zeros((FM, NB_ACT))
     if a.clause_w:
         p["Wc"] = jnp.zeros((H, L_ACT))
 
@@ -322,7 +336,9 @@ def forward_net(p, G):
     dA_glob = (h_g @ p["G2_a"]).reshape(B, C, NB_ACT, 2)
     dg = p["g0"][None, :] + h_g @ p["G2_g"]
     hd = hv[:, CV]  # (B, C, K, H)
-    dA_cav = (hd.mean(2) @ p["Wa"]).reshape(B, C, NB_ACT, 2)
+    hd_aug = jnp.concatenate([hd, G["fv"][:, CV]], axis=-1)  # (B, C, K, H + 7)
+    hcav_h = jnp.tanh(hd_aug.reshape(B, C, K * (a.H + 7)) @ p["Mcav1"] + p["bcav1"])  # (B, C, H)
+    dA_cav = ((hd.mean(2) + hcav_h) @ p["Wa"]).reshape(B, C, NB_ACT, 2)
     A_b = p["A0"][None] + dA_glob + dA_cav
 
     U0 = p["u0"] + hd @ p["P0"]
@@ -330,8 +346,15 @@ def forward_net(p, G):
     z = (jnp.einsum("bcjm,jf->bcfm", U1, BT) + jnp.einsum("bcjm,jf->bcfm", U0, 1.0 - BT)) / K
     ph_free = jnp.transpose(jnp.tanh(z + p["fq"]) @ p["Wo"], (0, 1, 3, 2))  # (B, C, NB_ACT, NU)
     ph_lin = jnp.einsum("bcjl,jf->bclf", hd @ p["Ws"], BT)
-    ph_fock = (hd.reshape(B, C, K * a.H) @ p["Wfock"]).reshape(B, C, NB_ACT, NU)
-    TH_b = p["TH0"][None] + ph_free + ph_lin + ph_fock
+    ph_fock = (hcav_h @ p["Wfock"]).reshape(B, C, NB_ACT, NU)
+
+    # Multilinear K-bit Fock-Product SNAP head: exact addressability of any Fock level f in 0..2^K-1
+    P_bit = jax.nn.sigmoid(hd_aug @ p["Wbit"] + p["bbit"])  # (B, C, K, FM)
+    M_jf = P_bit[:, :, :, None, :] * BT[None, None, :, :, None] + (1.0 - P_bit[:, :, :, None, :]) * (1.0 - BT[None, None, :, :, None])
+    Phi = jnp.prod(M_jf, axis=2)  # (B, C, NU, FM)
+    ph_prod = jnp.transpose(Phi @ p["Wprod"], (0, 1, 3, 2))  # (B, C, NB_ACT, NU)
+
+    TH_b = p["TH0"][None] + ph_free + ph_lin + ph_fock + ph_prod
     w_b = (hc @ p["Wc"]) if a.clause_w else jnp.zeros((B, 1, L_ACT), jnp.float32)
     return A_b, TH_b, dg, w_b
 
@@ -371,17 +394,18 @@ def main():
         nl = -jnp.log(p_s + 1e-12)
         if a.p_cap > 0:
             cap_nl = -np.log(a.p_cap)
-            nl_eff = jnp.where(nl < cap_nl, cap_nl + 0.08 * (nl - cap_nl), nl)
+            nl_eff = cap_nl + jax.nn.softplus(4.0 * (nl - cap_nl)) / 4.0
         else:
             nl_eff = nl
         out = jnp.mean(nl_eff)
         if a.tailw > 0:
-            k = max(1, int(round(0.15 * nl.shape[0])))
-            out = out + a.tailw * jnp.mean(jax.lax.top_k(nl, k)[0])
+            k = max(1, int(round(0.16 * nl.shape[0])))
+            top_nl = jax.lax.top_k(nl, k)[0]
+            out = out + a.tailw * jnp.mean(top_nl) + 0.12 * a.tailw * jnp.mean(jnp.exp(jnp.minimum(top_nl, 3.5)))
         if a.leakpen > 0:
             out = out + a.leakpen * jnp.mean(p_l)
         if a.wd > 0:
-            keys = ("G2_a", "G2_g", "Wa", "Ws", "Wo", "Wfock") + (("Wc",) if a.clause_w else ())
+            keys = ("G2_a", "G2_g", "Wa", "Ws", "Wo", "Wfock", "Wprod") + (("Wc",) if a.clause_w else ())
             out = out + a.wd * sum(jnp.sum(p[k_] ** 2) for k_ in keys)
         return out
 
@@ -418,7 +442,10 @@ def main():
             idx = rng_b.choice(B_tr, bs, replace=False)
             G_sub = {k_: v_[idx] for k_, v_ in D_tr["G"].items()}
             v_b, g_b = vg(x_cur, G_sub, D_tr["Cn_rel"][idx], D_tr["Succ"][idx], D_tr["Viol"][idx])
-            lr_t = a.lr * (0.08 + 0.92 * 0.5 * (1.0 + np.cos(np.pi * st / a.steps)))
+            gnorm = jnp.sqrt(jnp.sum(g_b * g_b) + 1e-12)
+            g_b = g_b * jnp.minimum(1.0, 3.0 / gnorm)
+            warm = min(1.0, st / 200.0)
+            lr_t = a.lr * warm * (0.08 + 0.92 * 0.5 * (1.0 + np.cos(np.pi * st / a.steps)))
             x_cur, mom, vel = adam_step(x_cur, mom, vel, g_b, st, lr_t)
             if st % 200 == 0 or st == a.steps:
                 mv = check_val(x_cur, st)
@@ -450,11 +477,32 @@ def main():
         check_val(r.x, a.steps + it_c[0])
 
     th_best = jnp.asarray(best_val["th"], jnp.float32)
+    np.savez_compressed(OUT.replace(".json", "_theta.npz"), theta=np.asarray(th_best, np.float32))
     m_val = eval_metrics(*ev_main(th_best, D_va))
     p_te, lk_te = ev_main(th_best, D_te)
     m_test = eval_metrics(p_te, lk_te)
     p_chk, lk_chk = ev_chk(th_best, D_te)
     m_chk = eval_metrics(p_chk, lk_chk)
+
+    if a.relabel in ("bpdec", "bpcenter", "bppol"):
+        ps_r, lks_r = [np.asarray(p_chk, float)], [np.asarray(lk_chk, float)]
+        for r_b in [1, 2, 3]:
+            D_r = prepare_split("test", r_branch=r_b)
+            pr_i, lk_i = ev_chk(th_best, D_r)
+            ps_r.append(np.asarray(pr_i, float)); lks_r.append(np.asarray(lk_i, float))
+        ps_r = np.stack(ps_r, axis=0)
+        lks_r = np.stack(lks_r, axis=0)
+        # Uniform RR4 and weighted RR4 (0.4, 0.2, 0.2, 0.2) and Best-of-4
+        m_rr4 = eval_metrics(np.mean(ps_r, axis=0), np.mean(lks_r, axis=0))
+        m_wrr4 = eval_metrics(0.40 * ps_r[0] + 0.20 * ps_r[1] + 0.20 * ps_r[2] + 0.20 * ps_r[3], np.mean(lks_r, axis=0))
+        m_best4 = eval_metrics(np.max(ps_r, axis=0), np.mean(lks_r, axis=0))
+        for d_tgt in (m_test, m_chk):
+            d_tgt["rr4_med"] = m_rr4["median_inv_p"]
+            d_tgt["rr4_B90"] = m_rr4["B90_inv_p"]
+            d_tgt["wrr4_med"] = m_wrr4["median_inv_p"]
+            d_tgt["wrr4_B90"] = m_wrr4["B90_inv_p"]
+            d_tgt["best4_med"] = m_best4["median_inv_p"]
+            d_tgt["best4_B90"] = m_best4["B90_inv_p"]
 
     res = {
         "args": vars(a), "ws_ref": WS_REF, "NF": NF, "NF_chk": NF_CHK, "NU": NU,
