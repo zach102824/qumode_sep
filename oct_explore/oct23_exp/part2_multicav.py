@@ -594,18 +594,30 @@ def run_gnn_pipeline():
             w_b = jnp.zeros_like(w_b)
         psi0 = make_psi0_log(C_cav)
         psi = jnp.broadcast_to(psi0, (B,) + (NU,) * C_cav)
+        # Clause-weighted cost must not materialize viol with shape (2^n, B, m)
+        # (OOM at n=20). Build Ew as (B, 2^n) via a batch loop over clauses.
         if a.clause_w and not zero_oracle:
-            xb = get_xb(n)
-            lit = xb[:, G["VP"]]
-            viol = jnp.prod((lit == G["BB"][None]).astype(jnp.float32), -1)
+            xb = get_xb(n)  # (2^n, n) int8, precomputed
+            VP = G["VP"]    # (B, m, K)
+            BB = G["BB"]    # (B, m, K)
             nm = n / float(G["Ip"].shape[1])
+            def cost_Ew(w_eff):
+                # w_eff: (B, m) -> Ew: (B, 2^n)
+                # viol_b[x,c] = prod_k (xb[x, VP[b,c,k]] == BB[b,c,k])
+                def one_b(vp_b, bb_b, w_b):
+                    # vp_b, bb_b: (m, K); w_b: (m,)
+                    lit = xb[:, vp_b]                      # (2^n, m, K)
+                    viol = jnp.prod((lit == bb_b[None]).astype(jnp.float32), axis=-1)  # (2^n, m)
+                    return viol @ w_b                       # (2^n,)
+                return nm * jax.vmap(one_b)(VP, BB, w_eff)  # (B, 2^n)
         else:
             Cn_sh = Cn.reshape(psi.shape)
 
         for l in range(L):
             if not zero_oracle:
                 if a.clause_w:
-                    Ew = nm * jnp.einsum("xbm,bm->bx", viol, dg[:, l][:, None] + w_b[:, :, l])
+                    w_eff = dg[:, l][:, None] + w_b[:, :, l]  # (B, m)
+                    Ew = cost_Ew(w_eff)
                     psi = psi * jnp.exp(-1j * Ew.reshape(psi.shape))
                 else:
                     psi = psi * jnp.exp(-1j * dg[:, l].reshape((B,) + (1,) * C_cav) * Cn_sh)
@@ -713,7 +725,7 @@ def run_gnn_pipeline():
         E_te, _, v_te, s_te = get_instances(n_te, 100, TEB, "test")
         G_te = build_graphs(v_te, s_te, n_te)
         m_te = int(round(9.93 * n_te))
-        ch = 50 if n_te <= 12 else (25 if n_te == 16 else 10)
+        ch = 50 if n_te <= 12 else (10 if n_te == 16 else 2)
         ev_fn = jax.jit(lambda th, G_b, c_b, s_b, n_val=n_te: sim_gnn_n(th, G_b, c_b, s_b, n_val, False))
         ev_z  = jax.jit(lambda th, G_b, c_b, s_b, n_val=n_te: sim_gnn_n(th, G_b, c_b, s_b, n_val, True))
         ps, lks, pzs = [], [], []
