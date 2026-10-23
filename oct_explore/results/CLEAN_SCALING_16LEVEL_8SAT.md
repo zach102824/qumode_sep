@@ -11,6 +11,7 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 | QAOA L4 (shots) | **7.33** [7.33–7.33] | **25.5** [25.5–25.5] | **105** [105–105] | **257** [257–257] |
 | Global cost L4 (shots) | **7.46** [7.41–7.46] | **25.8** [25.6–25.8] | **98.1** [97.3–98.1] | **245** [244–250] |
 | QAOA L14 (shots) | **2.06** [2.05–2.06] | **4.77** [4.76–4.77] | **11.3** [11.3–11.4] | **25.3** [25.3–25.3] |
+| Global cost L14 (shots) | **2.26** [2.2–2.28] | **4.9** [4.87–4.94] | **12.2** [12.2–13.1] | **25.1** [25.1–27.6] |
 | Native-projected cost L4, QAOA-style 8 params (shots) | **8.78** [7.44–8.78] | **158** [158–180] | **4.9e+03** [4.9e+03–5.53e+03] | **7.79e+04** [7.79e+04–9.54e+04] |
 | Native-projected cost L4 + GNN clause weights (shots) | **9.04** [8.98–9.04] | **186** [178–195] | **4.94e+03** [4.84e+03–5e+03] | **8.28e+04** [7.7e+04–8.28e+04] |
 | WalkSATlm (lookups) | **74.8** | **223** | **833** | **1.81e+03** |
@@ -24,6 +25,7 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 | QAOA L4 (shots) | **17.7** [17.7–17.7] | **68.9** [68.9–68.9] | **269** [269–269] | **850** [850–850] |
 | Global cost L4 (shots) | **16.9** [16.7–17.3] | **64.8** [62.3–65.1] | **233** [233–242] | **809** [796–825] |
 | QAOA L14 (shots) | **6.77** [6.75–6.77] | **27.4** [27.2–27.4] | **74** [73.8–74] | **167** [167–171] |
+| Global cost L14 (shots) | **6.19** [6.19–6.39] | **21.2** [21.2–25.3] | **46.7** [46.7–55.5] | **94.7** [94.7–108] |
 | Native-projected cost L4, QAOA-style 8 params (shots) | **18.9** [17.8–18.9] | **2.14e+03** [2.14e+03–2.98e+03] | **4.76e+04** [4.76e+04–8.66e+04] | **7.75e+05** [7.75e+05–2.53e+06] |
 | Native-projected cost L4 + GNN clause weights (shots) | **16.3** [16.2–16.9] | **982** [932–1.03e+03] | **2.28e+04** [2.24e+04–2.3e+04] | **4.17e+05** [4.17e+05–4.45e+05] |
 | WalkSATlm (lookups) | **149** | **616** | **1.74e+03** | **4.19e+03** |
@@ -42,26 +44,29 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 | Global cost L4 (shots) | B90 | **1.380** | [1.332, 1.414] | 1.378–1.384 | 0.465 | 1.31 |
 | QAOA L14 (shots) | median | **1.233** | [1.214, 1.269] | 1.233–1.234 | 0.303 | 0.386 |
 | QAOA L14 (shots) | B90 | **1.304** | [1.218, 1.396] | 1.304–1.306 | 0.383 | 0.947 |
-| Native-projected cost L4, QAOA-style 8 params (shots) | median | **2.155** | [2.078, 2.275] | 2.155–2.215 | 1.108 | 0.0183 |
-| Native-projected cost L4, QAOA-style 8 params (shots) | B90 | **2.397** | [2.299, 2.641] | 2.397–2.648 | 1.261 | 0.0301 |
-| Native-projected cost L4 + GNN clause weights (shots) | median | **2.151** | [2.079, 2.219] | 2.142–2.151 | 1.105 | 0.02 |
-| Native-projected cost L4 + GNN clause weights (shots) | B90 | **2.315** | [2.221, 2.524] | 2.315–2.327 | 1.211 | 0.0276 |
-| WalkSATlm (lookups) | median | **1.313** | [1.286, 1.334] | — | 0.392 | 8.84 |
-| WalkSATlm (lookups) | B90 | **1.318** | [1.290, 1.347] | — | 0.398 | 18.9 |
-| ref: paper's published angles p=4, no training (shots) | median | **1.341** | [1.322, 1.364] | — | 0.423 | 0.858 |
-| ref: paper's published angles p=4, no training (shots) | B90 | **1.366** | [1.331, 1.404] | — | 0.450 | 1.61 |
-| ref: paper's published angles p=14, no training (shots) | median | **1.209** | [1.184, 1.234] | — | 0.274 | 0.612 |
-| ref: paper's published angles p=14, no training (shots) | B90 | **1.256** | [1.187, 1.373] | — | 0.329 | 1.53 |
-| ref: paper's published angles p=60, no training (shots) | median | **1.111** | [1.077, 1.131] | — | 0.152 | 0.522 |
-| ref: paper's published angles p=60, no training (shots) | B90 | **1.331** | [1.217, 1.427] | — | 0.412 | 0.35 |
+| Global cost L14 (shots) | median | **1.225** | [1.201, 1.246] | 1.225–1.237 | 0.293 | 0.444 |
+| Global cost L14 (shots) | B90 | **1.251** | [1.194, 1.296] | 1.251–1.264 | 0.324 | 1.19 |
+| Native-projected cost L4, QAOA-style 8 params (shots) | median | **2.155** | [2.080, 2.277] | 2.155–2.215 | 1.108 | 0.0183 |
+| Native-projected cost L4, QAOA-style 8 params (shots) | B90 | **2.397** | [2.294, 2.638] | 2.397–2.648 | 1.261 | 0.0301 |
+| Native-projected cost L4 + GNN clause weights (shots) | median | **2.151** | [2.078, 2.220] | 2.142–2.151 | 1.105 | 0.02 |
+| Native-projected cost L4 + GNN clause weights (shots) | B90 | **2.315** | [2.225, 2.512] | 2.315–2.327 | 1.211 | 0.0276 |
+| WalkSATlm (lookups) | median | **1.313** | [1.285, 1.333] | — | 0.392 | 8.84 |
+| WalkSATlm (lookups) | B90 | **1.318** | [1.289, 1.344] | — | 0.398 | 18.9 |
+| ref: paper's published angles p=4, no training (shots) | median | **1.341** | [1.322, 1.366] | — | 0.423 | 0.858 |
+| ref: paper's published angles p=4, no training (shots) | B90 | **1.366** | [1.332, 1.403] | — | 0.450 | 1.61 |
+| ref: paper's published angles p=14, no training (shots) | median | **1.209** | [1.183, 1.235] | — | 0.274 | 0.612 |
+| ref: paper's published angles p=14, no training (shots) | B90 | **1.256** | [1.189, 1.362] | — | 0.329 | 1.53 |
+| ref: paper's published angles p=60, no training (shots) | median | **1.111** | [1.077, 1.130] | — | 0.152 | 0.522 |
+| ref: paper's published angles p=60, no training (shots) | B90 | **1.331** | [1.224, 1.426] | — | 0.412 | 0.35 |
 | ref: WalkSATlm in paper unit (tries of n flips) | median | **1.219** | [1.194, 1.237] | — | 0.285 | 1.79 |
-| ref: WalkSATlm in paper unit (tries of n flips) | B90 | **1.226** | [1.201, 1.251] | — | 0.294 | 3.7 |
+| ref: WalkSATlm in paper unit (tries of n flips) | B90 | **1.226** | [1.201, 1.253] | — | 0.294 | 3.7 |
 
 ## Seed selection (validation n=12, 200 formulas)
 
 - QAOA L4 (shots): winner seed 0; val med/B90 s0 24.77/62.96, s1 24.77/62.96, s2 24.77/62.96
 - Global cost L4 (shots): winner seed 0; val med/B90 s0 25.04/58.79, s1 25.14/59.39, s2 25.08/58.92
 - QAOA L14 (shots): winner seed 2; val med/B90 s0 4.47/17.99, s1 4.47/18.02, s2 4.45/18.01
+- Global cost L14 (shots): winner seed 0; val med/B90 s0 4.79/14.68, s1 4.90/15.53, s2 5.08/14.66
 - Native-projected cost L4, QAOA-style 8 params (shots): winner seed 0; val med/B90 s0 184.82/2314.42, s1 167.76/2673.83, s2 184.82/2314.42
 - Native-projected cost L4 + GNN clause weights (shots): winner seed 0; val med/B90 s0 209.27/1461.76, s1 206.66/1487.65, s2 224.08/1402.26
 
