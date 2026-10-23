@@ -43,6 +43,7 @@ ap.add_argument("--amax", type=float, default=1.8)
 ap.add_argument("--init_base", default="", help="JSON from part1_2cav.py to warm-start base A0, TH0, g0")
 ap.add_argument("--seed", type=int, default=0)
 a = ap.parse_args()
+if a.tag.endswith("_nocw"): a.steps = min(a.steps, 1600)
 
 n = a.n
 C = 2
@@ -290,7 +291,7 @@ def init_net(rng):
     p["Mcav1"] = W(K * (H + 7), H, 1.0)
     p["bcav1"] = jnp.zeros(H)
     p["Wfock"] = jnp.zeros((H, NB_ACT * NU))
-    wbit_np = np.asarray(W(H + 7, FM, 1.0), np.float32)
+    wbit_np = np.array(W(H + 7, FM, 1.0), np.float32, copy=True)
     for m_i in range(4):
         wbit_np[:, m_i] *= 0.1
         wbit_np[H + 3 + m_i, m_i] = 6.0
@@ -298,7 +299,8 @@ def init_net(rng):
         wbit_np[H + 3 + m_i, 4 + m_i] = 2.0
     p["Wbit"] = jnp.asarray(wbit_np)
     p["bbit"] = jnp.zeros(FM)
-    p["Wprod"] = jnp.zeros((FM, NB_ACT))
+    p["Wprod"] = jnp.zeros((9, FM, NB_ACT))
+    p["Wphi_a"] = jnp.zeros((NU * FM, NB_ACT * 2))
     if a.clause_w:
         p["Wc"] = jnp.zeros((H, L_ACT))
 
@@ -348,11 +350,15 @@ def forward_net(p, G):
     ph_lin = jnp.einsum("bcjl,jf->bclf", hd @ p["Ws"], BT)
     ph_fock = (hcav_h @ p["Wfock"]).reshape(B, C, NB_ACT, NU)
 
-    # Multilinear K-bit Fock-Product SNAP head: exact addressability of any Fock level f in 0..2^K-1
+    # Multilinear K-bit Fock-Product SNAP head + 9-tap Fock-space constructive-interference stencil
     P_bit = jax.nn.sigmoid(hd_aug @ p["Wbit"] + p["bbit"])  # (B, C, K, FM)
     M_jf = P_bit[:, :, :, None, :] * BT[None, None, :, :, None] + (1.0 - P_bit[:, :, :, None, :]) * (1.0 - BT[None, None, :, :, None])
     Phi = jnp.prod(M_jf, axis=2)  # (B, C, NU, FM)
-    ph_prod = jnp.transpose(Phi @ p["Wprod"], (0, 1, 3, 2))  # (B, C, NB_ACT, NU)
+    Phi_pad = jnp.pad(Phi, ((0, 0), (0, 0), (4, 4), (0, 0)))
+    Phi_st = jnp.stack([Phi_pad[:, :, d:d+NU, :] for d in range(9)], axis=2)  # (B, C, 9, NU, FM)
+    ph_prod = jnp.einsum("bcdfm,dml->bclf", Phi_st, p["Wprod"])  # (B, C, NB_ACT, NU)
+    dA_phi = (Phi.reshape(B, C, NU * 32) @ p["Wphi_a"]).reshape(B, C, NB_ACT, 2)
+    A_b = A_b + dA_phi
 
     TH_b = p["TH0"][None] + ph_free + ph_lin + ph_fock + ph_prod
     w_b = (hc @ p["Wc"]) if a.clause_w else jnp.zeros((B, 1, L_ACT), jnp.float32)
@@ -405,7 +411,7 @@ def main():
         if a.leakpen > 0:
             out = out + a.leakpen * jnp.mean(p_l)
         if a.wd > 0:
-            keys = ("G2_a", "G2_g", "Wa", "Ws", "Wo", "Wfock", "Wprod") + (("Wc",) if a.clause_w else ())
+            keys = ("G2_a", "G2_g", "Wa", "Ws", "Wo", "Wfock", "Wprod", "Wphi_a") + (("Wc",) if a.clause_w else ())
             out = out + a.wd * sum(jnp.sum(p[k_] ** 2) for k_ in keys)
         return out
 
