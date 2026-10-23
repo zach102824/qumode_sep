@@ -14,8 +14,8 @@ for f in files:
     except Exception as e:
         print(f"Skipping {f}: {e}")
 
-gray_shared = [r for r in runs if r["args"].get("mode") == "shared" and r["args"].get("mixer") == "gray"]
-sd_shared   = [r for r in runs if r["args"].get("mode") == "shared" and r["args"].get("mixer", "sd") == "sd"]
+gray_shared = [r for r in runs if (r["args"].get("mixer") == "gray" or str(r["args"].get("tag","")).startswith("p2_gray_")) and r["args"].get("mode","shared") != "gnn"]
+sd_shared   = [r for r in runs if r["args"].get("mode","shared") == "shared" and r["args"].get("mixer","sd") == "sd" and not str(r["args"].get("tag","")).startswith("p2_gray_")]
 gray_gnn    = [r for r in runs if r["args"].get("mode") == "gnn" and r["args"].get("mixer") == "gray"]
 sd_gnn      = [r for r in runs if r["args"].get("mode") == "gnn" and r["args"].get("mixer", "sd") == "sd"]
 
