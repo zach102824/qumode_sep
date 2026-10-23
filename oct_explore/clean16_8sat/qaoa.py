@@ -62,8 +62,26 @@ def f(x):
             v, gg = VG[n](x, PE[s:s + CH], S[s:s + CH]); w = PE[s:s + CH].shape[0] / PE.shape[0] / len(data); tot += float(v) * w; g = g + np.asarray(gg, np.float64) * w
     return tot, g
 rng = np.random.default_rng(7 + 1000 * a.seed)  # clean16: training seed
-cands = [np.stack([np.linspace(0.8, 0.1, L), np.linspace(0.1, 0.8, L)], 1).reshape(-1) * s for s in (0.5, 1, 2, 4)]
-cands += [np.stack([rng.uniform(0, np.pi, L), rng.uniform(0, 3, L)], 1).reshape(-1) for _ in range(a.nstart - 4)]
+if L == 14 and a.proj == "full":
+    # 8-SAT L=14: gamma in CM.NM=1/176.54 units has opposite sign to beta and scale ~ -15..-85.
+    # Seed 0 includes a warm-start from the paper's published p=14 angles (P14_x0.json); seeds 1,2 are purely from scratch.
+    cands = []
+    p14f = f"{CM.RES}/P14_x0.json"
+    if a.seed == 0 and os.path.exists(p14f):
+        xp = np.array(json.load(open(p14f))["x"], dtype=np.float64)
+        cands.append(xp)
+        cands.append(xp * rng.uniform(0.9, 1.1, size=xp.shape))
+    for _ in range(3):
+        b0, b1 = rng.uniform(0.5, 0.75), rng.uniform(0.12, 0.32)
+        g0, g1 = rng.uniform(-32.0, -18.0), rng.uniform(-88.0, -62.0)
+        cands.append(np.stack([np.linspace(b0, b1, L), np.linspace(g0, g1, L)], 1).reshape(-1))
+    cands.append(np.tile([0.01, -0.5 * 0.01 / CM.NM], L) * rng.uniform(0.8, 1.2, 2 * L))  # paper Sec 4.5 small-angle init
+    while len(cands) < a.nstart:
+        cands.append(np.stack([rng.uniform(0.1, 0.8, L), rng.uniform(-85.0, -15.0, L)], 1).reshape(-1))
+    cands = cands[:a.nstart]
+else:
+    cands = [np.stack([np.linspace(0.8, 0.1, L), np.linspace(0.1, 0.8, L)], 1).reshape(-1) * s for s in (0.5, 1, 2, 4)]
+    cands += [np.stack([rng.uniform(0, np.pi, L), rng.uniform(0, 3, L)], 1).reshape(-1) for _ in range(a.nstart - 4)]
 q6 = "/nonexistent"  # clean16: no warm start from old results
 if L == 4 and os.path.exists(q6): cands.append(np.array(json.load(open(q6))["best"]["x"]))
 if a.x0: cands = [np.array(json.load(open(f))["x"]) for f in a.x0.split(",")]

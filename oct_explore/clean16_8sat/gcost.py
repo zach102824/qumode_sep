@@ -64,10 +64,14 @@ def pairs(n, cl):
     return np.concatenate(J), np.concatenate(X).astype(np.int32)
 
 MPAD = lambda n: int(np.ceil(CM.R * n + 8 * np.sqrt(CM.R * n)))   # fixed clause padding per n (Poisson +8 sigma), so GNN pooling sees the same M everywhere
+GCACHE = "/tmp/clean16_8sat_gcache"; os.makedirs(GCACHE, exist_ok=True)
 def build(n, insts, rng=None):
     """-> dict of numpy arrays: graph (clauses zero-padded to the set's max m), violated-string pair lists CJ/XS (padded with dump index 2^n),
     permuted energy E, success mask. Only block assignment is supported here (G16_full_w recipe)."""
     assert a.assign == "block"
+    cdir = f"{GCACHE}/n{n}_c{len(insts)}_s{insts[0]['seed']}" if (n <= 12 and len(insts) >= 100) else None
+    if cdir and os.path.exists(f"{cdir}/DONE"):
+        D = {k: np.load(f"{cdir}/{k}.npy", mmap_mode="r") for k in ("Ip", "In", "fv", "deg", "CJ", "XS", "E", "S")}; D["nm"] = CM.NM; return D
     gs, PJ, PX, EE = [], [], [], []
     for ins in insts:
         G, V, Bb, m, cl = graph(n, ins["seed"]); gs.append(G); j, x = pairs(n, cl); PJ.append(j); PX.append(x); EE.append(ins["E"].astype(np.float32))
@@ -77,6 +81,12 @@ def build(n, insts, rng=None):
     D = {k: np.stack([padm(g[k]) if k in ("Ip", "In") else g[k] for g in gs]) for k in gs[0]}
     D["CJ"] = np.stack([np.pad(j, (0, P - len(j))) for j in PJ]); D["XS"] = np.stack([np.pad(x, (0, P - len(x)), constant_values=1 << n) for x in PX])
     D["E"] = np.stack(EE); D["S"] = (D["E"] == 0).astype(np.float32); D["nm"] = CM.NM
+    if cdir:
+        os.makedirs(cdir, exist_ok=True)
+        for k in ("Ip", "In", "fv", "deg", "CJ", "XS", "E", "S"):
+            if not os.path.exists(f"{cdir}/{k}.npy"): np.save(f"{cdir}/{k}.npy", D[k])
+        open(f"{cdir}/DONE", "w").write("ok")
+        D = {k: np.load(f"{cdir}/{k}.npy", mmap_mode="r") for k in ("Ip", "In", "fv", "deg", "CJ", "XS", "E", "S")}; D["nm"] = CM.NM
     return D
 
 XB = {}; MASK = {}
@@ -193,7 +203,8 @@ res = {"args": vars(a), "hist": HIST, "best_it": BEST["it"], "val_S": BEST["S"],
 thb = jnp.asarray(BEST["x"])
 for n in a.test:
     ins = sim.instances(n, CM.NTEST, TEB); t = time.time(); ch = 25 if n <= 12 else (4 if n <= 16 else 1); outs = []
-    for s0 in range(0, len(ins), 10): outs.append(evaluate(thb, build(n, ins[s0:s0 + 10]), n, ch))
+    step = 2 if n == 20 else 10
+    for s0 in range(0, len(ins), step): outs.append(evaluate(thb, build(n, ins[s0:s0 + step]), n, ch))
     pr, bl, gl = (np.concatenate([o[i] for o in outs]) for i in range(3))
     res["test"][str(n)] = NS.summ(pr) | {"p": pr.tolist(), "b_mean": bl.mean(0).tolist(), "b_std": bl.std(0).tolist(), "g_mean": gl.mean(0).tolist()}; res["random"][str(n)] = NS.rand_stats(ins, n)
     log(f"TEST n={n}: {res['test'][str(n)]['median_inv_p']:.2f}/{res['test'][str(n)]['B90_inv_p']:.2f} b {np.round(bl.mean(0), 3)} g {np.round(gl.mean(0), 3)} ({time.time()-t:.0f}s)")
