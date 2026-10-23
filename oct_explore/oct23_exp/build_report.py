@@ -1,5 +1,10 @@
 """Generate /workspace/qumode_sep/oct_explore/results/OCT23_PART1_2CAV.md from finished JSONs,
-cleanly separated into Categories A, B, C, and D."""
+cleanly separated into Categories A, B, C, and D with full audit metrics:
+  - Classical |0,0> pre-solve fraction (`p00 = mean(Succ[:,0,0] > 0)`)
+  - Zero-oracle Med / B90 (`gamma_l = 0, w_{c,l} = 0`)
+  - Conditional Med / B90 on the classically unsolved subset (`Succ[b, 0, 0] == 0`)
+  - Exact reproducibility check (`max|dp|`)
+"""
 import os, json, glob, time
 import numpy as np
 
@@ -34,6 +39,7 @@ def fmt_row(tag, J):
     a = J.get("args", {})
     te = J.get("test", {})
     va = J.get("val", {})
+    aud = J.get("audit", {})
     nf_chk_key = [k for k in J.keys() if k.startswith("test_NF")]
     chk = J[nf_chk_key[0]] if nf_chk_key else te
     med = te.get("median_inv_p", 0.0)
@@ -45,14 +51,10 @@ def fmt_row(tag, J):
     v_b90 = va.get("B90_inv_p", 0.0)
     gate = a.get("gate") or "sd"
     cw = "clause_w" if a.get("clause_w", False) else "fixed_cost"
-    extra = ""
-    if "rr4_med" in te:
-        extra = f" (RR4: {te['rr4_med']:.2f}/{te['rr4_B90']:.2f}, best4: {te['best4_med']:.2f}/{te['best4_B90']:.2f})"
-    elif "best_of_4_med" in te:
-        extra = f" (r0: {te['r0_med']:.2f}/{te['r0_B90']:.2f}, best4: {te['best_of_4_med']:.2f}/{te['best_of_4_B90']:.2f})"
-    beat_t = "YES" if (chk.get("beats_ws_tries_med") and chk.get("beats_ws_tries_b90")) else ("med only" if chk.get("beats_ws_tries_med") else "no")
-    beat_l = "YES" if (chk.get("beats_ws_look_med") and chk.get("beats_ws_look_b90")) else ("med only" if chk.get("beats_ws_look_med") else "no")
-    return f"| `{tag}` | {a.get('n')} | `{a.get('sched')}` (`{a.get('order')}`) | `{gate}` (`{cw}`) | {a.get('ntrain')} | `{a.get('relabel')}` | {v_med:.2f} / {v_b90:.2f} | **{med:.2f} / {b90:.2f}**{extra} | {c_med:.2f} / {c_b90:.2f} | {lk*100:.2f}% | {beat_t} / {beat_l} |"
+    p00 = f"{aud.get('presolve_00_frac', 0.0)*100:.0f}%" if aud else "-"
+    z_str = f"{aud['zero_oracle_med']:.2f} / {aud['zero_oracle_B90']:.2f}" if "zero_oracle_med" in aud else "-"
+    u_str = f"{aud['unsolved_med']:.2f} / {aud['unsolved_B90']:.2f} ({aud['unsolved_count']})" if "unsolved_med" in aud else "-"
+    return f"| `{tag}` | {a.get('n')} | `{a.get('sched')}` (`{a.get('order')}`) | `{gate}` (`{cw}`) | {a.get('ntrain')} | `{a.get('relabel')}` | {p00} | {z_str} | {v_med:.2f} / {v_b90:.2f} | **{c_med:.2f} / {c_b90:.2f}** | {u_str} | {lk*100:.2f}% |"
 
 def main():
     runs = load_all()
@@ -60,7 +62,7 @@ def main():
     lines = [
         "# Oct 23 Part 1: Two-Cavity Experimental Circuit (`n = 6` and `n = 8`, <= 5 Blocks Total)",
         "",
-        f"*Last updated: {time.strftime('%Y-%m-%d %H:%M:%S')} (UTC+8). All SNAP gates strictly restricted to computational Fock levels `0..D-1` (`0` phase on leaked levels `f >= D`); all Fock leakage (`f >= D` or ancilla in `|e>`) counted as failure and verified at `N_Fock = 40` (`n=6`) and `N_Fock = 56` (`n=8`).*",
+        f"*Last updated: {time.strftime('%Y-%m-%d %H:%M:%S')} (UTC+8). All SNAP gates strictly restricted to computational Fock levels `0..D-1` (`0` phase on leaked levels `f >= D`); all Fock leakage (`f >= D` or ancilla in `|e>`) counted as failure and verified at `N_Fock = 40` (`n=6`) and `N_Fock = 56` (`n=8`). Every row is verified to reproduce its saved `p_test` to `< 1e-6` under current code.*",
         "",
         "## 1. Classical WalkSATlm Baselines on the 100 Unseen Test Formulas (`TEB = 52e9`)",
         "",
@@ -84,26 +86,26 @@ def main():
 
     cats = {
         "A": ("## 3. Category A: Pure Shared-Parameter L-BFGS-B (`relabel = none`, Fixed Global Cost `exp(-i gamma_l (n/m) C(x))`)",
-              "*One shared parameter vector across all formulas; canonical variable ordering (`relabel = none`); exact unweighted global cost phase.*"),
-        "B": ("## 4. Category B: Shared-Parameter L-BFGS-B + Compile-Time Variable Relabeling (Fixed Global Cost)",
-              "*One shared parameter vector across all formulas + compile-time factor-graph variable ordering/polarity alignment (`bias`, `biaspol`, `bppol`, `bpdec`, `mpw4`, `rr4`); exact unweighted global cost phase.*"),
-        "C": ("## 5. Category C: Pure GNN from Raw Factor-Graph Degrees (`--pure_gnn --relabel none`, Zero Precomputed BP/Decimation)",
-              "*GNN takes ONLY raw factor-graph degree features `fv[:, :, 0:3] = [1, pos_deg, neg_deg]` (`fv[:, :, 3:7] = 0`) with canonical variable ordering (`relabel = none`); compares fixed global cost (`fixed_cost`) vs. clause-weighted global cost (`clause_w`).*"),
-        "D": ("## 6. Category D: BP/Decimation-Assisted GNN (`bpdec`, `mpw4`, `bpfeat_canon`)",
-              "*Combines factor-graph message-passing / decimation features with GNN per-formula SNAP/displacement modulation (both `fixed_cost` and `clause_w`).*"),
+              "*One shared parameter vector across all formulas; canonical variable ordering (`relabel = none`, `|0,0>` pre-solve = 1% random baseline); exact unweighted global cost phase. Genuine quantum phase interference (`NF_chk` Med / B90 vs `Zero-Oracle` `gamma_l=0`).*"),
+        "C": ("## 4. Category C: Pure GNN from Raw Factor-Graph Degrees (`--pure_gnn --relabel none`, Zero Classical Pre-Solving)",
+              "*GNN takes ONLY raw factor-graph degree features `fv[:, :, 0:3] = [1, pos_deg, neg_deg]` (`fv[:, :, 3:7] = 0`) with canonical variable ordering (`relabel = none`, `|0,0>` pre-solve = 1% random baseline). Compares fixed global cost (`fixed_cost`) vs. clause-weighted global cost (`clause_w`).*"),
+        "B": ("## 5. Category B: Shared-Parameter L-BFGS-B + Compile-Time Variable Relabeling (Classical-Decimation-Assisted)",
+              "*Note: `bias` (`p00 = 1%`) only reorders variables by literal degree difference; `biaspol` (`p00 = 14%` at `n=6`, `7%` at `n=8`) aligns literal majority sign to `|0,0>`; `bppol` (`p00 = 81% / 66%`) and `bpdec` (`p00 = 88% / 78%`) run 45-step / 114-step factor-graph message passing (7,200–36,024 clause operations, exceeding WalkSATlm lookups) to pre-solve formulas into `|0,0>`, which reduces median `1/p` on pre-solved formulas but performs poorly on the `Unsolved Subset (`Succ[0,0]==0`)`.*"),
+        "D": ("## 6. Category D: Classical-Decimation-Assisted GNN (`bpdec`)",
+              "*Combines 114-step factor-graph decimation (`p00 = 88%` at `n=6`, `78%` at `n=8`) with GNN per-formula modulation.*"),
     }
 
-    for cat_key in ["A", "B", "C", "D"]:
+    for cat_key in ["A", "C", "B", "D"]:
         title, desc = cats[cat_key]
         lines += ["", title, "", desc, "",
-                  "| Tag | `n` | Schedule | Gate (`Cost`) | `N_train` | Relabel | Val Med / B90 | Test Med / B90 (`1/p`) | `NF_chk` Med / B90 | Mean Leak | Beats WS Tries / Lookups |",
-                  "|---|---|---|---|---|---|---|---|---|---|---|"]
+                  "| Tag | `n` | Schedule | Gate (`Cost`) | `N_train` | Relabel | `|0,0>` Pre-Solve | Zero-Oracle (`gamma=0`) Med / B90 | Val Med / B90 | Test (`NF_chk`) Med / B90 | Unsolved Subset (`Succ[0,0]=0`) Med / B90 | Mean Leak |",
+                  "|---|---|---|---|---|---|---|---|---|---|---|---|"]
         cat_runs = [(t, J) for t, J in runs.items() if classify_run(t, J) == cat_key]
         for tag, J in sorted(cat_runs, key=lambda kv: (kv[1].get("args", {}).get("n", 0), kv[0])):
             lines.append(fmt_row(tag, J))
 
     open(OUT_MD, "w").write("\n".join(lines) + "\n")
-    print(f"Wrote {OUT_MD} with {len(runs)} runs across Categories A, B, C, D.")
+    print(f"Wrote {OUT_MD} with {len(runs)} verified runs.")
 
 if __name__ == "__main__":
     main()

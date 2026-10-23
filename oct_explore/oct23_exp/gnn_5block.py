@@ -44,7 +44,7 @@ ap.add_argument("--amax", type=float, default=1.8)
 ap.add_argument("--init_base", default="", help="JSON from part1_2cav.py to warm-start base A0, TH0, g0")
 ap.add_argument("--seed", type=int, default=0)
 a = ap.parse_args()
-if a.tag.endswith("_nocw"): a.steps = min(a.steps, 1200)
+if a.tag.endswith("_nocw") or a.tag.endswith("_mpw4_cw"): a.steps = min(a.steps, 800)
 if a.pure_gnn:
     a.ntrain = 10000
     a.steps = 1000
@@ -134,7 +134,7 @@ def prepare_split(split_name, max_count=None, r_branch=None):
     if r_branch is not None:
         h_bp = BP_DATA[f"{split_name}_h_bp4"][r_branch]
     else:
-        h_bp = BP_DATA[f"{split_name}_h_mpw4"] if a.relabel == "mpw4" else (BP_DATA[f"{split_name}_h_dec"] if a.relabel in ("bpdec", "bpcenter") else BP_DATA[f"{split_name}_h_bp"])
+        h_bp = (BP_DATA[f"{split_name}_h_dec"] if a.relabel in ("bpdec", "bpcenter") else BP_DATA[f"{split_name}_h_bp"])
     if max_count is not None:
         Es = Es[:max_count]; cls_v = cls_v[:max_count]; cls_s = cls_s[:max_count]
         pos = pos[:max_count]; neg = neg[:max_count]; h_bp = h_bp[:max_count]
@@ -189,7 +189,7 @@ def prepare_split(split_name, max_count=None, r_branch=None):
         fv[:, :, 3] = BP_DATA[f"{split_name}_h_bp"][:B][b_v, orders] * sgn
         fv[:, :, 4] = BP_DATA[f"{split_name}_h_dec"][:B][b_v, orders] * sgn
         fv[:, :, 5] = BP_DATA[f"{split_name}_h_bp4"][1, :B][b_v, orders] * sgn
-        fv[:, :, 6] = BP_DATA[f"{split_name}_h_mpw4"][:B][b_v, orders] * sgn
+        fv[:, :, 6] = BP_DATA[f"{split_name}_h_bp4"][2, :B][b_v, orders] * sgn
     deg[:] = np.maximum(Ip.sum(1) + In.sum(1), 1.0)
 
     return {

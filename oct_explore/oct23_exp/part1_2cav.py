@@ -68,11 +68,12 @@ ap.add_argument("--wd", type=float, default=1e-4)
 ap.add_argument("--seed", type=int, default=0)
 a = ap.parse_args()
 if a.gate in ("ecd", "ecdt"):
-    a.ntrain = min(a.ntrain, 2000)
-    a.nstarts = min(a.nstarts, 8)
-    a.screen_it = min(a.screen_it, 40)
+    a.ntrain = min(a.ntrain, 800 if a.n == 8 else 2000)
+    a.nscreen = min(a.nscreen, 400 if a.n == 8 else 1000)
+    a.nstarts = min(a.nstarts, 4 if a.n == 8 else 8)
+    a.screen_it = min(a.screen_it, 25 if a.n == 8 else 40)
     a.refine_top = 1
-    a.maxiter = min(a.maxiter, 80)
+    a.maxiter = min(a.maxiter, 40 if a.n == 8 else 80)
 elif a.n == 8:
     if not a.tag.startswith("n8_ntrain"):
         a.ntrain = min(a.ntrain, 2000)
