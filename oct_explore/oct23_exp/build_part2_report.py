@@ -37,7 +37,7 @@ lines.append("")
 lines.append("### Classical Baselines on the 100 Unseen Test Formulas (`TEB = 52e9`)")
 lines.append("| Classical Baseline / Reference | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) |")
 lines.append("| :--- | :---: | :---: | :---: | :---: | :---: |")
-lines.append("| **WalkSATlm Tries** (`p = 0.30`, 500 runs/inst) | `2.01 / 3.74` | `2.92 / 6.28` | `4.55 / 11.49` | `5.63 / 16.51` | **`1.092^n / 1.135^n`** |")
+lines.append("| **WalkSATlm Tries** (`p = 0.30`, 500 runs/inst) | `2.01 / 3.74` | `2.92 / 6.28` | `4.55 / 9.09` | `5.63 / 14.2` | **`1.092^n / 1.116^n`** |")
 lines.append("| **WalkSATlm Clause Lookups** (`p = 0.30`, 500 runs/inst) | `13.99 / 29.40` | `32.51 / 76.12` | `78.93 / 214.08` | `111.79 / 356.11` | **`1.191^n / 1.236^n`** |")
 lines.append("| **Uniform Random Guessing (`2^n` / Solutions)** | `42.67 / 128.00` | `585.14 / 2048.00` | `9362.29 / 32768.00` | `149796.6 / 524288.0` | **`1.970^n / 2.000^n`** |")
 lines.append("")
@@ -53,7 +53,7 @@ def fmt_cell(m, n):
     return s
 
 if gray_shared or gray_gnn:
-    lines.append("## 1A. Calibrated Cavity Gray Mixer (`U_gray`) + Per-Cavity `0..15` SNAP + Global Cost Phase (`L = 4..15`)")
+    lines.append("## 1A. Stage-1 Ideal Cavity Gray Mixer `U_gray(β)` + Global Cost Only (`2L` params `(β_l, γ_l)`; no free SNAP θ)")
     lines.append("| Tag | Mode | Arch / Init | `L` | `cw` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | Zero-Oracle `n=12 / n=20` |")
     lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
     for r in gray_shared + gray_gnn:
