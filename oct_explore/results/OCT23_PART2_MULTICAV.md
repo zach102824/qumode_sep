@@ -2,7 +2,7 @@
 
 ## 0. Experimental Protocol & Audit Compliance
 - **Encoding**: `K = 4` bits per cavity (`D = 2^4 = 16` computational Fock states `0..15`, `C = n / 4 in {2, 3, 4, 5}` cavities for `n in {8, 12, 16, 20}`, cutoff `N_Fock = 40`).
-- **Strict Computational-Subspace SNAP**: All SNAP gates (both in `k_prep = 2` state preparation and in all `L` circuit layers) act **exclusively on computational Fock states `0..15`**, with strictly `0` phase on leaked Fock levels `f >= 16`.
+- **Strict Computational-Subspace SNAP**: All SNAP gates (both in `k_prep = 2, 3` state preparation and in all `L` circuit layers) act **exclusively on computational Fock states `0..15`**, with strictly `0` phase on leaked Fock levels `f >= 16`.
 - **Leakage Accounted as Failure**: Any Fock population outside `0..15` in any cavity is excluded from `p_succ` and reported explicitly as `Leak%`.
 - **No Classical Pre-Solving (`relabel = none`)**: Canonical variable ordering and polarity (`flips = 0`), with raw factor-graph degree features only (`fv[:, :, 3:7] = 0`). The vacuum `|0,0,...,0>` pre-solve rate is `1%` at `n = 8` and `0%` at `n = 12, 16, 20`.
 - **Size-Transferable Training**: Shared parameters and GNN weights are trained **strictly on `n = 8, 12` training instances** (`TRB = 51e9`, selected on `n = 12` validation `VAB = 53e9`) and evaluated **zero-shot at `n = 16, 20`** on 100 unseen test instances per `n` (`TEB = 52e9`).
@@ -11,20 +11,20 @@
 | Classical Baseline / Reference | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **WalkSATlm Tries** (`p = 0.30`, 500 runs/inst) | `2.01 / 3.74` | `2.92 / 6.28` | `4.55 / 9.09` | `5.63 / 14.2` | **`1.092^n / 1.116^n`** |
-| **WalkSATlm Clause Lookups** (`p = 0.30`, 500 runs/inst) | `13.99 / 29.40` | `32.5 / 76.1` | `71.0 / 147` | `110 / 290` | **`1.191^n / 1.207^n`** |
+| **WalkSATlm Clause Lookups** (`p = 0.30`, 500 runs/inst) | `13.99 / 29.40` | `32.51 / 76.12` | `78.93 / 214.08` | `111.79 / 356.11` | **`1.191^n / 1.236^n`** |
 | **Uniform Random Guessing (`2^n` / Solutions)** | `42.67 / 128.00` | `585.14 / 2048.00` | `9362.29 / 32768.00` | `149796.6 / 524288.0` | **`1.970^n / 2.000^n`** |
 
 ## 1A. Stage-1 Ideal Cavity Gray Mixer `U_gray(β)` + Global Cost Only (`2L` params `(β_l, γ_l)`; no free SNAP θ)
 
-> **Stage-1 only:** exact `U_gray(β_l)` + cost phase `γ_l` in the computational subspace (`2L` schedule parameters). This is **not** physical per-cavity `0..15` SNAP synthesis — that is Stage-2 / §1B. ★T = dual-beats WalkSATlm tries (Med **and** B90); ✓L = dual-beats WalkSATlm lookups. `p2_gray_L15` at `n=20` is **not** ★T (`B90 = 14.52 ≰ 14.2`).
+> **Stage-1 only (for `shared` rows):** exact `U_gray(β_l)` + cost phase `γ_l` in the computational subspace (`2L` schedule parameters). This is **not** physical per-cavity `0..15` SNAP synthesis — that is Stage-2 / §1B. (For `gnn` rows below, the GNN modulates `U_gray(β_{c,l})` and per-cavity `0..15` SNAP phases.) ★T = dual-beats WalkSATlm tries (Med **and** B90); ✓L = dual-beats WalkSATlm lookups. `p2_gray_L15` at `n=20` is **not** ★T (`B90 = 14.52 ≰ 14.2`).
 
-| Tag | Mode | Arch / Init | `L` | `cw` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | Zero-Oracle `n=12 / n=20` |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| `p2_gray_L12` | `shared` | `Shared-2L` | 12 | no | **1.50 / 3.92** (✓L) | **2.24 / 11.66** (✓L) | **3.16 / 20.20** (✓L) | **5.92 / 22.91** (✓L) | **`1.1180^n / 1.1575^n`** | `2018` / `311066` |
-| `p2_gray_L15` | `shared` | `Shared-2L` | 15 | no | **1.29 / 3.08** (★T) | **1.83 / 8.25** (✓L) | **2.60 / 13.73** (✓L) | **3.87 / 14.52** (✓L) | **`1.0955^n / 1.1376^n`** | `1791` / `351532` |
+| Tag | Mode | Arch / Init | `L` | `N_tr(8,12)` | `cw` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | Zero-Oracle `n=12 / n=20` |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| `p2_gray_L12` | `shared` | `Shared-2L` | 12 | `2000,500` | no | **1.50 / 3.92** (✓L) | **2.24 / 11.66** (✓L) | **3.16 / 20.20** (✓L) | **5.92 / 22.91** (✓L) | **`1.1180^n / 1.1575^n`** | `2018` / `311066` |
+| `p2_gray_L15` | `shared` | `Shared-2L` | 15 | `2000,500` | no | **1.29 / 3.08** (★T) | **1.83 / 8.25** (✓L) | **2.60 / 13.73** (✓L) | **3.87 / 14.52** (✓L) | **`1.0955^n / 1.1376^n`** | `1791` / `351532` |
 
 ## 1B. Direct Physical `k = 1, 2, 3` `SNAP+D` Blocks per Layer — Shared Parameters (L-BFGS-B on `n = 8 + 12`)
-| Tag | `L` | `k` (`SNAP+D`/layer) | Blocks/Cav (`2 + L*k`) | `N_tr(8,12)` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |
+| Tag | `L` | `k` (`SNAP+D`/layer) | Blocks/Cav (`k_p + L*k`) | `N_tr(8,12)` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | `p2_shared_L4_k2` | 4 | 2 | 10 | `2000,500` | 14.13 / 33.16 | 60.84 / 176.39 | 284.81 / 1000.85 | 1124.18 / 3447.02 | **`1.4432^n / 1.4795^n`** | `1915/5451` | 7.29% |
 | `p2_shared_L6_k1` | 6 | 1 | 8 | `2000,500` | **11.98 / 32.17** | 52.89 / 194.88 | 201.01 / 661.52 | 837.33 / 3819.40 | **`1.4218^n / 1.4752^n`** | `1988/5393` | 14.37% |
@@ -49,4 +49,7 @@
 | `p2_gnn_L6_k2_mp128_cw` | 6 | 2 | `mp (H=128, r=4)` | yes | **7.88 / 22.48** (✓L) | **26.35 / 154.27** | 105.93 / 411.13 | 304.25 / 1420.43 | **`1.3617^n / 1.3986^n`** | `872/5795` | 12.41% |
 | `p2_gnn_L6_k2_mp64_cw` | 6 | 2 | `mp (H=64, r=3)` | yes | **7.06 / 20.97** (✓L) | **20.93 / 191.44** | 83.37 / 459.56 | 232.42 / 1332.35 | **`1.3452^n / 1.3955^n`** | `741/8414` | 9.02% |
 | `p2_gnn_L8_k2_mp128_nocw` | 8 | 2 | `mp (H=128, r=4)` | no | **7.47 / 17.48** (✓L) | **19.10 / 111.91** | **68.40 / 341.93** | 191.32 / 985.96 | **`1.3167^n / 1.3915^n`** | `1669/25384` | 8.14% |
+| `p2_gnn_L8_k2_mp128_cw` | 8 | 2 | `mp (H=128, r=4)` | yes | **6.24 / 16.93** (✓L) | **17.93 / 109.68** | **60.27 / 309.26** | 147.25 / 708.13 | **`1.3065^n / 1.3579^n`** | `770/8299` | 8.65% |
+| `p2_gnn_L10_k2_mp128_cw` | 10 | 2 | `mp (H=128, r=4)` | yes | **5.53 / 16.48** (✓L) | **16.83 / 87.07** | **59.71 / 298.37** | 115.39 / 521.89 | **`1.2963^n / 1.3364^n`** | `967/13360` | 7.96% |
+| `p2_gnn_L12_k2_mp128_cw` | 12 | 2 | `mp (H=128, r=4)` | yes | **3.97 / 14.43** (✓L) | **11.31 / 53.15** (✓L) | **31.59 / 223.14** | **69.85 / 420.19** | **`1.2721^n / 1.3347^n`** | `1203/44992` | 12.20% |
 

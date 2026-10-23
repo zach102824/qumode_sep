@@ -19,7 +19,7 @@ sd_shared   = [r for r in runs if r["args"].get("mode","shared") == "shared" and
 gray_gnn    = [r for r in runs if r["args"].get("mode") == "gnn" and r["args"].get("mixer") == "gray"]
 sd_gnn      = [r for r in runs if r["args"].get("mode") == "gnn" and r["args"].get("mixer", "sd") == "sd"]
 
-gray_shared.sort(key=lambda r: r["args"]["L"])
+gray_shared.sort(key=lambda r: (r["args"]["L"], r["args"].get("ntrain8", 2000)))
 sd_shared.sort(key=lambda r: (r["args"]["L"], r["args"]["pairs"], r["args"].get("ntrain8", 2000)))
 gray_gnn.sort(key=lambda r: (r["args"]["L"], r["args"].get("arch", ""), int(r["args"].get("clause_w", 0))))
 sd_gnn.sort(key=lambda r: (r["args"]["L"], r["args"]["pairs"], r["args"].get("arch", ""), int(r["args"].get("clause_w", 0))))
@@ -29,7 +29,7 @@ lines.append("# Oct 23 Exploration — Part 2: Multi-Cavity Scaling (`K = 4` Bit
 lines.append("")
 lines.append("## 0. Experimental Protocol & Audit Compliance")
 lines.append("- **Encoding**: `K = 4` bits per cavity (`D = 2^4 = 16` computational Fock states `0..15`, `C = n / 4 in {2, 3, 4, 5}` cavities for `n in {8, 12, 16, 20}`, cutoff `N_Fock = 40`).")
-lines.append("- **Strict Computational-Subspace SNAP**: All SNAP gates (both in `k_prep = 2` state preparation and in all `L` circuit layers) act **exclusively on computational Fock states `0..15`**, with strictly `0` phase on leaked Fock levels `f >= 16`.")
+lines.append("- **Strict Computational-Subspace SNAP**: All SNAP gates (both in `k_prep = 2, 3` state preparation and in all `L` circuit layers) act **exclusively on computational Fock states `0..15`**, with strictly `0` phase on leaked Fock levels `f >= 16`.")
 lines.append("- **Leakage Accounted as Failure**: Any Fock population outside `0..15` in any cavity is excluded from `p_succ` and reported explicitly as `Leak%`.")
 lines.append("- **No Classical Pre-Solving (`relabel = none`)**: Canonical variable ordering and polarity (`flips = 0`), with raw factor-graph degree features only (`fv[:, :, 3:7] = 0`). The vacuum `|0,0,...,0>` pre-solve rate is `1%` at `n = 8` and `0%` at `n = 12, 16, 20`.")
 lines.append("- **Size-Transferable Training**: Shared parameters and GNN weights are trained **strictly on `n = 8, 12` training instances** (`TRB = 51e9`, selected on `n = 12` validation `VAB = 53e9`) and evaluated **zero-shot at `n = 16, 20`** on 100 unseen test instances per `n` (`TEB = 52e9`).")
@@ -38,7 +38,7 @@ lines.append("### Classical Baselines on the 100 Unseen Test Formulas (`TEB = 52
 lines.append("| Classical Baseline / Reference | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) |")
 lines.append("| :--- | :---: | :---: | :---: | :---: | :---: |")
 lines.append("| **WalkSATlm Tries** (`p = 0.30`, 500 runs/inst) | `2.01 / 3.74` | `2.92 / 6.28` | `4.55 / 9.09` | `5.63 / 14.2` | **`1.092^n / 1.116^n`** |")
-lines.append("| **WalkSATlm Clause Lookups** (`p = 0.30`, 500 runs/inst) | `13.99 / 29.40` | `32.5 / 76.1` | `71.0 / 147` | `110 / 290` | **`1.191^n / 1.207^n`** |")
+lines.append("| **WalkSATlm Clause Lookups** (`p = 0.30`, 500 runs/inst) | `13.99 / 29.40` | `32.51 / 76.12` | `78.93 / 214.08` | `111.79 / 356.11` | **`1.191^n / 1.236^n`** |")
 lines.append("| **Uniform Random Guessing (`2^n` / Solutions)** | `42.67 / 128.00` | `585.14 / 2048.00` | `9362.29 / 32768.00` | `149796.6 / 524288.0` | **`1.970^n / 2.000^n`** |")
 lines.append("")
 
@@ -55,20 +55,21 @@ def fmt_cell(m, n):
 if gray_shared or gray_gnn:
     lines.append("## 1A. Stage-1 Ideal Cavity Gray Mixer `U_gray(β)` + Global Cost Only (`2L` params `(β_l, γ_l)`; no free SNAP θ)")
     lines.append("")
-    lines.append("> **Stage-1 only:** exact `U_gray(β_l)` + cost phase `γ_l` in the computational subspace (`2L` schedule parameters). This is **not** physical per-cavity `0..15` SNAP synthesis — that is Stage-2 / §1B. ★T = dual-beats WalkSATlm tries (Med **and** B90); ✓L = dual-beats WalkSATlm lookups. `p2_gray_L15` at `n=20` is **not** ★T (`B90 = 14.52 ≰ 14.2`).")
+    lines.append("> **Stage-1 only (for `shared` rows):** exact `U_gray(β_l)` + cost phase `γ_l` in the computational subspace (`2L` schedule parameters). This is **not** physical per-cavity `0..15` SNAP synthesis — that is Stage-2 / §1B. (For `gnn` rows below, the GNN modulates `U_gray(β_{c,l})` and per-cavity `0..15` SNAP phases.) ★T = dual-beats WalkSATlm tries (Med **and** B90); ✓L = dual-beats WalkSATlm lookups. `p2_gray_L15` at `n=20` is **not** ★T (`B90 = 14.52 ≰ 14.2`).")
     lines.append("")
-    lines.append("| Tag | Mode | Arch / Init | `L` | `cw` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | Zero-Oracle `n=12 / n=20` |")
-    lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
+    lines.append("| Tag | Mode | Arch / Init | `L` | `N_tr(8,12)` | `cw` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | Zero-Oracle `n=12 / n=20` |")
+    lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
     for r in gray_shared + gray_gnn:
         a = r["args"]; te = r["test"]; sc = r["scaling"]
-        arch = "Shared-2L" if a.get("mode") == "shared" else a.get("arch", "mp")
+        arch = "Shared-2L" if a.get("mode") == "shared" else f"{a.get('arch', 'mp')} (H={a.get('H',64)})"
+        ntr = f"{a.get('ntrain8',2000)},{a.get('ntrain12',500)}"
         cw = "yes" if a.get("clause_w") else "no"
         z_str = f"`{te['12']['zero_oracle_med']:.0f}` / `{te['20']['zero_oracle_med']:.0f}`"
-        lines.append(f"| `{a['tag']}` | `{a.get('mode')}` | `{arch}` | {a['L']} | {cw} | {fmt_cell(te['8'],8)} | {fmt_cell(te['12'],12)} | {fmt_cell(te['16'],16)} | {fmt_cell(te['20'],20)} | **`{sc['b_median']:.4f}^n / {sc['b_B90']:.4f}^n`** | {z_str} |")
+        lines.append(f"| `{a['tag']}` | `{a.get('mode')}` | `{arch}` | {a['L']} | `{ntr}` | {cw} | {fmt_cell(te['8'],8)} | {fmt_cell(te['12'],12)} | {fmt_cell(te['16'],16)} | {fmt_cell(te['20'],20)} | **`{sc['b_median']:.4f}^n / {sc['b_B90']:.4f}^n`** | {z_str} |")
     lines.append("")
 
 lines.append("## 1B. Direct Physical `k = 1, 2, 3` `SNAP+D` Blocks per Layer — Shared Parameters (L-BFGS-B on `n = 8 + 12`)")
-lines.append("| Tag | `L` | `k` (`SNAP+D`/layer) | Blocks/Cav (`2 + L*k`) | `N_tr(8,12)` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |")
+lines.append("| Tag | `L` | `k` (`SNAP+D`/layer) | Blocks/Cav (`k_p + L*k`) | `N_tr(8,12)` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |")
 lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
 for r in sd_shared:
     a = r["args"]; te = r["test"]; sc = r["scaling"]
