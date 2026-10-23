@@ -9,23 +9,23 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 | method | n=8† median | n=12† median | n=16 median | n=20 median |
 |---|---|---|---|---|
 | Global cost L4 (shots) | **7.46** [7.41–7.46] | **25.8** [25.6–25.8] | **98.1** [97.3–98.1] | **245** [244–250] |
-| Global cost L14 (shots) | **2.26** [2.2–2.28] | **4.9** [4.87–4.94] | **12.2** [12.2–13.1] | **25.1** [25.1–27.6] |
-| Native-projected cost L4 + GNN clause weights (shots) | **9.04** [8.98–9.04] | **186** [178–195] | **4.94e+03** [4.84e+03–5e+03] | **8.28e+04** [7.7e+04–8.28e+04] |
-| WalkSATlm (lookups) | **74.8** | **223** | **833** | **1.81e+03** |
 | ref: paper's published angles p=4, no training (shots) | **8.65** | **28.2** | **109** | **275** |
+| Global cost L14 (shots) | **2.26** [2.2–2.28] | **4.9** [4.87–4.94] | **12.2** [12.2–13.1] | **25.1** [25.1–27.6] |
 | ref: paper's published angles p=14, no training (shots) | **2.63** | **6.45** | **13.2** | **26** |
 | ref: paper's published angles p=60, no training (shots) | **1.29** | **1.65** | **2.93** | **4.31** |
+| Native-projected cost L4 + GNN clause weights (shots) | **9.04** [8.98–9.04] | **186** [178–195] | **4.94e+03** [4.84e+03–5e+03] | **8.28e+04** [7.7e+04–8.28e+04] |
+| WalkSATlm (lookups) | **74.8** | **223** | **833** | **1.81e+03** |
 | ref: WalkSATlm in paper unit (tries of n flips) | **8.75** | **17.6** | **49.4** | **86.6** |
 
 | method | n=8† B90 | n=12† B90 | n=16 B90 | n=20 B90 |
 |---|---|---|---|---|
 | Global cost L4 (shots) | **16.9** [16.7–17.3] | **64.8** [62.3–65.1] | **233** [233–242] | **809** [796–825] |
-| Global cost L14 (shots) | **6.19** [6.19–6.39] | **21.2** [21.2–25.3] | **46.7** [46.7–55.5] | **94.7** [94.7–108] |
-| Native-projected cost L4 + GNN clause weights (shots) | **16.3** [16.2–16.9] | **982** [932–1.03e+03] | **2.28e+04** [2.24e+04–2.3e+04] | **4.17e+05** [4.17e+05–4.45e+05] |
-| WalkSATlm (lookups) | **149** | **616** | **1.74e+03** | **4.19e+03** |
 | ref: paper's published angles p=4, no training (shots) | **19** | **70.8** | **246** | **805** |
+| Global cost L14 (shots) | **6.19** [6.19–6.39] | **21.2** [21.2–25.3] | **46.7** [46.7–55.5] | **94.7** [94.7–108] |
 | ref: paper's published angles p=14, no training (shots) | **8.15** | **28.5** | **63.6** | **131** |
 | ref: paper's published angles p=60, no training (shots) | **2.47** | **18.5** | **30.9** | **94.3** |
+| Native-projected cost L4 + GNN clause weights (shots) | **16.3** [16.2–16.9] | **982** [932–1.03e+03] | **2.28e+04** [2.24e+04–2.3e+04] | **4.17e+05** [4.17e+05–4.45e+05] |
+| WalkSATlm (lookups) | **149** | **616** | **1.74e+03** | **4.19e+03** |
 | ref: WalkSATlm in paper unit (tries of n flips) | **17.1** | **47.9** | **103** | **200** |
 
 ## Growth fit cost ≈ C·bⁿ over n=8,12,16,20 (least squares on log2 cost)
@@ -34,18 +34,18 @@ Cells: winner (best validation score S=(ln med+ln B90)/2 on val n=12) value, wit
 |---|---|---|---|---|---|---|
 | Global cost L4 (shots) | median | **1.343** | [1.327, 1.373] | 1.343–1.346 | 0.426 | 0.743 |
 | Global cost L4 (shots) | B90 | **1.380** | [1.333, 1.414] | 1.378–1.384 | 0.465 | 1.31 |
-| Global cost L14 (shots) | median | **1.225** | [1.203, 1.247] | 1.225–1.237 | 0.293 | 0.444 |
-| Global cost L14 (shots) | B90 | **1.251** | [1.193, 1.296] | 1.251–1.264 | 0.324 | 1.19 |
-| Native-projected cost L4 + GNN clause weights (shots) | median | **2.151** | [2.081, 2.225] | 2.142–2.151 | 1.105 | 0.02 |
-| Native-projected cost L4 + GNN clause weights (shots) | B90 | **2.315** | [2.224, 2.526] | 2.315–2.327 | 1.211 | 0.0276 |
-| WalkSATlm (lookups) | median | **1.313** | [1.285, 1.334] | — | 0.392 | 8.84 |
-| WalkSATlm (lookups) | B90 | **1.318** | [1.291, 1.347] | — | 0.398 | 18.9 |
 | ref: paper's published angles p=4, no training (shots) | median | **1.341** | [1.322, 1.366] | — | 0.423 | 0.858 |
 | ref: paper's published angles p=4, no training (shots) | B90 | **1.366** | [1.332, 1.403] | — | 0.450 | 1.61 |
+| Global cost L14 (shots) | median | **1.225** | [1.203, 1.247] | 1.225–1.237 | 0.293 | 0.444 |
+| Global cost L14 (shots) | B90 | **1.251** | [1.193, 1.296] | 1.251–1.264 | 0.324 | 1.19 |
 | ref: paper's published angles p=14, no training (shots) | median | **1.209** | [1.185, 1.234] | — | 0.274 | 0.612 |
 | ref: paper's published angles p=14, no training (shots) | B90 | **1.256** | [1.188, 1.367] | — | 0.329 | 1.53 |
 | ref: paper's published angles p=60, no training (shots) | median | **1.111** | [1.078, 1.130] | — | 0.152 | 0.522 |
 | ref: paper's published angles p=60, no training (shots) | B90 | **1.331** | [1.223, 1.425] | — | 0.412 | 0.35 |
+| Native-projected cost L4 + GNN clause weights (shots) | median | **2.151** | [2.081, 2.225] | 2.142–2.151 | 1.105 | 0.02 |
+| Native-projected cost L4 + GNN clause weights (shots) | B90 | **2.315** | [2.224, 2.526] | 2.315–2.327 | 1.211 | 0.0276 |
+| WalkSATlm (lookups) | median | **1.313** | [1.285, 1.334] | — | 0.392 | 8.84 |
+| WalkSATlm (lookups) | B90 | **1.318** | [1.291, 1.347] | — | 0.398 | 18.9 |
 | ref: WalkSATlm in paper unit (tries of n flips) | median | **1.219** | [1.195, 1.236] | — | 0.285 | 1.79 |
 | ref: WalkSATlm in paper unit (tries of n flips) | B90 | **1.226** | [1.198, 1.251] | — | 0.294 | 3.7 |
 
