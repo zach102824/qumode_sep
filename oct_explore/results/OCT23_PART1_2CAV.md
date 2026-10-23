@@ -1,6 +1,6 @@
 # Oct 23 Part 1: Two-Cavity Experimental Circuit (`n = 6` and `n = 8`, <= 5 Blocks Total)
 
-*Last updated: 2026-10-23 21:55:29 (UTC+8). All SNAP gates strictly restricted to computational Fock levels `0..D-1` (`0` phase on leaked levels `f >= D`); all Fock leakage (`f >= D` or ancilla in `|e>`) counted as failure and verified at `N_Fock = 40` (`n=6`) and `N_Fock = 56` (`n=8`).*
+*Last updated: 2026-10-23 21:57:29 (UTC+8). All SNAP gates strictly restricted to computational Fock levels `0..D-1` (`0` phase on leaked levels `f >= D`); all Fock leakage (`f >= D` or ancilla in `|e>`) counted as failure and verified at `N_Fock = 40` (`n=6`) and `N_Fock = 56` (`n=8`).*
 
 ## 1. Classical WalkSATlm Baselines on the 100 Unseen Test Formulas (`TEB = 52e9`)
 
@@ -89,6 +89,7 @@
 | `n8_1p2x2_csd_bpdec` | 8 | `1p2x2` (`csd`) | `sd` (`fixed_cost`) | 2000 | `bpdec` | 2.24 / 922.05 | **2.27 / 428.81** | 2.27 / 428.81 | 2.26% | no / med only |
 | `n8_1p4x1_bias` | 8 | `1p4x1` (`csd`) | `sd` (`fixed_cost`) | 2000 | `bias` | 69.57 / 199.22 | **58.67 / 184.84** | 58.67 / 184.84 | 5.36% | no / no |
 | `n8_1p4x1_biaspol` | 8 | `1p4x1` (`csd`) | `sd` (`fixed_cost`) | 2000 | `biaspol` | 18.05 / 146.56 | **21.46 / 232.15** | 21.46 / 232.15 | 4.17% | no / no |
+| `n8_1p4x1_bppol` | 8 | `1p4x1` (`csd`) | `sd` (`fixed_cost`) | 2000 | `bppol` | 2.91 / 184.01 | **2.82 / 148.84** | 2.82 / 148.84 | 3.73% | no / med only |
 | `n8_1p4x1_csd_mpw4` | 8 | `1p4x1` (`csd`) | `sd` (`fixed_cost`) | 2000 | `mpw4` | 1.57 / 3.00 | **1.56 / 1.72** | 1.56 / 1.72 | 0.78% | YES / YES |
 | `n8_1p4x1_msdec_sdir` | 8 | `1p4x1` (`csd`) | `sd` (`fixed_cost`) | 2000 | `bpdec` | 2.67 / 181.94 | **2.69 / 128.71** | 2.69 / 128.71 | 1.96% | no / med only |
 | `n8_2p3x1_csd_bpdec` | 8 | `2p3x1` (`csd`) | `sd` (`fixed_cost`) | 2000 | `bpdec` | 2.52 / 740.22 | **2.48 / 847.67** | 2.48 / 847.67 | 4.68% | no / med only |
@@ -103,6 +104,7 @@
 
 | Tag | `n` | Schedule | Gate (`Cost`) | `N_train` | Relabel | Val Med / B90 | Test Med / B90 (`1/p`) | `NF_chk` Med / B90 | Mean Leak | Beats WS Tries / Lookups |
 |---|---|---|---|---|---|---|---|---|---|---|
+| `gnn5_n6_pure_cw` | 6 | `1p4x1` (`csd`) | `sd` (`clause_w`) | 10000 | `none` | 5.09 / 11.60 | **5.16 / 9.21** | 5.16 / 9.21 | 5.74% | no / YES |
 | `gnn5_n6_pure_nocw` | 6 | `1p4x1` (`csd`) | `sd` (`fixed_cost`) | 2000 | `none` | 6.14 / 12.51 | **6.14 / 11.21** | 6.14 / 11.21 | 6.15% | no / YES |
 
 ## 6. Category D: BP/Decimation-Assisted GNN (`bpdec`, `mpw4`, `bpfeat_canon`)
