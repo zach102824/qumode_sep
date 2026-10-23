@@ -1,0 +1,50 @@
+# Oct 23 Part 1: Two-Cavity Experimental Circuit (`n = 6` and `n = 8`, <= 5 Blocks Total)
+
+*Last updated: 2026-10-23 19:21:58 (UTC+8). All SNAP gates strictly restricted to computational Fock levels `0..D-1` (`0` phase on leaked levels `f >= D`); all Fock leakage (`f >= D` or ancilla in `|e>`) counted as failure and verified at `N_Fock = 40` (`n=6`) and `N_Fock = 56` (`n=8`).*
+
+## 1. Classical WalkSATlm Baselines on the 100 Unseen Test Formulas (`TEB = 52e9`)
+
+| Problem Size `n` | Layout | WalkSATlm Tries (Med / B90) | WalkSATlm Lookups (Med / B90) | Random Guess `2^n / n_sol` (Med / B90) |
+|---|---|---|---|---|
+| **n = 6** | 2 cavities x 3 bits (`D = 8`) | **1.691 / 2.816** | **8.466 / 16.039** | 64.0 / 64.0 |
+| **n = 8** | 2 cavities x 4 bits (`D = 16`) | **2.014 / 3.739** | **13.989 / 29.396** | 128.0 / 256.0 |
+
+## 2. State Preparation Fidelity from Vacuum (`0..D-1` Computational SNAP Phases Only)
+
+| Gate & Cavity Size | `k = 1` Block `F` (leak) | `k = 2` Blocks `F` (leak) | `k = 3` Blocks `F` (leak) |
+|---|---|---|---|
+| SNAP+D (`K=2, D=4`) | 90.77% (2.81%) | 99.82% (0.16%) | 100.00% (0.00%) |
+| ECD ancilla (`K=2, D=4`) | 90.77% (2.81%) | 93.91% (2.15%) | 92.94% (2.21%) |
+| ECD hybrid (`1t+2c, 2D=8`) | 90.77% (2.81%) | 95.11% (1.43%) | 98.90% (0.60%) |
+| SNAP+D (`K=3, D=8`) | 88.60% (1.51%) | 99.78% (0.12%) | 100.00% (0.00%) |
+| ECD ancilla (`K=3, D=8`) | 88.60% (1.51%) | 88.61% (1.52%) | 90.61% (1.65%) |
+| ECD hybrid (`1t+3c, 2D=16`) | 88.60% (1.51%) | 92.88% (1.08%) | 97.16% (0.72%) |
+| SNAP+D (`K=4, D=16`) | 77.96% (0.64%) | 98.85% (0.29%) | 100.00% (0.00%) |
+| ECD ancilla (`K=4, D=16`) | 77.96% (0.64%) | 77.96% (0.64%) | 91.26% (4.30%) |
+| ECD hybrid (`1t+4c, 2D=32`) | 77.96% (0.64%) | 94.27% (1.56%) | 96.73% (0.82%) |
+
+## 3. Completed Circuit Runs (`n = 6` and `n = 8`, <= 5 Total Blocks Including State Prep)
+
+| Tag | `n` | Schedule | Gate | `N_train` | Relabel | Val Med / B90 | Test Med / B90 (`1/p`) | `NF_chk` Med / B90 | Mean Leak |
+|---|---|---|---|---|---|---|---|---|---|
+| `gnn5_n6_none_cw` | 6 | `2p3x1` (`csd`) | `None` | 10000 | `none` | 2.28 / 12.40 | **2.00 / 11.09** | 2.00 / 11.09 | 8.91% |
+| `n6_ntrain2000_bpdec` | 6 | `1p4x1` (`csd`) | `sd` | 2000 | `bpdec` | 2.03 / 17.45 | **2.06 / 15.97** | 2.06 / 15.97 | 3.74% |
+| `n6_ntrain2000_none` | 6 | `1p4x1` (`csd`) | `sd` | 2000 | `none` | 6.08 / 17.11 | **7.14 / 12.83** | 7.14 / 12.83 | 4.70% |
+| `n6_ntrain5000_bpdec` | 6 | `1p4x1` (`csd`) | `sd` | 5000 | `bpdec` | 2.19 / 16.69 | **2.23 / 13.68** | 2.23 / 13.68 | 3.08% |
+| `n6_ntrain5000_none` | 6 | `1p4x1` (`csd`) | `sd` | 5000 | `none` | 6.15 / 15.99 | **7.00 / 13.08** | 7.00 / 13.08 | 4.70% |
+| `n6_ntrain500_bpdec` | 6 | `1p4x1` (`csd`) | `sd` | 500 | `bpdec` | 1.87 / 20.84 | **1.89 / 17.67** | 1.89 / 17.67 | 2.56% |
+| `n6_ntrain500_none` | 6 | `1p4x1` (`csd`) | `sd` | 500 | `none` | 6.06 / 16.09 | **7.23 / 13.00** | 7.23 / 13.00 | 6.46% |
+| `smoke_n6` | 6 | `1p4x1` (`csd`) | `sd` | 500 | `none` | 8.74 / 23.11 | **10.24 / 21.51** | 10.24 / 21.51 | 2.29% |
+| `smoke_n6_0p5x1` | 6 | `0p5x1` (`csd`) | `sd` | 500 | `bppol` | 1.97 / 26.72 | **1.95 / 30.71** | 1.95 / 30.71 | 2.41% |
+| `smoke_n6_0p5x1_rr4` | 6 | `0p5x1` (`csd`) | `sd` | 500 | `rr4` | 4.32 / 7.87 | **4.23 / 7.27** (r0: 1.95/30.70, best4: 1.74/2.66) | 4.23 / 7.27 | 2.35% |
+| `smoke_n6_bpdec` | 6 | `1p4x1` (`csd`) | `sd` | 500 | `bpdec` | 1.82 / 32.80 | **1.83 / 19.82** | 1.83 / 19.82 | 2.47% |
+| `smoke_n6_bpdec_rr4` | 6 | `1p4x1` (`csd`) | `sd` | 500 | `rr4` | 3.29 / 7.44 | **3.57 / 7.47** (r0: 1.80/50.22, best4: 1.78/2.10) | 3.57 / 7.47 | 2.54% |
+| `smoke_n6_bpdec_sdir` | 6 | `1p4x1` (`csd`) | `sd` | 2000 | `bpdec` | 2.03 / 14.23 | **2.05 / 22.23** | 2.05 / 22.23 | 1.40% |
+| `smoke_n6_bppol` | 6 | `1p4x1` (`csd`) | `sd` | 500 | `bppol` | 2.50 / 29.07 | **2.50 / 22.49** | 2.50 / 22.49 | 3.08% |
+| `smoke_n6_ecd` | 6 | `1p4x1` (`csd`) | `ecd` | 500 | `none` | 8.30 / 49.97 | **7.92 / 35.62** | 7.92 / 35.62 | 1.61% |
+| `smoke_n6_ecdt` | 6 | `1p4x1` (`csd`) | `ecdt` | 500 | `none` | 15.07 / 37.18 | **15.44 / 34.33** | 15.44 / 34.33 | 8.57% |
+| `smoke_n6_gnn` | 6 | `1p4x1` (`csd`) | `sd` | 2000 | `bpdec` | 1.26 / 13.88 | **1.26 / 11.30** | 1.26 / 11.30 | 2.73% |
+| `smoke_n6_gnn_rr4` | 6 | `1p4x1` (`csd`) | `sd` | 2000 | `rr4` | 1.26 / 13.88 | **1.26 / 11.30** (RR4: 2.59/10.48, best4: 1.25/8.28) | 1.26 / 11.30 | 2.73% |
+| `smoke_n6_none_gnn` | 6 | `2p3x1` (`csd`) | `sd` | 2000 | `none` | 5.06 / 15.71 | **5.78 / 12.43** | 5.78 / 12.43 | 10.52% |
+| `smoke_n6_none_sdir` | 6 | `2p3x1` (`csd`) | `sd` | 2000 | `none` | 7.33 / 17.19 | **7.75 / 14.14** | 7.75 / 14.14 | 8.35% |
+| `smoke_n6_rr4` | 6 | `1p4x1` (`csd`) | `sd` | 500 | `rr4` | 5.06 / 7.76 | **5.50 / 8.02** (r0: 2.04/35.80, best4: 1.96/2.28) | 5.50 / 8.02 | 4.75% |
