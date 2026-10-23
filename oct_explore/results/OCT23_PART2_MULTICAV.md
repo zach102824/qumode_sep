@@ -47,6 +47,9 @@
 | `p2_gnn_gray_L15_mp64_cw_s1200` | `mp (H=64, r=3)` | 15 | `2000,500` | yes | **1.32 / 2.21** (★T) | **1.86 / 3.94** (★T) | **2.80 / 7.62** (★T) | **3.73 / 13.13** (★T) | **`1.0922^n / 1.1620^n`** | `1028` / `108800` | 1.44% |
 
 ## 1B. Direct Physical `k = 1, 2, 3, 4` `SNAP+D` Blocks per Layer — Shared Parameters (L-BFGS-B on `n = 8 + 12`)
+
+> **Gray→physical compile init (WAVE4):** compiling ideal Gray L=15 trajectories into physical `SNAP+D` shared inits, then refining, yields a large jump over vacuum-init shared. Best so far: `p2_shared_L15_k4_grayinit` (**2.56/6.46, 4.84/18.31, 9.37/36.48, 16.89/77.63**, **1.1712ⁿ / 1.2259ⁿ**, dual ✓L all `n`, `n=20` leak 6.97%) and `p2_shared_L15_k3_grayinit` (**2.78/7.35, 5.12/25.36, 10.88/50.86, 23.89/102.91**, **1.1974ⁿ / 1.2403ⁿ**, dual ✓L all `n`). Both beat prior best vacuum-init shared `p2_shared_L15_k3_ntr10000` (**4.88/12.55 … 93.75/304.42**, **1.277ⁿ / 1.297ⁿ**) on Med+B90 at every `n`, and for the first time give physical shared dual ✓L through `n=20`. Still no ★T vs WalkSATlm tries (closest at `n=8`: med 2.56 ≰ 2.01). GNN fine-tunes from these inits are in flight.
+
 | Tag | `L` | `k` (`SNAP+D`/layer) | Blocks/Cav (`k_p + L*k`) | `N_tr(8,12)` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | `p2_shared_L4_k2` | 4 | 2 | 10 | `2000,500` | 14.13 / 33.16 | 60.84 / 176.39 | 284.81 / 1000.85 | 1124.18 / 3447.02 | **`1.4432^n / 1.4795^n`** | `1915/5451` | 7.29% |
@@ -65,12 +68,14 @@
 | `p2_shared_L15_k2` | 15 | 2 | 32 | `2000,500` | **7.16 / 17.62** (✓L) | **24.13 / 62.53** (✓L) | **64.56 / 231.25** | 220.68 / 675.62 | **`1.3255^n / 1.3582^n`** | `2244/57090` | 18.91% |
 | `p2_shared_L15_k3_ntr500` | 15 | 3 | 48 | `500,200` | **5.11 / 13.19** (✓L) | **14.70 / 49.74** (✓L) | **38.07 / 121.43** (✓L) | **100.64 / 321.46** | **`1.2806^n / 1.2993^n`** | `3050/46866` | 11.44% |
 | `p2_shared_L15_k3` | 15 | 3 | 48 | `2000,500` | **5.63 / 13.29** (✓L) | **16.43 / 48.39** (✓L) | **40.39 / 127.98** (✓L) | 112.56 / 345.85 | **`1.2803^n / 1.3083^n`** | `2786/65516` | 13.91% |
+| `p2_shared_L15_k3_grayinit` | 15 | 3 | 48 | `2000,500` | **2.78 / 7.35** (✓L) | **5.12 / 25.36** (✓L) | **10.88 / 50.86** (✓L) | **23.89 / 102.91** (✓L) | **`1.1974^n / 1.2403^n`** | `9543/379794` | 9.48% |
 | `p2_shared_L15_k3_ntr5000` | 15 | 3 | 48 | `5000,1000` | **4.91 / 12.37** (✓L) | **14.58 / 48.88** (✓L) | **36.05 / 114.01** (✓L) | **94.75 / 305.67** | **`1.2771^n / 1.2991^n`** | `3329/120970` | 11.48% |
 | `p2_shared_L15_k3_ntr10000` | 15 | 3 | 48 | `10000,1000` | **4.88 / 12.55** (✓L) | **14.51 / 49.56** (✓L) | **36.07 / 114.84** (✓L) | **93.75 / 304.42** | **`1.2768^n / 1.2971^n`** | `3745/96348` | 11.48% |
+| `p2_shared_L15_k4_grayinit` | 15 | 4 | 63 | `2000,500` | **2.56 / 6.46** (✓L) | **4.84 / 18.31** (✓L) | **9.37 / 36.48** (✓L) | **16.89 / 77.63** (✓L) | **`1.1712^n / 1.2259^n`** | `2063/6917` | 6.97% |
 
 ## 2. Direct Physical `SNAP+D` Factor-Graph GNN Scaling (`relabel = none`, Trained on `n = 8, 12` -> Zero-Shot `n = 16, 20`)
 
-> **Median & B90 vs `p2_shared_L15_k3` (verified by `@qumode_checker`):** While `k = 2` GNNs (`L=12, 15`) beat `p2_shared_L15_k3` on medians at all `n` (`62.45` at `n=20`, **1.2573ⁿ**) while trailing on B90 at `n = 12, 16, 20`, stepping up to **`L = 15, k = 3`** fixes the tail: `p2_gnn_L15_k3_mp64_cw` (**3.42/9.73, 8.00/34.98, 20.33/92.82, 43.91/181.65**, **1.2395ⁿ / 1.2762ⁿ**) and `p2_gnn_L15_k3_mp128_cw` (**3.46/10.14, 8.00/36.73, 19.67/81.59, 46.40/219.78**, **1.2426ⁿ / 1.2849ⁿ**) **dual-beat both `p2_shared_L15_k3` and `p2_shared_L15_k3_ntr10000` on Median and B90 at every `n = 8, 12, 16, 20`**; fixed-cost `p2_gnn_L15_k3_mp64_nocw` (**3.17/10.86, 7.40/38.29, 18.60/124.33, 42.88/185.02**, **1.2441ⁿ / 1.2739ⁿ**) achieves the lowest medians at all `n`, dual-beats `p2_shared_L15_k3` (`ntr=2000`, `n=16` B90 `127.98`) at all `n`, and beats `ntr10000` on medians at all `n` and B90 at `n = 8, 12, 20` (`n=16` B90 `124.33` vs `114.84`). All three achieve **dual WalkSATlm lookup beats (✓L) across all `n = 8, 12, 16, 20`**.
+> **Median & B90 vs shared (verified by `@qumode_checker`):** Prior WAVE3 L15_k3 GNNs (`mp64_cw` / `mp128_cw` / `mp64_nocw` at `N_tr=2000`) dual-beat vacuum-init shared on Med+B90 all `n` with dual ✓L. New WAVE4 `p2_gnn_L15_k3_mp64_nocw_ntr5000` (**3.19/9.56, 6.77/32.38, 16.83/71.42, 38.67/149.51**, **1.2335ⁿ / 1.2536ⁿ**) further improves B90 at every `n` and medians at `n=12,16,20` vs `N_tr=2000` nocw, dual ✓L all `n`, and is the best physical GNN so far on B90 growth — still well above WalkSATlm tries and above the new grayinit shared baseline (`k4_grayinit` **16.89/77.63** at `n=20`). Grayinit-seeded GNNs (`k3` cw/nocw, `k4` cw) are training.
 
 | Tag | `L` | `k` | Arch (`H`) | `N_tr(8,12)` | `clause_w` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -88,6 +93,7 @@
 | `p2_gnn_L12_k2_mp64_cw` | 12 | 2 | `mp (H=64, r=3)` | `2000,500` | yes | **3.92 / 12.68** (✓L) | **10.99 / 75.39** (✓L) | **28.01 / 209.81** | **62.96 / 404.28** | **`1.2606^n / 1.3301^n`** | `1579/32025` | 11.95% |
 | `p2_gnn_L15_k2_mp128_cw` | 15 | 2 | `mp (H=128, r=4)` | `2000,500` | yes | **4.19 / 11.62** (✓L) | **10.58 / 55.08** (✓L) | **30.34 / 177.24** | **62.45 / 422.58** | **`1.2573^n / 1.3481^n`** | `1359/21882` | 13.51% |
 | `p2_gnn_L15_k3_mp64_nocw` | 15 | 3 | `mp (H=64, r=3)` | `2000,500` | no | **3.17 / 10.86** (✓L) | **7.40 / 38.29** (✓L) | **18.60 / 124.33** (✓L) | **42.88 / 185.02** (✓L) | **`1.2441^n / 1.2739^n`** | `3800/35546` | 7.57% |
+| `p2_gnn_L15_k3_mp64_nocw_ntr5000` | 15 | 3 | `mp (H=64, r=3)` | `5000,1000` | no | **3.19 / 9.56** (✓L) | **6.77 / 32.38** (✓L) | **16.83 / 71.42** (✓L) | **38.67 / 149.51** (✓L) | **`1.2335^n / 1.2536^n`** | `4526/58300` | 7.29% |
 | `p2_gnn_L15_k3_mp128_cw` | 15 | 3 | `mp (H=128, r=4)` | `2000,500` | yes | **3.46 / 10.14** (✓L) | **8.00 / 36.73** (✓L) | **19.67 / 81.59** (✓L) | **46.40 / 219.78** (✓L) | **`1.2426^n / 1.2849^n`** | `1508/31070` | 7.81% |
 | `p2_gnn_L15_k3_mp64_cw` | 15 | 3 | `mp (H=64, r=3)` | `2000,500` | yes | **3.42 / 9.73** (✓L) | **8.00 / 34.98** (✓L) | **20.33 / 92.82** (✓L) | **43.91 / 181.65** (✓L) | **`1.2395^n / 1.2762^n`** | `2024/31622` | 8.00% |
 

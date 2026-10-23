@@ -87,6 +87,9 @@ if gray_gnn:
     lines.append("")
 
 lines.append("## 1B. Direct Physical `k = 1, 2, 3, 4` `SNAP+D` Blocks per Layer — Shared Parameters (L-BFGS-B on `n = 8 + 12`)")
+lines.append("")
+lines.append("> **Gray→physical compile init (WAVE4):** compiling ideal Gray L=15 trajectories into physical `SNAP+D` shared inits, then refining, yields a large jump over vacuum-init shared. Best so far: `p2_shared_L15_k4_grayinit` (**2.56/6.46, 4.84/18.31, 9.37/36.48, 16.89/77.63**, **1.1712ⁿ / 1.2259ⁿ**, dual ✓L all `n`, `n=20` leak 6.97%) and `p2_shared_L15_k3_grayinit` (**2.78/7.35, 5.12/25.36, 10.88/50.86, 23.89/102.91**, **1.1974ⁿ / 1.2403ⁿ**, dual ✓L all `n`). Both beat prior best vacuum-init shared `p2_shared_L15_k3_ntr10000` (**4.88/12.55 … 93.75/304.42**, **1.277ⁿ / 1.297ⁿ**) on Med+B90 at every `n`, and for the first time give physical shared dual ✓L through `n=20`. Still no ★T vs WalkSATlm tries (closest at `n=8`: med 2.56 ≰ 2.01). GNN fine-tunes from these inits are in flight.")
+lines.append("")
 lines.append("| Tag | `L` | `k` (`SNAP+D`/layer) | Blocks/Cav (`k_p + L*k`) | `N_tr(8,12)` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |")
 lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
 for r in sd_shared:
@@ -100,7 +103,7 @@ lines.append("")
 
 lines.append("## 2. Direct Physical `SNAP+D` Factor-Graph GNN Scaling (`relabel = none`, Trained on `n = 8, 12` -> Zero-Shot `n = 16, 20`)")
 lines.append("")
-lines.append("> **Median & B90 vs `p2_shared_L15_k3` (verified by `@qumode_checker`):** While `k = 2` GNNs (`L=12, 15`) beat `p2_shared_L15_k3` on medians at all `n` (`62.45` at `n=20`, **1.2573ⁿ**) while trailing on B90 at `n = 12, 16, 20`, stepping up to **`L = 15, k = 3`** fixes the tail: `p2_gnn_L15_k3_mp64_cw` (**3.42/9.73, 8.00/34.98, 20.33/92.82, 43.91/181.65**, **1.2395ⁿ / 1.2762ⁿ**) and `p2_gnn_L15_k3_mp128_cw` (**3.46/10.14, 8.00/36.73, 19.67/81.59, 46.40/219.78**, **1.2426ⁿ / 1.2849ⁿ**) **dual-beat both `p2_shared_L15_k3` and `p2_shared_L15_k3_ntr10000` on Median and B90 at every `n = 8, 12, 16, 20`**; fixed-cost `p2_gnn_L15_k3_mp64_nocw` (**3.17/10.86, 7.40/38.29, 18.60/124.33, 42.88/185.02**, **1.2441ⁿ / 1.2739ⁿ**) achieves the lowest medians at all `n`, dual-beats `p2_shared_L15_k3` (`ntr=2000`, `n=16` B90 `127.98`) at all `n`, and beats `ntr10000` on medians at all `n` and B90 at `n = 8, 12, 20` (`n=16` B90 `124.33` vs `114.84`). All three achieve **dual WalkSATlm lookup beats (✓L) across all `n = 8, 12, 16, 20`**.")
+lines.append("> **Median & B90 vs shared (verified by `@qumode_checker`):** Prior WAVE3 L15_k3 GNNs (`mp64_cw` / `mp128_cw` / `mp64_nocw` at `N_tr=2000`) dual-beat vacuum-init shared on Med+B90 all `n` with dual ✓L. New WAVE4 `p2_gnn_L15_k3_mp64_nocw_ntr5000` (**3.19/9.56, 6.77/32.38, 16.83/71.42, 38.67/149.51**, **1.2335ⁿ / 1.2536ⁿ**) further improves B90 at every `n` and medians at `n=12,16,20` vs `N_tr=2000` nocw, dual ✓L all `n`, and is the best physical GNN so far on B90 growth — still well above WalkSATlm tries and above the new grayinit shared baseline (`k4_grayinit` **16.89/77.63** at `n=20`). Grayinit-seeded GNNs (`k3` cw/nocw, `k4` cw) are training.")
 lines.append("")
 lines.append("| Tag | `L` | `k` | Arch (`H`) | `N_tr(8,12)` | `clause_w` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |")
 lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
