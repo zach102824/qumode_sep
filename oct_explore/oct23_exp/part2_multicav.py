@@ -34,7 +34,7 @@ ap.add_argument("--tag", required=True)
 ap.add_argument("--mode", default="shared", choices=["shared", "gnn"])
 ap.add_argument("--mixer", default="sd", choices=["sd", "gray"])
 ap.add_argument("--L", type=int, default=6)
-ap.add_argument("--pairs", type=int, default=2, choices=[1, 2, 3], help="Physical SNAP+D blocks per cavity per cost layer")
+ap.add_argument("--pairs", type=int, default=2, choices=[1, 2, 3, 4], help="Physical SNAP+D blocks per cavity per cost layer")
 ap.add_argument("--kprep", type=int, default=2, choices=[2, 3], help="Physical SNAP+D blocks for initial flat state prep")
 ap.add_argument("--ntrain8", type=int, default=2000)
 ap.add_argument("--ntrain12", type=int, default=500)
@@ -352,8 +352,12 @@ def run_shared_pipeline():
     cands_x = []
     if a.grow_from and os.path.exists(a.grow_from) and a.mixer != "gray":
         Jg = json.load(open(a.grow_from))
-        cands_x.append((Jg.get("winner_init", "warm"), np.array(Jg["x_best"], dtype=np.float32)))
-        log(f"Warm-starting Stage 3 directly from {a.grow_from}")
+        if "cands_x" in Jg:
+            for cx in Jg["cands_x"]:
+                cands_x.append((cx["label"], np.array(cx["x"], dtype=np.float32)))
+        else:
+            cands_x.append((Jg.get("winner_init", "warm"), np.array(Jg["x_best"], dtype=np.float32)))
+        log(f"Warm-starting Stage 3 directly from {a.grow_from} ({len(cands_x)} candidates)")
     else:
         log(f"Stage 1: Optimizing 2L={2*L} (beta, gamma) schedules for Gray and Tri mixers...")
     for kind, Vf, w_j in ([] if cands_x else ([("gray", V_GRAY_J, W_GRAY_J)] if a.mixer == "gray" else [("gray", V_GRAY_J, W_GRAY_J), ("tri", V_TRI_J, W_TRI_J)])):

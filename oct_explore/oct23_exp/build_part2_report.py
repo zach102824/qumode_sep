@@ -20,9 +20,9 @@ gray_gnn    = [r for r in runs if r["args"].get("mode") == "gnn" and r["args"].g
 sd_gnn      = [r for r in runs if r["args"].get("mode") == "gnn" and r["args"].get("mixer", "sd") == "sd"]
 
 gray_shared.sort(key=lambda r: (r["args"]["L"], r["args"].get("ntrain8", 2000)))
-sd_shared.sort(key=lambda r: (r["args"]["L"], r["args"]["pairs"], r["args"].get("ntrain8", 2000)))
+sd_shared.sort(key=lambda r: (r["args"]["L"], r["args"]["pairs"], r["args"].get("ntrain8", 2000), r["args"]["tag"]))
 gray_gnn.sort(key=lambda r: (r["args"]["L"], r["args"].get("arch", ""), int(r["args"].get("clause_w", 0))))
-sd_gnn.sort(key=lambda r: (r["args"]["L"], r["args"]["pairs"], r["args"].get("arch", ""), int(r["args"].get("clause_w", 0))))
+sd_gnn.sort(key=lambda r: (r["args"]["L"], r["args"]["pairs"], r["args"].get("arch", ""), int(r["args"].get("clause_w", 0)), r["args"].get("ntrain8", 2000), r["args"]["tag"]))
 
 lines = []
 lines.append("# Oct 23 Exploration — Part 2: Multi-Cavity Scaling (`K = 4` Bits/Cavity, `n = 8, 12, 16, 20`)")
@@ -86,7 +86,7 @@ if gray_gnn:
         lines.append(f"| `{a['tag']}` | `{arch}` | {a['L']} | `{ntr}` | {cw} | {fmt_cell(te['8'],8)} | {fmt_cell(te['12'],12)} | {fmt_cell(te['16'],16)} | {fmt_cell(te['20'],20)} | **`{sc['b_median']:.4f}^n / {sc['b_B90']:.4f}^n`** | {z_str} | {lk20} |")
     lines.append("")
 
-lines.append("## 1B. Direct Physical `k = 1, 2, 3` `SNAP+D` Blocks per Layer — Shared Parameters (L-BFGS-B on `n = 8 + 12`)")
+lines.append("## 1B. Direct Physical `k = 1, 2, 3, 4` `SNAP+D` Blocks per Layer — Shared Parameters (L-BFGS-B on `n = 8 + 12`)")
 lines.append("| Tag | `L` | `k` (`SNAP+D`/layer) | Blocks/Cav (`k_p + L*k`) | `N_tr(8,12)` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |")
 lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
 for r in sd_shared:
@@ -102,16 +102,17 @@ lines.append("## 2. Direct Physical `SNAP+D` Factor-Graph GNN Scaling (`relabel 
 lines.append("")
 lines.append("> **Median & B90 vs `p2_shared_L15_k3` (verified by `@qumode_checker`):** While `k = 2` GNNs (`L=12, 15`) beat `p2_shared_L15_k3` on medians at all `n` (`62.45` at `n=20`, **1.2573ⁿ**) while trailing on B90 at `n = 12, 16, 20`, stepping up to **`L = 15, k = 3`** fixes the tail: `p2_gnn_L15_k3_mp64_cw` (**3.42/9.73, 8.00/34.98, 20.33/92.82, 43.91/181.65**, **1.2395ⁿ / 1.2762ⁿ**) and `p2_gnn_L15_k3_mp128_cw` (**3.46/10.14, 8.00/36.73, 19.67/81.59, 46.40/219.78**, **1.2426ⁿ / 1.2849ⁿ**) **dual-beat both `p2_shared_L15_k3` and `p2_shared_L15_k3_ntr10000` on Median and B90 at every `n = 8, 12, 16, 20`**; fixed-cost `p2_gnn_L15_k3_mp64_nocw` (**3.17/10.86, 7.40/38.29, 18.60/124.33, 42.88/185.02**, **1.2441ⁿ / 1.2739ⁿ**) achieves the lowest medians at all `n`, dual-beats `p2_shared_L15_k3` (`ntr=2000`, `n=16` B90 `127.98`) at all `n`, and beats `ntr10000` on medians at all `n` and B90 at `n = 8, 12, 20` (`n=16` B90 `124.33` vs `114.84`). All three achieve **dual WalkSATlm lookup beats (✓L) across all `n = 8, 12, 16, 20`**.")
 lines.append("")
-lines.append("| Tag | `L` | `k` | Arch (`H`) | `clause_w` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |")
-lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
+lines.append("| Tag | `L` | `k` | Arch (`H`) | `N_tr(8,12)` | `clause_w` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |")
+lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
 for r in sd_gnn:
     a = r["args"]; te = r["test"]; sc = r["scaling"]
     L = a["L"]; k = a["pairs"]
     arch = f"{a['arch']} (H={a['H']}, r={a['rounds']})"
+    ntr = f"{a.get('ntrain8',2000)},{a.get('ntrain12',500)}"
     cw = "yes" if a.get("clause_w") else "no"
     z12 = f"{te['12']['zero_oracle_med']:.0f}/{te['12']['zero_oracle_B90']:.0f}"
     lk20 = f"{te['20']['mean_leak']*100:.2f}%"
-    lines.append(f"| `{a['tag']}` | {L} | {k} | `{arch}` | {cw} | {fmt_cell(te['8'],8)} | {fmt_cell(te['12'],12)} | {fmt_cell(te['16'],16)} | {fmt_cell(te['20'],20)} | **`{sc['b_median']:.4f}^n / {sc['b_B90']:.4f}^n`** | `{z12}` | {lk20} |")
+    lines.append(f"| `{a['tag']}` | {L} | {k} | `{arch}` | `{ntr}` | {cw} | {fmt_cell(te['8'],8)} | {fmt_cell(te['12'],12)} | {fmt_cell(te['16'],16)} | {fmt_cell(te['20'],20)} | **`{sc['b_median']:.4f}^n / {sc['b_B90']:.4f}^n`** | `{z12}` | {lk20} |")
 lines.append("")
 
 with open(REPORT_PATH, "w") as f:
