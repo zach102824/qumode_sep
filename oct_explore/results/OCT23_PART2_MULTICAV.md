@@ -18,6 +18,7 @@
 | Tag | Mode | Arch / Init | `L` | `cw` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | Zero-Oracle `n=12 / n=20` |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | `p2_gray_L12` | `shared` | `Shared-2L` | 12 | no | **1.50 / 3.92** (✓L) | **2.24 / 11.66** (✓L) | **3.16 / 20.20** (✓L) | **5.92 / 22.91** (✓L) | **`1.1180^n / 1.1575^n`** | `2018` / `311066` |
+| `p2_gray_L15` | `shared` | `Shared-2L` | 15 | no | **1.29 / 3.08** (★T) | **1.83 / 8.25** (✓L) | **2.60 / 13.73** (✓L) | **3.87 / 14.52** (✓L) | **`1.0955^n / 1.1376^n`** | `1791` / `351532` |
 
 ## 1B. Direct Physical `k = 1, 2, 3` `SNAP+D` Blocks per Layer — Shared Parameters (L-BFGS-B on `n = 8 + 12`)
 | Tag | `L` | `k` (`SNAP+D`/layer) | Blocks/Cav (`2 + L*k`) | `N_tr(8,12)` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |
