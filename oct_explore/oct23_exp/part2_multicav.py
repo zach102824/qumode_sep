@@ -550,11 +550,12 @@ def run_gnn_pipeline():
     p0["A0"] = A0; p0["TH0"] = TH0; p0["SOUT0"] = SOUT0; p0["g0"] = g0
     th0, unr = ravel_pytree(p0)
 
+    # Precompute outside any JIT so get_xb never mutates a cache under a tracer.
     XB_CACHE = {}
+    for _n_xb in (8, 12, 16, 20):
+        _x = np.arange(1 << _n_xb)
+        XB_CACHE[_n_xb] = jnp.asarray(((_x[:, None] >> (_n_xb - 1 - np.arange(_n_xb))[None]) & 1).astype(np.int8))
     def get_xb(n):
-        if n not in XB_CACHE:
-            x = np.arange(1 << n)
-            XB_CACHE[n] = jnp.asarray(((x[:, None] >> (n - 1 - np.arange(n))[None]) & 1).astype(np.int8))
         return XB_CACHE[n]
 
     def forward_gnn(p, G, n):
