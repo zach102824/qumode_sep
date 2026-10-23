@@ -81,6 +81,9 @@ for r in sd_shared:
 lines.append("")
 
 lines.append("## 2. Pure Factor-Graph GNN Scaling (`relabel = none`, Trained on `n = 8, 12` -> Zero-Shot `n = 16, 20`)")
+lines.append("")
+lines.append("> **Median vs B90 vs `p2_shared_L15_k3` (verified by `@qumode_checker`):** `p2_gnn_L12_k2_mp128_cw` beats `p2_shared_L15_k3` on **medians** at every `n` (3.97, 11.31, 31.59, 69.85 vs 5.63, 16.43, 40.39, 112.56; median growth **1.272ⁿ** vs **1.280ⁿ**) and beats WalkSATlm **median** lookups through `n=20` (69.85 < 110), **but** loses to `shared_L15_k3` on **B90 at every `n`** (14.43, 53.15, 223.14, 420.19 vs 13.29, 48.39, 127.98, 345.85; B90 growth **1.335ⁿ** vs **1.308ⁿ**) and drops dual-lookup ✓L at `n=16` (223 > 147, while `shared_L15_k3` holds 128 < 147). Watch whether `L=15` GNN fixes the tail blow-up.")
+lines.append("")
 lines.append("| Tag | `L` | `k` | Arch (`H`) | `clause_w` | `n = 8` (Med / B90) | `n = 12` (Med / B90) | `n = 16` (Med / B90) | `n = 20` (Med / B90) | Growth `b^n` (Med / B90) | `n=12` Zero-Oracle | `n=20` Leak% |")
 lines.append("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
 for r in sd_gnn:
