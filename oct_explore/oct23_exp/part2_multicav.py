@@ -238,10 +238,21 @@ def build_graphs(cls_v, cls_s, n):
             "VP": jnp.asarray(cls_v.astype(np.int32)), "BB": jnp.asarray(bb)}
 
 # ---------------- Shared-Parameter Simulator & 3-Stage Optimizer ----------------
+def shared_param_size(nL=None, nP=None):
+    nL = L if nL is None else int(nL)
+    nP = PAIRS if nP is None else int(nP)
+    return nL * nP * 2 + nL * nP * NU + nL * NU + nL
+
 def unpack_shared(x):
     """x has size L*PAIRS*2 + L*PAIRS*16 + L*16 + L:
       A: (L, PAIRS, 2), TH: (L, PAIRS, 16), SOUT: (L, 16), g: (L,)
     """
+    x = jnp.asarray(x)
+    expect = shared_param_size()
+    assert int(x.size) == expect, (
+        f"unpack_shared: len(x)={int(x.size)} != expected {expect} for L={L}, pairs={PAIRS}. "
+        f"Flat prefix is NOT a valid layer truncate — use load_shared_params()."
+    )
     nA = L * PAIRS * 2
     nT = L * PAIRS * NU
     nS = L * NU
@@ -250,6 +261,46 @@ def unpack_shared(x):
     SOUT = x[nA + nT:nA + nT + nS].reshape(L, NU)
     g = x[nA + nT + nS:nA + nT + nS + L]
     return A, TH, SOUT, g
+
+def load_shared_params(xs, src_L=None, src_pairs=None, src_path=""):
+    """Load shared (A, TH, SOUT, g) for current (L, PAIRS).
+
+    Accepts an exact-size vector, or a longer same-`pairs` vector from `src_L > L`
+    that is truncated **by layer** (A[:L], TH[:L], SOUT[:L], g[:L]). A flat
+    prefix of concatenated [A_all|TH_all|SOUT_all|g] is rejected.
+    """
+    xs = np.asarray(xs, dtype=np.float32).ravel()
+    expect = shared_param_size()
+    if xs.size == expect:
+        return unpack_shared(jnp.asarray(xs))
+    if src_pairs is None:
+        src_pairs = PAIRS
+    src_pairs = int(src_pairs)
+    if src_L is None and src_pairs == PAIRS:
+        per = shared_param_size(1, PAIRS)
+        if xs.size % per == 0:
+            src_L = xs.size // per
+    if src_L is not None and src_pairs == PAIRS and int(src_L) > L:
+        src_L = int(src_L)
+        expect_src = shared_param_size(src_L, PAIRS)
+        assert xs.size == expect_src, (
+            f"load_shared_params: len(x)={xs.size} != src size {expect_src} "
+            f"for src_L={src_L}, pairs={PAIRS} ({src_path})"
+        )
+        nA = src_L * PAIRS * 2
+        nT = src_L * PAIRS * NU
+        nS = src_L * NU
+        A = xs[:nA].reshape(src_L, PAIRS, 2)[:L]
+        TH = xs[nA:nA + nT].reshape(src_L, PAIRS, NU)[:L]
+        SOUT = xs[nA + nT:nA + nT + nS].reshape(src_L, NU)[:L]
+        g = xs[nA + nT + nS:nA + nT + nS + src_L][:L]
+        return (jnp.asarray(A, jnp.float32), jnp.asarray(TH, jnp.float32),
+                jnp.asarray(SOUT, jnp.float32), jnp.asarray(g, jnp.float32))
+    raise ValueError(
+        f"load_shared_params: len(x)={xs.size} != expected {expect} for L={L}, pairs={PAIRS} "
+        f"(src_L={src_L}, src_pairs={src_pairs}, path={src_path}). "
+        f"Flat prefix of [A_all|TH_all|SOUT_all|g] is NOT a valid layer truncate."
+    )
 
 def sim_shared_n(x, Cn, Succ, n):
     C_cav = n // 4
@@ -352,12 +403,22 @@ def run_shared_pipeline():
     cands_x = []
     if a.grow_from and os.path.exists(a.grow_from) and a.mixer != "gray":
         Jg = json.load(open(a.grow_from))
+        src_L = (Jg.get("args") or {}).get("L")
+        src_pairs = (Jg.get("args") or {}).get("pairs", PAIRS)
+        def _align_shared_x(x_raw, label):
+            x_raw = np.asarray(x_raw, dtype=np.float32).ravel()
+            if x_raw.size == shared_param_size():
+                return x_raw
+            A, TH, SOUT, g = load_shared_params(
+                x_raw, src_L=src_L, src_pairs=src_pairs, src_path=f"{a.grow_from}:{label}")
+            return np.concatenate([np.asarray(A).ravel(), np.asarray(TH).ravel(),
+                                  np.asarray(SOUT).ravel(), np.asarray(g).ravel()]).astype(np.float32)
         if "cands_x" in Jg:
             for cx in Jg["cands_x"]:
-                cands_x.append((cx["label"], np.array(cx["x"], dtype=np.float32)))
+                cands_x.append((cx["label"], _align_shared_x(cx["x"], cx["label"])))
         else:
-            cands_x.append((Jg.get("winner_init", "warm"), np.array(Jg["x_best"], dtype=np.float32)))
-        log(f"Warm-starting Stage 3 directly from {a.grow_from} ({len(cands_x)} candidates)")
+            cands_x.append((Jg.get("winner_init", "warm"), _align_shared_x(Jg["x_best"], "x_best")))
+        log(f"Warm-starting Stage 3 from {a.grow_from} ({len(cands_x)} candidates; src_L={src_L}→L={L})")
     else:
         log(f"Stage 1: Optimizing 2L={2*L} (beta, gamma) schedules for Gray and Tri mixers...")
     for kind, Vf, w_j in ([] if cands_x else ([("gray", V_GRAY_J, W_GRAY_J)] if a.mixer == "gray" else [("gray", V_GRAY_J, W_GRAY_J), ("tri", V_TRI_J, W_TRI_J)])):
@@ -570,8 +631,12 @@ def run_gnn_pipeline():
         SOUT0 = jnp.zeros((L, NU), jnp.float32)
         g0 = jnp.asarray(bg_init[:, 1], jnp.float32)
     else:
-        xs = jnp.asarray(Js["x_best"], jnp.float32)
-        A0, TH0, SOUT0, g0 = unpack_shared(xs)
+        src_L = (Js.get("args") or {}).get("L")
+        src_pairs = (Js.get("args") or {}).get("pairs")
+        A0, TH0, SOUT0, g0 = load_shared_params(
+            Js["x_best"], src_L=src_L, src_pairs=src_pairs, src_path=a.init_shared)
+        if src_L is not None and int(src_L) != L:
+            log(f"Layer-truncated init_shared {a.init_shared}: L {src_L}→{L}, pairs={PAIRS}")
     p0["A0"] = A0; p0["TH0"] = TH0; p0["SOUT0"] = SOUT0; p0["g0"] = g0
     th0, unr = ravel_pytree(p0)
 
