@@ -361,19 +361,31 @@ def run_shared_pipeline():
             C_cav = n // 4; B = Cn.shape[0]
             psi = jnp.broadcast_to(make_psi0_log(C_cav), (B,) + (NU,) * C_cav)
             Cn_sh = Cn.reshape(psi.shape)
-            for l in range(L):
-                b, g = bg[2*l], bg[2*l+1]
-                psi = psi * jnp.exp(-1j * g * Cn_sh)
+            bg_mat = bg.reshape(L, 2)
+            def id_body(psi_c, bg_l):
+                b, g = bg_l[0], bg_l[1]
+                psi_c = psi_c * jnp.exp(-1j * g * Cn_sh)
                 U_f = (Vf * jnp.exp(-0.5j * b * w_j)[None, :]) @ Vf.conj().T
                 U_l = U_f[jnp.ix_(FOCK_OF_LOG, FOCK_OF_LOG)]
                 for c in range(C_cav):
-                    psi = apply_cav_shared(U_l, psi, c, C_cav)
+                    psi_c = apply_cav_shared(U_l, psi_c, c, C_cav)
+                return psi_c, None
+            psi, _ = jax.lax.scan(id_body, psi, bg_mat)
             pr = jnp.abs(psi.reshape(B, -1)) ** 2
             return jnp.sum(pr * S, axis=1)
-        vg_id = jax.jit(jax.value_and_grad(
-            lambda bg: 0.5 * jnp.mean(-jnp.log(sim_id(bg, Cn8_tr, S8_tr, 8) + 1e-12))
-                     + 0.5 * jnp.mean(-jnp.log(sim_id(bg, Cn12_tr, S12_tr, 12) + 1e-12))
-        ))
+        vg_id8  = jax.jit(jax.value_and_grad(lambda bg, c, s: jnp.mean(-jnp.log(sim_id(bg, c, s, 8) + 1e-12))))
+        vg_id12 = jax.jit(jax.value_and_grad(lambda bg, c, s: jnp.mean(-jnp.log(sim_id(bg, c, s, 12) + 1e-12))))
+        def vg_id(bg):
+            tot_v = 0.0; tot_g = np.zeros(2 * L, dtype=np.float64)
+            for i in range(0, a.ntrain8, 1000):
+                w = (min(i + 1000, a.ntrain8) - i) / float(a.ntrain8)
+                v, g = vg_id8(bg, Cn8_tr[i:i+1000], S8_tr[i:i+1000])
+                tot_v += 0.5 * float(v) * w; tot_g += 0.5 * np.asarray(g, np.float64) * w
+            for i in range(0, a.ntrain12, 500):
+                w = (min(i + 500, a.ntrain12) - i) / float(a.ntrain12)
+                v, g = vg_id12(bg, Cn12_tr[i:i+500], S12_tr[i:i+500])
+                tot_v += 0.5 * float(v) * w; tot_g += 0.5 * np.asarray(g, np.float64) * w
+            return tot_v, tot_g
         t_old = np.linspace(0, 1, 4); t_new = np.linspace(0, 1, L)
         bg_inits = [
             np.stack([np.interp(t_new, t_old, Q4_ANGLES[:, 0]), np.interp(t_new, t_old, Q4_ANGLES[:, 1])], 1).reshape(-1),
@@ -611,14 +623,16 @@ def run_gnn_pipeline():
             BB = G["BB"]    # (B, m, K)
             nm = n / float(G["Ip"].shape[1])
             def cost_Ew(w_eff):
-                # w_eff: (B, m) -> Ew: (B, 2^n)
-                # viol_b[x,c] = prod_k (xb[x, VP[b,c,k]] == BB[b,c,k])
-                def one_b(vp_b, bb_b, w_b):
-                    # vp_b, bb_b: (m, K); w_b: (m,)
-                    lit = xb[:, vp_b]                      # (2^n, m, K)
-                    viol = jnp.prod((lit == bb_b[None]).astype(jnp.float32), axis=-1)  # (2^n, m)
-                    return viol @ w_b                       # (2^n,)
-                return nm * jax.vmap(one_b)(VP, BB, w_eff)  # (B, 2^n)
+                def one_b(vp_b, bb_b, w_b_vec):
+                    m_tot = vp_b.shape[0]
+                    acc = jnp.zeros(xb.shape[0], jnp.float32)
+                    for c0 in range(0, m_tot, 40):
+                        c1 = min(c0 + 40, m_tot)
+                        lit = xb[:, vp_b[c0:c1]]
+                        viol = jnp.prod((lit == bb_b[None, c0:c1]).astype(jnp.float32), axis=-1)
+                        acc = acc + viol @ w_b_vec[c0:c1]
+                    return acc
+                return nm * jax.vmap(one_b)(VP, BB, w_eff)
         else:
             Cn_sh = Cn.reshape(psi.shape)
 
@@ -706,8 +720,15 @@ def run_gnn_pipeline():
             best_val.update(S=S_v, th=np.array(th_vec, dtype=np.float32, copy=True), step=st, med=med, B90=b90)
         return med, b90, S_v
 
-    m0, b0, s0 = check_val12(th0, 0)
-    log(f"Start Part2 Pure GNN L={L} pairs={PAIRS} arch={a.arch} H={H} cw={a.clause_w} params={th0.size} | step 0 val12={m0:.2f}/{b0:.2f} S={s0:.4f}")
+    th_file = OUT.replace(".json", "_theta.npz")
+    if os.path.exists(th_file):
+        th_loaded = np.load(th_file)["theta"].astype(np.float32)
+        m0, b0, s0 = check_val12(th_loaded, a.steps)
+        log(f"Loaded saved {th_file} for {a.tag} | val12={m0:.2f}/{b0:.2f} S={s0:.4f}, skipping training!")
+        a.steps = 0
+    else:
+        m0, b0, s0 = check_val12(th0, 0)
+        log(f"Start Part2 Pure GNN L={L} pairs={PAIRS} arch={a.arch} H={H} cw={a.clause_w} params={th0.size} | step 0 val12={m0:.2f}/{b0:.2f} S={s0:.4f}")
 
     @jax.jit
     def adam_step(x, m, v, g, t, lr):
@@ -738,6 +759,8 @@ def run_gnn_pipeline():
 
     th_best = jnp.asarray(best_val["th"], jnp.float32)
     np.savez_compressed(OUT.replace(".json", "_theta.npz"), theta=np.asarray(th_best, np.float32))
+    del G8_tr, G12_tr, G12_va, Cn8_tr, S8_tr, Cn12_tr, S12_tr, Cn12_va, S12_va, E8_tr, E12_tr, E12_va
+    import gc; gc.collect()
 
     test_res = {}
     for n_te in [8, 12, 16, 20]:
@@ -745,7 +768,7 @@ def run_gnn_pipeline():
         E_te, _, v_te, s_te = get_instances(n_te, 100, TEB, "test")
         G_te = build_graphs(v_te, s_te, n_te)
         m_te = int(round(9.93 * n_te))
-        ch = 50 if n_te <= 12 else (10 if n_te == 16 else 2)
+        ch = 50 if n_te <= 12 else (10 if n_te == 16 else 1)
         ev_fn = jax.jit(lambda th, G_b, c_b, s_b, n_val=n_te: sim_gnn_n(th, G_b, c_b, s_b, n_val, False))
         ev_z  = jax.jit(lambda th, G_b, c_b, s_b, n_val=n_te: sim_gnn_n(th, G_b, c_b, s_b, n_val, True))
         ps, lks, pzs = [], [], []

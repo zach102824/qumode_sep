@@ -21,7 +21,9 @@ JOBS = [
     ("p2_shared_L15_k3_ntr500",     f"--tag p2_shared_L15_k3_ntr500   --mode shared --L 15 --pairs 3 --kprep 3 --ntrain8 500   --ntrain12 200  --maxiter 60 --grow_from {RESDIR}/p2_shared_L15_k3.json"),
     ("p2_shared_L15_k3_ntr5000",    f"--tag p2_shared_L15_k3_ntr5000  --mode shared --L 15 --pairs 3 --kprep 3 --ntrain8 5000  --ntrain12 1000 --maxiter 60 --grow_from {RESDIR}/p2_shared_L15_k3.json"),
     ("p2_shared_L15_k3_ntr10000",   f"--tag p2_shared_L15_k3_ntr10000 --mode shared --L 15 --pairs 3 --kprep 3 --ntrain8 10000 --ntrain12 1000 --maxiter 60 --grow_from {RESDIR}/p2_shared_L15_k3.json"),
+    ("p2_gnn_L12_k2_mp64_cw",       f"--tag p2_gnn_L12_k2_mp64_cw   --mode gnn --L 12 --pairs 2 --kprep 2 --arch mp64 --clause_w --steps 800 --init_shared {RESDIR}/p2_shared_L12_k2.json"),
     ("p2_gnn_L12_k2_mp64_nocw",     f"--tag p2_gnn_L12_k2_mp64_nocw --mode gnn --L 12 --pairs 2 --kprep 2 --arch mp64 --steps 800 --init_shared {RESDIR}/p2_shared_L12_k2.json"),
+    ("p2_gnn_L15_k3_mp64_cw",       f"--tag p2_gnn_L15_k3_mp64_cw   --mode gnn --L 15 --pairs 3 --kprep 3 --arch mp64 --clause_w --steps 800 --init_shared {RESDIR}/p2_shared_L15_k3.json"),
     ("p2_gnn_L15_k3_mp64_nocw",     f"--tag p2_gnn_L15_k3_mp64_nocw --mode gnn --L 15 --pairs 3 --kprep 3 --arch mp64 --steps 800 --init_shared {RESDIR}/p2_shared_L15_k3.json"),
 ]
 
