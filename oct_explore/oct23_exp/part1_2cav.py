@@ -74,10 +74,12 @@ if a.gate in ("ecd", "ecdt"):
     a.refine_top = 1
     a.maxiter = min(a.maxiter, 80)
 elif a.n == 8:
-    a.nstarts = min(a.nstarts, 10)
-    a.screen_it = min(a.screen_it, 60)
+    if not a.tag.startswith("n8_ntrain"):
+        a.ntrain = min(a.ntrain, 2000)
+    a.nstarts = min(a.nstarts, 8)
+    a.screen_it = min(a.screen_it, 50)
     a.refine_top = 1
-    a.maxiter = min(a.maxiter, 120)
+    a.maxiter = min(a.maxiter, 90)
 
 n = a.n
 C = 2

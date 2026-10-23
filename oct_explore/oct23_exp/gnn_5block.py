@@ -44,7 +44,11 @@ ap.add_argument("--amax", type=float, default=1.8)
 ap.add_argument("--init_base", default="", help="JSON from part1_2cav.py to warm-start base A0, TH0, g0")
 ap.add_argument("--seed", type=int, default=0)
 a = ap.parse_args()
-if a.tag.endswith("_nocw"): a.steps = min(a.steps, 1600)
+if a.tag.endswith("_nocw"): a.steps = min(a.steps, 1200)
+if a.pure_gnn:
+    a.ntrain = 10000
+    a.steps = 1000
+    a.opt = "adam" 
 
 n = a.n
 C = 2
