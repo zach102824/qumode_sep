@@ -405,7 +405,7 @@ def run_shared_pipeline():
         inv_id_va = 1.0 / np.maximum(p_id_va, 1e-12)
         med_id_va, b90_id_va = float(np.median(inv_id_va)), float(np.quantile(inv_id_va, 0.9))
         log(f"  Stage 1 {kind}: loss={best_id.fun:.4f} | ideal val12 med/B90 = {med_id_va:.2f}/{b90_id_va:.2f}")
-        gray_out = os.path.join(OUT_DIR, f"p2_gray_L{L}.json")
+        # gray_out already set ntr-aware above (p2_gray_L{L}.json only when ntrain8==2000)
         if kind == "gray" and (a.mixer == "gray" or not os.path.exists(gray_out)):
             bg_j = jnp.asarray(best_id.x, jnp.float32)
             bg_z = jnp.asarray(np.stack([bg_opt[:, 0], np.zeros(L)], 1).reshape(-1), jnp.float32)
