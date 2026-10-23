@@ -414,8 +414,9 @@ def run_shared_pipeline():
                 te_g[str(n_te)] = eval_metrics(p_all_g, lk_g, pz_all_g, (E_te[:, 0] == 0).astype(float), n_te)
                 te_g[str(n_te)]["p"] = p_all_g.tolist()
             sc_g = fit_scaling(te_g)
+            g_tag = f"p2_gray_L{L}" if a.ntrain8 == 2000 else f"p2_gray_L{L}_ntr{a.ntrain8}"
             g_doc = {
-                "args": {**vars(a), "tag": f"p2_gray_L{L}", "mixer": "gray"},
+                "args": {**vars(a), "tag": g_tag, "mixer": "gray"},
                 "val12": {"median_inv_p": med_id_va, "B90_inv_p": b90_id_va, "S": 0.5*(np.log(med_id_va)+np.log(b90_id_va))},
                 "test": te_g, "scaling": sc_g, "bg_opt": best_id.x.tolist(), "sec": time.time() - t0
             }
