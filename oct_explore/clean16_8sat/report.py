@@ -15,7 +15,7 @@ def load(pref):
         if "val" not in T:   # gcost (gnnw): val n=12 (200) summary of the early-stopped checkpoint used for testing
             h = dict((it, v) for it, v in J["hist"])[J["best_it"]]; out[s]["valmb"] = (h["median_inv_p"], h["B90_inv_p"])
     return out
-M = {"QAOA L4 (shots)": load("Q"), "Global cost L4 (shots)": load("G"), "QAOA L14 (shots)": load("Q14"), "Global cost L14 (shots)": load("G14"), "Native-projected cost L4, QAOA-style 8 params (shots)": load("QC"), "Native-projected cost L4 + GNN clause weights (shots)": load("GC")}
+M = {"QAOA L4 (shots)": load("Q"), "Global cost L4 (shots)": load("G"), "Global cost L14 (shots)": load("G14"), "Native-projected cost L4, QAOA-style 8 params (shots)": load("QC"), "Native-projected cost L4 + GNN clause weights (shots)": load("GC")}
 W = {}
 for n in NS_:
     f = f"{CM.RES}/W_n{n}.json"
