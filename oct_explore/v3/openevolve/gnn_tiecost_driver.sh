@@ -38,11 +38,30 @@ alive=os.path.exists(f"{OUT}/cli.pid") and os.path.exists(f"/proc/{open(f'{OUT}/
 lines.append(f"- cli_alive: {alive}")
 cks=sorted(glob.glob(f"{OUT}/checkpoints/checkpoint_*"), key=lambda p:int(p.rsplit('_',1)[-1]))
 lines.append(f"- checkpoints: {len(cks)} latest={cks[-1] if cks else None}")
-if cks:
-  info=f"{cks[-1]}/best_program_info.json"
-  if os.path.exists(info):
-    d=json.load(open(info)); m=d.get("metrics",{})
-    lines.append(f"- best_score: {m.get('combined_score')} growth={m.get('growth_proxy')} n6_med={m.get('n6_med')} n8_med={m.get('n8_med')}")
+def _score(path):
+  if not os.path.exists(path): return None
+  d=json.load(open(path)); m=d.get("metrics",{}) or {}
+  sc=m.get("combined_score");
+  ts=d.get("saved_at") or d.get("timestamp") or 0
+  return (sc, ts, d, m)
+# Prefer disk best/ when present and better/newer than checkpoint best
+disk=_score(f"{OUT}/best/best_program_info.json")
+ckpt=_score(f"{cks[-1]}/best_program_info.json") if cks else None
+pick=None
+if disk and ckpt:
+  ds,dts,_,_ = disk; cs,cts,_,_ = ckpt
+  # higher combined_score is better; tie-break newer saved_at
+  if ds is not None and (cs is None or ds > cs or (ds == cs and dts >= cts)):
+    pick=("disk", disk)
+  else:
+    pick=("checkpoint", ckpt)
+elif disk:
+  pick=("disk", disk)
+elif ckpt:
+  pick=("checkpoint", ckpt)
+if pick:
+  src,(_,_,_,m)=pick
+  lines.append(f"- best_score: {m.get('combined_score')} growth={m.get('growth_proxy')} n6_med={m.get('n6_med')} n8_med={m.get('n8_med')} source={src}")
 lines.append(f"- stop_file: {os.path.exists(OUT+'/gnn_tiecost.STOP')}")
 open(f"{OUT}/STATUS.md","w").write("\n".join(lines)+"\n")
 PY
