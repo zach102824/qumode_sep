@@ -14,6 +14,16 @@ import arch_nets as AN
 OUT_DIR = os.path.join(ROOT, "results", "oct23_exp")
 PREPS = json.load(open(os.path.join(OUT_DIR, "preps.json")))
 WS = {6: {"look_med": 8.466, "look_b90": 16.039}, 8: {"look_med": 13.989, "look_b90": 29.396}}
+
+def _assert_tied_cost_heads(p):
+    """Hardening (qumode_checker): Wc/G2_g last dim must be 1.
+    Otherwise w_tied=(hc@Wc)[:,:,0] / g_tied=...[:,0] silently drop an L axis.
+    """
+    wc_sh = tuple(p["Wc"].shape)
+    g2_sh = tuple(p["G2_g"].shape)
+    assert wc_sh[-1] == 1, f"Wc last dim must be 1 (tied clause_w); got shape {wc_sh}"
+    assert g2_sh[-1] == 1, f"G2_g last dim must be 1 (tied gamma); got shape {g2_sh}"
+
 def _gray(i): return i ^ (i >> 1)
 def eval_metrics(p_succ, p_leak, n=None):
     p_succ = np.asarray(p_succ, float); p_leak = np.asarray(p_leak, float)
@@ -129,10 +139,12 @@ def train_one(n, L, hypers, screen=False, log_fn=None):
         A0 = np.stack([r*np.cos(ph), r*np.sin(ph)], -1).astype(np.float32); TH0 = np.zeros((C,NB_ACT,NU), np.float32)
         pr1 = PREPS[f"sd_K{K}_k1"]; A0[:,0,:] = np.array(pr1["alphas"][0])[None,:]; TH0[:,0,:] = np.array(pr1["thetas"][0])[None,:]
         p["A0"]=jnp.asarray(A0); p["TH0"]=jnp.asarray(TH0); p["g0"]=jnp.asarray(np.array([3.0], np.float32))
+        _assert_tied_cost_heads(p)
         return p
 
     def forward_net(p, G):
         B = G["Ip"].shape[0]
+        _assert_tied_cost_heads(p)
         hv, hc = AN.run_backbone(p, G, arch, H)
         g_pool = jnp.concatenate([hv.mean(1), hc.mean(1)], -1); h_g = jnp.tanh(g_pool @ p["G1"] + p["g1"])
         dA_glob = (h_g @ p["G2_a"]).reshape(B, C, NB_ACT, 2)
