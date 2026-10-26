@@ -1,0 +1,64 @@
+[export] n=6
+  100 formulas, first seeds [52060000000, 52060000001, 52060000002]
+[export] n=8
+  100 formulas, first seeds [52080000000, 52080000001, 52080000003]
+[export] n=10
+  100 formulas, first seeds [52100000000, 52100000001, 52100000004]
+[tune] building small VAB set...
+  walksat wp=0.3: tries med=2.817
+  walksat wp=0.4: tries med=2.867
+  walksat wp=0.5: tries med=2.818
+  walksat wp=0.6: tries med=2.909
+  novelty+ novnoise=0.3: tries med=2.606
+  novelty+ novnoise=0.5: tries med=2.659
+  novelty+ novnoise=0.7: tries med=2.474
+[tune] chose {'walksat': ['-wp', '0.3'], 'novelty+': ['-novnoise', '0.7'], 'adaptnovelty+': [], 'saps': [], 'rsaps': []}
+[WalkSATlm] n=6
+  tries [1.6909999999999998, 2.815800000000001] lookups [8.466000000000001, 16.039000000000012] (0.7s)
+[WalkSATlm] n=8
+  tries [2.0140000000000002, 3.739200000000001] lookups [13.989, 29.39580000000001] (0.9s)
+[WalkSATlm] n=10
+  tries [2.481, 4.949600000000001] lookups [22.915, 49.65740000000002] (1.3s)
+[UBCSAT walksat ['-wp', '0.3']] n=6
+  tries [1.9540833373108684, 3.0056527691118546] lookups [11.36058708414873, 18.360591491977168] censored=0 (0.2s)
+[UBCSAT walksat ['-wp', '0.3']] n=8
+  tries [2.228717301799363, 4.264569842738206] lookups [16.859407537593313, 34.80522016062033] censored=0 (0.2s)
+[UBCSAT walksat ['-wp', '0.3']] n=10
+  tries [3.0211549300274045, 5.33475935828877] lookups [29.071187157709836, 54.74873796791444] censored=0 (0.2s)
+[UBCSAT novelty+ ['-novnoise', '0.7']] n=6
+  tries [1.7497933314962801, 2.7560405179953693] lookups [10.00358918309639, 16.55533580695002] censored=0 (0.2s)
+[UBCSAT novelty+ ['-novnoise', '0.7']] n=8
+  tries [1.8273828605011486, 3.5618597320724996] lookups [13.24760675775339, 28.412486209613885] censored=0 (0.2s)
+[UBCSAT novelty+ ['-novnoise', '0.7']] n=10
+  tries [2.2234746518945885, 4.115764203787679] lookups [20.14379286582748, 41.870684182448684] censored=0 (0.3s)
+[UBCSAT adaptnovelty+ []] n=6
+  tries [1.7754193078622784, 2.9926977632666336] lookups [10.06964257183941, 18.014182916781103] censored=0 (0.2s)
+[UBCSAT adaptnovelty+ []] n=8
+  tries [2.087957953147357, 4.258052758667821] lookups [15.188426634879756, 34.60323796072715] censored=0 (0.2s)
+[UBCSAT adaptnovelty+ []] n=10
+  tries [2.433122433122433, 4.350983885962195] lookups [22.60503044093229, 43.17956741942982] censored=0 (0.2s)
+[UBCSAT saps []] n=6
+  tries [2.1356265378677484, 3.5614503699610114] lookups [12.303296703296702, 21.552212638572783] censored=0 (0.2s)
+[UBCSAT saps []] n=8
+  tries [2.4230309754644264, 5.105087054957827] lookups [18.30234373071635, 42.3831880747731] censored=0 (0.2s)
+[UBCSAT saps []] n=10
+  tries [2.9968617133518602, 5.6214047709828785] lookups [27.76875033328001, 56.36492051124782] censored=0 (0.3s)
+[UBCSAT rsaps []] n=6
+  tries [2.1266300206444786, 3.5449735449735464] lookups [12.169262720664591, 21.222486772486793] censored=0 (0.2s)
+[UBCSAT rsaps []] n=8
+  tries [2.5227460711331675, 5.038228604313396] lookups [18.69516129032258, 41.98619043051714] censored=0 (0.2s)
+[UBCSAT rsaps []] n=10
+  tries [3.0143334166231286, 5.399697227042795] lookups [28.68759010929385, 54.4478624967692] censored=0 (0.3s)
+[CDCL glucose4] n=6
+  conflicts [3.0, 7.0] decisions [7.0, 12.0] (0.0s)
+[CDCL glucose4] n=8
+  conflicts [5.0, 11.0] decisions [10.0, 16.0] (0.0s)
+[CDCL glucose4] n=10
+  conflicts [6.0, 16.0] decisions [11.0, 21.10000000000001] (0.0s)
+[CDCL cadical] n=6
+  conflicts [0.0, 10.0] decisions [0.0, 8.0] (0.0s)
+[CDCL cadical] n=8
+  conflicts [1.0, 12.0] decisions [4.0, 12.0] (0.0s)
+[CDCL cadical] n=10
+  conflicts [4.0, 16.0] decisions [7.0, 17.0] (0.0s)
+DONE
