@@ -1,5 +1,7 @@
 #!/bin/bash
 # gnn_tiecost NON-STOP driver. Stop: touch runs/gnn_tiecost/gnn_tiecost.STOP
+exec 9>"$PWD/runs/gnn_tiecost/driver.lock"
+if ! flock -n 9; then echo "another driver holds lock; exit"; exit 0; fi
 source /workspace/qumode_sep/oct_explore/v3/openevolve/env_gnn_tiecost.sh
 OUT=runs/gnn_tiecost; STOP=$OUT/gnn_tiecost.STOP
 mkdir -p $OUT/checkpoints logs
