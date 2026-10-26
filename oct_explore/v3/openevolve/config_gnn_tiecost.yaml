@@ -1,0 +1,47 @@
+# gnn_tiecost: evolve adaptive GNN training rule for tied-cost M-C^L
+max_iterations: 80
+checkpoint_interval: 5
+log_level: INFO
+random_seed: 2605
+diff_based_evolution: true
+max_code_length: 20000
+llm:
+  api_base: http://127.0.0.1:8767/v1
+  api_key: local-adapter-no-key
+  models:
+  - name: gnn_tiecost
+    weight: 1.0
+  temperature: 0.7
+  max_tokens: 8000
+  timeout: 900
+  retries: 1
+prompt:
+  system_message: |
+    You edit an ADAPTIVE TRAINING RULE for a locked quantum circuit (do NOT change the circuit).
+    Circuit (fixed): each layer = SNAP+D then cost; SNAP+D params are free (GNN emits them); cost = ONE unitary per formula, identical across all L layers (gamma + clause_w tied). Vacuum start, pure GNN + clause_w. Same L at train and test.
+    Goal: beat WalkSATlm 4-SAT TEB lookup growth 1.19^n Med / 1.21^n B90 on n=8->20 by finding a good GNN training rule that may depend on L.
+    You ONLY edit rule(L) -> dict of hypers: arch in {mp,attn,ds,mlp}, H, rounds, lr, steps, bs, wd, leakpen, tailw, ntrain, train_ns, amax, seed.
+    train_ns MUST include 6 and 8; you may add 9 and/or 12 (Phase-1 eval currently trains 6+8 data; extras are recorded).
+    OE search runs at L=OE_L (default 5); rule(L) should still adapt when L changes later.
+    Fitness = TEB Med/B90 score on train sizes + growth proxy (n6->n8). Hard fail if cost not tied or leak high.
+    Prefer genuine changes to size/lr/rounds/steps/train mix over tiny noise. Keep FAMILY line. Diff-based SEARCH/REPLACE only.
+    Imports: numpy, math only inside the program.
+  num_top_programs: 3
+  num_diverse_programs: 2
+  include_artifacts: true
+  max_artifact_bytes: 4096
+database:
+  population_size: 40
+  archive_size: 15
+  num_islands: 3
+  elite_selection_ratio: 0.2
+  exploitation_ratio: 0.35
+  exploration_ratio: 0.5
+  migration_interval: 10
+  migration_rate: 0.1
+evaluator:
+  timeout: 7200
+  max_retries: 0
+  cascade_evaluation: false
+  parallel_evaluations: 1
+  use_llm_feedback: false
