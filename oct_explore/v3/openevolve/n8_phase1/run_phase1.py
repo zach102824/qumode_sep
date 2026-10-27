@@ -292,8 +292,16 @@ def main():
     write_status()
 
     # Multiple densify passes: after first wave, if new best, could add more — for now one full densify wave
-    dens_q = densify_queue(load_all_results())
-    print(f"Densify queue size={len(dens_q)}", flush=True)
+    # Prefer wide densify around A_L5 / B_L3 winners (Zach: what moves Med)
+    try:
+        import wide_densify as WD
+        dens_q = WD.wide_queue()
+        print(f"WIDE densify queue size={len(dens_q)}", flush=True)
+    except Exception as e:
+        print(f"wide_densify import failed ({e}); falling back", flush=True)
+        dens_q = densify_queue(load_all_results())
+        print(f"Densify queue size={len(dens_q)}", flush=True)
+    (RUN / "DENSE_START").write_text(__import__("time").strftime("%Y-%m-%d %H:%M:%S") + f" n={len(dens_q)}\n")
     for cid, tag, L, nt, phase, ov in dens_q:
         run_one(cid, tag, L, nt, phase=phase, overrides=ov)
 
