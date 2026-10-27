@@ -1,0 +1,10 @@
+11:46:58 START A_L7_n10000 phase=core L=7 ntrain=10000 h={'H': 128, 'rounds': 4, 'steps': 1400, 'lr': 0.0011, 'leakpen': 0.14, 'tailw': 1.6, 'seed': 0}
+11:47:00 start params=540573 steps=1400 ntrain=10000 H=128 rounds=4 arch=mp lr=0.0011
+11:48:35   step 280 val med/B90=684.083/5001.139 S=7.5228 tie_ok=True
+11:50:06   step 560 val med/B90=531.239/3620.844 S=7.2348 tie_ok=True
+11:51:38   step 840 val med/B90=488.238/3045.477 S=7.1061 tie_ok=True
+11:55:56   step 1120 val med/B90=146.682/307.960 S=5.3591 tie_ok=True
+11:57:25   step 1400 val med/B90=144.620/285.076 S=5.3134 tie_ok=True
+11:57:27 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L7_n10000/weights.npz best_step=1400
+11:57:27 done test med/B90=134.411/293.894 leak=0.0198 627s
+11:57:27 DONE A_L7_n10000 test Med/B90=134.41/293.89 val=144.62 best_step=1400 sec=627

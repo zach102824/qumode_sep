@@ -1,0 +1,21 @@
+12:57:32 CURRICULUM stage1 L=3 steps=800
+12:57:33 start params=523277 steps=800 ntrain=10000 H=128 rounds=4 arch=mp lr=0.0011 ema=0.999 sched=constant
+12:58:09   step 160 val med/B90=172.027/356.267 S=5.5117 ema_med=1146.028 leakpen=0.140 lr=1.10e-03 tie_ok=True
+12:58:42   step 320 val med/B90=150.083/358.170 S=5.4461 ema_med=654.433 leakpen=0.140 lr=1.10e-03 tie_ok=True
+13:01:16   step 480 val med/B90=156.651/322.955 S=5.4158 ema_med=396.649 leakpen=0.140 lr=1.10e-03 tie_ok=True
+13:01:49   step 640 val med/B90=150.599/333.852 S=5.4127 ema_med=288.273 leakpen=0.140 lr=1.10e-03 tie_ok=True
+13:02:22   step 800 val med/B90=137.301/293.487 S=5.3020 ema_med=299.585 leakpen=0.140 lr=1.10e-03 tie_ok=True
+13:02:24 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L5_n10000_opus_curr_L3toL5/stage_L3_weights.npz best_step=800
+13:02:24 done test med/B90=133.918/275.673 leak=0.0674 291s
+13:02:24 CURRICULUM stage2 L=5 steps=1000 lr=0.0006 trying leaf-copy from /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L5_n10000_opus_curr_L3toL5/stage_L3_weights.npz
+13:02:24 leaf-copy done copied=17 skipped=9 -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L5_n10000_opus_curr_L3toL5/stage_L5_init_from_L3.npz
+13:02:26 init_th loaded from /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L5_n10000_opus_curr_L3toL5/stage_L5_init_from_L3.npz
+13:02:26 start params=531925 steps=1000 ntrain=10000 H=128 rounds=4 arch=mp lr=0.0006 ema=0.999 sched=constant
+13:03:22   step 200 val med/B90=154.249/336.693 S=5.4289 ema_med=216.603 leakpen=0.140 lr=6.00e-04 tie_ok=True
+13:04:15   step 400 val med/B90=119.637/340.994 S=5.3082 ema_med=244.796 leakpen=0.140 lr=6.00e-04 tie_ok=True
+13:05:09   step 600 val med/B90=112.583/258.394 S=5.1391 ema_med=317.934 leakpen=0.140 lr=6.00e-04 tie_ok=True
+13:06:03   step 800 val med/B90=112.852/305.910 S=5.2247 ema_med=427.534 leakpen=0.140 lr=6.00e-04 tie_ok=True
+13:06:57   step 1000 val med/B90=105.535/276.376 S=5.1404 ema_med=338.912 leakpen=0.140 lr=6.00e-04 tie_ok=True
+13:06:58 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L5_n10000_opus_curr_L3toL5/weights.npz best_step=600
+13:06:58 done test med/B90=119.647/280.289 leak=0.0493 272s
+13:06:58 CURRICULUM DONE test=119.65

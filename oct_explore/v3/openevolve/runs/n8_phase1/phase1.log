@@ -1,0 +1,137 @@
+Core queue size=24
+10:22:13 START A_L3_n10000 phase=core L=3 ntrain=10000 h={'H': 128, 'rounds': 4, 'steps': 1400, 'lr': 0.0011, 'leakpen': 0.14, 'tailw': 1.6, 'seed': 0}
+10:22:21 start params=523277 steps=1400 ntrain=10000 H=128 rounds=4 arch=mp lr=0.0011
+10:23:28   step 280 val med/B90=169.729/330.549 S=5.4675 tie_ok=True
+10:24:28   step 560 val med/B90=143.396/317.318 S=5.3628 tie_ok=True
+10:25:33   step 840 val med/B90=133.481/316.070 S=5.3250 tie_ok=True
+10:26:38   step 1120 val med/B90=130.831/312.172 S=5.3087 tie_ok=True
+10:27:42   step 1400 val med/B90=115.843/308.154 S=5.2414 tie_ok=True
+10:27:46 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L3_n10000/weights.npz best_step=1400
+10:27:46 done test med/B90=106.008/272.039 leak=0.0564 325s
+10:27:47 DONE A_L3_n10000 test Med/B90=106.01/272.04 val=115.84 best_step=1400 sec=325
+10:27:47 START B_L3_n10000 phase=core L=3 ntrain=10000 h={'H': 80, 'rounds': 8, 'steps': 2600, 'lr': 0.0006, 'leakpen': 0.14, 'tailw': 3.0, 'seed': 0}
+10:27:49 start params=367773 steps=2600 ntrain=10000 H=80 rounds=8 arch=mp lr=0.0006
+10:28:58   step 520 val med/B90=118.941/244.556 S=5.1390 tie_ok=True
+10:30:02   step 1040 val med/B90=91.429/225.178 S=4.9662 tie_ok=True
+10:31:08   step 1560 val med/B90=84.251/223.915 S=4.9225 tie_ok=True
+10:32:12   step 2080 val med/B90=77.612/227.839 S=4.8902 tie_ok=True
+10:33:18   step 2600 val med/B90=72.725/227.568 S=4.8571 tie_ok=True
+10:33:20 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/B_L3_n10000/weights.npz best_step=2600
+10:33:20 done test med/B90=62.487/238.404 leak=0.0224 331s
+10:33:20 DONE B_L3_n10000 test Med/B90=62.49/238.40 val=72.73 best_step=2600 sec=331
+10:33:20 START A_L3_n5000 phase=core L=3 ntrain=5000 h={'H': 128, 'rounds': 4, 'steps': 1400, 'lr': 0.0011, 'leakpen': 0.14, 'tailw': 1.6, 'seed': 0}
+10:33:21 start params=523277 steps=1400 ntrain=5000 H=128 rounds=4 arch=mp lr=0.0011
+10:34:27   step 280 val med/B90=117.877/261.110 S=5.1673 tie_ok=True
+10:35:27   step 560 val med/B90=95.316/266.582 S=5.0714 tie_ok=True
+10:36:27   step 840 val med/B90=89.284/290.937 S=5.0825 tie_ok=True
+10:37:28   step 1120 val med/B90=76.242/299.975 S=5.0188 tie_ok=True
+10:38:26   step 1400 val med/B90=70.768/301.890 S=4.9847 tie_ok=True
+10:38:27 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L3_n5000/weights.npz best_step=1400
+10:38:27 done test med/B90=72.160/378.279 leak=0.0466 306s
+10:38:27 DONE A_L3_n5000 test Med/B90=72.16/378.28 val=70.77 best_step=1400 sec=306
+10:38:27 START B_L3_n5000 phase=core L=3 ntrain=5000 h={'H': 80, 'rounds': 8, 'steps': 2600, 'lr': 0.0006, 'leakpen': 0.14, 'tailw': 3.0, 'seed': 0}
+10:38:28 start params=367773 steps=2600 ntrain=5000 H=80 rounds=8 arch=mp lr=0.0006
+10:39:33   step 520 val med/B90=136.809/273.046 S=5.2641 tie_ok=True
+10:40:32   step 1040 val med/B90=119.792/278.471 S=5.2075 tie_ok=True
+10:41:33   step 1560 val med/B90=115.571/262.466 S=5.1600 tie_ok=True
+10:42:35   step 2080 val med/B90=97.770/321.123 S=5.1772 tie_ok=True
+10:43:37   step 2600 val med/B90=95.786/252.633 S=5.0470 tie_ok=True
+10:43:38 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/B_L3_n5000/weights.npz best_step=2600
+10:43:38 done test med/B90=98.475/278.235 leak=0.0374 310s
+10:43:38 DONE B_L3_n5000 test Med/B90=98.48/278.23 val=95.79 best_step=2600 sec=310
+10:43:38 START A_L3_n2000 phase=core L=3 ntrain=2000 h={'H': 128, 'rounds': 4, 'steps': 1400, 'lr': 0.0011, 'leakpen': 0.14, 'tailw': 1.6, 'seed': 0}
+10:43:39 start params=523277 steps=1400 ntrain=2000 H=128 rounds=4 arch=mp lr=0.0011
+10:44:39   step 280 val med/B90=116.508/295.827 S=5.2239 tie_ok=True
+10:45:38   step 560 val med/B90=97.418/312.739 S=5.1622 tie_ok=True
+10:46:38   step 840 val med/B90=80.345/351.408 S=5.1241 tie_ok=True
+10:47:35   step 1120 val med/B90=78.387/566.703 S=5.3507 tie_ok=True
+10:48:35   step 1400 val med/B90=88.059/868.263 S=5.6223 tie_ok=True
+10:48:36 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L3_n2000/weights.npz best_step=840
+10:48:36 done test med/B90=80.790/409.400 leak=0.0483 298s
+10:48:36 DONE A_L3_n2000 test Med/B90=80.79/409.40 val=80.35 best_step=840 sec=298
+10:48:36 START B_L3_n2000 phase=core L=3 ntrain=2000 h={'H': 80, 'rounds': 8, 'steps': 2600, 'lr': 0.0006, 'leakpen': 0.14, 'tailw': 3.0, 'seed': 0}
+10:48:37 start params=367773 steps=2600 ntrain=2000 H=80 rounds=8 arch=mp lr=0.0006
+10:49:41   step 520 val med/B90=297.432/1680.512 S=6.5610 tie_ok=True
+10:50:42   step 1040 val med/B90=374.040/2635.371 S=6.9006 tie_ok=True
+10:51:43   step 1560 val med/B90=192.544/922.218 S=6.0436 tie_ok=True
+10:52:45   step 2080 val med/B90=140.669/279.651 S=5.2900 tie_ok=True
+10:53:47   step 2600 val med/B90=137.122/273.275 S=5.2657 tie_ok=True
+10:53:48 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/B_L3_n2000/weights.npz best_step=2600
+10:53:48 done test med/B90=137.982/274.512 leak=0.0348 311s
+10:53:48 DONE B_L3_n2000 test Med/B90=137.98/274.51 val=137.12 best_step=2600 sec=311
+10:53:48 START A_L5_n10000 phase=core L=5 ntrain=10000 h={'H': 128, 'rounds': 4, 'steps': 1400, 'lr': 0.0011, 'leakpen': 0.14, 'tailw': 1.6, 'seed': 0}
+10:53:50 start params=531925 steps=1400 ntrain=10000 H=128 rounds=4 arch=mp lr=0.0011
+10:55:11   step 280 val med/B90=220.250/601.599 S=5.8972 tie_ok=True
+10:56:29   step 560 val med/B90=54.214/173.389 S=4.5742 tie_ok=True
+10:57:48   step 840 val med/B90=43.366/133.683 S=4.3326 tie_ok=True
+10:59:11   step 1120 val med/B90=38.366/127.956 S=4.2494 tie_ok=True
+11:00:28   step 1400 val med/B90=39.859/116.884 S=4.2233 tie_ok=True
+11:00:30 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L5_n10000/weights.npz best_step=1400
+11:00:30 done test med/B90=38.317/145.182 leak=0.0543 400s
+11:00:30 DONE A_L5_n10000 test Med/B90=38.32/145.18 val=39.86 best_step=1400 sec=400
+11:00:30 START B_L5_n10000 phase=core L=5 ntrain=10000 h={'H': 80, 'rounds': 8, 'steps': 2600, 'lr': 0.0006, 'leakpen': 0.14, 'tailw': 3.0, 'seed': 0}
+11:00:31 start params=374213 steps=2600 ntrain=10000 H=80 rounds=8 arch=mp lr=0.0006
+11:01:53   step 520 val med/B90=546.347/3649.506 S=7.2528 tie_ok=True
+11:03:13   step 1040 val med/B90=351.792/2501.424 S=6.8438 tie_ok=True
+11:04:35   step 1560 val med/B90=302.617/2136.250 S=6.6896 tie_ok=True
+11:05:57   step 2080 val med/B90=150.165/298.508 S=5.3553 tie_ok=True
+11:07:18   step 2600 val med/B90=138.283/278.427 S=5.2792 tie_ok=True
+11:07:20 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/B_L5_n10000/weights.npz best_step=2600
+11:07:20 done test med/B90=137.535/278.438 leak=0.0425 408s
+11:07:20 DONE B_L5_n10000 test Med/B90=137.53/278.44 val=138.28 best_step=2600 sec=408
+11:07:20 START A_L5_n5000 phase=core L=5 ntrain=5000 h={'H': 128, 'rounds': 4, 'steps': 1400, 'lr': 0.0011, 'leakpen': 0.14, 'tailw': 1.6, 'seed': 0}
+11:07:21 start params=531925 steps=1400 ntrain=5000 H=128 rounds=4 arch=mp lr=0.0011
+11:08:41   step 280 val med/B90=349.887/3355.190 S=6.9879 tie_ok=True
+11:09:57   step 560 val med/B90=390.576/2684.667 S=6.9315 tie_ok=True
+11:11:16   step 840 val med/B90=458.427/3580.946 S=7.1556 tie_ok=True
+11:12:33   step 1120 val med/B90=393.224/2449.723 S=6.8891 tie_ok=True
+11:13:55   step 1400 val med/B90=410.239/2827.662 S=6.9820 tie_ok=True
+11:13:57 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L5_n5000/weights.npz best_step=1120
+11:13:57 done test med/B90=334.156/1654.320 leak=0.5052 396s
+11:13:57 DONE A_L5_n5000 test Med/B90=334.16/1654.32 val=393.22 best_step=1120 sec=396
+11:13:57 START B_L5_n5000 phase=core L=5 ntrain=5000 h={'H': 80, 'rounds': 8, 'steps': 2600, 'lr': 0.0006, 'leakpen': 0.14, 'tailw': 3.0, 'seed': 0}
+11:13:58 start params=374213 steps=2600 ntrain=5000 H=80 rounds=8 arch=mp lr=0.0006
+11:15:24   step 520 val med/B90=196.608/420.863 S=5.6618 tie_ok=True
+11:16:46   step 1040 val med/B90=138.777/293.151 S=5.3068 tie_ok=True
+11:18:04   step 1560 val med/B90=129.594/282.617 S=5.2543 tie_ok=True
+11:19:26   step 2080 val med/B90=122.450/251.212 S=5.1670 tie_ok=True
+11:20:46   step 2600 val med/B90=117.506/247.238 S=5.1384 tie_ok=True
+11:20:48 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/B_L5_n5000/weights.npz best_step=2600
+11:20:48 done test med/B90=114.349/290.064 leak=0.0560 410s
+11:20:48 DONE B_L5_n5000 test Med/B90=114.35/290.06 val=117.51 best_step=2600 sec=410
+11:20:48 START A_L5_n2000 phase=core L=5 ntrain=2000 h={'H': 128, 'rounds': 4, 'steps': 1400, 'lr': 0.0011, 'leakpen': 0.14, 'tailw': 1.6, 'seed': 0}
+11:20:48 start params=531925 steps=1400 ntrain=2000 H=128 rounds=4 arch=mp lr=0.0011
+11:30:37   step 280 val med/B90=146.610/304.958 S=5.3540 tie_ok=True
+11:31:55   step 560 val med/B90=128.061/293.228 S=5.2667 tie_ok=True
+11:33:15   step 840 val med/B90=133.324/338.641 S=5.3589 tie_ok=True
+11:34:33   step 1120 val med/B90=115.183/290.823 S=5.2096 tie_ok=True
+11:39:56   step 1400 val med/B90=105.371/280.765 S=5.1475 tie_ok=True
+11:39:57 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L5_n2000/weights.npz best_step=1400
+11:39:57 done test med/B90=90.165/263.190 leak=0.0622 1149s
+11:39:57 DONE A_L5_n2000 test Med/B90=90.16/263.19 val=105.37 best_step=1400 sec=1149
+11:39:57 START B_L5_n2000 phase=core L=5 ntrain=2000 h={'H': 80, 'rounds': 8, 'steps': 2600, 'lr': 0.0006, 'leakpen': 0.14, 'tailw': 3.0, 'seed': 0}
+11:39:57 start params=374213 steps=2600 ntrain=2000 H=80 rounds=8 arch=mp lr=0.0006
+11:41:19   step 520 val med/B90=407.819/2412.871 S=6.8997 tie_ok=True
+11:42:37   step 1040 val med/B90=509.539/2494.414 S=7.0277 tie_ok=True
+11:43:57   step 1560 val med/B90=852.217/5945.341 S=7.7191 tie_ok=True
+11:45:37   step 2080 val med/B90=163.158/329.194 S=5.4457 tie_ok=True
+11:46:57   step 2600 val med/B90=150.516/299.023 S=5.3573 tie_ok=True
+11:46:58 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/B_L5_n2000/weights.npz best_step=2600
+11:46:58 done test med/B90=147.620/301.188 leak=0.0777 421s
+11:46:58 DONE B_L5_n2000 test Med/B90=147.62/301.19 val=150.52 best_step=2600 sec=421
+11:46:58 START A_L7_n10000 phase=core L=7 ntrain=10000 h={'H': 128, 'rounds': 4, 'steps': 1400, 'lr': 0.0011, 'leakpen': 0.14, 'tailw': 1.6, 'seed': 0}
+11:47:00 start params=540573 steps=1400 ntrain=10000 H=128 rounds=4 arch=mp lr=0.0011
+11:48:35   step 280 val med/B90=684.083/5001.139 S=7.5228 tie_ok=True
+11:50:06   step 560 val med/B90=531.239/3620.844 S=7.2348 tie_ok=True
+11:51:38   step 840 val med/B90=488.238/3045.477 S=7.1061 tie_ok=True
+11:55:56   step 1120 val med/B90=146.682/307.960 S=5.3591 tie_ok=True
+11:57:25   step 1400 val med/B90=144.620/285.076 S=5.3134 tie_ok=True
+11:57:27 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L7_n10000/weights.npz best_step=1400
+11:57:27 done test med/B90=134.411/293.894 leak=0.0198 627s
+11:57:27 DONE A_L7_n10000 test Med/B90=134.41/293.89 val=144.62 best_step=1400 sec=627
+11:57:27 START B_L7_n10000 phase=core L=7 ntrain=10000 h={'H': 80, 'rounds': 8, 'steps': 2600, 'lr': 0.0006, 'leakpen': 0.14, 'tailw': 3.0, 'seed': 0}
+11:57:28 start params=380653 steps=2600 ntrain=10000 H=80 rounds=8 arch=mp lr=0.0006
+11:59:03   step 520 val med/B90=767.729/5854.175 S=7.6592 tie_ok=True
+12:00:31   step 1040 val med/B90=147.414/299.522 S=5.3477 tie_ok=True
+12:02:07   step 1560 val med/B90=140.266/281.925 S=5.2926 tie_ok=True
+12:03:44   step 2080 val med/B90=135.520/282.978 S=5.2772 tie_ok=True

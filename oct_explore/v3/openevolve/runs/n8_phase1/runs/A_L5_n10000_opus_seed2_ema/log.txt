@@ -1,0 +1,10 @@
+12:28:18 START A_L5_n10000_opus_seed2_ema phase=opus_seed L=5 ntrain=10000 h={'H': 128, 'rounds': 4, 'steps': 1400, 'lr': 0.0011, 'leakpen': 0.14, 'tailw': 1.6, 'seed': 2}
+12:28:20 start params=531925 steps=1400 ntrain=10000 H=128 rounds=4 arch=mp lr=0.0011 ema=0.999 sched=constant
+12:29:41   step 280 val med/B90=530.775/2330.202 S=7.0140 ema_med=245.051 leakpen=0.140 lr=1.10e-03 tie_ok=True
+12:31:00   step 560 val med/B90=527.121/4235.966 S=7.3094 ema_med=316.465 leakpen=0.140 lr=1.10e-03 tie_ok=True
+12:32:18   step 840 val med/B90=301.976/1619.683 S=6.5502 ema_med=406.019 leakpen=0.140 lr=1.10e-03 tie_ok=True
+12:33:35   step 1120 val med/B90=150.693/304.194 S=5.3665 ema_med=392.746 leakpen=0.140 lr=1.10e-03 tie_ok=True
+12:37:18   step 1400 val med/B90=134.155/273.221 S=5.2546 ema_med=377.188 leakpen=0.140 lr=1.10e-03 tie_ok=True
+12:37:19 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L5_n10000_opus_seed2_ema/weights.npz best_step=1400
+12:37:19 done test med/B90=135.704/267.829 leak=0.0093 539s
+12:37:19 DONE A_L5_n10000_opus_seed2_ema test Med/B90=135.70/267.83 val=134.15 best_step=1400 sec=539

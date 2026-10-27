@@ -1,0 +1,10 @@
+14:07:22 START A_L5_n10000_opus_cosine_2k phase=opus_dense L=5 ntrain=10000 h={'H': 128, 'rounds': 4, 'steps': 2000, 'lr': 0.0015, 'leakpen': 0.14, 'tailw': 1.6, 'seed': 0}
+14:07:24 start params=531925 steps=2000 ntrain=10000 H=128 rounds=4 arch=mp lr=0.0015 ema=0.999 sched=cosine
+14:09:18   step 400 val med/B90=406.816/2971.560 S=7.0026 ema_med=361.296 leakpen=0.140 lr=1.36e-03 tie_ok=True
+14:11:06   step 800 val med/B90=443.791/2234.249 S=6.9035 ema_med=455.211 leakpen=0.140 lr=9.86e-04 tie_ok=True
+14:12:56   step 1200 val med/B90=164.911/349.298 S=5.4807 ema_med=473.970 leakpen=0.140 lr=5.25e-04 tie_ok=True
+14:14:50   step 1600 val med/B90=133.370/271.880 S=5.2492 ema_med=486.259 leakpen=0.140 lr=1.52e-04 tie_ok=True
+14:16:39   step 2000 val med/B90=131.667/263.552 S=5.2273 ema_med=544.033 leakpen=0.140 lr=1.00e-05 tie_ok=True
+14:16:40 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L5_n10000_opus_cosine_2k/weights.npz best_step=2000
+14:16:40 done test med/B90=132.022/263.270 leak=0.0211 556s
+14:16:41 DONE A_L5_n10000_opus_cosine_2k test Med/B90=132.02/263.27 val=131.67 best_step=2000 sec=556

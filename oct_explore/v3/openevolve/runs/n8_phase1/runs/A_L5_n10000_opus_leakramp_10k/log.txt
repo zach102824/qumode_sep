@@ -1,0 +1,10 @@
+13:06:58 START A_L5_n10000_opus_leakramp_10k phase=opus_leakramp L=5 ntrain=10000 h={'H': 128, 'rounds': 4, 'steps': 1400, 'lr': 0.0011, 'leakpen': 0.1, 'tailw': 1.6, 'seed': 0}
+13:06:59 start params=531925 steps=1400 ntrain=10000 H=128 rounds=4 arch=mp lr=0.0011 ema=0.999 sched=constant
+13:09:00   step 280 val med/B90=142.738/293.920 S=5.3222 ema_med=487.952 leakpen=0.400 lr=1.10e-03 tie_ok=True
+13:10:18   step 560 val med/B90=143.606/294.664 S=5.3265 ema_med=865.926 leakpen=0.385 lr=1.10e-03 tie_ok=True
+13:11:34   step 840 val med/B90=131.760/293.376 S=5.2812 ema_med=761.893 leakpen=0.283 lr=1.10e-03 tie_ok=True
+13:12:52   step 1120 val med/B90=126.232/275.069 S=5.2276 ema_med=695.743 leakpen=0.156 lr=1.10e-03 tie_ok=True
+13:14:11   step 1400 val med/B90=116.072/283.204 S=5.2002 ema_med=886.042 leakpen=0.100 lr=1.10e-03 tie_ok=True
+13:14:13 saved weights -> /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/runs/A_L5_n10000_opus_leakramp_10k/weights.npz best_step=1400
+13:14:13 done test med/B90=109.536/274.805 leak=0.0651 433s
+13:14:13 DONE A_L5_n10000_opus_leakramp_10k test Med/B90=109.54/274.80 val=116.07 best_step=1400 sec=433
