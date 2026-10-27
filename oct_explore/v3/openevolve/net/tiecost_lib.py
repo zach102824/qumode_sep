@@ -42,6 +42,15 @@ def train_one(n, L, hypers, screen=False, log_fn=None, weights_path=None):
     lr = float(hypers.get("lr", 1.2e-3)); steps = int(hypers.get("steps", 1000)); bs = int(hypers.get("bs", 250))
     wd = float(hypers.get("wd", 1e-4)); leakpen = float(hypers.get("leakpen", 0.1)); tailw = float(hypers.get("tailw", 1.0))
     ntrain = int(hypers.get("ntrain", 10000)); amax = float(hypers.get("amax", 1.8)); seed = int(hypers.get("seed", 0))
+    ema_decay = float(hypers.get("ema_decay", 0.0))  # 0=off; e.g. 0.999
+    leakpen_start = hypers.get("leakpen_start", None)  # if set, ramp leakpen_start -> leakpen over training
+    leakpen_end = float(hypers.get("leakpen_end", leakpen))
+    leakpen_frac = float(hypers.get("leakpen_frac", 0.30))  # hold start for this fraction, then cosine to end
+    lr_schedule = str(hypers.get("lr_schedule", "constant"))  # constant|cosine
+    lr_min = float(hypers.get("lr_min", 1e-5))
+    grad_clip = float(hypers.get("grad_clip", 0.0))  # 0=off
+    init_th_path = hypers.get("init_th_path", None)
+    freeze_steps = int(hypers.get("freeze_steps", 0))  # optional warmup without updates (unused)
     if screen:
         steps = min(steps, int(os.environ.get("OE_SCREEN_STEPS", "200")))
         ntrain = min(ntrain, int(os.environ.get("OE_NTRAIN_SCREEN", "2000")))
@@ -170,7 +179,14 @@ def train_one(n, L, hypers, screen=False, log_fn=None, weights_path=None):
 
     D_tr = prepare_split("train", max_count=ntrain); D_va = prepare_split("val"); D_te = prepare_split("test")
     rng = np.random.default_rng(777 + seed); p0 = init_net(rng); th0, unr = ravel_pytree(p0)
-    log(f"start params={th0.size} steps={steps} ntrain={ntrain} H={H} rounds={rounds} arch={arch} lr={lr}")
+    if init_th_path:
+        z = np.load(init_th_path)
+        th_init = np.asarray(z["th"] if "th" in z.files else z["theta"], np.float32)
+        if th_init.size != th0.size:
+            raise ValueError(f"init_th size {th_init.size} != model {th0.size} ({init_th_path})")
+        th0 = th_init
+        log(f"init_th loaded from {init_th_path}")
+    log(f"start params={th0.size} steps={steps} ntrain={ntrain} H={H} rounds={rounds} arch={arch} lr={lr} ema={ema_decay} sched={lr_schedule}")
 
     def loss_fn(th, G, Cn_rel, Succ, Viol):
         p = unr(th); A_b, TH_b, g_t, w_t = forward_net(p, G)
@@ -191,37 +207,99 @@ def train_one(n, L, hypers, screen=False, log_fn=None, weights_path=None):
         return p_s, p_l, wx, g_t, w_t
     ev_jit = jax.jit(lambda th, D: _ev(th, D, SIM_MAIN))
     m = np.zeros_like(np.asarray(th0)); v = np.zeros_like(m); th = np.asarray(th0, np.float32)
-    best = {"S": np.inf, "th": th.copy(), "step": 0}; Btr = D_tr["B"]; t0 = time.time()
+    best = {"S": np.inf, "th": th.copy(), "step": 0, "med": np.inf}
+    ema_th = th.copy() if ema_decay > 0 else None
+    best_ema = {"S": np.inf, "th": th.copy(), "step": 0}
+    Btr = D_tr["B"]; t0 = time.time()
+    # rebuild loss with mutable leakpen via closure cell
+    leak_cell = [float(leakpen_start) if leakpen_start is not None else float(leakpen)]
+    def loss_fn_dyn(th, G, Cn_rel, Succ, Viol):
+        p = unr(th); A_b, TH_b, g_t, w_t = forward_net(p, G)
+        p_s, p_l, _ = SIM_MAIN(A_b, TH_b, g_t, w_t, Cn_rel, Succ, Viol)
+        nl = -jnp.log(p_s + 1e-12); out = jnp.mean(nl)
+        if tailw > 0:
+            k = max(1, int(round(0.16 * nl.shape[0]))); top_nl = jax.lax.top_k(nl, k)[0]
+            out = out + tailw * jnp.mean(top_nl) + 0.12 * tailw * jnp.mean(jnp.exp(jnp.minimum(top_nl, 3.5)))
+        lp = leak_cell[0]
+        if lp > 0: out = out + lp * jnp.mean(p_l)
+        if wd > 0:
+            keys = ("G2_a","G2_g","Wa","Ws","Wo","Wfock","Wprod","Wphi_a","Wc")
+            out = out + wd * sum(jnp.sum(p[k_]**2) for k_ in keys)
+        return out
+    vg = jax.jit(jax.value_and_grad(loss_fn_dyn))
     for step in range(1, steps+1):
+        # schedules
+        if leakpen_start is not None:
+            if step <= max(1, int(leakpen_frac * steps)):
+                leak_cell[0] = float(leakpen_start)
+            else:
+                # cosine from start to end over remaining
+                t = (step - leakpen_frac * steps) / max(1.0, (1.0 - leakpen_frac) * steps)
+                t = float(np.clip(t, 0.0, 1.0))
+                leak_cell[0] = float(leakpen_end + 0.5 * (float(leakpen_start) - leakpen_end) * (1.0 + np.cos(np.pi * t)))
+        if lr_schedule == "cosine":
+            # cosine decay from lr to lr_min
+            t = (step - 1) / max(1, steps - 1)
+            lr_t = float(lr_min + 0.5 * (lr - lr_min) * (1.0 + np.cos(np.pi * t)))
+        else:
+            lr_t = lr
         sel = rng.choice(Btr, size=min(bs, Btr), replace=False)
         G = {k: jnp.asarray(np.asarray(D_tr["G"][k])[sel]) for k in D_tr["G"]}
         Cn = jnp.asarray(np.asarray(D_tr["Cn_rel"])[sel]); Suc = jnp.asarray(np.asarray(D_tr["Succ"])[sel])
         Viol = jnp.asarray(np.asarray(D_tr["Viol"])[sel])
         loss, g = vg(jnp.asarray(th), G, Cn, Suc, Viol)
         g = np.nan_to_num(np.asarray(g), nan=0.0, posinf=0.0, neginf=0.0)
+        if grad_clip > 0:
+            gn = float(np.linalg.norm(g)); 
+            if gn > grad_clip: g = g * (grad_clip / (gn + 1e-12))
         m = 0.9*m + 0.1*g; v = 0.999*v + 0.001*(g*g)
-        mh = m/(1-0.9**step); vh = v/(1-0.999**step); th = th - lr * mh / (np.sqrt(vh)+1e-8)
+        mh = m/(1-0.9**step); vh = v/(1-0.999**step); th = th - lr_t * mh / (np.sqrt(vh)+1e-8)
+        if ema_th is not None:
+            ema_th = ema_decay * ema_th + (1.0 - ema_decay) * th
         if step % max(1, steps//5) == 0 or step == steps:
             p_v, lk_v, wx_v, g_v, w_v = ev_jit(jnp.asarray(th), D_va)
             mv = eval_metrics(p_v, lk_v, n)
             tie_ok = bool(np.isfinite(np.asarray(wx_v)).all() and np.isfinite(np.asarray(g_v)).all())
-            if mv["S"] < best["S"] and tie_ok: best.update(S=mv["S"], th=th.copy(), step=step)
-            log(f"  step {step} val med/B90={mv['median_inv_p']:.3f}/{mv['B90_inv_p']:.3f} S={mv['S']:.4f} tie_ok={tie_ok}")
+            if mv["S"] < best["S"] and tie_ok: best.update(S=mv["S"], th=th.copy(), step=step, med=mv["median_inv_p"])
+            if ema_th is not None:
+                p_e, lk_e, wx_e, g_e, w_e = ev_jit(jnp.asarray(ema_th), D_va)
+                me = eval_metrics(p_e, lk_e, n)
+                tok = bool(np.isfinite(np.asarray(wx_e)).all() and np.isfinite(np.asarray(g_e)).all())
+                if me["S"] < best_ema["S"] and tok: best_ema.update(S=me["S"], th=ema_th.copy(), step=step)
+                log(f"  step {step} val med/B90={mv['median_inv_p']:.3f}/{mv['B90_inv_p']:.3f} S={mv['S']:.4f} ema_med={me['median_inv_p']:.3f} leakpen={leak_cell[0]:.3f} lr={lr_t:.2e} tie_ok={tie_ok}")
+            else:
+                log(f"  step {step} val med/B90={mv['median_inv_p']:.3f}/{mv['B90_inv_p']:.3f} S={mv['S']:.4f} leakpen={leak_cell[0]:.3f} lr={lr_t:.2e} tie_ok={tie_ok}")
+    # Choose checkpoint: best-val th (default). Also report final & EMA.
     th_b = jnp.asarray(best["th"])
     p_te, lk_te, wx_te, g_te, w_te = ev_jit(th_b, D_te)
     p_va, lk_va, _, _, _ = ev_jit(th_b, D_va)
     assert np.asarray(g_te).ndim == 1 and np.asarray(w_te).ndim == 2
     mt = eval_metrics(p_te, lk_te, n); mv = eval_metrics(p_va, lk_va, n)
     p_chk, lk_chk, _, _, _ = _ev(th_b, D_te, SIM_CHK); mc = eval_metrics(p_chk, lk_chk, n)
+    # final weights
+    p_tf, lk_tf, _, _, _ = ev_jit(jnp.asarray(th), D_te)
+    mt_final = eval_metrics(p_tf, lk_tf, n)
+    mt_ema = None; mv_ema = None
+    if ema_th is not None:
+        p_te_e, lk_te_e, _, _, _ = ev_jit(jnp.asarray(best_ema["th"]), D_te)
+        p_va_e, lk_va_e, _, _, _ = ev_jit(jnp.asarray(best_ema["th"]), D_va)
+        mt_ema = eval_metrics(p_te_e, lk_te_e, n); mv_ema = eval_metrics(p_va_e, lk_va_e, n)
     out = {"n": n, "L": L, "screen": screen,
-           "hypers": dict(H=H, rounds=rounds, arch=arch, lr=lr, steps=steps, bs=bs, wd=wd, leakpen=leakpen, tailw=tailw, ntrain=ntrain, amax=amax, seed=seed),
-           "val": mv, "test": mt, "test_NFchk": mc, "cost_tied": True,
+           "hypers": dict(H=H, rounds=rounds, arch=arch, lr=lr, steps=steps, bs=bs, wd=wd, leakpen=leakpen, tailw=tailw, ntrain=ntrain, amax=amax, seed=seed,
+                          ema_decay=ema_decay, lr_schedule=lr_schedule, leakpen_start=leakpen_start, leakpen_end=leakpen_end if leakpen_start is not None else None,
+                          init_th_path=init_th_path, grad_clip=grad_clip),
+           "val": mv, "test": mt, "test_NFchk": mc, "test_final": mt_final,
+           "val_ema": mv_ema, "test_ema": mt_ema, "cost_tied": True,
            "tie_ok": bool(np.isfinite(np.asarray(wx_te)).all()), "mean_leak_test": mt["mean_leak"],
            "sec": time.time()-t0, "best_step": best["step"], "order": "sdc", "vacuum": True, "clause_w": True, "pure_gnn": True}
     if weights_path:
         os.makedirs(os.path.dirname(os.path.abspath(weights_path)) or ".", exist_ok=True)
-        np.savez_compressed(weights_path, th=np.asarray(best["th"]), best_step=int(best["step"]),
-                            S=float(best["S"]), n=int(n), L=int(L))
+        payload = dict(th=np.asarray(best["th"]), best_step=int(best["step"]),
+                       S=float(best["S"]), n=int(n), L=int(L), th_final=np.asarray(th))
+        if ema_th is not None:
+            payload["th_ema"] = np.asarray(best_ema["th"])
+            payload["ema_step"] = int(best_ema["step"])
+        np.savez_compressed(weights_path, **payload)
         out["weights_path"] = weights_path
         log(f"saved weights -> {weights_path} best_step={best['step']}")
     log(f"done test med/B90={mt['median_inv_p']:.3f}/{mt['B90_inv_p']:.3f} leak={mt['mean_leak']:.4f} {out['sec']:.0f}s")
