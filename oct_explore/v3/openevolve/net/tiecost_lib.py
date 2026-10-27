@@ -36,7 +36,7 @@ def eval_metrics(p_succ, p_leak, n=None):
     return out
 
 
-def train_one(n, L, hypers, screen=False, log_fn=None):
+def train_one(n, L, hypers, screen=False, log_fn=None, weights_path=None):
     log = log_fn or (lambda *a: print(__import__("time").strftime("%H:%M:%S"), f"[tie n={n} L={L}]", *a, flush=True))
     H = int(hypers.get("H", 128)); rounds = int(hypers.get("rounds", 4)); arch = str(hypers.get("arch", "mp"))
     lr = float(hypers.get("lr", 1.2e-3)); steps = int(hypers.get("steps", 1000)); bs = int(hypers.get("bs", 250))
@@ -218,6 +218,12 @@ def train_one(n, L, hypers, screen=False, log_fn=None):
            "val": mv, "test": mt, "test_NFchk": mc, "cost_tied": True,
            "tie_ok": bool(np.isfinite(np.asarray(wx_te)).all()), "mean_leak_test": mt["mean_leak"],
            "sec": time.time()-t0, "best_step": best["step"], "order": "sdc", "vacuum": True, "clause_w": True, "pure_gnn": True}
+    if weights_path:
+        os.makedirs(os.path.dirname(os.path.abspath(weights_path)) or ".", exist_ok=True)
+        np.savez_compressed(weights_path, th=np.asarray(best["th"]), best_step=int(best["step"]),
+                            S=float(best["S"]), n=int(n), L=int(L))
+        out["weights_path"] = weights_path
+        log(f"saved weights -> {weights_path} best_step={best['step']}")
     log(f"done test med/B90={mt['median_inv_p']:.3f}/{mt['B90_inv_p']:.3f} leak={mt['mean_leak']:.4f} {out['sec']:.0f}s")
     return out
 
