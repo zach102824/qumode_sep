@@ -169,7 +169,9 @@ def run_one(cid, tag, L, ntrain, phase="core", overrides=None):
         row = {
             "id": cid, "phase": phase, "anchor": tag, "L": L, "status": "done",
             "hypers": out["hypers"], "val": out["val"], "test": out["test"],
-            "test_NFchk": out.get("test_NFchk"), "cost_tied": out.get("cost_tied"),
+            "test_NFchk": out.get("test_NFchk"),
+            "test_final": out.get("test_final"), "val_ema": out.get("val_ema"), "test_ema": out.get("test_ema"),
+            "cost_tied": out.get("cost_tied"),
             "tie_ok": out.get("tie_ok"), "mean_leak_test": out.get("mean_leak_test"),
             "sec": out["sec"], "best_step": out["best_step"],
             "weights_path": out.get("weights_path", str(wj)),
