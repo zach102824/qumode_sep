@@ -1,6 +1,6 @@
 # qtimes_cost — self-contained campaign plan
 
-- Updated: 2026-10-28 ~16:55 Asia/Shanghai (Zach: **self-contained folder**; ladder **n∈{6,9,12,15,18,21}**; train **6&9**; eval **12–21**; M0→M1→M2; Day2 cancelled)
+- Updated: 2026-10-28 ~16:41 Asia/Shanghai (Zach: **GNN arch not frozen** — H=128/r=4 = baseline only; add **M-GNN** arch sweep on train n=6&9 after M0/M1)
 - Status: **plan only** — no GPU jobs. Next work = code under this folder only.
 - Day2 / tied-cost farm: **cancelled**. This track owns the next chaodao runs.
 
@@ -36,6 +36,7 @@ qtimes_cost/
   scripts/
     gen_teb_packs.py      # M0
     run_walksat_bars.py   # M1
+    sweep_gnn_arch.py     # M-GNN
     train.py              # M2
     eval_scale.py         # M2
   data/                   # data_n{n}.npz
@@ -48,21 +49,22 @@ qtimes_cost/
 ## Zach-facing plan (edited)
 
 1. **Brand-new self-contained folder** `qtimes_cost/` at repo root. Copy what you need from prior tracks; **no external imports**.
-2. **Freeze GNN** from prior data: bipartite message-passing, **H=128, rounds=4**, mean aggregation (+ degree). No arch search this campaign.
+2. **GNN architecture is searchable** (brand-new machine — find what works best). **H=128, rounds=4, mean+degree** is only the **starting baseline** from prior data, **not** a freeze. Sweep H, rounds, aggregators, etc. on train n=6&9 once packs exist (**M-GNN**).
 3. **Ansatz:** `|0⟩ → D(α₀) → [SNAP_ℓ → D(α_ℓ) → U_phase^{q_ℓ}]^L` on **C = n/3 cavities** (fixed K=3 bits/cav).
    - One shared `U_phase` per formula, applied `q` times per layer.
    - `q_ℓ ∈ {1…10}` is a **global schedule** (shared across formulas), continuous→anneal→integer. Report integer-q only.
    - **A0:** exact cost Hamiltonian phase. **A1:** cost prior + GNN clause weights + per-clause 8-phase residuals (zero-init ⇒ A1 starts = A0). Promote A1 only if earned.
 4. **n ladder:** generate Hamiltonians / TEB for **n∈{6,9,12,15,18,21}**. **Train 6&9**; **eval 12,15,18,21**. Chaodao is fast → include **n=21**.
-5. **Pipeline order (locked):**
+5. **Pipeline order:**
    - **M0** — generate TEB / Hamiltonian packs for all n on the ladder
    - **M1** — classical WalkSAT / WalkSATlm scaling bars on the **same seeds**
-   - **M2** — ansatz code + train on 6&9 + scale-eval on 12/15/18/21
+   - **M-GNN** — GNN arch sweep on train **n=6&9** (after M0; can start once train packs exist, parallel with finishing M1 bars for eval n)
+   - **M2** — ansatz train on 6&9 with **winning arch** + scale-eval on 12/15/18/21
 6. Opus extras still apply:
    - **Regression anchor:** new code with `q≡1`, `α₀=0`, and a tiny parity harness should roughly reproduce Night1 spirit before trusting multi-cavity.
    - **q-oracle:** best integer q per instance with everything else fixed — decides whether GNN-predicted q (A2) is worth building.
 
-**Opus calls (kept):**
+**Opus / design calls (kept + GNN update):**
 
 | Question | Call |
 |---|---|
@@ -71,6 +73,7 @@ qtimes_cost/
 | Multi-n mix? | Weights **n6 0.35 / n9 0.65**; curriculum: n6 first ~20%, then ramp n9 |
 | Mixer per n? | **Shared size-normalized mixer** is the headline; per-n mixer = control only |
 | Coherent start? | Keep `D(α₀)`; credit only with `α₀=0` ablation |
+| GNN arch? | **Not frozen.** Baseline = H=128 / r=4 / mean+degree. **Sweep** H, rounds, aggregators (mean/sum/max/attention), dropout, etc. on n6&9; lock winner before long M2 scale-eval |
 
 ---
 
@@ -142,10 +145,39 @@ Suggest `NF ≥ NU` per cavity (e.g. 24–40) with a larger `NF_CHK` for leakage
 
 **Script:** `qtimes_cost/scripts/run_walksat_bars.py` (vendored binary/wrapper + JSON writer).
 
+### M-GNN — GNN architecture sweep (NOT frozen)
+
+Brand-new chaodao machine → **find which GNN works best** for this ansatz; prior Night1 arch is a **baseline**, not a lock.
+
+**When:** after **M0 train packs (n6, n9)** exist. Can run **in parallel with finishing M1** bars for eval n (12–21). Prefer M1 n6/n9 bars first so kill/promote uses classical ratios.
+
+**Baseline (start here, not freeze):** bipartite message-passing, **H=128, rounds=4, mean aggregation (+ degree)**.
+
+**Sweep grid (suggested; prune by wall-clock):**
+
+| Axis | Candidates |
+|---|---|
+| Hidden **H** | {64, 128, 256} (optional 192) |
+| Message **rounds** | {2, 4, 6, 8} |
+| Aggregator | mean, sum, max; optional attention / gated |
+| Extras | ±dropout, ±LayerNorm, ±residual, ±degree features |
+
+**Protocol:**
+
+1. Fix ansatz A0 + shared q schedule + L∈{5} (or small L) so the sweep measures **amortizer quality**, not circuit depth.
+2. Short train on **n6&9** (same mix 0.35/0.65); 1–2 seeds per cell; early kill on val.
+3. Rank by **n9 val Med/B90** (primary) and train≈test gap (overfit kill).
+4. **Lock winning arch** → write `runs/gnn_arch_winner.json` (H, rounds, agg, extras).
+5. Optional confirm: 1 longer seed of winner vs baseline H=128/r=4/mean before M2.
+
+**Script:** `qtimes_cost/scripts/sweep_gnn_arch.py`
+
+**Gate:** winner documented before long M2 scale-eval farm. Do **not** re-sweep during 12–21 eval unless Zach opens a new round.
+
 ### M2 — ansatz code, train, scale-eval
 
 1. Implement circuit: `|0⟩ → D(α₀) → [SNAP → D → U_phase^q]^L` with packing above.
-2. GNN H=128 / r=4 frozen arch; heads for clause weights / residuals / γ scale as needed.
+2. GNN = **M-GNN winner** (fallback = baseline H=128/r=4/mean if sweep not done yet).
 3. **Train** on n=6&9 only (weights ~0.35/0.65).
 4. **Eval** on n=12,15,18,21 (chunked / approximate forward at large C).
 5. Report Med, B90, R(n)=Med_Q/Med_WS vs classical bars from M1 at **fixed L**.
@@ -160,7 +192,7 @@ Suggest `NF ≥ NU` per cavity (e.g. 24–40) with a larger `NF_CHK` for leakage
 - **U_phase:** never a free raw 2ⁿ diagonal head. A0 = cost phase; A1 = cost prior + bounded residuals.
 - **q:** `q̃ = 1 + 9·sigmoid(u)`; anneal free → sin² penalty → hard round + polish. Report integer q only.
 - **Mixer:** α scaled by √N (N=2ⁿ); SNAP as smooth fn of r=√(k/NU) so params transfer as **C grows** at fixed NU=8.
-- **GNN:** H=128, r=4, mean+degree.
+- **GNN:** **searchable.** Baseline H=128 / r=4 / mean+degree; **lock winner after M-GNN** before long M2.
 - **Loss:** `log(1/p) − log(Med_WS(n))` + CVaR₉₀; τ ∈ {1.0, 1.6}. Leakage penalty on guard band.
 - **L ∈ {5, 8}** fixed across n for the headline. Don’t go past L=8 before the q-oracle.
 - **Hardware encoding:** **K=3, NU=8, C=n/3**. Odd n / non-multiples of 3 out of scope.
@@ -183,6 +215,7 @@ rsync -avz --delete qtimes_cost/ chaodao:/mnt/f/zach/qtimes_cost/
 cd F:\zach\qtimes_cost
 # python -m qtimes_cost.scripts.gen_teb_packs --n 6,9,12,15,18,21   # M0
 # python -m qtimes_cost.scripts.run_walksat_bars --n 6,9,12,15,18,21 # M1
+# python -m qtimes_cost.scripts.sweep_gnn_arch ...                   # M-GNN
 # python -m qtimes_cost.train ...                                    # M2
 ```
 
@@ -202,7 +235,8 @@ Align path with wherever qumode_GPU parks (`F:\zach\qtimes_cost` vs `F:\zach\GPU
 |---|---|
 | **0** | **M0** gen packs n∈{6,9,12,15,18,21} (CPU; chaodao OK for speed) |
 | **1** | **M1** WalkSAT/wslm bars on same seeds → classical scaling curve |
-| **2** | M2 simulator parity + A0 sweep on **n6+n9**: L∈{5,8} × τ∈{1.0,1.6} × seeds; ablations (q≡1, α₀=0) |
+| **1b** | **M-GNN** arch sweep on n6&9 (after M0 train packs; parallel OK with M1 eval-n bars) → lock winner |
+| **2** | M2 simulator parity + A0 sweep on **n6+n9** with **winning GNN**: L∈{5,8} × τ∈{1.0,1.6} × seeds; ablations (q≡1, α₀=0) |
 | **3** | A1 main if gate; **scale-eval n=12,15,18,21** (chunked at ≥15) |
 | **4** | A2 / GNN-q only if oracle gate passes |
 
@@ -229,9 +263,10 @@ Align path with wherever qumode_GPU parks (`F:\zach\qtimes_cost` vs `F:\zach\GPU
 - Don’t use K=n/2 or fixed C=2 packing for the headline.
 - Don’t train primarily on n=12/15/18/21.
 - Don’t start A0 / long GPU jobs before M0 packs for train n (6,9) and at least M1 bar for n=12.
-- No raw 2ⁿ diagonal, Gumbel-q, n6-only screening as the only result, continuous-q as reported numbers, per-n mixer as headline, H=256 / arch search, sum aggregation, L>8 before oracle, dense full-state **train** at n≥15 (esp. n=21), mean-1/p loss, mismatched WS generators at new n.
+- Don’t **freeze** GNN to H=128/r=4 forever — baseline only; run **M-GNN** once data exists. Don’t re-sweep mid scale-eval without Zach.
+- No raw 2ⁿ diagonal, Gumbel-q, n6-only screening as the only result, continuous-q as reported numbers, per-n mixer as headline, sum aggregation as the **only** tried agg (it is a sweep candidate), L>8 before oracle, dense full-state **train** at n≥15 (esp. n=21), mean-1/p loss, mismatched WS generators at new n.
 - No ECD/transmon unless Zach adds later.
 - Don’t run GPUs from Mac — sync to chaodao first.
 - Don’t message qumode_GPU / start farm until Zach says go **and** M0 is green for train n.
 
-Historical Opus notes under `oct_explore` are superseded by this file for packing / train-n / folder rules.
+Historical Opus notes under `oct_explore` are superseded by this file for packing / train-n / folder / GNN rules.
