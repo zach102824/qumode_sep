@@ -6,6 +6,14 @@
 - Ideas only. Brand **new folder** track — do **not** kill/stop Day2 / old-lock farm; do not message qumode_GPU from this call.
 - Zach draft edited: freeze GNN from prior data; D(α₀) coherent start; SNAP+D+U_phase^q (q∈1…10); train n=6/8/12; scale-eval larger n.
 
+**Plan update (2026-10-28 ~16:15 Asia/Shanghai, Zach):** canonical working plan is
+`oct_explore/NEW_ANSATZ_SCALE_PLAN.md`. Folder renamed to **`qtimes_cost`**
+(not `new_ansatz_scale`). Added **2-cavity Gray packing** (match `tiecost_lib`:
+C=2, K=n/2, NU=2^K, GRID_TO_X; even n only) and **Mac→chaodao** default workflow
+(author on Mac `~/qumode_sep`, sync to `F:\zach\GPU\qtimes_cost`, box git under
+`/workspace/qumode_sep/oct_explore/qtimes_cost`). Opus A0/A1, global q, train weights,
+T3 goal, and don’t-stop-Day2 calls below are unchanged.
+
 ---
 
 The workspace folder is empty, so this plan is built from your brief alone. Where I've assumed something about the old code, I say so.
