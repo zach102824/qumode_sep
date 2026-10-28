@@ -26,6 +26,7 @@ def main(argv=None):
     ap.add_argument("--max_count", type=int, default=32)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--out", type=str, default=None)
+    ap.add_argument("--device", type=str, default="", help="cuda:0 / cpu")
     args = ap.parse_args(argv)
 
     arch, params_by_n = load_gnn_best()
@@ -53,6 +54,7 @@ def main(argv=None):
         met = eval_pack_metrics(
             n, arch, p, split=args.split, L=args.L,
             max_count=args.max_count, seed=args.seed,
+            device=args.device or None,
         )
         results[n] = met
         print(f"n={n}: Med={met['median_inv_p']:.3f} B90={met['B90_inv_p']:.3f} "

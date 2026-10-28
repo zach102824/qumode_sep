@@ -2,6 +2,8 @@
 
 Self-contained campaign: coherent-init `D(α₀)` + `[SNAP → D → U_phase^q]^L` on **fixed 3 bits/cavity** (`C = n/3`).
 
+**Backend: PyTorch** (CUDA on chaodao 2×RTX 5090; CPU fallback for smoke/tests).
+
 - **Train n:** 6, 9  
 - **Eval n:** 12, 15, 18, 21  
 - **No imports outside this folder** (vendored SAT gen + WalkSAT).  
@@ -11,11 +13,13 @@ Self-contained campaign: coherent-init `D(α₀)` + `[SNAP → D → U_phase^q]^
 
 ```
 qtimes_cost/
-  lib/           sat_gen, walksat, gray_grid, ansatz, gnn, train_loop
-  scripts/       gen_teb_packs, run_walksat_bars, evolve_gnn, train, eval_scale
+  lib/           sat_gen, walksat, gray_grid, ansatz (torch), gnn (torch), train_loop, device
+  scripts/       gen_teb_packs, run_walksat_bars, evolve_gnn (dual-GPU), train, eval_scale
+  tests/         pytest correctness suite
   data/          data_n{n}.npz
   baselines/     walksat_n{n}.json
   runs/gnn_best/ best arch only (+ CSV trial log)
+  requirements.txt
 ```
 
 ## Mac → chaodao sync
@@ -24,40 +28,37 @@ Prefer run folder `F:\zach\qtimes_cost` (WSL `/mnt/f/zach/qtimes_cost`).
 
 ```bash
 # on Mac, from repo root (host alias `chaodao` in ~/.ssh/config)
-rsync -avz --delete --exclude '__pycache__' --exclude '*.pyc' \
+rsync -avz --delete --exclude '__pycache__' --exclude '*.pyc' --exclude '.pytest_cache' \
   qtimes_cost/ chaodao:/mnt/f/zach/qtimes_cost/
 ```
 
 ```bash
 # scp alternative (whole folder)
 scp -r qtimes_cost chaodao:/mnt/f/zach/qtimes_cost_upload
-# then on chaodao WSL:
-# rsync -av --delete /mnt/f/zach/qtimes_cost_upload/ /mnt/f/zach/qtimes_cost/
 ```
 
-## Chaodao first commands (PowerShell)
+## Chaodao (2× GPU) — PowerShell
 
 ```powershell
 cd F:\zach\qtimes_cost
-# If package root is the folder itself, set PYTHONPATH to its parent:
-#   parent = F:\zach   and folder = qtimes_cost
 $env:PYTHONPATH = "F:\zach"
+pip install -r requirements.txt   # once: torch with CUDA
 
-# M0 smoke then train packs
-python -m qtimes_cost.scripts.gen_teb_packs --ns 6,9 --ntrain 200 --nval 20 --ntest 20 --overwrite
+# M0 packs
 python -m qtimes_cost.scripts.gen_teb_packs --ns 6,9 --overwrite
-# full ladder (18/21 = clauses-only by default, no dense E)
 python -m qtimes_cost.scripts.gen_teb_packs --ns 6,9,12,15,18,21 --overwrite
 
-# M1 classical bars (start small)
+# M1 classical bars
 python -m qtimes_cost.scripts.run_walksat_bars --ns 6,9 --R 20 --max_inst 20
 
-# M-GNN nonstop (best-only); stop with:  New-Item runs\STOP_EVOLVE
-python -m qtimes_cost.scripts.evolve_gnn --max_trials 0 --steps 15 --gpu 0
+# M-GNN dual-GPU evolve: TWO candidates per round on cuda:0 and cuda:1
+# best-only overwrite of runs/gnn_best/; losers discarded; CSV append
+python -m qtimes_cost.scripts.evolve_gnn --max_trials 0 --steps 15 --gpus 0,1 --n_parallel 2
+# stop: New-Item runs\STOP_EVOLVE
 
-# M2
-python -m qtimes_cost.scripts.train --steps 30 --save_best
-python -m qtimes_cost.scripts.eval_scale --ns 6,9,12 --max_count 32
+# single-GPU train
+python -m qtimes_cost.scripts.train --steps 30 --device cuda:0 --save_best
+python -m qtimes_cost.scripts.eval_scale --ns 6,9,12 --max_count 32 --device cuda:0
 ```
 
 ## Chaodao (WSL)
@@ -65,31 +66,29 @@ python -m qtimes_cost.scripts.eval_scale --ns 6,9,12 --max_count 32
 ```bash
 cd /mnt/f/zach/qtimes_cost
 export PYTHONPATH=/mnt/f/zach
-python -m qtimes_cost.scripts.gen_teb_packs --ns 6,9 --overwrite
-python -m qtimes_cost.scripts.evolve_gnn --gpu 0   # or --gpu 0
+python -m qtimes_cost.scripts.evolve_gnn --gpus 0,1 --n_parallel 2 --steps 15
 touch runs/STOP_EVOLVE   # graceful stop
 ```
 
-> If you synced so that `F:\zach\qtimes_cost` **is** the package root (contains `lib/`, `scripts/`),  
-> `PYTHONPATH` must be the **parent** (`F:\zach`) for `python -m qtimes_cost...` to work.  
-> Alternatively: `cd F:\zach` and run the same `-m` commands.
+> `PYTHONPATH` must be the **parent** of the `qtimes_cost` package folder.
 
-## Smoke (box / laptop)
+## Tests (box / laptop CPU)
 
 ```bash
 cd /path/to/qumode_sep
-PYTHONPATH=. python -m qtimes_cost.scripts.gen_teb_packs --ns 6 --ntrain 200 --nval 20 --ntest 20 --overwrite
-PYTHONPATH=. python -c "from qtimes_cost.lib.ansatz import AnsatzConfig, MultiCavityAnsatz, random_params; from qtimes_cost.lib.sat_gen import gen_instance; import numpy as np; n=6; m,cl,E=gen_instance(n,51_000_000_000+10_000_000*n); cfg=AnsatzConfig(n=n,L=2,nf=16); sim=MultiCavityAnsatz(cfg); p=random_params(cfg); print(sim.forward(E,p['alpha0'],p['A'],p['TH'],p['q_logits']))"
+pip install -r qtimes_cost/requirements.txt
+PYTHONPATH=. pytest qtimes_cost/tests -q
 ```
 
-## Optional fast WalkSAT binary
+## Dual-GPU notes
 
-```bash
-gcc -O2 -o lib/walksat_cls qtimes_cost/lib/walksat_cls.c -lm
-# Python runner still default; swap later if desired.
-```
+- `evolve_gnn --gpus 0,1 --n_parallel 2` trains **two arch candidates in parallel** (ThreadPool, one per device).
+- Each candidate’s `short_train` uses Adam on that device; VAL Med/B90 → `combined_score`.
+- Promote only if score beats champion (`runs/gnn_best/`); append every try to `runs/gnn_evolve_trials.csv`.
+- `--gpu 0,1` sets `CUDA_VISIBLE_DEVICES` before device resolution if you need to mask cards.
+- Without CUDA, both candidates fall back to CPU (still runs; slow).
 
 ## Notes
 
-- Numpy reference sim/GNN — good for correctness + evolve scaffolding. Swap accelerator inside `lib/` later; keep scripts’ CLI stable.
-- `runs/gnn_best/` is overwritten only on VAL improvement; losers are discarded. History: `runs/gnn_evolve_trials.csv`.
+- Weights saved as `runs/gnn_best/weights_n{n}.pt` (torch state_dict).
+- `runs/gnn_best/` overwritten only on VAL improvement.

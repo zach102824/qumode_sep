@@ -1,7 +1,7 @@
 # qtimes_cost — self-contained campaign plan
 
-- Updated: 2026-10-28 ~16:42 Asia/Shanghai (Zach: **nonstop GNN evolve** — loop forever, keep **best arch only**; replace one-shot M-GNN sweep)
-- Status: **plan only** — no GPU jobs. Next work = code under this folder only.
+- Updated: 2026-10-28 ~17:10 Asia/Shanghai (PyTorch rewrite + dual-GPU evolve on 2×5090; pytest suite)
+- Status: **code ready** — torch GNN/ansatz/train; evolve runs two candidates on cuda:0 & cuda:1.
 - Day2 / tied-cost farm: **cancelled**. This track owns the next chaodao runs.
 
 ---

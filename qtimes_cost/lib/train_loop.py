@@ -1,17 +1,20 @@
-"""Short train / eval loop on n=6&9 packs (numpy reference).
+"""Short train / eval loop on n=6&9 packs (PyTorch + Adam).
 
-Not a full production trainer — enough for evolve_gnn scoring and smoke.
-Chaodao can swap in a JAX/Torch accelerator later without leaving this folder.
+Uses CUDA when available. Dual-GPU evolve launches two short_train calls
+on cuda:0 and cuda:1 in parallel (see scripts/evolve_gnn.py).
 """
 from __future__ import annotations
 import json
 import time
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union
 
 import numpy as np
+import torch
+import torch.nn as nn
 
 from .ansatz import AnsatzConfig, MultiCavityAnsatz
+from .device import resolve_device
 from .gnn import FactorGNN, GNNArch
 
 PKG = Path(__file__).resolve().parents[1]
@@ -42,46 +45,59 @@ def _split_arrays(pack: dict, split: str, max_count: Optional[int] = None):
     return seeds, cls_v, cls_s, nsol, E
 
 
+def _to_torch_heads_device(gnn: FactorGNN, device: torch.device):
+    gnn.to(device)
+    return gnn
+
+
+@torch.no_grad()
 def eval_pack_metrics(
     n: int,
     arch: GNNArch,
-    params: Optional[Dict[str, np.ndarray]],
+    state: Optional[dict],
     split: str = "val",
     L: int = 5,
     max_count: int = 32,
     seed: int = 0,
     data_dir: Path | None = None,
+    device: Union[str, torch.device, None] = None,
+    nf: Optional[int] = None,
 ) -> dict:
     """Forward GNN+ansatz on a split; return Med/B90 of 1/p_succ."""
+    device = resolve_device(device)
     pack = load_pack(n, data_dir=data_dir)
     m = int(pack["m"])
     seeds, cls_v, cls_s, nsol, E = _split_arrays(pack, split, max_count=max_count)
     if E is None:
         raise RuntimeError(f"Pack n={n} split={split} has no dense E; needed for ansatz eval")
     B = len(seeds)
-    gnn = FactorGNN(arch, n=n, m=m, L=L, seed=seed)
-    if params is not None:
-        gnn.load_parameters(params)
-    cfg = AnsatzConfig(n=n, L=L)
-    sim = MultiCavityAnsatz(cfg)
+    gnn = FactorGNN(arch, n=n, m=m, L=L, seed=seed).to(device)
+    if state is not None:
+        gnn.load_state_dict(state)
+    gnn.eval()
+    cfg = AnsatzConfig(n=n, L=L, nf=nf)
+    sim = MultiCavityAnsatz(cfg, device=device).to(device)
     inv = []
     leaks = []
     t0 = time.time()
     for b in range(B):
-        heads = gnn.forward_graph(cls_v[b], cls_s[b])
+        cv = torch.as_tensor(cls_v[b], device=device)
+        cs = torch.as_tensor(cls_s[b], dtype=torch.float32, device=device)
+        heads = gnn.forward_graph(cv, cs)
+        Eb = torch.as_tensor(E[b], dtype=torch.float32, device=device)
         out = sim.forward(
-            E[b],
+            Eb,
             heads["alpha0"],
             heads["A"],
             heads["TH"],
             heads["q_logits"],
             gamma=heads["gamma"],
         )
-        inv.append(out["inv_p"])
-        leaks.append(out["p_leak"])
-    inv = np.asarray(inv, float)
-    med = float(np.median(inv))
-    b90 = float(np.quantile(inv, 0.9))
+        inv.append(float(out["inv_p"].detach().cpu()))
+        leaks.append(float(out["p_leak"].detach().cpu()))
+    inv_a = np.asarray(inv, float)
+    med = float(np.median(inv_a))
+    b90 = float(np.quantile(inv_a, 0.9))
     return {
         "n": n,
         "split": split,
@@ -91,6 +107,7 @@ def eval_pack_metrics(
         "S": float((np.log(med) + np.log(b90)) / 2.0),
         "mean_leak": float(np.mean(leaks)),
         "wall_s": time.time() - t0,
+        "device": str(device),
     }
 
 
@@ -104,22 +121,36 @@ def combined_score(metrics_by_n: Dict[int, dict], w6: float = 0.35, w9: float = 
     return float(s)
 
 
+def _instance_loss(out: dict, leakpen: float = 0.1) -> torch.Tensor:
+    """Differentiable surrogate: log(1/p_succ) + leakpen * p_leak."""
+    return torch.log(out["inv_p"].clamp(min=1.0)) + leakpen * out["p_leak"]
+
+
 def short_train(
     arch: GNNArch,
     steps: int = 20,
     L: int = 5,
     max_val: int = 16,
+    max_train: int = 32,
     seed: int = 0,
     data_dir: Path | None = None,
+    device: Union[str, torch.device, None] = None,
+    leakpen: float = 0.1,
+    nf: Optional[int] = None,
     log_fn=None,
 ) -> Tuple[dict, dict, dict]:
-    """Tiny train stub: perturb GNN weights, keep best val combined score.
+    """Adam short-train of FactorGNN on n=6&9; keep best val combined score.
 
-    Returns (val_metrics_by_n, best_params_by_n, info).
+    Returns (val_metrics_by_n, best_state_by_n, info).
     """
-    log = log_fn or (lambda *a: print(time.strftime("%H:%M:%S"), "[train]", *a, flush=True))
-    rng = np.random.default_rng(seed)
-    nets = {}
+    device = resolve_device(device)
+    log = log_fn or (lambda *a: print(time.strftime("%H:%M:%S"), f"[train:{device}]", *a, flush=True))
+    torch.manual_seed(seed)
+    np_rng = np.random.default_rng(seed)
+
+    nets: Dict[int, FactorGNN] = {}
+    sims: Dict[int, MultiCavityAnsatz] = {}
+    packs: Dict[int, dict] = {}
     for n in (6, 9):
         try:
             pack = load_pack(n, data_dir=data_dir)
@@ -127,57 +158,129 @@ def short_train(
             log("skip", n, e)
             continue
         m = int(pack["m"])
-        nets[n] = FactorGNN(arch, n=n, m=m, L=L, seed=seed + n)
+        gnn = FactorGNN(arch, n=n, m=m, L=L, seed=seed + n).to(device)
+        cfg = AnsatzConfig(n=n, L=L, nf=nf)
+        sim = MultiCavityAnsatz(cfg, device=device).to(device)
+        nets[n] = gnn
+        sims[n] = sim
+        packs[n] = pack
 
     if not nets:
         raise FileNotFoundError("No train packs found under data/")
 
+    params = []
+    for gnn in nets.values():
+        params.extend(list(gnn.parameters()))
+    opt = torch.optim.Adam(params, lr=float(arch.lr), weight_decay=float(arch.wd))
+
     best_score = float("inf")
-    best_params = None
+    best_states = None
     best_val = {}
-    lr = float(arch.lr)
 
     for step in range(steps):
+        opt.zero_grad(set_to_none=True)
+        losses = []
         for n, gnn in nets.items():
-            pdata = gnn.parameters()
-            for k, W in pdata.items():
-                pdata[k] = W + rng.normal(0, lr, size=W.shape)
-            gnn.load_parameters(pdata)
+            gnn.train()
+            pack = packs[n]
+            seeds, cls_v, cls_s, nsol, E = _split_arrays(pack, "train", max_count=max_train)
+            if E is None:
+                continue
+            B = len(seeds)
+            # mini-batch of up to 4 random instances
+            bs = min(4, B)
+            idx = np_rng.choice(B, size=bs, replace=False)
+            sim = sims[n]
+            for b in idx:
+                cv = torch.as_tensor(cls_v[b], device=device)
+                cs = torch.as_tensor(cls_s[b], dtype=torch.float32, device=device)
+                heads = gnn.forward_graph(cv, cs)
+                Eb = torch.as_tensor(E[b], dtype=torch.float32, device=device)
+                out = sim.forward(
+                    Eb,
+                    heads["alpha0"],
+                    heads["A"],
+                    heads["TH"],
+                    heads["q_logits"],
+                    gamma=heads["gamma"],
+                )
+                losses.append(_instance_loss(out, leakpen=leakpen))
+        if not losses:
+            raise RuntimeError("No train instances with dense E")
+        loss = torch.stack(losses).mean()
+        loss.backward()
+        # grad finite check / clip
+        torch.nn.utils.clip_grad_norm_(params, 5.0)
+        opt.step()
+
+        # val every step (cheap max_val) for best tracking
         metrics = {}
         for n, gnn in nets.items():
+            gnn.eval()
             metrics[n] = eval_pack_metrics(
-                n, arch, gnn.parameters(), split="val", L=L,
+                n, arch, gnn.state_dict(), split="val", L=L,
                 max_count=max_val, seed=seed, data_dir=data_dir,
+                device=device, nf=nf,
             )
         sc = combined_score(metrics)
         if sc < best_score:
             best_score = sc
-            best_params = {n: {k: v.copy() for k, v in gnn.parameters().items()} for n, gnn in nets.items()}
+            best_states = {n: {k: v.detach().cpu().clone() for k, v in gnn.state_dict().items()}
+                           for n, gnn in nets.items()}
             best_val = metrics
             log(
-                f"step {step}: NEW best S_comb={sc:.4f} "
+                f"step {step}: NEW best S_comb={sc:.4f} loss={float(loss):.4f} "
                 + " ".join(
                     f"n{n}:Med={metrics[n]['median_inv_p']:.2f}/B90={metrics[n]['B90_inv_p']:.2f}"
                     for n in metrics
                 )
             )
         elif step % 5 == 0:
-            log(f"step {step}: S_comb={sc:.4f}")
+            log(f"step {step}: S_comb={sc:.4f} loss={float(loss):.4f}")
 
-    info = {"best_score": best_score, "steps": steps, "arch": arch.to_dict(), "seed": seed}
-    return best_val, best_params, info
+    info = {
+        "best_score": best_score,
+        "steps": steps,
+        "arch": arch.to_dict(),
+        "seed": seed,
+        "device": str(device),
+        "backend": "torch",
+    }
+    return best_val, best_states or {}, info
 
 
-def save_gnn_best(arch: GNNArch, params_by_n: dict, metrics: dict, runs_dir: Path | None = None):
+def save_gnn_best(arch: GNNArch, states_by_n: dict, metrics: dict, runs_dir: Path | None = None):
     runs_dir = runs_dir or RUNS
     out = runs_dir / "gnn_best"
     out.mkdir(parents=True, exist_ok=True)
     with open(out / "arch.json", "w") as f:
-        json.dump({"arch": arch.to_dict(), "metrics": {str(k): v for k, v in metrics.items()}}, f, indent=2)
-    for n, p in (params_by_n or {}).items():
-        np.savez_compressed(out / f"weights_n{n}.npz", **{k: v for k, v in p.items()})
+        json.dump(
+            {"arch": arch.to_dict(), "metrics": {str(k): v for k, v in metrics.items()}, "backend": "torch"},
+            f,
+            indent=2,
+        )
+    for n, state in (states_by_n or {}).items():
+        # state values may be tensors
+        cpu_state = {}
+        for k, v in state.items():
+            if isinstance(v, torch.Tensor):
+                cpu_state[k] = v.detach().cpu()
+            else:
+                cpu_state[k] = torch.as_tensor(v)
+        torch.save(cpu_state, out / f"weights_n{n}.pt")
+        # also drop legacy npz if present
+        legacy = out / f"weights_n{n}.npz"
+        if legacy.exists():
+            legacy.unlink()
     with open(out / "meta.json", "w") as f:
-        json.dump({"updated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "ns": list((params_by_n or {}).keys())}, f)
+        json.dump(
+            {
+                "updated": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+                "ns": list((states_by_n or {}).keys()),
+                "backend": "torch",
+            },
+            f,
+        )
 
 
 def load_gnn_best(runs_dir: Path | None = None) -> Tuple[Optional[GNNArch], dict]:
@@ -188,8 +291,20 @@ def load_gnn_best(runs_dir: Path | None = None) -> Tuple[Optional[GNNArch], dict
     meta = json.load(open(arch_path))
     arch = GNNArch.from_dict(meta["arch"])
     params = {}
-    for p in (runs_dir / "gnn_best").glob("weights_n*.npz"):
+    best_dir = runs_dir / "gnn_best"
+    for p in best_dir.glob("weights_n*.pt"):
         n = int(p.stem.replace("weights_n", ""))
+        params[n] = torch.load(p, map_location="cpu", weights_only=True)
+    # legacy numpy
+    for p in best_dir.glob("weights_n*.npz"):
+        n = int(p.stem.replace("weights_n", ""))
+        if n in params:
+            continue
         z = np.load(p)
-        params[n] = {k: z[k] for k in z.files}
+        params[n] = {k: torch.as_tensor(z[k]) for k in z.files}
     return arch, params
+
+
+def should_promote(cand_score: float, best_score: float, min_improve: float = 0.0) -> bool:
+    """Best-only: promote iff cand is strictly better by min_improve."""
+    return cand_score + min_improve < best_score

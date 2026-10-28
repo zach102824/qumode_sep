@@ -1,4 +1,4 @@
-"""Searchable factor-graph GNN (numpy) predicting ansatz heads.
+"""Searchable factor-graph GNN (PyTorch) predicting ansatz heads.
 
 Baseline / evolve parent: H=128, rounds=4, agg=mean, degree features.
 Outputs size-normalized mixer params for MultiCavityAnsatz.
@@ -8,6 +8,9 @@ from dataclasses import dataclass, asdict
 from typing import Dict, List, Optional
 
 import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
 
 from .packing import NU, n_cavities
 
@@ -37,151 +40,138 @@ class GNNArch:
         return base
 
     def n_params_estimate(self, n: int = 9, m: int = 89, L: int = 5) -> int:
-        """Rough count for tie-break."""
         H = self.H
         C = n_cavities(n)
-        # message MLPs + heads
         return (
             H * H * self.rounds * 4
             + H * (C * L * 2 + C * L * NU + C * 2 + L + 1)
         )
 
 
-def _init_W(rng: np.random.Generator, din: int, dout: int, scale: float = 1.0) -> np.ndarray:
-    return (rng.normal(0, scale / np.sqrt(max(din, 1)), size=(din, dout))).astype(np.float64)
-
-
-def _relu(x):
-    return np.maximum(x, 0.0)
-
-
-def _layernorm(x, eps=1e-5):
-    mu = x.mean(axis=-1, keepdims=True)
-    var = x.var(axis=-1, keepdims=True)
-    return (x - mu) / np.sqrt(var + eps)
-
-
-class FactorGNN:
-    """Lightweight numpy GNN over bipartite var↔clause factor graph."""
+class FactorGNN(nn.Module):
+    """Bipartite var↔clause factor-graph GNN (torch)."""
 
     def __init__(self, arch: GNNArch, n: int, m: int, L: int, seed: int = 0):
+        super().__init__()
         self.arch = arch
-        self.n = n
-        self.m = m
-        self.L = L
+        self.n = int(n)
+        self.m = int(m)
+        self.L = int(L)
         self.C = n_cavities(n)
-        self.rng = np.random.default_rng(seed)
         H = arch.H
         in_dim = 4 if arch.degree_features else 2
-        self.W_in = _init_W(self.rng, in_dim, H)
-        self.W_vc = [_init_W(self.rng, H, H) for _ in range(arch.rounds)]
-        self.W_cv = [_init_W(self.rng, H, H) for _ in range(arch.rounds)]
-        # heads
-        self.W_alpha0 = _init_W(self.rng, H, self.C * 2, 0.3)
-        self.W_A = _init_W(self.rng, H, self.C * L * 2, 0.3)
-        self.W_TH = _init_W(self.rng, H, self.C * L * NU, 0.1)
-        self.W_q = _init_W(self.rng, H, L, 0.1)
-        self.W_g = _init_W(self.rng, H, 1, 0.1)
-        self.b_alpha0 = np.zeros(self.C * 2)
-        self.b_A = np.zeros(self.C * L * 2)
-        self.b_TH = np.zeros(self.C * L * NU)
-        self.b_q = np.zeros(L)
-        self.b_g = np.zeros(1)
+        g = torch.Generator()
+        g.manual_seed(int(seed))
 
-    def parameters(self) -> Dict[str, np.ndarray]:
-        d = {
-            "W_in": self.W_in,
-            "W_alpha0": self.W_alpha0,
-            "W_A": self.W_A,
-            "W_TH": self.W_TH,
-            "W_q": self.W_q,
-            "W_g": self.W_g,
-            "b_alpha0": self.b_alpha0,
-            "b_A": self.b_A,
-            "b_TH": self.b_TH,
-            "b_q": self.b_q,
-            "b_g": self.b_g,
-        }
-        for i, W in enumerate(self.W_vc):
-            d[f"W_vc_{i}"] = W
-        for i, W in enumerate(self.W_cv):
-            d[f"W_cv_{i}"] = W
-        return d
+        def _lin(din, dout, scale=1.0):
+            layer = nn.Linear(din, dout, bias=False)
+            with torch.no_grad():
+                layer.weight.normal_(0.0, scale / max(din, 1) ** 0.5, generator=g)
+            return layer
 
-    def load_parameters(self, d: Dict[str, np.ndarray]):
-        for k, v in d.items():
-            if k.startswith("W_vc_"):
-                self.W_vc[int(k.split("_")[-1])] = np.asarray(v)
-            elif k.startswith("W_cv_"):
-                self.W_cv[int(k.split("_")[-1])] = np.asarray(v)
-            elif hasattr(self, k):
-                setattr(self, k, np.asarray(v))
+        self.W_in = _lin(in_dim, H)
+        self.W_vc = nn.ModuleList([_lin(H, H) for _ in range(arch.rounds)])
+        self.W_cv = nn.ModuleList([_lin(H, H) for _ in range(arch.rounds)])
+        self.ln_c = nn.ModuleList(
+            [nn.LayerNorm(H) if arch.layernorm else nn.Identity() for _ in range(arch.rounds)]
+        )
+        self.ln_v = nn.ModuleList(
+            [nn.LayerNorm(H) if arch.layernorm else nn.Identity() for _ in range(arch.rounds)]
+        )
+        self.drop = nn.Dropout(arch.dropout) if arch.dropout > 0 else nn.Identity()
 
-    def _agg(self, msgs: np.ndarray, axis: int) -> np.ndarray:
+        self.head_alpha0 = nn.Linear(H, self.C * 2)
+        self.head_A = nn.Linear(H, self.C * L * 2)
+        self.head_TH = nn.Linear(H, self.C * L * NU)
+        self.head_q = nn.Linear(H, L)
+        self.head_g = nn.Linear(H, 1)
+        with torch.no_grad():
+            for head, sc in (
+                (self.head_alpha0, 0.3),
+                (self.head_A, 0.3),
+                (self.head_TH, 0.1),
+                (self.head_q, 0.1),
+                (self.head_g, 0.1),
+            ):
+                head.weight.normal_(0.0, sc / max(H, 1) ** 0.5, generator=g)
+                head.bias.zero_()
+
+    def _agg(self, msgs: torch.Tensor, dim: int) -> torch.Tensor:
         if self.arch.agg == "sum":
-            return msgs.sum(axis=axis)
+            return msgs.sum(dim=dim)
         if self.arch.agg == "max":
-            return msgs.max(axis=axis)
-        return msgs.mean(axis=axis)
+            return msgs.max(dim=dim).values
+        return msgs.mean(dim=dim)
 
-    def forward_graph(self, cls_v: np.ndarray, cls_s: np.ndarray) -> dict:
-        """cls_v, cls_s: (m, 4). Returns ansatz param dict for one formula."""
+    def forward_graph(
+        self,
+        cls_v: torch.Tensor,
+        cls_s: torch.Tensor,
+    ) -> dict:
+        """cls_v, cls_s: (m, 4) int/float on same device as module.
+
+        Returns ansatz param dict (torch tensors) for one formula.
+        """
         n, m, H, L, C = self.n, self.m, self.arch.H, self.L, self.C
-        # var features: [1, pos_deg_norm, neg_deg_norm, total_deg_norm]
-        pos = np.zeros(n)
-        neg = np.zeros(n)
-        for c in range(m):
-            for j in range(4):
-                v = int(cls_v[c, j])
-                if cls_s[c, j] > 0:
-                    pos[v] += 1
-                else:
-                    neg[v] += 1
-        deg = np.maximum(pos + neg, 1.0)
+        device = cls_v.device
+        dtype = next(self.parameters()).dtype
+        cls_v = cls_v.long().to(device)
+        cls_s = cls_s.to(device=device, dtype=dtype)
+
+        pos = torch.zeros(n, device=device, dtype=dtype)
+        neg = torch.zeros(n, device=device, dtype=dtype)
+        flat_v = cls_v.reshape(-1)
+        flat_s = cls_s.reshape(-1)
+        pos.index_add_(0, flat_v, (flat_s > 0).to(dtype))
+        neg.index_add_(0, flat_v, (flat_s <= 0).to(dtype))
+        deg = torch.clamp(pos + neg, min=1.0)
         scale = 2.0 * m / max(n, 1)
         if self.arch.degree_features:
-            fv = np.stack([np.ones(n), pos / scale, neg / scale, deg / scale], axis=-1)
+            fv = torch.stack(
+                [torch.ones(n, device=device, dtype=dtype), pos / scale, neg / scale, deg / scale],
+                dim=-1,
+            )
         else:
-            fv = np.stack([np.ones(n), deg / scale], axis=-1)
-        hv = _relu(fv @ self.W_in)  # (n, H)
-        hc = np.zeros((m, H))
+            fv = torch.stack(
+                [torch.ones(n, device=device, dtype=dtype), deg / scale],
+                dim=-1,
+            )
+        hv = F.relu(self.W_in(fv))
+        hc = torch.zeros(m, H, device=device, dtype=dtype)
+
         for r in range(self.arch.rounds):
-            # var -> clause
-            for c in range(m):
-                vs = [int(cls_v[c, j]) for j in range(4)]
-                msgs = hv[vs]  # (4, H)
-                pooled = self._agg(msgs[None], axis=1)[0]
-                new = _relu(pooled @ self.W_vc[r])
-                if self.arch.layernorm:
-                    new = _layernorm(new)
-                if self.arch.residual and hc[c].shape == new.shape:
-                    hc[c] = hc[c] + new if r > 0 else new
-                else:
-                    hc[c] = new
-            # clause -> var
-            acc = np.zeros((n, H))
-            cnt = np.zeros(n)
-            for c in range(m):
-                for j in range(4):
-                    v = int(cls_v[c, j])
-                    acc[v] += hc[c]
-                    cnt[v] += 1
-            pooled_v = acc / np.maximum(cnt[:, None], 1.0)
-            new_v = _relu(pooled_v @ self.W_cv[r])
-            if self.arch.layernorm:
-                new_v = _layernorm(new_v)
+            msgs = hv[cls_v]  # (m, 4, H)
+            pooled = self._agg(msgs, dim=1)
+            new = F.relu(self.W_vc[r](pooled))
+            new = self.ln_c[r](new)
+            new = self.drop(new)
+            if self.arch.residual and r > 0:
+                hc = hc + new
+            else:
+                hc = new
+
+            msgs_c = hc.unsqueeze(1).expand(-1, 4, -1).reshape(-1, H)
+            idx = cls_v.reshape(-1)
+            acc = torch.zeros(n, H, device=device, dtype=dtype)
+            acc.index_add_(0, idx, msgs_c)
+            cnt = torch.zeros(n, device=device, dtype=dtype)
+            cnt.index_add_(0, idx, torch.ones_like(idx, dtype=dtype))
+            pooled_v = acc / cnt.clamp(min=1.0).unsqueeze(-1)
+            new_v = F.relu(self.W_cv[r](pooled_v))
+            new_v = self.ln_v[r](new_v)
+            new_v = self.drop(new_v)
             hv = hv + new_v if self.arch.residual else new_v
 
-        g = hv.mean(axis=0)  # graph readout
-        alpha0 = (g @ self.W_alpha0 + self.b_alpha0).reshape(C, 2)
-        A = (g @ self.W_A + self.b_A).reshape(C, L, 2)
-        TH = (g @ self.W_TH + self.b_TH).reshape(C, L, NU)
-        q_logits = g @ self.W_q + self.b_q
-        gamma = float((g @ self.W_g + self.b_g)[0])
-        # size-normalize displacements by sqrt(N)
+        g = hv.mean(dim=0)
+        alpha0 = self.head_alpha0(g).reshape(C, 2)
+        A = self.head_A(g).reshape(C, L, 2)
+        TH = self.head_TH(g).reshape(C, L, NU)
+        q_logits = self.head_q(g)
+        gamma = self.head_g(g).reshape(())
         N = float(2 ** n)
-        alpha0 = alpha0 / np.sqrt(N) * np.sqrt(64.0)  # ref n=6
-        A = A / np.sqrt(N) * np.sqrt(64.0)
+        scale_d = (64.0 / N) ** 0.5
+        alpha0 = alpha0 * scale_d
+        A = A * scale_d
         return {
             "alpha0": alpha0,
             "A": A,
@@ -190,9 +180,11 @@ class FactorGNN:
             "gamma": gamma,
         }
 
+    def forward(self, cls_v, cls_s):
+        return self.forward_graph(cls_v, cls_s)
+
 
 BASELINE_ARCH = GNNArch(H=128, rounds=4, agg="mean", degree_features=True)
-
 
 SEARCH_SPACE = {
     "H": [64, 128, 192, 256],
