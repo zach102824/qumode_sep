@@ -1,0 +1,56 @@
+n=8 L=5 NF=36 m=79 instances=[0, 2, 4, 6, 9, 63, 52, 30, 34, 82] hard=[0, 2, 4, 6, 9] nsol_hard=[1, 1, 1, 1, 1] rand=[63, 52, 30, 34, 82] nsol_rand=[1, 2, 1, 1, 1]
+=== instance 0 n_gs=1 ===
+  idx=0 r=0 nit=250 p=0.9989 1/p=1.00 leak=0.0004 chk_p=0.9989
+  idx=0 r=1 nit=250 p=0.9997 1/p=1.00 leak=0.0001 chk_p=0.9997
+  idx=0 r=2 nit=250 p=0.9993 1/p=1.00 leak=0.0002 chk_p=0.9993
+=== instance 2 n_gs=1 ===
+  idx=2 r=0 nit=250 p=0.9979 1/p=1.00 leak=0.0007 chk_p=0.9979
+  idx=2 r=1 nit=250 p=0.9996 1/p=1.00 leak=0.0002 chk_p=0.9996
+  idx=2 r=2 nit=250 p=0.9988 1/p=1.00 leak=0.0004 chk_p=0.9988
+=== instance 4 n_gs=1 ===
+  idx=4 r=0 nit=250 p=0.9972 1/p=1.00 leak=0.0007 chk_p=0.9972
+  idx=4 r=1 nit=250 p=0.9971 1/p=1.00 leak=0.0007 chk_p=0.9971
+  idx=4 r=2 nit=250 p=0.9995 1/p=1.00 leak=0.0001 chk_p=0.9995
+=== instance 6 n_gs=1 ===
+  idx=6 r=0 nit=250 p=0.7033 1/p=1.42 leak=0.0322 chk_p=0.6574
+  idx=6 r=1 nit=250 p=0.9977 1/p=1.00 leak=0.0008 chk_p=0.9977
+  idx=6 r=2 nit=250 p=0.9986 1/p=1.00 leak=0.0007 chk_p=0.9986
+=== instance 9 n_gs=1 ===
+  idx=9 r=0 nit=250 p=0.9888 1/p=1.01 leak=0.0038 chk_p=0.9888
+  idx=9 r=1 nit=250 p=0.9855 1/p=1.01 leak=0.0068 chk_p=0.9855
+  idx=9 r=2 nit=250 p=0.4094 1/p=2.44 leak=0.0540 chk_p=0.3968
+=== instance 63 n_gs=1 ===
+  idx=63 r=0 nit=250 p=0.9283 1/p=1.08 leak=0.0226 chk_p=0.9283
+  idx=63 r=1 nit=250 p=0.9239 1/p=1.08 leak=0.0481 chk_p=0.9239
+  idx=63 r=2 nit=250 p=0.6007 1/p=1.66 leak=0.1789 chk_p=0.6007
+=== instance 52 n_gs=2 ===
+  idx=52 r=0 nit=250 p=0.9932 1/p=1.01 leak=0.0009 chk_p=0.9932
+  idx=52 r=1 nit=250 p=0.9943 1/p=1.01 leak=0.0016 chk_p=0.9943
+  idx=52 r=2 nit=250 p=0.9991 1/p=1.00 leak=0.0004 chk_p=0.9991
+=== instance 30 n_gs=1 ===
+  idx=30 r=0 nit=250 p=0.9975 1/p=1.00 leak=0.0009 chk_p=0.9975
+  idx=30 r=1 nit=250 p=0.9959 1/p=1.00 leak=0.0010 chk_p=0.9959
+  idx=30 r=2 nit=250 p=0.9918 1/p=1.01 leak=0.0017 chk_p=0.9918
+=== instance 34 n_gs=1 ===
+  idx=34 r=0 nit=250 p=0.6711 1/p=1.49 leak=0.0915 chk_p=0.4527
+  idx=34 r=1 nit=250 p=0.9865 1/p=1.01 leak=0.0052 chk_p=0.9865
+  idx=34 r=2 nit=250 p=0.9905 1/p=1.01 leak=0.0036 chk_p=0.9905
+=== instance 82 n_gs=1 ===
+  idx=82 r=0 nit=250 p=0.9968 1/p=1.00 leak=0.0015 chk_p=0.9968
+  idx=82 r=1 nit=250 p=0.9863 1/p=1.01 leak=0.0090 chk_p=0.9863
+  idx=82 r=2 nit=250 p=0.9698 1/p=1.03 leak=0.0138 chk_p=0.9699
+
+=== DONE ===
+{
+  "median_inv_p": 1.00196131431832,
+  "B90_inv_p": 1.017892162881433,
+  "mean_inv_p": 1.0107335804251463,
+  "n_p_ge_0.5": 10,
+  "n_p_ge_0.9": 10,
+  "n_instances": 10,
+  "WalkSAT_look_med": 13.989,
+  "WalkSAT_look_b90": 29.396
+}
+VERDICT: expressivity OK — most hard instances reach 1/p ≲ 20–30 under per-instance BFGS; amortization/opt is the gap
+wrote /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/ceiling_bfgs_n8_L5.json /workspace/qumode_sep/oct_explore/v3/openevolve/runs/n8_phase1/ceiling_bfgs_n8_L5.md
+wall_s_total=21.2
