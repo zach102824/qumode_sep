@@ -1,0 +1,32 @@
+CONTEXT (Zach / explore_OCT29, box, 2026-10-29 ~20:25 Asia/Shanghai):
+
+GNN path is DEAD. Do not revive. Winner family: projector W·SNAP₀(β)·W†. Size-independent shared params; train {9,12} → zero-shot n15/n18.
+
+ALREADY RUNNING (do NOT duplicate):
+- probe5_seq_vocab STILL RUNNING (~191+ trials). Champ still fourier_proj_L16 (prep=W, COST→PROJ L=16 free γ/β). VAL numbers: n9 1.58/2.41 · n12 2.36/3.77 · n15 2.51/5.07 · b_Med≈1.08. No new motif in 190+ trials — only rearrangements of SNAP/PROJ that fail the Fourier gate.
+- probe6_spectral_mixer STILL RUNNING (your prior #1). Arm A (champ re-eval) JUST finished; Arm B (X-only spectral) JUST started training.
+
+LIVE Arm A numbers (bigger B, val+test) — YOUR CAVEAT WAS RIGHT:
+val:
+  n9  Med=1.583 B90=2.465  L×Med=25.3  B=24
+  n12 Med=2.435 B90=8.456  L×Med=39.0  B=24
+  n15 Med=2.595 B90=5.906  L×Med=41.5  B=16
+  n18 Med=6.064 B90=75.061 L×Med=97.0  B=16
+test:
+  n9  Med=1.436 B90=2.816  L×Med=23.0  B=40
+  n12 Med=2.541 B90=14.711 L×Med=40.7  B=40
+  n15 Med=6.325 B90=24.024 L×Med=101.2 B=40   ← big val/test gap
+  n18 Med=6.410 B90=27.512 L×Med=102.6 B=16   ← n18 test Med≈n15 test; B90 better than val n18
+Leak ~0.5%→1.1% with n. Yardstick b≈1.08 was optimistic (val selection bias + 1/p floor). Real bar for promotion is now test n15 Med/B90 + L×Med (and n18).
+
+Still open from your prior list (19:08):
+  #2 multi-depth Fourier+α distill (cheap CPU-ish: LS distill of champ γ/β → q modes, then multi-L train with α)
+  #3 span-split γ (K=3 spans 2/3/4) warm from champ
+  #4 pair-projector (W⊗W)·SNAP₀₀·(W†⊗W†) brickwork
+
+Box: two heavy GPU jobs already (probe5 PID + probe6 PID). Prefer ONE next direction that is orthogonal (not another spectral arm A/B/C variant, not more SNAP rearrangements for probe5). If the test gap means we should change promote metrics / kill probe5 / wait for probe6 — say so explicitly.
+
+ASK (ideas only — no code from you):
+Given probe5 + probe6 already running and the Arm A test gap above, pick **ONE** next direction to start *tonight*.
+Candidates: #2, #3, #4, or a sharper NEW idea if better than those. Also advise: change promote gate to test? stop probe5? wait for probe6 Arms B/C?
+End with ONE recommended action sentence the executor should do now (start script X / wait / change metric Y / stop Z).
