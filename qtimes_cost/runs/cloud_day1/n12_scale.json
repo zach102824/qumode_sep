@@ -1,0 +1,94 @@
+{
+  "ckpt": "/workspace/qtimes_cost/runs/cloud_day1/BEST_round1",
+  "L": 12,
+  "cfg": {
+    "L": 12,
+    "lr": 5e-05,
+    "leakpen": 0.1,
+    "seed": 0,
+    "H": 128,
+    "rounds": 4,
+    "tag": "core",
+    "trial_id": 0,
+    "alpha0": "learned"
+  },
+  "parent_n": 9,
+  "transfer": "exact weights_n{n} when present; else body+q+gamma from parent_n, last cavity repeated",
+  "by_n": {
+    "6": {
+      "load": "exact",
+      "splits": {
+        "val": {
+          "B": 200.0,
+          "median_inv_p": 13.661976337432861,
+          "B90_inv_p": 64.67562866210938,
+          "S": 3.392000486330317,
+          "mean_leak": 0.08912580311298371,
+          "q_med": 5.0,
+          "n": 6.0,
+          "max_count": 200.0
+        },
+        "test": {
+          "B": 100.0,
+          "median_inv_p": 15.118804454803467,
+          "B90_inv_p": 36.26124153137207,
+          "S": 3.1533443708060265,
+          "mean_leak": 0.086791170835495,
+          "q_med": 5.0,
+          "n": 6.0,
+          "max_count": 100.0
+        }
+      }
+    },
+    "9": {
+      "load": "exact",
+      "splits": {
+        "val": {
+          "B": 200.0,
+          "median_inv_p": 18.07232093811035,
+          "B90_inv_p": 124.9458755493164,
+          "S": 3.8611310928973817,
+          "mean_leak": 0.035994893610477446,
+          "q_med": 4.083333333333333,
+          "n": 9.0,
+          "max_count": 200.0
+        },
+        "test": {
+          "B": 100.0,
+          "median_inv_p": 16.78520965576172,
+          "B90_inv_p": 120.83598403930667,
+          "S": 3.807466121639512,
+          "mean_leak": 0.038297067880630496,
+          "q_med": 4.083333333333333,
+          "n": 9.0,
+          "max_count": 100.0
+        }
+      }
+    },
+    "12": {
+      "load": "transfer_from_n9_C3_to_C4_repeat_last_cavity",
+      "splits": {
+        "val": {
+          "B": 200.0,
+          "median_inv_p": 344682640.0,
+          "B90_inv_p": 999999995904.0,
+          "S": 23.644577889708614,
+          "mean_leak": 2.517104148864746e-06,
+          "q_med": 4.083333333333333,
+          "n": 12.0,
+          "max_count": 200.0
+        },
+        "test": {
+          "B": 100.0,
+          "median_inv_p": 192370104.0,
+          "B90_inv_p": 999999995904.0,
+          "S": 23.3529764056698,
+          "mean_leak": 2.9402971267700194e-06,
+          "q_med": 4.083333333333333,
+          "n": 12.0,
+          "max_count": 100.0
+        }
+      }
+    }
+  }
+}

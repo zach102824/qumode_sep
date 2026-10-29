@@ -35,6 +35,23 @@ BOX_NEW = {
 }
 
 
+# Cloud day-1 L=12 trial 0, the parent for the next fork. Val-40 is the promote bar.
+CLOUD_L12 = {
+    "tag": "cloud_L12_trial0",
+    "L": 12,
+    "leakpen": 0.1,
+    "lr": 5e-5,
+    "alpha0": "learned",
+    "val40_med6": 12.006427764892578,
+    "val40_med9": 16.979470252990723,
+    "val40_S": 3.3937208125844736,
+    "test_med6": 15.118804454803467,
+    "test_med9": 16.78520965576172,
+    "test_S": 3.578523508847792,
+    "note": "saved BEST before the L=12/14/16 fork",
+}
+
+
 def ratio_9_6(med6: float, med9: float) -> float:
     return float(med9) / max(float(med6), 1e-9)
 
@@ -63,6 +80,43 @@ def beats_box_reval(
         "beats_n9": beats9,
         "full_win": bool(beats6 and beats9 and healthy),
     }
+
+
+def fork_promote(
+    val: dict,
+    test: dict,
+    champ: dict,
+    *,
+    test_caps: dict,
+    min_improve: float = 1e-4,
+) -> tuple[bool, str]:
+    """Promote only after val-40 and test.
+
+    Both val medians and val S_comb must beat the champion. Test medians must
+    stay under the fixed caps taken from the original cloud L=12 test
+    (a modest slack). Ratio on val must stay in [0.75, 2].
+    """
+    med6 = float(val["med6"])
+    med9 = float(val["med9"])
+    s_comb = float(val["s_comb"])
+    if not (med6 == med6 and med9 == med9 and s_comb == s_comb):
+        return False, "nonfinite"
+    ratio = ratio_9_6(med6, med9)
+    if not (0.75 <= ratio <= 2.0):
+        return False, "ratio"
+    if med6 >= float(champ["med6"]):
+        return False, "val_med6"
+    if med9 >= float(champ["med9"]):
+        return False, "val_med9"
+    if s_comb + min_improve >= float(champ["s_comb"]):
+        return False, "val_S"
+    t6 = float(test["med6"])
+    t9 = float(test["med9"])
+    if not (t6 == t6 and t9 == t9):
+        return False, "test_nonfinite"
+    if t6 > float(test_caps["med6"]) or t9 > float(test_caps["med9"]):
+        return False, "test_wreck"
+    return True, "promote"
 
 
 def promotion_decision(

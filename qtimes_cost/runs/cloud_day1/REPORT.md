@@ -104,3 +104,18 @@ A stronger H or extra rounds is a thin fork on the same ansatz (learned α0, exa
 - `BEST/` — final weights (`weights_n6.pt`, `weights_n9.pt`), `best.json`, `arch.json`. Mid-saved on each search promote, then refreshed if the val-40 reval picks a different trial.
 - `BEST_reval.json` — val-40 and test metrics.
 - `BEST_search/` — present only if the reval winner differs from the search champion.
+
+## n=12 scale of the L=12 BEST
+
+Checkpoint is trial 0 (L=12, leakpen=0.1, lr=5e-5, learned α0), frozen in `BEST_round1/` before later fork promotes. n=6 and n=9 load `weights_n6.pt` / `weights_n9.pt` directly. There is no `weights_n12.pt`: the n=12 circuit uses the n=9 network, with the message-passing body, q, and gamma copied exactly and the fourth cavity's α0 / displacement / SNAP head set equal to the third. Pack is `data/data_n12.npz` from `gen_teb_packs` (val 200, test 100, dense E). Uniform 1/p on that pack is about 2048 / 4096.
+
+| n | split | B | Med | B90 | mean leak |
+|---:|---|---:|---:|---:|---:|
+| 6 | val | 200 | 13.66 | 64.68 | 0.089 |
+| 6 | test | 100 | 15.12 | 36.26 | 0.087 |
+| 9 | val | 200 | 18.07 | 124.95 | 0.036 |
+| 9 | test | 100 | 16.79 | 120.84 | 0.038 |
+| 12 | val | 200 | 3.45e8 | ~1e12 | ~0 |
+| 12 | test | 100 | 1.92e8 | ~1e12 | ~0 |
+
+n=6 and n=9 match the earlier full-val / test numbers for this checkpoint. n=12 does not transfer. Median 1/p is orders of magnitude above the uniform baseline, while leakage stays about 0, so the state remains in the computational subspace and almost none of it sits on solutions. Zero-shot cavity repeat is not a scale result. Full table: `n12_scale.json`.

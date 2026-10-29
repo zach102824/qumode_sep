@@ -1,5 +1,13 @@
 """Promotion gate: S_comb + n9 med, never ratio alone."""
-from qtimes_cost.lib.promote import BOX_NEW, BOX_R014, beats_box_reval, promotion_decision, ratio_9_6
+from qtimes_cost.lib.promote import (
+    BOX_NEW,
+    BOX_R014,
+    CLOUD_L12,
+    beats_box_reval,
+    fork_promote,
+    promotion_decision,
+    ratio_9_6,
+)
 
 
 def test_r014_reference_ratio():
@@ -71,6 +79,64 @@ def test_beats_box_reval_requires_both_and_healthy_ratio():
     assert not unhealthy["full_win"]
     miss = beats_box_reval(14.5, 19.5)  # not strictly better
     assert not miss["full_win"]
+
+
+def test_fork_promote_needs_both_val_medians_and_intact_test():
+    champ = {"med6": CLOUD_L12["val40_med6"], "med9": CLOUD_L12["val40_med9"], "s_comb": CLOUD_L12["val40_S"]}
+    caps = {"med6": CLOUD_L12["test_med6"] * 1.20, "med9": CLOUD_L12["test_med9"] * 1.20}
+    good_val = {"med6": 11.0, "med9": 15.5, "s_comb": 3.1}
+    good_test = {"med6": 15.0, "med9": 16.5}
+    ok, why = fork_promote(good_val, good_test, champ, test_caps=caps)
+    assert ok and why == "promote"
+    # n9 not improved
+    ok, why = fork_promote({"med6": 11.0, "med9": 17.5, "s_comb": 3.1}, good_test, champ, test_caps=caps)
+    assert not ok and why == "val_med9"
+    # val wins but test n9 jumps well past the cap
+    ok, why = fork_promote(good_val, {"med6": 15.0, "med9": 30.0}, champ, test_caps=caps)
+    assert not ok and why == "test_wreck"
+    # ratio outside the band
+    ok, why = fork_promote({"med6": 6.0, "med9": 15.0, "s_comb": 3.0}, good_test, champ, test_caps=caps)
+    assert not ok and why == "ratio"
+
+
+def test_warm_start_repeats_last_layer():
+    import torch
+    from qtimes_cost.lib.cloud_worker import warm_start_gnn
+    from qtimes_cost.lib.gnn import FactorGNN, GNNArch
+
+    arch = GNNArch(H=8, rounds=1, layernorm=True, residual=True, degree_features=True)
+    src = FactorGNN(arch, n=6, m=8, L=2, seed=0)
+    with torch.no_grad():
+        src.head_q.bias.copy_(torch.tensor([0.25, -0.5]))
+    dst = FactorGNN(arch, n=6, m=8, L=4, seed=3)
+    warm_start_gnn(dst, src.state_dict(), src_L=2)
+    q = dst.head_q.bias.detach()
+    assert torch.allclose(q[:2], src.head_q.bias.detach())
+    assert torch.allclose(q[2:], src.head_q.bias.detach()[-1].expand(2))
+    # same depth is an exact copy of the parent heads
+    same = FactorGNN(arch, n=6, m=8, L=2, seed=9)
+    warm_start_gnn(same, src.state_dict(), src_L=2)
+    assert torch.allclose(same.head_alpha0.weight, src.head_alpha0.weight)
+    assert torch.allclose(same.head_A.weight, src.head_A.weight)
+
+
+def test_transfer_gnn_repeats_last_cavity():
+    import torch
+    from qtimes_cost.lib.cloud_worker import transfer_gnn_n
+    from qtimes_cost.lib.gnn import FactorGNN, GNNArch
+
+    arch = GNNArch(H=8, rounds=1, layernorm=True, residual=True, degree_features=True)
+    src = FactorGNN(arch, n=9, m=12, L=2, seed=0)
+    with torch.no_grad():
+        src.head_alpha0.bias.copy_(torch.arange(6, dtype=torch.float32))
+    dst = FactorGNN(arch, n=12, m=16, L=2, seed=1)
+    src_C = transfer_gnn_n(dst, src.state_dict())
+    assert src_C == 3
+    got = dst.head_alpha0.bias.detach().reshape(4, 2)
+    parent = src.head_alpha0.bias.detach().reshape(3, 2)
+    assert torch.allclose(got[:3], parent)
+    assert torch.allclose(got[3], parent[2])
+    assert torch.allclose(dst.head_q.weight, src.head_q.weight)
 
 
 def test_leak_veto():
