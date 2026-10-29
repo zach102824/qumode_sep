@@ -228,7 +228,8 @@ def write_status(out_dir, champ, trials_done, baselines):
             m = lad.get(n) or lad.get(str(n)) or {}
             if "median_inv_p" in m:
                 lines.append(f"- n{n}: {m['median_inv_p']:.4g}/{m['B90_inv_p']:.4g}\n")
-        lines.append(f"- vs Fourier L12 n15: champ={lad.get(15,{}).get('median_inv_p','?')} "
+        m15 = lad.get(15) or lad.get("15") or {}
+        lines.append(f"- vs Fourier L12 n15: champ={m15.get('median_inv_p','?')} "
                      f"ceiling={baselines['med15_fourier_L12']:.3g}\n")
     lines.append("\n## Note\n\nPromote on fitted b over {9,12,15}; reject if Med15 worse than probe2 "
                  "projector unless b clearly better.\n")
