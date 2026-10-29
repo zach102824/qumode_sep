@@ -1,15 +1,15 @@
 {
   "L": 16,
   "leakpen": 0.1,
-  "steps": 240,
+  "steps": 180,
   "phase1": 0,
   "phase2": 0,
-  "leakpen12": 0.3,
+  "leakpen12": 0.2,
   "body_from": "/workspace/qtimes_cost/runs/cloud_day1/BEST_round1/weights_n9.pt",
   "body_tensors_copied": [
     "resume"
   ],
-  "best_step": 239,
+  "best_step": 120,
   "n12_train": 64,
   "n12_batch": 1,
   "note": "one SizeGeneralGNN; L=16 BEST is written only if n=6 and n=9 test both improve",
@@ -17,49 +17,49 @@
     "6": {
       "val": {
         "B": 40,
-        "median_inv_p": 12.438243865966797,
-        "B90_inv_p": 61.38936195373536,
-        "mean_leak": 0.26389155983924867,
-        "S": 3.319006235537449
+        "median_inv_p": 11.793388366699219,
+        "B90_inv_p": 47.420987319946306,
+        "mean_leak": 0.26135996282100676,
+        "S": 3.163301983851877
       },
       "test": {
         "B": 100,
-        "median_inv_p": 12.83535623550415,
-        "B90_inv_p": 53.04281616210942,
-        "mean_leak": 0.26725197792053224,
-        "S": 3.261651504237308
+        "median_inv_p": 12.939185619354248,
+        "B90_inv_p": 48.91739234924319,
+        "mean_leak": 0.27399440050125123,
+        "S": 3.2251966784828134
       }
     },
     "9": {
       "val": {
         "B": 40,
-        "median_inv_p": 23.52559185028076,
-        "B90_inv_p": 105.9887413024903,
-        "mean_leak": 0.08568740785121917,
-        "S": 3.910710858926299
+        "median_inv_p": 16.796615600585938,
+        "B90_inv_p": 55.757588958740236,
+        "mean_leak": 0.05873600691556931,
+        "S": 3.4210954698327134
       },
       "test": {
         "B": 100,
-        "median_inv_p": 18.587552070617676,
-        "B90_inv_p": 89.42583618164065,
-        "mean_leak": 0.08970444023609161,
-        "S": 3.7079508744546503
+        "median_inv_p": 15.78394603729248,
+        "B90_inv_p": 52.65323295593262,
+        "mean_leak": 0.06217586100101471,
+        "S": 3.3613604956285075
       }
     },
     "12": {
       "val": {
         "B": 40,
-        "median_inv_p": 195.1891632080078,
-        "B90_inv_p": 760.729907226563,
-        "mean_leak": 0.03033587783575058,
-        "S": 5.954123766359126
+        "median_inv_p": 194.2086639404297,
+        "B90_inv_p": 821.054559326172,
+        "mean_leak": 0.0360436886548996,
+        "S": 5.989761365160612
       },
       "test": {
         "B": 100,
-        "median_inv_p": 173.9659423828125,
-        "B90_inv_p": 891.9489807128926,
-        "mean_leak": 0.030250083804130554,
-        "S": 5.976134240529072
+        "median_inv_p": 175.73788452148438,
+        "B90_inv_p": 944.8342041015638,
+        "mean_leak": 0.03567274749279022,
+        "S": 6.01000152957722
       }
     }
   },
@@ -70,5 +70,5 @@
   "beats_l16_test_both": false,
   "best_overwritten": false,
   "role": "pareto checkpoint, not a replacement for L=16 BEST",
-  "why": "n12 test median 174 is under 300 and n6 test 12.8 is near 11.07; n9 test 18.6 does not beat 8.79, so BEST/ was not overwritten"
+  "why": "test n6=12.9 (<=14), n12=176 (<=200), n9=15.8 (improved from 18.6, not yet <=12). Does not beat L16 test 11.07/8.79."
 }

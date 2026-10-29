@@ -19,7 +19,7 @@ import numpy as np
 import torch
 
 from qtimes_cost.lib.ansatz import AnsatzConfig, MultiCavityAnsatz
-from qtimes_cost.lib.gnn import GNNArch, SizeGeneralGNN
+from qtimes_cost.lib.gnn import FactorGNN, GNNArch, SizeGeneralGNN
 from qtimes_cost.lib.train_loop import PKG, _instance_loss, _split_arrays, load_pack
 
 
@@ -40,6 +40,52 @@ def _copy_body(gnn: SizeGeneralGNN, factor_state: dict) -> list[str]:
     return copied
 
 
+def distill_cavity_head(gnn: SizeGeneralGNN, factor_ckpt: str, pack9: dict, steps: int = 40) -> float:
+    """Fit only the shared cavity MLP so n=9 outputs match the L=16 FactorGNN head.
+
+    The factor head reads a global pool. This matches its α0, displacement, and
+    SNAP on n=9 formulas. It does not copy those tensors across cavities.
+    """
+    meta_path = os.path.join(os.path.dirname(factor_ckpt), "best.json")
+    meta = json.load(open(meta_path))
+    arch = GNNArch.from_dict(meta["arch"])
+    factor = FactorGNN(arch, n=9, m=int(pack9["m"]), L=int(meta["cfg"]["L"]), seed=0)
+    factor.load_state_dict(torch.load(factor_ckpt, map_location="cpu", weights_only=True))
+    factor.eval()
+    for p in factor.parameters():
+        p.requires_grad_(False)
+    for name, p in gnn.named_parameters():
+        p.requires_grad_(name.startswith("cav_"))
+    opt = torch.optim.Adam([p for p in gnn.parameters() if p.requires_grad], lr=1e-3)
+    seeds, cls_v, cls_s, _nsol, _E = _split_arrays(pack9, "train", max_count=32)
+    rng = np.random.default_rng(2)
+    last = 0.0
+    for _step in range(steps):
+        opt.zero_grad(set_to_none=True)
+        idx = rng.choice(len(seeds), size=4, replace=False)
+        loss = None
+        for b in idx:
+            b = int(b)
+            cv = torch.as_tensor(cls_v[b])
+            cs = torch.as_tensor(cls_s[b], dtype=torch.float32)
+            hs = gnn.forward_graph(cv, cs, n=9)
+            with torch.no_grad():
+                hf = factor.forward_graph(cv, cs)
+            term = (
+                (hs["alpha0"] - hf["alpha0"]).pow(2).mean()
+                + (hs["A"] - hf["A"]).pow(2).mean()
+                + (hs["TH"] - hf["TH"]).pow(2).mean()
+            )
+            loss = term if loss is None else loss + term
+        loss = loss / 4
+        loss.backward()
+        opt.step()
+        last = float(loss.detach())
+    for p in gnn.parameters():
+        p.requires_grad_(True)
+    return last
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--steps", type=int, default=240)
@@ -56,6 +102,14 @@ def main(argv=None):
     ap.add_argument("--phase1", type=int, default=0, help="steps on n=6+n=9 only before n=12 is ramped in")
     ap.add_argument("--phase2", type=int, default=0, help="steps that ramp the n=12 loss weight")
     ap.add_argument("--leakpen12", type=float, default=0.0, help="n=12 leak penalty; 0 uses --leakpen")
+    ap.add_argument("--n6-w", type=float, default=0.0, help="if >0 with --n9-w, override the mix")
+    ap.add_argument("--n9-w", type=float, default=0.0)
+    ap.add_argument("--n12-w", type=float, default=0.0)
+    ap.add_argument("--n9-batch", type=int, default=2)
+    ap.add_argument("--n9-train", type=int, default=64)
+    ap.add_argument("--val-n9", type=int, default=16, help="n=9 val count used to pick the checkpoint")
+    ap.add_argument("--cap-n6", type=float, default=0.0, help="keep checkpoints with n6 val median at or below this")
+    ap.add_argument("--cap-n12", type=float, default=0.0, help="keep checkpoints with n12 val median at or below this")
     args = ap.parse_args(argv)
     torch.set_num_threads(1)
     arch = GNNArch(H=128, rounds=4, agg="mean", layernorm=True, residual=True, degree_features=True, lr=args.lr)
@@ -75,9 +129,14 @@ def main(argv=None):
     train_ns = [6, 9] + ([12] if args.n12_train > 0 else [])
     train = {}
     for n in train_ns:
-        cap = args.n12_train if n == 12 else 64
+        if n == 12:
+            cap = args.n12_train
+        elif n == 9:
+            cap = args.n9_train
+        else:
+            cap = 64
         train[n] = _split_arrays(packs[n], "train", max_count=cap)
-    batch_for = {6: 2, 9: 2, 12: max(1, args.n12_batch)}
+    batch_for = {6: 2, 9: max(1, args.n9_batch), 12: max(1, args.n12_batch)}
     opt = torch.optim.Adam(gnn.parameters(), lr=args.lr, weight_decay=1e-4)
     rng = np.random.default_rng(0)
 
@@ -121,7 +180,9 @@ def main(argv=None):
     t0 = time.time()
 
     def mix_at(step):
-        if args.phase1 <= 0:
+        if args.n9_w > 0:
+            w = {6: args.n6_w, 9: args.n9_w, 12: args.n12_w if 12 in train_ns else 0.0}
+        elif args.phase1 <= 0:
             w = {6: 0.35, 9: 0.40, 12: 0.25 if 12 in train_ns else 0.0}
         elif step < args.phase1 or 12 not in train_ns:
             w = {6: 0.45, 9: 0.55, 12: 0.0}
@@ -130,6 +191,20 @@ def main(argv=None):
             w = {6: 0.42, 9: 0.48, 12: 0.05 + 0.20 * ramp}
         z = sum(w[n] for n in train_ns)
         return {n: w[n] / z for n in train_ns}
+
+    if args.cap_n6 > 0 or args.cap_n12 > 0:
+        parts0 = {n: eval_n(n, "val", {6: 16, 9: max(16, args.val_n9), 12: 12}[n]) for n in (6, 9, 12)}
+        best = {
+            "score": parts0[9]["median_inv_p"],
+            "step": -1,
+            "parts": parts0,
+            "state": {k: v.detach().cpu().clone() for k, v in gnn.state_dict().items()},
+        }
+        print(
+            "step -1 loaded "
+            + " ".join(f"n{n}={parts0[n]['median_inv_p']:.1f}" for n in (6, 9, 12)),
+            flush=True,
+        )
 
     for step in range(total_steps):
         opt.zero_grad(set_to_none=True)
@@ -158,32 +233,43 @@ def main(argv=None):
         torch.stack(per_n).sum().backward()
         torch.nn.utils.clip_grad_norm_(gnn.parameters(), 5.0)
         opt.step()
-        if step % 40 == 0 or step == total_steps - 1:
-            parts = {n: eval_n(n, "val", 16 if n < 12 else 8) for n in (6, 9, 12)}
+        if step % 20 == 0 or step == total_steps - 1:
+            counts = {6: 16, 9: max(16, args.val_n9), 12: 12}
+            parts = {n: eval_n(n, "val", counts[n]) for n in (6, 9, 12)}
+            caps_ok = (
+                (args.cap_n6 <= 0 or parts[6]["median_inv_p"] <= args.cap_n6)
+                and (args.cap_n12 <= 0 or parts[12]["median_inv_p"] <= args.cap_n12)
+            )
             if args.phase1 > 0 and step < args.phase1:
                 score = 0.45 * parts[6]["S"] + 0.55 * parts[9]["S"]
             else:
                 score = 0.40 * parts[6]["S"] + 0.40 * parts[9]["S"] + 0.20 * parts[12]["S"]
             state = {k: v.detach().cpu().clone() for k, v in gnn.state_dict().items()}
             mark = ""
-            if args.phase1 > 0 and step < args.phase1 and (anchor is None or score < anchor["score"]):
-                anchor = {"score": score, "step": step, "parts": parts, "state": state}
-            cap6 = 22.0 if anchor is None else max(18.0, 1.4 * anchor["parts"][6]["median_inv_p"])
-            cap9 = 28.0 if anchor is None else max(22.0, 1.4 * anchor["parts"][9]["median_inv_p"])
-            held = parts[6]["median_inv_p"] <= cap6 and parts[9]["median_inv_p"] <= cap9
-            if held and (best is None or parts[12]["median_inv_p"] < best["parts"][12]["median_inv_p"]):
-                best = {"score": score, "step": step, "parts": parts, "state": state}
-                mark = " *"
-            elif best is None:
-                best = {"score": score, "step": step, "parts": parts, "state": state}
-                mark = " *"
+            if args.cap_n6 > 0 or args.cap_n12 > 0:
+                better_n9 = best is None or parts[9]["median_inv_p"] < best["parts"][9]["median_inv_p"]
+                if caps_ok and better_n9:
+                    best = {"score": parts[9]["median_inv_p"], "step": step, "parts": parts, "state": state}
+                    mark = " *"
+            else:
+                if args.phase1 > 0 and step < args.phase1 and (anchor is None or score < anchor["score"]):
+                    anchor = {"score": score, "step": step, "parts": parts, "state": state}
+                cap6 = 22.0 if anchor is None else max(18.0, 1.4 * anchor["parts"][6]["median_inv_p"])
+                cap9 = 28.0 if anchor is None else max(22.0, 1.4 * anchor["parts"][9]["median_inv_p"])
+                held = parts[6]["median_inv_p"] <= cap6 and parts[9]["median_inv_p"] <= cap9
+                if held and (best is None or parts[12]["median_inv_p"] < best["parts"][12]["median_inv_p"]):
+                    best = {"score": score, "step": step, "parts": parts, "state": state}
+                    mark = " *"
+                elif best is None:
+                    best = {"score": score, "step": step, "parts": parts, "state": state}
+                    mark = " *"
             print(
                 f"step {step} t={time.time()-t0:.0f}s w12={mix_w.get(12, 0):.2f} "
                 + " ".join(
                     f"n{n}={parts[n]['median_inv_p']:.1f}/{parts[n]['B90_inv_p']:.1f}"
                     for n in (6, 9, 12)
                 )
-                + f" S={score:.3f}{mark}",
+                + f" S={score:.3f} cap={int(caps_ok)}{mark}",
                 flush=True,
             )
 

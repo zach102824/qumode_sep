@@ -241,4 +241,18 @@ n=12 test median 311 is below the uniform baseline near 2048, and test B90 2253 
 | 12 | val 40 | 195 | 761 | 0.030 |
 | 12 | test 100 | 174 | 892 | 0.030 |
 
-n=12 test median 174 is under 300. n=6 test 12.8 is close to the L=16 test of 11.07. n=9 test 18.6 is still about twice 8.79, so this is not a replacement for trial 23. The checkpoint is in `size_general_curriculum/` and copied to `BEST_pareto/` as that tradeoff. L=16 test remains 11.07 / 8.79.
+n=12 test median 174 is under 300. n=6 test 12.8 is close to the L=16 test of 11.07. n=9 test 18.6 is still about twice 8.79, so this is not a replacement for trial 23. The checkpoint is in `size_general_curriculum/`. L=16 test remains 11.07 / 8.79.
+
+## Push n=9 inside the caps
+
+Continued from that Pareto checkpoint with n=9 loss weight 0.70 (then 0.75), n=6 at 0.18–0.15, n=12 at 0.10–0.12, four n=9 instances per step, and checkpoint choice on 40 n=9 val formulas. A step is kept only when the check-val n=6 median is ≤ 13.5 and the n=12 median is ≤ 200. `BEST/` was not written.
+
+| n | test Med | test B90 | mean leak |
+|---:|---:|---:|---:|
+| 6 | 12.9 | 48.9 | 0.274 |
+| 9 | 15.8 | 52.7 | 0.062 |
+| 12 | 176 | 945 | 0.036 |
+
+n=9 test moves from 18.6 toward 12 and is not there yet. n=6 test 12.9 stays ≤ 14. n=12 test 176 stays ≤ 200. This replaces `BEST_pareto/`. It does not beat L=16 test 11.07 / 8.79 on both sizes.
+
+Fitting only the shared cavity MLP to the L=16 n=9 global head, for 40 steps, leaves n=9 val median near 1.7e4. That head is a function of the pooled graph, not of one cavity, so copying it into the per-cavity MLP does not reproduce the L=16 n=9 circuit. The Pareto run keeps the cavity MLP that was trained in the curriculum.
