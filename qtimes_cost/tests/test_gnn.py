@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import pytest
 
-from qtimes_cost.lib.gnn import FactorGNN, GNNArch, BASELINE_ARCH
+from qtimes_cost.lib.gnn import FactorGNN, GNNArch, BASELINE_ARCH, SizeGeneralGNN
 from qtimes_cost.lib.packing import NU, n_cavities
 from qtimes_cost.lib.sat_gen import clause_count, gen_instance
 
@@ -24,3 +24,22 @@ def test_gnn_head_shapes(n, L):
     assert heads["TH"].shape == (C, L, NU)
     assert heads["q_logits"].shape == (L,)
     assert heads["gamma"].ndim == 0
+
+
+def test_size_general_one_module_two_widths():
+    """Same parameters serve n=6 (C=2) and n=12 (C=4). No per-n Linear(H, C*2)."""
+    arch = GNNArch(H=16, rounds=1, layernorm=True, residual=True, degree_features=True)
+    gnn = SizeGeneralGNN(arch, L=3, seed=0)
+    names = [name for name, _ in gnn.named_parameters()]
+    assert not any("head_alpha0" in name or "head_A" in name or "head_TH" in name for name in names)
+    for n in (6, 12):
+        _, cl, _ = gen_instance(n, 51_000_000_000 + 10_000_000 * n + 3, compute_E=False)
+        cls_v = torch.as_tensor(np.array([v for v, s in cl], dtype=np.int64))
+        cls_s = torch.as_tensor(np.array([s for v, s in cl], dtype=np.float32))
+        heads = gnn.forward_graph(cls_v, cls_s, n=n)
+        C = n_cavities(n)
+        assert heads["alpha0"].shape == (C, 2)
+        assert heads["A"].shape == (C, 3, 2)
+        assert heads["TH"].shape == (C, 3, NU)
+        assert heads["q_logits"].shape == (3,)
+        assert heads["gamma"].ndim == 0

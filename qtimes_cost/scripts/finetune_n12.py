@@ -69,6 +69,7 @@ def main(argv=None):
     ap.add_argument("--max-test", type=int, default=100)
     ap.add_argument("--out", type=str, default=str(PKG / "runs" / "cloud_day1" / "n12_finetune"))
     ap.add_argument("--resume", action="store_true", help="continue from weights already in --out")
+    ap.add_argument("--freeze-69", action="store_true", help="train only the n=12 net; n=6 and n=9 stay fixed")
     args = ap.parse_args(argv)
     torch.set_num_threads(1)
     arch, L, meta = _load_best(args.ckpt)
@@ -131,13 +132,16 @@ def main(argv=None):
                     heads["alpha0"], heads["A"], heads["TH"], heads["q_logits"],
                     gamma=heads["gamma"],
                 )
-                losses.append(_instance_loss(out, leakpen=args.leakpen))
+                w = args.leakpen if n == 12 else min(args.leakpen, 0.1)
+                losses.append(_instance_loss(out, leakpen=w))
         loss = torch.stack(losses).mean()
         loss.backward()
         torch.nn.utils.clip_grad_norm_(nets[12].parameters(), 5.0)
-        torch.nn.utils.clip_grad_norm_([p for n in (6, 9) for p in nets[n].parameters()], 5.0)
+        if not args.freeze_69:
+            torch.nn.utils.clip_grad_norm_([p for n in (6, 9) for p in nets[n].parameters()], 5.0)
         opt12.step()
-        opt69.step()
+        if not args.freeze_69:
+            opt69.step()
         if step % 20 == 0 or step == args.steps - 1:
             med, b90, leak, S = score12()
             mark = ""

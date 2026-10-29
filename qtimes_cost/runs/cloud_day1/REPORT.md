@@ -180,3 +180,35 @@ Uniform 1/p on the n=12 pack is about 2048 / 4096.
 | 300 (saved) | 300 | 9 | test 100 | 18.4 | 107.0 | 0.058 |
 
 n=12 median 1/p comes down from the zero-shot ~1e8 into the low hundreds, past the uniform median, after a few hundred joint steps. The tail is still about the uniform B90, and leakage rises to ~0.16. The saved 300-step point is the better n=12 checkpoint and the worse n=6/n=9 one: n=6 test moves from 15.1 on the frozen L=12 BEST to 19.7. Weights: `n12_finetune/`. The n=6/n=9 BEST used above is still trial 23, not this fine-tune.
+
+## Stronger leakpen on n=12 only
+
+Another 200 Adam steps from that checkpoint, leakpen 0.5 on n=12, n=6 and n=9 frozen. `BEST/` (L=16 trial 23) was not written. Its test medians stay **11.07 / 8.79**.
+
+| n | split | Med | B90 | mean leak |
+|---:|---|---:|---:|---:|
+| 12 | val 40 | 143 | 1783 | 0.103 |
+| 12 | test 100 | 172 | 2268 | 0.101 |
+| 6 | val 40 | 20.6 | 77.4 | 0.103 |
+| 6 | test 100 | 19.7 | 90.5 | 0.102 |
+| 9 | val 40 | 19.8 | 76.8 | 0.057 |
+| 9 | test 100 | 18.4 | 107.0 | 0.058 |
+
+Against the 300-step point, n=12 val B90 falls from 3799 to 1783 and test B90 from 3984 to 2268. Medians fall too (201 → 143 val, 256 → 172 test), and n=12 leak falls from 0.16 to 0.10. Frozen n=6/n=9 match the 300-step numbers exactly. They are not the L=16 test.
+
+## Size-general FactorGNN
+
+`SizeGeneralGNN` keeps the factor-graph body and replaces `Linear(H, C*2)` (and the matching displacement and SNAP linears) with one MLP applied to each cavity. The cavity vector is the mean of that cavity's three variable states. q and gamma stay a global pool. One module runs n=6, n=9, and n=12. Parameter shapes do not depend on C.
+
+Trained on n=6 and n=9 only (L=12, leakpen 0.3, body and q initialized from the L=12 n=9 checkpoint, cavity MLP fresh), about 720 Adam steps. n=12 was not in the loss.
+
+| n | split | Med | B90 | mean leak |
+|---:|---|---:|---:|---:|
+| 6 | val 40 | 12.2 | 26.1 | 0.170 |
+| 6 | test 100 | 14.5 | 31.7 | 0.189 |
+| 9 | val 40 | 28.5 | 150 | 0.012 |
+| 9 | test 100 | 32.4 | 133 | 0.013 |
+| 12 | val 40 | 2.1e9 | ~1e12 | ~0 |
+| 12 | test 100 | 6.1e7 | ~1e12 | ~0 |
+
+The shared module fits n=6. It does not put mass on n=12 solutions: median 1/p stays orders of magnitude above the uniform baseline, with leakage about 0. Weights are in `size_general/`, not in `BEST/`.
