@@ -209,3 +209,9 @@ n15 Med falls monotonically with L. b_Med≈1.41–1.45. Results: `runs/probe3_f
 Vocab: `W`, `WDAG`, `FLAT_PREP`, `SNAP0`, `PROJ` (=W·SNAP0·W†). Seeded from projector.
 Promote on fitted **b** over {9,12,15}. Loop: `scripts/probe5_seq_vocab.py`, stop via `runs/STOP_PROBE5`.
 Results: `runs/probe5_seq_vocab/`. Old raw `evolve_seq` stopped.
+
+
+## 11. Fourier deepen (2026-10-29 ~18:01 CST)
+
+q=3 + L_train=6 beats Probe3. Best: **n15 Med 7.70 @L12 / 5.99 @L20** (ref Probe3 L12=9.67). b_Med@L20≈1.24. Monotonic in L on n15.
+Artifacts: `runs/probe3_fourier_deep/`. Probe5 left running; probe4 deferred.
