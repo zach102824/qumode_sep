@@ -119,3 +119,50 @@ Details: [`TODO_REWRITE.md`](TODO_REWRITE.md).
 - Train-n Med/B90 logged but **never** alone enough to overwrite `runs/gnn_best/`.
 - Stage-up (clause weights / εΔ): same backbone, only if n12 Med improves ≳ **10%** vs that backbone’s step-0 (`stage_up_ok`).
 - Stop: `touch explore_OCT29/runs/STOP_EVOLVE`.
+
+---
+
+## 6. Long-confirm + pivot (2026-10-29, Asia/Shanghai)
+
+### Long-confirm of micro champ (H=64,r6,mean,residual+degree, lr=1e-3)
+
+Train: 1500 steps, L=5, seed=0, max_val/n12=24. Best step **1220**. Snapshot: `runs/gnn_best_long_confirm/` (micro frozen at `runs/gnn_best_micro_t223/`).
+
+| split | n6 Med/B90 | n9 Med/B90 | n12 Med/B90 (zero-shot) |
+|-------|------------|------------|-------------------------|
+| train-best val B=24 | **11.40 / 31.37** | **59.20 / 281.2** | **4.05e8 / 2.62e11** |
+| eval val B=32 | 11.40 / 27.88 | 89.01 / 750.7 | 4.05e8 / ~1e12 |
+| eval test B=32 | 11.31 / 32.18 | 157.5 / 898.8 | 1.11e8 / 9.19e11 |
+
+Growth (test Med9/Med6 ≈ **13.9**, ~≥2³). n12 transfer **collapsed**.
+
+### vs OCT20 fair global-cost L4 (≈1.26ⁿ class)
+
+| | n8 | n12 | n16 |
+|--|----|-----|-----|
+| OCT20 Med/B90 | 4.76/8.81 | 12.31/26.31 | 31.19/74.14 |
+
+Recipe gap (honest): OCT20 = calibrated Gray-digit X mixer (SNAP–D–SNAP ≈ ∏exp(−iβX/2)) + warm γ/β + optional per-layer clause weights. OCT29 long-confirm = **cold** shared SNAP+D + shared H_cost only, QAOA-like sandwich, GNN-emitted heads.
+
+
+**Zach (2026-10-29 ~17:32 CST):** further long-confirm of this sandwich declared useless — do **not** resume 1500-step GNN confirm. Pivot immediately to native gate-sequence explore (`evolve_seq`). Numbers above kept only as negative baseline.
+
+### Verdict on GNN-hyper evolve
+
+**Pause.** Micro already plateaued (~200 trials, one H=64 r6 basin). Long confirm shows train-n can look “ok” while **zero-shot n12 is useless**. Lever is **not** more 15-step MP-GNN arch search.
+
+### Main direction (Zach 2026-10-29): native gate-sequence explore
+
+Theory lock holds only for the completed confirm baseline. Going forward, prioritize **qumode-native, hardware-efficient gate sequences** that could train-small→transfer-large — **not** recreating QAOA with SNAP+D labels, and **not** more GNN micro-evolve.
+
+Still ban: free `U_phase^q` / dense nonlocal phase heads with no native payoff.
+
+### Next probes (approved to run nonstop)
+
+1. **Gate-sequence evolve** (`scripts/evolve_seq.py`, `lib/seq_ansatz.py`) — mutate prep/mixer/COST ordering; SNAP–D–SNAP sandwiches; shared fixed-angle params (no GNN). Promote only on clear n12 Med/B90 improvement vs long-confirm baseline. ← **running now**
+2. **Gray-X-like calibrated / structured mixer** motif as first-class native block (shared strengths), not QAOA emulation.
+3. **Prep motifs** (SNAP+D flat-ish prep) + cost placement variants.
+4. Freedom-1 clause weights / εΔ **only if** a native sequence already moves n12 off the 1e8 cliff.
+5. Keep micro GNN evolve **stopped** until a sequence baseline transfers.
+
+Stop seq loop: `touch explore_OCT29/runs/STOP_SEQ_EVOLVE`.
