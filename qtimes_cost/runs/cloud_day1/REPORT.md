@@ -119,3 +119,64 @@ Checkpoint is trial 0 (L=12, leakpen=0.1, lr=5e-5, learned α0), frozen in `BEST
 | 12 | test | 100 | 1.92e8 | ~1e12 | ~0 |
 
 n=6 and n=9 match the earlier full-val / test numbers for this checkpoint. n=12 does not transfer. Median 1/p is orders of magnitude above the uniform baseline, while leakage stays about 0, so the state remains in the computational subspace and almost none of it sits on solutions. Zero-shot cavity repeat is not a scale result. Full table: `n12_scale.json`.
+
+## Fork from L=12 BEST
+
+Warm-started from trial 0 (L=12, leakpen=0.1, lr=5e-5, learned α0). Grid is L∈{12,14,16} × lr∈{3e-5,5e-5,1e-4} × leakpen∈{0.05,0.1,0.2}. No L≈10. The parent cell is `best_continue` (more Adam steps, patience 10 evals). Other cells are shorter forks. Promote only if val-40 beats **12.01 / 16.98** on both medians and on S_comb, and test medians stay ≤ 1.20× the cloud test (15.12 / 16.79).
+
+| id | tag | L | lp | lr | steps | status | search n6/n9 | val40 n6/n9 | val40 S | test n6/n9 | decision |
+|---:|---|---:|---:|---:|---:|---|---|---|---:|---|---|
+| 22 | best_continue | 12 | 0.1 | 5e-05 | 1521 | early_stop | 6.3/12.0 | 7.5/15.2 | 3.172 | 8.9/14.3 | ratio |
+| 23 | fork | 16 | 0.1 | 5e-05 | 640 | ok | 9.6/7.7 | 8.9/9.7 | 3.047 | 11.1/8.8 | promote |
+| 24 | fork | 16 | 0.05 | 5e-05 | 640 | ok | 6.4/9.3 | 7.1/12.6 | 3.166 | 7.9/9.9 | val_med9 |
+| 25 | fork | 16 | 0.2 | 5e-05 | 561 | early_stop | 19.1/8.8 | 20.9/9.2 | 3.231 | 18.9/9.1 | ratio |
+| 26 | fork | 16 | 0.1 | 0.0001 | 321 | early_stop | 37.7/9.1 | 37.3/13.9 | 3.917 | 52.5/12.9 | ratio |
+| 27 | fork | 16 | 0.05 | 0.0001 | 401 | early_stop | 43.2/9.9 | 38.0/11.7 | 3.676 | 64.4/10.0 | ratio |
+| 28 | fork | 16 | 0.2 | 0.0001 | 441 | early_stop | 79.5/8.0 | 86.6/10.7 | 3.874 | 59.6/9.0 | ratio |
+| 29 | fork | 16 | 0.1 | 3e-05 | 640 | ok | 12.7/8.5 | 15.2/9.6 | 3.392 | 18.1/10.0 | ratio |
+| 30 | fork | 16 | 0.05 | 3e-05 | 640 | ok | 8.5/9.2 | 12.4/9.2 | 3.078 | 13.1/9.6 | ratio |
+| 31 | fork | 16 | 0.2 | 3e-05 | 640 | ok | 10.3/9.0 | 10.2/10.6 | 2.971 | 10.7/9.5 | val_med6 |
+| 32 | fork | 14 | 0.1 | 5e-05 | 640 | ok | 9.2/8.4 | 9.4/11.7 | 3.074 | 9.0/10.9 | val_med6 |
+| 33 | fork | 14 | 0.05 | 5e-05 | 521 | early_stop | 17.7/9.6 | 27.3/12.6 | 3.443 | 20.6/13.3 | ratio |
+| 34 | fork | 14 | 0.2 | 5e-05 | 640 | ok | 14.1/9.4 | 22.1/13.6 | 3.471 | 24.8/11.2 | ratio |
+| 35 | fork | 14 | 0.1 | 0.0001 | 640 | ok | 73.3/8.6 | 64.7/11.3 | 4.006 | 89.3/10.3 | ratio |
+| 36 | fork | 14 | 0.05 | 0.0001 | 361 | early_stop | 161.3/13.8 | 121.2/17.7 | 4.349 | 223.1/16.3 | ratio |
+| 37 | fork | 14 | 0.2 | 0.0001 | 441 | early_stop | 30.3/12.6 | 30.8/16.3 | 3.586 | 39.1/14.9 | ratio |
+| 38 | fork | 14 | 0.1 | 3e-05 | 640 | ok | 33.2/12.4 | 27.7/13.8 | 3.517 | 29.3/12.3 | ratio |
+| 39 | fork | 14 | 0.05 | 3e-05 | 640 | ok | 41.7/9.5 | 46.1/13.1 | 3.654 | 53.5/10.9 | ratio |
+| 40 | fork | 14 | 0.2 | 3e-05 | 601 | early_stop | 17.0/10.4 | 18.0/12.5 | 3.308 | 16.3/10.7 | ratio |
+| 41 | fork | 12 | 0.05 | 5e-05 | 281 | early_stop | 12.6/11.1 | 12.0/17.0 | 3.394 | 15.1/16.8 | val_med6 |
+| 42 | fork | 12 | 0.2 | 5e-05 | 561 | early_stop | 9.5/14.8 | 10.7/18.1 | 3.271 | 12.0/15.2 | val_med6 |
+| 43 | fork | 12 | 0.1 | 0.0001 | 281 | early_stop | 12.6/11.1 | 12.0/17.0 | 3.394 | 15.1/16.8 | val_med6 |
+| 44 | fork | 12 | 0.05 | 0.0001 | 281 | early_stop | 12.6/11.1 | 12.0/17.0 | 3.394 | 15.1/16.8 | val_med6 |
+| 45 | fork | 12 | 0.2 | 0.0001 | 401 | early_stop | 9.3/18.0 | 11.6/20.8 | 3.324 | 13.0/19.4 | val_med6 |
+| 46 | fork | 12 | 0.1 | 3e-05 | 281 | early_stop | 12.6/11.1 | 12.0/17.0 | 3.394 | 15.1/16.8 | val_med6 |
+| 47 | fork | 12 | 0.05 | 3e-05 | 281 | early_stop | 12.6/11.1 | 12.0/17.0 | 3.394 | 15.1/16.8 | val_med6 |
+| 48 | fork | 12 | 0.2 | 3e-05 | 281 | early_stop | 12.6/11.1 | 12.0/17.0 | 3.394 | 15.1/16.8 | val_med6 |
+
+Promoted trial **23** (L=16, leakpen=0.1, lr=5e-5, learned α0): val-40 **8.89 / 9.67**, test **11.07 / 8.79**. Both val medians beat the cloud L=12 bar of 12.01 / 16.98, and both test medians beat that checkpoint's test of 15.12 / 16.79. Val ratio 1.09 is inside [0.75, 2]. This is the saved `BEST/`. The L=12 parent remains in `BEST_round1/`.
+
+27 trials, one promote. The longer L=12 continuation (trial 22, 1521 steps) reached val-40 7.53 / 15.23 and test 8.90 / 14.34, which also beats 12.01 / 16.98 and does not hurt test, but the val ratio is 2.02, just outside the gate, so it was not promoted. Several later L=12 warm-starts never left the parent checkpoint (val-40 still 12.0 / 17.0).
+
+## n=12 joint fine-tune (no cavity repeat)
+
+FactorGNN sets C = n/3 when the module is constructed. The readout widths for α0, displacement, and SNAP are fixed Linear layers, not a per-cavity map applied to however many cavities the graph has. A variable-C forward is not already there, so this is path (b): a C=4 network, body plus q and gamma copied from the n=9 L=12 BEST, cavity heads left at their own init, then Adam on n=6, n=9, and 32 n=12 training instances together (2 n=12 + 1 n=6 + 1 n=9 per step). Learned α0. No cavity repeat.
+
+Uniform 1/p on the n=12 pack is about 2048 / 4096.
+
+| stage | steps | n | split | Med | B90 | mean leak |
+|---|---:|---:|---|---:|---:|---:|
+| 120 | 120 | 12 | val 40 | 384 | 8836 | 0.111 |
+| 120 | 120 | 12 | test 100 | 560 | 12383 | 0.110 |
+| 120 | 120 | 6 | val 40 | 14.8 | 30.2 | 0.054 |
+| 120 | 120 | 6 | test 100 | 11.5 | 46.8 | 0.052 |
+| 120 | 120 | 9 | val 40 | 17.9 | 93.7 | 0.050 |
+| 120 | 120 | 9 | test 100 | 16.5 | 88.3 | 0.050 |
+| 300 (saved) | 300 | 12 | val 40 | 201 | 3799 | 0.165 |
+| 300 (saved) | 300 | 12 | test 100 | 256 | 3984 | 0.161 |
+| 300 (saved) | 300 | 6 | val 40 | 20.6 | 77.4 | 0.103 |
+| 300 (saved) | 300 | 6 | test 100 | 19.7 | 90.5 | 0.102 |
+| 300 (saved) | 300 | 9 | val 40 | 19.8 | 76.8 | 0.057 |
+| 300 (saved) | 300 | 9 | test 100 | 18.4 | 107.0 | 0.058 |
+
+n=12 median 1/p comes down from the zero-shot ~1e8 into the low hundreds, past the uniform median, after a few hundred joint steps. The tail is still about the uniform B90, and leakage rises to ~0.16. The saved 300-step point is the better n=12 checkpoint and the worse n=6/n=9 one: n=6 test moves from 15.1 on the frozen L=12 BEST to 19.7. Weights: `n12_finetune/`. The n=6/n=9 BEST used above is still trial 23, not this fine-tune.

@@ -120,6 +120,22 @@ def test_warm_start_repeats_last_layer():
     assert torch.allclose(same.head_A.weight, src.head_A.weight)
 
 
+def test_copy_shared_body_skips_cavity_heads():
+    import torch
+    from qtimes_cost.lib.cloud_worker import copy_shared_body
+    from qtimes_cost.lib.gnn import FactorGNN, GNNArch
+
+    arch = GNNArch(H=8, rounds=1, layernorm=True, residual=True, degree_features=True)
+    src = FactorGNN(arch, n=9, m=12, L=2, seed=0)
+    dst = FactorGNN(arch, n=12, m=16, L=2, seed=1)
+    fresh = dst.head_alpha0.weight.detach().clone()
+    copied = copy_shared_body(dst, src.state_dict())
+    assert "head_q.weight" in copied
+    assert not any(k.startswith("head_alpha0") or k.startswith("head_A") or k.startswith("head_TH") for k in copied)
+    assert torch.allclose(dst.head_q.weight, src.head_q.weight)
+    assert torch.allclose(dst.head_alpha0.weight, fresh)
+
+
 def test_transfer_gnn_repeats_last_cavity():
     import torch
     from qtimes_cost.lib.cloud_worker import transfer_gnn_n

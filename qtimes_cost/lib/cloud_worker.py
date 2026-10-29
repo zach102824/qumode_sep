@@ -114,6 +114,30 @@ def _grow_cavity(src: torch.Tensor, src_C: int, dst_C: int) -> torch.Tensor:
     return dst.reshape(dst_C * rest, H)
 
 
+# Cavity readout. These widths depend on C and must not be copied across n.
+CAVITY_HEAD_PREFIXES = ("head_alpha0.", "head_A.", "head_TH.")
+
+
+def copy_shared_body(gnn: FactorGNN, src: dict) -> list[str]:
+    """Copy parameters whose shapes match, skipping cavity heads.
+
+    Message-passing body, q, and gamma transfer across n. α0 / SNAP / displacement
+    stay at the destination init (they are not cavity-repeated).
+    """
+    merged = {k: v.detach().clone() for k, v in gnn.state_dict().items()}
+    copied = []
+    for key, dst in list(merged.items()):
+        if key not in src or key.startswith(CAVITY_HEAD_PREFIXES):
+            continue
+        parent = src[key].detach().to(dtype=dst.dtype, device=dst.device)
+        if tuple(parent.shape) != tuple(dst.shape):
+            continue
+        merged[key] = parent
+        copied.append(key)
+    gnn.load_state_dict(merged)
+    return copied
+
+
 def transfer_gnn_n(gnn: FactorGNN, src: dict) -> int:
     """Load a checkpoint trained at another n.
 

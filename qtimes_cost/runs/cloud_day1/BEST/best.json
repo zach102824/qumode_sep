@@ -1,18 +1,27 @@
 {
-  "kind": "search",
+  "kind": "fork_reval",
   "reason": "promote",
-  "saved": "2026-10-29T03:12:51+0000",
-  "trial_id": 0,
+  "saved": "2026-10-29T03:38:23+0000",
+  "trial_id": 23,
   "cfg": {
-    "L": 12,
-    "lr": 5e-05,
-    "leakpen": 0.1,
     "seed": 0,
     "H": 128,
     "rounds": 4,
-    "tag": "core",
-    "trial_id": 0,
-    "alpha0": "learned"
+    "alpha0": "learned",
+    "init_dir": "/workspace/qtimes_cost/runs/cloud_day1/BEST_round1",
+    "src_L": 12,
+    "L": 16,
+    "lr": 5e-05,
+    "leakpen": 0.1,
+    "tag": "fork",
+    "steps": 640,
+    "patience_evals": 6,
+    "min_steps": 280,
+    "eval_every": 40,
+    "hopeless_after": 320,
+    "hopeless_med9": 80.0,
+    "hopeless_S": 5.2,
+    "trial_id": 23
   },
   "arch": {
     "H": 128,
@@ -27,28 +36,28 @@
     "ema": 0.0
   },
   "status": "ok",
-  "steps_ran": 1000,
-  "best_step": 880,
-  "wall_s": 205.66504406929016,
-  "s_comb": 3.246745109511557,
+  "steps_ran": 640,
+  "best_step": 560,
+  "wall_s": 170.5890176296234,
+  "s_comb": 2.8595247112783793,
   "metrics": {
     "6": {
       "B": 16.0,
-      "median_inv_p": 12.60187578201294,
-      "B90_inv_p": 23.47085666656494,
-      "S": 2.8448025920775226,
-      "mean_leak": 0.09335125610232353,
-      "q_med": 5.0,
+      "median_inv_p": 9.563129901885986,
+      "B90_inv_p": 28.279340744018555,
+      "S": 2.8000232990466976,
+      "mean_leak": 0.0991964153945446,
+      "q_med": 4.0625,
       "n": 6.0,
       "max_count": 16.0
     },
     "9": {
       "B": 16.0,
-      "median_inv_p": 11.123244762420654,
-      "B90_inv_p": 91.58929061889648,
-      "S": 3.463175695822191,
-      "mean_leak": 0.03245878219604492,
-      "q_med": 4.083333333333333,
+      "median_inv_p": 7.693811655044556,
+      "B90_inv_p": 42.21229553222656,
+      "S": 2.891563933249285,
+      "mean_leak": 0.03268526494503021,
+      "q_med": 4.5625,
       "n": 9.0,
       "max_count": 16.0
     }
@@ -64,7 +73,5 @@
     "med9": 23.0,
     "ratio_9_6": 1.2777777777777777,
     "note": "earlier box BEST; optimistic small val"
-  },
-  "confirmed_by_reval": true,
-  "final_reason": "search_champion"
+  }
 }
