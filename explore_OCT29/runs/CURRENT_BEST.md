@@ -1,33 +1,30 @@
 # CURRENT BEST — explore_OCT29 (Asia/Shanghai)
 
-_Updated 2026-10-29 ~18:05 CST_
+_Updated 2026-10-29 ~18:08 CST_
 
-## Fixed-angle champion (transfer)
+## Fixed-angle / schedule champion
 
 **Fourier q=3, L_train=6** on projector `W·SNAP₀(β)·W†`  
-Path: `runs/probe3_fourier_deep/` (modes: `modes_q3_Ltrain6.pt`, commit `d1399b4d`)
+`runs/probe3_fourier_deep/modes_q3_Ltrain6.pt` (commit `d1399b4d`)
 
-| n | L4 | L12 | L20 |
-|---|----|-----|-----|
-| 15 Med/B90 | 46.2/90 | **7.70/10.6** | **5.99/16.6** |
-| 18 Med/B90 | 176/621 | 32.9/461 | 16.0/102 |
+| deploy L | n15 Med/B90 | b_Med (9–18) |
+|----------|-------------|--------------|
+| 12 | 7.70/10.6 | ~1.34 |
+| 20 | **5.99**/16.6 | **~1.24** |
 
-- b_Med @ L20 ≈ **1.24** (≪2)
-- Monotonic Med vs L on n15
+## Probe5 seq champ (beats Fourier gate)
 
-Legacy: Probe2 free-angle L4 train{9,12} n15 Med≈30.9; Probe3 q=2 L12 n15≈9.67 — both superseded for ceiling.
+After raising promote gate to q3_Ltrain6, Fourier-warmed free-angle projector at **L=16** promoted:
 
-## Probe5 (seq vocab with W atoms)
+| | n9 | n12 | n15 | b_Med |
+|--|----|-----|-----|-------|
+| **fourier_proj_L16** (free γ/β, Fourier warm) | **1.58/2.41** | **2.36/3.77** | **2.51/5.07** | **1.080** |
+| Fourier q3 deploy L20 (schedule only) | — | — | 5.99/16.6 | 1.24 |
 
-- Loop: `scripts/probe5_seq_vocab.py` — **raise gate to Fourier q3_Ltrain6** (n15≲7.7, b≲1.24)
-- Seeds: `fourier_proj_L{4,6,8,12,16}` warm-started from q3 modes
-- Promote only if competitive with Fourier; mediocre mutants rejected
-- Status/champ: `runs/probe5_seq_vocab/`
-- Stop: `touch runs/STOP_PROBE5`
+- Motif still `prep=W, layer=COST→PROJ` — depth + free angles, not a new mixer
+- Gate: n15≲7.7 / b≲1.24; weak pre-gate champ archived as `champ_pre_fourier_gate.json`
+- Loop alive: `scripts/probe5_seq_vocab.py` (stop: `touch runs/STOP_PROBE5`)
 
-Until a motif beats/matches Fourier on n15+b, **fixed-angle champ remains q3_Ltrain6**.
+## Takeaway
 
-## Not in play
-
-- GNN: dead (do not revive)
-- Raw SNAP+D seq_best: obsolete vs projector/Fourier
+Ceiling to beat for *novel* seq atoms is now ~**n15 Med 2.5 / b≈1.08** (L16 free-angle projector), not just Fourier 5.99. Mutants that only rearrange SNAP/D without matching this remain rejected.
