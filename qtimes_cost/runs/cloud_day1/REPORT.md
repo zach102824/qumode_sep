@@ -282,9 +282,22 @@ Re-evaluated on the full val and test splits:
 | 6 | L=16 BEST | test | 11.07 | 38.7 | 0.093 |
 | 9 | L=16 BEST | val | 10.70 | 67.7 | 0.034 |
 | 9 | L=16 BEST | test | 8.79 | 34.3 | 0.038 |
-| 12 | SizeGeneral Pareto | val | 190 | 901 | 0.036 |
-| 12 | SizeGeneral Pareto | test | 176 | 945 | 0.036 |
+| 12 | SizeGeneral L=20, scale only | val | 37.1 | 196 | 0.019 |
+| 12 | SizeGeneral L=20, scale only | test | 36.6 | 184 | 0.019 |
 
 `BEST/` was not overwritten.
 
-WalkSAT (SKC, p=0.5, 20 runs) on the same 100 n=12 test formulas: median flips **25.5** (B90 59.8), median formula-evaluations **103** (B90 240). The quantum number is expected shots (1/p), not flips, so 176 shots is not a claim against 25 flips. It is the classical scale of this pack. Summary: `walksat_n12.json`. Entry point: `scripts/eval_two_model.py`.
+WalkSAT (SKC, p=0.5, 20 runs) on the same 100 n=12 test formulas: median flips **25.5** (B90 59.8), median formula-evaluations **103** (B90 240). Shots and flips are different units. On the L=20 scale model, the per-formula median of (shots / WalkSAT flips) is **1.46** (B90 5.26), and 81% of test formulas have median shots under 100. Summary: `walksat_n12.json`. Entry point: `scripts/eval_two_model.py`.
+
+## n≥12 L sweep
+
+SizeGeneral only, warm-started from the previous Pareto weights, 256 n=12 training formulas, batch 2, leakpen 0.2. Checkpoints were kept two ways: lowest val median of 1/p, and lowest median of (1/p) / WalkSAT flips on the same 24 val formulas. `BEST/` was not written.
+
+| L | selected by | test Med | test B90 | mean leak |
+|---:|---|---:|---:|---:|
+| 12 | either | 311 | 1146 | 0.168 |
+| 16 | raw median | 52.2 | 367 | 0.052 |
+| 16 | shots/flips | 64.5 | 522 | 0.027 |
+| 20 | both (same step) | **36.6** | **184** | **0.019** |
+
+L=20 is the n≥12 model now, saved as `BEST_pareto/weights_n12_L20.pt`. The older joint Pareto weights remain `BEST_pareto/weights.pt` (test n=6/n=9/n=12 = 12.9 / 15.8 / 176). L=16 test on `BEST/` remains 11.07 / 8.79.

@@ -38,20 +38,21 @@
     }
   },
   "n12": {
-    "model": "SizeGeneral_pareto",
-    "L": 16,
+    "model": "SizeGeneral_L20_scale",
+    "L": 20,
+    "weights": "BEST_pareto/weights_n12_L20.pt",
     "splits": {
       "val": {
         "B": 200,
-        "median_inv_p": 189.929931640625,
-        "B90_inv_p": 901.3653930664061,
-        "mean_leak": 0.03639937311410904
+        "median_inv_p": 37.13589668273926,
+        "B90_inv_p": 195.6580902099607,
+        "mean_leak": 0.018582771122455596
       },
       "test": {
         "B": 100,
-        "median_inv_p": 175.73788452148438,
-        "B90_inv_p": 944.8342041015638,
-        "mean_leak": 0.03567274749279022
+        "median_inv_p": 36.54528617858887,
+        "B90_inv_p": 184.1010681152344,
+        "mean_leak": 0.0190
       }
     }
   }
