@@ -180,3 +180,13 @@ Two arms only (Ideal Gray-X dropped per Zach). Results: `runs/driver_bakeoff/`.
 | snap_d COST→SNAP→D L4 trained | 289/6.24e3 | 8.89e3/1.57e5 | 1.24e5/1.11e6 | 2.746 | 2.371 |
 
 Winner: native projector `W·SNAP₀(β)·W†` (W flat-prep F=0.999). Keeps **b≪2**. Next: probe 2 (train {9,12}).
+
+
+## 8. Opus probe 2 — train {n9,n12} (2026-10-29 ~17:44 CST)
+
+| model | n9 | n12 | n15 | n18 | b_Med | Med15/12 | Med18/15 |
+|-------|----|-----|-----|-----|-------|----------|----------|
+| n9-only bake-off | 9.27/28.3 | 36.8/65.3 | 76.5/152 | 373/996 | 1.483 | 2.08 | 4.88 |
+| **train {9,12}** | **6.03/19.9** | **17.5/40.4** | **30.9/75.3** | **149/581** | **1.405** | **1.76** | **4.84** |
+
+Transfer healthy (b≪2, no Med15 cliff). Results: `runs/probe2_train912/`. Next: probe 3 Fourier.
