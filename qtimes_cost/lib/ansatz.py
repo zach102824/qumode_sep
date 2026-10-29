@@ -3,6 +3,7 @@
 PyTorch simulator with autograd through SNAP / displacement / cost phase.
 A0: U_phase from exact cost Hamiltonian on the product Gray grid.
 q in {1..10}: continuous q_tilde = 1 + 9*sigmoid(u).
+q≡1 freeze: q_from_logit(..., freeze_q1=True) returns exact 1 and zeroes the logit.
 """
 from __future__ import annotations
 from dataclasses import dataclass
@@ -29,15 +30,38 @@ class AnsatzConfig:
         assert self.nf >= NU
 
 
-def q_from_logit(u: Union[float, torch.Tensor]) -> Union[float, torch.Tensor]:
-    """Continuous q in (1, 10)."""
+Q_MODES = ("learned", "freeze1")
+
+
+def check_q_mode(q_mode: str) -> str:
+    if q_mode not in Q_MODES:
+        raise ValueError(f"q_mode must be one of {Q_MODES}, got {q_mode!r}")
+    return q_mode
+
+
+def q_from_logit(
+    u: Union[float, torch.Tensor],
+    freeze_q1: bool = False,
+) -> Union[float, torch.Tensor]:
+    """Continuous q in (1, 10), or exact 1.0 when freeze_q1.
+
+    Learned path (default): q = 1 + 9 * sigmoid(u).
+    Freeze path: multiply the logit by zero and add 1, so q is exactly 1 and
+    the logit contributes nothing (gradient w.r.t. u is identically 0).
+    """
+    if freeze_q1:
+        if isinstance(u, torch.Tensor):
+            return u * 0 + 1.0
+        return 1.0
     if isinstance(u, torch.Tensor):
         return 1.0 + 9.0 * torch.sigmoid(u)
     return 1.0 + 9.0 / (1.0 + np.exp(-float(u)))
 
 
-def integer_q(u: Union[float, torch.Tensor]) -> int:
-    q = q_from_logit(u)
+def integer_q(u: Union[float, torch.Tensor], freeze_q1: bool = False) -> int:
+    if freeze_q1:
+        return 1
+    q = q_from_logit(u, freeze_q1=False)
     if isinstance(q, torch.Tensor):
         q = float(q.detach().cpu())
     return int(np.clip(np.round(q), 1, 10))
@@ -128,13 +152,22 @@ class MultiCavityAnsatz(torch.nn.Module):
         TH: torch.Tensor,
         q_logits: torch.Tensor,
         gamma: Union[float, torch.Tensor] = 1.0,
+        q_mode: str = "learned",
     ) -> dict:
-        """Forward one instance (all tensors on same device as module)."""
+        """Forward one instance (all tensors on same device as module).
+
+        q_mode='learned': q = 1+9*sigmoid(logit) per layer.
+        q_mode='freeze1': zero the logits, then q_from_logit forces q≡1.
+        """
         C, L, nf, NU_ = self.C, self.L, self.nf, NU
         assert tuple(alpha0.shape) == (C, 2)
         assert tuple(A.shape) == (C, L, 2)
         assert tuple(TH.shape) == (C, L, NU_)
         assert tuple(q_logits.shape) == (L,)
+        freeze = check_q_mode(q_mode) == "freeze1"
+        if freeze:
+            # Drop whatever the q head emitted. q_from_logit still forces 1.
+            q_logits = torch.zeros_like(q_logits)
 
         if not isinstance(gamma, torch.Tensor):
             gamma = torch.tensor(gamma, dtype=self.rdtype, device=self.lam.device)
@@ -147,6 +180,8 @@ class MultiCavityAnsatz(torch.nn.Module):
 
         Cn = self.cost_Cn(E)  # (NU,)*C real
 
+        q_cont = []
+        q_int = []
         for ell in range(L):
             for c in range(C):
                 ph = torch.zeros(nf, dtype=self.rdtype, device=self.lam.device)
@@ -156,7 +191,9 @@ class MultiCavityAnsatz(torch.nn.Module):
                 psi = self._apply_local(psi, snap, c)
             for c in range(C):
                 psi = self._apply_local(psi, self._D(A[c, ell, 0], A[c, ell, 1]), c)
-            q = q_from_logit(q_logits[ell])
+            q = q_from_logit(q_logits[ell], freeze_q1=freeze)
+            q_cont.append(q)
+            q_int.append(integer_q(q_logits[ell], freeze_q1=freeze))
             phase = torch.exp(-1j * (gamma * q).to(self.cdtype) * Cn.to(self.cdtype))
             sl = tuple(slice(0, NU_) for _ in range(C))
             # Avoid in-place on view that breaks autograd: clone then assign
@@ -179,8 +216,8 @@ class MultiCavityAnsatz(torch.nn.Module):
             "p_leak": p_leak,
             "inv_p": inv_p,
             "norm": probs.sum(),
-            "q_int": [integer_q(u) for u in q_logits],
-            "q_cont": [q_from_logit(u) for u in q_logits],
+            "q_int": q_int,
+            "q_cont": q_cont,
             "psi": psi,
         }
 
