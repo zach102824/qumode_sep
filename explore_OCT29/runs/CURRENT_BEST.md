@@ -28,3 +28,8 @@ After raising promote gate to q3_Ltrain6, Fourier-warmed free-angle projector at
 ## Takeaway
 
 Ceiling to beat for *novel* seq atoms is now ~**n15 Med 2.5 / b≈1.08** (L16 free-angle projector), not just Fourier 5.99. Mutants that only rearrange SNAP/D without matching this remain rejected.
+
+
+## Fixed-γ deepen (2026-10-29) — negative
+
+One γ (shared or per-instance) + deep L **does not scale**: n15 Med worsens past L≈8 (shared L8≈40 → L24≈686). Per-instance γ opt helps little. **Keep γ_ℓ / Fourier.** See `runs/fixed_gamma_deep/`.
