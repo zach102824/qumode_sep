@@ -1,7 +1,7 @@
 # explore_OCT29 — theory lock + campaign plan (2026-10-29)
 
 Snapshot of `qtimes_cost` for the **OCT 29 transfer** track.  
-**Code in this folder is a pre-lock runnable snapshot** (still free-`U_phase^q` / per-cavity mixers). Rewrite only after Zach says **go** — order in [`TODO_REWRITE.md`](TODO_REWRITE.md). Run locus: **box / Mac CPU / cloud** (chaodao GPU deferred).
+**Step 0 implemented** (Zach go 2026-10-29): shared SNAP+D + `γ_ℓ`, Φ=`H_cost`. Later ladder in [`TODO_REWRITE.md`](TODO_REWRITE.md). Run locus: **box CPU** (chaodao deferred).
 
 ---
 
@@ -28,7 +28,7 @@ Fixed **L across n**:
 
 | Step | Freedom | Status |
 |------|---------|--------|
-| **0** | Pure `H_cost` + shared `(γ_ℓ, SNAP+D_ℓ)` | **Step 1 / baseline** when coding starts |
+| **0** | Pure `H_cost` + shared `(γ_ℓ, SNAP+D_ℓ)` | **DONE — live** |
 | **1** | Learned clause weights on that graph | next |
 | **2–3** | + small local `εΔ` | **sweet spot** |
 | **4–5** | Nonlocal / free phase | **ban** |
@@ -36,7 +36,7 @@ Fixed **L across n**:
 ### Param target (planned shared)
 
 - SNAP+D shared → **8 + 2 = 10** mixer + **1 γ_ℓ** per layer → **11**, independent of C.
-- **Today’s snapshot** still has per-cavity mixers (**10C+1**) + free `q` — that is the baseline **to rewrite**, not the target.
+- **Live now:** shared **11**/layer (independent of C). Old 10C+1 + free `q` removed from forward.
 
 ### Train / eval
 
@@ -60,15 +60,15 @@ Explores on the old chaodao path are stopped for this track.
 
 ## 2. Code state of this folder
 
-**Pre-lock snapshot / to rewrite.** Copied from `qtimes_cost` on 2026-10-29:
+**Step 0 live** (post-go rewrite):
 
-- `lib/ansatz.py` — still `|0⟩→D→[SNAP→D→U_phase^q]^L` with free `q_logits`
-- `lib/gnn.py` — still per-cavity `TH`/`A` heads + `head_q` (10C+1 style)
-- `lib/train_loop.py`, scripts, tests — wired to that path
-- Data: `data/data_n6.npz`, `data_n9.npz`
-- Empty `runs/` + `runs/gnn_best/` (no trial logs copied)
+- `lib/ansatz.py` — `|0⟩→D→[SNAP→D→U_Φ]^L`, Φ=`H_cost`, shared SNAP+D, `γ_ℓ` per layer
+- `lib/gnn.py` — shared heads (`alpha0`(2,), `A`(L,2), `TH`(L,NU), `gamma`(L,)); no `head_q`
+- `lib/train_loop.py` — promote helpers for zero-shot n12; meta `freedom_step=0`
+- Evolve: mutate arch only; **promote on n12 Med/B90**; stage-up gate ≥10% later
+- Data: `data_n6/n9` + generate `data_n12` for promote gate
 
-Smoke-test the snapshot with [`RUN.md`](RUN.md). Implement ladder step 0+ only after **go**.
+See [`RUN.md`](RUN.md).
 
 ---
 
@@ -111,3 +111,11 @@ Self-contained: **no imports outside `explore_OCT29/`**.
 4. Protect-small / curriculum if transfer still soft  
 
 Details: [`TODO_REWRITE.md`](TODO_REWRITE.md).
+
+
+## Promote gate (evolve)
+
+- Primary: **zero-shot n12** `S = (log Med + log B90)/2` (lower better).
+- Train-n Med/B90 logged but **never** alone enough to overwrite `runs/gnn_best/`.
+- Stage-up (clause weights / εΔ): same backbone, only if n12 Med improves ≳ **10%** vs that backbone’s step-0 (`stage_up_ok`).
+- Stop: `touch explore_OCT29/runs/STOP_EVOLVE`.

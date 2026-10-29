@@ -1,7 +1,6 @@
-"""Short train / eval loop on n=6&9 packs (PyTorch + Adam).
+"""Short train / eval loop on n=6&9 packs (PyTorch + Adam). Step 0 shared mixer.
 
-Uses CUDA when available. Dual-GPU evolve launches two short_train calls
-on cuda:0 and cuda:1 in parallel (see scripts/evolve_gnn.py).
+Promotion / transfer scoring uses zero-shot n12 when a pack is available.
 """
 from __future__ import annotations
 import json
@@ -16,10 +15,14 @@ import torch.nn as nn
 from .ansatz import AnsatzConfig, MultiCavityAnsatz
 from .device import resolve_device
 from .gnn import FactorGNN, GNNArch
+from .sat_gen import clause_count
 
 PKG = Path(__file__).resolve().parents[1]
 DATA = PKG / "data"
 RUNS = PKG / "runs"
+
+FREEDOM_STEP = 0
+SHARED_MIXER = True
 
 
 def load_pack(n: int, data_dir: Path | None = None) -> dict:
@@ -45,9 +48,32 @@ def _split_arrays(pack: dict, split: str, max_count: Optional[int] = None):
     return seeds, cls_v, cls_s, nsol, E
 
 
-def _to_torch_heads_device(gnn: FactorGNN, device: torch.device):
-    gnn.to(device)
-    return gnn
+def fixed_flat_plus_alpha0(n: int, device, amp: float = 1.6) -> torch.Tensor:
+    """Shared flat/plus coherent prep: real α, size-normalized. Shape (2,)."""
+    scale_d = (64.0 / float(2 ** n)) ** 0.5
+    a = float(amp) * scale_d
+    return torch.tensor([a, 0.0], dtype=torch.float32, device=device)
+
+
+def apply_alpha0_mode(heads: dict, n: int, mode: str, amp: float, device) -> dict:
+    """Optionally replace GNN α₀ with fixed flat/plus prep (detach — no grad)."""
+    if mode in (None, "", "learned"):
+        return heads
+    if mode in ("fixed_flat_plus", "flat_plus", "fixed"):
+        heads = dict(heads)
+        heads["alpha0"] = fixed_flat_plus_alpha0(n, device, amp=amp)
+        return heads
+    raise ValueError(f"unknown alpha0_mode={mode!r}")
+
+
+def _forward_ansatz(sim: MultiCavityAnsatz, Eb: torch.Tensor, heads: dict) -> dict:
+    return sim.forward(
+        Eb,
+        heads["alpha0"],
+        heads["A"],
+        heads["TH"],
+        heads["gamma"],
+    )
 
 
 @torch.no_grad()
@@ -64,10 +90,16 @@ def eval_pack_metrics(
     nf: Optional[int] = None,
     alpha0_mode: str = "learned",
     alpha0_amp: float = 1.6,
-    q_mode: str = "learned",
-    q_fixed: int = 1,
+    gnn_n: Optional[int] = None,
+    gnn_m: Optional[int] = None,
 ) -> dict:
-    """Forward GNN+ansatz on a split; return Med/B90 of 1/p_succ."""
+    """Forward GNN+ansatz on a split; return Med/B90 of 1/p_succ.
+
+    ``state`` may come from a different train-n (zero-shot): shared-mixer head
+    shapes do not depend on C, so n=9 weights load into an n=12 FactorGNN.
+    Pass ``gnn_n``/``gnn_m`` only if you need to force the GNN graph size
+    (defaults to pack n / pack m).
+    """
     device = resolve_device(device)
     pack = load_pack(n, data_dir=data_dir)
     m = int(pack["m"])
@@ -75,9 +107,18 @@ def eval_pack_metrics(
     if E is None:
         raise RuntimeError(f"Pack n={n} split={split} has no dense E; needed for ansatz eval")
     B = len(seeds)
-    gnn = FactorGNN(arch, n=n, m=m, L=L, seed=seed).to(device)
+    use_n = int(gnn_n) if gnn_n is not None else n
+    use_m = int(gnn_m) if gnn_m is not None else m
+    # For zero-shot the GNN must match the *eval* formula size (n,m of pack),
+    # while weights come from a train-n checkpoint (same shapes).
+    use_n, use_m = n, m
+    gnn = FactorGNN(arch, n=use_n, m=use_m, L=L, seed=seed).to(device)
     if state is not None:
-        gnn.load_state_dict(state)
+        missing, unexpected = gnn.load_state_dict(state, strict=False)
+        # shared heads: ignore legacy head_q if present in old ckpt
+        unexpected = [k for k in unexpected if not k.startswith("head_q")]
+        if unexpected:
+            raise RuntimeError(f"unexpected keys loading state into n={n}: {unexpected}")
     gnn.eval()
     cfg = AnsatzConfig(n=n, L=L, nf=nf)
     sim = MultiCavityAnsatz(cfg, device=device).to(device)
@@ -88,17 +129,9 @@ def eval_pack_metrics(
         cv = torch.as_tensor(cls_v[b], device=device)
         cs = torch.as_tensor(cls_s[b], dtype=torch.float32, device=device)
         heads = gnn.forward_graph(cv, cs)
-        heads = apply_alpha0_mode(heads, n, gnn.C, alpha0_mode, alpha0_amp, device)
-        heads = apply_q_mode(heads, L, q_mode, device, q_fixed=q_fixed)
+        heads = apply_alpha0_mode(heads, n, alpha0_mode, alpha0_amp, device)
         Eb = torch.as_tensor(E[b], dtype=torch.float32, device=device)
-        out = sim.forward(
-            Eb,
-            heads["alpha0"],
-            heads["A"],
-            heads["TH"],
-            heads["q_logits"],
-            gamma=heads["gamma"],
-        )
+        out = _forward_ansatz(sim, Eb, heads)
         inv.append(float(out["inv_p"].detach().cpu()))
         leaks.append(float(out["p_leak"].detach().cpu()))
     inv_a = np.asarray(inv, float)
@@ -114,11 +147,13 @@ def eval_pack_metrics(
         "mean_leak": float(np.mean(leaks)),
         "wall_s": time.time() - t0,
         "device": str(device),
+        "freedom_step": FREEDOM_STEP,
+        "shared_mixer": SHARED_MIXER,
     }
 
 
 def combined_score(metrics_by_n: Dict[int, dict], w6: float = 0.35, w9: float = 0.65) -> float:
-    """Lower is better. Primary n9, secondary n6."""
+    """Lower is better. Primary n9, secondary n6 (train-n monitor)."""
     s = 0.0
     if 9 in metrics_by_n:
         s += w9 * metrics_by_n[9]["S"]
@@ -127,61 +162,25 @@ def combined_score(metrics_by_n: Dict[int, dict], w6: float = 0.35, w9: float = 
     return float(s)
 
 
+def transfer_score(metrics_n12: dict) -> float:
+    """Primary promote metric: n12 zero-shot S = (log Med + log B90)/2. Lower better."""
+    return float(metrics_n12["S"])
+
+
+def pick_transfer_state(states_by_n: dict) -> Optional[dict]:
+    """Prefer n=9 weights for zero-shot; fallback n=6."""
+    if not states_by_n:
+        return None
+    if 9 in states_by_n:
+        return states_by_n[9]
+    if 6 in states_by_n:
+        return states_by_n[6]
+    return next(iter(states_by_n.values()))
+
+
 def _instance_loss(out: dict, leakpen: float = 0.1) -> torch.Tensor:
     """Differentiable surrogate: log(1/p_succ) + leakpen * p_leak."""
     return torch.log(out["inv_p"].clamp(min=1.0)) + leakpen * out["p_leak"]
-
-
-def fixed_flat_plus_alpha0(n: int, C: int, device, amp: float = 1.6) -> torch.Tensor:
-    """OCT20-like shared flat/plus coherent prep: real α, size-normalized.
-
-    Same scale_d as FactorGNN heads: (64 / 2^n)^0.5 so n=6 keeps ``amp``,
-    larger n shrinks displacement. All cavities share the same (re, im=0).
-    """
-    scale_d = (64.0 / float(2 ** n)) ** 0.5
-    a = float(amp) * scale_d
-    out = torch.zeros(C, 2, dtype=torch.float32, device=device)
-    out[:, 0] = a
-    return out
-
-
-def apply_alpha0_mode(heads: dict, n: int, C: int, mode: str, amp: float, device) -> dict:
-    """Optionally replace GNN α₀ with fixed flat/plus prep (detach — no grad)."""
-    if mode in (None, "", "learned"):
-        return heads
-    if mode in ("fixed_flat_plus", "flat_plus", "fixed"):
-        heads = dict(heads)
-        heads["alpha0"] = fixed_flat_plus_alpha0(n, C, device, amp=amp)
-        return heads
-    raise ValueError(f"unknown alpha0_mode={mode!r}")
-
-
-def fixed_q_logits(L: int, q: int, device) -> torch.Tensor:
-    """Integer q via inverse of q = 1 + 9*sigmoid(u)."""
-    q = int(max(1, min(10, q)))
-    if q <= 1:
-        u = -20.0
-    elif q >= 10:
-        u = 20.0
-    else:
-        import math
-        prob = (q - 1) / 9.0
-        prob = min(max(prob, 1e-6), 1 - 1e-6)
-        u = math.log(prob / (1 - prob))
-    return torch.full((L,), float(u), dtype=torch.float32, device=device)
-
-
-def apply_q_mode(heads: dict, L: int, mode: str, device, q_fixed: int = 1) -> dict:
-    """Optionally replace GNN q_logits with fixed integer-q logits (no grad)."""
-    if mode in (None, "", "learned"):
-        return heads
-    if mode in ("fixed_q1", "q1", "fixed"):
-        heads = dict(heads)
-        heads["q_logits"] = fixed_q_logits(L, int(q_fixed), device)
-        return heads
-    raise ValueError(f"unknown q_mode={mode!r}")
-
-
 
 
 def short_train(
@@ -200,13 +199,10 @@ def short_train(
     min_steps: int = 0,
     alpha0_mode: str = "learned",
     alpha0_amp: float = 1.6,
-    q_mode: str = "learned",
-    q_fixed: int = 1,
 ) -> Tuple[dict, dict, dict]:
     """Adam short-train of FactorGNN on n=6&9; keep best val combined score.
 
-    If ``patience`` is set, stop after that many steps with no NEW best S_comb
-    (checked after ``min_steps``). Returns (val_metrics_by_n, best_state_by_n, info).
+    Returns (val_metrics_by_n, best_state_by_n, info).
     """
     device = resolve_device(device)
     log = log_fn or (lambda *a: print(time.strftime("%H:%M:%S"), f"[train:{device}]", *a, flush=True))
@@ -235,13 +231,10 @@ def short_train(
 
     params = []
     freeze_a0 = alpha0_mode not in (None, "", "learned")
-    freeze_q = q_mode not in (None, "", "learned")
     for gnn in nets.values():
-        if freeze_a0 or freeze_q:
+        if freeze_a0:
             for name, p in gnn.named_parameters():
-                if freeze_a0 and name.startswith("head_alpha0"):
-                    p.requires_grad_(False)
-                elif freeze_q and name.startswith("head_q"):
+                if name.startswith("head_alpha0"):
                     p.requires_grad_(False)
                 else:
                     params.append(p)
@@ -269,7 +262,6 @@ def short_train(
             if E is None:
                 continue
             B = len(seeds)
-            # mini-batch of up to 4 random instances
             bs = min(4, B)
             idx = np_rng.choice(B, size=bs, replace=False)
             sim = sims[n]
@@ -277,27 +269,17 @@ def short_train(
                 cv = torch.as_tensor(cls_v[b], device=device)
                 cs = torch.as_tensor(cls_s[b], dtype=torch.float32, device=device)
                 heads = gnn.forward_graph(cv, cs)
-                heads = apply_alpha0_mode(heads, n, gnn.C, alpha0_mode, alpha0_amp, device)
-                heads = apply_q_mode(heads, L, q_mode, device, q_fixed=q_fixed)
+                heads = apply_alpha0_mode(heads, n, alpha0_mode, alpha0_amp, device)
                 Eb = torch.as_tensor(E[b], dtype=torch.float32, device=device)
-                out = sim.forward(
-                    Eb,
-                    heads["alpha0"],
-                    heads["A"],
-                    heads["TH"],
-                    heads["q_logits"],
-                    gamma=heads["gamma"],
-                )
+                out = _forward_ansatz(sim, Eb, heads)
                 losses.append(_instance_loss(out, leakpen=leakpen))
         if not losses:
             raise RuntimeError("No train instances with dense E")
         loss = torch.stack(losses).mean()
         loss.backward()
-        # grad finite check / clip
         torch.nn.utils.clip_grad_norm_(params, 5.0)
         opt.step()
 
-        # val every step (cheap max_val) for best tracking
         metrics = {}
         for n, gnn in nets.items():
             gnn.eval()
@@ -306,7 +288,6 @@ def short_train(
                 max_count=max_val, seed=seed, data_dir=data_dir,
                 device=device, nf=nf,
                 alpha0_mode=alpha0_mode, alpha0_amp=alpha0_amp,
-                q_mode=q_mode, q_fixed=q_fixed,
             )
         sc = combined_score(metrics)
         if sc < best_score:
@@ -316,7 +297,7 @@ def short_train(
                            for n, gnn in nets.items()}
             best_val = metrics
             log(
-                f"step {step}: NEW best S_comb={sc:.4f} loss={float(loss):.4f} "
+                f"step {step}: NEW best S_comb={sc:.4f} loss={float(loss.detach()):.4f} "
                 + " ".join(
                     f"n{n}:Med={metrics[n]['median_inv_p']:.2f}/B90={metrics[n]['B90_inv_p']:.2f}"
                     + f"/leak={metrics[n]['mean_leak']:.3f}"
@@ -325,7 +306,7 @@ def short_train(
             )
         elif step % 5 == 0:
             stagnant = step - best_step if best_step >= 0 else step
-            log(f"step {step}: S_comb={sc:.4f} loss={float(loss):.4f} stagnant={stagnant}")
+            log(f"step {step}: S_comb={sc:.4f} loss={float(loss.detach()):.4f} stagnant={stagnant}")
 
         if (
             patience is not None
@@ -352,28 +333,38 @@ def short_train(
         "L": int(L),
         "alpha0_mode": alpha0_mode,
         "alpha0_amp": float(alpha0_amp),
-        "q_mode": q_mode,
-        "q_fixed": int(q_fixed),
         "arch": arch.to_dict(),
         "seed": seed,
         "device": str(device),
         "backend": "torch",
+        "freedom_step": FREEDOM_STEP,
+        "shared_mixer": SHARED_MIXER,
     }
     return best_val, best_states or {}, info
 
 
-def save_gnn_best(arch: GNNArch, states_by_n: dict, metrics: dict, runs_dir: Path | None = None):
+def save_gnn_best(
+    arch: GNNArch,
+    states_by_n: dict,
+    metrics: dict,
+    runs_dir: Path | None = None,
+    extra_meta: Optional[dict] = None,
+):
     runs_dir = runs_dir or RUNS
     out = runs_dir / "gnn_best"
     out.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "arch": arch.to_dict(),
+        "metrics": {str(k): v for k, v in metrics.items()},
+        "backend": "torch",
+        "freedom_step": FREEDOM_STEP,
+        "shared_mixer": SHARED_MIXER,
+    }
+    if extra_meta:
+        payload.update(extra_meta)
     with open(out / "arch.json", "w") as f:
-        json.dump(
-            {"arch": arch.to_dict(), "metrics": {str(k): v for k, v in metrics.items()}, "backend": "torch"},
-            f,
-            indent=2,
-        )
+        json.dump(payload, f, indent=2)
     for n, state in (states_by_n or {}).items():
-        # state values may be tensors
         cpu_state = {}
         for k, v in state.items():
             if isinstance(v, torch.Tensor):
@@ -381,7 +372,6 @@ def save_gnn_best(arch: GNNArch, states_by_n: dict, metrics: dict, runs_dir: Pat
             else:
                 cpu_state[k] = torch.as_tensor(v)
         torch.save(cpu_state, out / f"weights_n{n}.pt")
-        # also drop legacy npz if present
         legacy = out / f"weights_n{n}.npz"
         if legacy.exists():
             legacy.unlink()
@@ -391,6 +381,8 @@ def save_gnn_best(arch: GNNArch, states_by_n: dict, metrics: dict, runs_dir: Pat
                 "updated": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
                 "ns": list((states_by_n or {}).keys()),
                 "backend": "torch",
+                "freedom_step": FREEDOM_STEP,
+                "shared_mixer": SHARED_MIXER,
             },
             f,
         )
@@ -408,7 +400,6 @@ def load_gnn_best(runs_dir: Path | None = None) -> Tuple[Optional[GNNArch], dict
     for p in best_dir.glob("weights_n*.pt"):
         n = int(p.stem.replace("weights_n", ""))
         params[n] = torch.load(p, map_location="cpu", weights_only=True)
-    # legacy numpy
     for p in best_dir.glob("weights_n*.npz"):
         n = int(p.stem.replace("weights_n", ""))
         if n in params:
@@ -419,5 +410,12 @@ def load_gnn_best(runs_dir: Path | None = None) -> Tuple[Optional[GNNArch], dict
 
 
 def should_promote(cand_score: float, best_score: float, min_improve: float = 0.0) -> bool:
-    """Best-only: promote iff cand is strictly better by min_improve."""
+    """Best-only: promote iff cand is strictly better by min_improve (lower is better)."""
     return cand_score + min_improve < best_score
+
+
+def stage_up_ok(cand_n12_med: float, step0_n12_med: float, min_rel: float = 0.10) -> bool:
+    """Clause-w / εΔ stage-up only if n12 Med improves ≥ min_rel vs same-backbone step-0."""
+    if step0_n12_med <= 0:
+        return False
+    return (step0_n12_med - cand_n12_med) / step0_n12_med >= min_rel

@@ -1,8 +1,8 @@
-"""Factor-graph GNN heads (PRE-LOCK SNAPSHOT — to rewrite).
+"""Factor-graph GNN heads — step 0 shared mixer.
 
-Current heads still emit per-cavity mixer params + free q_logits (10C+1 style).
-LOCKED TARGET: shared SNAP+D (10) + 1 γ_ℓ per layer (=11, independent of C);
-freedom only via clause weights / local εΔ on Φ — see PLAN.md / TODO_REWRITE.md.
+Emits shared SNAP+D (10) + γ_ℓ (1) per layer = 11, independent of C.
+Plus shared α₀ (2,) size-normalized. No head_q / per-cavity mixers.
+Freedom via clause weights / local εΔ comes in later ladder steps.
 """
 from __future__ import annotations
 from dataclasses import dataclass, asdict
@@ -41,16 +41,23 @@ class GNNArch:
         return base
 
     def n_params_estimate(self, n: int = 9, m: int = 89, L: int = 5) -> int:
+        """Rough count: backbone + shared heads (independent of C)."""
         H = self.H
-        C = n_cavities(n)
-        return (
-            H * H * self.rounds * 4
-            + H * (C * L * 2 + C * L * NU + C * 2 + L + 1)
-        )
+        # heads: alpha0=2, A=L*2, TH=L*NU, gamma=L  →  2 + L*(2+NU+1)
+        head_out = 2 + L * (2 + NU + 1)
+        return H * H * self.rounds * 4 + H * head_out
+
+    def mixer_params_per_layer(self) -> int:
+        """10 shared mixer (TH:NU + A:2) + 1 γ = 11."""
+        return NU + 2 + 1
 
 
 class FactorGNN(nn.Module):
-    """Bipartite var↔clause factor-graph GNN (torch)."""
+    """Bipartite var↔clause factor-graph GNN → shared mixer + γ_ℓ heads.
+
+    Weight shapes do **not** depend on n or C, so a checkpoint trained at
+    n=9 can zero-shot load into an n=12 FactorGNN (same arch, L).
+    """
 
     def __init__(self, arch: GNNArch, n: int, m: int, L: int, seed: int = 0):
         super().__init__()
@@ -81,17 +88,16 @@ class FactorGNN(nn.Module):
         )
         self.drop = nn.Dropout(arch.dropout) if arch.dropout > 0 else nn.Identity()
 
-        self.head_alpha0 = nn.Linear(H, self.C * 2)
-        self.head_A = nn.Linear(H, self.C * L * 2)
-        self.head_TH = nn.Linear(H, self.C * L * NU)
-        self.head_q = nn.Linear(H, L)
-        self.head_g = nn.Linear(H, 1)
+        # Shared heads — independent of C
+        self.head_alpha0 = nn.Linear(H, 2)          # shared α₀
+        self.head_A = nn.Linear(H, L * 2)           # shared D per layer
+        self.head_TH = nn.Linear(H, L * NU)         # shared SNAP per layer
+        self.head_g = nn.Linear(H, L)               # γ_ℓ per layer
         with torch.no_grad():
             for head, sc in (
                 (self.head_alpha0, 0.3),
                 (self.head_A, 0.3),
                 (self.head_TH, 0.1),
-                (self.head_q, 0.1),
                 (self.head_g, 0.1),
             ):
                 head.weight.normal_(0.0, sc / max(H, 1) ** 0.5, generator=g)
@@ -109,11 +115,8 @@ class FactorGNN(nn.Module):
         cls_v: torch.Tensor,
         cls_s: torch.Tensor,
     ) -> dict:
-        """cls_v, cls_s: (m, 4) int/float on same device as module.
-
-        Returns ansatz param dict (torch tensors) for one formula.
-        """
-        n, m, H, L, C = self.n, self.m, self.arch.H, self.L, self.C
+        """cls_v, cls_s: (m, 4). Returns shared-mixer ansatz param dict."""
+        n, m, H, L = self.n, self.m, self.arch.H, self.L
         device = cls_v.device
         dtype = next(self.parameters()).dtype
         cls_v = cls_v.long().to(device)
@@ -164,11 +167,11 @@ class FactorGNN(nn.Module):
             hv = hv + new_v if self.arch.residual else new_v
 
         g = hv.mean(dim=0)
-        alpha0 = self.head_alpha0(g).reshape(C, 2)
-        A = self.head_A(g).reshape(C, L, 2)
-        TH = self.head_TH(g).reshape(C, L, NU)
-        q_logits = self.head_q(g)
-        gamma = self.head_g(g).reshape(())
+        alpha0 = self.head_alpha0(g)            # (2,)
+        A = self.head_A(g).reshape(L, 2)        # (L, 2)
+        TH = self.head_TH(g).reshape(L, NU)     # (L, NU)
+        gamma = self.head_g(g)                  # (L,)
+        # size-normalized displacement scale (transfer-friendly)
         N = float(2 ** n)
         scale_d = (64.0 / N) ** 0.5
         alpha0 = alpha0 * scale_d
@@ -177,7 +180,6 @@ class FactorGNN(nn.Module):
             "alpha0": alpha0,
             "A": A,
             "TH": TH,
-            "q_logits": q_logits,
             "gamma": gamma,
         }
 
@@ -187,6 +189,7 @@ class FactorGNN(nn.Module):
 
 BASELINE_ARCH = GNNArch(H=128, rounds=4, agg="mean", degree_features=True)
 
+# Evolve search space — arch / train only. No head_q, no per-cavity mixer flags.
 SEARCH_SPACE = {
     "H": [64, 128, 192, 256],
     "rounds": [2, 4, 6, 8],

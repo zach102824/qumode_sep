@@ -1,4 +1,4 @@
-"""One short train step on CPU; gradients finite."""
+"""One short train step on CPU; gradients finite. No q heads."""
 from __future__ import annotations
 import numpy as np
 import torch
@@ -8,7 +8,10 @@ from pathlib import Path
 from explore_OCT29.lib.gnn import FactorGNN, GNNArch
 from explore_OCT29.lib.ansatz import AnsatzConfig, MultiCavityAnsatz
 from explore_OCT29.lib.sat_gen import clause_count, gen_instance
-from explore_OCT29.lib.train_loop import _instance_loss, should_promote, save_gnn_best, load_gnn_best, combined_score
+from explore_OCT29.lib.train_loop import (
+    _instance_loss, should_promote, save_gnn_best, load_gnn_best,
+    combined_score, stage_up_ok,
+)
 from explore_OCT29.lib.device import resolve_device, dual_devices, cuda_count
 
 
@@ -20,16 +23,19 @@ def test_one_train_step_cpu_grads_finite(tmp_path):
     gnn = FactorGNN(arch, n=n, m=m, L=L, seed=0).to(device)
     cfg = AnsatzConfig(n=n, L=L, nf=nf)
     sim = MultiCavityAnsatz(cfg, device=device).to(device)
-    # fresh satisfiable instance
     _, cl, E = gen_instance(n, 51_000_000_000 + 10_000_000 * n + 7)
     cls_v = torch.as_tensor(np.array([v for v, s in cl], dtype=np.int64), device=device)
     cls_s = torch.as_tensor(np.array([s for v, s in cl], dtype=np.float32), device=device)
     Eb = torch.as_tensor(E, dtype=torch.float32, device=device)
 
+    # no head_q
+    names = [n for n, _ in gnn.named_parameters()]
+    assert not any("head_q" in n for n in names)
+
     opt = torch.optim.Adam(gnn.parameters(), lr=1e-3)
     opt.zero_grad()
     heads = gnn.forward_graph(cls_v, cls_s)
-    out = sim.forward(Eb, heads["alpha0"], heads["A"], heads["TH"], heads["q_logits"], gamma=heads["gamma"])
+    out = sim.forward(Eb, heads["alpha0"], heads["A"], heads["TH"], heads["gamma"])
     loss = _instance_loss(out)
     loss.backward()
     for p in gnn.parameters():
@@ -46,8 +52,9 @@ def test_best_only_promote(tmp_path):
     assert should_promote(0.9, 1.0, min_improve=0.05) is True
     assert should_promote(0.99, 1.0, min_improve=0.05) is False
 
-    # worse score must not overwrite; better must
-    from explore_OCT29.lib.gnn import BASELINE_ARCH
+    assert stage_up_ok(35.0, 40.0, min_rel=0.10) is True   # 12.5% better
+    assert stage_up_ok(38.0, 40.0, min_rel=0.10) is False  # 5% only
+
     runs = tmp_path / "runs"
     arch = GNNArch(H=8, rounds=1)
     good_metrics = {
@@ -58,20 +65,16 @@ def test_best_only_promote(tmp_path):
         6: {"S": 5.0, "median_inv_p": 20.0, "B90_inv_p": 30.0},
         9: {"S": 5.0, "median_inv_p": 20.0, "B90_inv_p": 30.0},
     }
-    # fake tiny state
     state = {"dummy": torch.tensor([1.0])}
-    # monkey: save uses state_dict keys — just store tensors
     save_gnn_best(arch, {6: state}, good_metrics, runs_dir=runs)
     best_s = combined_score(good_metrics)
     cand_s = combined_score(bad_metrics)
     assert not should_promote(cand_s, best_s)
-    # load back
     a2, p2 = load_gnn_best(runs_dir=runs)
     assert a2 is not None
     assert a2.H == 8
     assert 6 in p2
 
-    # better promotes
     better = {
         6: {"S": 0.5, "median_inv_p": 1.5, "B90_inv_p": 2.0},
         9: {"S": 0.5, "median_inv_p": 1.5, "B90_inv_p": 2.0},
@@ -99,7 +102,7 @@ def test_dual_device_path():
         heads = gnn.forward_graph(torch.as_tensor(cls_v, device=dev), torch.as_tensor(cls_s, device=dev))
         out = sim.forward(
             torch.as_tensor(E, dtype=torch.float32, device=dev),
-            heads["alpha0"], heads["A"], heads["TH"], heads["q_logits"], gamma=heads["gamma"],
+            heads["alpha0"], heads["A"], heads["TH"], heads["gamma"],
         )
         return float(out["inv_p"].cpu())
 

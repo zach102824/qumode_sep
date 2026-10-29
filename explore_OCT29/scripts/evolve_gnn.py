@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""M-GNN — nonstop GNN evolve; disk keeps best only under runs/gnn_best/.
+"""Nonstop GNN evolve — step 0 shared mixer. Promote on zero-shot n12.
 
-Dual-GPU (chaodao 2×5090): each round trains TWO candidates in parallel
-  — one on cuda:0, one on cuda:1 — then best-only promote.
-Single GPU / CPU: still runs two candidates (sequentially if same device).
+Skeleton frozen: shared SNAP+D + γ_ℓ, Φ=H_cost. Evolve arch/heads/train only.
+No OpenEvolve. No head_q / per-cavity mixer mutations.
 
-Loop: mutate/random arch → short_train on n6&9 → VAL score → overwrite best or discard.
+Loop: mutate/random arch → short_train on n6&9 → score val@6&9 + zero-shot@12
+      → promote only if n12 S beats champion → runs/gnn_best/
 Stop: touch runs/STOP_EVOLVE  or  --max_trials N
 CSV: runs/gnn_evolve_trials.csv (append-only)
 """
@@ -36,10 +36,16 @@ from explore_OCT29.lib.gnn import (  # noqa: E402
 )
 from explore_OCT29.lib.train_loop import (  # noqa: E402
     combined_score,
+    eval_pack_metrics,
     load_gnn_best,
+    load_pack,
+    pick_transfer_state,
     save_gnn_best,
     short_train,
     should_promote,
+    transfer_score,
+    FREEDOM_STEP,
+    SHARED_MIXER,
 )
 
 STOP_NAME = "STOP_EVOLVE"
@@ -79,7 +85,20 @@ def append_csv(path: Path, row: dict, fieldnames: list):
         w.writerow(row)
 
 
-def _run_one(cand: GNNArch, device, steps, L, max_val, seed, data_dir=None):
+def _eval_n12(arch, states_by_n, L, max_n12, seed, device, data_dir, nf=None):
+    """Zero-shot n12 with train-n weights (prefer n9). Returns metrics or None if no pack."""
+    try:
+        load_pack(12, data_dir=data_dir)
+    except FileNotFoundError:
+        return None
+    state = pick_transfer_state(states_by_n)
+    return eval_pack_metrics(
+        12, arch, state, split="val", L=L, max_count=max_n12,
+        seed=seed, data_dir=data_dir, device=device, nf=nf,
+    )
+
+
+def _run_one(cand: GNNArch, device, steps, L, max_val, max_n12, seed, data_dir=None, nf=None):
     metrics, params, info = short_train(
         cand,
         steps=steps,
@@ -88,28 +107,38 @@ def _run_one(cand: GNNArch, device, steps, L, max_val, seed, data_dir=None):
         seed=seed,
         device=device,
         data_dir=data_dir,
+        nf=nf,
     )
-    sc = combined_score(metrics)
-    return cand, metrics, params, info, sc, str(device)
+    sc_train = combined_score(metrics)
+    m12 = _eval_n12(cand, params, L, max_n12, seed, device, data_dir, nf=nf)
+    if m12 is not None:
+        metrics[12] = m12
+        sc_promote = transfer_score(m12)
+    else:
+        # fallback: promote on train-n only if n12 pack missing (should not happen in prod)
+        sc_promote = sc_train
+    return cand, metrics, params, info, sc_promote, sc_train, str(device)
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--max_trials", type=int, default=0, help="0 = forever (counts candidate pairs×2 as trials)")
+    ap.add_argument("--max_trials", type=int, default=0, help="0 = forever")
     ap.add_argument("--steps", type=int, default=15, help="short_train steps per candidate")
     ap.add_argument("--max_val", type=int, default=12)
+    ap.add_argument("--max_n12", type=int, default=8, help="zero-shot n12 val count for promote gate")
     ap.add_argument("--L", type=int, default=5)
+    ap.add_argument("--nf", type=int, default=None, help="Fock truncation (default packing.default_nf)")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--eps_mutate", type=float, default=0.7, help="P(mutate best) else random")
-    ap.add_argument("--gpu", type=str, default="", help="optional CUDA_VISIBLE_DEVICES (e.g. 0,1)")
+    ap.add_argument("--gpu", type=str, default="", help="optional CUDA_VISIBLE_DEVICES")
     ap.add_argument(
         "--gpus",
         type=str,
-        default="0,1",
-        help="two device indices/specs for parallel candidates (default 0,1)",
+        default="",
+        help="device specs for parallel candidates (default empty → CPU)",
     )
-    ap.add_argument("--n_parallel", type=int, default=2, help="candidates per round (default 2)")
-    ap.add_argument("--min_improve", type=float, default=0.0, help="require S improve by this")
+    ap.add_argument("--n_parallel", type=int, default=1, help="candidates per round (default 1 for CPU)")
+    ap.add_argument("--min_improve", type=float, default=0.0, help="require n12 S improve by this")
     ap.add_argument("--runs", type=str, default=None)
     ap.add_argument("--sequential", action="store_true", help="force sequential (debug)")
     args = ap.parse_args(argv)
@@ -123,17 +152,24 @@ def main(argv=None):
     csv_path = runs / CSV_NAME
     lock_path = runs / LOCK_NAME
 
-    gpu_list = parse_gpus_arg(args.gpus)
-    devices = dual_devices(gpu_list if gpu_list else None)
-    # stretch/shrink to n_parallel
+    # clear stale STOP from prior runs if user wants forever — do NOT auto-delete;
+    # only warn if present at start
+    if stop_path.exists():
+        print(f"WARNING: {stop_path} exists — loop will exit immediately. Remove it to run.", flush=True)
+
+    gpu_list = parse_gpus_arg(args.gpus) if args.gpus.strip() else []
+    if gpu_list:
+        devices = dual_devices(gpu_list)
+    else:
+        devices = [resolve_device("cpu")]
     while len(devices) < args.n_parallel:
         devices.append(devices[-1])
     devices = devices[: args.n_parallel]
 
     print(
-        f"evolve_gnn backend=torch cuda_available={torch.cuda.is_available()} "
-        f"cuda_count={torch.cuda.device_count() if torch.cuda.is_available() else 0} "
-        f"devices={[str(d) for d in devices]}",
+        f"evolve_gnn step0 shared_mixer={SHARED_MIXER} freedom_step={FREEDOM_STEP} "
+        f"backend=torch cuda_available={torch.cuda.is_available()} "
+        f"devices={[str(d) for d in devices]} L={args.L} promote=n12_zero_shot",
         flush=True,
     )
 
@@ -149,14 +185,19 @@ def main(argv=None):
     if arch_json.exists():
         meta = json.load(open(arch_json))
         mets = {int(k): v for k, v in meta.get("metrics", {}).items()}
-        if mets:
+        if 12 in mets:
+            best_score = transfer_score(mets[12])
+            print(f"Current best n12 S={best_score:.4f} "
+                  f"Med={mets[12].get('median_inv_p')} B90={mets[12].get('B90_inv_p')}")
+        elif mets:
             best_score = combined_score(mets)
-            print(f"Current best S_comb={best_score:.4f}")
+            print(f"Current best (no n12 yet) S_comb={best_score:.4f} — will replace once n12 scored")
 
     rng = np.random.default_rng(args.seed)
     fields = [
-        "trial_id", "wall_s", "keep", "S_comb", "best_S", "arch_json",
-        "n6_med", "n6_b90", "n9_med", "n9_b90", "seed", "parent_S", "device",
+        "trial_id", "wall_s", "keep", "S_n12", "S_train", "best_S_n12", "arch_json",
+        "n6_med", "n6_b90", "n9_med", "n9_b90", "n12_med", "n12_b90",
+        "seed", "parent_S", "device", "freedom_step",
     ]
     trial = 0
     while True:
@@ -167,7 +208,6 @@ def main(argv=None):
             print("max_trials reached — exit")
             break
 
-        # propose n_parallel candidates
         cands = []
         modes = []
         for _ in range(args.n_parallel):
@@ -197,7 +237,9 @@ def main(argv=None):
                 args.steps,
                 args.L,
                 args.max_val,
+                args.max_n12,
                 args.seed + tid,
+                nf=args.nf,
             )
 
         if args.sequential or args.n_parallel == 1:
@@ -220,7 +262,6 @@ def main(argv=None):
                     except Exception as e:
                         results.append((trial + i + 1, i, None, e))
 
-        # process in trial_id order
         results.sort(key=lambda x: x[0])
         for tid, ci, payload, err in results:
             trial = max(trial, tid)
@@ -228,47 +269,62 @@ def main(argv=None):
                 print(f"trial {tid} failed:", err)
                 append_csv(csv_path, {
                     "trial_id": tid, "wall_s": f"{time.time()-t0:.1f}", "keep": "error",
-                    "S_comb": "", "best_S": f"{best_score:.6f}",
+                    "S_n12": "", "S_train": "", "best_S_n12": f"{best_score:.6f}",
                     "arch_json": json.dumps(cands[ci].to_dict()),
                     "n6_med": "", "n6_b90": "", "n9_med": "", "n9_b90": "",
+                    "n12_med": "", "n12_b90": "",
                     "seed": args.seed + tid, "parent_S": f"{best_score:.6f}",
-                    "device": str(devices[ci]),
+                    "device": str(devices[ci]), "freedom_step": FREEDOM_STEP,
                 }, fields)
                 continue
-            cand, metrics, params, info, sc, dev_s = payload
-            keep = should_promote(sc, best_score, args.min_improve)
+            cand, metrics, params, info, sc_promote, sc_train, dev_s = payload
+            keep = should_promote(sc_promote, best_score, args.min_improve)
             row = {
                 "trial_id": tid,
                 "wall_s": f"{time.time()-t0:.1f}",
                 "keep": "keep" if keep else "discard",
-                "S_comb": f"{sc:.6f}",
-                "best_S": f"{best_score:.6f}",
+                "S_n12": f"{sc_promote:.6f}",
+                "S_train": f"{sc_train:.6f}",
+                "best_S_n12": f"{best_score:.6f}",
                 "arch_json": json.dumps(cand.to_dict()),
                 "n6_med": f"{metrics.get(6, {}).get('median_inv_p', '')}",
                 "n6_b90": f"{metrics.get(6, {}).get('B90_inv_p', '')}",
                 "n9_med": f"{metrics.get(9, {}).get('median_inv_p', '')}",
                 "n9_b90": f"{metrics.get(9, {}).get('B90_inv_p', '')}",
+                "n12_med": f"{metrics.get(12, {}).get('median_inv_p', '')}",
+                "n12_b90": f"{metrics.get(12, {}).get('B90_inv_p', '')}",
                 "seed": args.seed + tid,
                 "parent_S": f"{best_score:.6f}",
                 "device": dev_s,
+                "freedom_step": FREEDOM_STEP,
             }
             append_csv(csv_path, row, fields)
+            msg = (
+                f"trial {tid} S_n12={sc_promote:.4f} S_train={sc_train:.4f} "
+                f"n6={metrics.get(6, {}).get('median_inv_p', float('nan')):.2f}/"
+                f"{metrics.get(6, {}).get('B90_inv_p', float('nan')):.2f} "
+                f"n9={metrics.get(9, {}).get('median_inv_p', float('nan')):.2f}/"
+                f"{metrics.get(9, {}).get('B90_inv_p', float('nan')):.2f} "
+                f"n12={metrics.get(12, {}).get('median_inv_p', float('nan')):.2f}/"
+                f"{metrics.get(12, {}).get('B90_inv_p', float('nan')):.2f}"
+            )
             if keep:
                 fd = _acquire_lock(lock_path)
                 try:
-                    # re-check under lock
-                    if should_promote(sc, best_score, args.min_improve):
-                        save_gnn_best(cand, params, metrics, runs_dir=runs)
-                        best_score = sc
+                    if should_promote(sc_promote, best_score, args.min_improve):
+                        save_gnn_best(
+                            cand, params, metrics, runs_dir=runs,
+                            extra_meta={"promote_metric": "n12_zero_shot", "S_n12": sc_promote},
+                        )
+                        best_score = sc_promote
                         parent_arch = cand
-                        print(f"PROMOTED trial {tid} S_comb={sc:.4f} on {dev_s} → runs/gnn_best/")
+                        print(f"PROMOTED {msg} → runs/gnn_best/")
                     else:
-                        print(f"discard trial {tid} (lost race) S_comb={sc:.4f}")
-                        row["keep"] = "discard_race"
+                        print(f"discard (lost race) {msg}")
                 finally:
                     _release_lock(fd, lock_path)
             else:
-                print(f"discard trial {tid} S_comb={sc:.4f} (best={best_score:.4f}) on {dev_s}")
+                print(f"discard {msg} (best_n12={best_score:.4f}) on {dev_s}")
 
 
 if __name__ == "__main__":
