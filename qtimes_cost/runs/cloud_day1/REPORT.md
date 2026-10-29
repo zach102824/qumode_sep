@@ -256,3 +256,13 @@ Continued from that Pareto checkpoint with n=9 loss weight 0.70 (then 0.75), n=6
 n=9 test moves from 18.6 toward 12 and is not there yet. n=6 test 12.9 stays ≤ 14. n=12 test 176 stays ≤ 200. This replaces `BEST_pareto/`. It does not beat L=16 test 11.07 / 8.79 on both sizes.
 
 Fitting only the shared cavity MLP to the L=16 n=9 global head, for 40 steps, leaves n=9 val median near 1.7e4. That head is a function of the pooled graph, not of one cavity, so copying it into the per-cavity MLP does not reproduce the L=16 n=9 circuit. The Pareto run keeps the cavity MLP that was trained in the curriculum.
+
+## n=9 SNAP residual, then another weighted pass
+
+`SizeGeneralGNN` can add a SNAP residual that is applied only at n=9. It is initialized at zero, so n=6 and n=12 are unchanged until other weights move. Head-copy of the L=16 global head was not retried.
+
+Training that residual alone, with every other parameter frozen, never beat the loaded n=9 val median of 16.8. Early stop was at 220 steps. n=6 and n=12 did not move.
+
+A longer pass then trained the shared weights and that residual together (n=9 loss weight 0.75, four n=9 instances per step, lr 3e-5, 40 n=9 val formulas for the decision). Early stop was at 260 steps. Every check whose n=9 val median fell below 16.8 had n=6 above 13.5 or n=12 above 200. The best legal checkpoint is still the loaded Pareto model.
+
+`BEST_pareto/` test medians stay **12.9 / 15.8 / 176**. `BEST/` stays the L=16 model, test **11.07 / 8.79**.
