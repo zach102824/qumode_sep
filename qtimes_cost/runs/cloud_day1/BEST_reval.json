@@ -1,0 +1,669 @@
+{
+  "protocol": {
+    "workers": 4,
+    "cpus": 4,
+    "steps": 1000,
+    "max_val": 40,
+    "max_test": 100,
+    "search": {
+      "max_steps": 1000,
+      "eval_every": 40,
+      "patience_evals": 5,
+      "min_steps": 480,
+      "batch": 4,
+      "max_train": 128,
+      "max_val": 16,
+      "hopeless_after": 280,
+      "hopeless_med9": 400.0,
+      "hopeless_S": 6.2,
+      "kill_after": 1000000000,
+      "kill_margin": 2.0
+    },
+    "alpha0": "learned",
+    "grid": "L={12,14} x lr~5e-5 x leakpen~0.1, plus L=10 control and a thin GNN fork"
+  },
+  "box_r014": {
+    "tag": "r014",
+    "L": 10,
+    "leakpen": 0.1,
+    "lr": 0.0001,
+    "alpha0": "learned",
+    "med6": 18.0,
+    "med9": 23.0,
+    "ratio_9_6": 1.2777777777777777,
+    "note": "earlier box BEST; optimistic small val"
+  },
+  "box_new": {
+    "tag": "box_L10_lr5e-5",
+    "L": 10,
+    "leakpen": 0.1,
+    "lr": 5e-05,
+    "alpha0": "learned",
+    "small_val_med6": 10.2,
+    "small_val_med9": 18.0,
+    "reval40_med6": 14.5,
+    "reval40_med9": 19.5,
+    "ratio_reval": 1.3448275862068966,
+    "note": "box NEW BEST; reval40 is the bar for a win"
+  },
+  "search_best": {
+    "trial_id": 0,
+    "s_comb": 3.246745109511557,
+    "cfg": {
+      "L": 12,
+      "lr": 5e-05,
+      "leakpen": 0.1,
+      "seed": 0,
+      "H": 128,
+      "rounds": 4,
+      "tag": "core",
+      "trial_id": 0,
+      "alpha0": "learned"
+    },
+    "metrics": {
+      "6": {
+        "B": 16.0,
+        "median_inv_p": 12.60187578201294,
+        "B90_inv_p": 23.47085666656494,
+        "S": 2.8448025920775226,
+        "mean_leak": 0.09335125610232353,
+        "q_med": 5.0,
+        "n": 6.0,
+        "max_count": 16.0
+      },
+      "9": {
+        "B": 16.0,
+        "median_inv_p": 11.123244762420654,
+        "B90_inv_p": 91.58929061889648,
+        "S": 3.463175695822191,
+        "mean_leak": 0.03245878219604492,
+        "q_med": 4.083333333333333,
+        "n": 9.0,
+        "max_count": 16.0
+      }
+    },
+    "status": "ok",
+    "best_step": 880
+  },
+  "reval_best": {
+    "trial_id": 0,
+    "cfg": {
+      "L": 12,
+      "lr": 5e-05,
+      "leakpen": 0.1,
+      "seed": 0,
+      "H": 128,
+      "rounds": 4,
+      "tag": "core",
+      "trial_id": 0,
+      "alpha0": "learned"
+    },
+    "final_reason": "search_champion",
+    "reval": {
+      "val": {
+        "S_comb": 3.3937208125844736,
+        "by_n": {
+          "6": {
+            "B": 40.0,
+            "median_inv_p": 12.006427764892578,
+            "B90_inv_p": 29.707485389709475,
+            "S": 2.9384206004159195,
+            "mean_leak": 0.0901159793138504,
+            "q_med": 5.0,
+            "n": 6.0,
+            "max_count": 40.0
+          },
+          "9": {
+            "B": 40.0,
+            "median_inv_p": 16.979470252990723,
+            "B90_inv_p": 85.26464996337894,
+            "S": 3.6388824652906187,
+            "mean_leak": 0.035266639292240144,
+            "q_med": 4.083333333333333,
+            "n": 9.0,
+            "max_count": 40.0
+          }
+        },
+        "ratio_9_6": 1.4141983432107574
+      },
+      "test": {
+        "S_comb": 3.578523508847792,
+        "by_n": {
+          "6": {
+            "B": 100.0,
+            "median_inv_p": 15.118804454803467,
+            "B90_inv_p": 36.26124153137207,
+            "S": 3.1533443708060265,
+            "mean_leak": 0.086791170835495,
+            "q_med": 5.0,
+            "n": 6.0,
+            "max_count": 100.0
+          },
+          "9": {
+            "B": 100.0,
+            "median_inv_p": 16.78520965576172,
+            "B90_inv_p": 120.83598403930667,
+            "S": 3.807466121639512,
+            "mean_leak": 0.038297067880630496,
+            "q_med": 4.083333333333333,
+            "n": 9.0,
+            "max_count": 100.0
+          }
+        },
+        "ratio_9_6": 1.1102206993906063
+      }
+    },
+    "vs_r014_val": {
+      "med6": 12.006427764892578,
+      "med9": 16.979470252990723,
+      "delta_med6_vs_18": -5.993572235107422,
+      "delta_med9_vs_23": -6.020529747009277,
+      "beats_n6_med": true,
+      "beats_n9_med": true,
+      "ratio_9_6": 1.4141983432107574,
+      "r014_ratio_9_6": 1.2777777777777777,
+      "ratio_healthy": true
+    },
+    "vs_r014_test": {
+      "med6": 15.118804454803467,
+      "med9": 16.78520965576172,
+      "delta_med6_vs_18": -2.881195545196533,
+      "delta_med9_vs_23": -6.214790344238281,
+      "beats_n6_med": true,
+      "beats_n9_med": true,
+      "ratio_9_6": 1.1102206993906063,
+      "r014_ratio_9_6": 1.2777777777777777,
+      "ratio_healthy": true
+    },
+    "vs_box_reval40": {
+      "med6": 12.006427764892578,
+      "med9": 16.979470252990723,
+      "ratio_9_6": 1.4141983432107574,
+      "ratio_healthy": true,
+      "beats_n6": true,
+      "beats_n9": true,
+      "full_win": true
+    }
+  },
+  "depth_verdict": {
+    "box_reval40": {
+      "med6": 14.5,
+      "med9": 19.5
+    },
+    "best_deep_by_S": {
+      "med6": 12.518689155578613,
+      "med9": 21.319143295288086,
+      "ratio_9_6": 1.7029852750827181,
+      "ratio_healthy": true,
+      "beats_n6": true,
+      "beats_n9": false,
+      "full_win": false,
+      "trial_id": 16,
+      "cfg": {
+        "tag": "grid",
+        "L": 12,
+        "leakpen": 0.2,
+        "lr": 0.0001,
+        "seed": 0,
+        "H": 128,
+        "rounds": 4
+      },
+      "S_comb": 3.3663094124338784
+    },
+    "best_deep_by_n9": {
+      "med6": 12.006427764892578,
+      "med9": 16.979470252990723,
+      "ratio_9_6": 1.4141983432107574,
+      "ratio_healthy": true,
+      "beats_n6": true,
+      "beats_n9": true,
+      "full_win": true,
+      "trial_id": 0,
+      "cfg": {
+        "tag": "core",
+        "L": 12,
+        "leakpen": 0.1,
+        "lr": 5e-05,
+        "seed": 0,
+        "H": 128,
+        "rounds": 4
+      },
+      "S_comb": 3.3937208125844736
+    },
+    "l10_control": {
+      "med6": 10.557288646697998,
+      "med9": 27.753310203552246,
+      "ratio_9_6": 2.6288293455188088,
+      "ratio_healthy": false,
+      "beats_n6": true,
+      "beats_n9": false,
+      "full_win": false,
+      "trial_id": 15,
+      "cfg": {
+        "tag": "l10_control",
+        "L": 10,
+        "leakpen": 0.1,
+        "lr": 5e-05,
+        "seed": 1,
+        "H": 128,
+        "rounds": 4
+      },
+      "S_comb": 3.5632845718468578
+    },
+    "any_deep_full_win": true
+  },
+  "also_reval": [
+    {
+      "trial_id": 0,
+      "cfg": {
+        "L": 12,
+        "lr": 5e-05,
+        "leakpen": 0.1,
+        "seed": 0,
+        "H": 128,
+        "rounds": 4,
+        "tag": "core",
+        "trial_id": 0,
+        "alpha0": "learned"
+      },
+      "search_s": 3.246745109511557,
+      "reval": {
+        "val": {
+          "S_comb": 3.3937208125844736,
+          "by_n": {
+            "6": {
+              "B": 40.0,
+              "median_inv_p": 12.006427764892578,
+              "B90_inv_p": 29.707485389709475,
+              "S": 2.9384206004159195,
+              "mean_leak": 0.0901159793138504,
+              "q_med": 5.0,
+              "n": 6.0,
+              "max_count": 40.0
+            },
+            "9": {
+              "B": 40.0,
+              "median_inv_p": 16.979470252990723,
+              "B90_inv_p": 85.26464996337894,
+              "S": 3.6388824652906187,
+              "mean_leak": 0.035266639292240144,
+              "q_med": 4.083333333333333,
+              "n": 9.0,
+              "max_count": 40.0
+            }
+          },
+          "ratio_9_6": 1.4141983432107574
+        },
+        "test": {
+          "S_comb": 3.578523508847792,
+          "by_n": {
+            "6": {
+              "B": 100.0,
+              "median_inv_p": 15.118804454803467,
+              "B90_inv_p": 36.26124153137207,
+              "S": 3.1533443708060265,
+              "mean_leak": 0.086791170835495,
+              "q_med": 5.0,
+              "n": 6.0,
+              "max_count": 100.0
+            },
+            "9": {
+              "B": 100.0,
+              "median_inv_p": 16.78520965576172,
+              "B90_inv_p": 120.83598403930667,
+              "S": 3.807466121639512,
+              "mean_leak": 0.038297067880630496,
+              "q_med": 4.083333333333333,
+              "n": 9.0,
+              "max_count": 100.0
+            }
+          },
+          "ratio_9_6": 1.1102206993906063
+        }
+      },
+      "vs_r014_val": {
+        "med6": 12.006427764892578,
+        "med9": 16.979470252990723,
+        "delta_med6_vs_18": -5.993572235107422,
+        "delta_med9_vs_23": -6.020529747009277,
+        "beats_n6_med": true,
+        "beats_n9_med": true,
+        "ratio_9_6": 1.4141983432107574,
+        "r014_ratio_9_6": 1.2777777777777777,
+        "ratio_healthy": true
+      },
+      "vs_box_reval40": {
+        "med6": 12.006427764892578,
+        "med9": 16.979470252990723,
+        "ratio_9_6": 1.4141983432107574,
+        "ratio_healthy": true,
+        "beats_n6": true,
+        "beats_n9": true,
+        "full_win": true
+      }
+    },
+    {
+      "trial_id": 16,
+      "cfg": {
+        "L": 12,
+        "lr": 0.0001,
+        "leakpen": 0.2,
+        "seed": 0,
+        "H": 128,
+        "rounds": 4,
+        "tag": "grid",
+        "trial_id": 16,
+        "alpha0": "learned"
+      },
+      "search_s": 3.1451727643462903,
+      "reval": {
+        "val": {
+          "S_comb": 3.3663094124338784,
+          "by_n": {
+            "6": {
+              "B": 40.0,
+              "median_inv_p": 12.518689155578613,
+              "B90_inv_p": 25.653903007507328,
+              "S": 2.885959192116622,
+              "mean_leak": 0.12634085416793822,
+              "q_med": 3.5833333333333335,
+              "n": 6.0,
+              "max_count": 40.0
+            },
+            "9": {
+              "B": 40.0,
+              "median_inv_p": 21.319143295288086,
+              "B90_inv_p": 66.04350204467777,
+              "S": 3.6249595310662475,
+              "mean_leak": 0.05967150032520294,
+              "q_med": 4.5,
+              "n": 9.0,
+              "max_count": 40.0
+            }
+          },
+          "ratio_9_6": 1.7029852750827181
+        },
+        "test": {
+          "S_comb": 3.520228776894453,
+          "by_n": {
+            "6": {
+              "B": 100.0,
+              "median_inv_p": 15.490908145904541,
+              "B90_inv_p": 40.885004806518566,
+              "S": 3.2255083228844343,
+              "mean_leak": 0.12213748037815093,
+              "q_med": 3.5833333333333335,
+              "n": 6.0,
+              "max_count": 100.0
+            },
+            "9": {
+              "B": 100.0,
+              "median_inv_p": 19.438234329223633,
+              "B90_inv_p": 80.68936996459968,
+              "S": 3.678924405976771,
+              "mean_leak": 0.060889997482299806,
+              "q_med": 4.5,
+              "n": 9.0,
+              "max_count": 100.0
+            }
+          },
+          "ratio_9_6": 1.254815672918613
+        }
+      },
+      "vs_r014_val": {
+        "med6": 12.518689155578613,
+        "med9": 21.319143295288086,
+        "delta_med6_vs_18": -5.481310844421387,
+        "delta_med9_vs_23": -1.680856704711914,
+        "beats_n6_med": true,
+        "beats_n9_med": true,
+        "ratio_9_6": 1.7029852750827181,
+        "r014_ratio_9_6": 1.2777777777777777,
+        "ratio_healthy": true
+      },
+      "vs_box_reval40": {
+        "med6": 12.518689155578613,
+        "med9": 21.319143295288086,
+        "ratio_9_6": 1.7029852750827181,
+        "ratio_healthy": true,
+        "beats_n6": true,
+        "beats_n9": false,
+        "full_win": false
+      }
+    },
+    {
+      "trial_id": 4,
+      "cfg": {
+        "L": 14,
+        "lr": 5e-05,
+        "leakpen": 0.2,
+        "seed": 0,
+        "H": 128,
+        "rounds": 4,
+        "tag": "core",
+        "trial_id": 4,
+        "alpha0": "learned"
+      },
+      "search_s": 3.2460443987217245,
+      "reval": {
+        "val": {
+          "S_comb": 3.538388528910371,
+          "by_n": {
+            "6": {
+              "B": 40.0,
+              "median_inv_p": 10.005677700042725,
+              "B90_inv_p": 27.602619934082064,
+              "S": 2.8105316976219052,
+              "mean_leak": 0.08399926722049714,
+              "q_med": 3.0714285714285716,
+              "n": 6.0,
+              "max_count": 40.0
+            },
+            "9": {
+              "B": 40.0,
+              "median_inv_p": 28.880497932434082,
+              "B90_inv_p": 89.78844757080081,
+              "S": 3.930311438065699,
+              "mean_leak": 0.07109878063201905,
+              "q_med": 3.857142857142857,
+              "n": 9.0,
+              "max_count": 40.0
+            }
+          },
+          "ratio_9_6": 2.8864109756714194
+        },
+        "test": {
+          "S_comb": 3.627898833858886,
+          "by_n": {
+            "6": {
+              "B": 100.0,
+              "median_inv_p": 13.59365463256836,
+              "B90_inv_p": 38.26683349609375,
+              "S": 3.127093333795509,
+              "mean_leak": 0.08224797666072846,
+              "q_med": 3.0714285714285716,
+              "n": 6.0,
+              "max_count": 100.0
+            },
+            "9": {
+              "B": 100.0,
+              "median_inv_p": 22.61127471923828,
+              "B90_inv_p": 107.41265487670903,
+              "S": 3.897563333893012,
+              "mean_leak": 0.07389421999454499,
+              "q_med": 3.857142857142857,
+              "n": 9.0,
+              "max_count": 100.0
+            }
+          },
+          "ratio_9_6": 1.663369809695257
+        }
+      },
+      "vs_r014_val": {
+        "med6": 10.005677700042725,
+        "med9": 28.880497932434082,
+        "delta_med6_vs_18": -7.994322299957275,
+        "delta_med9_vs_23": 5.880497932434082,
+        "beats_n6_med": true,
+        "beats_n9_med": false,
+        "ratio_9_6": 2.8864109756714194,
+        "r014_ratio_9_6": 1.2777777777777777,
+        "ratio_healthy": false
+      },
+      "vs_box_reval40": {
+        "med6": 10.005677700042725,
+        "med9": 28.880497932434082,
+        "ratio_9_6": 2.8864109756714194,
+        "ratio_healthy": false,
+        "beats_n6": true,
+        "beats_n9": false,
+        "full_win": false
+      }
+    },
+    {
+      "trial_id": 15,
+      "cfg": {
+        "L": 10,
+        "lr": 5e-05,
+        "leakpen": 0.1,
+        "seed": 1,
+        "H": 128,
+        "rounds": 4,
+        "tag": "l10_control",
+        "trial_id": 15,
+        "alpha0": "learned"
+      },
+      "search_s": 3.4729406263041076,
+      "reval": {
+        "val": {
+          "S_comb": 3.5632845718468578,
+          "by_n": {
+            "6": {
+              "B": 40.0,
+              "median_inv_p": 10.557288646697998,
+              "B90_inv_p": 28.26807556152344,
+              "S": 2.849274792117491,
+              "mean_leak": 0.060295026004314425,
+              "q_med": 3.6,
+              "n": 6.0,
+              "max_count": 40.0
+            },
+            "9": {
+              "B": 40.0,
+              "median_inv_p": 27.753310203552246,
+              "B90_inv_p": 96.75167388916017,
+              "S": 3.947751376316517,
+              "mean_leak": 0.0628913700580597,
+              "q_med": 4.7,
+              "n": 9.0,
+              "max_count": 40.0
+            }
+          },
+          "ratio_9_6": 2.6288293455188088
+        },
+        "test": {
+          "S_comb": 3.6309004993951657,
+          "by_n": {
+            "6": {
+              "B": 100.0,
+              "median_inv_p": 14.9961838722229,
+              "B90_inv_p": 43.102430725097655,
+              "S": 3.235687576534942,
+              "mean_leak": 0.05691625237464905,
+              "q_med": 3.6,
+              "n": 6.0,
+              "max_count": 100.0
+            },
+            "9": {
+              "B": 100.0,
+              "median_inv_p": 22.41093349456787,
+              "B90_inv_p": 97.30651779174806,
+              "S": 3.843707457858363,
+              "mean_leak": 0.06370132327079774,
+              "q_med": 4.7,
+              "n": 9.0,
+              "max_count": 100.0
+            }
+          },
+          "ratio_9_6": 1.4944424318562235
+        }
+      },
+      "vs_r014_val": {
+        "med6": 10.557288646697998,
+        "med9": 27.753310203552246,
+        "delta_med6_vs_18": -7.442711353302002,
+        "delta_med9_vs_23": 4.753310203552246,
+        "beats_n6_med": true,
+        "beats_n9_med": false,
+        "ratio_9_6": 2.6288293455188088,
+        "r014_ratio_9_6": 1.2777777777777777,
+        "ratio_healthy": false
+      },
+      "vs_box_reval40": {
+        "med6": 10.557288646697998,
+        "med9": 27.753310203552246,
+        "ratio_9_6": 2.6288293455188088,
+        "ratio_healthy": false,
+        "beats_n6": true,
+        "beats_n9": false,
+        "full_win": false
+      }
+    }
+  ],
+  "alpha0": "learned",
+  "win_rule": "val-40 med6<14.5 and med9<19.5 and ratio in [0.75, 2]; test does not select",
+  "extended_val_best_trial0": {
+    "note": "Same BEST weights (trial 0, L=12, leakpen=0.1, lr=5e-5). full_win means med6<14.5 and med9<19.5 and ratio in [0.75, 2].",
+    "rows": [
+      {
+        "split": "val",
+        "B": 40,
+        "med6": 12.01,
+        "b90_6": 29.7,
+        "med9": 16.98,
+        "b90_9": 85.3,
+        "ratio": 1.414,
+        "full_win": true
+      },
+      {
+        "split": "val",
+        "B": 80,
+        "med6": 11.5,
+        "b90_6": 29.7,
+        "med9": 18.64,
+        "b90_9": 84.3,
+        "ratio": 1.62,
+        "full_win": true
+      },
+      {
+        "split": "val",
+        "B": 120,
+        "med6": 12.59,
+        "b90_6": 51.2,
+        "med9": 18.66,
+        "b90_9": 112.1,
+        "ratio": 1.482,
+        "full_win": true
+      },
+      {
+        "split": "val",
+        "B": 200,
+        "med6": 13.66,
+        "b90_6": 64.7,
+        "med9": 18.07,
+        "b90_9": 124.9,
+        "ratio": 1.323,
+        "full_win": true
+      },
+      {
+        "split": "test",
+        "B": 100,
+        "med6": 15.12,
+        "med9": 16.79,
+        "ratio": 1.1104497354497354,
+        "full_win": false,
+        "note": "n6 above 14.5; n9 still under 19.5. Not used to select."
+      }
+    ]
+  }
+}
