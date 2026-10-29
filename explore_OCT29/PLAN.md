@@ -202,3 +202,10 @@ q=2 modes trained at L=4 on {9,12}; deploy L∈{4,6,8,12} no retrain.
 | 18 Med/B90 | 194/674 | 88.6/361 | 77.5/688 | 75.4/481 |
 
 n15 Med falls monotonically with L. b_Med≈1.41–1.45. Results: `runs/probe3_fourier/`.
+
+
+## 10. Opus probe 5 — W-atom seq vocab (started 2026-10-29 ~17:50 CST)
+
+Vocab: `W`, `WDAG`, `FLAT_PREP`, `SNAP0`, `PROJ` (=W·SNAP0·W†). Seeded from projector.
+Promote on fitted **b** over {9,12,15}. Loop: `scripts/probe5_seq_vocab.py`, stop via `runs/STOP_PROBE5`.
+Results: `runs/probe5_seq_vocab/`. Old raw `evolve_seq` stopped.
