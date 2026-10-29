@@ -166,3 +166,17 @@ Still ban: free `U_phase^q` / dense nonlocal phase heads with no native payoff.
 5. Keep micro GNN evolve **stopped** until a sequence baseline transfers.
 
 Stop seq loop: `touch explore_OCT29/runs/STOP_SEQ_EVOLVE`.
+
+
+---
+
+## 7. Opus probe 1 — driver bake-off (2026-10-29 ~17:41 CST)
+
+Two arms only (Ideal Gray-X dropped per Zach). Results: `runs/driver_bakeoff/`.
+
+| arm | n9 Med/B90 | n12 | n15 | b_Med | b_B90 |
+|-----|------------|-----|-----|-------|-------|
+| **projector L4 trained** | **9.89/25** | **36.8/65.3** | **76.5/152** | **1.406** | **1.352** |
+| snap_d COST→SNAP→D L4 trained | 289/6.24e3 | 8.89e3/1.57e5 | 1.24e5/1.11e6 | 2.746 | 2.371 |
+
+Winner: native projector `W·SNAP₀(β)·W†` (W flat-prep F=0.999). Keeps **b≪2**. Next: probe 2 (train {9,12}).
