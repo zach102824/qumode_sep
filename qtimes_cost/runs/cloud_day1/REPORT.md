@@ -266,3 +266,25 @@ Training that residual alone, with every other parameter frozen, never beat the 
 A longer pass then trained the shared weights and that residual together (n=9 loss weight 0.75, four n=9 instances per step, lr 3e-5, 40 n=9 val formulas for the decision). Early stop was at 260 steps. Every check whose n=9 val median fell below 16.8 had n=6 above 13.5 or n=12 above 200. The best legal checkpoint is still the loaded Pareto model.
 
 `BEST_pareto/` test medians stay **12.9 / 15.8 / 176**. `BEST/` stays the L=16 model, test **11.07 / 8.79**.
+
+## Two-model scale path
+
+One SizeGeneral model is not carrying n=6, n=9, and n=12 together. The split is:
+
+- **n≤9:** L=16 FactorGNN in `BEST/` (trial 23). Separate weights per n.
+- **n≥12:** the SizeGeneral checkpoint in `BEST_pareto/`, used only as the scale model. It is not asked to match the L=16 n=9 number.
+
+Re-evaluated on the full val and test splits:
+
+| n | model | split | Med | B90 | mean leak |
+|---:|---|---|---:|---:|---:|
+| 6 | L=16 BEST | val | 9.72 | 51.2 | 0.095 |
+| 6 | L=16 BEST | test | 11.07 | 38.7 | 0.093 |
+| 9 | L=16 BEST | val | 10.70 | 67.7 | 0.034 |
+| 9 | L=16 BEST | test | 8.79 | 34.3 | 0.038 |
+| 12 | SizeGeneral Pareto | val | 190 | 901 | 0.036 |
+| 12 | SizeGeneral Pareto | test | 176 | 945 | 0.036 |
+
+`BEST/` was not overwritten.
+
+WalkSAT (SKC, p=0.5, 20 runs) on the same 100 n=12 test formulas: median flips **25.5** (B90 59.8), median formula-evaluations **103** (B90 240). The quantum number is expected shots (1/p), not flips, so 176 shots is not a claim against 25 flips. It is the classical scale of this pack. Summary: `walksat_n12.json`. Entry point: `scripts/eval_two_model.py`.
