@@ -190,3 +190,15 @@ Winner: native projector `W·SNAP₀(β)·W†` (W flat-prep F=0.999). Keeps **b
 | **train {9,12}** | **6.03/19.9** | **17.5/40.4** | **30.9/75.3** | **149/581** | **1.405** | **1.76** | **4.84** |
 
 Transfer healthy (b≪2, no Med15 cliff). Results: `runs/probe2_train912/`. Next: probe 3 Fourier.
+
+
+## 9. Opus probe 3 — Fourier depth-at-deploy (2026-10-29 ~17:47 CST)
+
+q=2 modes trained at L=4 on {9,12}; deploy L∈{4,6,8,12} no retrain.
+
+| n \ L | 4 | 6 | 8 | 12 |
+|-------|---|---|---|-----|
+| 15 Med/B90 | 50.2/102 | 25.1/37 | 16/21.5 | **9.67/14.6** |
+| 18 Med/B90 | 194/674 | 88.6/361 | 77.5/688 | 75.4/481 |
+
+n15 Med falls monotonically with L. b_Med≈1.41–1.45. Results: `runs/probe3_fourier/`.
