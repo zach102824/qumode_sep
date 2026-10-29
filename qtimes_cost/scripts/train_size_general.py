@@ -51,8 +51,11 @@ def main(argv=None):
     ap.add_argument("--max-test", type=int, default=100)
     ap.add_argument("--out", type=str, default=str(PKG / "runs" / "cloud_day1" / "size_general"))
     ap.add_argument("--resume", action="store_true")
-    ap.add_argument("--n12-train", type=int, default=0, help="if >0, include this many n=12 train formulas from step 0")
+    ap.add_argument("--n12-train", type=int, default=0, help="if >0, include this many n=12 train formulas")
     ap.add_argument("--n12-batch", type=int, default=1)
+    ap.add_argument("--phase1", type=int, default=0, help="steps on n=6+n=9 only before n=12 is ramped in")
+    ap.add_argument("--phase2", type=int, default=0, help="steps that ramp the n=12 loss weight")
+    ap.add_argument("--leakpen12", type=float, default=0.0, help="n=12 leak penalty; 0 uses --leakpen")
     args = ap.parse_args(argv)
     torch.set_num_threads(1)
     arch = GNNArch(H=128, rounds=4, agg="mean", layernorm=True, residual=True, degree_features=True, lr=args.lr)
@@ -111,14 +114,30 @@ def main(argv=None):
             "S": float((np.log(max(med, 1e-12)) + np.log(max(b90, 1e-12))) / 2),
         }
 
+    leak_for = {6: args.leakpen, 9: args.leakpen, 12: args.leakpen12 or args.leakpen}
+    total_steps = (args.phase1 + args.phase2) if args.phase1 > 0 else args.steps
+    anchor = None
     best = None
     t0 = time.time()
-    for step in range(args.steps):
+
+    def mix_at(step):
+        if args.phase1 <= 0:
+            w = {6: 0.35, 9: 0.40, 12: 0.25 if 12 in train_ns else 0.0}
+        elif step < args.phase1 or 12 not in train_ns:
+            w = {6: 0.45, 9: 0.55, 12: 0.0}
+        else:
+            ramp = min(1.0, (step - args.phase1 + 1) / max(args.phase2, 1))
+            w = {6: 0.42, 9: 0.48, 12: 0.05 + 0.20 * ramp}
+        z = sum(w[n] for n in train_ns)
+        return {n: w[n] / z for n in train_ns}
+
+    for step in range(total_steps):
         opt.zero_grad(set_to_none=True)
-        # Per-n mean, then mix. n=12 is in the batch from step 0 when requested.
-        mix_w = {6: 0.35, 9: 0.40, 12: 0.25}
+        mix_w = mix_at(step)
         per_n = []
         for n in train_ns:
+            if mix_w[n] <= 0:
+                continue
             seeds, cls_v, cls_s, _nsol, E = train[n]
             idx = rng.choice(len(seeds), size=min(batch_for[n], len(seeds)), replace=False)
             losses = []
@@ -134,25 +153,32 @@ def main(argv=None):
                     heads["alpha0"], heads["A"], heads["TH"], heads["q_logits"],
                     gamma=heads["gamma"],
                 )
-                losses.append(_instance_loss(out, leakpen=args.leakpen))
+                losses.append(_instance_loss(out, leakpen=leak_for[n]))
             per_n.append(mix_w[n] * torch.stack(losses).mean())
         torch.stack(per_n).sum().backward()
         torch.nn.utils.clip_grad_norm_(gnn.parameters(), 5.0)
         opt.step()
-        if step % 40 == 0 or step == args.steps - 1:
-            parts = {n: eval_n(n, "val", 8) for n in (6, 9, 12)}
-            score = 0.25 * parts[6]["S"] + 0.35 * parts[9]["S"] + 0.40 * parts[12]["S"]
+        if step % 40 == 0 or step == total_steps - 1:
+            parts = {n: eval_n(n, "val", 16 if n < 12 else 8) for n in (6, 9, 12)}
+            if args.phase1 > 0 and step < args.phase1:
+                score = 0.45 * parts[6]["S"] + 0.55 * parts[9]["S"]
+            else:
+                score = 0.40 * parts[6]["S"] + 0.40 * parts[9]["S"] + 0.20 * parts[12]["S"]
+            state = {k: v.detach().cpu().clone() for k, v in gnn.state_dict().items()}
             mark = ""
-            if best is None or score < best["score"]:
-                best = {
-                    "score": score,
-                    "step": step,
-                    "parts": parts,
-                    "state": {k: v.detach().cpu().clone() for k, v in gnn.state_dict().items()},
-                }
+            if args.phase1 > 0 and step < args.phase1 and (anchor is None or score < anchor["score"]):
+                anchor = {"score": score, "step": step, "parts": parts, "state": state}
+            cap6 = 22.0 if anchor is None else max(18.0, 1.4 * anchor["parts"][6]["median_inv_p"])
+            cap9 = 28.0 if anchor is None else max(22.0, 1.4 * anchor["parts"][9]["median_inv_p"])
+            held = parts[6]["median_inv_p"] <= cap6 and parts[9]["median_inv_p"] <= cap9
+            if held and (best is None or parts[12]["median_inv_p"] < best["parts"][12]["median_inv_p"]):
+                best = {"score": score, "step": step, "parts": parts, "state": state}
+                mark = " *"
+            elif best is None:
+                best = {"score": score, "step": step, "parts": parts, "state": state}
                 mark = " *"
             print(
-                f"step {step} t={time.time()-t0:.0f}s "
+                f"step {step} t={time.time()-t0:.0f}s w12={mix_w.get(12, 0):.2f} "
                 + " ".join(
                     f"n{n}={parts[n]['median_inv_p']:.1f}/{parts[n]['B90_inv_p']:.1f}"
                     for n in (6, 9, 12)
@@ -167,7 +193,10 @@ def main(argv=None):
     report = {
         "L": args.L,
         "leakpen": args.leakpen,
-        "steps": args.steps,
+        "steps": total_steps,
+        "phase1": int(args.phase1),
+        "phase2": int(args.phase2),
+        "leakpen12": float(leak_for[12]),
         "body_from": args.body_from,
         "body_tensors_copied": copied,
         "best_step": best["step"],

@@ -1,0 +1,72 @@
+{
+  "L": 16,
+  "leakpen": 0.1,
+  "steps": 240,
+  "phase1": 0,
+  "phase2": 0,
+  "leakpen12": 0.3,
+  "body_from": "/workspace/qtimes_cost/runs/cloud_day1/BEST_round1/weights_n9.pt",
+  "body_tensors_copied": [
+    "resume"
+  ],
+  "best_step": 239,
+  "n12_train": 64,
+  "n12_batch": 1,
+  "note": "one SizeGeneralGNN; L=16 BEST is written only if n=6 and n=9 test both improve",
+  "by_n": {
+    "6": {
+      "val": {
+        "B": 40,
+        "median_inv_p": 12.438243865966797,
+        "B90_inv_p": 61.38936195373536,
+        "mean_leak": 0.26389155983924867,
+        "S": 3.319006235537449
+      },
+      "test": {
+        "B": 100,
+        "median_inv_p": 12.83535623550415,
+        "B90_inv_p": 53.04281616210942,
+        "mean_leak": 0.26725197792053224,
+        "S": 3.261651504237308
+      }
+    },
+    "9": {
+      "val": {
+        "B": 40,
+        "median_inv_p": 23.52559185028076,
+        "B90_inv_p": 105.9887413024903,
+        "mean_leak": 0.08568740785121917,
+        "S": 3.910710858926299
+      },
+      "test": {
+        "B": 100,
+        "median_inv_p": 18.587552070617676,
+        "B90_inv_p": 89.42583618164065,
+        "mean_leak": 0.08970444023609161,
+        "S": 3.7079508744546503
+      }
+    },
+    "12": {
+      "val": {
+        "B": 40,
+        "median_inv_p": 195.1891632080078,
+        "B90_inv_p": 760.729907226563,
+        "mean_leak": 0.03033587783575058,
+        "S": 5.954123766359126
+      },
+      "test": {
+        "B": 100,
+        "median_inv_p": 173.9659423828125,
+        "B90_inv_p": 891.9489807128926,
+        "mean_leak": 0.030250083804130554,
+        "S": 5.976134240529072
+      }
+    }
+  },
+  "l16_test": {
+    "6": 11.0707426071167,
+    "9": 8.794253826141357
+  },
+  "beats_l16_test_both": false,
+  "best_overwritten": false
+}

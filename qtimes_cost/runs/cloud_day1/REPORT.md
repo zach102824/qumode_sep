@@ -227,3 +227,18 @@ Same `SizeGeneralGNN`, not the fixed-C fine-tune. Body and q start from the L=12
 | 12 | test 100 | 311 | 2253 | 0.068 |
 
 n=12 test median 311 is below the uniform baseline near 2048, and test B90 2253 is below that baseline's B90 near 4096. The n=6/9-only size-general run had left n=12 test at 6e7. A shared cavity MLP can reach n=12 when those formulas are in the training mix. It does not match the separate C=4 fine-tune (test 172 / 2268) and it does not approach the L=16 n=6/n=9 test. Weights: `size_general_mix/`. An OCT20-style shared γ/β plus clause-weight head was not built; this curriculum was the direct follow-up.
+
+## L=16-body curriculum, then a slow n=12 ramp
+
+`SizeGeneralGNN` at L=16. Message-passing body, q, and gamma are copied from the L=16 n=9 BEST. The cavity MLP starts fresh. First 400 steps are n=6 and n=9 only (loss weights 0.45 / 0.55, leakpen 0.1). The next several hundred steps ramp n=12 in, using 64 training formulas, one n=12 instance per step, leakpen 0.3 on n=12, and n=6/n=9 kept as the heavier part of the loss. `BEST/` was not overwritten.
+
+| n | split | Med | B90 | mean leak |
+|---:|---|---:|---:|---:|
+| 6 | val 40 | 12.4 | 61.4 | 0.264 |
+| 6 | test 100 | 12.8 | 53.0 | 0.267 |
+| 9 | val 40 | 23.5 | 106 | 0.086 |
+| 9 | test 100 | 18.6 | 89.4 | 0.090 |
+| 12 | val 40 | 195 | 761 | 0.030 |
+| 12 | test 100 | 174 | 892 | 0.030 |
+
+n=12 test median 174 is under 300. n=6 test 12.8 is close to the L=16 test of 11.07. n=9 test 18.6 is still about twice 8.79, so this is not a replacement for trial 23. The checkpoint is in `size_general_curriculum/` and copied to `BEST_pareto/` as that tradeoff. L=16 test remains 11.07 / 8.79.
