@@ -42,6 +42,8 @@ OUT = _PKG / "runs" / "probe5_seq_vocab"
 STOP = _PKG / "runs" / "STOP_PROBE5"
 P2_PARAMS = _PKG / "runs" / "probe2_train912" / "projector_912_params.pt"
 P3_JSON = _PKG / "runs" / "probe3_fourier" / "results.json"
+P3_DEEP = _PKG / "runs" / "probe3_fourier_deep" / "results.json"
+P3_DEEP_MODES = _PKG / "runs" / "probe3_fourier_deep" / "modes_q3_Ltrain6.pt"
 
 
 def log(*a):
@@ -181,31 +183,52 @@ def short_train(
 
 
 def load_baselines():
-    """Projector probe2 b and Fourier L12 n15 Med as ceilings."""
+    """Ceilings from Fourier q3_Ltrain6 (deepen winner) + probe2 fallback warms."""
     base = {
-        "b_med_gate": 1.42,  # probe2 ~1.405; must beat meaningfully or match + better Med15
-        "med15_proj_L4": 30.9,
-        "med15_fourier_L12": 9.67,
+        # NEW GATE (Fourier deepen d1399b4d): must beat/match these to promote
+        "b_med_gate": 1.24,
+        "med15_fourier_L12": 7.70,   # q3_Ltrain6 @ deploy L12
+        "med15_fourier_L20": 5.99,   # q3_Ltrain6 @ deploy L20
+        "med15_proj_L4": 30.9,       # legacy probe2 (reject bar only)
         "med12_proj": 17.5,
+        "fourier_tag": "q3_Ltrain6",
+        "u_gamma": None,
+        "u_beta": None,
+        "warm_gamma": None,
+        "warm_beta": None,
     }
+    # Prefer deepen q3 modes
+    if P3_DEEP.exists():
+        js = json.loads(P3_DEEP.read_text())
+        for block in js.get("runs", []):
+            if block.get("tag") == "q3_Ltrain6":
+                base["med15_fourier_L12"] = float(block.get("med15_L12") or base["med15_fourier_L12"])
+                base["med15_fourier_L20"] = float(block.get("med15_Lmax") or base["med15_fourier_L20"])
+                base["b_med_gate"] = float(block.get("b_Med_Lmax") or block.get("b_Med_L12") or 1.24)
+                base["u_gamma"] = block.get("u_gamma")
+                base["u_beta"] = block.get("u_beta")
+                break
+    if P3_DEEP_MODES.exists():
+        blob = torch.load(P3_DEEP_MODES, map_location="cpu", weights_only=False)
+        base["u_gamma"] = blob["u_gamma"].tolist() if torch.is_tensor(blob["u_gamma"]) else blob["u_gamma"]
+        base["u_beta"] = blob["u_beta"].tolist() if torch.is_tensor(blob["u_beta"]) else blob["u_beta"]
+    # free-angle warm fallback (probe2) if no Fourier modes
     if P2_PARAMS.exists():
         blob = torch.load(P2_PARAMS, map_location="cpu", weights_only=False)
         base["warm_gamma"] = blob["gamma"].tolist() if torch.is_tensor(blob["gamma"]) else blob["gamma"]
         base["warm_beta"] = blob["beta"].tolist() if torch.is_tensor(blob["beta"]) else blob["beta"]
-    else:
-        base["warm_gamma"] = None
-        base["warm_beta"] = None
-    if P3_JSON.exists():
-        js = json.loads(P3_JSON.read_text())
-        try:
-            base["med15_fourier_L12"] = js["sweep"]["15"]["12"]["median_inv_p"]
-        except Exception:
-            pass
-        try:
-            base["b_fourier_L12"] = js["fits_by_L"]["12"]["Med"]["b"]
-        except Exception:
-            base["b_fourier_L12"] = 1.44
     return base
+
+
+def fourier_angles_for_L(baselines: dict, L: int):
+    """Sample q3 Fourier modes at depth L → (gamma, beta) length-L lists."""
+    ug, ub = baselines.get("u_gamma"), baselines.get("u_beta")
+    if ug is None or ub is None:
+        return baselines.get("warm_gamma"), baselines.get("warm_beta")
+    from explore_OCT29.scripts.probe3_fourier import angles_from_modes
+    g, b = angles_from_modes(torch.as_tensor(ug, dtype=torch.float32),
+                             torch.as_tensor(ub, dtype=torch.float32), L)
+    return g.tolist(), b.tolist()
 
 
 def write_status(out_dir, champ, trials_done, baselines):
@@ -213,13 +236,15 @@ def write_status(out_dir, champ, trials_done, baselines):
         "# Opus probe 5 — W-atom seq vocab evolve\n\n",
         f"_Updated {time.strftime('%Y-%m-%d %H:%M:%S %z')} (Asia/Shanghai)_\n\n",
         f"Trials done: {trials_done}\n\n",
-        "## Baselines to beat\n\n",
-        f"- Probe2 projector L4 train{{9,12}}: n15 Med≈{baselines['med15_proj_L4']}, b≈1.41\n",
-        f"- Probe3 Fourier L12: n15 Med≈{baselines['med15_fourier_L12']:.3g}\n\n",
-        "## Current champion\n\n",
+        "## Promote gate (Fourier deepen)\n\n",
+        f"- **q3_Ltrain6** n15 Med ≲ **{baselines['med15_fourier_L12']:.3g}** @L12 "
+        f"/ **{baselines.get('med15_fourier_L20', 5.99):.3g}** @L20\n",
+        f"- b_Med gate ≲ **{baselines['b_med_gate']:.3f}**\n",
+        f"- Legacy probe2 n15≈{baselines['med15_proj_L4']} (reject-only)\n\n",
+        "## Current seq champ (must beat Fourier to matter)\n\n",
     ]
     if champ is None:
-        lines.append("_none yet_\n")
+        lines.append("_none yet — Fourier q3_Ltrain6 remains fixed-angle champ_\n")
     else:
         lines.append(f"- motif: `{champ['motif']['name']}`\n")
         lines.append(f"- b_Med={champ['b_med']:.4f} b_B90={champ.get('b_b90', float('nan')):.4f}\n")
@@ -229,10 +254,13 @@ def write_status(out_dir, champ, trials_done, baselines):
             if "median_inv_p" in m:
                 lines.append(f"- n{n}: {m['median_inv_p']:.4g}/{m['B90_inv_p']:.4g}\n")
         m15 = lad.get(15) or lad.get("15") or {}
-        lines.append(f"- vs Fourier L12 n15: champ={m15.get('median_inv_p','?')} "
-                     f"ceiling={baselines['med15_fourier_L12']:.3g}\n")
-    lines.append("\n## Note\n\nPromote on fitted b over {9,12,15}; reject if Med15 worse than probe2 "
-                 "projector unless b clearly better.\n")
+        ceil = baselines['med15_fourier_L12']
+        m15v = m15.get('median_inv_p')
+        beat = (m15v is not None) and (m15v <= ceil * 1.05)
+        lines.append(f"- vs Fourier L12 n15: champ={m15v} ceiling={ceil:.3g} "
+                     f"{'BEATS/MATCHES' if beat else 'LOSES'}\n")
+    lines.append("\n## Note\n\nPromote only if n15 Med and b are within noise of q3_Ltrain6 "
+                 "(≲7.7 Med / b≲1.24). Mediocre projector mutants are rejected.\n")
     (out_dir / "RESULTS.md").write_text("".join(lines))
 
 
@@ -266,22 +294,32 @@ def main(argv=None):
     new = not csv_path.exists()
     rng = np.random.default_rng(args.seed)
     champ = None
-    best_b = float(baselines["b_med_gate"])  # must beat probe2 b to promote as "better transfer"
-    # but allow promote if Med15 beats probe2 even if b similar
-    best_med15 = float(baselines["med15_proj_L4"])
+    # Gate = Fourier deepen; seq champ must beat this (not legacy probe2)
+    best_b = float(baselines["b_med_gate"])
+    best_med15 = float(baselines["med15_fourier_L12"])
     parent = SEED_W_MOTIFS[0]
     seed_i = 0
     trial = 0
 
-    # load prior champ if any
     champ_path = OUT / "champ.json"
     if champ_path.exists():
         try:
-            champ = json.loads(champ_path.read_text())
-            best_b = float(champ["b_med"])
-            best_med15 = float(champ["ladder"]["15"]["median_inv_p"])
-            parent = WMotif.from_dict(champ["motif"])
-            log(f"resumed champ {parent.name} b={best_b:.4f} Med15={best_med15:.3g}")
+            prev = json.loads(champ_path.read_text())
+            prev_med15 = float(prev["ladder"]["15"]["median_inv_p"])
+            prev_b = float(prev["b_med"])
+            # Only resume if prior champ already meets new Fourier gate (within 15% Med noise)
+            if prev_med15 <= best_med15 * 1.15 and prev_b <= best_b * 1.15:
+                champ = prev
+                best_b = min(best_b, prev_b)
+                best_med15 = min(best_med15, prev_med15)
+                parent = WMotif.from_dict(champ["motif"])
+                log(f"resumed champ {parent.name} b={best_b:.4f} Med15={best_med15:.3g}")
+            else:
+                archived = OUT / "champ_pre_fourier_gate.json"
+                archived.write_text(json.dumps(prev, indent=2) + "\n")
+                log(f"archived weak champ Med15={prev_med15:.3g} b={prev_b:.3g} "
+                    f"(gate n15≲{best_med15:.3g} b≲{best_b:.3g}) → {archived.name}")
+                champ = None
         except Exception as e:
             log(f"champ load failed: {e}")
 
@@ -318,14 +356,19 @@ def main(argv=None):
             log(f"=== trial {trial} {mode} {cand.name} prep={cand.prep} layer={cand.layer} "
                 f"L={cand.L} n_params={cand.n_params()}")
 
-            # warm-start γ/β only for projector-like motifs
-            use_warm = any(o in ("PROJ", "SNAP0") for o in cand.layer) and (("W" in cand.prep) or ("FLAT_PREP" in cand.prep))
+            # warm-start γ/β from Fourier q3 schedule sampled at motif.L (projector-like)
+            use_warm = any(o in ("PROJ", "SNAP0") for o in cand.layer) and (
+                ("W" in cand.prep) or ("FLAT_PREP" in cand.prep)
+            )
+            if use_warm:
+                warm_g, warm_b = fourier_angles_for_L(baselines, cand.L)
+            else:
+                warm_g = warm_b = None
             try:
                 best = short_train(
                     cand, W, args.steps, args.max_train, args.max_val, args.nf,
                     seed=args.seed + trial, device=device,
-                    warm_g=baselines["warm_gamma"] if use_warm else None,
-                    warm_b=baselines["warm_beta"] if use_warm else None,
+                    warm_g=warm_g, warm_b=warm_b,
                 )
                 ladder = eval_ladder(cand, best["params"], W, args.nf, device, max_counts)
                 fits = fit_b_from_ladder(ladder)
@@ -346,25 +389,26 @@ def main(argv=None):
             med15 = m15.get("median_inv_p", float("inf"))
             med12 = m12.get("median_inv_p", float("inf"))
 
-            # promote rules:
-            # 1) b_med < best_b * 0.98 AND med15 not worse than 1.15× probe2
-            # 2) OR med15 < best_med15 * 0.95 AND b_med < 1.55 (still transferring)
-            # 3) never promote if med15 > 2× probe2 or med12 > 1e4
+            # promote rules vs Fourier q3_Ltrain6 gate:
+            # - reject unless Med15 within ~20% of L12 ceiling OR clearly better b
+            # - never promote mediocre mutants (Med15 >> 7.7)
+            ceil15 = float(baselines["med15_fourier_L12"])
             keep = False
             reason = "no"
-            if med12 > 1e4 or med15 > 2.5 * baselines["med15_proj_L4"]:
+            if med12 > 1e4 or med15 > ceil15 * 3.0:
                 reason = "reject_explode"
-            elif b_med < best_b * 0.98 and med15 <= baselines["med15_proj_L4"] * 1.15:
+            elif med15 > ceil15 * 1.25 and b_med > baselines["b_med_gate"] * 1.1:
+                reason = "reject_below_fourier"
+            elif b_med < best_b * 0.98 and med15 <= ceil15 * 1.10:
                 keep = True
                 reason = "promote_b"
-            elif med15 < best_med15 * 0.95 and b_med < 1.55:
+            elif med15 < best_med15 * 0.97 and b_med <= baselines["b_med_gate"] * 1.12:
                 keep = True
                 reason = "promote_med15"
-            elif cand.name.startswith("proj_") and trial <= len(SEED_W_MOTIFS) and champ is None:
-                # first projector seed always becomes initial champ if sane
-                if med15 < baselines["med15_proj_L4"] * 1.3 and b_med < 1.6:
-                    keep = True
-                    reason = "promote_seed_init"
+            elif champ is None and med15 <= ceil15 * 1.10 and b_med <= baselines["b_med_gate"] * 1.12:
+                # first motif that matches Fourier gate becomes seq champ
+                keep = True
+                reason = "promote_match_fourier"
 
             row = {
                 "trial": trial, "mode": mode, "keep": reason, "motif": cand.name,
@@ -391,17 +435,17 @@ def main(argv=None):
                 conf = short_train(
                     cand, W, args.confirm_steps, args.max_train, max(args.max_val, 16),
                     args.nf, seed=args.seed + trial + 9999, device=device,
-                    warm_g=baselines["warm_gamma"] if use_warm else None,
-                    warm_b=baselines["warm_beta"] if use_warm else None,
+                    warm_g=warm_g, warm_b=warm_b,
                 )
                 lad_c = eval_ladder(cand, conf["params"], W, args.nf, device, max_counts)
                 fits_c = fit_b_from_ladder(lad_c)
                 b_c = float(fits_c["Med"]["b"])
                 med15_c = lad_c.get(15, {}).get("median_inv_p", float("inf"))
-                ok = (b_c < best_b * 1.01 and med15_c <= baselines["med15_proj_L4"] * 1.2) or (
-                    med15_c < best_med15 and b_c < 1.55
+                ceil15 = float(baselines["med15_fourier_L12"])
+                ok = (med15_c <= ceil15 * 1.12 and b_c <= baselines["b_med_gate"] * 1.15) or (
+                    med15_c < best_med15 * 0.98 and b_c <= baselines["b_med_gate"] * 1.15
                 )
-                if ok or (champ is None and b_c < 1.55):
+                if ok:
                     champ = {
                         "motif": cand.to_dict(),
                         "b_med": b_c,
@@ -410,6 +454,8 @@ def main(argv=None):
                         "trial": trial,
                         "reason": reason,
                         "vs_fourier_L12_med15": baselines["med15_fourier_L12"],
+                        "fourier_gate_tag": baselines.get("fourier_tag", "q3_Ltrain6"),
+                        "b_med_gate": baselines["b_med_gate"],
                     }
                     best_b = min(best_b, b_c)
                     best_med15 = min(best_med15, med15_c)

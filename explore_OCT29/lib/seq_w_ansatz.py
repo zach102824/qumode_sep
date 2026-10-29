@@ -100,19 +100,19 @@ class WMotif:
         )
 
 
-# Seed pool — projector family first, then hybrids
+# Seed pool — Fourier-depth projector motifs first (q3 L_train=6 schedule warm in probe5),
+# then other projector variants / hybrids. Free-angle γ/β at L match Fourier deploy depths.
 SEED_W_MOTIFS: List[WMotif] = [
-    WMotif("proj_cost_proj", prep=("W",), layer=("COST", "PROJ"), L=4),
-    WMotif("proj_cost_proj_L6", prep=("W",), layer=("COST", "PROJ"), L=6),
-    WMotif("proj_cost_w_snap0_wdag", prep=("W",), layer=("COST", "W", "SNAP0", "WDAG"), L=4),
-    WMotif("flat_cost_proj", prep=("FLAT_PREP",), layer=("COST", "PROJ"), L=4),
-    WMotif("proj_cost_proj_cost", prep=("W",), layer=("COST", "PROJ", "COST"), L=4),  # double cost
-    WMotif("proj_proj_cost", prep=("W",), layer=("PROJ", "COST"), L=4),  # mixer-first
-    WMotif("proj_cost_snap0", prep=("W",), layer=("COST", "SNAP0"), L=4),  # weak: SNAP0 in flat basis
-    WMotif("hybrid_cost_proj_d", prep=("W",), layer=("COST", "PROJ", "D"), L=4),
+    WMotif("fourier_proj_L6", prep=("W",), layer=("COST", "PROJ"), L=6),   # train depth of q3 champ
+    WMotif("fourier_proj_L12", prep=("W",), layer=("COST", "PROJ"), L=12), # deploy depth
+    WMotif("fourier_proj_L4", prep=("W",), layer=("COST", "PROJ"), L=4),
+    WMotif("fourier_proj_L8", prep=("W",), layer=("COST", "PROJ"), L=8),
+    WMotif("fourier_proj_L16", prep=("W",), layer=("COST", "PROJ"), L=16),
+    WMotif("proj_cost_w_snap0_wdag", prep=("W",), layer=("COST", "W", "SNAP0", "WDAG"), L=6),
+    WMotif("proj_proj_cost_L6", prep=("W",), layer=("PROJ", "COST"), L=6),
+    WMotif("hybrid_cost_proj_d_L6", prep=("W",), layer=("COST", "PROJ", "D"), L=6),
     WMotif("hybrid_cost_snap_d_proj", prep=("W",), layer=("COST", "SNAP", "D", "PROJ"), L=4),
-    WMotif("raw_cost_snap_d", prep=("D",), layer=("COST", "SNAP", "D"), L=4),  # old baseline control
-    WMotif("proj_cost_proj_L8", prep=("W",), layer=("COST", "PROJ"), L=8),
+    WMotif("raw_cost_snap_d", prep=("D",), layer=("COST", "SNAP", "D"), L=4),
 ]
 
 

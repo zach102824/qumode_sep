@@ -1,23 +1,24 @@
 # Opus probe 5 — W-atom seq vocab evolve
 
-_Updated 2026-10-29 17:50:41 +0800 (Asia/Shanghai)_
+_Updated 2026-10-29 18:07:26 +0800 (Asia/Shanghai)_
 
-Trials done: 2
+Trials done: 13
 
-## Baselines to beat
+## Promote gate (Fourier deepen)
 
-- Probe2 projector L4 train{9,12}: n15 Med≈30.9, b≈1.41
-- Probe3 Fourier L12: n15 Med≈9.67
+- **q3_Ltrain6** n15 Med ≲ **7.7** @L12 / **5.99** @L20
+- b_Med gate ≲ **1.240**
+- Legacy probe2 n15≈30.9 (reject-only)
 
-## Current champion
+## Current seq champ (must beat Fourier to matter)
 
-- motif: `proj_cost_proj`
-- b_Med=1.3931 b_B90=1.2543
-- n9: 5.146/17.91
-- n12: 14.26/24.6
-- n15: 37.62/69.72
-- vs Fourier L12 n15: champ=? ceiling=9.67
+- motif: `fourier_proj_L16`
+- b_Med=1.0798 b_B90=1.1319
+- n9: 1.583/2.41
+- n12: 2.356/3.772
+- n15: 2.509/5.069
+- vs Fourier L12 n15: champ=2.508528232574463 ceiling=7.7 BEATS/MATCHES
 
 ## Note
 
-Promote on fitted b over {9,12,15}; reject if Med15 worse than probe2 projector unless b clearly better.
+Promote only if n15 Med and b are within noise of q3_Ltrain6 (≲7.7 Med / b≲1.24). Mediocre projector mutants are rejected.
