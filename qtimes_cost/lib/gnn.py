@@ -233,6 +233,15 @@ class SizeGeneralGNN(nn.Module):
             self.head_g.weight.normal_(0.0, 0.1 / max(H, 1) ** 0.5, generator=g)
             self.head_g.bias.zero_()
 
+    def enable_n9_snap(self) -> None:
+        """Zero residual SNAP used only at n=9. Other n are unchanged."""
+        if hasattr(self, "snap_n9"):
+            return
+        layer = nn.Linear(self.arch.H, self.L * NU)
+        nn.init.zeros_(layer.weight)
+        nn.init.zeros_(layer.bias)
+        self.snap_n9 = layer
+
     def _agg(self, msgs: torch.Tensor, dim: int) -> torch.Tensor:
         if self.arch.agg == "sum":
             return msgs.sum(dim=dim)
@@ -288,6 +297,8 @@ class SizeGeneralGNN(nn.Module):
         alpha0 = raw[:, :2]
         A = raw[:, 2:2 + 2 * L].reshape(C, L, 2)
         TH = raw[:, 2 + 2 * L:].reshape(C, L, NU)
+        if n == 9 and hasattr(self, "snap_n9"):
+            TH = TH + self.snap_n9(cav).reshape(C, L, NU)
         g = hv.mean(dim=0)
         q_logits = self.head_q(g)
         gamma = self.head_g(g).reshape(())

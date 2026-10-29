@@ -110,14 +110,19 @@ def main(argv=None):
     ap.add_argument("--val-n9", type=int, default=16, help="n=9 val count used to pick the checkpoint")
     ap.add_argument("--cap-n6", type=float, default=0.0, help="keep checkpoints with n6 val median at or below this")
     ap.add_argument("--cap-n12", type=float, default=0.0, help="keep checkpoints with n12 val median at or below this")
+    ap.add_argument("--n9-snap", action="store_true", help="train a zero-init SNAP residual used only at n=9")
+    ap.add_argument("--snap-only", action="store_true", help="with --n9-snap, freeze every other parameter")
+    ap.add_argument("--patience", type=int, default=0, help="stop after this many n=9 val checks without a new best")
     args = ap.parse_args(argv)
     torch.set_num_threads(1)
     arch = GNNArch(H=128, rounds=4, agg="mean", layernorm=True, residual=True, degree_features=True, lr=args.lr)
     gnn = SizeGeneralGNN(arch, L=args.L, seed=0)
+    if args.n9_snap:
+        gnn.enable_n9_snap()
     copied = []
     resume_path = os.path.join(args.out, "weights.pt")
     if args.resume and os.path.exists(resume_path):
-        gnn.load_state_dict(torch.load(resume_path, map_location="cpu", weights_only=True))
+        gnn.load_state_dict(torch.load(resume_path, map_location="cpu", weights_only=True), strict=False)
         copied = ["resume"]
         print(f"resumed {resume_path}", flush=True)
     elif args.body_from and os.path.exists(args.body_from):
@@ -137,7 +142,12 @@ def main(argv=None):
             cap = 64
         train[n] = _split_arrays(packs[n], "train", max_count=cap)
     batch_for = {6: 2, 9: max(1, args.n9_batch), 12: max(1, args.n12_batch)}
-    opt = torch.optim.Adam(gnn.parameters(), lr=args.lr, weight_decay=1e-4)
+    if args.snap_only:
+        if not args.n9_snap:
+            raise SystemExit("--snap-only requires --n9-snap")
+        for name, p in gnn.named_parameters():
+            p.requires_grad_(name.startswith("snap_n9"))
+    opt = torch.optim.Adam([p for p in gnn.parameters() if p.requires_grad], lr=args.lr, weight_decay=0.0 if args.snap_only else 1e-4)
     rng = np.random.default_rng(0)
 
     def eval_n(n, split, count):
@@ -177,6 +187,7 @@ def main(argv=None):
     total_steps = (args.phase1 + args.phase2) if args.phase1 > 0 else args.steps
     anchor = None
     best = None
+    stall = 0
     t0 = time.time()
 
     def mix_at(step):
@@ -250,7 +261,10 @@ def main(argv=None):
                 better_n9 = best is None or parts[9]["median_inv_p"] < best["parts"][9]["median_inv_p"]
                 if caps_ok and better_n9:
                     best = {"score": parts[9]["median_inv_p"], "step": step, "parts": parts, "state": state}
+                    stall = 0
                     mark = " *"
+                elif args.patience > 0:
+                    stall += 1
             else:
                 if args.phase1 > 0 and step < args.phase1 and (anchor is None or score < anchor["score"]):
                     anchor = {"score": score, "step": step, "parts": parts, "state": state}
@@ -272,6 +286,9 @@ def main(argv=None):
                 + f" S={score:.3f} cap={int(caps_ok)}{mark}",
                 flush=True,
             )
+            if args.patience > 0 and stall >= args.patience:
+                print(f"early stop at step {step}: n9 val flat for {stall} checks", flush=True)
+                break
 
     gnn.load_state_dict(best["state"])
     os.makedirs(args.out, exist_ok=True)

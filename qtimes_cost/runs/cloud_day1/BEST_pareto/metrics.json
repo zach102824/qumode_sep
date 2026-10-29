@@ -70,5 +70,9 @@
   "beats_l16_test_both": false,
   "best_overwritten": false,
   "role": "pareto checkpoint, not a replacement for L=16 BEST",
-  "why": "test n6=12.9 (<=14), n12=176 (<=200), n9=15.8 (improved from 18.6, not yet <=12). Does not beat L16 test 11.07/8.79."
+  "why": "test n6=12.9 (<=14), n12=176 (<=200), n9=15.8 (improved from 18.6, not yet <=12). Does not beat L16 test 11.07/8.79.",
+  "n9_followup": {
+    "result": "unchanged",
+    "why": "n9-weighted training and a zero-init n=9 SNAP residual found no checkpoint with n9 val40 below 16.8 while n6 val stayed <=13.5 and n12 val stayed <=200. Saved test remains n6=12.94, n9=15.78, n12=175.74."
+  }
 }

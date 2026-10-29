@@ -43,3 +43,20 @@ def test_size_general_one_module_two_widths():
         assert heads["TH"].shape == (C, 3, NU)
         assert heads["q_logits"].shape == (3,)
         assert heads["gamma"].ndim == 0
+
+
+def test_n9_snap_residual_is_zero_at_init_and_inactive_at_other_n():
+    arch = GNNArch(H=16, rounds=1, layernorm=True, residual=True, degree_features=True)
+    gnn = SizeGeneralGNN(arch, L=2, seed=1)
+    _, cl, _ = gen_instance(9, 51_000_000_000 + 10_000_000 * 9 + 4, compute_E=False)
+    cv = torch.as_tensor(np.array([v for v, s in cl], dtype=np.int64))
+    cs = torch.as_tensor(np.array([s for v, s in cl], dtype=np.float32))
+    before = gnn.forward_graph(cv, cs, n=9)["TH"].detach().clone()
+    gnn.enable_n9_snap()
+    after = gnn.forward_graph(cv, cs, n=9)["TH"].detach()
+    assert torch.allclose(before, after)
+    _, cl6, _ = gen_instance(6, 51_000_000_000 + 10_000_000 * 6 + 4, compute_E=False)
+    cv6 = torch.as_tensor(np.array([v for v, s in cl6], dtype=np.int64))
+    cs6 = torch.as_tensor(np.array([s for v, s in cl6], dtype=np.float32))
+    th6 = gnn.forward_graph(cv6, cs6, n=6)["TH"]
+    assert th6.shape == (2, 2, NU)
