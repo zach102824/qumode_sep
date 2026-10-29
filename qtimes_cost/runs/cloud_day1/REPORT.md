@@ -282,12 +282,12 @@ Re-evaluated on the full val and test splits:
 | 6 | L=16 BEST | test | 11.07 | 38.7 | 0.093 |
 | 9 | L=16 BEST | val | 10.70 | 67.7 | 0.034 |
 | 9 | L=16 BEST | test | 8.79 | 34.3 | 0.038 |
-| 12 | SizeGeneral L=20, scale only | val | 37.1 | 196 | 0.019 |
-| 12 | SizeGeneral L=20, scale only | test | 36.6 | 184 | 0.019 |
+| 12 | SizeGeneral L=24, scale only | val | 23.1 | 157 | 0.018 |
+| 12 | SizeGeneral L=24, scale only | test | 21.1 | 95.9 | 0.018 |
 
 `BEST/` was not overwritten.
 
-WalkSAT (SKC, p=0.5, 20 runs) on the same 100 n=12 test formulas: median flips **25.5** (B90 59.8), median formula-evaluations **103** (B90 240). Shots and flips are different units. On the L=20 scale model, the per-formula median of (shots / WalkSAT flips) is **1.46** (B90 5.26), and 81% of test formulas have median shots under 100. Summary: `walksat_n12.json`. Entry point: `scripts/eval_two_model.py`.
+WalkSAT (SKC, p=0.5, 20 runs) on the same 100 n=12 test formulas: median flips **25.5** (B90 59.8), median formula-evaluations **103** (B90 240). Shots and flips are different units. On the L=24 scale model, the per-formula median of (shots / WalkSAT flips) is **0.94** (B90 2.85), and 90% of test formulas have median shots under 100. Summary: `walksat_n12.json`. Entry point: `scripts/eval_two_model.py`.
 
 ## n≥12 L sweep
 
@@ -300,4 +300,6 @@ SizeGeneral only, warm-started from the previous Pareto weights, 256 n=12 traini
 | 16 | shots/flips | 64.5 | 522 | 0.027 |
 | 20 | both (same step) | **36.6** | **184** | **0.019** |
 
-L=20 is the n≥12 model now, saved as `BEST_pareto/weights_n12_L20.pt`. The older joint Pareto weights remain `BEST_pareto/weights.pt` (test n=6/n=9/n=12 = 12.9 / 15.8 / 176). L=16 test on `BEST/` remains 11.07 / 8.79.
+L=20 was the n≥12 model at test 36.6 / 184. A further run at **L=24**, 512 n=12 training formulas, and leakpen 0.05, warm-started from those L=20 weights, reaches test **21.1 / 95.9** (leak 0.018). Val on all 200 formulas is 23.1 / 157. The raw-median checkpoint beat the WalkSAT-ratio checkpoint (test 28.3 / 114). Weights: `BEST_pareto/weights_n12_L24.pt`. `BEST/` was not written. L=16 test remains 11.07 / 8.79.
+
+n=15 packs were generated (`data_n15.npz`, val 50, test 100, dense E). One L=24 forward is about 40s, so this is 4 test formulas, not a full bar. Shots were 4.7e5, 6.5e7, and two formulas at the 1/p floor, with leakage about 0. WalkSAT medians on those four were 21.5, 18.5, 118.5, and 241.5 flips. The n=12 model does not zero-shot to n=15.

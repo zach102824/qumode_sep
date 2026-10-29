@@ -76,16 +76,16 @@ def _splits(gnn, sim, pack, n, splits, max_count, size_general):
 def main():
     torch.set_num_threads(1)
     small = os.path.join(str(PKG), "runs", "cloud_day1", "BEST")
-    scale_w = os.path.join(str(PKG), "runs", "cloud_day1", "BEST_pareto", "weights_n12_L20.pt")
+    scale_w = os.path.join(str(PKG), "runs", "cloud_day1", "BEST_pareto", "weights_n12_L24.pt")
     L6, m6 = _eval_factor(small, 6, ("val", "test"), None)
     L9, m9 = _eval_factor(small, 9, ("val", "test"), None)
-    m12 = _eval_size(scale_w, 20, 12, ("val", "test"), None)
+    m12 = _eval_size(scale_w, 24, 12, ("val", "test"), None)
     payload = {
         "rule": "n<=9 uses L=16 FactorGNN BEST; n>=12 uses SizeGeneral weights in BEST_pareto",
         "best_untouched": True,
         "n6": {"model": "L16_BEST", "L": L6, "splits": m6},
         "n9": {"model": "L16_BEST", "L": L9, "splits": m9},
-        "n12": {"model": "SizeGeneral_L20_scale", "L": 20, "splits": m12},
+        "n12": {"model": "SizeGeneral_L24_scale", "L": 24, "splits": m12},
     }
     out = os.path.join(str(PKG), "runs", "cloud_day1", "two_model.json")
     with open(out, "w") as f:
