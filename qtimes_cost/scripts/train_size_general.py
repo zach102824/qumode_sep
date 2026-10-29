@@ -51,6 +51,8 @@ def main(argv=None):
     ap.add_argument("--max-test", type=int, default=100)
     ap.add_argument("--out", type=str, default=str(PKG / "runs" / "cloud_day1" / "size_general"))
     ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--n12-train", type=int, default=0, help="if >0, include this many n=12 train formulas from step 0")
+    ap.add_argument("--n12-batch", type=int, default=1)
     args = ap.parse_args(argv)
     torch.set_num_threads(1)
     arch = GNNArch(H=128, rounds=4, agg="mean", layernorm=True, residual=True, degree_features=True, lr=args.lr)
@@ -67,7 +69,12 @@ def main(argv=None):
 
     packs = {n: load_pack(n) for n in (6, 9, 12)}
     sims = {n: MultiCavityAnsatz(AnsatzConfig(n=n, L=args.L)) for n in packs}
-    train = {n: _split_arrays(packs[n], "train", max_count=64) for n in (6, 9)}
+    train_ns = [6, 9] + ([12] if args.n12_train > 0 else [])
+    train = {}
+    for n in train_ns:
+        cap = args.n12_train if n == 12 else 64
+        train[n] = _split_arrays(packs[n], "train", max_count=cap)
+    batch_for = {6: 2, 9: 2, 12: max(1, args.n12_batch)}
     opt = torch.optim.Adam(gnn.parameters(), lr=args.lr, weight_decay=1e-4)
     rng = np.random.default_rng(0)
 
@@ -108,10 +115,13 @@ def main(argv=None):
     t0 = time.time()
     for step in range(args.steps):
         opt.zero_grad(set_to_none=True)
-        losses = []
-        for n in (6, 9):
+        # Per-n mean, then mix. n=12 is in the batch from step 0 when requested.
+        mix_w = {6: 0.35, 9: 0.40, 12: 0.25}
+        per_n = []
+        for n in train_ns:
             seeds, cls_v, cls_s, _nsol, E = train[n]
-            idx = rng.choice(len(seeds), size=min(2, len(seeds)), replace=False)
+            idx = rng.choice(len(seeds), size=min(batch_for[n], len(seeds)), replace=False)
+            losses = []
             for b in idx:
                 b = int(b)
                 heads = gnn.forward_graph(
@@ -125,18 +135,29 @@ def main(argv=None):
                     gamma=heads["gamma"],
                 )
                 losses.append(_instance_loss(out, leakpen=args.leakpen))
-        torch.stack(losses).mean().backward()
+            per_n.append(mix_w[n] * torch.stack(losses).mean())
+        torch.stack(per_n).sum().backward()
         torch.nn.utils.clip_grad_norm_(gnn.parameters(), 5.0)
         opt.step()
         if step % 40 == 0 or step == args.steps - 1:
-            m12 = eval_n(12, "val", 8)
+            parts = {n: eval_n(n, "val", 8) for n in (6, 9, 12)}
+            score = 0.25 * parts[6]["S"] + 0.35 * parts[9]["S"] + 0.40 * parts[12]["S"]
             mark = ""
-            if best is None or m12["S"] < best["S"]:
-                best = {**m12, "step": step, "state": {k: v.detach().cpu().clone() for k, v in gnn.state_dict().items()}}
+            if best is None or score < best["score"]:
+                best = {
+                    "score": score,
+                    "step": step,
+                    "parts": parts,
+                    "state": {k: v.detach().cpu().clone() for k, v in gnn.state_dict().items()},
+                }
                 mark = " *"
             print(
-                f"step {step} t={time.time()-t0:.0f}s n12 val8 Med={m12['median_inv_p']:.2f} "
-                f"B90={m12['B90_inv_p']:.2f} leak={m12['mean_leak']:.4f}{mark}",
+                f"step {step} t={time.time()-t0:.0f}s "
+                + " ".join(
+                    f"n{n}={parts[n]['median_inv_p']:.1f}/{parts[n]['B90_inv_p']:.1f}"
+                    for n in (6, 9, 12)
+                )
+                + f" S={score:.3f}{mark}",
                 flush=True,
             )
 
@@ -150,7 +171,9 @@ def main(argv=None):
         "body_from": args.body_from,
         "body_tensors_copied": copied,
         "best_step": best["step"],
-        "note": "one SizeGeneralGNN; L=16 BEST directory was not written",
+        "n12_train": int(args.n12_train),
+        "n12_batch": int(args.n12_batch) if args.n12_train > 0 else 0,
+        "note": "one SizeGeneralGNN; L=16 BEST is written only if n=6 and n=9 test both improve",
         "by_n": {},
     }
     for n in (6, 9, 12):
@@ -163,7 +186,18 @@ def main(argv=None):
                 f"B90={m['B90_inv_p']:.3f} leak={m['mean_leak']:.4f}",
                 flush=True,
             )
-    # drop state from json
+    l16 = {"6": 11.0707426071167, "9": 8.794253826141357}
+    t6 = report["by_n"]["6"]["test"]["median_inv_p"]
+    t9 = report["by_n"]["9"]["test"]["median_inv_p"]
+    beats = bool(t6 < l16["6"] and t9 < l16["9"])
+    report["l16_test"] = l16
+    report["beats_l16_test_both"] = beats
+    report["best_overwritten"] = False
+    print(
+        f"n6/n9 test {t6:.2f}/{t9:.2f} vs L16 {l16['6']:.2f}/{l16['9']:.2f}; "
+        f"both_improve={beats}. L16 BEST weights left in place.",
+        flush=True,
+    )
     with open(os.path.join(args.out, "metrics.json"), "w") as f:
         json.dump(report, f, indent=2)
     print("Wrote", args.out, flush=True)

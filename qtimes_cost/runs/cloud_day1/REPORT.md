@@ -212,3 +212,18 @@ Trained on n=6 and n=9 only (L=12, leakpen 0.3, body and q initialized from the 
 | 12 | test 100 | 6.1e7 | ~1e12 | ~0 |
 
 The shared module fits n=6. It does not put mass on n=12 solutions: median 1/p stays orders of magnitude above the uniform baseline, with leakage about 0. Weights are in `size_general/`, not in `BEST/`.
+
+## Multi-n curriculum (n=12 in the loss from step 0)
+
+Same `SizeGeneralGNN`, not the fixed-C fine-tune. Body and q start from the L=12 n=9 checkpoint. Every step is 2×n=6, 2×n=9, and 1×n=12, with only 24 n=12 training formulas, leakpen 0.3, about 680 Adam steps. n=12 is in the mix from the first step. `BEST/` was not written: n=6/n=9 test do not both beat the L=16 test of 11.07 / 8.79.
+
+| n | split | Med | B90 | mean leak |
+|---:|---|---:|---:|---:|
+| 6 | val 40 | 24.8 | 81.5 | 0.254 |
+| 6 | test 100 | 26.3 | 72.1 | 0.261 |
+| 9 | val 40 | 70.1 | 574 | 0.160 |
+| 9 | test 100 | 61.9 | 405 | 0.165 |
+| 12 | val 40 | 458 | 1983 | 0.071 |
+| 12 | test 100 | 311 | 2253 | 0.068 |
+
+n=12 test median 311 is below the uniform baseline near 2048, and test B90 2253 is below that baseline's B90 near 4096. The n=6/9-only size-general run had left n=12 test at 6e7. A shared cavity MLP can reach n=12 when those formulas are in the training mix. It does not match the separate C=4 fine-tune (test 172 / 2268) and it does not approach the L=16 n=6/n=9 test. Weights: `size_general_mix/`. An OCT20-style shared γ/β plus clause-weight head was not built; this curriculum was the direct follow-up.
