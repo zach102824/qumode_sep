@@ -1,0 +1,59 @@
+{
+  "rule": "n<=9 uses L=16 FactorGNN BEST; n>=12 uses SizeGeneral weights in BEST_pareto",
+  "best_untouched": true,
+  "n6": {
+    "model": "L16_BEST",
+    "L": 16,
+    "splits": {
+      "val": {
+        "B": 200,
+        "median_inv_p": 9.71702527999878,
+        "B90_inv_p": 51.17189445495604,
+        "mean_leak": 0.09493996918201447
+      },
+      "test": {
+        "B": 100,
+        "median_inv_p": 11.0707426071167,
+        "B90_inv_p": 38.718949508667095,
+        "mean_leak": 0.09301148533821106
+      }
+    }
+  },
+  "n9": {
+    "model": "L16_BEST",
+    "L": 16,
+    "splits": {
+      "val": {
+        "B": 200,
+        "median_inv_p": 10.702189922332764,
+        "B90_inv_p": 67.70214462280272,
+        "mean_leak": 0.03439029097557068
+      },
+      "test": {
+        "B": 100,
+        "median_inv_p": 8.794253826141357,
+        "B90_inv_p": 34.337504196167,
+        "mean_leak": 0.038119481801986696
+      }
+    }
+  },
+  "n12": {
+    "model": "SizeGeneral_L24_scale",
+    "L": 24,
+    "weights": "BEST_pareto/weights_n12_L24.pt",
+    "splits": {
+      "val": {
+        "B": 200,
+        "median_inv_p": 23.096176147460938,
+        "B90_inv_p": 156.63690490722655,
+        "mean_leak": 0.017825959622859953
+      },
+      "test": {
+        "B": 100,
+        "median_inv_p": 21.062233924865723,
+        "B90_inv_p": 95.89409942626963,
+        "mean_leak": 0.0178
+      }
+    }
+  }
+}

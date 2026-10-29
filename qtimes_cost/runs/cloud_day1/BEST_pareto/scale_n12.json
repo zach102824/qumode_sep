@@ -1,0 +1,41 @@
+{
+  "L": 24,
+  "role": "n>=12 scale model. Not a replacement for L=16 BEST.",
+  "n12_train": 512,
+  "leakpen": 0.05,
+  "val200": {
+    "B": 200,
+    "median_inv_p": 23.096176147460938,
+    "B90_inv_p": 156.63690490722655,
+    "mean_leak": 0.017825959622859953
+  },
+  "test": {
+    "B": 100,
+    "median_inv_p": 21.062233924865723,
+    "B90_inv_p": 95.89409942626963,
+    "median_inv_over_ws_flips": 0.9436744840826998,
+    "B90_inv_over_ws_flips": 2.846143030291822,
+    "frac_med_under_100": 0.9
+  },
+  "n15_test4": [
+    {
+      "inv": 470966.21875,
+      "ws_flips": 21.5
+    },
+    {
+      "inv": 999999995904.0,
+      "ws_flips": 118.5
+    },
+    {
+      "inv": 939291770880.0,
+      "ws_flips": 241.5
+    },
+    {
+      "inv": 64615152.0,
+      "ws_flips": 18.5
+    }
+  ],
+  "n15_note": "4 test formulas only. One L=24 forward is about 40s. Leak ~0. Not a full n=15 bar.",
+  "previous_L20_test_median": 36.55,
+  "best_untouched": true
+}

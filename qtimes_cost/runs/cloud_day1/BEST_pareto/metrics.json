@@ -1,0 +1,78 @@
+{
+  "L": 16,
+  "leakpen": 0.1,
+  "steps": 180,
+  "phase1": 0,
+  "phase2": 0,
+  "leakpen12": 0.2,
+  "body_from": "/workspace/qtimes_cost/runs/cloud_day1/BEST_round1/weights_n9.pt",
+  "body_tensors_copied": [
+    "resume"
+  ],
+  "best_step": 120,
+  "n12_train": 64,
+  "n12_batch": 1,
+  "note": "one SizeGeneralGNN; L=16 BEST is written only if n=6 and n=9 test both improve",
+  "by_n": {
+    "6": {
+      "val": {
+        "B": 40,
+        "median_inv_p": 11.793388366699219,
+        "B90_inv_p": 47.420987319946306,
+        "mean_leak": 0.26135996282100676,
+        "S": 3.163301983851877
+      },
+      "test": {
+        "B": 100,
+        "median_inv_p": 12.939185619354248,
+        "B90_inv_p": 48.91739234924319,
+        "mean_leak": 0.27399440050125123,
+        "S": 3.2251966784828134
+      }
+    },
+    "9": {
+      "val": {
+        "B": 40,
+        "median_inv_p": 16.796615600585938,
+        "B90_inv_p": 55.757588958740236,
+        "mean_leak": 0.05873600691556931,
+        "S": 3.4210954698327134
+      },
+      "test": {
+        "B": 100,
+        "median_inv_p": 15.78394603729248,
+        "B90_inv_p": 52.65323295593262,
+        "mean_leak": 0.06217586100101471,
+        "S": 3.3613604956285075
+      }
+    },
+    "12": {
+      "val": {
+        "B": 40,
+        "median_inv_p": 194.2086639404297,
+        "B90_inv_p": 821.054559326172,
+        "mean_leak": 0.0360436886548996,
+        "S": 5.989761365160612
+      },
+      "test": {
+        "B": 100,
+        "median_inv_p": 175.73788452148438,
+        "B90_inv_p": 944.8342041015638,
+        "mean_leak": 0.03567274749279022,
+        "S": 6.01000152957722
+      }
+    }
+  },
+  "l16_test": {
+    "6": 11.0707426071167,
+    "9": 8.794253826141357
+  },
+  "beats_l16_test_both": false,
+  "best_overwritten": false,
+  "role": "pareto checkpoint, not a replacement for L=16 BEST",
+  "why": "test n6=12.9 (<=14), n12=176 (<=200), n9=15.8 (improved from 18.6, not yet <=12). Does not beat L16 test 11.07/8.79.",
+  "n9_followup": {
+    "result": "unchanged",
+    "why": "n9-weighted training and a zero-init n=9 SNAP residual found no checkpoint with n9 val40 below 16.8 while n6 val stayed <=13.5 and n12 val stayed <=200. Saved test remains n6=12.94, n9=15.78, n12=175.74."
+  }
+}
