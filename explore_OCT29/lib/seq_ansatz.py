@@ -242,12 +242,14 @@ def mutate_motif(parent: Motif, rng: np.random.Generator) -> Motif:
             del layer[int(rng.choice(idxs))]
     elif kind == 3:
         # flip prep between D / SNAP+D / D+SNAP
-        prep = list(rng.choice([
+        # rng.choice cannot take inhomogeneous tuple lengths — pick by index
+        _preps = [
             ("D",),
             ("SNAP", "D"),
             ("D", "SNAP"),
             ("SNAP", "D", "SNAP"),
-        ]))
+        ]
+        prep = list(_preps[int(rng.integers(0, len(_preps)))])
     elif kind == 4:
         L = int(np.clip(L + int(rng.choice([-1, 1])), 3, 8))
     elif kind == 5:
