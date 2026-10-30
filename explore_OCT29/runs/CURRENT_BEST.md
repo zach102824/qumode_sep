@@ -159,3 +159,21 @@ b_Med≈1.0676. Span-split discarded.
 Med/B90 n9–18: **1.092/1.776, 1.197/2.843, 1.418/5.505, 1.752/11.353** (b_Med≈1.054).
 
 renames_Hc wave (`runs/gadget_Uc/renames_Hc/`): soft-n18 + SNAP φ noise on **retrain seed** (params.pt was never in git). Soft-n18 keep vs retrain only — **not** promoted over locked. WalkSAT scale1000 filled. Still `Uc=exp(-iγ Hc)`.
+
+---
+
+## Champ UPDATE — soft-n18 from locked LBFGS (2026-10-31 ~02:33 CST)
+
+**CRITICAL FIX:** earlier soft-n18 (~n18 Med 10) was on bad retrain — INVALID.
+
+Locked seed0 verified scale1000 = sealed (Δ~0). Soft-n18 `t9121518_w1` **PROMOTED**:
+
+| n | Med | B90 |
+|---|-----|-----|
+| 9 | 1.098 | 1.719 |
+| 12 | 1.197 | 2.779 |
+| 15 | 1.395 | 5.460 |
+| 18 | 1.709 | 11.107 |
+
+b_Med≈1.0506. Params: `unsat_params.pt`. Backup: `unsat_params_pre_soft18_backup.pt`.
+n18 val in soft pool (not pure zero-shot); scale1000 holdout OK. Still exp(-iγ Hc).
