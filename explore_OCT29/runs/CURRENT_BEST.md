@@ -93,3 +93,17 @@ Motif: clause-projector cost + Arm C shell mixer, BinH W. Params: `runs/gadget_U
 | 18 | 4.329 | 24.342 | 1000 |
 
 Matches/beats Arm C B1000 on n9–18. Parity/stencil retired. Fourier deepen discarded.
+
+
+## Projector-gadget champ — train{6,9,12} (2026-10-30 ~19:38 CST)
+
+Params: `runs/gadget_Uc/unsat_params.pt` (promoted from train6912).
+
+| n | Med | B90 |
+|---|-----|-----|
+| 9 | 1.406 | 3.288 |
+| 12 | 1.864 | 6.106 |
+| 15 | 2.754 | 10.244 |
+| 18 | 4.194 | 24.302 |
+
+GRAPE library: `runs/gadget_Uc/grape_library/LIBRARY.md` (26 local projectors; SNAP exact).

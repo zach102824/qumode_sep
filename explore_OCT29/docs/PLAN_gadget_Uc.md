@@ -56,3 +56,19 @@ Mixer both: Arm C `W · SNAP(φ_pc) · W†`, prep `W`, binary Fock packing, L=1
 - n18 Med/B90 **4.329/24.342** vs Arm C 4.573/27.810.
 - Drop parity & stencil from further runs.
 - Fourier-γ deepen: **discard** (see fourier_deepen/RESULTS.md).
+
+## GRAPE library + train6912 (2026-10-30 ~19:38 CST)
+
+### Library
+- 26 local C on 3-bit cavity; U(γ)=I+(e^{-iγ}-1)C; two-cavity C_a⊗C_b.
+- Exact SNAP (Z) and W†SNAP W (X/BinH). Doc: `runs/gadget_Uc/grape_library/LIBRARY.md`.
+
+### Performance
+- train{6,9,12} **promoted** over train{9,12}:
+  - n15 Med 2.754 < prior 2.820
+  - n18 Med 4.194 < prior 4.329
+- Champ: `runs/gadget_Uc/unsat_params.pt`
+
+### Still banned
+- GRAPE targeting densified instance diag(E) as the pulse target.
+- parity XOR / stencil_x / Fourier deepen for SAT.
