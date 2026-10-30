@@ -34,3 +34,11 @@ Opus 5.5 **region-blocked** (CN). Ran agent-ranked top-2 cheap:
 
 No L48+ reopen. Still `Uc=exp(-iγ Hc)`.
 
+## NON-DEPTH #3+#4 (2026-10-31 ~04:28) — CVaR PROMOTE
+
+- #3a equal-shot mixture: Spearman max 0.997 → kill; no promote (best L44+L40 n18 B90 9.501 > thr 9.356).
+- #3b CVaR_q80 @L44: **PROMOTE** → new champ Med/B90 n9–18 = 1.045/1.420, 1.109/2.163, 1.228/4.067, 1.412/9.145; b_Med≈1.0341.
+- #4 freedom span_w @L44: NO PROMOTE (Med gains <2% gate).
+
+Still `Uc=exp(-iγ Hc)`. No L48+. Blind banned.
+
