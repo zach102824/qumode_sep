@@ -99,3 +99,9 @@ Artifacts: `runs/gadget_Uc/freedom/`.
 - **Champ = retrain L24**: n15 **1.820**, n18 **2.492**; b_Med≈1.0868.
 - Params: `runs/gadget_Uc/unsat_params.pt`.
 - Next: L=28 or span-split γ_ℓ^(s) on L24.
+
+## Depth L=28 CHAMP (2026-10-30 ~20:06 CST)
+
+- Retrain L28 vs L24 gate: n15 **1.655**, n18 **2.183** — PROMOTE.
+- b_Med≈**1.0749** (best so far vs Arm C 1.137 / QAOA 1.151).
+- Next: span-split γ on L28, or one L=32 check then stop depth ladder.
