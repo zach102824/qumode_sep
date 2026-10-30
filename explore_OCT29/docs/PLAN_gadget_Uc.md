@@ -105,3 +105,9 @@ Artifacts: `runs/gadget_Uc/freedom/`.
 - Retrain L28 vs L24 gate: n15 **1.655**, n18 **2.183** — PROMOTE.
 - b_Med≈**1.0749** (best so far vs Arm C 1.137 / QAOA 1.151).
 - Next: span-split γ on L28, or one L=32 check then stop depth ladder.
+
+## Spanγ DISCARD + L32 CHAMP (2026-10-30 ~20:18 CST)
+
+- Span-split γ_ℓ^(s) on L28: **discard** (n15 1.663 / n18 2.210 miss gate).
+- Plain **L=32** retrain: **promote** — n15 **1.537**, n18 **1.995**; b_Med≈1.0676.
+- Champ: `unsat_params.pt` (L32). Stop further depth; next = train-set tweak or GRAPE compile notes.
