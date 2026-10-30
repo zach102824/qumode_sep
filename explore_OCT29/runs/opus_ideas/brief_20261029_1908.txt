@@ -1,0 +1,27 @@
+CONTEXT (Zach / explore_OCT29, box, 2026-10-29 ~19:08 Asia/Shanghai):
+
+GNN QAOA-sandwich path is DEAD (n12 OOD ~1e8). Do not revive GNN.
+Winner family: projector driver W·SNAP₀(β)·W† (flat-prep W calibrated once). Prefer qumode-native sequences; size-independent shared params; train-small → transfer-large.
+
+DONE since last Opus consult (17:32 CST) — all of your prior 5 probes:
+1. Driver bake-off: projector W·SNAP₀·W† WON vs SNAP+D (Ideal Gray-X dropped). Train n9 L4 → n15 Med~76, b_Med≈1.41.
+2. Train {9,12}: n15 Med≈30.9, n18≈149, b_Med≈1.41. Healthy transfer.
+3. Fourier q=2 train L4 deploy L12: n15 Med≈9.67 (depth-at-deploy works).
+3b. Fourier deepen q=3 L_train=6: n15 Med≈7.70 @L12 / **5.99 @L20**, b_Med@L20≈**1.24**. Beat probe3.
+4. Fixed-γ deepen (one γ shared or per-instance + deep L): NEGATIVE. n15 worsens past L≈8 (shared L8≈40 → L24≈686). Keep γ_ℓ / Fourier.
+5. Seq vocab (W/SNAP0/PROJ atoms) looping ~138 trials. Early champ promoted: **fourier_proj_L16** (free γ/β, Fourier-warmed, motif still prep=W layer=COST→PROJ L=16):
+   n9 1.58/2.41 · n12 2.36/3.77 · n15 **2.51/5.07** · b_Med **1.08**
+   So free-angle deep projector already beats Fourier schedule-only. Probe5 still running; mutants rearranging SNAP/D without matching this get rejected. Motif novelty has NOT appeared — just depth + free angles on same projector.
+
+CURRENT CEILINGS TO BEAT (not the old Fourier L12 9.67):
+- Novel seq atoms / new mixer: beat n15 Med≲2.5 / b≲1.08 (fourier_proj_L16)
+- Schedule-only / fixed-angle: beat Fourier q3 L20 n15≈5.99 / b≈1.24
+- OCT20 Gray-X reference class still ~1.25^n (n12 Med~12, n16~31) — free-angle projector already looks better than that on Med, but compare apples-to-apples (shots / B90 / packing).
+
+Deferred from prior Opus: probe4 K=4 bits/cavity + span-split γ_ℓ^(s). Not started.
+
+ASK (ideas only — no code edits):
+Give 3–5 concrete NEXT PROBES ranked by priority that could (a) beat fourier_proj_L16 n15≈2.51 / b≈1.08 with a *novel* native motif, OR (b) improve fixed-angle / Fourier schedule b toward ~1.15 or below with size-independent params, OR (c) unlock genuine new atoms beyond W/PROJ rearrangements.
+For each: (1) what to try in 1–2 sentences, (2) why it might transfer better / beat current champ, (3) cheapest first experiment (n, L, steps, metric).
+Be specific to SNAP+D / cavity qumodes / Gray / projector / Fourier. No vague “try transformers”. No revive GNN.
+End with ONE recommended next step to start tonight (probe5 already looping — pick something orthogonal that is not already running).

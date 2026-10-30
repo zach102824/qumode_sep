@@ -1,0 +1,22 @@
+CONTEXT (Zach / explore_OCT29, box, 2026-10-29 Asia/Shanghai):
+
+We are stuck: no reliable train-small → transfer-large path for qumode SAT solvers.
+
+LOCKED PATH LOOKS DEAD:
+- Ansatz: |0⟩ → D(α₀) → [SNAP → D → U_Φ]^L with Φ = H_cost (shared SNAP+D across cavities; only γ_ℓ per layer). QAOA-like sandwich on qumodes.
+- Micro-GNN evolve (15-step screens) plateaued: champion H=64,r6,mean,residual+degree,lr=1e-3 stuck at S≈8.54 since trial 223; ~200 trials no keep; top pack same basin.
+- Long confirm 1500 steps of that champ FINISHED: best val S_comb=4.19 at step 1220 — n6 Med≈11.4 / B90≈31; n9 Med≈59 / B90≈281. Earlier plateau around step 570 (n6≈12.4, n9≈84) then slight late improve; then stagnant again to 1500. Zero-shot n12 CATASTROPHIC: Med≈4e8 / B90≈2.6e11 (S≈23). Leak on n6/n9 ~0.11. So train-n ok-ish, transfer dead.
+
+OCT20 GOOD DATA (contrast):
+- Used calibrated Gray-digit X mixer built from SNAP+D (k≈8 SNAP+D pairs at n=6 for F≳0.995; prep to flat only ~3 pairs).
+- Warm γ/β from good SNAP schedule (S_g4_snapF), then long train (e.g. 3000 steps). Achieved roughly ~1.25^n scaling class, not ~2^n — e.g. G16_full_w TEST-ish n8≈4.8/8.8, n12≈12.3/26.3, n16≈31/74.
+- Cost: fixed-strength runs = same H_cost each layer (only γ_ℓ); GNN clause-weight runs could reshape Φ per layer via w_jℓ.
+
+ZACH INTENT:
+- Stop recreating QAOA-like gate sandwiches and micro-tuning GNN hypers.
+- Want qumode-NATIVE efficient gate sequences (SNAP / D / bus-native ideas) that can train at small n and transfer to large n.
+- Free explore; GNN architecture tweaks alone seem useless for scaling if still ~2^n.
+- Constrained: shared-across-cavity / size-independent params preferred for transfer; no free nonlocal phase memorization.
+
+ASK:
+Give 3–5 concrete NEXT PROBES ranked by priority. Cover gate sequence / prep / mixer / cost connectivity / learning setup. For each: (1) what to try in 1–2 sentences, (2) why it might enable small→large transfer better than QAOA-sandwich+GNN, (3) cheapest first experiment (n, steps, metric). Be specific to SNAP+D / cavity qumodes / Gray encoding if relevant. No vague “try transformers”. End with ONE recommended first probe to start tonight.

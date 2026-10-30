@@ -1,0 +1,22 @@
+CONTEXT (Zach / explore_OCT29, box, 2026-10-30 ~08:30 Asia/Shanghai):
+
+GNN DEAD. probe5 STOPPED. Promote gate = val2 (full val); test sealed except milestones.
+
+DONE overnight:
+- probe6 DONE. Arm C free shells W_H·SNAP(φ_pc)·W_H† PROMOTED vs Arm A PROJ on test:
+  n15 Med 4.495 vs 6.325 (×1.41), n18 3.764 vs 6.410 (×1.70). leak~0. b_test~1.10.
+  Arm B X-only dead.
+- probe7 Fourier+α DONE NEGATIVE. multi-L+α test n15~158. Do NOT restart α recipe.
+  Distill-only q=8 was OK on val2 but phase2 ruined it.
+
+NOW STARTING (do not duplicate):
+- probe8_span_split = your prior #3: γ_ℓ^(s) by clause span 2/3/4, mixer=Arm C shells,
+  warm γ from Arm C. Train {9,12} Adam120+LBFGS; gate val2; sealed test iff val2 beats Arm C.
+
+Still open from 19:08 list:
+  #4 pair-projector (W⊗W)·SNAP₀₀·(W†⊗W†) brickwork — next candidate after probe8.
+
+ASK (ideas only — no code): After probe8 lands (span-split ±), what ONE next direction?
+Candidates: #4 pair-projector, a sharper NEW mixer/cost idea on top of Arm C, or a
+val2-honest schedule compress of Arm C (no α multi-L repeat of probe7). End with ONE
+recommended action sentence.
