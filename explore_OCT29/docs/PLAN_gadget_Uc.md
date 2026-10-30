@@ -85,3 +85,17 @@ Mixer both: Arm C `W · SNAP(φ_pc) · W†`, prep `W`, binary Fock packing, L=1
 - Keep champ `unsat_params.pt` (train{6,9,12} plain projector).
 
 Artifacts: `runs/gadget_Uc/freedom/`.
+
+## Depth L=20 PROMOTE (2026-10-30 ~19:53 CST)
+
+- Pad L20/L24: see `depth/RESULTS.md` (interp alone).
+- **Retrain L=20** on {6,9,12}: n15 Med **2.168**, n18 Med **3.170** (gate pass).
+- Champ → L=20 `unsat_params.pt`. b_Med≈1.1079 (best vs Arm C 1.137 / QAOA 1.151).
+- Next: L=24 retrain.
+
+## Depth L=24 CHAMP (2026-10-30 ~19:59 CST)
+
+- Pad L20/L24 and retrain L20/L24 all beat L16 gate.
+- **Champ = retrain L24**: n15 **1.820**, n18 **2.492**; b_Med≈1.0868.
+- Params: `runs/gadget_Uc/unsat_params.pt`.
+- Next: L=28 or span-split γ_ℓ^(s) on L24.

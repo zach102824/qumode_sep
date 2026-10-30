@@ -112,3 +112,29 @@ GRAPE library: `runs/gadget_Uc/grape_library/LIBRARY.md` (26 local projectors; S
 ### Freedom ladder (2026-10-30) — negative
 
 span_w / eps_delta: absolute Med dips but miss promote gate on n18. Champ unchanged.
+
+
+## Champ UPDATE — projector L=20 (2026-10-30 ~19:53 CST)
+
+
+| n | Med | B90 |
+|---|-----|-----|
+| 9 | 1.261 | 2.657 |
+| 12 | 1.590 | 4.760 |
+| 15 | 2.168 | 8.296 |
+| 18 | 3.170 | 19.916 |
+
+b_Med≈1.1079, b_B90≈1.2460. Params: `runs/gadget_Uc/unsat_params.pt`.
+
+
+## Champ UPDATE — projector **L=24** (2026-10-30 ~19:59 CST)
+
+
+| n | Med | B90 |
+|---|-----|-----|
+| 9 | 1.185 | 2.245 |
+| 12 | 1.392 | 3.865 |
+| 15 | 1.820 | 7.283 |
+| 18 | 2.492 | 17.005 |
+
+b_Med≈1.0868, b_B90≈1.2506.
