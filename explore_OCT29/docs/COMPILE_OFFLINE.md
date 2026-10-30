@@ -37,7 +37,7 @@ Library = clause→local `snap_mask` lookup + `γ·mask` (8 floats), **no 2^n al
 
 | n | B | densify build E (s) | densify phase L32 (s) | lib schedule L32 (s) | densify/inst ms | lib/inst ms | speedup (phase) |
 |---|---|---------------------|------------------------|----------------------|-----------------|-------------|-----------------|
-| 12 | 64 | 0.0457 | 0.2279 | 0.4627 | 3.56 | 7.230 | ×0 |
+| 12 | 64 | 0.0457 | 0.2279 | 0.4627 | 3.56 | 7.230 | ×0.5 |
 | 15 | 32 | 0.0480 | 0.8611 | 0.2972 | 26.91 | 9.287 | ×3 |
 | 18 | 8 | 0.0598 | 1.8326 | 0.0950 | 229.08 | 11.879 | ×19 |
 
@@ -46,7 +46,7 @@ Library = clause→local `snap_mask` lookup + `γ·mask` (8 floats), **no 2^n al
 
 At **n=12** a pure-Python clause→mask loop can be *slower* than NumPy `exp(-iγE)` on
 length-4096 (table above). That is a **simulator artifact**. Hardware/GRAPE story:
-library is **26 fixed SNAP masks compiled once**; densify allocates/grows as \(2^n\)
+library is **26 fixed SNAP masks compiled once**; densify allocates/grows as 2^n
 (n18: 1 MB/E float32, n=24 would be 64 MB/E). Library per-inst time stays ~O(m L)
 with m≈10n; densify phase already ×60 slower by n18 in this CPU bench.
 
