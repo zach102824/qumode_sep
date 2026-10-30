@@ -26,3 +26,7 @@ Densified instance `diag(E_unsat)` as a pulse optimization target.
 ## Next hardware-facing work
 
 Two-cavity GRAPE/SNAP fidelity for \(C_a\otimes C_b\); pulse reuse across γ via time-scale / SNAP phase.
+
+## Done (sim, not pulses)
+
+Two-cavity factor/fidelity table: `COMPILE_TWOCAV.md` (2026-10-30). Kron of locals fails; joint SNAP exact.

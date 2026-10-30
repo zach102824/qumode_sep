@@ -1,0 +1,31 @@
+/workspace/qumode_sep/explore_OCT29/scripts/gadget_Uc_compile_twocav.py:331: SyntaxWarning: invalid escape sequence '\('
+  "Clause spanning two cavities: \(C=C_a\\otimes C_b\) with local projectors from the frozen library.",
+/workspace/qumode_sep/explore_OCT29/scripts/gadget_Uc_compile_twocav.py:336: SyntaxWarning: invalid escape sequence '\('
+  "- **(1,3):** \(C_a=\\Pi_{b0}\), \(C_b=\\Pi_{b0,b1,b2}\) (rank 4 ⊗ rank 1)",
+/workspace/qumode_sep/explore_OCT29/scripts/gadget_Uc_compile_twocav.py:337: SyntaxWarning: invalid escape sequence '\('
+  "- **(2,2):** \(C_a=\\Pi_{b0,b1}\), \(C_b=\\Pi_{b0,b1}\) (rank 2 ⊗ rank 2)",
+/workspace/qumode_sep/explore_OCT29/scripts/gadget_Uc_compile_twocav.py:339: SyntaxWarning: invalid escape sequence '\('
+  "## Does \(U\) factor as locals?",
+/workspace/qumode_sep/explore_OCT29/scripts/gadget_Uc_compile_twocav.py:341: SyntaxWarning: invalid escape sequence '\('
+  "**No.** If \(U_a=I+(e^{-i\gamma}-1)C_a\) and \(U_b=I+(e^{-i\gamma}-1)C_b\), then",
+/workspace/qumode_sep/explore_OCT29/scripts/gadget_Uc_compile_twocav.py:346: SyntaxWarning: invalid escape sequence '\('
+  "**AND** of supports \(\\mathrm{supp}(C_a)\\times\\mathrm{supp}(C_b)\); product of local",
+/workspace/qumode_sep/explore_OCT29/scripts/gadget_Uc_compile_twocav.py:356: SyntaxWarning: invalid escape sequence '\('
+  f"- Fid(\(U\), \(U_a\\otimes U_b\)) = **{notes['fid_U_vs_Ua_kron_Ub']:.6f}** "
+/workspace/qumode_sep/explore_OCT29/scripts/gadget_Uc_compile_twocav.py:366: SyntaxWarning: invalid escape sequence '\|'
+  "| **Joint Fock SNAP** (Z-frame) | phase γ on \|fa,fb⟩ iff fa∈supp_a and fb∈supp_b | **YES** |",
+/workspace/qumode_sep/explore_OCT29/scripts/gadget_Uc_compile_twocav.py:367: SyntaxWarning: invalid escape sequence '\('
+  "| BinH sandwich | \(W^\\dagger\\otimes W^\\dagger\) · jointSNAP · \(W\\otimes W\) | **YES** (X-frame) |",
+/workspace/qumode_sep/explore_OCT29/scripts/gadget_Uc_compile_twocav.py:391: SyntaxWarning: invalid escape sequence '\('
+  "   target \(U(\\gamma)=I+(e^{-i\\gamma}-1)C_a\\otimes C_b\) — still **not** densified diag(E).",
+/workspace/qumode_sep/explore_OCT29/scripts/gadget_Uc_compile_twocav.py:392: SyntaxWarning: invalid escape sequence '\('
+  "5. Instance only picks which \((C_a,C_b)\) pair from the finite library.",
+20:33:52 [2cav] (1,3) local factor? False fid=0.773743
+20:33:52 [2cav] (2,2) local factor? False fid=0.773743
+20:33:55 [2cav] (1,3) γ=0.5000: joint=1.000000 localKron=0.9932 BS=0.9932 Xkron=0.9397
+20:33:58 [2cav] (1,3) γ=1.0000: joint=1.000000 localKron=0.9731 BS=0.9732 Xkron=0.7737
+20:34:01 [2cav] (1,3) γ=3.1416: joint=1.000000 localKron=0.7811 BS=0.7812 Xkron=0.0156
+20:34:03 [2cav] (2,2) γ=0.5000: joint=1.000000 localKron=0.9911 BS=0.9913 Xkron=0.9397
+20:34:06 [2cav] (2,2) γ=1.0000: joint=1.000000 localKron=0.9651 BS=0.9657 Xkron=0.7737
+20:34:09 [2cav] (2,2) γ=3.1416: joint=1.000000 localKron=0.7656 BS=0.7656 Xkron=0.0156
+20:34:09 [2cav] wrote /workspace/qumode_sep/explore_OCT29/runs/gadget_Uc/grape_library/COMPILE_TWOCAV.md

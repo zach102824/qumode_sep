@@ -30,6 +30,8 @@ Detail: `soft_n15/RESULTS.md`. n15 train empty → soft pool=val; scale1000=hold
 
 See `grape_library/FREEZE.md` + `LIBRARY.md`. Classical angle/depth search paused; hardware compile next.
 
+Two-cavity sim compile: `grape_library/COMPILE_TWOCAV.md` — joint SNAP exact; local SNAP⊗SNAP / naive Ua⊗Ub fail AND-phase (needs entangling).
+
 ## Retired
 
 parity, stencil, Fourier, freedom w/εΔ, span-γ, further depth >32.
