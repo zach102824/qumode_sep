@@ -26,3 +26,11 @@ b_Med≈**1.0333**, b_B90≈**1.2323**
 
 Gate ≤1.208 / ≤1.381: n15 **fail**, n18 ok. L52 skipped.
 
+## NON-DEPTH wave (2026-10-31 ~04:00)
+
+Opus 5.5 **region-blocked** (CN). Ran agent-ranked top-2 cheap:
+1. Fair ArmC L44 pad — champ still wins; ArmC pad improves vs L16 (see `armC_L44_pad/`).
+2. Kerr@L44 + paper mega-table finalized (`kerr_paper_L44/`, `PAPER_TABLE.md`).
+
+No L48+ reopen. Still `Uc=exp(-iγ Hc)`.
+
