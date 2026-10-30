@@ -42,3 +42,11 @@ No L48+ reopen. Still `Uc=exp(-iγ Hc)`.
 
 Still `Uc=exp(-iγ Hc)`. No L48+. Blind banned.
 
+## CVaR polish + jitter (2026-10-31 ~04:45)
+
+- PAPER_TABLE refreshed with CVaR champ vs ArmC L16/L44 / QAOA / WalkSAT.
+- LBFGS polish seeds 0–3: **NO PROMOTE**. Best n18 B90 seed3=8.966 vs thr 8.962 (≥2% gate miss by 0.04%).
+- Joint γ+φ jitter: σ≤2% ok (n9 Med ×≲1.04); σ=5% hurts (×1.27). Paper robustness row.
+
+Champ remains **L44 CVaR_q80**: 1.045/1.420, 1.109/2.163, 1.228/4.067, 1.412/9.145; b_Med≈1.034.
+
