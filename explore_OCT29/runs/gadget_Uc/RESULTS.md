@@ -1,58 +1,45 @@
-# Gadget-Uc explore — X-gadget cost + Arm C shell mixer (BinH)
+# Gadget-Uc — projector-gadget family (SOFT-PROMOTED)
 
-_Generated 2026-10-30 19:19:03 +0800 (Asia/Shanghai)_
+_Generated 2026-10-30 19:33:57 +0800 (Asia/Shanghai)_
 
-Plan: `explore_OCT29/docs/PLAN_gadget_Uc.md`.
+Plan: `docs/PLAN_gadget_Uc.md`. **BinH** \(W=H^{\otimes 3}\), mixer Arm C shell `W·SNAP(φ_pc)·W†`, L=16.
 
-**Locked:** BinH \(W=H^{\otimes 3}\), mixer = Arm C shell `W·SNAP(φ_pc)·W†`, train `{9,12}` L=16.
+## Soft promote
 
-## What is instance-blind vs aware
+- **KEEP:** per-clause **projector gadgets** `U_c=∏_c[I+(e^{-iγ}-1)C_c]` (= `diag(e^{-iγ E})` algebraically; GRAPE targets clause ops / BinH X-projectors — not densified global `H_cost` as pulse target).
+- **DROP from further runs:** XOR parity `∏X` strings; instance-blind `stencil_x`.
+- Params: `unsat_params.pt` (train `{9,12}`).
 
-| Piece | Blind? |
-|-------|--------|
-| Gadget family / SNAP controls | YES (GRAPE once) |
-| Which clause projectors / X-strings | NO (classical schedule) |
-| `stencil_x` entire \(U_c\) | YES fully |
-| `γ_ℓ`, `φ_pc` | shared train |
+## scale1000 Med/B90 (B=1000) — projector vs Arm C
 
-## Operator checks
+| n | projector (unsat) | Arm C ref | ratio ArmC/proj Med |
+|---|-------------------|-----------|---------------------|
+| 9 | 1.445/3.222 | 1.441/3.314 | ×0.997 |
+| 12 | 1.926/6.148 | 1.991/6.252 | ×1.034 |
+| 15 | 2.820/10.063 | 2.921/10.959 | ×1.036 |
+| 18 | 4.329/24.342 | 4.573/27.810 | ×1.056 |
 
-- BinH: `W† exp(-iγ ZZZ) W = exp(-iγ XXX)` fro ~1e-15 PASS
-- stencil: `∏ exp(-iγ X_j) = W† exp(-iγ ∑ Z_j) W` fro ~1e-15 PASS
-- Clause projector: `∏_c [I+(e^{-iγ}-1)C_c] = diag(e^{-iγ E_unsat})` exact. BinH ⇒ X-projector gadgets.
+- n18 wall ≈ 8.2 min; frac_inv≤2 = 0.092; leak≈7.68e-06
 
-## scale1000 Med/B90 (B=1000) — main gate
+## Retired arms (do not restart)
 
-| n | parity (XOR X-string) | stencil_x (blind) | unsat / projector-gadget | Arm C ref |
-|---|----------------------|-------------------|--------------------------|-----------|
-| 9 | 309.767/2158.960 | 256.000/512.000 | 1.445/3.222 | 1.441/3.314 |
-| 12 | 1912.569/11831.688 | 2048.001/4096.005 | 1.926/6.148 | 1.991/6.252 |
-| 15 | 13150.490/87785.854 | 16383.996/32768.035 | 2.820/10.063 | 2.921/10.959 |
+| arm | scale1000 n15 Med/B90 | note |
+|-----|----------------------|------|
+| parity XOR | 13150/87786 | wrong cost |
+| stencil_x | 16384/32768 | no SAT signal |
 
-### unsat vs Arm C (scale1000 Med ratio ArmC/unsat; >1 means unsat better)
+## Fourier-γ deepen nudge — DISCARD
 
-| n | ratio |
-|---|-------|
-| 9 | ×0.997 |
-| 12 | ×1.034 |
-| 15 | ×1.036 |
+See `fourier_deepen/RESULTS.md`. q=3 Fourier γ+φ train L16 deploy L16/20:
+- L16 scale n9 Med **1.843** > projector **1.445**
+- L20 test n15 Med **5.102** > projector test **4.167**
+- **keep=False** — stick with free γ/φ `unsat_params.pt`.
 
-## test ladder (small packs)
+## Operator reminder
 
-| n | parity | stencil_x | unsat |
-|---|--------|-----------|-------|
-| 9 | 247.592/598.573 | 256.000/512.000 | 1.364/2.012 |
-| 12 | 2084.425/10576.339 | 2048.002/4096.004 | 2.137/8.499 |
-| 15 | 22242.663/109403.417 | 32767.982/32768.051 | 4.167/15.725 |
-| 18 | 75755.387/377338.750 | 58982.453/262144.016 | 3.263/10.675 |
+- `∏_c [I+(e^{-iγ}-1)C_c] = diag(e^{-iγ E_unsat})` exact.
+- BinH: each `C_c → C_c^X` (X-basis projector gadget).
+- Single-Pauli XXX ≠ clause projector.
 
-## Promote verdict
-
-- **parity**: FAIL (Med hundreds–10k). Single Pauli `∏X` per clause is Max-XOR/parity, not 4-SAT unsat.
-- **stencil_x**: FAIL (Med≈`2^{n-1}`). Instance-blind cost carries no SAT signal.
-- **unsat / clause-projector gadgets**: **PROMOTE soft** — competitive with Arm C B1000 on n9/12/15 (BinH). This is the GRAPE-correct exact cost: per-clause ops `I+(e^{-iγ}-1)C_c` (Z) or conjugated X-projectors — **not** densifying global `H_cost` as a GRAPE pulse target; instance only picks which projectors.
-
-Single-Pauli XXX gadgets do **not** replace unsat projectors. Keep projector-gadget family for GRAPE; drop XOR-parity and blind stencil for SAT.
-
-Artifacts: `parity_params.pt`, `stencil_x_params.pt`, `unsat_params.pt`, `results.json`, `run.log`, `run_unsat.log`.
+Artifacts: `unsat_params.pt`, `scale1000_n18.json`, `fourier_deepen/`, `run.log`, `run_unsat.log`, `eval_n18.log`.
 

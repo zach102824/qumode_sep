@@ -49,3 +49,10 @@ Mixer both: Arm C `W · SNAP(φ_pc) · W†`, prep `W`, binary Fock packing, L=1
 - unsat clause-projector (BinH): **matches Arm C** scale1000 n9–15; this is the GRAPE path (per-clause projector gadgets, conjugated to X under BinH).
 - Do not promote XOR-string or blind stencil for 4-SAT.
 - RESULTS: `runs/gadget_Uc/RESULTS.md`
+
+## SOFT-PROMOTE (2026-10-30 ~19:30 CST)
+
+- Projector-gadget unsat: scale1000 n9–18 competitive with Arm C; **promoted family**.
+- n18 Med/B90 **4.329/24.342** vs Arm C 4.573/27.810.
+- Drop parity & stencil from further runs.
+- Fourier-γ deepen: **discard** (see fourier_deepen/RESULTS.md).
