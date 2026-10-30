@@ -1,10 +1,10 @@
 # Paper table — scale1000 B=1000 (refreshed)
 
-_Generated 2026-10-31 03:09:23 +0800 (Asia/Shanghai)_
+_Generated 2026-10-31 03:14:44 +0800 (Asia/Shanghai)_
 
 **Metric:** quantum = Med/B90 of **1/p**; WalkSAT flips/evals.
 
-Honesty: champ = **L44 pad** ≡ `exp(-iγ Hc)`. L44 pad from L40; L48 skipped. No blind-cost.
+Honesty: champ = **L44 pad** ≡ `exp(-iγ Hc)`. L48 pad failed ≥2% gate → **STOP depth ladder**. No blind-cost.
 
 | n | **champ** Med/B90 | ArmC L16 | QAOA L16 | WalkSAT flips | WalkSAT evals |
 |---|-------------------|----------|----------|---------------|---------------|
@@ -17,12 +17,26 @@ Honesty: champ = **L44 pad** ≡ `exp(-iγ Hc)`. L44 pad from L40; L48 skipped. 
 
 - champ b_Med≈**1.0333**, b_B90≈**1.2323**
 
-## Depth pad ladder
+## Depth pad ladder (diminishing returns)
 
-| L | tag | n15 | n18 |
-|---|-----|-----|-----|
-| 32 | soft-n18 w1 | 1.395/5.460 | 1.709/11.107 |
-| 36 | pad | 1.312/4.918 | 1.571/10.312 |
-| 40 | pad | 1.263/4.563 | 1.467/10.012 |
-| **44** | **pad** | **1.233/4.243** | **1.409/9.645** |
+| L | tag | n15 Med/B90 | n18 Med/B90 | Δn15 Med | Δn18 Med |
+|---|-----|-------------|-------------|----------|----------|
+| 32 | soft-n18 w1 | 1.395/5.460 | 1.709/11.107 | — | — |
+| 36 | pad | 1.312/4.918 | 1.571/10.312 | -5.9% | -8.1% |
+| 40 | pad | 1.263/4.563 | 1.467/10.012 | -3.7% | -6.6% |
+| **44** | **pad **CHAMP**** | **1.233/4.243** | **1.409/9.645** | -2.4% | -4.0% |
+| 48 | pad NO | 1.212/3.872 | 1.379/9.706 | -1.7% | -2.1% |
+
+L48: n15 1.212 vs thr 1.208 (miss); n18 1.379 vs thr 1.381 (ok). Gate AND → **no promote**. L52 not tried.
+
+### Depth diminishing returns
+
+- L32→36: n15 −6.0%, n18 −8.1%
+- L36→40: n15 −3.7%, n18 −6.6%
+- L40→44: n15 −2.4%, n18 −4.0% (last promote, ≥2% gate)
+- L44→48: n15 −1.7%, n18 −2.1% (**below** 2% n15 gate) → stop
+- Marginal gain per +4 layers halves ~each step; pad-only interp saturates near L44.
+## WalkSAT R=50 confirm
+
+max_inst=200 scale1000; see `renames_Hc/walksat_R50/RESULTS.md`. Med flips ≈ R=20 (within sampling noise).
 

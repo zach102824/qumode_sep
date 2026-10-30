@@ -1,10 +1,10 @@
-# Gadget-Uc — **L44 pad**
+# gadget_Uc RESULTS — projector BinH unsat
 
-_Generated 2026-10-31 03:09:23 +0800 (Asia/Shanghai)_
+_Generated 2026-10-31 03:14:44 +0800 (Asia/Shanghai)_
 
-Still `Uc=exp(-iγ Hc)`. No blind-cost.
+Honesty: `Uc=exp(-iγ Hc)`. Blind-cost banned.
 
-## Champ
+**Champ:** L44 pad → `unsat_params.pt`
 
 | n | Med | B90 |
 |---|-----|-----|
@@ -13,19 +13,6 @@ Still `Uc=exp(-iγ Hc)`. No blind-cost.
 | 15 | 1.233 | 4.243 |
 | 18 | 1.409 | 9.645 |
 
-b_Med≈**1.0333**.
+Depth ladder STOP after L48 fail (≥2% n15+n18 Med gate). Soft-n18 on L44: no promote.
+See `renames_Hc/PAPER_TABLE.md` for ArmC/QAOA/WalkSAT + diminishing returns.
 
-## Wave
-
-- L44 pad: **PROMOTE** vs L40
-- L48: skipped
-- Soft-n18 L44: no promote (mem-light retry)
-
-## WalkSAT
-
-| n | flips | evals |
-|---|-------|-------|
-| 9 | 12.5/40.1 | 51.0/161.4 |
-| 12 | 26.5/65.9 | 107.0/264.6 |
-| 15 | 43.8/128.1 | 176.0/513.6 |
-| 18 | 71.5/203.6 | 287.0/815.4 |
