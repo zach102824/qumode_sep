@@ -30,3 +30,7 @@ Two-cavity GRAPE/SNAP fidelity for \(C_a\otimes C_b\); pulse reuse across γ via
 ## Done (sim, not pulses)
 
 Two-cavity factor/fidelity table: `COMPILE_TWOCAV.md` (2026-10-30). Kron of locals fails; joint SNAP exact.
+
+## Offline compile (done)
+
+See `COMPILE_OFFLINE.md` — 26 SNAP masks Fid=1; wall vs densify n12/15/18.

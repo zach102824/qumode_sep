@@ -51,6 +51,15 @@ If robust arms stay at Med \(\gg\) Arm C, the honest paper claim is:
 **classical schedule of frozen clause projectors (= Uc) + shared mixer angles**,
 not “GRAPE invents a SAT solver without Hc”.
 
+
+## Offline compile (Opus #6)
+
+Compile the 26 locals **once** as SNAP / W†SNAP W (Fid=1 exact); γ from champ L32
+reuses `θ=γ·mask`. Does **not** make GRAPE Hc-free — only skips densifying E.
+See `docs/COMPILE_OFFLINE.md` (mirror: `runs/gadget_Uc/grape_library/COMPILE_OFFLINE.md`).
+
+**One-liner:** offline SNAP library = rename of `Uc=exp(-iγ Hc)`, not a blind cost.
+
 ## Probe script
 
 `scripts/probe_robust_grape.py` → `runs/robust_grape/` (verdict table).
