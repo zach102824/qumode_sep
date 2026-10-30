@@ -21,13 +21,13 @@ if str(_ROOT) not in sys.path:
 from explore_OCT29.lib.walksat import aggregate_bars, walksat_instance  # noqa: E402
 
 
-def load_test_clauses(pack_path: Path):
+def load_test_clauses(pack_path: Path, split: str = "test"):
     z = np.load(pack_path)
     n = int(z["n"])
     m = int(z["m"])
-    seeds = z["test_seeds"]
-    cls_v = z["test_cls_v"]
-    cls_s = z["test_cls_s"]
+    seeds = z[f"{split}_seeds"]
+    cls_v = z[f"{split}_cls_v"]
+    cls_s = z[f"{split}_cls_s"]
     return n, m, seeds, cls_v, cls_s
 
 
@@ -40,6 +40,12 @@ def main(argv=None):
     ap.add_argument("--p", type=float, default=0.5, help="WalkSAT noise param")
     ap.add_argument("--max_inst", type=int, default=None, help="cap test instances")
     ap.add_argument("--overwrite", action="store_true")
+    ap.add_argument(
+        "--split",
+        type=str,
+        default="test",
+        help="npz key prefix: test | scale1000 | val | train",
+    )
     args = ap.parse_args(argv)
 
     data_dir = Path(args.data) if args.data else _PKG / "data"
@@ -59,12 +65,12 @@ def main(argv=None):
         if out.exists() and not args.overwrite:
             print(f"[skip] {out} exists")
             continue
-        n_, m, seeds, cls_v, cls_s = load_test_clauses(pack)
+        n_, m, seeds, cls_v, cls_s = load_test_clauses(pack, split=args.split)
         assert n_ == n
         B = len(seeds)
         if args.max_inst is not None:
             B = min(B, args.max_inst)
-        print(f"n={n}: WalkSAT p={args.p} R={args.R} on {B} test insts...", flush=True)
+        print(f"n={n}: WalkSAT p={args.p} R={args.R} split={args.split} on {B} insts...", flush=True)
         t0 = time.time()
         per_med_flips = []
         per_med_evals = []
@@ -86,6 +92,7 @@ def main(argv=None):
             "algo": "walksat_skc_python",
             "p": args.p,
             "R": args.R,
+            "split": args.split,
             "n_inst": B,
             "flips_across_inst": aggregate_bars(per_med_flips),
             "evals_across_inst": aggregate_bars(per_med_evals),
