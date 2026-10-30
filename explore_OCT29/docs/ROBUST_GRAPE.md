@@ -77,3 +77,4 @@ not “GRAPE invents a SAT solver without Hc”.
 
 Artifacts: `runs/robust_grape/RESULTS.md`.
 
+Tracked copies: `docs/ROBUST_GRAPE_RESULTS.md`, `docs/robust_grape_results.json`.
