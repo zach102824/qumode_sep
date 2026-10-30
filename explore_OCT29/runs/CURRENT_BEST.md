@@ -205,3 +205,10 @@ b_Med≈1.0434. Still exp(-iγ Hc). Multi-seed LBFGS on L32: no promote.
 | 18 | 1.467 | 10.012 |
 
 b_Med≈1.0371. Interp L36→40, no retrain. Still exp(-iγ Hc).
+
+---
+
+## Champ UPDATE — L44 pad (2026-10-31 03:09 CST)
+
+Med/B90 n9–18: 1.051/1.473, 1.113/2.263, 1.233/4.243, 1.409/9.645
+b_Med≈1.0333. L44 pad yes; soft18=no. L48 skipped. Still exp(-iγ Hc).
