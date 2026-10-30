@@ -151,3 +151,11 @@ b_Med≈1.0868, b_B90≈1.2506.
 | 18 | 1.995 | 14.117 |
 
 b_Med≈1.0676. Span-split discarded.
+
+---
+
+## Locked projector LBFGS L32 (unchanged 2026-10-31)
+
+Med/B90 n9–18: **1.092/1.776, 1.197/2.843, 1.418/5.505, 1.752/11.353** (b_Med≈1.054).
+
+renames_Hc wave (`runs/gadget_Uc/renames_Hc/`): soft-n18 + SNAP φ noise on **retrain seed** (params.pt was never in git). Soft-n18 keep vs retrain only — **not** promoted over locked. WalkSAT scale1000 filled. Still `Uc=exp(-iγ Hc)`.

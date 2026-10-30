@@ -38,11 +38,21 @@ See `grape_library/FREEZE.md` + `LIBRARY.md`. Classical angle/depth search pause
 
 parity, stencil, Fourier, freedom w/εΔ, span-γ, further depth >32, CVaR/lme (no beat plain).
 
-## WalkSAT bars (existing scale1000 baseline)
+## WalkSAT bars (scale1000, R=20, max_inst=200)
 
-| n | Med | B90 |
-|---|-----|-----|
-| 9 | None | None |
-| 12 | None | None |
-| 15 | None | None |
-| 18 | None | None |
+| n | flips Med/B90 | evals Med/B90 |
+|---|---------------|---------------|
+| 9 | 12.5/40.1 | 51.0/161.4 |
+| 12 | 26.5/65.9 | 107.0/264.6 |
+| 15 | 43.8/128.1 | 176.0/513.6 |
+| 18 | 71.5/203.6 | 287.0/815.4 |
+
+Locked champ 1/p still 1.092/1.776 … 1.752/11.353 (units ≠ flips).
+
+## renames_Hc wave (2026-10-31 ~02:19 CST)
+
+Opus-style top-2 under renames_Hc: SNAP φ noise + soft-n18. Detail: `renames_Hc/RESULTS.md`.
+
+- Soft-n18 improved a **short retrain seed** (params missing from git) but **does not** beat locked LBFGS.
+- SNAP φ: σ≤2% mild; σ=5% ~+23% n9 Med (same ballpark as γ-jitter).
+- L=36/40 deferred.

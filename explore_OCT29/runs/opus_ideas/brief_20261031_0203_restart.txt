@@ -1,0 +1,13 @@
+Opus-style pick — 2026-10-31 ~02:03 Asia/Shanghai (restart after interrupt)
+
+LOCKED: LBFGS L32 champ Med/B90 n9–18 = 1.092/1.776, 1.197/2.843, 1.418/5.505, 1.752/11.353
+Honesty: projector = exp(-iγ Hc); blind cost banned. Done: compile, pulse, tail, LBFGS, depth ladder, finite-shot, γ-jitter.
+
+FOUR NEXT (ranked):
+1. SNAP phase noise (CHEAP, renames_Hc) — freeze champ; φ_pc ← φ_pc + σ ξ; Med vs σ on n9/12 (and n15 if time). Pair with prior γ-jitter. Paper robustness row.
+2. WalkSAT fair table (CHEAP, paper) — fill RESULTS WalkSAT None/None on scale1000; flips+evals Med/B90 vs champ 1/p. Not physics, but paper-blocking.
+3. Soft train include n18 (MED, renames_Hc) — soft-pool n18 val into L32 Adam/LBFGS; promote only if n18 B90 ↓ without n9/12 Med ×1.05. Analog of soft-n15.
+4. L=36/40 deepen (MED-HEAVY, renames_Hc) — pad L32→36/40 + short retrain {9,12,15}. Expect small Med gain; b already 1.054 — diminishing returns. Do after #3 if soft-n18 flat.
+
+TOP 2 CHEAP under renames_Hc → run now: (#1 SNAP phase noise) + (#3 soft-n18, reduced steps).
+Defer #4. Run #2 WalkSAT in parallel (not renames_Hc but unblocks RESULTS).
