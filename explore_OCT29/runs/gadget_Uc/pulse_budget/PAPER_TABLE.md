@@ -1,30 +1,37 @@
-# Paper table — scale1000 B=1000
+# Paper table — scale1000 B=1000 (refreshed)
 
-_Generated 2026-10-31 00:05:20 +0800 (Asia/Shanghai)_
+_Generated 2026-10-31 02:50:09 +0800 (Asia/Shanghai)_
 
-**Metric:** quantum columns = median / B90 of **1/p**; WalkSAT = median / B90 **flips** (different unit).
+**Metric:** quantum = Med/B90 of **1/p**; WalkSAT = Med/B90 **flips** (and evals). Different units.
 
-Honesty: champ = soft-n15 L32 projector-Uc ≡ exp(-iγ Hc); offline 26 SNAP masks Fid=1; two-cav needs joint SNAP.
+Honesty: champ = **L36 pad** from soft-n18 L32 projector-Uc ≡ `exp(-iγ Hc)`;
+n18 val was in soft-n18 pool; L36 is depth pad only (no extra train). scale1000 holdout. No blind-cost.
 
-| n | champ Med/B90 | ArmC L16 | QAOA L16 | WalkSAT flips |
-|---|---------------|----------|----------|---------------|
-| 9 | **1.100/1.759** | 1.441/3.314 | 2.242/5.534 | 13.0/37.1 |
-| 12 | **1.231/2.919** | 1.991/6.252 | 3.263/10.868 | 26.5/69.6 |
-| 15 | **1.483/5.847** | 2.921/10.959 | 5.099/18.647 | 44.8/123.6 |
-| 18 | **1.884/13.704** | 4.573/27.810 | 7.894/34.070 | 75.5/210.7 |
+| n | **champ L36** Med/B90 | ArmC L16 | QAOA L16 | WalkSAT flips | WalkSAT evals |
+|---|----------------------|----------|----------|---------------|---------------|
+| 9 | **1.072/1.613** | 1.441/3.314 | 2.242/5.534 | 12.5/40.1 | 51.0/161.4 |
+| 12 | **1.156/2.532** | 1.991/6.252 | 3.263/10.868 | 26.5/65.9 | 107.0/264.6 |
+| 15 | **1.312/4.918** | 2.921/10.959 | 5.099/18.647 | 43.8/128.1 | 176.0/513.6 |
+| 18 | **1.571/10.312** | 4.573/27.810 | 7.894/34.070 | 71.5/203.6 | 287.0/815.4 |
 
 ## b fits (9→18)
 
-- champ b_Med≈**1.0619**, b_B90≈**1.2567**
+- champ b_Med≈**1.0434**, b_B90≈**1.2308**
 - ArmC b_Med≈**1.1368**
 - QAOA b_Med≈**1.1511**
-- WalkSAT flips b_Med≈**1.2133**
+- WalkSAT flips b_Med≈**1.2106**
 
-## Ablation (L16 n15 Med) — no blind revive
+## vs ArmC / QAOA (champ Med ratio)
 
-| arm | n15 Med |
-|-----|---------|
-| projector | 2.754 |
-| armC | 2.921 |
-| trunc_Hc | 192.176 |
-| mixer_only | 16384.0 |
+| n | champ/ArmC | champ/QAOA |
+|---|------------|------------|
+| 9 | ×0.744 | ×0.478 |
+| 12 | ×0.581 | ×0.354 |
+| 15 | ×0.449 | ×0.257 |
+| 18 | ×0.344 | ×0.199 |
+
+## Lineage
+
+LBFGS seed0 → soft-n18 w1 L32 → **L36 pad (promoted)**.
+Multi-seed LBFGS on L32 soft-n18: no promote (flat).
+

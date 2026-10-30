@@ -1,27 +1,24 @@
-# Gadget-Uc — projector-gadget family (**soft-n18 PROMOTED** from locked LBFGS)
+# Gadget-Uc — **L36 pad PROMOTED**
 
-_Generated 2026-10-31 02:33:30 +0800 (Asia/Shanghai)_
+_Generated 2026-10-31 02:50:09 +0800 (Asia/Shanghai)_
 
-Plan: `docs/PLAN_gadget_Uc.md`. **BinH** W=H^{⊗3}, Arm C shell mixer, **L=32**.
+BinH W=H^{⊗3}, Arm C shell mixer. Still `Uc=exp(-iγ Hc)`.
 
-## Champ — soft-n18 `t9121518_w1` (warm from LBFGS seed0)
+## Champ — L=36 pad from soft-n18
 
-Params: `unsat_params.pt`. Backup locked: `unsat_params_pre_soft18_backup.pt`.
+| n | **L36 pad** | soft-n18 L32 | LBFGS seed0 |
+|---|-------------|--------------|-------------|
+| 9 | **1.072/1.613** | 1.098/1.719 | 1.092/1.776 |
+| 12 | **1.156/2.532** | 1.197/2.779 | 1.197/2.843 |
+| 15 | **1.312/4.918** | 1.395/5.460 | 1.418/5.505 |
+| 18 | **1.571/10.312** | 1.709/11.107 | 1.752/11.353 |
 
-| n | **soft-n18** | locked LBFGS seed0 |
-|---|--------------|--------------------|
-| 9 | **1.098/1.719** | 1.092/1.776 |
-| 12 | **1.197/2.779** | 1.197/2.843 |
-| 15 | **1.395/5.460** | 1.418/5.505 |
-| 18 | **1.709/11.107** | 1.752/11.353 |
+b_Med≈**1.0434**, b_B90≈**1.2308**.
 
-b_Med≈**1.0506**, b_B90≈**1.2325**.
+Params: `unsat_params.pt`. Soft-n18 backup: `unsat_params_pre_L36_backup.pt`.
+Paper table: `pulse_budget/PAPER_TABLE.md`.
 
-**Honesty:** soft-n18 uses n18 val in train pool; scale1000 holdout. Still `Uc=exp(-iγ Hc)`.
-
-**CRITICAL:** prior renames_Hc soft-n18 (~9.8/38.6) was on bad retrain — **INVALID**. See `renames_Hc/RESULTS.md`.
-
-## WalkSAT bars (scale1000, R=20, max_inst=200)
+## WalkSAT (scale1000 R=20 B=200)
 
 | n | flips Med/B90 | evals Med/B90 |
 |---|---------------|---------------|
@@ -30,11 +27,7 @@ b_Med≈**1.0506**, b_B90≈**1.2325**.
 | 15 | 43.8/128.1 | 176.0/513.6 |
 | 18 | 71.5/203.6 | 287.0/815.4 |
 
-## GRAPE library — FREEZE
+## Recent probes
 
-See `grape_library/FREEZE.md`. Still renames densify as clause→mask.
-
-## Retired / invalid
-
-- Prior renames_Hc soft-n18 on short retrain seed (INVALID)
-- parity, stencil, Fourier, freedom, span-γ, CVaR/lme
+- Multi-seed LBFGS on soft-n18: **no promote** (flat).
+- L36 pad: **PROMOTE** (n15 −6.0%, n18 −8.1% Med).

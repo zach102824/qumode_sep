@@ -177,3 +177,18 @@ Locked seed0 verified scale1000 = sealed (Δ~0). Soft-n18 `t9121518_w1` **PROMOT
 
 b_Med≈1.0506. Params: `unsat_params.pt`. Backup: `unsat_params_pre_soft18_backup.pt`.
 n18 val in soft pool (not pure zero-shot); scale1000 holdout OK. Still exp(-iγ Hc).
+
+---
+
+## Champ UPDATE — L36 pad (2026-10-31 ~02:50 CST)
+
+Interp soft-n18 L32→36, no retrain. Med/B90:
+
+| n | Med | B90 |
+|---|-----|-----|
+| 9 | 1.072 | 1.613 |
+| 12 | 1.156 | 2.532 |
+| 15 | 1.312 | 4.918 |
+| 18 | 1.571 | 10.312 |
+
+b_Med≈1.0434. Still exp(-iγ Hc). Multi-seed LBFGS on L32: no promote.
