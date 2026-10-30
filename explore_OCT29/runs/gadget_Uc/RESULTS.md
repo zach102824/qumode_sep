@@ -1,35 +1,48 @@
 # Gadget-Uc — projector-gadget family (SOFT-PROMOTED)
 
-_Generated 2026-10-30 19:39:52 +0800 (Asia/Shanghai)_
+_Generated 2026-10-30 19:47:06 +0800 (Asia/Shanghai)_
 
-Plan: `docs/PLAN_gadget_Uc.md`. **BinH** W=H^{⊗3}, mixer Arm C shell, L=16.
+Plan: `docs/PLAN_gadget_Uc.md`. **BinH** W=H^{⊗3}, Arm C shell mixer, L=16.
 
-## Soft promote
+## Champ — train{6,9,12} projector-Uc
 
-- **KEEP:** per-clause projector gadgets `U=∏_c[I+(e^{-iγ}-1)C_c]` (GRAPE library: finite C / C^X; not densified global H_cost).
-- **DROP:** XOR parity; stencil_x; Fourier-γ deepen.
-- **Champ params:** `unsat_params.pt` ← train **{6,9,12}** (`train6912/`, promoted).
-- Prior train{9,12} backup: `unsat_params_train912_backup.pt`.
+Params: `unsat_params.pt`
 
-## scale1000 Med/B90 (B=1000)
+| n | Med/B90 | Arm C | ×ArmC/champ |
+|---|---------|-------|-------------|
+| 9 | **1.406/3.288** | 1.441/3.314 | ×1.025 |
+| 12 | **1.864/6.106** | 1.991/6.252 | ×1.068 |
+| 15 | **2.754/10.244** | 2.921/10.959 | ×1.061 |
+| 18 | **4.194/24.302** | 4.573/27.810 | ×1.090 |
 
-| n | projector {6,9,12} | prior {9,12} | Arm C | ×ArmC/new |
-|---|--------------------|--------------|-------|-----------|
-| 9 | **1.406/3.288** | 1.445/3.222 | 1.441/3.314 | ×1.025 |
-| 12 | **1.864/6.106** | 1.926/6.148 | 1.991/6.252 | ×1.068 |
-| 15 | **2.754/10.244** | 2.820/10.063 | 2.921/10.959 | ×1.061 |
-| 18 | **4.194/24.302** | 4.329/24.342 | 4.573/27.810 | ×1.090 |
+## GRAPE library
 
-## GRAPE library (finite ops)
+`grape_library/LIBRARY.md`: **26** local projectors; SNAP↔UZ and W†SNAP W↔UX **Fid=1**.
+Two-cavity: \(C=C_a\otimes C_b\) for span-2 with \((k_a,k_b)\in\{(1,3),(2,2)\}\).
 
-See `grape_library/LIBRARY.md`. **26** local projectors (k=1,2,3). Exact: SNAP↔UZ and W†SNAP W↔UX Fid=1. Mean SNAP·D fit to UX ≈0.90; D·SNAP·D ≈0.93.
+### Two-cavity frequency (packs)
 
-## Retired / discarded
+| n | two-cav frac | (1,3) | (2,2) |
+|---|--------------|-------|-------|
+| 9 | 0.359 | 0.146 | 0.213 |
+| 12 | 0.184 | 0.074 | 0.110 |
+| 15 | 0.110 | 0.044 | 0.065 |
+| 18 | 0.073 | 0.030 | 0.043 |
 
-| item | note |
-|------|------|
-| parity / stencil | wrong / blind cost |
-| Fourier-γ deepen | L16 scale n9 1.843 > 1.445 |
+Tensor check kron projector: pass. Detail: `freedom/two_cavity_census.json`.
 
-Artifacts: `unsat_params.pt`, `train6912/`, `grape_library/`, `fourier_deepen/`.
+## Freedom ladder — DISCARD
+
+Promote gate: n15/n18 Med < 0.98×champ (2.699 / 4.110).
+
+| arm | n15 | n18 | keep |
+|-----|-----|-----|------|
+| span_w (clause weights by span) | 2.695/10.064 | 4.120/24.166 | False (n18 miss by ~0.01) |
+| eps_delta (local Fock residual) | 2.697/10.261 | 4.123/23.955 | False (n18 miss; ε→0) |
+
+Mild absolute Med gains but **do not replace champ**. See `freedom/RESULTS.md`.
+
+## Retired
+
+parity XOR, stencil_x, Fourier-γ deepen, freedom span_w / eps_delta.
 

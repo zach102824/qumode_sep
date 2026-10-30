@@ -72,3 +72,16 @@ Mixer both: Arm C `W · SNAP(φ_pc) · W†`, prep `W`, binary Fock packing, L=1
 ### Still banned
 - GRAPE targeting densified instance diag(E) as the pulse target.
 - parity XOR / stencil_x / Fourier deepen for SAT.
+
+## Freedom ladder + two-cavity census (2026-10-30 ~19:45 CST)
+
+### Two-cavity factors
+- Span-2 ⇒ \(C=C_a\otimes C_b\) with local \((1,3)\) or \((2,2)\); in GRAPE library.
+- Frac of clauses that are two-cavity: n9 36%, n12 18%, n15 11%, n18 7% (declines with n as span-3/4 dominate).
+
+### Freedom probes (train{6,9,12}) — DISCARD
+- **span_w**: learned softplus weights on E^(span=2,3,4); converged ≈(1,1,1); n15 2.695 / n18 4.120 — fails joint 2% gate on n18.
+- **eps_delta**: local δ on Fock 0..7 + bounded ε; ε→0; n15 2.697 / n18 4.123 — same.
+- Keep champ `unsat_params.pt` (train{6,9,12} plain projector).
+
+Artifacts: `runs/gadget_Uc/freedom/`.

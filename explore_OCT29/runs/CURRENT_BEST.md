@@ -107,3 +107,8 @@ Params: `runs/gadget_Uc/unsat_params.pt` (promoted from train6912).
 | 18 | 4.194 | 24.302 |
 
 GRAPE library: `runs/gadget_Uc/grape_library/LIBRARY.md` (26 local projectors; SNAP exact).
+
+
+### Freedom ladder (2026-10-30) — negative
+
+span_w / eps_delta: absolute Med dips but miss promote gate on n18. Champ unchanged.
