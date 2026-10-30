@@ -192,3 +192,16 @@ Interp soft-n18 L32→36, no retrain. Med/B90:
 | 18 | 1.571 | 10.312 |
 
 b_Med≈1.0434. Still exp(-iγ Hc). Multi-seed LBFGS on L32: no promote.
+
+---
+
+## Champ UPDATE — L40 pad (2026-10-31 ~02:53 CST)
+
+| n | Med | B90 |
+|---|-----|-----|
+| 9 | 1.058 | 1.532 |
+| 12 | 1.129 | 2.367 |
+| 15 | 1.263 | 4.563 |
+| 18 | 1.467 | 10.012 |
+
+b_Med≈1.0371. Interp L36→40, no retrain. Still exp(-iγ Hc).

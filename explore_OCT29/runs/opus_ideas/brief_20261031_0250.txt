@@ -1,0 +1,13 @@
+Opus-style next (after L40 pad) — 2026-10-31 ~02:50 Asia/Shanghai
+
+Champ L36 pad: 1.072/1.613, 1.156/2.532, 1.312/4.918, 1.571/10.312; b≈1.043.
+Still Uc=exp(-iγ Hc). Blind banned.
+
+LIVE: L40 pad from L36 (same interp). Promote if n15+n18 Med ≤98% L36.
+Fallback: short retrain L36 free γ/φ if L40 fails.
+
+TWO MORE IDEAS:
+1. (CHEAP) SNAP φ + γ joint jitter on L36/L40 champ — paper robustness row; σ∈{0,0.01,0.02,0.05}.
+2. (MED) Soft-n18 refresh on L36/L40 angles (n18 val weight) — may squeeze n18 B90; promote vs sealed holdout only.
+
+If L40 done: run #1 if cheap leftover; else idle.
