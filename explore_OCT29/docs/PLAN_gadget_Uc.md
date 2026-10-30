@@ -117,3 +117,9 @@ Artifacts: `runs/gadget_Uc/freedom/`.
 - Soft include n15 (val pool): both t691215 and t91215 pass n18 holdout gate.
 - Champ = **t91215**: n15 1.483, n18 1.884; b_Med≈1.0618.
 - **Freeze GRAPE library** (`grape_library/FREEZE.md`). No more classical depth.
+
+## Robust ablations (2026-10-31 ~00:00 CST)
+
+Zach worry: projector = solving Hc. Ablations in `docs/ROBUST_GRAPE.md` + `runs/robust_grape/RESULTS.md`:
+mixer_only / random_diag / shuffle_E / universal_cover / trunc_Hc — all Med ≫ projector.
+Honest claim: frozen projector library **is** Uc=exp(-iγ Hc); not Hc-free.
