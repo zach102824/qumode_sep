@@ -111,3 +111,9 @@ Artifacts: `runs/gadget_Uc/freedom/`.
 - Span-split γ_ℓ^(s) on L28: **discard** (n15 1.663 / n18 2.210 miss gate).
 - Plain **L=32** retrain: **promote** — n15 **1.537**, n18 **1.995**; b_Med≈1.0676.
 - Champ: `unsat_params.pt` (L32). Stop further depth; next = train-set tweak or GRAPE compile notes.
+
+## Soft-n15 PROMOTE + GRAPE FREEZE (2026-10-30 ~20:28 CST)
+
+- Soft include n15 (val pool): both t691215 and t91215 pass n18 holdout gate.
+- Champ = **t91215**: n15 1.483, n18 1.884; b_Med≈1.0618.
+- **Freeze GRAPE library** (`grape_library/FREEZE.md`). No more classical depth.
