@@ -1,0 +1,70 @@
+VERDICT: YES. Two-mode or few-mode GRAPE, used to build an offline library of frozen pulses that are then run as a classical schedule, implements \(U_c = e^{-i\gamma H_c}\) for fixed-k k-SAT/TEB without ever forming the \(2^n\) or \(d^n\) instance matrix. This holds under three conditions, covered in the caveats below: the clause terms commute, \(k\) is fixed, and there is a per-gadget error budget.
+
+A note on quotes: I'm working from memory of these papers and did not check wording against the PDFs. Treat the text below as accurate paraphrase of each paper's role, not as verbatim quotes. The two "quotes" in your `GRAPE_TARGET_SPEC.md` (lines 77 and 81, from Khaneja 2005 and Rowland & Jones 2012) should be checked against the originals before they go in a write-up.
+
+## Answers
+
+**A) YES.** GRAPE only ever works with the propagator of the system it controls. The gradient is computed by forward and backward propagation of \(N\times N\) matrices, where \(N\) is the dimension of the simulated device model (for example \(d_1 d_2\), or \(d_c \cdot d_q\) for cavity⊗transmon), plus any guard levels. The fidelity is \(|\mathrm{Tr}(U_{\rm tgt}^\dagger U(T))|^2\) on that space. Nothing about an instance on \(n\) variables enters the calculation. A completely general \(U_{\rm tgt} \in SU(d_1 d_2)\) is allowed, provided the controls make the system fully controllable (see the two-mode caveat below).
+
+**B) YES, for fixed k and commuting clause terms.**
+
+## Proof sketch
+
+1. **Each clause is a projector.** Each clause indicator \(C_c\) is diagonal in the computational or Fock basis and satisfies \(C_c^2 = C_c\). Therefore
+\[
+e^{-i\gamma w_c C_c} = I + (e^{-i\gamma w_c}-1)\,C_c .
+\]
+   This is exact. For a weighted cost, the weight \(w_c\) sits inside the exponent.
+2. **The clause terms commute.** All \(C_c\) are diagonal in the same basis, so they commute, and
+\[
+\prod_c e^{-i\gamma w_c C_c} = e^{-i\gamma \sum_c w_c C_c} = e^{-i\gamma H_c}
+\]
+   exactly, in any order, with no Trotter error. Your related fact is confirmed.
+3. **Each gadget is small.** Each factor acts nontrivially only on the \(\le k\) variables of its clause, so it is a \(d^k \times d^k\) object tensored with identity. It can be built in either of two ways:
+   - by GRAPE directly on the \(k\)-mode support, or
+   - by decomposing it into two-mode or two-qudit gates. Two-level gates are universal for qudits (Brylinski & Brylinski 2002; Muthukrishnan & Stroud 2000). A \(k\)-local diagonal phase needs \(O(2^k)\) or \(O(d^k)\) entanglers (Bullock & Markov 2004; Welch et al. 2014). That is constant for fixed \(k\).
+4. **The total cost is polynomial.** The full circuit is a classical list of \(m\) gadgets, each with \(O(1)\) pulses, plus routing. The classical work is \(O(m \cdot \mathrm{poly}(d^k))\) and the circuit depth is \(O(m)\), or less with parallel scheduling. No step multiplies anything of dimension \(d^n\).
+5. **Universality doesn't create an exponential cost here.** Knill (1995) shows that generic \(n\)-qubit unitaries need exponentially many local gates. \(U_c\), however, is not generic: it comes with an explicit factorisation into \(m\) local factors. Universality of local gates is used only gadget by gadget.
+
+## C) Literature and the role of each paper
+
+- **Khaneja et al., J. Magn. Reson. 172, 296 (2005), GRAPE.** This paper defines GRAPE: piecewise-constant controls, with an analytic gradient obtained from forward-propagated \(U_j\) and back-propagated \(\lambda_j\). Its examples use small analytic targets on the controlled spins, such as a three-spin \(e^{-i\alpha ZZZ}\)-type target, not a densified many-body cost operator.
+  - Supports: the target is defined on the controlled space.
+  - Limits: the cost grows with that space's dimension. That is fine for 2–3 modes and is exactly why GRAPE is not applied to the whole instance. Rowland & Jones (2012) make the scaling point explicitly.
+- **Krastanov et al., PRA 92, 040303(R) (2015), with Heeres et al., PRL 115, 137002 (2015).** Krastanov proves that SNAP (Selective Number-dependent Arbitrary Phase) plus displacement is universal for one oscillator, with an explicit construction. Heeres demonstrates SNAP experimentally.
+  - Supports: SNAP is itself a diagonal phase gadget \(\sum_n e^{i\theta_n}|n\rangle\langle n|\), so single-mode clause or penalty phases can be set analytically with no GRAPE at all. Here \(\theta_n = -\gamma f(n)\).
+  - Limits: this is single-mode universality. Two-mode universality needs an added entangler such as a beamsplitter, cross-Kerr, or a shared transmon.
+- **Heeres et al., Nat. Commun. 8, 94 (2017).** GRAPE pulses on a cavity⊗transmon system, truncated, with penalties on high photon numbers and robustness to parameter spread. They realise a universal logical gate set on a cat-encoded qubit with fidelity of about 0.99.
+  - Supports A: GRAPE compiles arbitrary targets on a truncated cavity⊗transmon space offline.
+  - Limits: the target there was a logical-qubit operation, with guard levels and leakage penalties. A full arbitrary \(SU(d_1 d_2)\) on many Fock levels is harder, and pulses get longer as \(d\) grows.
+- **Wang et al., Science 352, 1087 (2016), "cat in two boxes".** This work used optimal-control pulses on a cavity–transmon–cavity system. It is the closest direct support for GRAPE on two bosonic modes together with an ancilla.
+- **Gao et al., PRX 8, 021073 (2018), and Nature 566, 509 (2019).** These provide the programmable beamsplitter and exponential-SWAP between two cavities. Together with SNAP or ECD on each mode, they give a route to two-mode universality. Lloyd & Braunstein, PRL 82, 1784 (1999), gives the continuous-variable universality background. The Liu et al. 2024 hybrid oscillator–qubit instruction-set paper collects these results.
+- **Fösel, Krastanov, Marquardt & Jiang, arXiv:2004.14256 (2020).** Optimises SNAP plus displacement sequences so that far fewer layers are needed for target states or unitaries.
+  - Supports: a compact, "frozen" parameterised gadget compiled offline.
+  - Limits: single-mode, and the best results are for state preparation rather than full unitaries.
+  - For cavity⊗transmon, also see Eickbusch et al., Nat. Phys. 2022 (ECD control).
+- **Farhi, Goldstone & Gutmann, arXiv:1411.4028 (2014), QAOA.** This paper writes \(U(C,\gamma) = e^{-i\gamma C} = \prod_\alpha e^{-i\gamma C_\alpha}\), notes that the terms commute and are local, and bounds the depth by roughly \(m+1\). That is precisely your claims 2 and 3 for qubits. Note what it does not say: nothing about QAOA's performance on k-SAT is implied.
+
+## D) Caveats: when something exponential or non-scalable comes back
+
+1. **Gadgets must not depend on \(\gamma\).** A pulse optimised for \(I + (e^{-i\gamma}-1)C_c\) at one value of \(\gamma\) is not reusable at other values. There are three fixes:
+   - decompose so that \(\gamma\) only enters a single-mode phase (a virtual-Z rotation or SNAP angle) between \(\gamma\)-independent entanglers. Example: compute the clause into an ancilla, apply \(R_z(\gamma)\), then uncompute;
+   - store a grid of \(\gamma\) values and interpolate;
+   - use parameterised or robust GRAPE.
+
+   Otherwise you are compiling per \(\gamma\), though still never per instance at size \(2^n\).
+2. **\(k\) must be fixed.** Gadget cost is \(d^k\) for GRAPE, or \(O(2^k)\) entanglers when decomposed. If clause width grows with \(n\), this becomes exponential again.
+3. **Truncation and leakage.** GRAPE optimises a truncated model, while the real oscillator is infinite. Leakage from one gadget feeds into the next, so you need guard levels and leakage penalties (as in Heeres 2017), and to check the full stack of gadgets in a larger truncation.
+4. **Spectator modes and crosstalk.** With a shared transmon or a multimode cavity, always-on dispersive shifts \(\chi\) and cross-Kerr couplings to idle modes make a gadget calibrated in isolation non-local in practice. You must include spectators in the model, echo them out, or bound the error. If you model spectators by brute force, the dimension grows with their number. That is the one place where exponential cost could quietly come back.
+5. **Error accumulates.** Total infidelity grows roughly as \(m\,\varepsilon_{\rm gadget}\), so each gadget needs \(\varepsilon \ll 1/m\). This is polynomial but it limits scale.
+6. **Commuting cost only.** If the clause or penalty operators are not simultaneously diagonal (for example quadrature-based penalties, or mixing terms folded into the cost), the product is a Trotter approximation, with error \(O(\gamma^2 \sum \|[H_a, H_b]\|)\). This applies to your `nonhc_Uc` variants.
+7. **Connectivity.** If a clause's modes aren't physically coupled, you need SWAP or beamsplitter routing. The overhead is polynomial, not exponential.
+8. **What remains exponential is unrelated to compilation.** Classically simulating or verifying the instance output state, computing \(\langle H_c\rangle\) exactly on a classical machine, and the hardness of k-SAT itself are all still exponential in the worst case. Avoiding densification removes a compilation bottleneck, not computational hardness.
+
+## Related facts
+
+- **Product of commuting projectors:** confirmed exact. It needs \(C_c^2 = C_c\) (or weights placed in the exponent) and a common diagonal basis.
+- **Two-mode universality from beamsplitter + SNAP, or GRAPE on cavity+transmon:** confirmed in principle, with a caveat. The experiments cited demonstrate pieces (single-mode universality, beamsplitter or exponential-SWAP, cavity–transmon GRAPE, two-cavity optimal-control state preparation). Arbitrary \(SU(d_1 d_2)\) at large \(d\) on two cavities is a controllability statement more than a demonstrated high-fidelity result.
+- **Universality of local gates doesn't require GRAPE of the full instance matrix:** confirmed (Barenco et al. 1995; DiVincenzo 1995; Brylinski & Brylinski 2002 for qudits).
+
+VERDICT: YES
