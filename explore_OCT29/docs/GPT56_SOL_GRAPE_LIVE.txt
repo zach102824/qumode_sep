@@ -1,0 +1,247 @@
+## (A) Full-instance matrix required?
+
+**NO.**
+
+Standard GRAPE needs a target and device Hamiltonians on the Hilbert space being controlled. For an offline local gadget, that space has dimension
+
+\[
+N=\prod_{\ell\in\text{gadget}} d_\ell,
+\]
+
+not \(2^n\) or \(d^n\) for the complete SAT instance.
+
+Examples:
+
+- Two truncated modes: \(N=d_1d_2\), so \(U_{\mathrm{tgt}}\) is \((d_1d_2)\times(d_1d_2)\).
+- Cavity–transmon: \(N=d_{\mathrm{cav}}d_{\mathrm{tr}}\), including any guard levels.
+- \(k\) qubits: \(N=2^k\), so a 4-SAT clause target is \(16\times16\).
+- \(k\) \(d\)-level systems: \(N=d^k\), target size \(d^k\times d^k\).
+
+GRAPE would require a \(2^n\times2^n\) target only if one deliberately asked it to optimize the complete \(n\)-variable instance as one monolithic unitary.
+
+## (B) Do gradients force the full matrix?
+
+**NO.**
+
+Zach’s inference is false: differentiating the controlled evolution does not enlarge its Hilbert space. The gradients use local \(N\times N\) quantities:
+
+\[
+U_j=e^{-i\Delta t H_j},\qquad
+X_j=U_jU_{j-1}\cdots U_1,
+\]
+
+and an adjoint/backward object
+
+\[
+\lambda_j
+  =U_{j+1}^{\dagger}\cdots U_M^{\dagger}U_{\mathrm{tgt}}.
+\]
+
+Thus \(U_j,X_j,\lambda_j,H_0,H_k\), and an explicit full-space \(U_{\mathrm{tgt}}\) are all \(N\times N\). For state-transfer GRAPE, the propagated objects can instead be \(N\)-component state vectors.
+
+Whether a derivative is first-order approximate or evaluated exactly changes gradient accuracy and runtime—not \(N\).
+
+## (C) Usual GRAPE procedure
+
+The original reference is N. Khaneja, T. Reiss, C. Kehlet, T. Schulte-Herbrüggen, and S. J. Glaser, “Optimal control of coupled spin dynamics: design of NMR pulse sequences by gradient ascent algorithms,” *Journal of Magnetic Resonance* **172**, 296–305 (2005), [DOI: 10.1016/j.jmr.2004.11.004](https://doi.org/10.1016/j.jmr.2004.11.004); see also [quant-ph/0502173](https://arxiv.org/abs/quant-ph/0502173).
+
+The standard unitary-synthesis loop is:
+
+1. **Choose the controlled model.**
+
+   On an \(N\)-dimensional truncated space,
+
+   \[
+   H(t)=H_0+\sum_a u_a(t)H_a,
+   \]
+
+   where \(H_0\) is the drift and \(H_a\) are available control Hamiltonians.
+
+2. **Discretize the pulse.**
+
+   Divide \(T\) into \(M\) intervals of duration \(\Delta t\), taking each control as constant:
+
+   \[
+   u_a(t)=u_a(j),\qquad t\in[(j-1)\Delta t,j\Delta t).
+   \]
+
+3. **Build slice propagators.**
+
+   \[
+   H_j=H_0+\sum_a u_a(j)H_a,\qquad
+   U_j=e^{-i\Delta t H_j}.
+   \]
+
+   Each \(U_j\) is \(N\times N\).
+
+4. **Forward propagation.**
+
+   \[
+   X_0=I,\qquad X_j=U_jX_{j-1}.
+   \]
+
+   The realized final gate is \(U_f=X_M=U_M\cdots U_1\).
+
+5. **Evaluate fidelity.**
+
+   A common phase-insensitive objective is
+
+   \[
+   \Phi=\frac{\left|\operatorname{Tr}
+       (U_{\mathrm{tgt}}^\dagger X_M)\right|^2}{N^2}.
+   \]
+
+   Khaneja et al. use the corresponding Hilbert–Schmidt overlap formulation; normalization conventions vary without changing the algorithm.
+
+6. **Backward/adjoint propagation.**
+
+   Define
+
+   \[
+   \lambda_j
+      =U_{j+1}^{\dagger}\cdots U_M^{\dagger}U_{\mathrm{tgt}},
+   \]
+
+   with \(\lambda_M=U_{\mathrm{tgt}}\), and obtain earlier \(\lambda_j\) recursively. Khaneja et al. commonly denote this backward object by \(P_j\).
+
+   If
+
+   \[
+   z=\operatorname{Tr}(U_{\mathrm{tgt}}^\dagger X_M),
+   \]
+
+   then equivalently \(z=\operatorname{Tr}(\lambda_j^\dagger X_j)\).
+
+7. **Compute all control gradients.**
+
+   Exactly,
+
+   \[
+   \frac{\partial U_j}{\partial u_a(j)}
+   =
+   -i\int_0^{\Delta t}
+   e^{-i(\Delta t-s)H_j}H_a e^{-isH_j}\,ds .
+   \]
+
+   Therefore
+
+   \[
+   \frac{\partial\Phi}{\partial u_a(j)}
+   =
+   \frac{2}{N^2}\operatorname{Re}\!\left[
+   z^*\operatorname{Tr}\!\left(
+   \lambda_j^\dagger
+   \frac{\partial U_j}{\partial u_a(j)}
+   X_{j-1}\right)\right].
+   \]
+
+   Original GRAPE uses the short-slice approximation
+
+   \[
+   \frac{\partial U_j}{\partial u_a(j)}
+   \approx -i\Delta t\,H_aU_j,
+   \]
+
+   giving
+
+   \[
+   \frac{\partial\Phi}{\partial u_a(j)}
+   \approx
+   \frac{2\Delta t}{N^2}
+   \operatorname{Im}\!\left[
+   z^*\operatorname{Tr}(\lambda_j^\dagger H_aX_j)
+   \right],
+   \]
+
+   up to sign conventions. Modern implementations may use exact Fréchet derivatives or automatic differentiation.
+
+8. **Update and repeat.**
+
+   Update \(u_a(j)\) using gradient ascent, conjugate-gradient, BFGS/L-BFGS, etc.; enforce amplitude/bandwidth constraints; repeat until fidelity and robustness criteria are met. Finally validate with a larger truncation and hardware uncertainties.
+
+The key GRAPE efficiency is that one forward and one backward sweep supplies gradients for every time slice. All of this occurs in the chosen \(N\)-dimensional controlled model.
+
+## (D) Local compilation followed by scheduling
+
+**YES, under the stated caveats.**
+
+Compile each clause gadget—or the two-mode primitives from which it is decomposed—offline. At instance time, retain only a classical list such as
+
+\[
+(G_{c_1},G_{c_2},\ldots,G_{c_m}),
+\]
+
+with variable/mode mappings and pulse parameters. Hardware executes that list. It never needs to multiply the factors into a dense \(d^n\times d^n\) matrix.
+
+“Arbitrary two-mode target” additionally requires controllability and sufficient control time. If a two-mode system is not controllable, GRAPE cannot synthesize every element of \(SU(d_1d_2)\).
+
+This bypass concerns compilation and execution. A classical full-state simulation may still require a \(d^n\)-component state vector.
+
+## (E) Caveats
+
+### Commuting projector clauses
+
+For \(C_c^2=C_c\),
+
+\[
+e^{-i\gamma C_c}
+=(I-C_c)+e^{-i\gamma}C_c
+=I+(e^{-i\gamma}-1)C_c.
+\]
+
+If all clauses commute,
+
+\[
+\prod_c e^{-i\gamma C_c}
+=e^{-i\gamma\sum_c C_c}
+=e^{-i\gamma H_c}
+\]
+
+exactly, in any order, with no Trotter error. Weighted clauses use \(e^{-i\gamma w_cC_c}\).
+
+For noncommuting terms, the equality generally fails because of BCH commutator terms; ordering, Trotterization, or direct joint control is then required.
+
+### Fixed \(k\)
+
+For \(k\) \(d\)-level subsystems:
+
+- Hilbert dimension: \(N=d^k\).
+- Target matrix: \(d^k\times d^k\).
+- Dense storage: \(d^{2k}\) complex entries.
+- Naive matrix exponentiation: roughly \(O(d^{3k})\).
+- A general \(k\)-qubit unitary may require \(O(4^k)\) two-qubit gates; structured diagonal/clause phases can require only \(O(2^k)\), or less with ancillas and multi-control constructions.
+
+These are constants with respect to \(n\) only when \(k\) and local truncations remain fixed. If one mode encodes exponentially many logical states, so that \(d\sim2^{n_i}\), the exponential dimension has merely been hidden inside \(d\).
+
+### Error budget
+
+If each implemented gadget obeys an operator/diamond-norm bound
+
+\[
+\|\widetilde G_c-G_c\|\le\epsilon_{\mathrm{gadget}},
+\]
+
+then telescoping gives
+
+\[
+\left\|\prod_c\widetilde G_c-\prod_cG_c\right\|
+\le m\,\epsilon_{\mathrm{gadget}}
+\]
+
+in the worst case. Thus one typically needs \(\epsilon_{\mathrm{gadget}}\ll1/m\).
+
+That linear statement is not automatically valid when \(\epsilon\) means average infidelity: coherent errors can accumulate in amplitude and produce \(O(m^2\epsilon)\) infidelity.
+
+Additional errors include:
+
+- leakage outside the optimized truncation;
+- insufficient guard levels;
+- spectator-dependent dispersive or cross-Kerr shifts;
+- crosstalk and routing operations;
+- accumulation of leakage between consecutive gadgets.
+
+Spectators must be included, echoed, calibrated out, or bounded. Including many spectators explicitly enlarges \(N\).
+
+Finally, a pulse optimized for one \(\gamma\) is not automatically frozen for every \(\gamma\). Use a parameterized phase, a \(\gamma\)-indexed library, or robust/parameterized control.
+
+**VERDICT: YES—BYPASS; the full \(2^n\times2^n\) instance matrix is not needed.**
