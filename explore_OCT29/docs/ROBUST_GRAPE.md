@@ -87,3 +87,16 @@ See `docs/COMPILE_OFFLINE.md` (mirror: `runs/gadget_Uc/grape_library/COMPILE_OFF
 Artifacts: `runs/robust_grape/RESULTS.md`.
 
 Tracked copies: `docs/ROBUST_GRAPE_RESULTS.md`, `docs/robust_grape_results.json`.
+
+
+## Follow-up non-Hc probes (2026-10-31)
+
+Script `scripts/probe_nonhc_Uc.py` → `runs/nonhc_Uc/`.
+
+| arm | =exp(Hc)? | n15 Med (B=200) | verdict |
+|-----|-----------|-----------------|---------|
+| surrogate_pair (2-body Ising) | NO | ~10577 | KILL ≫ trunc_Hc |
+| noncomm_xz (Ux@Uz local) | NO | ~24479 | KILL |
+| wrong_graph (var-perm clauses) | NO | ~1.5e5 | KILL |
+
+None beat trunc_Hc; none approach ArmC. See `runs/nonhc_Uc/RESULTS.md`.
