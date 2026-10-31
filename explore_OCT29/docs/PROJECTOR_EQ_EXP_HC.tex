@@ -1,0 +1,228 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\title{Clause projectors implement $\mathrm{e}^{-i\gamma H_c}$\\
+without densifying $H_c$ or matrix-exponentiating $2^n$}
+\author{explore\_OCT29 / qumode\_sep\\
+Asia/Shanghai \quad 2026-10-31}
+\date{2026-10-31 (Asia/Shanghai)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For TEB 4-SAT with mutually commuting Fock clause projectors $C_c$,
+the product of local gadgets
+$U_c(\gamma)=I+(e^{-i\gamma}-1)C_c$ equals $\exp(-i\gamma H_c)$ with
+$H_c=\sum_c C_c$ \emph{exactly}.  Each gadget is applied sparsely
+(Fock-local / SNAP mask), so one never builds the densified diagonal
+$E\in\mathbb{C}^{2^n}$ nor a $2^n\times 2^n$ matrix exponential.
+Conjugation by $W=H^{\otimes 3}$ only changes frame; the identity
+still holds in the computational (Fock) frame.  This note records the
+algebra and the complexity contrast with Arm~C densified $\mathrm{diag}(E)$.
+\end{abstract}
+
+\section{Setup}
+
+Fix TEB 4-SAT on $n$ bits packed into cavities of Fock dimension $8$
+($3$ bits per cavity).  For each clause $c$ let $C_c$ be the
+\emph{Fock clause projector}: the orthogonal projector onto the
+subspace of computational basis states that \emph{falsify} clause $c$.
+Then
+\begin{equation}
+  C_c^\dagger = C_c,\qquad C_c^2 = C_c,
+\end{equation}
+and, because every $C_c$ is diagonal in the same Fock / computational
+basis,
+\begin{equation}
+  [C_c,C_{c'}]=0\qquad\text{for all clauses }c,c'.
+\end{equation}
+Define the cost Hamiltonian
+\begin{equation}
+  H_c \;:=\; \sum_{c} C_c.
+\end{equation}
+On computational basis state $\lvert x\rangle$,
+$H_c\lvert x\rangle = E(x)\lvert x\rangle$ where $E(x)$ is the number
+of unsatisfied clauses (the densified energy used by Arm~C).
+
+\section{Single-clause gadget}
+
+\begin{lemma}[Projector exponential]
+\label{lem:single}
+Let $P$ be an orthogonal projector and $\gamma\in\mathbb{R}$.  Then
+\begin{equation}
+  U(\gamma) \;:=\; I + (e^{-i\gamma}-1)\,P
+  \;=\;
+  \exp(-i\gamma P).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Since $P^2=P$, the spectral theorem gives $P = \sum_j \lvert\psi_j\rangle\langle\psi_j\rvert$
+on its support with eigenvalues in $\{0,1\}$.  Hence
+\begin{align}
+  \exp(-i\gamma P)
+  &= \sum_{k=0}^\infty \frac{(-i\gamma)^k}{k!}\,P^k
+   = I + \sum_{k=1}^\infty \frac{(-i\gamma)^k}{k!}\,P
+   \nonumber\\
+  &= I + \bigl(e^{-i\gamma}-1\bigr)\,P,
+\end{align}
+because $P^k=P$ for all $k\ge 1$.  Equivalently, on $\ker P$ the
+operator acts as $I$, and on $\mathrm{ran}\,P$ it acts as
+$e^{-i\gamma}I$.
+\end{proof}
+
+\begin{corollary}
+For each clause projector $C_c$,
+\begin{equation}
+  U_c(\gamma) \;:=\; I + (e^{-i\gamma}-1)\,C_c
+  \;=\;
+  \exp(-i\gamma C_c).
+\end{equation}
+\end{corollary}
+
+\section{Product over clauses}
+
+\begin{theorem}[Projector product $= \mathrm{e}^{-i\gamma H_c}$]
+\label{thm:main}
+If $\{C_c\}$ are mutually commuting orthogonal projectors, then
+\begin{equation}
+  \prod_{c} U_c(\gamma)
+  \;=\;
+  \prod_{c} \exp(-i\gamma C_c)
+  \;=\;
+  \exp\!\Bigl(-i\gamma \sum_{c} C_c\Bigr)
+  \;=\;
+  \exp(-i\gamma H_c).
+\end{equation}
+The product may be taken in any order.
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:single}, $U_c(\gamma)=\exp(-i\gamma C_c)$.
+Because $[C_c,C_{c'}]=0$ for all $c,c'$, the family
+$\{-i\gamma C_c\}$ also pairwise-commutes, so the Baker--Campbell--Hausdorff
+formula truncates:
+\begin{equation}
+  \prod_{c}\exp(-i\gamma C_c)
+  \;=\;
+  \exp\!\Bigl(\sum_{c}(-i\gamma C_c)\Bigr)
+  \;=\;
+  \exp(-i\gamma H_c).
+\end{equation}
+(Equivalently: all $C_c$ are simultaneously diagonalizable; on a common
+eigenbasis vector with eigenvalues $p_c\in\{0,1\}$, both sides multiply
+the amplitude by $\prod_c e^{-i\gamma p_c}=e^{-i\gamma\sum_c p_c}$.)
+\end{proof}
+
+\begin{remark}[Honesty]
+Theorem~\ref{thm:main} shows that the projector ``cost unitary'' is
+\emph{the same physics} as Arm~C's $\mathrm{e}^{-i\gamma H_c}$.  The
+gain is only algorithmic: one never densifies $E$ of length $2^n$.
+It is \emph{not} a different $U_c$ that secretly avoids $H_c$.
+\end{remark}
+
+\section{Complexity: sparse gadgets vs densified $\mathrm{diag}(E)$}
+
+\paragraph{Densified path (Arm~C).}
+Enumerate all $2^n$ bitstrings, compute $E(x)=\#\{\text{unsat clauses}\}$,
+store the vector $E\in\mathbb{R}^{2^n}$, then apply
+$\psi\mapsto e^{-i\gamma E}\odot\psi$ (pointwise) each layer.
+Memory and build cost scale as $\Theta(2^n)$; for $n=18$ one $E$ is
+already $\sim 1$\,MB float32, and $n=24$ would be $\sim 64$\,MB per $E$.
+
+\paragraph{Projector / SNAP-library path.}
+Never form $H_c$ or $U$ as a dense $2^n\times 2^n$ matrix.  Apply each
+clause gadget as a Fock-local update: for a span-$1$ clause the support
+is an $8$-level SNAP phase mask; for span-$2$ a joint $8\times 8$ SNAP;
+in all cases the per-clause work is $O(\mathrm{poly}(n))$ (constant in
+Fock dimension for fixed packing).  With $m$ clauses the layer costs
+\begin{equation}
+  O\bigl(m\cdot\mathrm{poly}(n)\bigr)
+\end{equation}
+(or $O(m)$ per amplitude if amplitudes are already materialized).
+The offline library of $26$ local masks is compiled once
+($\sim 1$\,KB) and reused; only the shared angles $\gamma_\ell$ change
+per layer.  By Theorem~\ref{thm:main} the composed unitary remains
+exactly $\mathrm{e}^{-i\gamma H_c}$.
+
+\begin{proposition}[No densify, no matrix-exp of $2^n$]
+\label{prop:complexity}
+Implementing $\prod_c U_c(\gamma)$ via sparse / Fock-local gadgets
+implements $\mathrm{e}^{-i\gamma H_c}$ without (i)~allocating
+$E\in\mathbb{C}^{2^n}$, and without (ii)~forming or exponentiating a
+dense $2^n\times 2^n$ matrix.
+\end{proposition}
+
+\section{$W=H^{\otimes 3}$ conjugation}
+
+Let $W=H^{\otimes 3}$ act on one cavity's three qubits (Hadamard on each
+bit).  Cost implemented in the $W$-frame is
+\begin{equation}
+  W^\dagger\,\mathrm{e}^{-i\gamma H_c}\,W
+  \;=\;
+  \exp\!\bigl(-i\gamma\, W^\dagger H_c W\bigr).
+\end{equation}
+This is a \emph{change of frame}: the spectrum of the generator is
+unchanged, and sandwich checks already verify
+$W^\dagger Z W=X$ and Fock$\leftrightarrow W$ fidelity $1$ for the
+compiled SNAP masks.  In the computational / Fock frame the product
+identity of Theorem~\ref{thm:main} continues to hold; $W$ does not
+break $\prod_c U_c=\mathrm{e}^{-i\gamma H_c}$.
+
+\section{What this does \emph{not} claim}
+
+\begin{itemize}[leftmargin=*]
+  \item It does \emph{not} claim a $U_c$ algebraically inequivalent to
+        $\mathrm{e}^{-i\gamma H_c}$.  Non-$H_c$ probes (surrogate,
+        noncommuting XZ, wrong-graph, adaptive feedback, nonlinear
+        clause phases) all die on n15 screens versus trunc\_Hc /
+        Arm~C.
+  \item It does \emph{not} remove instance dependence: clauses still
+        enter via $\{C_c\}$.
+  \item Simulator wall-clock at small $n$ may favor NumPy
+        $\exp(-i\gamma E)$ over a pure-Python clause loop; that is an
+        implementation artifact, not a complexity rebuttal
+        (see \texttt{docs/COMPILE\_OFFLINE.md}).
+\end{itemize}
+
+\section{Summary}
+
+\begin{center}
+\begin{tabular}{@{}llp{0.42\textwidth}@{}}
+\toprule
+Claim & Status & Note \\
+\midrule
+$U_c(\gamma)=I+(e^{-i\gamma}-1)C_c=\mathrm{e}^{-i\gamma C_c}$
+  & Proven & Lemma~\ref{lem:single} \\
+$\prod_c U_c(\gamma)=\mathrm{e}^{-i\gamma H_c}$
+  & Proven & Thm.~\ref{thm:main}, needs $[C_c,C_{c'}]=0$ \\
+Sparse apply, no densify $E\in\mathbb{C}^{2^n}$
+  & Complexity & Prop.~\ref{prop:complexity} \\
+$W=H^{\otimes 3}$ keeps identity in Fock frame
+  & Frame only & Sec.~5 \\
+Same physics as Arm~C densified $\mathrm{diag}(E)$
+  & Honest & Remark after Thm.~\ref{thm:main} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.8em}
+\noindent\textbf{One-liner.}
+Clause projectors are an \emph{exp-avoiding implementation} of
+$\mathrm{e}^{-i\gamma H_c}$---a complexity win over densification, not
+different cost physics.
+
+\end{document}

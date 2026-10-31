@@ -1,0 +1,230 @@
+Clause projectors implement e−iγHc
+without densifying Hc or matrix-exponentiating 2n
+explore_OCT29 / qumode_sep
+Asia/Shanghai 2026-10-31
+2026-10-31 (Asia/Shanghai)
+Abstract
+For TEB 4-SAT with mutually commuting Fock clause projectors
+Cc , the product of local
+∑
+gadgets Uc (γ) = I + (e−iγ − 1)Cc equals exp(−iγHc ) with Hc = c Cc exactly. Each gadget is
+n
+applied sparsely (Fock-local / SNAP mask), so one never builds the densified diagonal E ∈ C2
+nor a 2n × 2n matrix exponential. Conjugation by W = H ⊗3 only changes frame; the identity
+still holds in the computational (Fock) frame. This note records the algebra and the complexity
+contrast with Arm C densified diag(E).
+
+1
+
+Setup
+
+Fix TEB 4-SAT on n bits packed into cavities of Fock dimension 8 (3 bits per cavity). For each clause
+c let Cc be the Fock clause projector: the orthogonal projector onto the subspace of computational
+basis states that falsify clause c. Then
+Cc† = Cc ,
+
+Cc2 = Cc ,
+
+(1)
+
+and, because every Cc is diagonal in the same Fock / computational basis,
+for all clauses c, c′ .
+
+[Cc , Cc′ ] = 0
+Define the cost Hamiltonian
+
+∑
+
+Hc :=
+
+(2)
+(3)
+
+Cc .
+
+c
+
+On computational basis state |xi, Hc |xi = E(x)|xi where E(x) is the number of unsatisfied clauses
+(the densified energy used by Arm C).
+
+2
+
+Single-clause gadget
+
+Lemma 1 (Projector exponential). Let P be an orthogonal projector and γ ∈ R. Then
+U (γ) := I + (e−iγ − 1) P = exp(−iγP ).
+(4)
+∑
+Proof. Since P 2 = P , the spectral theorem gives P = j |ψj ihψj | on its support with eigenvalues
+in {0, 1}. Hence
+exp(−iγP ) =
+
+∞
+∑
+(−iγ)k
+k=0
+
+k!
+
+Pk = I +
+
+(
+)
+= I + e−iγ − 1 P,
+1
+
+∞
+∑
+(−iγ)k
+k=1
+
+k!
+
+P
+(5)
+
+because P k = P for all k ≥ 1. Equivalently, on ker P the operator acts as I, and on ran P it acts
+as e−iγ I.
+Corollary 1. For each clause projector Cc ,
+Uc (γ) := I + (e−iγ − 1) Cc = exp(−iγCc ).
+
+3
+
+(6)
+
+Product over clauses
+
+Theorem 1 (Projector product = e−iγHc ). If {Cc } are mutually commuting orthogonal projectors,
+then
+(
+∏
+∏
+∑ )
+Uc (γ) =
+exp(−iγCc ) = exp −iγ
+Cc = exp(−iγHc ).
+(7)
+c
+
+c
+
+c
+
+The product may be taken in any order.
+Proof. By Lemma 1, Uc (γ) = exp(−iγCc ). Because [Cc , Cc′ ] = 0 for all c, c′ , the family {−iγCc }
+also pairwise-commutes, so the Baker–Campbell–Hausdorff formula truncates:
+)
+(∑
+∏
+(−iγCc ) = exp(−iγHc ).
+(8)
+exp(−iγCc ) = exp
+c
+
+c
+
+(Equivalently: all Cc are simultaneously diagonalizable; on
+eigenbasis
+vector with eigen∑
+∏ a common
+−iγ
+p
+−iγp
+c
+c
+c
+.)
+values pc ∈ {0, 1}, both sides multiply the amplitude by c e
+=e
+Remark 1 (Honesty). Theorem 1 shows that the projector “cost unitary” is the same physics as
+Arm C’s e−iγHc . The gain is only algorithmic: one never densifies E of length 2n . It is not a
+different Uc that secretly avoids Hc .
+
+4
+
+Complexity: sparse gadgets vs densified diag(E)
+
+Densified path (Arm C). Enumerate all 2n bitstrings, compute E(x) = #{unsat clauses},
+n
+store the vector E ∈ R2 , then apply ψ 7→ e−iγE ψ (pointwise) each layer. Memory and build
+cost scale as Θ(2n ); for n = 18 one E is already ∼ 1 MB float32, and n = 24 would be ∼ 64 MB
+per E.
+Projector / SNAP-library path. Never form Hc or U as a dense 2n × 2n matrix. Apply each
+clause gadget as a Fock-local update: for a span-1 clause the support is an 8-level SNAP phase
+mask; for span-2 a joint 8 × 8 SNAP; in all cases the per-clause work is O(poly(n)) (constant in
+Fock dimension for fixed packing). With m clauses the layer costs
+(
+)
+O m · poly(n)
+(9)
+(or O(m) per amplitude if amplitudes are already materialized). The offline library of 26 local
+masks is compiled once (∼ 1 KB) and reused; only the shared angles γℓ change per layer. By
+Theorem 1 the composed unitary remains exactly e−iγHc .
+∏
+Proposition 1 (No densify, no matrix-exp of 2n ). Implementing c Uc (γ) via sparse / Fock-local
+n
+gadgets implements e−iγHc without (i) allocating E ∈ C2 , and without (ii) forming or exponentiating a dense 2n × 2n matrix.
+2
+
+5 W = H ⊗3 conjugation
+Let W = H ⊗3 act on one cavity’s three qubits (Hadamard on each bit). Cost implemented in the
+W -frame is
+(
+)
+W † e−iγHc W = exp −iγ W † Hc W .
+(10)
+This is a change of frame: the spectrum of the generator is unchanged, and sandwich checks already
+verify W † ZW = X and Fock↔ W fidelity 1 for the compiled SNAP masks. In the computational
+/
+∏
+Fock frame the product identity of Theorem 1 continues to hold; W does not break c Uc = e−iγHc .
+
+6
+
+What this does not claim
+
+• It does not claim a Uc algebraically inequivalent to e−iγHc . Non-Hc probes (surrogate, noncommuting XZ, wrong-graph, adaptive feedback, nonlinear clause phases) all die on n15 screens
+versus trunc_Hc / Arm C.
+• It does not remove instance dependence: clauses still enter via {Cc }.
+• Simulator wall-clock at small n may favor NumPy exp(−iγE) over a pure-Python clause loop;
+that is an implementation artifact, not a complexity rebuttal (see docs/COMPILE_OFFLINE.md).
+
+7
+
+Summary
+
+Claim
+
+Status
+
+Note
+
+−iγ − 1)C = e−iγCc
+U
+c
+∏c (γ) = I + (e
+−iγHc
+c Uc (γ) = e
+n
+Sparse apply, no densify E ∈ C2
+W = H ⊗3 keeps identity in Fock frame
+Same physics as Arm C densified diag(E)
+
+Proven
+Proven
+Complexity
+Frame only
+Honest
+
+Lemma 1
+Thm. 1, needs [Cc , Cc′ ] = 0
+Prop. 1
+Sec. 5
+Remark after Thm. 1
+
+One-liner. Clause projectors are an exp-avoiding implementation of e−iγHc —a complexity win
+over densification, not different cost physics.
+
+3
+
+
