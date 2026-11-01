@@ -613,11 +613,234 @@ def load_warm_shell_from_disk(out_dir: Path, seeds, prefer_L=16):
     return warm or None
 
 
+def beats_sealed(sc: dict) -> tuple[bool, dict]:
+    """Strict dual-beat vs sealed Med AND B90 at every n in SEALED_REF."""
+    detail = {}
+    ok = True
+    for n, ref in SEALED_REF.items():
+        m = sc.get(n)
+        if not m:
+            ok = False
+            detail[n] = {"missing": True}
+            continue
+        med_ok = m["median_inv_p"] < ref["Med"]
+        b90_ok = m["B90_inv_p"] < ref["B90"]
+        detail[n] = {
+            "Med": m["median_inv_p"], "B90": m["B90_inv_p"],
+            "Med_x": m["median_inv_p"] / ref["Med"],
+            "B90_x": m["B90_inv_p"] / ref["B90"],
+            "med_beat": med_ok, "b90_beat": b90_ok,
+            "dual_beat": med_ok and b90_ok,
+        }
+        if not (med_ok and b90_ok):
+            ok = False
+    return ok, detail
+
+
+def _load_pt_state(pt: Path) -> dict | None:
+    if not pt.exists():
+        return None
+    st = torch.load(pt, map_location="cpu", weights_only=False)
+    if "snap" not in st and st.get("phi") is not None:
+        st["snap"] = st["phi"]
+    return st
+
+
+def collect_polish_starts(out_dir: Path) -> list[dict]:
+    """Warm starts for wave-2 polish (do not wipe prior results)."""
+    starts = []
+    prog = out_dir / "progressive"
+    for seed in (0, 1, 2):
+        pt = prog / f"params_prog_snap_shell_perL_L32_seed{seed}.pt"
+        st = _load_pt_state(pt)
+        if st:
+            starts.append({"name": f"shell_L32_seed{seed}", "state": st, "path": str(pt)})
+    # bakeoff free / shell / bits champs at L32
+    bake = out_dir / "snap_bakeoff"
+    for tag in ("snap_free_perL", "snap_shell_perL", "snap_bits_perL", "snap_x_pop_perL"):
+        d = bake / tag
+        if not d.exists():
+            continue
+        cands = sorted(d.glob("params_*_L32_seed*.pt"))
+        for pt in cands:
+            st = _load_pt_state(pt)
+            if st:
+                starts.append({"name": f"{tag}_{pt.stem}", "state": st, "path": str(pt)})
+    # dedupe by path
+    seen = set()
+    uniq = []
+    for s in starts:
+        if s["path"] in seen:
+            continue
+        seen.add(s["path"])
+        uniq.append(s)
+    return uniq
+
+
+def run_polish_wave(W, nf, device, *, max_train, max_val, out_dir, scale_B=1000):
+    """Wave-2: keep max_train=200; polish best angles harder (steps/LBFGS/loss/lr)."""
+    polish_dir = out_dir / "polish"
+    polish_dir.mkdir(parents=True, exist_ok=True)
+    starts = collect_polish_starts(out_dir)
+    log(f"polish starts raw: {len(starts)}")
+    # Prioritize: progressive shell seeds, then free/bits bakeoff L32 seed0 only
+    def rank(s):
+        n = s["name"]
+        if n == "shell_L32_seed0": return (0, 0)
+        if n.startswith("shell_L32_seed"): return (0, int(n.split("seed")[-1]))
+        if "free_perL" in n and "seed0" in n: return (1, 0)
+        if "free_perL" in n and "seed1" in n: return (1, 1)
+        if "bits_perL" in n and "seed0" in n: return (2, 0)
+        if "shell_perL" in n and "seed0" in n and "bake" not in n: return (3, 0)
+        return (9, 0)
+    starts = sorted(starts, key=rank)
+    # Cap starts to top 5 to keep nonstop moving
+    starts = [s for s in starts if rank(s)[0] <= 2][:5]
+    log(f"polish starts selected: {[s['name'] for s in starts]}")
+    # Tier-A recipes on all starts; tier-B only if n9 Med_x <= 1.05 after tier-A best
+    recipes_A = [
+        ("adam800_lbfgs8", 800, 2e-3, "log_inv", 0.1, 4, 12, 0),
+        ("cvar_adam600_lbfgs", 600, 2e-3, "cvar", 0.1, 4, 10, 30),
+        ("adam600_lr1e3_lbfgs", 600, 1e-3, "log_inv", 0.1, 4, 10, 10),
+    ]
+    recipes_B = [
+        ("adam600_lr5e3_lbfgs", 600, 5e-3, "log_inv", 0.1, 3, 8, 20),
+        ("cvar_q09_adam600", 600, 2e-3, "cvar", 0.05, 3, 8, 40),
+        ("raw_inv_adam400_lbfgs", 400, 2e-3, "raw_inv", 0.1, 4, 10, 50),
+        ("adam1200_lbfgs12", 1200, 2e-3, "log_inv", 0.1, 5, 14, 60),
+    ]
+    results = []
+    beat_any = False
+
+    for s in starts:
+        if stopped():
+            break
+        st0 = s["state"]
+        mode = st0.get("snap_mode", "shell")
+        shared = bool(st0.get("snap_shared", False))
+        L = int(st0.get("L", 32))
+        g0 = st0["gamma"]
+        sn0 = st0.get("snap")
+        if sn0 is None:
+            sn0 = st0.get("phi")
+        best_n9x = 9e9
+        recipes = list(recipes_A)
+        tier_b_added = False
+        for rname, steps, lr, loss, leakpen, lb_r, lb_i, soff in recipes:
+            if stopped():
+                break
+            seed = int(st0.get("seed", 0)) + soff
+            arm = f"polish_{mode}_{'sh' if shared else 'pL'}_{rname}"
+            log(f"=== polish {s['name']} → {arm} L={L} seed={seed} ===")
+            best = train_one(
+                W, L, nf, device, max_train=max_train, max_val=max_val, seed=seed,
+                lr=lr, steps=steps, gamma0=g0, snap0=sn0,
+                snap_mode=mode, snap_shared=shared,
+                loss_kind=loss, leakpen=leakpen,
+                lbfgs_mid=True, lbfgs_final=True,
+                lbfgs_rounds=lb_r, lbfgs_iter=lb_i,
+                arm_tag=arm, out_dir=polish_dir / mode,
+            )
+            append_leaderboard(
+                out_dir / "leaderboard.csv",
+                lb_row(arm, L, seed, lr, steps, loss, leakpen, best, mode, shared),
+            )
+            # full scale on every polish (goal is beat sealed)
+            sc, rows = scale_record(
+                W, best["state"], nf, device, [9, 12, 15, 18], scale_B,
+                polish_dir, f"{arm}_seed{seed}",
+            )
+            beat, detail = beats_sealed(sc)
+            n9 = detail.get(9, {})
+            entry = {
+                "start": s["name"], "arm": arm, "seed": seed, "L": L,
+                "mode": mode, "shared": shared, "loss": loss, "lr": lr, "steps": steps,
+                "path": best.get("path"), "beat_sealed": beat, "detail": detail,
+                "n9_Med": n9.get("Med"), "n9_B90": n9.get("B90"),
+                "n9_Med_x": n9.get("Med_x"), "n9_B90_x": n9.get("B90_x"),
+                "val_n9_Med": best["val"][9]["median_inv_p"] if best.get("val") else None,
+            }
+            results.append(entry)
+            (polish_dir / f"meta_{arm}_seed{seed}.json").write_text(
+                json.dumps(_jsonable(entry), indent=2)
+            )
+            if beat:
+                beat_any = True
+                log(f"*** BEAT SEALED *** {arm} seed{seed} n9={n9.get('Med'):.4f}/{n9.get('B90'):.4f}")
+                # write ping file for parent
+                (out_dir / "BEAT_SEALED.json").write_text(
+                    json.dumps(_jsonable(entry), indent=2)
+                )
+            else:
+                # closeness log
+                xs = " ".join(
+                    f"n{n}:{detail[n].get('Med_x', float('nan')):.3f}/"
+                    f"{detail[n].get('B90_x', float('nan')):.3f}"
+                    for n in (9, 12, 15, 18) if n in detail and not detail[n].get("missing")
+                )
+                log(f"no-beat {arm} seed{seed} ×sealed {xs}")
+            if n9.get("Med_x") is not None:
+                best_n9x = min(best_n9x, float(n9["Med_x"]))
+            # After tier-A done for this start, queue tier-B if close
+            # After finishing current tier-A list (before extend), unlock tier-B if close
+            if (not tier_b_added) and rname == recipes_A[-1][0]:
+                if best_n9x <= 1.05:
+                    log(f"tier-B unlock for {s['name']} best_n9x={best_n9x:.4f}")
+                    recipes.extend(recipes_B)
+                    tier_b_added = True
+
+    # write polish RESULTS
+    lines = [
+        "# Polish wave — RESULTS",
+        "",
+        f"_Generated {time.strftime('%Y-%m-%d %H:%M:%S %z')} (Asia/Shanghai)_",
+        "",
+        "Fixed max_train=200. Goal: dual-beat sealed Med AND B90 at n9/12/15/18.",
+        "",
+        "## Sealed bar",
+        "",
+        "| n | Med | B90 |",
+        "|---|-----|-----|",
+    ]
+    for n, r in SEALED_REF.items():
+        lines.append(f"| {n} | {r['Med']} | {r['B90']} |")
+    lines += ["", "## Runs", "",
+              "| arm | start | n9 Med/B90 | n9× | n12× | n15× | n18× | beat? |",
+              "|-----|-------|------------|-----|------|------|------|-------|"]
+    for e in results:
+        d = e["detail"]
+        def fx(n):
+            if n not in d or d[n].get("missing"):
+                return "—"
+            return f"{d[n]['Med_x']:.3f}/{d[n]['B90_x']:.3f}"
+        n9m = e.get("n9_Med"); n9b = e.get("n9_B90")
+        lines.append(
+            f"| `{e['arm']}` | {e['start'][:40]} | "
+            f"{n9m:.3f}/{n9b:.3f} | {fx(9)} | {fx(12)} | {fx(15)} | {fx(18)} | "
+            f"{'YES' if e['beat_sealed'] else 'no'} |"
+        )
+    # closest by n9 Med×
+    valid = [e for e in results if e.get("n9_Med_x") is not None]
+    if valid:
+        best = min(valid, key=lambda e: (e["n9_Med_x"], e.get("n9_B90_x") or 9e9))
+        lines += ["", "## Closest (n9 Med×)", "",
+                  f"**{best['arm']}** from `{best['start']}` — "
+                  f"n9 {best['n9_Med']:.3f}/{best['n9_B90']:.3f} "
+                  f"({best['n9_Med_x']:.3f}× / {best['n9_B90_x']:.3f}×)",
+                  "",
+                  f"Any sealed dual-beat: **{'YES' if beat_any else 'no'}**."]
+    (polish_dir / "RESULTS.md").write_text("\n".join(lines) + "\n")
+    (polish_dir / "summary.json").write_text(json.dumps(_jsonable({
+        "n_runs": len(results), "beat_any": beat_any, "results": results,
+    }), indent=2))
+    return results
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--smoke-only", action="store_true")
     ap.add_argument("--phase", default="all",
-                    help="all|progressive|snap_bakeoff|scale_champ|resume_shell")
+                    help="all|progressive|snap_bakeoff|scale_champ|resume_shell|polish")
     ap.add_argument("--nf", type=int, default=8)
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--max_train", type=int, default=200)
@@ -682,6 +905,16 @@ def main():
         scale_record(W, champs[32]["state"], args.nf, device, [9, 12, 15, 18],
                      args.scale_B, OUT, "shell_prog_L32_B1000")
         torch.save(champs[32]["state"], OUT / "champ_shell_params.pt")
+
+    if args.phase in ("polish",):
+        polish_results = run_polish_wave(
+            W, args.nf, device, max_train=args.max_train, max_val=args.max_val,
+            out_dir=OUT, scale_B=args.scale_B,
+        )
+        summary["polish_n"] = len(polish_results)
+        summary["polish_beat"] = any(r.get("beat_sealed") for r in polish_results)
+        if summary["polish_beat"]:
+            log("*** POLISH WAVE BEAT SEALED ***")
 
     # pick closest SNAP head
     if head_champs:

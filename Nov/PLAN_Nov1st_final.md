@@ -72,4 +72,12 @@ Stop: `Nov/runs/STOP_ANGLE_EXPLORE`.
 
 ## Status
 
-**GO nonstop** — resume shell progressive + SNAP bakeoff. Report Med/B90 per head vs sealed.
+**Wave-1 DONE** (progressive shell + SNAP bakeoff). Closest: progressive shell L32 scale1000 n9 **1.103/1.772** (1.010×/0.998×) — no dual-beat.
+
+**Wave-2 RUNNING** — `--phase polish`: warm-start shell/free/bits L32 → Adam 600–1200 + heavy LBFGS + CVaR/lr. Fixed max_train=200. Ping only if dual-beats sealed Med **and** B90 at n9/12/15/18.
+
+```bash
+source /workspace/qtimes_venv/bin/activate
+export PYTHONPATH=/workspace/qumode_sep
+python -m Nov.scripts.angle_explore --phase polish --max_train 200 --scale_B 1000
+```

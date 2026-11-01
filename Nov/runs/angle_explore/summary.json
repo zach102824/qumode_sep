@@ -1,0 +1,90 @@
+{
+  "phase": "all",
+  "max_train": 200,
+  "heads": [
+    {
+      "mode": "shell",
+      "shared": 0,
+      "dim": 4,
+      "tag": "snap_shell_perL"
+    },
+    {
+      "mode": "shell",
+      "shared": 1,
+      "dim": 4,
+      "tag": "snap_shell_shared"
+    },
+    {
+      "mode": "free",
+      "shared": 0,
+      "dim": 8,
+      "tag": "snap_free_perL"
+    },
+    {
+      "mode": "free",
+      "shared": 1,
+      "dim": 8,
+      "tag": "snap_free_shared"
+    },
+    {
+      "mode": "bits",
+      "shared": 0,
+      "dim": 3,
+      "tag": "snap_bits_perL"
+    },
+    {
+      "mode": "bits",
+      "shared": 1,
+      "dim": 3,
+      "tag": "snap_bits_shared"
+    },
+    {
+      "mode": "fourier",
+      "shared": 0,
+      "dim": 5,
+      "tag": "snap_fourierM2_perL"
+    },
+    {
+      "mode": "fourier",
+      "shared": 1,
+      "dim": 5,
+      "tag": "snap_fourierM2_shared"
+    },
+    {
+      "mode": "proj",
+      "shared": 0,
+      "dim": 1,
+      "tag": "snap_proj_perL"
+    },
+    {
+      "mode": "proj",
+      "shared": 1,
+      "dim": 1,
+      "tag": "snap_proj_shared"
+    },
+    {
+      "mode": "x_pop",
+      "shared": 0,
+      "dim": 1,
+      "tag": "snap_x_pop_perL"
+    },
+    {
+      "mode": "x_pop",
+      "shared": 1,
+      "dim": 1,
+      "tag": "snap_x_pop_shared"
+    }
+  ],
+  "smoke": {
+    "n": 6,
+    "L": 2,
+    "overlap_abs": 0.9999998807907104,
+    "max_abs_delta_p": 2.9802322387695312e-08,
+    "nov_inv_p": 86.14408111572266,
+    "sealed_inv_p": 86.1440200805664,
+    "pass": 1
+  },
+  "snap_winner": "snap_free_perL",
+  "snap_winner_n9": 1.1304460763931274,
+  "notes": "SNAP winner=snap_free_perL n9Med=1.1304460763931274. Complete. "
+}
