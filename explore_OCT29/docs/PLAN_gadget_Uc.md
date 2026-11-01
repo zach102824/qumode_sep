@@ -123,3 +123,20 @@ Artifacts: `runs/gadget_Uc/freedom/`.
 Zach worry: projector = solving Hc. Ablations in `docs/ROBUST_GRAPE.md` + `runs/robust_grape/RESULTS.md`:
 mixer_only / random_diag / shuffle_E / universal_cover / trunc_Hc — all Med ≫ projector.
 Honest claim: frozen projector library **is** Uc=exp(-iγ Hc); not Hc-free.
+
+---
+
+## Next explore arm — n6 L-ladder (2026-11-01, Asia/Shanghai)
+
+**Separate plan:** [`PLAN_binh_proj_n6_Lladder.md`](PLAN_binh_proj_n6_Lladder.md).
+
+Zach locked **cost-sandwich + bare SNAP** (not the historical mixer-sandwich champ writeup):
+
+1. Prep \(W=H^{\otimes 3}\)
+2. Layer cost \(W U_c^{Z}(\gamma_\ell) W^\dagger\)
+3. Layer mixer bare \(\mathrm{SNAP}(\phi_\ell)\)
+4. Repeat; final \(W\); Fock measure
+
+Train **n=6 only**, \(L\in\{1,4,\ldots,32\}\), eval scale1000.  
+Script/out (planned): `scripts/binh_proj_L_ladder_n6.py` → `runs/binh_proj_n6_Lladder/`.  
+**Do not start until go.**

@@ -215,3 +215,16 @@ Results: `runs/probe5_seq_vocab/`. Old raw `evolve_seq` stopped.
 
 q=3 + L_train=6 beats Probe3. Best: **n15 Med 7.70 @L12 / 5.99 @L20** (ref Probe3 L12=9.67). b_Med@L20≈1.24. Monotonic in L on n15.
 Artifacts: `runs/probe3_fourier_deep/`. Probe5 left running; probe4 deferred.
+
+## 12. Opus probe 6 — spectral mixer (started 2026-10-29 ~19:15 CST)
+
+Ideal W_H=Π_gray·H^{⊗3}; arms at L16: A champ PROJ re-eval (test n15/18), B X-only θ=β·pc, C free shell φ_pc warm-started at PROJ.
+Script: `scripts/probe6_spectral_mixer.py`. Results: `runs/probe6_spectral_mixer/`. Orthogonal to probe5.
+
+
+## 13. BinH-proj n6 L-ladder — PLAN ONLY (2026-11-01)
+
+Zach locked motif: **cost-sandwich + bare SNAP** (prep \(W\); layer \(W U_c^{Z} W^\dagger\) then bare SNAP; final \(W\)).  
+Train n=6 only; \(L\in\{1,4,8,12,16,20,24,28,32\}\); eval scale1000.  
+**Full plan:** [`docs/PLAN_binh_proj_n6_Lladder.md`](docs/PLAN_binh_proj_n6_Lladder.md).  
+**Do not start training/eval until go.**

@@ -14,6 +14,8 @@ U_Φ = exp(-i γ_ℓ Φ),  Φ = H_cost
 | [`PLAN.md`](PLAN.md) | Theory lock, freedom ladder, promote gate, so-far bars |
 | [`RUN.md`](RUN.md) | Box commands (I run these; you confirm plan in chat) |
 | [`TODO_REWRITE.md`](TODO_REWRITE.md) | Step 0 checklist (done) + later ladder |
+| [`docs/PLAN_binh_proj_n6_Lladder.md`](docs/PLAN_binh_proj_n6_Lladder.md) | **PLAN ONLY** — n6 BinH-proj L-ladder, cost-sandwich + bare SNAP (wait for go) |
+| [`docs/PLAN_gadget_Uc.md`](docs/PLAN_gadget_Uc.md) | Projector-Uc / BinH-proj champ lineage |
 
 ## Locus
 
