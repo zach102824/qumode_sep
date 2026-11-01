@@ -2,9 +2,16 @@
 
 Repo-root folder (not under `explore_OCT29`).
 
-Sandwich-cost BinH rewrite locked as **Nov1st-final** (2026-11-01), unitary-equivalent to sealed BinH-proj.
+**Nov1st-final:** \(|0\rangle \to [U_c^{X}\to\mathrm{SNAP}]^L \to W \to\) Fock ≡ sealed BinH-proj.
 
-See `PLAN_Nov1st_final.md`. Skeleton: `scripts/nov1st_final_train.py`.  
-Outputs: `runs/Nov1st_final/`.
+Also explores **SNAP angle heads**: shell / free / bits / fourier / proj / x_pop × shared|perL at fixed `max_train=200`.
 
-Default: `--smoke` only. Do not full-train / scale1000 until Zach go.
+See `PLAN_Nov1st_final.md`.
+
+```bash
+source /workspace/qtimes_venv/bin/activate
+export PYTHONPATH=/workspace/qumode_sep
+python -m Nov.scripts.angle_explore --phase all --max_train 200 --steps 400
+```
+
+Outputs: `runs/angle_explore/` (`snap_bakeoff/RESULTS.md`, `leaderboard.csv`).

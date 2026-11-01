@@ -58,17 +58,26 @@ def log(*a):
 
 
 class Nov1stFinalAnsatz(GadgetAnsatz):
-    """|0⟩ → [Uc^X=W D W → bare SNAP]^L → final W → Fock."""
+    """|0⟩ → [Uc^X=W D W → bare SNAP]^L → final W → Fock.
+
+    SNAP heads via snap_mode (default shell=popcount φ_pc).
+    """
 
     def forward_nov1st_final(
         self,
         E: torch.Tensor,
         gamma: torch.Tensor,
-        phi: torch.Tensor,
+        snap_params: torch.Tensor,
+        *,
+        snap_mode: str = "shell",
+        snap_shared: bool = False,
+        fourier_M: int = 2,
     ) -> dict:
+        from Nov.scripts.snap_heads import expand_theta, layer_vec
+
         L = self.L
         gamma = gamma.to(dtype=self.rdtype, device=self.lam.device).reshape(L)
-        phi = phi.to(dtype=self.rdtype, device=self.lam.device)
+        snap_params = snap_params.to(dtype=self.rdtype, device=self.lam.device)
         psi = self.vacuum()  # no prep W
         Cn = self.cost_Cn(E)
         sl = tuple(slice(0, NU) for _ in range(self.C))
@@ -81,9 +90,9 @@ class Nov1stFinalAnsatz(GadgetAnsatz):
             psi_new[sl] = psi[sl] * phase
             psi = psi_new
             psi = self._apply_all(psi, self.Wmat)
-            # bare SNAP
-            ph = phi[ell].to(self.rdtype).reshape(4)
-            th = ph[self.popcount]
+            # bare SNAP with selectable head
+            vec = layer_vec(snap_params, ell, snap_shared)
+            th = expand_theta(snap_mode, vec, self.popcount, fourier_M=fourier_M)
             psi = self._apply_all(psi, self._snap_theta(th))
 
         # final W
@@ -101,17 +110,35 @@ class Nov1stFinalAnsatz(GadgetAnsatz):
             "p_leak": p_leak,
             "inv_p": inv_p,
             "norm": probs.sum(),
-            "arm": "nov1st_final",
+            "arm": f"nov1st_final_{snap_mode}{'shared' if snap_shared else 'perL'}",
             "probs": probs,
+            "snap_mode": snap_mode,
+            "snap_shared": snap_shared,
         }
 
-    def forward_dispatch(self, E, gamma, phi, *, use_sealed: bool):
+    def forward_dispatch(
+        self,
+        E,
+        gamma,
+        snap_params,
+        *,
+        use_sealed: bool = False,
+        snap_mode: str = "shell",
+        snap_shared: bool = False,
+        fourier_M: int = 2,
+    ):
         if use_sealed:
-            out = self.forward_gadget(E, gamma, phi, "unsat")
+            # sealed twin only defined for shell per-layer φ
+            if snap_mode != "shell" or snap_shared:
+                raise ValueError("use_sealed requires snap_mode=shell per-layer")
+            out = self.forward_gadget(E, gamma, snap_params, "unsat")
             out = dict(out)
             out["arm"] = "sealed_unsat"
             return out
-        return self.forward_nov1st_final(E, gamma, phi)
+        return self.forward_nov1st_final(
+            E, gamma, snap_params,
+            snap_mode=snap_mode, snap_shared=snap_shared, fourier_M=fourier_M,
+        )
 
 
 def make_sim(n, W, L, nf, device):
@@ -133,7 +160,7 @@ def smoke_overlap(n=6, L=2, nf=8, device="cpu", seed=0) -> dict:
     gamma = torch.as_tensor(rng.uniform(0.2, 1.2, size=L), dtype=torch.float32)
     phi = torch.as_tensor(rng.normal(0.0, 0.4, size=(L, 4)), dtype=torch.float32)
     sim = make_sim(n, W, L, nf, device)
-    out_n = sim.forward_nov1st_final(Eb, gamma, phi)
+    out_n = sim.forward_nov1st_final(Eb, gamma, phi, snap_mode="shell", snap_shared=False)
     out_s = sim.forward_gadget(Eb, gamma, phi, "unsat")
     # rebuild state probs for sealed via a second forward that returns probs —
     # sealed return has no probs; recompute overlap via p_succ / inv_p + full state.
@@ -216,6 +243,7 @@ def eval_split(
         out = sim.forward_dispatch(
             torch.as_tensor(E[b], dtype=torch.float32, device=device),
             gamma, phi, use_sealed=use_sealed,
+            snap_mode="shell", snap_shared=False,
         )
         invs.append(float(out["inv_p"].detach().cpu()))
         leaks.append(float(out["p_leak"].detach().cpu()))
@@ -269,7 +297,7 @@ def scale1000_eval(W, gamma, phi, L, nf, device, ns, *, use_sealed, max_count=10
 
 
 def train_ns(
-    W, L, nf, device, *, train_ns=(6, 9), steps=150, max_train=48, max_val=12,
+    W, L, nf, device, *, train_ns=(6, 9), steps=400, max_train=200, max_val=40,
     seed=0, lr=2e-3, use_sealed=False, gamma0=None, phi0=None,
 ):
     train_ns = tuple(int(x) for x in train_ns)
@@ -300,7 +328,8 @@ def train_ns(
         for n, P in packs.items():
             idx = int(rng.integers(0, len(P["E"])))
             out = sims[n].forward_dispatch(
-                P["E"][idx], gamma, phi, use_sealed=use_sealed
+                P["E"][idx], gamma, phi, use_sealed=use_sealed,
+                snap_mode="shell", snap_shared=False,
             )
             losses.append(_loss(out))
         loss = torch.stack(losses).mean()
@@ -320,7 +349,8 @@ def train_ns(
                     for n, P in packs.items():
                         for j in range(min(8, len(P["E"]))):
                             o = sims[n].forward_dispatch(
-                                P["E"][j], gamma, phi, use_sealed=use_sealed
+                                P["E"][j], gamma, phi, use_sealed=use_sealed,
+                                snap_mode="shell", snap_shared=False,
                             )
                             ls.append(_loss(o))
                     lt = torch.stack(ls).mean()
@@ -431,9 +461,9 @@ def main():
     ap.add_argument("--use-sealed", action="store_true", help="call sealed forward_gadget(unsat) instead of rewrite")
     ap.add_argument("--L", type=int, default=32)
     ap.add_argument("--nf", type=int, default=8)
-    ap.add_argument("--steps", type=int, default=150)
-    ap.add_argument("--max_train", type=int, default=48)
-    ap.add_argument("--max_val", type=int, default=12)
+    ap.add_argument("--steps", type=int, default=400)
+    ap.add_argument("--max_train", type=int, default=200)
+    ap.add_argument("--max_val", type=int, default=40)
     ap.add_argument("--train_ns", default="6,9")
     ap.add_argument("--scale_ns", default="9,12,15,18")
     ap.add_argument("--scale_B", type=int, default=1000)
