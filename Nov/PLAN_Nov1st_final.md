@@ -86,6 +86,7 @@ Nov/                            # repo root (NOT under explore_OCT29)
   README.md
   scripts/
     nov1st_final_train.py       # skeleton: smoke + gated train/eval
+  nov1st_final.py                # thin shim → scripts.nov1st_final_train
   runs/Nov1st_final/            # outputs (params, results.json, RESULTS.md, run.log)
 ```
 
