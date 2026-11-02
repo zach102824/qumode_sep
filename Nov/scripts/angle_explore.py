@@ -111,7 +111,7 @@ def load_train_packs(train_ns, max_train, device):
 
 @torch.no_grad()
 def eval_snap(
-    n, W, gamma, snap, L, nf, device, *, snap_mode, snap_shared, fourier_M=2,
+    n, W, gamma, snap, L, nf, device, *, snap_mode, snap_shared, fourier_M=2, few_M=3,
     split="val", max_count=40, data_dir=None, use_sealed=False, progress_every=0,
 ):
     pack = load_pack(n, data_dir=data_dir)
@@ -134,7 +134,7 @@ def eval_snap(
         out = sim.forward_dispatch(
             torch.as_tensor(E[b], dtype=torch.float32, device=device),
             gamma, snap, use_sealed=use_sealed,
-            snap_mode=snap_mode, snap_shared=snap_shared, fourier_M=fourier_M,
+            snap_mode=snap_mode, snap_shared=snap_shared, fourier_M=fourier_M, few_M=few_M,
         )
         invs.append(float(out["inv_p"].detach().cpu()))
         leaks.append(float(out["p_leak"].detach().cpu()))
@@ -153,7 +153,7 @@ def eval_snap(
 
 
 def scale1000_snap(W, gamma, snap, L, nf, device, ns, *, snap_mode, snap_shared,
-                   fourier_M=2, max_count=1000, use_sealed=False):
+                   fourier_M=2, few_M=3, max_count=1000, use_sealed=False):
     from Nov.scripts.nov1st_final_train import SCALE_DIR
     out = {}
     if not SCALE_DIR.exists():
@@ -161,7 +161,7 @@ def scale1000_snap(W, gamma, snap, L, nf, device, ns, *, snap_mode, snap_shared,
     for n in ns:
         m = eval_snap(
             n, W, gamma, snap, L, nf, device,
-            snap_mode=snap_mode, snap_shared=snap_shared, fourier_M=fourier_M,
+            snap_mode=snap_mode, snap_shared=snap_shared, fourier_M=fourier_M, few_M=few_M,
             split="scale1000", max_count=max_count, data_dir=SCALE_DIR,
             use_sealed=use_sealed, progress_every=100 if n >= 15 else 200,
         )
@@ -181,7 +181,7 @@ def train_one(
     W, L, nf, device, *,
     train_ns=(6, 9), max_train=200, max_val=40, seed=0, lr=2e-3, steps=400,
     use_sealed=False, gamma0=None, snap0=None,
-    snap_mode="shell", snap_shared=False, fourier_M=2,
+    snap_mode="shell", snap_shared=False, fourier_M=2, few_M=3,
     loss_kind="log_inv", leakpen=0.1, cvar_q=0.8,
     lbfgs_mid=True, lbfgs_final=True, lbfgs_rounds=2, lbfgs_iter=6,
     val_every=20, minibatch=1, arm_tag="adam", out_dir: Path | None = None,
@@ -191,9 +191,9 @@ def train_one(
     torch.manual_seed(seed)
     gamma = torch.nn.Parameter(pad_gamma(gamma0, L))
     if snap0 is None:
-        snap_t = init_snap_params(snap_mode, L, shared=snap_shared, fourier_M=fourier_M)
+        snap_t = init_snap_params(snap_mode, L, shared=snap_shared, fourier_M=fourier_M, few_M=few_M)
     else:
-        snap_t = pad_snap(snap0, L, snap_mode, snap_shared, fourier_M=fourier_M)
+        snap_t = pad_snap(snap0, L, snap_mode, snap_shared, fourier_M=fourier_M, few_M=few_M)
     snap = torch.nn.Parameter(snap_t.float())
     packs = load_train_packs(train_ns, max_train, device)
     sims = {n: make_sim(n, W, L, nf, device) for n in train_ns}
@@ -205,7 +205,7 @@ def train_one(
     def fwd(n, Erow):
         return sims[n].forward_dispatch(
             Erow, gamma, snap, use_sealed=use_sealed,
-            snap_mode=snap_mode, snap_shared=snap_shared, fourier_M=fourier_M,
+            snap_mode=snap_mode, snap_shared=snap_shared, fourier_M=fourier_M, few_M=few_M,
         )
 
     def run_lbfgs(tag):
@@ -256,7 +256,7 @@ def train_one(
             for n in train_ns:
                 vals[n] = eval_snap(
                     n, W, gamma.detach(), snap.detach(), L, nf, device,
-                    snap_mode=snap_mode, snap_shared=snap_shared, fourier_M=fourier_M,
+                    snap_mode=snap_mode, snap_shared=snap_shared, fourier_M=fourier_M, few_M=few_M,
                     split="val", max_count=max_val, use_sealed=use_sealed,
                 )
             sc = 0.4 * vals[n_lo]["S"] + 0.6 * vals[n_hi]["S"]
@@ -272,7 +272,7 @@ def train_one(
                         "L": L, "motif": "nov1st_final", "W": "BinH",
                         "train_ns": list(train_ns), "arm": arm_tag,
                         "snap_mode": snap_mode, "snap_shared": snap_shared,
-                        "fourier_M": fourier_M, "loss_kind": loss_kind,
+                        "fourier_M": fourier_M, "few_M": few_M, "loss_kind": loss_kind,
                         "leakpen": leakpen, "seed": seed, "lr": lr, "steps": steps,
                     },
                 }
@@ -391,6 +391,7 @@ def scale_record(W, state, nf, device, ns, B, out_dir, tag, use_sealed=False):
         snap_mode=state.get("snap_mode", "shell"),
         snap_shared=bool(state.get("snap_shared", False)),
         fourier_M=int(state.get("fourier_M", 2)),
+        few_M=int(state.get("few_M", 3)),
         max_count=B, use_sealed=use_sealed,
     )
     rows = []

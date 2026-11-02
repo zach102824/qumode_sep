@@ -81,3 +81,31 @@ source /workspace/qtimes_venv/bin/activate
 export PYTHONPATH=/workspace/qumode_sep
 python -m Nov.scripts.angle_explore --phase polish --max_train 200 --scale_B 1000
 ```
+
+## SNAP easiness / restriction ladder (Zach t2320)
+
+Angle polish is ≈ sealed on Med → **restrict bare SNAP** so hardware is easiest (Gaussian / Kerr / few-tone / low-degree poly), motif locked.
+
+Papers: `Nov/runs/snap_easy/PAPERS.md`. Runner: `Nov/scripts/snap_easy_explore.py`.
+
+| Mode | params/L | Meaning |
+|------|----------|---------|
+| `const` | 1 | global phase (sanity kill) |
+| `kerr` | 2 | \(\chi k(k-1)/2+\omega k\) |
+| `gauss` | 3 | \(\alpha+\beta\,\mathrm{pc}+\delta\,\mathrm{pc}^2\) |
+| `poly2_n` | 3 | quadratic on Fock \(n\) |
+| `few_m` | M | only first M Fock phases free |
+| `gauss_plus1` | 4 | gauss + residual on pc=3 |
+| `poly3_*` | 4 | cubic on pc or \(n\) |
+| `shell` / `free` | 4 / 8 | reference / upper bound |
+
+Also × **shared-across-L**. Warm-start: LS-project best shell polish → restricted head, then Adam+LBFGS.
+
+```bash
+source /workspace/qtimes_venv/bin/activate
+export PYTHONPATH=/workspace/qumode_sep
+python -m Nov.scripts.snap_easy_explore --L 16,32 --seeds 0,1 --steps 400 --scale_B 1000
+```
+
+Stop: `Nov/runs/STOP_SNAP_EASY` (independent of angle polish).
+Ping only if a **restricted** SNAP dual-beats sealed Med **and** B90 at every n∈{9,12,15,18}.

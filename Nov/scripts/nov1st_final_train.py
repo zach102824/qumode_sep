@@ -72,6 +72,7 @@ class Nov1stFinalAnsatz(GadgetAnsatz):
         snap_mode: str = "shell",
         snap_shared: bool = False,
         fourier_M: int = 2,
+        few_M: int = 3,
     ) -> dict:
         from Nov.scripts.snap_heads import expand_theta, layer_vec
 
@@ -92,7 +93,9 @@ class Nov1stFinalAnsatz(GadgetAnsatz):
             psi = self._apply_all(psi, self.Wmat)
             # bare SNAP with selectable head
             vec = layer_vec(snap_params, ell, snap_shared)
-            th = expand_theta(snap_mode, vec, self.popcount, fourier_M=fourier_M)
+            th = expand_theta(
+                snap_mode, vec, self.popcount, fourier_M=fourier_M, few_M=few_M
+            )
             psi = self._apply_all(psi, self._snap_theta(th))
 
         # final W
@@ -126,6 +129,7 @@ class Nov1stFinalAnsatz(GadgetAnsatz):
         snap_mode: str = "shell",
         snap_shared: bool = False,
         fourier_M: int = 2,
+        few_M: int = 3,
     ):
         if use_sealed:
             # sealed twin only defined for shell per-layer φ
@@ -137,7 +141,8 @@ class Nov1stFinalAnsatz(GadgetAnsatz):
             return out
         return self.forward_nov1st_final(
             E, gamma, snap_params,
-            snap_mode=snap_mode, snap_shared=snap_shared, fourier_M=fourier_M,
+            snap_mode=snap_mode, snap_shared=snap_shared,
+            fourier_M=fourier_M, few_M=few_M,
         )
 
 
