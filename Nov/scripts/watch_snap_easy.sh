@@ -96,25 +96,47 @@ launch_gauss_polish() {
   echo "$(date +%H:%M:%S) gauss_polish pid=$!" >> "$LOG"
 }
 
+mem_avail_kb() {
+  awk '/MemAvailable:/ {print $2}' /proc/meminfo
+}
+
 while true; do
   if [[ -f "$STOP" ]]; then
     echo "$(date +%H:%M:%S) STOP; exit" >> "$LOG"; exit 0
   fi
-  # main ladder
-  if [[ -f "$PIDFILE" ]]; then
-    pid=$(cat "$PIDFILE")
-    if ! kill -0 "$pid" 2>/dev/null; then
-      wave=$(cat "$WAVEFILE")
-      next=$((wave + 1))
-      if [[ ! -f "$OUT/L32_STARTED" ]]; then
-        touch "$OUT/L32_STARTED"
-      fi
-      launch_wave "$next"
-      echo "$next" > "$WAVEFILE"
+  # main ladder — pause when EXPLORE_PAUSED or RAM tight (n18 polish needs headroom)
+  avail=$(mem_avail_kb)
+  explore_ok=1
+  if [[ -f "$OUT/EXPLORE_PAUSED" ]]; then
+    explore_ok=0
+  fi
+  # keep ~3.5GiB free for kerr n18 train/eval
+  if [[ -n "$avail" && "$avail" -lt 3600000 ]]; then
+    explore_ok=0
+  fi
+  # also skip explore while kerr polish alive (shared box OOM risk)
+  if [[ -f "$KPIDFILE" ]]; then
+    kpid=$(cat "$KPIDFILE")
+    if kill -0 "$kpid" 2>/dev/null; then
+      explore_ok=0
     fi
-  else
-    wave=$(cat "$WAVEFILE")
-    launch_wave "$wave"
+  fi
+  if [[ "$explore_ok" -eq 1 ]]; then
+    if [[ -f "$PIDFILE" ]]; then
+      pid=$(cat "$PIDFILE")
+      if ! kill -0 "$pid" 2>/dev/null; then
+        wave=$(cat "$WAVEFILE")
+        next=$((wave + 1))
+        if [[ ! -f "$OUT/L32_STARTED" ]]; then
+          touch "$OUT/L32_STARTED"
+        fi
+        launch_wave "$next"
+        echo "$next" > "$WAVEFILE"
+      fi
+    else
+      wave=$(cat "$WAVEFILE")
+      launch_wave "$wave"
+    fi
   fi
   # side gauss polish (restart if dead and no BEAT yet)
   if [[ ! -f "$OUT/BEAT_SEALED.json" ]]; then

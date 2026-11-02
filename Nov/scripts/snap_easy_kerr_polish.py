@@ -388,8 +388,16 @@ def main():
 
             # Cap per-n when training with n12/n15/n18 so wall time stays sane
             mt = args.max_train
+            mv = args.max_val
+            do_lbfgs = True
+            lb_r_use, lb_i_use = lb_r, lb_i
             if 18 in train_ns:
-                mt = min(mt, 24)  # n18 train pack only ~16 inst
+                mt = min(mt, 16)  # n18 train pack ~16; keep tiny
+                mv = min(mv, 8)   # val on n18 is expensive
+                # Mid/final LBFGS retains ~8 graph forwards per n → OOM (~12GB) on 16GB box
+                do_lbfgs = False
+                lb_r_use, lb_i_use = 0, 0
+                log("n18-in-train: LBFGS disabled, max_val=", mv, "max_train=", mt)
             elif 15 in train_ns:
                 mt = min(mt, 60)
             elif 12 in train_ns:
@@ -398,13 +406,13 @@ def main():
             log(f"=== {full_tag} mode={mode} few_M={few_M} loss={loss} q={cvar_q} train_ns={train_ns} ===")
             best = train_one(
                 W, L, args.nf, device,
-                train_ns=train_ns, max_train=mt, max_val=args.max_val,
+                train_ns=train_ns, max_train=mt, max_val=mv,
                 seed=seed, lr=lr, steps=steps,
                 gamma0=gamma0, snap0=snap0,
                 snap_mode=mode, snap_shared=False, few_M=few_M,
                 loss_kind=loss, leakpen=leak, cvar_q=cvar_q,
-                lbfgs_mid=True, lbfgs_final=True,
-                lbfgs_rounds=lb_r, lbfgs_iter=lb_i,
+                lbfgs_mid=do_lbfgs, lbfgs_final=do_lbfgs,
+                lbfgs_rounds=lb_r_use, lbfgs_iter=lb_i_use,
                 arm_tag=full_tag, out_dir=OUT / mode,
             )
             val = best.get("val") or {}
