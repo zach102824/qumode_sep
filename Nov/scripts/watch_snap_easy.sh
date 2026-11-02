@@ -142,12 +142,19 @@ while true; do
       launch_kerr_polish
     fi
   fi
-  # few_m n12/n15 chain polish until 2PARAM beat
+  # few_m n12/n15 chain — only if kerr polish also dead (kerr runs polish-chain first)
   if [[ ! -f "$OUT/BEAT_SEALED_2PARAM.json" ]]; then
     need_fp=1
     if [[ -f "$FPIDFILE" ]]; then
       fpid=$(cat "$FPIDFILE")
       if kill -0 "$fpid" 2>/dev/null; then
+        need_fp=0
+      fi
+    fi
+    # avoid double-running the same polish-chain arms
+    if [[ -f "$KPIDFILE" ]]; then
+      kpid=$(cat "$KPIDFILE")
+      if kill -0 "$kpid" 2>/dev/null; then
         need_fp=0
       fi
     fi
