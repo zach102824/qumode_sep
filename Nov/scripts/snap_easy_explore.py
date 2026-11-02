@@ -347,6 +347,24 @@ def run_ladder(W, nf, device, *, L_list, seeds, steps, max_train, max_val, lr, s
             if beat:
                 log("*** BEAT_SEALED restricted SNAP ***")
                 (out_dir / "BEAT_SEALED").write_text(r["tag"] + "\n")
+                detail = {}
+                for n in (9, 12, 15, 18):
+                    m = sc.get(n)
+                    if not m:
+                        continue
+                    ref = SEALED_REF[n]
+                    detail[str(n)] = {
+                        "Med": m["median_inv_p"], "B90": m["B90_inv_p"],
+                        "Med_x": m["median_inv_p"] / ref["Med"],
+                        "B90_x": m["B90_inv_p"] / ref["B90"],
+                        "sealed_Med": ref["Med"], "sealed_B90": ref["B90"],
+                    }
+                (out_dir / "BEAT_SEALED.json").write_text(json.dumps({
+                    "tag": r["tag"], "beat_sealed": True,
+                    "criterion": "Med AND B90 <= sealed at all n in {9,12,15,18}",
+                    "detail": detail,
+                    "written_at": time.strftime("%Y-%m-%d %H:%M:%S Asia/Shanghai"),
+                }, indent=2) + "\n")
             write_results(out_dir / "RESULTS.md", results_rows)
         (out_dir / "summary.json").write_text(json.dumps(_jsonable({
             "rows": results_rows, "heads": describe_easy_heads(),
