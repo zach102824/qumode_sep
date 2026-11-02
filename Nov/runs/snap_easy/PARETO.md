@@ -1,6 +1,6 @@
 # SNAP-easy pareto
 
-_Updated 2026-11-02 13:09 Asia/Shanghai_
+_Updated 2026-11-02 13:24 Asia/Shanghai_
 
 ## Clear pareto + sealed dual-beat: `gp_cvar08_from_gauss_s0`
 
@@ -10,22 +10,18 @@ See BEAT_SEALED.json / RESULTS.md.
 
 No dual-beat yet. Kerr B90 gap + few_m polish running in `kerr_polish/`.
 
-Best 2-param full table so far: `easy_snap_few_mM2_perL_L32_s0_full`
+Best 2-param full table so far: `kp_kerr_cvar08_from_best_s0_full`
 
 | n | Med / B90 | ×Med / ×B90 |
 |---|-----------|-------------|
-| 9 | 1.138 / 1.988 | 1.042× / 1.119× |
-| 12 | 1.381 / 4.003 | 1.154× / 1.408× |
-| 15 | 1.881 / 7.824 | 1.326× / 1.421× |
-| 18 | 2.746 / 20.737 | 1.567× / 1.827× |
+| 9 | 1.176 / 2.405 | 1.077× / 1.354× |
+| 12 | 1.426 / 5.619 | 1.192× / 1.976× |
+| 15 | 1.880 / 10.137 | 1.326× / 1.841× |
+| 18 | 2.624 / 30.147 | 1.498× / 2.655× |
 
-## Kerr clean full B=1000 (s2)
+## Kerr clean full B=1000
 
-| n | Med / B90 | × |
-|---|-----------|---|
-| 9 | 1.217 / 2.998 | 1.114× / 1.688× |
-| 12 | 1.488 / 6.773 | 1.243× / 2.382× |
-| 15 | 2.002 / 12.298 | 1.412× / 2.234× |
-| 18 | 2.841 / 36.445 | 1.622× / 3.210× |
+Baseline s2: n9 1.217/2.998 (1.114×/1.688×) … n18 2.841/36.445 (1.622×/3.210×)
 
-No ≤2-param dual-beat yet.
+Best polish `kp_kerr_cvar08_from_best_s0`: n9 1.176/2.405 (1.077×/1.354×), n12 1.426/5.619 (1.192×/1.976×), n15 1.880/10.137 (1.326×/1.841×), n18 2.624/30.147 (1.498×/2.655×). B90 gap closing but no dual-beat.
+

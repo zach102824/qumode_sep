@@ -167,7 +167,7 @@ def run_full_scale(W, st, nf, device, scale_B, tag: str):
     payload["beat_sealed"] = bool(beat)
     mirror.write_text(json.dumps(payload, indent=2) + "\n")
     # also write a kerr-specific clean table marker
-    if "kerr" in tag:
+    if tag.startswith("kerr_baseline"):
         (EASY / "KERR_FULL_B1000.json").write_text(json.dumps(payload, indent=2) + "\n")
     return sc, beat
 
