@@ -61,8 +61,11 @@ launch_wave() {
 
 launch_kerr_polish() {
   local logf="$OUT/run_kerr_polish.log"
-  echo "$(date +%H:%M:%S) launching kerr/few_m polish" >> "$LOG"
-  OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2     nohup python -m Nov.scripts.snap_easy_kerr_polish       --L 32 --seeds 0,2,10,22 --scale_B 1000       >> "$logf" 2>&1 &
+  echo "$(date +%H:%M:%S) launching kerr/few_m polish (n12 CVaR + skip-done)" >> "$LOG"
+  OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 \
+    nohup python -m Nov.scripts.snap_easy_kerr_polish \
+      --L 32 --seeds 0,2,10,22,33,44,55 --scale_B 1000 --skip-baseline-scale \
+      >> "$logf" 2>&1 &
   echo $! > "$KPIDFILE"
   echo "$(date +%H:%M:%S) kerr_polish pid=$!" >> "$LOG"
 }

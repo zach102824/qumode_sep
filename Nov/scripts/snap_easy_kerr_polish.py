@@ -58,18 +58,27 @@ def load_ckpt(path: Path):
     return st["gamma"].float(), st["snap"].float(), st
 
 
-# (tag, mode, few_M, loss, cvar_q, steps, lr, lb_rounds, lb_iter, leakpen, warm)
+# (tag, mode, few_M, loss, cvar_q, steps, lr, lb_rounds, lb_iter, leakpen, warm, train_ns)
 # warm: "kerr_best" | "few_m_best" | "shell" | "fresh"
+# train_ns: include 12 to attack higher-n B90 blow-up (main Kerr failure mode)
 ARMS = [
-    ("kerr_cvar08_from_best", "kerr", 3, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "kerr_best"),
-    ("kerr_cvar09_from_best", "kerr", 3, "cvar", 0.9, 700, 2e-3, 5, 12, 0.05, "kerr_best"),
-    ("kerr_adam800_from_best", "kerr", 3, "log_inv", 0.8, 800, 5e-3, 4, 10, 0.1, "kerr_best"),
-    ("kerr_cvar08_from_shell", "kerr", 3, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "shell"),
-    ("kerr_adam600_lr3e3_shell", "kerr", 3, "log_inv", 0.8, 600, 3e-3, 4, 10, 0.1, "shell"),
-    ("fewm2_cvar08_from_best", "few_m", 2, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "few_m_best"),
-    ("fewm2_cvar09_from_best", "few_m", 2, "cvar", 0.9, 700, 2e-3, 5, 12, 0.05, "few_m_best"),
-    ("fewm2_adam800_from_best", "few_m", 2, "log_inv", 0.8, 800, 5e-3, 4, 10, 0.1, "few_m_best"),
-    ("fewm2_cvar08_from_shell", "few_m", 2, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "shell"),
+    ("kerr_cvar08_from_best", "kerr", 3, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "kerr_best", (6, 9)),
+    ("kerr_cvar09_from_best", "kerr", 3, "cvar", 0.9, 700, 2e-3, 5, 12, 0.05, "kerr_best", (6, 9)),
+    ("kerr_adam800_from_best", "kerr", 3, "log_inv", 0.8, 800, 5e-3, 4, 10, 0.1, "kerr_best", (6, 9)),
+    ("kerr_cvar08_from_shell", "kerr", 3, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "shell", (6, 9)),
+    ("kerr_adam600_lr3e3_shell", "kerr", 3, "log_inv", 0.8, 600, 3e-3, 4, 10, 0.1, "shell", (6, 9)),
+    # B90-focused: train with n12 + higher CVaR
+    ("kerr_cvar095_n12_from_best", "kerr", 3, "cvar", 0.95, 800, 2e-3, 6, 14, 0.05, "kerr_best", (6, 9, 12)),
+    ("kerr_cvar09_n12_from_best", "kerr", 3, "cvar", 0.9, 800, 2e-3, 5, 12, 0.05, "kerr_best", (6, 9, 12)),
+    ("kerr_cvar08_n12_from_best", "kerr", 3, "cvar", 0.8, 800, 2e-3, 5, 12, 0.1, "kerr_best", (6, 9, 12)),
+    ("kerr_adam900_n12_from_best", "kerr", 3, "log_inv", 0.8, 900, 3e-3, 5, 12, 0.1, "kerr_best", (6, 9, 12)),
+    ("fewm2_cvar08_from_best", "few_m", 2, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "few_m_best", (6, 9)),
+    ("fewm2_cvar09_from_best", "few_m", 2, "cvar", 0.9, 700, 2e-3, 5, 12, 0.05, "few_m_best", (6, 9)),
+    ("fewm2_adam800_from_best", "few_m", 2, "log_inv", 0.8, 800, 5e-3, 4, 10, 0.1, "few_m_best", (6, 9)),
+    ("fewm2_cvar08_from_shell", "few_m", 2, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "shell", (6, 9)),
+    ("fewm2_cvar095_n12_from_best", "few_m", 2, "cvar", 0.95, 800, 2e-3, 6, 14, 0.05, "few_m_best", (6, 9, 12)),
+    ("fewm2_cvar09_n12_from_best", "few_m", 2, "cvar", 0.9, 800, 2e-3, 5, 12, 0.05, "few_m_best", (6, 9, 12)),
+    ("fewm2_adam900_n12_from_best", "few_m", 2, "log_inv", 0.8, 900, 3e-3, 5, 12, 0.1, "few_m_best", (6, 9, 12)),
 ]
 
 
@@ -183,6 +192,8 @@ def main():
     ap.add_argument("--seeds", default="0,2,10,22")
     ap.add_argument("--arms", default="", help="comma filter on arm tags")
     ap.add_argument("--skip-baseline-scale", action="store_true")
+    ap.add_argument("--retrain-existing", action="store_true",
+                    help="retrain even if ckpt already exists")
     args = ap.parse_args()
 
     OUT.mkdir(parents=True, exist_ok=True)
@@ -238,12 +249,55 @@ def main():
     if few_best_pt:
         g_few, s_few, _ = load_ckpt(few_best_pt)
 
-    for arm_tag, mode, few_M, loss, cvar_q, steps, lr, lb_r, lb_i, leak, warm_src in ARMS:
+    for arm_tag, mode, few_M, loss, cvar_q, steps, lr, lb_r, lb_i, leak, warm_src, train_ns in ARMS:
         if arm_filter and arm_tag not in arm_filter:
             continue
         for seed in seeds:
             if stopped():
                 log("STOP"); return
+            full_tag = f"kp_{arm_tag}_s{seed}"
+            # Skip if this arm+seed already has a full B=1000 table
+            if (EASY / f"scale1000_{full_tag}_full.json").exists() or (
+                OUT / f"scale1000_{full_tag}_full.json"
+            ).exists():
+                log("skip done full", full_tag)
+                continue
+            # Skip if ckpt already trained (resume across watchdog restarts)
+            ckpt_guess = OUT / mode / f"params_{full_tag}_L{L}_seed{seed}.pt"
+            if ckpt_guess.exists() and not args.retrain_existing:
+                # still try full-scale if train-val looked close but scale missing
+                try:
+                    gamma, snap, raw = load_ckpt(ckpt_guess)
+                    raw = dict(raw)
+                    raw["gamma"] = gamma[:L]
+                    raw["snap"] = snap[:L] if snap.dim() > 1 else snap
+                    raw["snap_mode"] = mode
+                    raw["snap_shared"] = False
+                    raw["few_M"] = few_M
+                    meta = json.loads(
+                        (OUT / mode / f"meta_{full_tag}_L{L}_seed{seed}.json").read_text()
+                    ) if (OUT / mode / f"meta_{full_tag}_L{L}_seed{seed}.json").exists() else {}
+                    v9 = ((meta.get("val") or {}).get("9") or (meta.get("val") or {}).get(9) or {})
+                    n9med = float(v9.get("Med", v9.get("median_inv_p", 1e9)))
+                    n9b90 = float(v9.get("B90", v9.get("B90_inv_p", 1e9)))
+                    log(f"resume ckpt {full_tag} train-val n9 {n9med:.4f}/{n9b90:.4f}")
+                    if (n9med / SEALED_REF[9]["Med"] <= 1.15
+                            and n9b90 / SEALED_REF[9]["B90"] <= 1.45):
+                        sc, beat = run_full_scale(
+                            W, raw, args.nf, device, args.scale_B, full_tag,
+                        )
+                        update_pareto_2param(full_tag, mode, sc, beat)
+                        if beat:
+                            log("*** BEAT_SEALED ≤2-param ***", full_tag)
+                            write_2param_beat(full_tag, sc, EASY / "BEAT_SEALED_2PARAM.json")
+                            (OUT / "BEAT_SEALED_2PARAM.json").write_text(
+                                (EASY / "BEAT_SEALED_2PARAM.json").read_text()
+                            )
+                            break
+                    continue
+                except Exception as e:
+                    log("resume failed, retrain", full_tag, e)
+
             if warm_src == "kerr_best" and g_kerr is not None:
                 gamma0 = g_kerr[:L].clone()
                 snap0 = s_kerr[:L].clone() if s_kerr.dim() > 1 else s_kerr.clone()
@@ -258,11 +312,15 @@ def main():
             else:
                 gamma0, snap0 = None, None
 
-            full_tag = f"kp_{arm_tag}_s{seed}"
-            log(f"=== {full_tag} mode={mode} few_M={few_M} loss={loss} q={cvar_q} ===")
+            # Cap per-n when training with n12 so wall time stays sane
+            mt = args.max_train
+            if 12 in train_ns:
+                mt = min(mt, 120)
+
+            log(f"=== {full_tag} mode={mode} few_M={few_M} loss={loss} q={cvar_q} train_ns={train_ns} ===")
             best = train_one(
                 W, L, args.nf, device,
-                train_ns=(6, 9), max_train=args.max_train, max_val=args.max_val,
+                train_ns=train_ns, max_train=mt, max_val=args.max_val,
                 seed=seed, lr=lr, steps=steps,
                 gamma0=gamma0, snap0=snap0,
                 snap_mode=mode, snap_shared=False, few_M=few_M,
@@ -293,8 +351,11 @@ def main():
 
             # Full-scale if train-val looks within striking distance of sealed
             # (kerr historically ~1.07 Med / 1.5 B90 — cast a wider net)
-            if (n9med / SEALED_REF[9]["Med"] <= 1.12
-                    and n9b90 / SEALED_REF[9]["B90"] <= 1.35):
+            # Wider net when n12 was in the train set (B90 is the real target)
+            med_gate = 1.18 if 12 in train_ns else 1.12
+            b90_gate = 1.50 if 12 in train_ns else 1.35
+            if (n9med / SEALED_REF[9]["Med"] <= med_gate
+                    and n9b90 / SEALED_REF[9]["B90"] <= b90_gate):
                 if stopped():
                     log("STOP"); return
                 sc, beat = run_full_scale(

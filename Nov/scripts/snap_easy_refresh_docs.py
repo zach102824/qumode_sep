@@ -143,7 +143,11 @@ def main():
     # best 2-param row
     twos = [r for r in rows if r.get("params") == 2]
     if twos:
-        best = min(twos, key=lambda r: max(r["cells"][n][2] for n in (9, 12, 15, 18)))
+        # bottleneck = max(Med×, B90×) over sealed n (B90 is the usual killer)
+        best = min(
+            twos,
+            key=lambda r: max(max(r["cells"][n][2], r["cells"][n][3]) for n in (9, 12, 15, 18)),
+        )
         pareto += [f"Best 2-param full table so far: `{best['tag']}`", ""]
         pareto += ["| n | Med / B90 | ×Med / ×B90 |", "|---|-----------|-------------|"]
         for n in (9, 12, 15, 18):
