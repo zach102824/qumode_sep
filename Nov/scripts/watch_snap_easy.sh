@@ -62,11 +62,11 @@ launch_wave() {
 
 launch_kerr_polish() {
   local logf="$OUT/run_kerr_polish.log"
-  echo "$(date +%H:%M:%S) launching kerr/few_m polish (priority cvar098→n15 chain)" >> "$LOG"
+  echo "$(date +%H:%M:%S) launching kerr/few_m polish (warm cvar096-s22 1.264× → adam/cvar099/n15)" >> "$LOG"
   OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 \
     nohup python -m Nov.scripts.snap_easy_kerr_polish \
-      --L 32 --seeds 10,0,22,33,44,55,66,2 --scale_B 1000 --skip-baseline-scale \
-      --arms fewm2_cvar096_n12_from_polish,fewm2_adam1500_n12_from_polish,fewm2_cvar09_n12_from_polish,fewm2_adam1200_n12_from_polish,fewm2_cvar098_n15_from_polish,fewm2_cvar095_n15_from_polish,fewm2_adam900_n15_from_polish,fewm2_cvar09_n15_from_polish \
+      --L 32 --seeds 22,10,0,33 --scale_B 1000 --skip-baseline-scale \
+      --arms fewm2_adam1500_n12_from_polish,fewm2_cvar099_n12_from_polish,fewm2_adam2000_n12_from_polish,fewm2_cvar098_n12n15_long,fewm2_cvar09_n12_from_polish,fewm2_adam1200_n12_from_polish,fewm2_cvar098_n15_from_polish,fewm2_cvar095_n15_from_polish,fewm2_adam900_n15_from_polish,fewm2_cvar09_n15_from_polish \
       >> "$logf" 2>&1 &
   echo $! > "$KPIDFILE"
   echo "$(date +%H:%M:%S) kerr_polish pid=$!" >> "$LOG"

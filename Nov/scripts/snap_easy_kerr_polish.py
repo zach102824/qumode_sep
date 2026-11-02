@@ -45,7 +45,8 @@ FEWM2_CKPTS = [
 ]
 # Prefer polished few_m M=2 (chain warm) when present — these beat explore baselines on n18 B90.
 FEWM_POLISH_CKPTS = [
-    # Prefer lowest known bottleneck first (cvar098 s22 ~1.296× > cvar095 s10 ~1.301×)
+    # Prefer lowest known bottleneck first (cvar096 s22 ~1.264× > cvar098 s22 ~1.296×)
+    OUT / "few_m" / "params_kp_fewm2_cvar096_n12_from_polish_s22_L32_seed22.pt",
     OUT / "few_m" / "params_kp_fewm2_cvar098_n12_from_polish_s22_L32_seed22.pt",
     OUT / "few_m" / "params_kp_fewm2_cvar098_n12_from_polish_s0_L32_seed0.pt",
     OUT / "few_m" / "params_kp_fewm2_cvar095_n12_from_polish_s10_L32_seed10.pt",
@@ -82,6 +83,10 @@ ARMS = [
     ("fewm2_cvar098_n12_from_polish", "few_m", 2, "cvar", 0.98, 1000, 1.5e-3, 6, 14, 0.03, "few_m_polish", (6, 9, 12)),
     ("fewm2_cvar096_n12_from_polish", "few_m", 2, "cvar", 0.96, 1000, 1.5e-3, 6, 14, 0.04, "few_m_polish", (6, 9, 12)),
     ("fewm2_adam1500_n12_from_polish", "few_m", 2, "log_inv", 0.8, 1500, 1.5e-3, 6, 16, 0.08, "few_m_polish", (6, 9, 12)),
+    # Longer / higher-q / n15+n18-proxy from best polish — attack residual n18 B90
+    ("fewm2_cvar099_n12_from_polish", "few_m", 2, "cvar", 0.99, 1200, 1.2e-3, 6, 16, 0.02, "few_m_polish", (6, 9, 12)),
+    ("fewm2_adam2000_n12_from_polish", "few_m", 2, "log_inv", 0.8, 2000, 1.2e-3, 7, 18, 0.06, "few_m_polish", (6, 9, 12)),
+    ("fewm2_cvar098_n12n15_long", "few_m", 2, "cvar", 0.98, 1000, 1.0e-3, 6, 14, 0.03, "few_m_polish", (9, 12, 15)),
     ("fewm2_cvar09_n12_from_polish", "few_m", 2, "cvar", 0.9, 900, 2e-3, 6, 14, 0.05, "few_m_polish", (6, 9, 12)),
     ("fewm2_adam1200_n12_from_polish", "few_m", 2, "log_inv", 0.8, 1200, 2e-3, 6, 14, 0.1, "few_m_polish", (6, 9, 12)),
     ("fewm2_cvar098_n15_from_polish", "few_m", 2, "cvar", 0.98, 800, 1.2e-3, 5, 12, 0.03, "few_m_polish", (6, 9, 12, 15)),
