@@ -45,8 +45,10 @@ FEWM2_CKPTS = [
 ]
 # Prefer polished few_m M=2 (chain warm) when present — these beat explore baselines on n18 B90.
 FEWM_POLISH_CKPTS = [
-    # Prefer lowest known bottleneck first (cvar096 s22 ~1.264×; n12n15_long s22 ~1.270×)
+    # Prefer lowest known bottleneck first (cvar097 n12n15 s22 ~1.235×)
+    OUT / "few_m" / "params_kp_fewm2_cvar097_n12n15_long_s22_L32_seed22.pt",
     OUT / "few_m" / "params_kp_fewm2_cvar096_n12_from_polish_s22_L32_seed22.pt",
+    OUT / "few_m" / "params_kp_fewm2_cvar096_n12n15_long_s10_L32_seed10.pt",
     OUT / "few_m" / "params_kp_fewm2_cvar096_n12n15_long_s22_L32_seed22.pt",
     OUT / "few_m" / "params_kp_fewm2_cvar096_n12_from_polish_s10_L32_seed10.pt",
     OUT / "few_m" / "params_kp_fewm2_cvar098_n12_from_polish_s22_L32_seed22.pt",
