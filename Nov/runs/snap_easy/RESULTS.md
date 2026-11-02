@@ -1,6 +1,6 @@
 # SNAP easiness — RESULTS
 
-_Updated 2026-11-02 11:35 Asia/Shanghai_
+_Updated 2026-11-02 12:17 Asia/Shanghai_
 
 Motif locked: Nov1st-final. Train n∈{6,9} max_train=200. Eval scale1000 B=1000.
 
@@ -12,7 +12,7 @@ Sealed: n9 1.092/1.776, n12 1.197/2.843, n15 1.418/5.505, n18 1.752/11.353.
 
 | tag | L | params | n9 Med/B90 | ×Med/×B90 | n12 | n15 | n18 | verdict |
 |-----|---|--------|------------|-----------|-----|-----|-----|---------|
-| `easy_snap_gauss_perL_L32_s0` | 32 | 3 | 1.071/1.597 (0.981×/0.899×) | 0.9806949249554029/0.8991747020601151 | 1.186/2.218 (0.991×/0.780×) | — | — | PROMOTE_CAND |
+| `easy_snap_gauss_perL_L32_s0` | 32 | 3 | 1.076/1.791 (0.986×/1.008×) | 0.9858026936814025/1.008350885397679 | 1.167/2.864 (0.975×/1.007×) | 1.340/4.934 (0.945×/0.896×) | 1.620/10.811 (0.925×/0.952×) | PROMOTE_CAND |
 | `easy_snap_gauss_shared_L32_s0` | 32 | 3 | 1.436/2.141 (1.315×/1.205×) | 1.3147507940893206/1.2054837636045503 | 1.855/3.346 (1.550×/1.177×) | — | — | PROMOTE_CAND |
 | `easy_snap_poly2_n_perL_L32_s1` | 32 | 3 | 1.156/2.982 (1.059×/1.679×) | 1.0590536362958913/1.6791342346517883 | 1.459/3.858 (1.219×/1.357×) | — | — | PROMOTE_CAND |
 | `easy_snap_poly2_n_shared_L32_s1` | 32 | 3 | 1.815/3.817 (1.662×/2.149×) | 1.662324527244428/2.149126161863137 | 2.527/6.727 (2.111×/2.366×) | — | — | PROMOTE_CAND |
@@ -25,10 +25,28 @@ Sealed: n9 1.092/1.776, n12 1.197/2.843, n15 1.418/5.505, n18 1.752/11.353.
 | `snap_poly3_n_perL_L32` | 32 | 4 | — | —/— | — | — | — | KILL |
 | `easy_snap_shell_perL_L32_s0` | 32 | 4 | 1.081/1.557 (0.990×/0.877×) | 0.9903028443619445/0.8765077805733894 | 1.245/2.256 (1.040×/0.794×) | — | — | PROMOTE_CAND |
 
+## Full B=1000 finalists (complete ×sealed)
+
+Sealed bar: n9 1.092/1.776 · n12 1.197/2.843 · n15 1.418/5.505 · n18 1.752/11.353.
+
+### `gauss` perL (3 params/L) — most-restricted near-sealed survivor
+`easy_snap_gauss_perL_L32_s0` seed0 warm-start. **Med ≤ sealed at all n**; B90 misses only n9/n12 by ~0.7–0.8%.
+
+| n | Med / B90 | ×Med / ×B90 | dual? |
+|---|-----------|-------------|-------|
+| 9 | 1.076 / 1.791 | 0.986× / 1.008× | Med yes, B90 no |
+| 12 | 1.167 / 2.864 | 0.975× / 1.007× | Med yes, B90 no |
+| 15 | 1.340 / 4.934 | 0.945× / 0.896× | YES |
+| 18 | 1.620 / 10.811 | 0.925× / 0.952× | YES |
+
+**BEAT_SEALED dual (Med+B90 all n):** NO (n9/n12 B90 ~1.008×).
+
+Other finalists (few_m M=2, poly2_n, gauss_plus1, poly3_pc, shell) still running full B=1000.
+
 ## Most-restricted survivors (n9 Med ≤ 1.10× sealed)
 
 - **easy_snap_few_mM2_perL_L32_s0** params=2 n9 1.126/1.959 (1.031×/1.103×)
-- **easy_snap_gauss_perL_L32_s0** params=3 n9 1.071/1.597 (0.981×/0.899×)
+- **easy_snap_gauss_perL_L32_s0** params=3 n9 1.076/1.791 (0.986×/1.008×)
 - **easy_snap_few_mM3_perL_L32_s0** params=3 n9 1.120/1.901 (1.026×/1.071×)
 - **easy_snap_poly2_n_perL_L32_s1** params=3 n9 1.156/2.982 (1.059×/1.679×)
 - **easy_snap_gauss_plus1_perL_L32_s1** params=4 n9 1.074/1.694 (0.984×/0.954×)
