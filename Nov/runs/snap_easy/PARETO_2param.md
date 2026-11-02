@@ -1,6 +1,6 @@
 # SNAP-easy pareto — ≤2-param polish (kerr / few_m M=2)
 
-_Updated 2026-11-02 16:15 Asia/Shanghai_
+_Updated 2026-11-02 16:24 Asia/Shanghai_
 
 Best-so-far by bottleneck max(Med×,B90×): `kp_fewm2_cvar095_n12_from_polish_s10_full`  beat=False  bottleneck=1.301×
 
