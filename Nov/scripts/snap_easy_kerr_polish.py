@@ -44,6 +44,8 @@ FEWM2_CKPTS = [
     EASY / "snap_few_mM2_perL" / "params_easy_snap_few_mM2_perL_L32_s1_L32_seed1.pt",
 ]
 # Prefer polished few_m M=2 (chain warm) when present — these beat explore baselines on n18 B90.
+GAUSS_BEAT_CKPT = EASY / "gauss_polish" / "gauss" / "params_gp_cvar08_from_gauss_s0_L32_seed0.pt"
+
 FEWM_POLISH_CKPTS = [
     # Prefer lowest known bottleneck first (cvar097 n12n15 s22 ~1.235×)
     OUT / "few_m" / "params_kp_fewm2_cvar097_n12n15_long_s22_L32_seed22.pt",
@@ -79,12 +81,51 @@ def load_ckpt(path: Path):
     return st["gamma"].float(), st["snap"].float(), st
 
 
+def project_gauss_to_mode(gauss_snap: torch.Tensor, mode: str, few_M: int = 2) -> torch.Tensor:
+    """Project sealed-beating gauss (L,3) SNAP → ≤2-param head (few_m / kerr).
+
+    Expands each layer's gauss phases to Fock θ_k, then:
+      few_m: keep θ_0..M-1
+      kerr:  LS-fit χ,ω on θ_k = χ·k(k-1)/2 + ω·k
+    """
+    from Nov.scripts.snap_heads import expand_theta, NU
+    g = gauss_snap.detach().float().cpu()
+    if g.dim() == 1:
+        g = g.unsqueeze(0)
+    L = g.shape[0]
+    pc = torch.tensor([bin(k).count("1") for k in range(NU)], dtype=torch.long)
+    ks = torch.arange(NU, dtype=torch.float32)
+    out = []
+    for ell in range(L):
+        th = expand_theta("gauss", g[ell], pc)
+        if mode == "few_m":
+            out.append(th[:few_M].clone())
+        elif mode == "kerr":
+            A = torch.stack([ks * (ks - 1.0) * 0.5, ks], dim=1)
+            sol = torch.linalg.lstsq(A, th.unsqueeze(1)).solution.reshape(-1)
+            out.append(sol)
+        else:
+            raise ValueError(f"project_gauss_to_mode: unsupported {mode}")
+    return torch.stack(out, dim=0)
+
+
+
 # (tag, mode, few_M, loss, cvar_q, steps, lr, lb_rounds, lb_iter, leakpen, warm, train_ns)
 # warm: "kerr_best" | "few_m_best" | "shell" | "fresh"
 # train_ns: include 12 to attack higher-n B90 blow-up (main Kerr failure mode)
 ARMS = [
     # Prefer n12n15 (honest val) — best so far 1.235×; n15n18 tiny-val overfits (val~6 vs scale~15)
     ("fewm2_cvar097_n12n15_long", "few_m", 2, "cvar", 0.97, 1200, 8e-4, 7, 16, 0.03, "few_m_polish", (9, 12, 15)),
+    # --- NEW IDEA wave (post CVaR-floor ~1.235×): different warm / shared / loss ---
+    # 12-tuple or 13-tuple (optional shared bool at end; default False)
+    ("fewm2_gproj_cvar097_n12n15", "few_m", 2, "cvar", 0.97, 1200, 8e-4, 7, 16, 0.03, "gauss_project", (9, 12, 15)),
+    ("kerr_gproj_cvar097_n12n15", "kerr", 3, "cvar", 0.97, 1200, 8e-4, 7, 16, 0.03, "gauss_project", (9, 12, 15)),
+    ("fewm2_softplus_n12n15", "few_m", 2, "softplus", 0.8, 1400, 8e-4, 7, 16, 0.04, "few_m_polish", (9, 12, 15)),
+    ("fewm2_shared_cvar097_n12n15", "few_m", 2, "cvar", 0.97, 1400, 1.0e-3, 7, 16, 0.03, "few_m_polish", (9, 12, 15), True),
+    ("kerr_shared_gproj_cvar097", "kerr", 3, "cvar", 0.97, 1400, 1.0e-3, 7, 16, 0.03, "gauss_project", (9, 12, 15), True),
+    ("fewm2_shell_cvar097_n12n15", "few_m", 2, "cvar", 0.97, 1500, 1.2e-3, 8, 18, 0.04, "shell", (9, 12, 15)),
+    ("fewm2_gproj_cvar099_n12n15", "few_m", 2, "cvar", 0.99, 1200, 7e-4, 7, 18, 0.02, "gauss_project", (9, 12, 15)),
+    ("fewm2_gproj_adam1800_n12n15", "few_m", 2, "log_inv", 0.8, 1800, 1.0e-3, 7, 16, 0.05, "gauss_project", (9, 12, 15)),
     ("fewm2_cvar096_n12n15_hiLBFGS", "few_m", 2, "cvar", 0.96, 700, 8e-4, 10, 22, 0.03, "few_m_polish", (9, 12, 15)),
     ("fewm2_cvar099_n12n15_long", "few_m", 2, "cvar", 0.99, 1200, 7e-4, 7, 18, 0.02, "few_m_polish", (9, 12, 15)),
     ("fewm2_cvar098_n12n15_long", "few_m", 2, "cvar", 0.98, 1000, 1.0e-3, 6, 14, 0.03, "few_m_polish", (9, 12, 15)),
@@ -312,7 +353,22 @@ def main():
     else:
         log("few_m_polish warm missing; polish-chain arms will fall back to fresh")
 
-    for arm_tag, mode, few_M, loss, cvar_q, steps, lr, lb_r, lb_i, leak, warm_src, train_ns in ARMS:
+    # Load gauss beat once for gauss_project warm
+    g_gauss = s_gauss = None
+    if GAUSS_BEAT_CKPT.exists():
+        g_gauss, s_gauss, _ = load_ckpt(GAUSS_BEAT_CKPT)
+        log("gauss_project warm available from", GAUSS_BEAT_CKPT.name)
+    else:
+        log("gauss beat ckpt missing; gauss_project arms fall back to few_m_polish/shell")
+
+    for arm in ARMS:
+        if len(arm) == 12:
+            arm_tag, mode, few_M, loss, cvar_q, steps, lr, lb_r, lb_i, leak, warm_src, train_ns = arm
+            shared = False
+        elif len(arm) == 13:
+            arm_tag, mode, few_M, loss, cvar_q, steps, lr, lb_r, lb_i, leak, warm_src, train_ns, shared = arm
+        else:
+            raise ValueError(f"bad ARMS entry len={len(arm)}: {arm[0]!r}")
         if arm_filter and arm_tag not in arm_filter:
             continue
         for seed in seeds:
@@ -335,7 +391,7 @@ def main():
                     raw["gamma"] = gamma[:L]
                     raw["snap"] = snap[:L] if snap.dim() > 1 else snap
                     raw["snap_mode"] = mode
-                    raw["snap_shared"] = False
+                    raw["snap_shared"] = shared
                     raw["few_M"] = few_M
                     meta = json.loads(
                         (OUT / mode / f"meta_{full_tag}_L{L}_seed{seed}.json").read_text()
@@ -367,7 +423,15 @@ def main():
                 if fresh_pt is not None:
                     g_few_p, s_few_p, _ = load_ckpt(fresh_pt)
                     log("few_m_polish warm →", fresh_pt.name)
-            if warm_src == "kerr_best" and g_kerr is not None:
+            if warm_src == "gauss_project" and s_gauss is not None:
+                gamma0 = (g_gauss[:L].clone() if g_gauss is not None else
+                          (g_few_p[:L].clone() if g_few_p is not None else None))
+                snap0 = project_gauss_to_mode(s_gauss[:L], mode, few_M=few_M if mode == "few_m" else 2)
+                if shared:
+                    from Nov.scripts.snap_heads import project_shared
+                    snap0 = project_shared(snap0)
+                log(f"gauss_project → {mode} shared={shared} snap_shape={tuple(snap0.shape)}")
+            elif warm_src == "kerr_best" and g_kerr is not None:
                 gamma0 = g_kerr[:L].clone()
                 snap0 = s_kerr[:L].clone() if s_kerr.dim() > 1 else s_kerr.clone()
             elif warm_src == "few_m_polish" and g_few_p is not None:
@@ -384,9 +448,13 @@ def main():
                 gamma0 = g_shell.clone() if g_shell is not None else (
                     g_kerr[:L].clone() if g_kerr is not None else None
                 )
-                snap0 = warm_snap_for(mode, False, L, few_M, phi_shell)
+                snap0 = warm_snap_for(mode, shared, L, few_M, phi_shell)
             else:
                 gamma0, snap0 = None, None
+            # Shared SNAP: collapse per-L warm to one vector
+            if shared and snap0 is not None and snap0.dim() > 1:
+                from Nov.scripts.snap_heads import project_shared
+                snap0 = project_shared(snap0)
 
             # Cap per-n when training with n12/n15/n18 so wall time stays sane
             mt = args.max_train
@@ -406,13 +474,13 @@ def main():
             elif 12 in train_ns:
                 mt = min(mt, 120)
 
-            log(f"=== {full_tag} mode={mode} few_M={few_M} loss={loss} q={cvar_q} train_ns={train_ns} ===")
+            log(f"=== {full_tag} mode={mode} few_M={few_M} shared={shared} loss={loss} q={cvar_q} train_ns={train_ns} ===")
             best = train_one(
                 W, L, args.nf, device,
                 train_ns=train_ns, max_train=mt, max_val=mv,
                 seed=seed, lr=lr, steps=steps,
                 gamma0=gamma0, snap0=snap0,
-                snap_mode=mode, snap_shared=False, few_M=few_M,
+                snap_mode=mode, snap_shared=shared, few_M=few_M,
                 loss_kind=loss, leakpen=leak, cvar_q=cvar_q,
                 lbfgs_mid=do_lbfgs, lbfgs_final=do_lbfgs,
                 lbfgs_rounds=lb_r_use, lbfgs_iter=lb_i_use,

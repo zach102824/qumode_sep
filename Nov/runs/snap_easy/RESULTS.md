@@ -1,6 +1,6 @@
 # SNAP easiness — RESULTS
 
-_Updated 2026-11-03 00:34 Asia/Shanghai_
+_Updated 2026-11-03 00:38 Asia/Shanghai_
 
 Motif locked: Nov1st-final. Train n∈{6,9} max_train=200. Eval scale1000 B=1000.
 
