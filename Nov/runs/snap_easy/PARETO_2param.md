@@ -1,17 +1,19 @@
 # SNAP-easy pareto — ≤2-param polish (kerr / few_m M=2)
 
-_Updated 2026-11-02 14:05 Asia/Shanghai_
+_Updated 2026-11-02 14:25 Asia/Shanghai_
 
-Arm: `kp_kerr_cvar09_from_best_s2`  mode=kerr  beat=False
+Best-so-far by bottleneck max(Med×,B90×): `kp_fewm2_adam900_n12_from_best_s0_full`  beat=False  bottleneck=1.494×
+
+Note: n12-in-train few_m (2 params) closed a large B90 gap vs n6+n9-only Kerr.
 
 Sealed: n9 1.092/1.776 · n12 1.197/2.843 · n15 1.418/5.505 · n18 1.752/11.353
 
 | n | Med / B90 | ×Med / ×B90 |
 |---|-----------|-------------|
-| 9 | 1.151 / 2.509 | 1.054× / 1.413× |
-| 12 | 1.391 / 5.819 | 1.162× / 2.047× |
-| 15 | 1.837 / 10.060 | 1.296× / 1.827× |
-| 18 | 2.581 / 33.309 | 1.473× / 2.934× |
+| 9 | 1.101 / 1.697 | 1.008× / 0.955× |
+| 12 | 1.256 / 3.191 | 1.049× / 1.122× |
+| 15 | 1.579 / 6.182 | 1.113× / 1.123× |
+| 18 | 2.118 / 16.960 | 1.209× / 1.494× |
 
 **BEAT_SEALED (≤2 params/L):** NO
 
