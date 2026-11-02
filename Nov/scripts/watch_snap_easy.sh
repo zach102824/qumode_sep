@@ -66,7 +66,7 @@ launch_kerr_polish() {
   OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 \
     nohup python -m Nov.scripts.snap_easy_kerr_polish \
       --L 32 --seeds 10,0,22,33,44,55,66,2 --scale_B 1000 --skip-baseline-scale \
-      --arms fewm2_cvar098_n12_from_polish,fewm2_cvar096_n12_from_polish,fewm2_adam1500_n12_from_polish,fewm2_cvar09_n12_from_polish,fewm2_adam1200_n12_from_polish,fewm2_cvar098_n15_from_polish,fewm2_cvar095_n15_from_polish,fewm2_adam900_n15_from_polish,fewm2_cvar09_n15_from_polish \
+      --arms fewm2_cvar096_n12_from_polish,fewm2_adam1500_n12_from_polish,fewm2_cvar09_n12_from_polish,fewm2_adam1200_n12_from_polish,fewm2_cvar098_n15_from_polish,fewm2_cvar095_n15_from_polish,fewm2_adam900_n15_from_polish,fewm2_cvar09_n15_from_polish \
       >> "$logf" 2>&1 &
   echo $! > "$KPIDFILE"
   echo "$(date +%H:%M:%S) kerr_polish pid=$!" >> "$LOG"

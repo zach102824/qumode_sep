@@ -1,23 +1,22 @@
 # SNAP-easy executor status
 
-_Updated 2026-11-02 16:40 Asia/Shanghai_
+_Updated 2026-11-02 16:56 Asia/Shanghai_
 
 ## Alive
-- ladder 714841 · watch 853191 · kerr_polish **893614** (cvar098 s33 train)
+- ladder 714841 · watch 853191 · kerr_polish **918955** cvar096_n12_from_polish s22 warm from cvar098-s22 1.296×
 - angle polish 624526 (untouched)
 - STOP_SNAP_EASY: absent
 - BEAT_SEALED_2PARAM: absent
 
 ## Best ≤2-param
-`kp_fewm2_cvar098_n12_from_polish_s22_full` bottleneck **1.296×** (was 1.301×)
-n18 gap: Med ~1.16× / B90 **1.296×** (14.718 vs sealed 11.353).
-cvar098: s22 **1.296** · s0 1.310 · s10 1.334.
+`kp_fewm2_cvar098_n12_from_polish_s22_full` bottleneck **1.296×**
+n18 B90 14.718 vs sealed 11.353 (1.296×). Improving 1.494→1.389→1.301→**1.296**.
+
+## cvar098 wave (done enough)
+s22 **1.296** · s0 1.310 · s10 1.334 · s33 1.342 · s44 (see RESULTS). Skipped remaining s55/66/2; restarted with s22 warm onto next arms.
 
 ## In flight
-cvar098 remaining s33/44/55/66/2 → cvar096 → adam1500 → cvar09 → adam1200 → n15
-
-## Note
-Script FEWM_POLISH_CKPTS now prefers s22; live process still uses in-memory list until next restart (first_existing will pick s22 file once listed — **needs restart after cvar098 wave or mid-arm for warm to flip**). Will restart onto cvar096 with s22 warm after cvar098 seed wave or sooner if plateaus.
+cvar096 → adam1500 → cvar09 → adam1200 → n15 CVaR/Adam (warm=s22)
 
 ## Ping rule
 Ping parent ONLY on ≤2-param strict dual-beat.
