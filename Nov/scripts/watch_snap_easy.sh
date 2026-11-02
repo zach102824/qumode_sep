@@ -10,6 +10,7 @@ export PYTHONPATH="$ROOT"
 OUT=Nov/runs/snap_easy
 PIDFILE="$OUT/PID"
 GPIDFILE="$OUT/GAUSS_POLISH_PID"
+KPIDFILE="$OUT/KERR_POLISH_PID"
 STOP=Nov/runs/STOP_SNAP_EASY
 LOG="$OUT/watchdog.log"
 WAVEFILE="$OUT/WAVE"
@@ -57,6 +58,15 @@ launch_wave() {
   echo "$(date +%H:%M:%S) wave=$wave pid=$!" >> "$LOG"
 }
 
+
+launch_kerr_polish() {
+  local logf="$OUT/run_kerr_polish.log"
+  echo "$(date +%H:%M:%S) launching kerr/few_m polish" >> "$LOG"
+  OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2     nohup python -m Nov.scripts.snap_easy_kerr_polish       --L 32 --seeds 0,2,10,22 --scale_B 1000       >> "$logf" 2>&1 &
+  echo $! > "$KPIDFILE"
+  echo "$(date +%H:%M:%S) kerr_polish pid=$!" >> "$LOG"
+}
+
 launch_gauss_polish() {
   local logf="$OUT/run_gauss_polish.log"
   echo "$(date +%H:%M:%S) launching gauss polish" >> "$LOG"
@@ -99,9 +109,23 @@ while true; do
       fi
     fi
     if [[ "$need_gp" -eq 1 ]]; then
-      # stagger: only launch if main has been up OR wave>=1
       launch_gauss_polish
     fi
   fi
+  # side kerr/few_m ≤2-param polish until 2PARAM beat
+  if [[ ! -f "$OUT/BEAT_SEALED_2PARAM.json" ]]; then
+    need_kp=1
+    if [[ -f "$KPIDFILE" ]]; then
+      kpid=$(cat "$KPIDFILE")
+      if kill -0 "$kpid" 2>/dev/null; then
+        need_kp=0
+      fi
+    fi
+    if [[ "$need_kp" -eq 1 ]]; then
+      launch_kerr_polish
+    fi
+  fi
+  # refresh RESULTS/PARETO periodically
+  python -m Nov.scripts.snap_easy_refresh_docs >> "$OUT/refresh_docs.log" 2>&1 || true
   sleep 45
 done

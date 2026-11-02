@@ -1,30 +1,31 @@
-# SNAP-easy pareto — BEAT_SEALED
+# SNAP-easy pareto
 
-_Updated 2026-11-02 12:57 Asia/Shanghai_
+_Updated 2026-11-02 13:09 Asia/Shanghai_
 
-## Clear pareto + sealed dual-beat: `gauss` CVaR polish (3 params/L)
+## Clear pareto + sealed dual-beat: `gp_cvar08_from_gauss_s0`
 
-Warm-start from `easy_snap_gauss_perL_L32_s0` (which was ~1.007–1.008× B90 short at n9/12),
-then CVaR q=0.8 Adam 600 + LBFGS → `gp_cvar08_from_gauss_s0`.
+See BEAT_SEALED.json / RESULTS.md.
 
-Checkpoint: `gauss_polish/gauss/params_gp_cvar08_from_gauss_s0_L32_seed0.pt`
+## ≤2-param (kerr / few_m M=2)
 
-JSON: `BEAT_SEALED.json` / `gauss_polish/scale1000_gp_cvar08_from_gauss_s0_full.json`
+No dual-beat yet. Kerr B90 gap + few_m polish running in `kerr_polish/`.
 
-Sealed: n9 1.092/1.776 · n12 1.197/2.843 · n15 1.418/5.505 · n18 1.752/11.353
+Best 2-param full table so far: `easy_snap_few_mM2_perL_L32_s0_full`
 
-| n | Med / B90 | ×Med / ×B90 | vs sealed |
-|---|-----------|-------------|-----------|
-| 9 | **1.080 / 1.756** | **0.989× / 0.989×** | dual beat |
-| 12 | **1.167 / 2.833** | **0.975× / 0.997×** | dual beat |
-| 15 | **1.347 / 5.017** | **0.950× / 0.911×** | dual beat |
-| 18 | **1.623 / 10.523** | **0.926× / 0.927×** | dual beat |
+| n | Med / B90 | ×Med / ×B90 |
+|---|-----------|-------------|
+| 9 | 1.138 / 1.988 | 1.042× / 1.119× |
+| 12 | 1.381 / 4.003 | 1.154× / 1.408× |
+| 15 | 1.881 / 7.824 | 1.326× / 1.421× |
+| 18 | 2.746 / 20.737 | 1.567× / 1.827× |
 
-**BEAT_SEALED (Med+B90 all n): YES**
+## Kerr clean full B=1000 (s2)
 
-Hardware: gauss = θ_k = α + β·pc(k) + δ·pc(k)² — 3 params/layer.
+| n | Med / B90 | × |
+|---|-----------|---|
+| 9 | 1.217 / 2.998 | 1.114× / 1.688× |
+| 12 | 1.488 / 6.773 | 1.243× / 2.382× |
+| 15 | 2.002 / 12.298 | 1.412× / 2.234× |
+| 18 | 2.841 / 36.445 | 1.622× / 3.210× |
 
-## Queue
-
-Ladder 714841 still finishing full B=1000 on few_mM3, gauss_plus1, poly3_pc, shell (and later waves for kerr/more seeds).
-
+No ≤2-param dual-beat yet.
