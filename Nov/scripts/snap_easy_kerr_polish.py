@@ -45,6 +45,10 @@ FEWM2_CKPTS = [
 ]
 # Prefer polished few_m M=2 (chain warm) when present — these beat explore baselines on n18 B90.
 FEWM_POLISH_CKPTS = [
+    # Prefer lowest known bottleneck first (s10 ~1.301× > s0 ~1.389×)
+    OUT / "few_m" / "params_kp_fewm2_cvar095_n12_from_polish_s10_L32_seed10.pt",
+    OUT / "few_m" / "params_kp_fewm2_cvar095_n12_from_polish_s0_L32_seed0.pt",
+    OUT / "few_m" / "params_kp_fewm2_cvar095_n12_from_polish_s2_L32_seed2.pt",
     OUT / "few_m" / "params_kp_fewm2_adam900_n12_from_best_s0_L32_seed0.pt",
     OUT / "few_m" / "params_kp_fewm2_adam900_n12_from_best_s33_L32_seed33.pt",
     OUT / "few_m" / "params_kp_fewm2_adam900_n12_from_best_s44_L32_seed44.pt",
@@ -70,10 +74,15 @@ def load_ckpt(path: Path):
 # warm: "kerr_best" | "few_m_best" | "shell" | "fresh"
 # train_ns: include 12 to attack higher-n B90 blow-up (main Kerr failure mode)
 ARMS = [
-    # Chain from polished few_m (attacks residual n18 B90 gap ~1.49×)
+    # Chain from polished few_m (attacks residual n18 B90 gap; best ~1.301× s10)
     ("fewm2_cvar095_n12_from_polish", "few_m", 2, "cvar", 0.95, 900, 2e-3, 6, 14, 0.05, "few_m_polish", (6, 9, 12)),
+    # Higher-CVaR / longer from best polish — push n18 B90 further
+    ("fewm2_cvar098_n12_from_polish", "few_m", 2, "cvar", 0.98, 1000, 1.5e-3, 6, 14, 0.03, "few_m_polish", (6, 9, 12)),
+    ("fewm2_cvar096_n12_from_polish", "few_m", 2, "cvar", 0.96, 1000, 1.5e-3, 6, 14, 0.04, "few_m_polish", (6, 9, 12)),
+    ("fewm2_adam1500_n12_from_polish", "few_m", 2, "log_inv", 0.8, 1500, 1.5e-3, 6, 16, 0.08, "few_m_polish", (6, 9, 12)),
     ("fewm2_cvar09_n12_from_polish", "few_m", 2, "cvar", 0.9, 900, 2e-3, 6, 14, 0.05, "few_m_polish", (6, 9, 12)),
     ("fewm2_adam1200_n12_from_polish", "few_m", 2, "log_inv", 0.8, 1200, 2e-3, 6, 14, 0.1, "few_m_polish", (6, 9, 12)),
+    ("fewm2_cvar098_n15_from_polish", "few_m", 2, "cvar", 0.98, 800, 1.2e-3, 5, 12, 0.03, "few_m_polish", (6, 9, 12, 15)),
     ("fewm2_cvar095_n15_from_polish", "few_m", 2, "cvar", 0.95, 700, 1.5e-3, 5, 12, 0.05, "few_m_polish", (6, 9, 12, 15)),
     ("fewm2_adam900_n15_from_polish", "few_m", 2, "log_inv", 0.8, 900, 2e-3, 5, 12, 0.1, "few_m_polish", (6, 9, 12, 15)),
     ("fewm2_cvar09_n15_from_polish", "few_m", 2, "cvar", 0.9, 700, 1.5e-3, 5, 12, 0.05, "few_m_polish", (6, 9, 12, 15)),
@@ -321,6 +330,12 @@ def main():
                 except Exception as e:
                     log("resume failed, retrain", full_tag, e)
 
+            # Re-resolve polish warm each seed so newer full-evals (e.g. s10 1.301×) chain in
+            if warm_src == "few_m_polish":
+                fresh_pt = first_existing(FEWM_POLISH_CKPTS)
+                if fresh_pt is not None:
+                    g_few_p, s_few_p, _ = load_ckpt(fresh_pt)
+                    log("few_m_polish warm →", fresh_pt.name)
             if warm_src == "kerr_best" and g_kerr is not None:
                 gamma0 = g_kerr[:L].clone()
                 snap0 = s_kerr[:L].clone() if s_kerr.dim() > 1 else s_kerr.clone()
