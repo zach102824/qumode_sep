@@ -47,6 +47,8 @@ FEWM2_CKPTS = [
 FEWM_POLISH_CKPTS = [
     # Prefer lowest known bottleneck first (cvar097 n12n15 s22 ~1.235×)
     OUT / "few_m" / "params_kp_fewm2_cvar097_n12n15_long_s22_L32_seed22.pt",
+    OUT / "few_m" / "params_kp_fewm2_cvar097_n12n15_long_s10_L32_seed10.pt",
+    OUT / "few_m" / "params_kp_fewm2_cvar097_n12n15_long_s0_L32_seed0.pt",
     OUT / "few_m" / "params_kp_fewm2_cvar096_n12_from_polish_s22_L32_seed22.pt",
     OUT / "few_m" / "params_kp_fewm2_cvar096_n12n15_long_s10_L32_seed10.pt",
     OUT / "few_m" / "params_kp_fewm2_cvar096_n12n15_long_s22_L32_seed22.pt",
@@ -81,6 +83,13 @@ def load_ckpt(path: Path):
 # warm: "kerr_best" | "few_m_best" | "shell" | "fresh"
 # train_ns: include 12 to attack higher-n B90 blow-up (main Kerr failure mode)
 ARMS = [
+    # Direct n18-in-train (train pack N≈16) — attack residual n18 B90 wall (~1.235×)
+    ("fewm2_cvar097_n15n18", "few_m", 2, "cvar", 0.97, 900, 7e-4, 6, 14, 0.03, "few_m_polish", (9, 15, 18)),
+    ("fewm2_cvar098_n15n18", "few_m", 2, "cvar", 0.98, 900, 6e-4, 6, 16, 0.02, "few_m_polish", (9, 15, 18)),
+    ("fewm2_cvar096_n12n15n18", "few_m", 2, "cvar", 0.96, 800, 7e-4, 6, 14, 0.03, "few_m_polish", (12, 15, 18)),
+    ("fewm2_cvar099_n15n18", "few_m", 2, "cvar", 0.99, 1000, 5e-4, 7, 16, 0.02, "few_m_polish", (9, 15, 18)),
+    ("fewm2_adam1200_n15n18", "few_m", 2, "log_inv", 0.8, 1200, 8e-4, 6, 14, 0.04, "few_m_polish", (9, 15, 18)),
+    ("fewm2_cvar097_n18_only", "few_m", 2, "cvar", 0.97, 700, 8e-4, 5, 12, 0.03, "few_m_polish", (18,)),
     # Chain from polished few_m (attacks residual n18 B90 gap; best ~1.301× s10)
     ("fewm2_cvar095_n12_from_polish", "few_m", 2, "cvar", 0.95, 900, 2e-3, 6, 14, 0.05, "few_m_polish", (6, 9, 12)),
     # Higher-CVaR / longer from best polish — push n18 B90 further
@@ -377,9 +386,11 @@ def main():
             else:
                 gamma0, snap0 = None, None
 
-            # Cap per-n when training with n12/n15 so wall time stays sane
+            # Cap per-n when training with n12/n15/n18 so wall time stays sane
             mt = args.max_train
-            if 15 in train_ns:
+            if 18 in train_ns:
+                mt = min(mt, 24)  # n18 train pack only ~16 inst
+            elif 15 in train_ns:
                 mt = min(mt, 60)
             elif 12 in train_ns:
                 mt = min(mt, 120)
@@ -425,8 +436,10 @@ def main():
                 w.writerow(row)
 
             # Full-scale if train-val looks within striking distance of sealed
-            # Wider net when n12/n15 in train set (B90 is the real target)
-            if 15 in train_ns:
+            # Wider net when n12/n15/n18 in train set (B90 is the real target)
+            if 18 in train_ns:
+                med_gate, b90_gate = 1.40, 2.20  # n18 train tiny; allow wider gate
+            elif 15 in train_ns:
                 med_gate, b90_gate = 1.25, 1.70
             elif 12 in train_ns:
                 med_gate, b90_gate = 1.18, 1.50
