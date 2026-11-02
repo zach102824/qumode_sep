@@ -155,6 +155,40 @@ def main():
             pareto.append(f"| {n} | {med:.3f} / {b90:.3f} | {mx:.3f}× / {bx:.3f}× |")
         pareto.append("")
     (EASY / "PARETO.md").write_text("\n".join(pareto) + "\n")
+
+    # PARETO_2param: best ≤2-param by bottleneck max(Med×,B90×)
+    twos2 = [r for r in rows if r.get("params") == 2]
+    p2 = [
+        "# SNAP-easy pareto — ≤2-param polish (kerr / few_m M=2)",
+        "",
+        f"_Updated {time.strftime('%Y-%m-%d %H:%M Asia/Shanghai')}_",
+        "",
+    ]
+    if beat2.exists():
+        bj = json.loads(beat2.read_text())
+        p2 += [f"**BEAT_SEALED (≤2 params/L):** YES — `{bj.get('tag')}`", ""]
+    elif twos2:
+        best2 = min(
+            twos2,
+            key=lambda r: max(max(r["cells"][n][2], r["cells"][n][3]) for n in (9, 12, 15, 18)),
+        )
+        bn = max(max(best2["cells"][n][2], best2["cells"][n][3]) for n in (9, 12, 15, 18))
+        p2 += [
+            f"Best-so-far by bottleneck max(Med×,B90×): `{best2['tag']}`  beat=False  bottleneck={bn:.3f}×",
+            "",
+            "Sealed: n9 1.092/1.776 · n12 1.197/2.843 · n15 1.418/5.505 · n18 1.752/11.353",
+            "",
+            "| n | Med / B90 | ×Med / ×B90 |",
+            "|---|-----------|-------------|",
+        ]
+        for n in (9, 12, 15, 18):
+            med, b90, mx, bx = best2["cells"][n]
+            p2.append(f"| {n} | {med:.3f} / {b90:.3f} | {mx:.3f}× / {bx:.3f}× |")
+        p2 += ["", "**BEAT_SEALED (≤2 params/L):** NO", ""]
+    else:
+        p2 += ["No full B=1000 ≤2-param tables yet.", ""]
+    (EASY / "PARETO_2param.md").write_text("\n".join(p2) + "\n")
+
     print("Wrote", EASY / "RESULTS.md", "and", EASY / "PARETO.md", "n_full=", len(rows))
 
 

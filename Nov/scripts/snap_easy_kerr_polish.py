@@ -43,6 +43,14 @@ FEWM2_CKPTS = [
     EASY / "snap_few_mM2_perL" / "params_easy_snap_few_mM2_perL_L32_s0_L32_seed0.pt",
     EASY / "snap_few_mM2_perL" / "params_easy_snap_few_mM2_perL_L32_s1_L32_seed1.pt",
 ]
+# Prefer polished few_m M=2 (chain warm) when present — these beat explore baselines on n18 B90.
+FEWM_POLISH_CKPTS = [
+    OUT / "few_m" / "params_kp_fewm2_adam900_n12_from_best_s0_L32_seed0.pt",
+    OUT / "few_m" / "params_kp_fewm2_adam900_n12_from_best_s33_L32_seed33.pt",
+    OUT / "few_m" / "params_kp_fewm2_adam900_n12_from_best_s44_L32_seed44.pt",
+    OUT / "few_m" / "params_kp_fewm2_cvar095_n12_from_best_s0_L32_seed0.pt",
+    OUT / "few_m" / "params_kp_fewm2_cvar09_n12_from_best_s0_L32_seed0.pt",
+]
 
 
 def log(*a):
@@ -61,7 +69,16 @@ def load_ckpt(path: Path):
 # (tag, mode, few_M, loss, cvar_q, steps, lr, lb_rounds, lb_iter, leakpen, warm, train_ns)
 # warm: "kerr_best" | "few_m_best" | "shell" | "fresh"
 # train_ns: include 12 to attack higher-n B90 blow-up (main Kerr failure mode)
-ARMS = [    ("fewm2_adam900_n12_from_best", "few_m", 2, "log_inv", 0.8, 900, 3e-3, 5, 12, 0.1, "few_m_best", (6, 9, 12)),
+ARMS = [
+    # Chain from polished few_m (attacks residual n18 B90 gap ~1.49×)
+    ("fewm2_cvar095_n12_from_polish", "few_m", 2, "cvar", 0.95, 900, 2e-3, 6, 14, 0.05, "few_m_polish", (6, 9, 12)),
+    ("fewm2_cvar09_n12_from_polish", "few_m", 2, "cvar", 0.9, 900, 2e-3, 6, 14, 0.05, "few_m_polish", (6, 9, 12)),
+    ("fewm2_adam1200_n12_from_polish", "few_m", 2, "log_inv", 0.8, 1200, 2e-3, 6, 14, 0.1, "few_m_polish", (6, 9, 12)),
+    ("fewm2_cvar095_n15_from_polish", "few_m", 2, "cvar", 0.95, 700, 1.5e-3, 5, 12, 0.05, "few_m_polish", (6, 9, 12, 15)),
+    ("fewm2_adam900_n15_from_polish", "few_m", 2, "log_inv", 0.8, 900, 2e-3, 5, 12, 0.1, "few_m_polish", (6, 9, 12, 15)),
+    ("fewm2_cvar09_n15_from_polish", "few_m", 2, "cvar", 0.9, 700, 1.5e-3, 5, 12, 0.05, "few_m_polish", (6, 9, 12, 15)),
+    # Warm from explore few_m best
+    ("fewm2_adam900_n12_from_best", "few_m", 2, "log_inv", 0.8, 900, 3e-3, 5, 12, 0.1, "few_m_best", (6, 9, 12)),
     ("fewm2_cvar095_n12_from_best", "few_m", 2, "cvar", 0.95, 800, 2e-3, 6, 14, 0.05, "few_m_best", (6, 9, 12)),
     ("fewm2_cvar09_n12_from_best", "few_m", 2, "cvar", 0.9, 800, 2e-3, 5, 12, 0.05, "few_m_best", (6, 9, 12)),
     ("fewm2_adam800_from_best", "few_m", 2, "log_inv", 0.8, 800, 5e-3, 4, 10, 0.1, "few_m_best", (6, 9)),
@@ -74,7 +91,6 @@ ARMS = [    ("fewm2_adam900_n12_from_best", "few_m", 2, "log_inv", 0.8, 900, 3e-
     ("kerr_cvar08_n12_from_best", "kerr", 3, "cvar", 0.8, 800, 2e-3, 5, 12, 0.1, "kerr_best", (6, 9, 12)),
     ("kerr_cvar095_n12_from_best", "kerr", 3, "cvar", 0.95, 800, 2e-3, 6, 14, 0.05, "kerr_best", (6, 9, 12)),
     ("kerr_cvar09_n12_from_best", "kerr", 3, "cvar", 0.9, 800, 2e-3, 5, 12, 0.05, "kerr_best", (6, 9, 12)),
-
     ("kerr_adam800_from_best", "kerr", 3, "log_inv", 0.8, 800, 5e-3, 4, 10, 0.1, "kerr_best", (6, 9)),
     ("kerr_cvar08_from_best", "kerr", 3, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "kerr_best", (6, 9)),
     ("kerr_cvar08_from_shell", "kerr", 3, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "shell", (6, 9)),
@@ -242,12 +258,19 @@ def main():
 
     kerr_best_pt = first_existing(KERR_CKPTS)
     few_best_pt = first_existing(FEWM2_CKPTS)
+    few_polish_pt = first_existing(FEWM_POLISH_CKPTS)
     g_kerr = s_kerr = None
     g_few = s_few = None
+    g_few_p = s_few_p = None
     if kerr_best_pt:
         g_kerr, s_kerr, _ = load_ckpt(kerr_best_pt)
     if few_best_pt:
         g_few, s_few, _ = load_ckpt(few_best_pt)
+    if few_polish_pt:
+        g_few_p, s_few_p, _ = load_ckpt(few_polish_pt)
+        log("few_m_polish warm from", few_polish_pt.name)
+    else:
+        log("few_m_polish warm missing; polish-chain arms will fall back to fresh")
 
     for arm_tag, mode, few_M, loss, cvar_q, steps, lr, lb_r, lb_i, leak, warm_src, train_ns in ARMS:
         if arm_filter and arm_tag not in arm_filter:
@@ -301,6 +324,13 @@ def main():
             if warm_src == "kerr_best" and g_kerr is not None:
                 gamma0 = g_kerr[:L].clone()
                 snap0 = s_kerr[:L].clone() if s_kerr.dim() > 1 else s_kerr.clone()
+            elif warm_src == "few_m_polish" and g_few_p is not None:
+                gamma0 = g_few_p[:L].clone()
+                snap0 = s_few_p[:L].clone() if s_few_p.dim() > 1 else s_few_p.clone()
+            elif warm_src == "few_m_polish" and g_few is not None:
+                # polish ckpt not ready yet — fall back to explore few_m best
+                gamma0 = g_few[:L].clone()
+                snap0 = s_few[:L].clone() if s_few.dim() > 1 else s_few.clone()
             elif warm_src == "few_m_best" and g_few is not None:
                 gamma0 = g_few[:L].clone()
                 snap0 = s_few[:L].clone() if s_few.dim() > 1 else s_few.clone()
@@ -312,9 +342,11 @@ def main():
             else:
                 gamma0, snap0 = None, None
 
-            # Cap per-n when training with n12 so wall time stays sane
+            # Cap per-n when training with n12/n15 so wall time stays sane
             mt = args.max_train
-            if 12 in train_ns:
+            if 15 in train_ns:
+                mt = min(mt, 60)
+            elif 12 in train_ns:
                 mt = min(mt, 120)
 
             log(f"=== {full_tag} mode={mode} few_M={few_M} loss={loss} q={cvar_q} train_ns={train_ns} ===")
@@ -352,8 +384,12 @@ def main():
             # Full-scale if train-val looks within striking distance of sealed
             # (kerr historically ~1.07 Med / 1.5 B90 — cast a wider net)
             # Wider net when n12 was in the train set (B90 is the real target)
-            med_gate = 1.18 if 12 in train_ns else 1.12
-            b90_gate = 1.50 if 12 in train_ns else 1.35
+            if 15 in train_ns:
+                med_gate, b90_gate = 1.22, 1.60
+            elif 12 in train_ns:
+                med_gate, b90_gate = 1.18, 1.50
+            else:
+                med_gate, b90_gate = 1.12, 1.35
             if (n9med / SEALED_REF[9]["Med"] <= med_gate
                     and n9b90 / SEALED_REF[9]["B90"] <= b90_gate):
                 if stopped():

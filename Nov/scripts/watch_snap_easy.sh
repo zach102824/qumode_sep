@@ -11,6 +11,7 @@ OUT=Nov/runs/snap_easy
 PIDFILE="$OUT/PID"
 GPIDFILE="$OUT/GAUSS_POLISH_PID"
 KPIDFILE="$OUT/KERR_POLISH_PID"
+FPIDFILE="$OUT/FEWM_N12_POLISH_PID"
 STOP=Nov/runs/STOP_SNAP_EASY
 LOG="$OUT/watchdog.log"
 WAVEFILE="$OUT/WAVE"
@@ -70,6 +71,19 @@ launch_kerr_polish() {
   echo "$(date +%H:%M:%S) kerr_polish pid=$!" >> "$LOG"
 }
 
+
+launch_fewm_n12() {
+  local logf="$OUT/run_kerr_polish_fewm_n12.log"
+  echo "$(date +%H:%M:%S) launching few_m n12/n15 polish-chain (≤2p)" >> "$LOG"
+  OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 \
+    nohup python -m Nov.scripts.snap_easy_kerr_polish \
+      --L 32 --seeds 0,33,44,55,66 --scale_B 1000 --skip-baseline-scale \
+      --arms fewm2_cvar095_n12_from_polish,fewm2_cvar09_n12_from_polish,fewm2_adam1200_n12_from_polish,fewm2_cvar095_n15_from_polish,fewm2_adam900_n15_from_polish,fewm2_cvar09_n15_from_polish,fewm2_cvar095_n12_from_best,fewm2_cvar09_n12_from_best,fewm2_adam900_n12_from_best \
+      >> "$logf" 2>&1 &
+  echo $! > "$FPIDFILE"
+  echo "$(date +%H:%M:%S) fewm_n12_polish pid=$!" >> "$LOG"
+}
+
 launch_gauss_polish() {
   local logf="$OUT/run_gauss_polish.log"
   echo "$(date +%H:%M:%S) launching gauss polish" >> "$LOG"
@@ -126,6 +140,19 @@ while true; do
     fi
     if [[ "$need_kp" -eq 1 ]]; then
       launch_kerr_polish
+    fi
+  fi
+  # few_m n12/n15 chain polish until 2PARAM beat
+  if [[ ! -f "$OUT/BEAT_SEALED_2PARAM.json" ]]; then
+    need_fp=1
+    if [[ -f "$FPIDFILE" ]]; then
+      fpid=$(cat "$FPIDFILE")
+      if kill -0 "$fpid" 2>/dev/null; then
+        need_fp=0
+      fi
+    fi
+    if [[ "$need_fp" -eq 1 ]]; then
+      launch_fewm_n12
     fi
   fi
   # refresh RESULTS/PARETO periodically
