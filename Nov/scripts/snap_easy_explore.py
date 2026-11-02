@@ -280,17 +280,17 @@ def run_ladder(W, nf, device, *, L_list, seeds, steps, max_train, max_val, lr, s
                 row["n9_Med_x"] = v9["median_inv_p"] / SEALED_REF[9]["Med"]
                 row["n9_B90_x"] = v9["B90_inv_p"] / SEALED_REF[9]["B90"]
 
-            # scale1000 if promote cand or within ~1.15× on train-val n9
+            # Fast screen: n9+n12 at min(B,200). Full n15/18 deferred to finalists.
             do_this_scale = do_scale and best_for_arm["verdict"] in ("PROMOTE_CAND", "KEEP")
-            if do_this_scale and row.get("n9_Med_x", 99) <= 1.25:
-                log(f"=== scale1000 {row['tag']} B={scale_B} ===")
-                sc, sc_rows = scale_record(
+            if do_this_scale and row.get("n9_Med_x", 99) <= 2.5:
+                screen_B = min(int(scale_B), 200)
+                log(f"=== scale screen {row['tag']} n9/12 B={screen_B} ===")
+                sc, _ = scale_record(
                     W, best_for_arm["state"], nf, device,
-                    [9, 12, 15, 18], scale_B, out_dir, row["tag"],
+                    [9, 12], screen_B, out_dir, row["tag"] + f"_screenB{screen_B}",
                 )
-                beat, _ = beats_sealed(sc)
-                row["beat_sealed"] = bool(beat)
-                for n in (9, 12, 15, 18):
+                row["beat_sealed"] = False
+                for n in (9, 12):
                     m = sc.get(n)
                     if not m:
                         continue
@@ -299,15 +299,58 @@ def run_ladder(W, nf, device, *, L_list, seeds, steps, max_train, max_val, lr, s
                     row[f"n{n}_B90"] = m["B90_inv_p"]
                     row[f"n{n}_Med_x"] = m["median_inv_p"] / ref["Med"]
                     row[f"n{n}_B90_x"] = m["B90_inv_p"] / ref["B90"]
-                if beat:
-                    log("*** BEAT_SEALED restricted SNAP ***")
-                    (out_dir / "BEAT_SEALED").write_text(row["tag"] + "\n")
+                if row.get("n9_Med_x", 99) <= 1.15 and row.get("n12_Med_x", 99) <= 1.25:
+                    row["finalist"] = True
+                    log(f"  FINALIST {row['tag']} n9×={row.get('n9_Med_x'):.3f} n12×={row.get('n12_Med_x'):.3f}")
 
             results_rows.append(row)
             (out_dir / "summary.json").write_text(json.dumps(_jsonable({
                 "rows": results_rows, "heads": describe_easy_heads(),
             }), indent=2))
             write_results(out_dir / "RESULTS.md", results_rows)
+
+    # Full scale1000 on finalists / top-3 by n9 Med×
+    if do_scale and not stopped():
+        finals = [r for r in results_rows if r.get("finalist") and r.get("path")]
+        ranked = sorted(
+            [r for r in results_rows if r.get("n9_Med_x") is not None and r.get("path")],
+            key=lambda r: r["n9_Med_x"],
+        )[:3]
+        seen, queue = set(), []
+        for r in finals + ranked:
+            if r["tag"] in seen:
+                continue
+            seen.add(r["tag"])
+            queue.append(r)
+        for r in queue:
+            if stopped():
+                break
+            pt = Path(r["path"])
+            if not pt.exists():
+                continue
+            st = torch.load(pt, map_location="cpu", weights_only=False)
+            log(f"=== FULL scale1000 {r['tag']} B={scale_B} ===")
+            sc, _ = scale_record(
+                W, st, nf, device, [9, 12, 15, 18], scale_B, out_dir, r["tag"] + "_full",
+            )
+            beat, _ = beats_sealed(sc)
+            r["beat_sealed"] = bool(beat)
+            for n in (9, 12, 15, 18):
+                m = sc.get(n)
+                if not m:
+                    continue
+                ref = SEALED_REF[n]
+                r[f"n{n}_Med"] = m["median_inv_p"]
+                r[f"n{n}_B90"] = m["B90_inv_p"]
+                r[f"n{n}_Med_x"] = m["median_inv_p"] / ref["Med"]
+                r[f"n{n}_B90_x"] = m["B90_inv_p"] / ref["B90"]
+            if beat:
+                log("*** BEAT_SEALED restricted SNAP ***")
+                (out_dir / "BEAT_SEALED").write_text(r["tag"] + "\n")
+            write_results(out_dir / "RESULTS.md", results_rows)
+        (out_dir / "summary.json").write_text(json.dumps(_jsonable({
+            "rows": results_rows, "heads": describe_easy_heads(),
+        }), indent=2))
     return results_rows
 
 
