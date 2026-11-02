@@ -1,6 +1,6 @@
 # SNAP-easy pareto
 
-_Updated 2026-11-02 13:44 Asia/Shanghai_
+_Updated 2026-11-02 13:53 Asia/Shanghai_
 
 ## Clear pareto + sealed dual-beat: `gp_cvar08_from_gauss_s0`
 

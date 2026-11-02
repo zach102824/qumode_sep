@@ -61,24 +61,24 @@ def load_ckpt(path: Path):
 # (tag, mode, few_M, loss, cvar_q, steps, lr, lb_rounds, lb_iter, leakpen, warm, train_ns)
 # warm: "kerr_best" | "few_m_best" | "shell" | "fresh"
 # train_ns: include 12 to attack higher-n B90 blow-up (main Kerr failure mode)
-ARMS = [
-    ("kerr_cvar08_from_best", "kerr", 3, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "kerr_best", (6, 9)),
-    ("kerr_cvar09_from_best", "kerr", 3, "cvar", 0.9, 700, 2e-3, 5, 12, 0.05, "kerr_best", (6, 9)),
-    ("kerr_adam800_from_best", "kerr", 3, "log_inv", 0.8, 800, 5e-3, 4, 10, 0.1, "kerr_best", (6, 9)),
-    ("kerr_cvar08_from_shell", "kerr", 3, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "shell", (6, 9)),
-    ("kerr_adam600_lr3e3_shell", "kerr", 3, "log_inv", 0.8, 600, 3e-3, 4, 10, 0.1, "shell", (6, 9)),
-    # B90-focused: train with n12 + higher CVaR
-    ("kerr_cvar095_n12_from_best", "kerr", 3, "cvar", 0.95, 800, 2e-3, 6, 14, 0.05, "kerr_best", (6, 9, 12)),
-    ("kerr_cvar09_n12_from_best", "kerr", 3, "cvar", 0.9, 800, 2e-3, 5, 12, 0.05, "kerr_best", (6, 9, 12)),
-    ("kerr_cvar08_n12_from_best", "kerr", 3, "cvar", 0.8, 800, 2e-3, 5, 12, 0.1, "kerr_best", (6, 9, 12)),
-    ("kerr_adam900_n12_from_best", "kerr", 3, "log_inv", 0.8, 900, 3e-3, 5, 12, 0.1, "kerr_best", (6, 9, 12)),
-    ("fewm2_cvar08_from_best", "few_m", 2, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "few_m_best", (6, 9)),
-    ("fewm2_cvar09_from_best", "few_m", 2, "cvar", 0.9, 700, 2e-3, 5, 12, 0.05, "few_m_best", (6, 9)),
-    ("fewm2_adam800_from_best", "few_m", 2, "log_inv", 0.8, 800, 5e-3, 4, 10, 0.1, "few_m_best", (6, 9)),
-    ("fewm2_cvar08_from_shell", "few_m", 2, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "shell", (6, 9)),
+ARMS = [    ("fewm2_adam900_n12_from_best", "few_m", 2, "log_inv", 0.8, 900, 3e-3, 5, 12, 0.1, "few_m_best", (6, 9, 12)),
     ("fewm2_cvar095_n12_from_best", "few_m", 2, "cvar", 0.95, 800, 2e-3, 6, 14, 0.05, "few_m_best", (6, 9, 12)),
     ("fewm2_cvar09_n12_from_best", "few_m", 2, "cvar", 0.9, 800, 2e-3, 5, 12, 0.05, "few_m_best", (6, 9, 12)),
-    ("fewm2_adam900_n12_from_best", "few_m", 2, "log_inv", 0.8, 900, 3e-3, 5, 12, 0.1, "few_m_best", (6, 9, 12)),
+    ("fewm2_adam800_from_best", "few_m", 2, "log_inv", 0.8, 800, 5e-3, 4, 10, 0.1, "few_m_best", (6, 9)),
+    ("fewm2_cvar08_from_best", "few_m", 2, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "few_m_best", (6, 9)),
+    ("fewm2_cvar08_from_shell", "few_m", 2, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "shell", (6, 9)),
+    ("fewm2_cvar09_from_best", "few_m", 2, "cvar", 0.9, 700, 2e-3, 5, 12, 0.05, "few_m_best", (6, 9)),
+    ("kerr_adam600_lr3e3_shell", "kerr", 3, "log_inv", 0.8, 600, 3e-3, 4, 10, 0.1, "shell", (6, 9)),
+    # B90-focused: train with n12 + higher CVaR
+    ("kerr_adam900_n12_from_best", "kerr", 3, "log_inv", 0.8, 900, 3e-3, 5, 12, 0.1, "kerr_best", (6, 9, 12)),
+    ("kerr_cvar08_n12_from_best", "kerr", 3, "cvar", 0.8, 800, 2e-3, 5, 12, 0.1, "kerr_best", (6, 9, 12)),
+    ("kerr_cvar095_n12_from_best", "kerr", 3, "cvar", 0.95, 800, 2e-3, 6, 14, 0.05, "kerr_best", (6, 9, 12)),
+    ("kerr_cvar09_n12_from_best", "kerr", 3, "cvar", 0.9, 800, 2e-3, 5, 12, 0.05, "kerr_best", (6, 9, 12)),
+
+    ("kerr_adam800_from_best", "kerr", 3, "log_inv", 0.8, 800, 5e-3, 4, 10, 0.1, "kerr_best", (6, 9)),
+    ("kerr_cvar08_from_best", "kerr", 3, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "kerr_best", (6, 9)),
+    ("kerr_cvar08_from_shell", "kerr", 3, "cvar", 0.8, 700, 2e-3, 5, 12, 0.1, "shell", (6, 9)),
+    ("kerr_cvar09_from_best", "kerr", 3, "cvar", 0.9, 700, 2e-3, 5, 12, 0.05, "kerr_best", (6, 9)),
 ]
 
 
