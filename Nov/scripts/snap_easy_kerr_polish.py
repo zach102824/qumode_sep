@@ -83,31 +83,33 @@ def load_ckpt(path: Path):
 # warm: "kerr_best" | "few_m_best" | "shell" | "fresh"
 # train_ns: include 12 to attack higher-n B90 blow-up (main Kerr failure mode)
 ARMS = [
-    # Direct n18-in-train (train pack N≈16) — attack residual n18 B90 wall (~1.235×)
+    # Prefer n12n15 (honest val) — best so far 1.235×; n15n18 tiny-val overfits (val~6 vs scale~15)
+    ("fewm2_cvar097_n12n15_long", "few_m", 2, "cvar", 0.97, 1200, 8e-4, 7, 16, 0.03, "few_m_polish", (9, 12, 15)),
+    ("fewm2_cvar096_n12n15_hiLBFGS", "few_m", 2, "cvar", 0.96, 700, 8e-4, 10, 22, 0.03, "few_m_polish", (9, 12, 15)),
+    ("fewm2_cvar099_n12n15_long", "few_m", 2, "cvar", 0.99, 1200, 7e-4, 7, 18, 0.02, "few_m_polish", (9, 12, 15)),
+    ("fewm2_cvar098_n12n15_long", "few_m", 2, "cvar", 0.98, 1000, 1.0e-3, 6, 14, 0.03, "few_m_polish", (9, 12, 15)),
+    ("fewm2_cvar096_n12n15_long", "few_m", 2, "cvar", 0.96, 1000, 1.0e-3, 6, 14, 0.04, "few_m_polish", (9, 12, 15)),
+    ("fewm2_adam1800_n12n15", "few_m", 2, "log_inv", 0.8, 1800, 1.0e-3, 7, 16, 0.05, "few_m_polish", (9, 12, 15)),
+    # Anti-overfit follow-ons: smaller lr / higher leak / mid-q around best 1.235 ckpt
+    ("fewm2_cvar097_n12n15_slow", "few_m", 2, "cvar", 0.97, 1600, 4e-4, 8, 18, 0.05, "few_m_polish", (9, 12, 15)),
+    ("fewm2_cvar975_n12n15_long", "few_m", 2, "cvar", 0.975, 1400, 6e-4, 8, 18, 0.04, "few_m_polish", (9, 12, 15)),
+    ("fewm2_cvar097_n12n15_hiLeak", "few_m", 2, "cvar", 0.97, 1200, 7e-4, 7, 16, 0.08, "few_m_polish", (9, 12, 15)),
+    ("fewm2_cvar096_n9n15_long", "few_m", 2, "cvar", 0.96, 1100, 9e-4, 7, 16, 0.04, "few_m_polish", (9, 15)),
+    ("fewm2_cvar097_n15_from_polish", "few_m", 2, "cvar", 0.97, 1000, 1.0e-3, 6, 16, 0.03, "few_m_polish", (6, 9, 12, 15)),
+    ("fewm2_cvar096_n15_from_polish", "few_m", 2, "cvar", 0.96, 900, 1.2e-3, 5, 14, 0.04, "few_m_polish", (6, 9, 12, 15)),
+    ("fewm2_cvar098_n15_from_polish", "few_m", 2, "cvar", 0.98, 800, 1.2e-3, 5, 12, 0.03, "few_m_polish", (6, 9, 12, 15)),
+    # n18-in-train last (tiny-val overfits; keep for coverage, do not promote on val alone)
     ("fewm2_cvar097_n15n18", "few_m", 2, "cvar", 0.97, 900, 7e-4, 6, 14, 0.03, "few_m_polish", (9, 15, 18)),
     ("fewm2_cvar098_n15n18", "few_m", 2, "cvar", 0.98, 900, 6e-4, 6, 16, 0.02, "few_m_polish", (9, 15, 18)),
     ("fewm2_cvar096_n12n15n18", "few_m", 2, "cvar", 0.96, 800, 7e-4, 6, 14, 0.03, "few_m_polish", (12, 15, 18)),
     ("fewm2_cvar099_n15n18", "few_m", 2, "cvar", 0.99, 1000, 5e-4, 7, 16, 0.02, "few_m_polish", (9, 15, 18)),
     ("fewm2_adam1200_n15n18", "few_m", 2, "log_inv", 0.8, 1200, 8e-4, 6, 14, 0.04, "few_m_polish", (9, 15, 18)),
     ("fewm2_cvar097_n18_only", "few_m", 2, "cvar", 0.97, 700, 8e-4, 5, 12, 0.03, "few_m_polish", (18,)),
-    # Chain from polished few_m (attacks residual n18 B90 gap; best ~1.301× s10)
+    # Chain from polished few_m (n6/9/12)
     ("fewm2_cvar095_n12_from_polish", "few_m", 2, "cvar", 0.95, 900, 2e-3, 6, 14, 0.05, "few_m_polish", (6, 9, 12)),
-    # Higher-CVaR / longer from best polish — push n18 B90 further
     ("fewm2_cvar098_n12_from_polish", "few_m", 2, "cvar", 0.98, 1000, 1.5e-3, 6, 14, 0.03, "few_m_polish", (6, 9, 12)),
     ("fewm2_cvar096_n12_from_polish", "few_m", 2, "cvar", 0.96, 1000, 1.5e-3, 6, 14, 0.04, "few_m_polish", (6, 9, 12)),
     ("fewm2_adam1500_n12_from_polish", "few_m", 2, "log_inv", 0.8, 1500, 1.5e-3, 6, 16, 0.08, "few_m_polish", (6, 9, 12)),
-    # Longer / higher-q / n15+n18-proxy from best polish — attack residual n18 B90
-    ("fewm2_cvar096_n12n15_long", "few_m", 2, "cvar", 0.96, 1000, 1.0e-3, 6, 14, 0.04, "few_m_polish", (9, 12, 15)),
-    # n18 B90 push — mid/high CVaR, longer, smaller lr; keep n9 for gate+coverage
-    ("fewm2_cvar097_n12n15_long", "few_m", 2, "cvar", 0.97, 1200, 8e-4, 7, 16, 0.03, "few_m_polish", (9, 12, 15)),
-    ("fewm2_cvar096_n12n15_hiLBFGS", "few_m", 2, "cvar", 0.96, 700, 8e-4, 10, 22, 0.03, "few_m_polish", (9, 12, 15)),
-    ("fewm2_cvar099_n12n15_long", "few_m", 2, "cvar", 0.99, 1200, 7e-4, 7, 18, 0.02, "few_m_polish", (9, 12, 15)),
-    ("fewm2_adam1800_n12n15", "few_m", 2, "log_inv", 0.8, 1800, 1.0e-3, 7, 16, 0.05, "few_m_polish", (9, 12, 15)),
-    ("fewm2_cvar097_n15_from_polish", "few_m", 2, "cvar", 0.97, 1000, 1.0e-3, 6, 16, 0.03, "few_m_polish", (6, 9, 12, 15)),
-    ("fewm2_cvar096_n9n15_long", "few_m", 2, "cvar", 0.96, 1100, 9e-4, 7, 16, 0.04, "few_m_polish", (9, 15)),
-    ("fewm2_cvar096_n15_from_polish", "few_m", 2, "cvar", 0.96, 900, 1.2e-3, 5, 14, 0.04, "few_m_polish", (6, 9, 12, 15)),
-    ("fewm2_cvar098_n12n15_long", "few_m", 2, "cvar", 0.98, 1000, 1.0e-3, 6, 14, 0.03, "few_m_polish", (9, 12, 15)),
-    ("fewm2_cvar098_n15_from_polish", "few_m", 2, "cvar", 0.98, 800, 1.2e-3, 5, 12, 0.03, "few_m_polish", (6, 9, 12, 15)),
     ("fewm2_cvar099_n12_from_polish", "few_m", 2, "cvar", 0.99, 1200, 1.2e-3, 6, 16, 0.02, "few_m_polish", (6, 9, 12)),
     ("fewm2_adam2000_n12_from_polish", "few_m", 2, "log_inv", 0.8, 2000, 1.2e-3, 7, 18, 0.06, "few_m_polish", (6, 9, 12)),
     ("fewm2_cvar09_n12_from_polish", "few_m", 2, "cvar", 0.9, 900, 2e-3, 6, 14, 0.05, "few_m_polish", (6, 9, 12)),
@@ -393,7 +395,8 @@ def main():
             lb_r_use, lb_i_use = lb_r, lb_i
             if 18 in train_ns:
                 mt = min(mt, 16)  # n18 train pack ~16; keep tiny
-                mv = min(mv, 8)   # val on n18 is expensive
+                # Larger val than 8: tiny-val B90~6 overfit vs scale1000~15; 24 is still cheap vs full
+                mv = min(mv, 24)
                 # Mid/final LBFGS retains ~8 graph forwards per n → OOM (~12GB) on 16GB box
                 do_lbfgs = False
                 lb_r_use, lb_i_use = 0, 0
