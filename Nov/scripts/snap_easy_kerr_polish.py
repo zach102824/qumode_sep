@@ -45,8 +45,10 @@ FEWM2_CKPTS = [
 ]
 # Prefer polished few_m M=2 (chain warm) when present — these beat explore baselines on n18 B90.
 FEWM_POLISH_CKPTS = [
-    # Prefer lowest known bottleneck first (cvar096 s22 ~1.264× > cvar098 s22 ~1.296×)
+    # Prefer lowest known bottleneck first (cvar096 s22 ~1.264×; n12n15_long s22 ~1.270×)
     OUT / "few_m" / "params_kp_fewm2_cvar096_n12_from_polish_s22_L32_seed22.pt",
+    OUT / "few_m" / "params_kp_fewm2_cvar096_n12n15_long_s22_L32_seed22.pt",
+    OUT / "few_m" / "params_kp_fewm2_cvar096_n12_from_polish_s10_L32_seed10.pt",
     OUT / "few_m" / "params_kp_fewm2_cvar098_n12_from_polish_s22_L32_seed22.pt",
     OUT / "few_m" / "params_kp_fewm2_cvar098_n12_from_polish_s0_L32_seed0.pt",
     OUT / "few_m" / "params_kp_fewm2_cvar095_n12_from_polish_s10_L32_seed10.pt",
@@ -85,6 +87,13 @@ ARMS = [
     ("fewm2_adam1500_n12_from_polish", "few_m", 2, "log_inv", 0.8, 1500, 1.5e-3, 6, 16, 0.08, "few_m_polish", (6, 9, 12)),
     # Longer / higher-q / n15+n18-proxy from best polish — attack residual n18 B90
     ("fewm2_cvar096_n12n15_long", "few_m", 2, "cvar", 0.96, 1000, 1.0e-3, 6, 14, 0.04, "few_m_polish", (9, 12, 15)),
+    # n18 B90 push — mid/high CVaR, longer, smaller lr; keep n9 for gate+coverage
+    ("fewm2_cvar097_n12n15_long", "few_m", 2, "cvar", 0.97, 1200, 8e-4, 7, 16, 0.03, "few_m_polish", (9, 12, 15)),
+    ("fewm2_cvar096_n12n15_hiLBFGS", "few_m", 2, "cvar", 0.96, 700, 8e-4, 10, 22, 0.03, "few_m_polish", (9, 12, 15)),
+    ("fewm2_cvar099_n12n15_long", "few_m", 2, "cvar", 0.99, 1200, 7e-4, 7, 18, 0.02, "few_m_polish", (9, 12, 15)),
+    ("fewm2_adam1800_n12n15", "few_m", 2, "log_inv", 0.8, 1800, 1.0e-3, 7, 16, 0.05, "few_m_polish", (9, 12, 15)),
+    ("fewm2_cvar097_n15_from_polish", "few_m", 2, "cvar", 0.97, 1000, 1.0e-3, 6, 16, 0.03, "few_m_polish", (6, 9, 12, 15)),
+    ("fewm2_cvar096_n9n15_long", "few_m", 2, "cvar", 0.96, 1100, 9e-4, 7, 16, 0.04, "few_m_polish", (9, 15)),
     ("fewm2_cvar096_n15_from_polish", "few_m", 2, "cvar", 0.96, 900, 1.2e-3, 5, 14, 0.04, "few_m_polish", (6, 9, 12, 15)),
     ("fewm2_cvar098_n12n15_long", "few_m", 2, "cvar", 0.98, 1000, 1.0e-3, 6, 14, 0.03, "few_m_polish", (9, 12, 15)),
     ("fewm2_cvar098_n15_from_polish", "few_m", 2, "cvar", 0.98, 800, 1.2e-3, 5, 12, 0.03, "few_m_polish", (6, 9, 12, 15)),
@@ -385,16 +394,24 @@ def main():
                 lbfgs_rounds=lb_r, lbfgs_iter=lb_i,
                 arm_tag=full_tag, out_dir=OUT / mode,
             )
-            v9 = (best.get("val") or {}).get(9) or {}
-            n9med = float(v9.get("median_inv_p", 1e9))
-            n9b90 = float(v9.get("B90_inv_p", 1e9))
-            log(f"  → train-val n9 {n9med:.4f}/{n9b90:.4f}")
+            val = best.get("val") or {}
+            # Prefer n9 for logging/gate; else largest trained n (for n15-heavy arms)
+            gate_n = 9 if 9 in val else (max(train_ns) if any(n in val for n in train_ns) else 9)
+            vg = val.get(gate_n) or val.get(str(gate_n)) or {}
+            gmed = float(vg.get("median_inv_p", 1e9))
+            gb90 = float(vg.get("B90_inv_p", 1e9))
+            v9 = val.get(9) or {}
+            n9med = float(v9.get("median_inv_p", gmed if gate_n == 9 else 1e9))
+            n9b90 = float(v9.get("B90_inv_p", gb90 if gate_n == 9 else 1e9))
+            log(f"  → train-val n{gate_n} {gmed:.4f}/{gb90:.4f}"
+                + (f" (n9 {n9med:.4f}/{n9b90:.4f})" if gate_n != 9 and v9 else ""))
             row = {
                 "tag": full_tag, "mode": mode, "few_M": few_M, "loss": loss,
                 "cvar_q": cvar_q, "seed": seed, "steps": steps, "lr": lr,
                 "warm": warm_src, "n9_Med": n9med, "n9_B90": n9b90,
-                "n9_Med_x": n9med / SEALED_REF[9]["Med"],
-                "n9_B90_x": n9b90 / SEALED_REF[9]["B90"],
+                "n9_Med_x": n9med / SEALED_REF[9]["Med"] if n9med < 1e8 else None,
+                "n9_B90_x": n9b90 / SEALED_REF[9]["B90"] if n9b90 < 1e8 else None,
+                "gate_n": gate_n, "gate_Med": gmed, "gate_B90": gb90,
                 "path": best.get("path", ""), "score": best.get("score"),
             }
             results.append(row)
@@ -406,16 +423,16 @@ def main():
                 w.writerow(row)
 
             # Full-scale if train-val looks within striking distance of sealed
-            # (kerr historically ~1.07 Med / 1.5 B90 — cast a wider net)
-            # Wider net when n12 was in the train set (B90 is the real target)
+            # Wider net when n12/n15 in train set (B90 is the real target)
             if 15 in train_ns:
-                med_gate, b90_gate = 1.22, 1.60
+                med_gate, b90_gate = 1.25, 1.70
             elif 12 in train_ns:
                 med_gate, b90_gate = 1.18, 1.50
             else:
                 med_gate, b90_gate = 1.12, 1.35
-            if (n9med / SEALED_REF[9]["Med"] <= med_gate
-                    and n9b90 / SEALED_REF[9]["B90"] <= b90_gate):
+            ref_g = SEALED_REF.get(gate_n) or SEALED_REF[9]
+            if (gmed / ref_g["Med"] <= med_gate
+                    and gb90 / ref_g["B90"] <= b90_gate):
                 if stopped():
                     log("STOP"); return
                 sc, beat = run_full_scale(
