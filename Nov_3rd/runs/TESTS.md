@@ -1,8 +1,8 @@
 # Nov_3rd — TESTS
 
-_Asia/Shanghai 2026-11-03 14:59_
+_Asia/Shanghai 2026-11-03 16:22_
 
-**43 passed / 0 failed**
+**48 passed / 0 failed**
 
 ## Passed
 - T1a_locks_ok
@@ -48,6 +48,11 @@ _Asia/Shanghai 2026-11-03 14:59_
 - T11_final_W_comment
 - T11_no_killed_prepW_arm
 - T12_L_list
+- T13a_reject_worse
+- T13b_keep_tie
+- T13c_keep_better
+- T13d_reject_missing
+- T13e_warm_phi_dual
 
 ## Failed
 - (none)

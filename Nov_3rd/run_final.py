@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
-"""Nov_3rd ladder: L small→large; after each L compare vs QAOA; STOP if UNDER."""
+"""Nov_3rd ladder: L small→large; after each L compare vs QAOA; STOP if UNDER.
+
+Fair same-L QAOA: paper init β=0.01 γ=-0.01, nstart=1, train n6×1000
+(see ensure_qaoa / qaoa_init). Warm dual φ_j=-β·j; polish rejected if
+train Med > warm (exact QAOA dual recovered).
+"""
 from __future__ import annotations
 
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -21,7 +27,9 @@ from Nov_3rd.data_io import (
     load_split_E,
     load_train_E,
     log,
+    shell_phi_from_betas,
 )
+from Nov_3rd.ensure_qaoa import ensure_qaoa_paper_n6
 from Nov_3rd.eval_scale import eval_ladder
 from Nov_3rd.train_bfgs import train_seed
 from explore_OCT29.lib.qaoa import qaoa_psucc
@@ -56,7 +64,6 @@ def qaoa_med_on_scale(L: int, n: int, betas, gammas, max_count: int, device) -> 
         return None
     E, _ = load_split_E(n, "scale1000", max_count, device, data_dir=S.SCALE1000_DIR)
     invs = []
-    # chunk for memory
     B = len(E)
     chunk = 32 if n >= 15 else 64
     for i0 in range(0, B, chunk):
@@ -72,13 +79,20 @@ def compare_vs_qaoa(L: int, rows: dict, qref: dict, betas, gammas, device) -> di
     under = False
     for n, m in sorted(rows.items()):
         qmed = None
+        qb90 = None
         if n in qref and qref[n].get("Med") is not None:
             qmed = float(qref[n]["Med"])
+            qb90 = qref[n].get("B90")
         else:
             log(f"L{L} n{n}: QAOA Med missing in results — computing ideal QAOA…")
             qmed = qaoa_med_on_scale(L, n, betas, gammas, S.SCALE_B, device)
         if qmed is None or not np.isfinite(qmed) or qmed <= 0:
-            per[n] = {"Med": m["median_inv_p"], "B90": m["B90_inv_p"], "R": None, "verdict": "NO_QAOA"}
+            per[n] = {
+                "Med": m["median_inv_p"],
+                "B90": m["B90_inv_p"],
+                "R": None,
+                "verdict": "NO_QAOA",
+            }
             continue
         R = float(m["median_inv_p"] / qmed)
         if R <= BEAT_HI:
@@ -92,6 +106,7 @@ def compare_vs_qaoa(L: int, rows: dict, qref: dict, betas, gammas, device) -> di
             "Med": m["median_inv_p"],
             "B90": m["B90_inv_p"],
             "QAOA_Med": qmed,
+            "QAOA_B90": qb90,
             "R": R,
             "verdict": v,
         }
@@ -102,13 +117,22 @@ def compare_vs_qaoa(L: int, rows: dict, qref: dict, betas, gammas, device) -> di
     return {"per_n": per, "overall": overall, "under": under}
 
 
-def write_L_results(L: int, rows: dict, best_seed: int, meta: dict, cmp: dict):
+def write_L_results(
+    L: int,
+    rows: dict,
+    warm_rows: dict,
+    best_seed: int,
+    meta: dict,
+    cmp: dict,
+    warm_cmp: dict,
+):
     lines = [
         f"# Nov_3rd — RESULTS L={L}",
         "",
         f"_Asia/Shanghai {time.strftime('%Y-%m-%d %H:%M')}_",
         "",
-        f"Overall vs QAOA: **{cmp['overall']}** (UNDER stops ladder)",
+        f"Overall vs QAOA (accepted ckpt): **{cmp['overall']}** (UNDER stops ladder)",
+        f"Warm-only vs QAOA: **{warm_cmp['overall']}**",
         f"Best seed = {best_seed}",
         (
             f"Warm recovery: **yes** (polish rejected; exact QAOA dual shipped)"
@@ -116,26 +140,52 @@ def write_L_results(L: int, rows: dict, best_seed: int, meta: dict, cmp: dict):
             else "Warm recovery: no (polish train Med ≤ warm)"
         ),
         "",
-        "| n | Med | B90 | QAOA Med | R | verdict |",
-        "|---|-----|-----|----------|---|---------|",
+        "QAOA ref: paper init β=0.01 γ=-0.01 nstart=1, train n6×1000 (fair same-L).",
+        "",
+        "| n | QAOA Med | QAOA B90 | warm Med | warm B90 | R_warm | warm | "
+        "acc Med | acc B90 | R_acc | acc |",
+        "|---|----------|----------|----------|----------|--------|------|"
+        "---------|---------|-------|-----|",
     ]
-    for n, p in sorted(cmp["per_n"].items()):
-        r = "" if p["R"] is None else f"{p['R']:.3f}×"
-        qm = "" if p.get("QAOA_Med") is None else f"{p['QAOA_Med']:.3f}"
+    ns = sorted(set(list(cmp["per_n"]) + list(warm_cmp["per_n"])))
+    for n in ns:
+        w = warm_cmp["per_n"].get(n, {})
+        a = cmp["per_n"].get(n, {})
+        qm = w.get("QAOA_Med", a.get("QAOA_Med"))
+        qb = w.get("QAOA_B90", a.get("QAOA_B90"))
+        def f3(x):
+            return "" if x is None else f"{float(x):.3f}"
+        def fr(x):
+            return "" if x is None else f"{float(x):.3f}×"
         lines.append(
-            f"| {n} | {p['Med']:.3f} | {p['B90']:.3f} | {qm} | {r} | {p['verdict']} |"
+            f"| {n} | {f3(qm)} | {f3(qb)} | {f3(w.get('Med'))} | {f3(w.get('B90'))} | "
+            f"{fr(w.get('R'))} | {w.get('verdict', '')} | "
+            f"{f3(a.get('Med'))} | {f3(a.get('B90'))} | {fr(a.get('R'))} | "
+            f"{a.get('verdict', '')} |"
         )
     lines.append("")
     if cmp["under"]:
         lines += [
             "## STOP",
-            "At least one n is UNDER QAOA (R>1.02). "
-            "Per plan: something missing/wrong — do not continue larger L.",
+            "At least one n is UNDER QAOA (R>1.02) on the **accepted** ckpt. "
+            "Per plan: do not continue larger L.",
             "",
         ]
     (S.OUT / f"RESULTS_L{L}.md").write_text("\n".join(lines) + "\n")
     (S.OUT / f"results_L{L}.json").write_text(
-        json.dumps(_jsonable({"meta": meta, "eval": rows, "compare": cmp, "best_seed": best_seed}), indent=2)
+        json.dumps(
+            _jsonable(
+                {
+                    "meta": meta,
+                    "eval": rows,
+                    "warm_eval": warm_rows,
+                    "compare": cmp,
+                    "warm_compare": warm_cmp,
+                    "best_seed": best_seed,
+                }
+            ),
+            indent=2,
+        )
     )
 
 
@@ -147,8 +197,9 @@ def write_summary(all_L: dict):
         f"_Asia/Shanghai {time.strftime('%Y-%m-%d %H:%M')}_",
         "",
         f"L set={list(S.L_LIST)}; eval sim ns={list(S.EVAL_NS_SIM)}; gate R≤{TIE_HI} vs QAOA",
+        "QAOA: paper init n6×1000 fair same-L. Accepted ckpt uses warm-fallback.",
         "",
-        "## Med",
+        "## Accepted Med",
         "| L | " + " | ".join(f"n{n}" for n in ns) + " | vs QAOA |",
         "|---|" + "|".join(["-----"] * len(ns)) + "|---------|",
     ]
@@ -168,6 +219,10 @@ def write_summary(all_L: dict):
 
 
 def main():
+    os.environ.setdefault("OMP_NUM_THREADS", "8")
+    os.environ.setdefault("MKL_NUM_THREADS", "8")
+    torch.set_num_threads(8)
+
     S.assert_locked(
         b=S.B_BITS, W_frame=S.W_FRAME, snap_head=S.SNAP_HEAD,
         optimizer=S.OPTIMIZER, train_ns=S.TRAIN_NS, max_train=S.MAX_TRAIN,
@@ -190,15 +245,21 @@ def main():
     E_val, _ = load_split_E(6, "val", S.MAX_VAL, device, data_dir=S.SEALED_DATA)
 
     log(f"START ladder L={list(S.L_LIST)} eval_sim={list(S.EVAL_NS_SIM)}")
+    log("QAOA refs: paper init n6×1000 (ensure_qaoa_paper_n6)")
     all_L = {}
     for L in S.L_LIST:
-        if not S.qaoa_angles_path(L).exists():
-            log(f"STOP: missing QAOA angles for L={L} at {S.qaoa_angles_path(L)}")
-            log("Train/copy angles into Nov_3rd/qaoa_angles/ then re-run")
-            write_summary(all_L)
-            sys.exit(3)
+        t_L0 = time.time()
+        log(f"=== L={L} ensure fair QAOA ===")
+        ensure_qaoa_paper_n6(L, device=device)
         betas0, gammas0 = load_qaoa(L)
-        log(f"=== L={L} train ===")
+        warm_phi = shell_phi_from_betas(betas0)
+        log(f"=== L={L} warm-only baseline eval ===")
+        warm_rows = eval_ladder(L, gammas0, warm_phi, device, ns=S.EVAL_NS)
+        qref = load_qaoa_scale_ref(L)
+        warm_cmp = compare_vs_qaoa(L, warm_rows, qref, betas0, gammas0, device)
+        log(f"L={L} warm-only overall {warm_cmp['overall']}")
+
+        log(f"=== L={L} train (LBFGS + warm-fallback) ===")
         best_all = None
         seed_rows = []
         for seed in S.SEEDS:
@@ -233,6 +294,7 @@ def main():
                     "best_used_warm": bool(
                         best_all.get("used_warm") or best_all.get("rejected_polish")
                     ),
+                    "qaoa_source": "paper_n6",
                 }),
                 indent=2,
             )
@@ -243,25 +305,70 @@ def main():
                 f"(polish rejected on train Med)"
             )
         st = best_all["state"]
+        # If warm recovered, accepted == warm; still re-eval for a clean accepted table
+        # (cheap when identical; keep protocol uniform).
+        log(f"=== L={L} accepted-ckpt eval ===")
         rows = eval_ladder(L, st["gamma"], st["phi"], device, ns=S.EVAL_NS)
-        qref = load_qaoa_scale_ref(L)
         cmp = compare_vs_qaoa(L, rows, qref, betas0, gammas0, device)
         meta = {
             "recipe": S.RECIPE_NAME, "L": L, "b": S.B_BITS,
             "optimizer": S.OPTIMIZER, "train_ns": list(S.TRAIN_NS),
             "max_train": S.MAX_TRAIN, "scale_B": S.SCALE_B,
             "best_seed": best_all["seed"], "qaoa_ref": qref,
+            "qaoa_source": "paper_n6",
             "train_summary": seed_rows, "compare": cmp,
+            "warm_compare": warm_cmp,
             "best_used_warm": bool(
                 best_all.get("used_warm") or best_all.get("rejected_polish")
             ),
             "best_warm_med": best_all.get("warm_med"),
             "best_train_med": best_all.get("train_med"),
+            "wall_s": time.time() - t_L0,
         }
-        write_L_results(L, rows, best_all["seed"], meta, cmp)
-        all_L[L] = {"meta": meta, "eval": rows, "compare": cmp, "best_seed": best_all["seed"]}
+        write_L_results(L, rows, warm_rows, best_all["seed"], meta, cmp, warm_cmp)
+        all_L[L] = {
+            "meta": meta,
+            "eval": rows,
+            "warm_eval": warm_rows,
+            "compare": cmp,
+            "warm_compare": warm_cmp,
+            "best_seed": best_all["seed"],
+        }
         write_summary(all_L)
-        log(f"L={L} overall {cmp['overall']}")
+        log(
+            f"L={L} overall {cmp['overall']} (warm {warm_cmp['overall']}) "
+            f"wall={meta['wall_s']/60:.1f}min → RESULTS_L{L}.md"
+        )
+        # commit per L so progress is on main
+        try:
+            import subprocess
+            files = [
+                str(S.OUT / f"RESULTS_L{L}.md"),
+                str(S.OUT / f"results_L{L}.json"),
+                str(S.OUT / f"train_summary_L{L}.json"),
+                str(S.OUT / "RESULTS.md"),
+                str(S.OUT / "results_all.json"),
+                str(S.qaoa_angles_path(L)),
+                str(S.qaoa_results_path(L)),
+            ]
+            # also ckpts
+            for seed in S.SEEDS:
+                files.append(str(S.OUT / f"params_seed{seed}_L{L}.pt"))
+            files.append(str(S.OUT / f"params_best_L{L}.pt"))
+            existing = [f for f in files if Path(f).exists()]
+            subprocess.run(["git", "add", "--"] + existing, cwd=str(_ROOT), check=False)
+            subprocess.run(
+                [
+                    "git", "commit", "-m",
+                    f"Nov_3rd RESULTS L={L} {cmp['overall']} (warm {warm_cmp['overall']}; paper-n6 QAOA)",
+                ],
+                cwd=str(_ROOT),
+                check=False,
+            )
+            subprocess.run(["git", "push", "origin", "HEAD"], cwd=str(_ROOT), check=False)
+            log(f"L={L}: pushed RESULTS / ckpts")
+        except Exception as e:
+            log(f"L={L}: git push skipped ({e})")
         if cmp["under"]:
             log(f"STOP ladder at L={L}: UNDER QAOA — investigate before larger L")
             sys.exit(4)

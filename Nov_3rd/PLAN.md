@@ -30,6 +30,18 @@ Warm dual-QAOA map (locked):
 | QAOA angle init | **β=0.01, γ=−0.01**, **nstart=1** (arXiv:2208.06909 §Parameter optimization; one train) |
 | QAOA convention | qaoa_ref \(U_C=e^{-i\gamma C_n}\), \(U_B=e^{-i\beta X/2}\) |
 
+## Fair same-L QAOA refs (locked for ladder)
+
+Canonical angles live in `qaoa_angles/L{L}/` and **must** be paper-init n6×1000
+(`ensure_qaoa_paper_n6` / `qaoa_init.py`). Old n9+n12 / grown multi-start angles
+are archived as `L{L}_n912_legacy` or `L{L}_legacy_nonpaper`.
+
+`run_final` always:
+1. ensures paper-n6 QAOA for that L (+ scale1000 Med/B90 refs),
+2. records warm-only baseline (exact dual),
+3. polishes with warm-fallback,
+4. gates accepted ckpt vs same-L QAOA; STOP on UNDER.
+
 ## QAOA parameter init
 Retrain / new QAOA angles under `Nov_3rd/` use **only** the Boulebnane–Montanaro paper init (arXiv:2208.06909 §Parameter optimization): every layer starts at β=0.01, γ=−0.01, with **nstart=1** (no multi-start paper-k4 / linear-ramp / random). Shared helper: `Nov_3rd/qaoa_init.py`. Convention: qaoa_ref \(U_C=\mathrm{exp}(-i\gamma C_n)\), \(U_B=\mathrm{exp}(-i\beta X/2)\).
 

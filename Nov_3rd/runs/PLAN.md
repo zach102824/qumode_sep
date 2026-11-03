@@ -30,6 +30,18 @@ Warm dual-QAOA map (locked):
 | QAOA angle init | **β=0.01, γ=−0.01**, **nstart=1** (arXiv:2208.06909 §Parameter optimization; one train) |
 | QAOA convention | qaoa_ref \(U_C=e^{-i\gamma C_n}\), \(U_B=e^{-i\beta X/2}\) |
 
+## Fair same-L QAOA refs (locked for ladder)
+
+Canonical angles live in `qaoa_angles/L{L}/` and **must** be paper-init n6×1000
+(`ensure_qaoa_paper_n6` / `qaoa_init.py`). Old n9+n12 / grown multi-start angles
+are archived as `L{L}_n912_legacy` or `L{L}_legacy_nonpaper`.
+
+`run_final` always:
+1. ensures paper-n6 QAOA for that L (+ scale1000 Med/B90 refs),
+2. records warm-only baseline (exact dual),
+3. polishes with warm-fallback,
+4. gates accepted ckpt vs same-L QAOA; STOP on UNDER.
+
 ## QAOA parameter init
 Retrain / new QAOA angles under `Nov_3rd/` use **only** the Boulebnane–Montanaro paper init (arXiv:2208.06909 §Parameter optimization): every layer starts at β=0.01, γ=−0.01, with **nstart=1** (no multi-start paper-k4 / linear-ramp / random). Shared helper: `Nov_3rd/qaoa_init.py`. Convention: qaoa_ref \(U_C=\mathrm{exp}(-i\gamma C_n)\), \(U_B=\mathrm{exp}(-i\beta X/2)\).
 
@@ -86,6 +98,8 @@ Script / log: `scripts/debug_L1_warm_vs_polished.py`, `runs/debug_L1_warm_vs_pol
 7. Else write `runs/RESULTS_L{L}.md` and proceed.
 
 **Do not ship** a polished checkpoint that lost to warm on train Med.
+
+**Code enforcement (train_bfgs.py):** `reject_polish_for_warm(train_med, warm_med)` is applied at the end of every `train_seed` call. Mid-loop never crowns a round with `train_med > warm_med`. If polish is missing or worse, the returned state is the exact QAOA dual (φ_j=-β·j, γ=γ_QAOA), with `used_warm=True` / `rejected_polish=True` logged and written into ckpts / `train_summary_L*.json` / RESULTS.
 
 ### Opus polish strategy (Opus 5.5 medium, 2026-11-03 15:16 Asia/Shanghai)
 
