@@ -1,0 +1,21 @@
+# Nov_3rd local data manifest (files on disk; npz gitignored)
+data/scale1000/data_n12.npz  4343829  sha256=4c85d564b784
+data/scale1000/data_n15.npz  31237905  sha256=c5279c0aa15d
+data/scale1000/data_n18.npz  241384457  sha256=4b80bd9905f6
+data/scale1000/data_n6.npz  235607  sha256=d2e17f2c5e70
+data/scale1000/data_n9.npz  814231  sha256=49def928b148
+data/sealed/data_n12.npz  505489  sha256=332b6988eb12
+data/sealed/data_n15.npz  1261614  sha256=75bbc60036dc
+data/sealed/data_n18.npz  3873062  sha256=5648255324a7
+data/sealed/data_n6.npz  242935  sha256=ff31600a7c4a
+data/sealed/data_n9.npz  845881  sha256=4ca77a7b0aa9
+qaoa_angles/L1/angles.json  6350  sha256=4bae39b0ffc1
+qaoa_angles/L1/results.json  7131  sha256=6f6102c4c498
+qaoa_angles/L16/angles.json  4621  sha256=e2f8d37d907d
+qaoa_angles/L16/results.json  6726  sha256=82f095b0b771
+qaoa_angles/L2/angles.json  7024  sha256=356db34711c1
+qaoa_angles/L2/results.json  7118  sha256=7d6c1687dd78
+qaoa_angles/L4/angles.json  570  sha256=2bbc9f2c30b9
+qaoa_angles/L4/results.json  833  sha256=0e0430a1b516
+qaoa_angles/L8/angles.json  778  sha256=0e39f452dd60
+qaoa_angles/L8/results.json  839  sha256=b1fa2ccead0e

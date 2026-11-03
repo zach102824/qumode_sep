@@ -1,3 +1,7 @@
 runs/*.log
 runs/*.pid
 runs/params_*.pt
+__pycache__/
+*.pyc
+# large npz stay on disk under data/; not pushed to git
+data/**/*.npz
