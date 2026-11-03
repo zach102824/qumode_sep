@@ -18,7 +18,7 @@ def log(*a):
     print(time.strftime("%H:%M:%S"), "[Nov_3rd]", *a, flush=True)
 
 
-def load_qaoa(L: int = S.L_PRIMARY):
+def load_qaoa(L: int = 16):
     path = S.qaoa_angles_path(L)
     data = json.loads(path.read_text())
     best = data["best"]
@@ -68,7 +68,7 @@ def load_split_E(n: int, split: str, max_count: int, device, data_dir: Path | No
     return torch.as_tensor(E, dtype=torch.float32, device=device), key
 
 
-def load_qaoa_scale_ref(L: int = S.L_PRIMARY) -> dict:
+def load_qaoa_scale_ref(L: int = 16) -> dict:
     path = S.qaoa_results_path(L)
     if not path.exists():
         return {}
