@@ -47,6 +47,13 @@ def eval_n(n: int, L: int, gamma, phi, device, *, max_count: int = S.SCALE_B) ->
 def eval_ladder(L: int, gamma, phi, device, ns=S.EVAL_NS, max_count=S.SCALE_B) -> dict:
     rows = {}
     for n in ns:
+        if n % S.B_BITS != 0:
+            log(f"skip n{n}: not divisible by b={S.B_BITS} (3 bits/cavity)")
+            continue
+        pack = S.SCALE1000_DIR / f"data_n{n}.npz"
+        if not pack.exists():
+            log(f"skip n{n}: no scale1000 pack {pack.name}")
+            continue
         m = eval_n(n, L, gamma, phi, device, max_count=max_count)
         rows[n] = m
         log(f"scale1000 n{n}: Med={m['median_inv_p']:.3f} B90={m['B90_inv_p']:.3f} B={m['B']}")
