@@ -83,3 +83,20 @@ Running: n9med ρ0.03/0.08; dense_trust ρ0.05→0.08; cloud bc-ca109616; R3 par
 ## Cloud
 - L16 Idea1+Idea2 FINISHED. Champ=power_p s0.
 - L2 dense+n9med: bc-ca109616 RUNNING.
+
+## L=2 med_align (Idea A) — 2026-11-04 Asia/Shanghai
+
+Gate = Med(inv)/QAOA_Med. Loss `--loss med_align` = log(soft_quantile(inv_p)/QAOA_Med_train).
+
+| variant | best knee max(R12,R15) | notes |
+|---------|------------------------|-------|
+| trust69 QAOA-warm ρ0.05–0.12 | ~0.990–0.997 | R9≈1.00 same basin as dense |
+| n9med med_align | ~0.989–0.993 | R9 still ~1.00 on CORE |
+| origin-ball "warm" ρ0.04 (BUG) | 0.996 (3 BEAT n6/9/12) | projected toward QAOA origin; Pareto slide |
+| champ↔warm blend | **0.9858 at a=1** | smooth front; champ dominates knee |
+| delta-ball around champ ρ0.01 | 0.9866 best so far | no beat of champ knee |
+| radial ε on champ | **0.9858 at ε=0** | ε≠0 raises knee; local min at champ |
+
+**ALL_CORE_BEAT = False.** Champ still `pareto_blend/eval_L2_a0.80_s1.json` (n6=0.9573 n9=0.9782 n12=0.9858 n15=0.9853).
+Cloud bc-0fa5a09f + bc-5198772e still RUNNING on med_align. Capacity NOT declared.
+
