@@ -14,6 +14,7 @@ New checks (not covered by prior Nov/ explorers):
   T10 eval skip: n not %3 and missing packs skipped; sim ns = 6,9,12,15,18
   T11 no prep-W killed form (vacuum start; final W applied)
   T12 L_LIST exact set; EVAL range 6..18
+  T13 warm-fallback gate: reject polish if train Med > warm (or missing)
 """
 from __future__ import annotations
 
@@ -33,6 +34,7 @@ if str(_ROOT) not in sys.path:
 from Nov_3rd import settings as S
 from Nov_3rd.ansatz import make_W, make_sim
 from Nov_3rd.data_io import load_qaoa, load_train_E, shell_phi_from_betas
+from Nov_3rd.train_bfgs import reject_polish_for_warm
 from explore_OCT29.lib.blockmix import fidelity_vs_qaoa, qaoa_theta_from_beta
 from explore_OCT29.lib.qaoa import qaoa_psucc
 from explore_OCT29.lib.packing import NU, n_cavities
@@ -262,12 +264,29 @@ def t12_L_list(s: Suite):
     )
 
 
+def t13_warm_fallback_gate(s: Suite):
+    """Protocol step 4 must be code-enforced: worse/missing train Med → warm."""
+    s.check("T13a_reject_worse", reject_polish_for_warm(9.8, 9.61) is True)
+    s.check("T13b_keep_tie", reject_polish_for_warm(9.61, 9.61) is False)
+    s.check("T13c_keep_better", reject_polish_for_warm(9.5, 9.61) is False)
+    s.check("T13d_reject_missing", reject_polish_for_warm(None, 9.61) is True)
+    # warm recovery angles are exact dual (same as T4 map)
+    betas = torch.tensor([0.3, -0.1], dtype=torch.float32)
+    phi = shell_phi_from_betas(betas)
+    expected = (-betas.reshape(-1, 1)) * torch.arange(4, dtype=torch.float32)
+    s.check(
+        "T13e_warm_phi_dual",
+        bool(torch.allclose(phi, expected)),
+        f"phi={phi.tolist()} expected={expected.tolist()}",
+    )
+
+
 def main():
     s = Suite()
     tests = [
         t1_locks, t2_data, t3_packing, t4_shell_warm, t5_motif_overlap,
         t6_warm_vs_qaoa, t7_blockmix_fidelity, t8_optimizer, t9_train_count,
-        t10_eval_ns, t11_killed_form, t12_L_list,
+        t10_eval_ns, t11_killed_form, t12_L_list, t13_warm_fallback_gate,
     ]
     for fn in tests:
         try:

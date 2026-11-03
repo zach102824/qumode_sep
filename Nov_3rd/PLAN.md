@@ -87,6 +87,8 @@ Script / log: `scripts/debug_L1_warm_vs_polished.py`, `runs/debug_L1_warm_vs_pol
 
 **Do not ship** a polished checkpoint that lost to warm on train Med.
 
+**Code enforcement (train_bfgs.py):** `reject_polish_for_warm(train_med, warm_med)` is applied at the end of every `train_seed` call. Mid-loop never crowns a round with `train_med > warm_med`. If polish is missing or worse, the returned state is the exact QAOA dual (φ_j=-β·j, γ=γ_QAOA), with `used_warm=True` / `rejected_polish=True` logged and written into ckpts / `train_summary_L*.json` / RESULTS.
+
 ### Opus polish strategy (Opus 5.5 medium, 2026-11-03 15:16 Asia/Shanghai)
 
 Full reply: `explore_OCT29/runs/opus_ideas/opus_reply_20261103_1516_nov3rd_polish_plan.md`  

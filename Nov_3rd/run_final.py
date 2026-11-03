@@ -110,6 +110,11 @@ def write_L_results(L: int, rows: dict, best_seed: int, meta: dict, cmp: dict):
         "",
         f"Overall vs QAOA: **{cmp['overall']}** (UNDER stops ladder)",
         f"Best seed = {best_seed}",
+        (
+            f"Warm recovery: **yes** (polish rejected; exact QAOA dual shipped)"
+            if meta.get("best_used_warm")
+            else "Warm recovery: no (polish train Med ≤ warm)"
+        ),
         "",
         "| n | Med | B90 | QAOA Med | R | verdict |",
         "|---|-----|-----|----------|---|---------|",
@@ -201,17 +206,42 @@ def main():
                 L=L, device=device, E_train=E_train,
                 betas0=betas0, gammas0=gammas0, seed=seed, E_val=E_val,
             )
+            used_warm = bool(best.get("used_warm") or best.get("rejected_polish"))
+            if used_warm:
+                log(
+                    f"L{L} seed{seed}: warm recovered (rejected polish); "
+                    f"trainMed=warmMed≈{best['warm_med']:.4f}"
+                )
             seed_rows.append({
                 "seed": seed, "score": best["score"], "round": best["round"],
                 "train_med": best["train_med"], "warm_med": best["warm_med"],
+                "used_warm": used_warm,
+                "rejected_polish": bool(best.get("rejected_polish", False)),
             })
             torch.save(best["state"], S.OUT / f"params_seed{seed}_L{L}.pt")
             if best_all is None or best["score"] < best_all["score"]:
                 best_all = {**best, "seed": seed}
         torch.save(best_all["state"], S.OUT / f"params_best_L{L}.pt")
+        n_warm = sum(1 for r in seed_rows if r.get("used_warm"))
         (S.OUT / f"train_summary_L{L}.json").write_text(
-            json.dumps(_jsonable({"seeds": seed_rows, "best_seed": best_all["seed"], "L": L}), indent=2)
+            json.dumps(
+                _jsonable({
+                    "seeds": seed_rows,
+                    "best_seed": best_all["seed"],
+                    "L": L,
+                    "n_seeds_used_warm": n_warm,
+                    "best_used_warm": bool(
+                        best_all.get("used_warm") or best_all.get("rejected_polish")
+                    ),
+                }),
+                indent=2,
+            )
         )
+        if best_all.get("used_warm") or best_all.get("rejected_polish"):
+            log(
+                f"L{L} best seed{best_all['seed']}: shipping QAOA-warm angles "
+                f"(polish rejected on train Med)"
+            )
         st = best_all["state"]
         rows = eval_ladder(L, st["gamma"], st["phi"], device, ns=S.EVAL_NS)
         qref = load_qaoa_scale_ref(L)
@@ -222,6 +252,11 @@ def main():
             "max_train": S.MAX_TRAIN, "scale_B": S.SCALE_B,
             "best_seed": best_all["seed"], "qaoa_ref": qref,
             "train_summary": seed_rows, "compare": cmp,
+            "best_used_warm": bool(
+                best_all.get("used_warm") or best_all.get("rejected_polish")
+            ),
+            "best_warm_med": best_all.get("warm_med"),
+            "best_train_med": best_all.get("train_med"),
         }
         write_L_results(L, rows, best_all["seed"], meta, cmp)
         all_L[L] = {"meta": meta, "eval": rows, "compare": cmp, "best_seed": best_all["seed"]}

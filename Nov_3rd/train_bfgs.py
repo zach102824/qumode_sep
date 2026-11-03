@@ -13,6 +13,17 @@ def _loss(out) -> torch.Tensor:
     return torch.log(out["inv_p"].clamp(min=1e-12))
 
 
+def reject_polish_for_warm(train_med, warm_med) -> bool:
+    """Hard gate: True → discard polish and recover QAOA-warm angles.
+
+    Reject when train Med is missing or strictly worse than warm Med
+    (ties keep polish: train_med <= warm_med).
+    """
+    if train_med is None:
+        return True
+    return float(train_med) > float(warm_med)
+
+
 @torch.no_grad()
 def median_inv(sim, gamma, phi, E, max_count=64) -> float:
     invs = []
@@ -33,6 +44,31 @@ def eval_med_b90(sim, gamma, phi, E) -> dict:
         "B90_inv_p": float(np.quantile(invs, 0.90)),
         "B": int(len(invs)),
         "S": float(np.median(invs) + 0.1 * np.quantile(invs, 0.90)),
+    }
+
+
+def _ckpt_state(
+    *,
+    gamma: torch.Tensor,
+    phi: torch.Tensor,
+    L: int,
+    seed: int,
+) -> dict:
+    return {
+        "gamma": gamma.detach().cpu().clone(),
+        "phi": phi.detach().cpu().clone(),
+        "L": L,
+        "b": S.B_BITS,
+        "W": S.W_FRAME,
+        "snap_mode": S.SNAP_HEAD,
+        "snap_shared_cavities": S.SNAP_SHARED_CAVITIES,
+        "motif": S.MOTIF,
+        "recipe": S.RECIPE_NAME,
+        "train_ns": list(S.TRAIN_NS),
+        "max_train": S.MAX_TRAIN,
+        "optimizer": S.OPTIMIZER,
+        "qaoa_warm": S.QAOA_WARM,
+        "seed": seed,
     }
 
 
@@ -62,8 +98,11 @@ def train_seed(
     np.random.seed(seed)
     rng = np.random.default_rng(seed)
 
-    gamma = torch.nn.Parameter(gammas0.detach().clone().float())
-    phi = torch.nn.Parameter(shell_phi_from_betas(betas0).float())
+    # Exact QAOA dual warm init — kept for recovery if polish worsens train Med.
+    gamma_warm = gammas0.detach().clone().float()
+    phi_warm = shell_phi_from_betas(betas0).float()
+    gamma = torch.nn.Parameter(gamma_warm.clone())
+    phi = torch.nn.Parameter(phi_warm.clone())
     sim = make_sim(6, L, device)
     N = len(E_train)
 
@@ -77,6 +116,8 @@ def train_seed(
         "train_med": None,
         "val": None,
         "state": None,
+        "used_warm": False,
+        "rejected_polish": False,
     }
 
     for r in range(S.LBFGS_ROUNDS):
@@ -110,29 +151,17 @@ def train_seed(
         tr_med = median_inv(sim, gamma, phi, E_train, max_count=min(128, N))
         val = eval_med_b90(sim, gamma.detach(), phi.detach(), E_val) if E_val is not None else None
         sc = float(val["S"]) if val else tr_med
-        if sc < best["score"]:
+        # Mid-loop: never crown a polish that already lost to warm on train Med.
+        if tr_med <= warm_med and sc < best["score"]:
             best = {
                 "score": sc,
                 "round": r,
                 "warm_med": warm_med,
                 "train_med": tr_med,
                 "val": val,
-                "state": {
-                    "gamma": gamma.detach().cpu().clone(),
-                    "phi": phi.detach().cpu().clone(),
-                    "L": L,
-                    "b": S.B_BITS,
-                    "W": S.W_FRAME,
-                    "snap_mode": S.SNAP_HEAD,
-                    "snap_shared_cavities": S.SNAP_SHARED_CAVITIES,
-                    "motif": S.MOTIF,
-                    "recipe": S.RECIPE_NAME,
-                    "train_ns": list(S.TRAIN_NS),
-                    "max_train": S.MAX_TRAIN,
-                    "optimizer": S.OPTIMIZER,
-                    "qaoa_warm": S.QAOA_WARM,
-                    "seed": seed,
-                },
+                "state": _ckpt_state(gamma=gamma, phi=phi, L=L, seed=seed),
+                "used_warm": False,
+                "rejected_polish": False,
             }
         if r % 5 == 0 or r + 1 == S.LBFGS_ROUNDS:
             vbit = ""
@@ -142,4 +171,41 @@ def train_seed(
                 f"seed{seed} r{r}/{S.LBFGS_ROUNDS}: loss≈{loss_f:.4f} "
                 f"trainMed≈{tr_med:.3f}{vbit} bestS={best['score']:.3f}@r{best['round']}"
             )
+
+    # Mandatory final gate: recover exact QAOA-warm if polish did not help train Med.
+    if reject_polish_for_warm(best["train_med"], warm_med):
+        why = (
+            "no accepted polish round"
+            if best["train_med"] is None
+            else f"trainMed={best['train_med']:.4f} > warmMed={warm_med:.4f}"
+        )
+        log(
+            f"seed{seed} REJECT polish ({why}) — recovering QAOA-warm "
+            f"(φ_j=-β·j, γ=γ_QAOA); warmMed≈{warm_med:.4f}"
+        )
+        best = {
+            "score": warm_med,
+            "round": -1,
+            "warm_med": warm_med,
+            "train_med": warm_med,
+            "val": None,
+            "state": _ckpt_state(gamma=gamma_warm, phi=phi_warm, L=L, seed=seed),
+            "used_warm": True,
+            "rejected_polish": True,
+        }
+        best["state"]["used_warm"] = True
+        best["state"]["rejected_polish"] = True
+        best["state"]["warm_med"] = warm_med
+    else:
+        best["used_warm"] = False
+        best["rejected_polish"] = False
+        if best["state"] is not None:
+            best["state"]["used_warm"] = False
+            best["state"]["rejected_polish"] = False
+            best["state"]["warm_med"] = warm_med
+        log(
+            f"seed{seed} KEEP polish trainMed≈{best['train_med']:.4f} "
+            f"≤ warmMed≈{warm_med:.4f} (round={best['round']})"
+        )
+
     return best
