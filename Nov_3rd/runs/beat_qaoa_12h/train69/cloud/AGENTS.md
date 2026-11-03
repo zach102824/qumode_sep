@@ -9,3 +9,5 @@
 
 L16 champ on main: power_p s0. Remaining goal: L=2 ALL_CORE only.
 | L2 med_align | bc-0fa5a09f-3233-497d-8b29-69a848823b53 | CREATING | https://cursor.com/agents/bc-0fa5a09f-3233-497d-8b29-69a848823b53 |
+
+Box 2026-11-04: L2 CAPACITY NEAR-MISS declared (knee 0.9858). Clouds: finish current, no new shallow unless BEAT.
