@@ -1,15 +1,12 @@
 # Nov_3rd
 
-Self-contained final recipe folder: plan, scripts, settings, data, QAOA angles, runs.
-
-- b=3 / BinH / shell / QAOA-warm / n6×1000 / L-BFGS
-- L ∈ {1,4,8,12,16,20,24,28,32}
-- Eval n = 6…18 (sim: 6,9,12,15,18)
+Self-contained final recipe: plan, scripts, tests, data, QAOA angles, runs.
 
 ```bash
 source /workspace/qtimes_venv/bin/activate
 export PYTHONPATH=/workspace/qumode_sep
-python -m Nov_3rd.run_final
+python -m Nov_3rd.tests.run_tests   # must 0 failed
+python -m Nov_3rd.run_final         # L small→large; STOP if UNDER QAOA
 ```
 
-See `PLAN.md`. Paths: `data/`, `qaoa_angles/`, `runs/`.
+See `PLAN.md`.
