@@ -1,0 +1,24 @@
+You are advising a locked Hamming-shell SNAP + Nov1st X-sandwich qumode QAOA dual experiment (Nov_3rd). Gate sequence / motif / W are LOCKED. Only training may change.
+
+GOAL: clear BEAT of fair paper-n6 QAOA (R=Med/Med_QAOA ≤ 0.98) at shallow L∈{1,2} AND deep L=16, on at least n12 and n15 (prefer all CORE n∈{6,9,12,15}).
+
+Round 0 PASS: exact dual φ_k=-βk gives R=1.000 at L=1,2,16 after fixing stale QAOA ladders.
+
+Round 1 L=2 seed0 results (scale1000 B=1000):
+1. CORE-RATIO train{6,9,12,15} 250/n, loss mean log(Eθ/EQ)+λ(c2²+c3²), free γ,c1,c2,c3, Adam600→LBFGS12:
+   n6 R=0.9586 BEAT, n9 0.9781 BEAT, n12 0.9760 BEAT, n15 0.9929 TIE
+2. RULE-SCALED train{9,12}, c2,3^(n)=κ·2/(n-1)·c2,3, κ≈1.107:
+   n6 0.987 TIE, n9 0.980 TIE, n12 0.979 BEAT, n15 0.999 TIE
+3. TRUST-RESIDUAL freeze γ,c1; ||(c2,c3)||≤ρ=0.1 train{9,12,15}:
+   n6 0.973 BEAT, n9 0.992 TIE, n12 0.990 TIE, n15 0.995 TIE
+
+Param: φ_k = c1·k + c2·k² + c3·k³. Idea1 L=16 currently training.
+
+Give exactly 3 ranked TRAINING-ONLY next ideas to:
+(a) push n15 to ≤0.98 at L=2 (Idea1 is 1.3% short)
+(b) get BEAT at L=16 on n12+n15
+(c) cover L=1
+
+For each idea: train ns, freeze/scale, loss, opt, L order, success, wall on 8c, kill criterion.
+Also: kill/promote which R1 ideas; one knob change per survivor.
+No new gates / no Arm C projector unless all training paths fail at L=16.
