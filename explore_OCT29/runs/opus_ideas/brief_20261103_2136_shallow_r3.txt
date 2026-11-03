@@ -1,0 +1,22 @@
+You are Opus advising Zach on beat-QAOA (Hamming-shell SNAP, Nov1st X-sandwich locked). Ideas only — no tools, no file edits, no commands. Model context: Round-3 after capacity probe.
+
+GOAL: clear BEAT (R≤0.98) of fair paper-n6 QAOA on n15 at L=1 or L=2, keeping n12 BEAT. L=16 already CLEAR BEAT all CORE (3 seeds, n15 R≈0.88–0.90). Training-only; gate sequence locked. 8 cores. ~12h window from 20:40 Asia/Shanghai.
+
+EVIDENCE (Asia/Shanghai 2026-11-03 ~21:36):
+
+1) Prior shallow bests (scale1000 eval):
+- L=2 CORE-RATIO: n12 0.976 BEAT, n15 0.993 TIE
+- L=2 minimax polish: n12 0.979, n15 0.984
+- L=2 free-φ weighted: n12 0.986, n15 0.983 (best eval n15)
+- L=1 CORE-RATIO: n12 0.979 BEAT, n15 0.984 TIE
+- n15-ONLY free-φ+γ train L=2: train R=0.9848, eval 0.993
+
+2) YOUR prior kill check (global search): "if best train R ≥0.982 → capacity-limited; only if ≤0.978 revisit."
+We ran it: 801 uniform starts over (γ,c1–c3) around QAOA dual + LBFGS top-20.
+- best_train_R = **0.9807** on n15 train pack (capacity_limited=False vs your 0.982 kill)
+- That point on scale1000 eval: n6 0.971 BEAT, n9 0.983, n12 0.977 BEAT, **n15 0.997 TIE** — train scrape did NOT transfer.
+- Still NOT ≤0.978 reopen bar. Best *eval* n15 remains ~0.983.
+
+ASK: With this evidence, give exactly 3 ranked training-only ideas that could still push eval n15 ≤0.98 at L∈{1,2}, OR explicitly recommend declaring capacity-limited for shallow n15 under Hamming-shell (and celebrate L=16 + shallow n12) as #1.
+
+If ideas: must stay training-only (loss / train set / optimizer / freezes / scaling / multi-start / CVaR / denser samples / layerwise — NOT new gates / Arm C unless you argue capacity is proven and only a head change can break it). Include kill criteria and rough wall on 8 cores. Be honest if remaining EV is near zero.

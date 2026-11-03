@@ -1,6 +1,6 @@
 # beat_qaoa_12h RESULTS
 
-_Updated 2026-11-03 21:19 Asia/Shanghai_
+_Updated 2026-11-03 21:36 Asia/Shanghai_
 
 **Locked:** Hamming-shell SNAP + Nov1st X-sandwich (training-only).  
 **BEAT** = R≤0.98 vs fair paper-n6 QAOA · scale1000 B=1000.
@@ -42,6 +42,22 @@ All CORE BEAT on every seed. Champion: `champion/params_L16.pt` (seed0).
 | 15 | 0.984 | TIE |
 
 ---
+
+
+
+### Global search L=2 shell on n15 train (Opus capacity check)
+- Method: 801 scrambled-uniform starts over (γ,c1,c2,c3) ± box around QAOA dual; L-BFGS refine top 20.
+- **best_train_R=0.9807** (capacity_limited=False vs kill 0.982; NOT ≤0.978 reopen bar).
+- scale1000 eval of that point:
+
+| n | R | verdict |
+|---|---|---------|
+| 6 | **0.971** | BEAT |
+| 9 | 0.983 | TIE |
+| 12 | **0.977** | BEAT |
+| 15 | 0.997 | TIE |
+
+Train scrape does **not** transfer to eval n15. Best *eval* n15 remains ~0.983 (free-φ weighted). Artifacts: `round_2/global_search_n15_L2/`.
 
 ## Success gate
 | Goal | Status |

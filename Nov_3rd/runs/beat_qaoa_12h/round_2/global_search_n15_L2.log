@@ -1,0 +1,55 @@
+21:22:21 [Nov_3rd] scipy unavailable (No module named 'scipy'); using scrambled grid
+21:22:21 [Nov_3rd] uniform 0/801 best=1.0000
+21:22:32 [Nov_3rd] uniform 100/801 best=1.0000
+21:22:43 [Nov_3rd] uniform 200/801 best=1.0000
+21:22:54 [Nov_3rd] uniform 300/801 best=1.0000
+21:23:06 [Nov_3rd] uniform 400/801 best=1.0000
+21:23:17 [Nov_3rd] uniform 500/801 best=1.0000
+21:23:28 [Nov_3rd] uniform 600/801 best=1.0000
+21:23:39 [Nov_3rd] uniform 700/801 best=1.0000
+21:23:49 [Nov_3rd] uniform 800/801 best=1.0000
+21:23:49 [Nov_3rd] grid best=1.0000 wall=89s
+/tmp/global_search_n15_L2.py:72: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  invs=[float(sim.forward_nov3rd(E[i],gamma,phi)['inv_p'].cpu()) for i in range(len(E))]
+21:24:27 [Nov_3rd] refine 0/20 R=0.9852 best=0.9852
+21:25:03 [Nov_3rd] refine 1/20 R=0.9877 best=0.9852
+21:25:26 [Nov_3rd] refine 2/20 R=1.0182 best=0.9852
+21:25:50 [Nov_3rd] refine 3/20 R=1.0004 best=0.9852
+21:26:16 [Nov_3rd] refine 4/20 R=1.0181 best=0.9852
+21:26:40 [Nov_3rd] refine 5/20 R=0.9952 best=0.9852
+21:27:22 [Nov_3rd] refine 6/20 R=1.1217 best=0.9852
+21:27:46 [Nov_3rd] refine 7/20 R=1.0363 best=0.9852
+21:28:10 [Nov_3rd] refine 8/20 R=1.1287 best=0.9852
+21:28:31 [Nov_3rd] refine 9/20 R=1.0045 best=0.9852
+21:28:53 [Nov_3rd] refine 10/20 R=1.1694 best=0.9852
+21:29:18 [Nov_3rd] refine 11/20 R=1.0050 best=0.9852
+21:29:55 [Nov_3rd] refine 12/20 R=1.0516 best=0.9852
+21:30:19 [Nov_3rd] refine 13/20 R=1.0280 best=0.9852
+21:30:45 [Nov_3rd] refine 14/20 R=0.9807 best=0.9807
+21:31:11 [Nov_3rd] refine 15/20 R=1.0436 best=0.9807
+21:31:36 [Nov_3rd] refine 16/20 R=1.0079 best=0.9807
+21:32:11 [Nov_3rd] refine 17/20 R=0.9889 best=0.9807
+21:32:47 [Nov_3rd] refine 18/20 R=1.0203 best=0.9807
+21:33:10 [Nov_3rd] refine 19/20 R=1.0017 best=0.9807
+21:33:10 [Nov_3rd] DONE best_train_R=0.9807 capacity_limited=False
+{
+  "best_train_R": 0.9807181080815804,
+  "best_x": [
+    -4.354304790496826,
+    -6.792530059814453,
+    -0.9383399486541748,
+    -0.7512881755828857,
+    -0.006078466307371855,
+    0.08999945223331451,
+    0.0219462588429451,
+    -0.010287312790751457
+  ],
+  "src": "refine_23",
+  "grid_best_R": 1.0000006745753185,
+  "N": 801,
+  "method": "uniform",
+  "kill_threshold": 0.982,
+  "capacity_limited": false,
+  "finished": "2026-11-03 21:33:10 +0800"
+}

@@ -1,0 +1,10 @@
+Hamming-shell SNAP locked. We have a CLEAR BEAT of fair QAOA at L=16 on all CORE n (3 seeds, n15 R≈0.88–0.90).
+
+Shallow problem: cannot get n15 R≤0.98 at L=1 or L=2.
+- Best L=2 eval n15 R≈0.983 (free-φ weighted) / 0.984 (minimax)
+- Best L=1 eval n15 R=0.984
+- CRITICAL: n15-ONLY free-φ+γ train at L=2 reaches train R=0.9848 only (cannot BEAT even on train). Eval then 0.993. So this looks like a capacity floor, not overfit.
+
+Question: give exactly 3 training-only ideas that could still push shallow n15 ≤0.98, OR explicitly say "declare capacity-limited at L≤2 for n15 under Hamming-shell; celebrate L=16 + shallow n12" as the ranked #1 recommendation.
+
+If ideas: must stay training-only (no new gates / no Arm C projector unless you argue it's required). Include kill criteria.
