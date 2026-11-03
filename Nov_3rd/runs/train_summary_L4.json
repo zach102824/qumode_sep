@@ -31,7 +31,47 @@
   "best_seed": 0,
   "L": 4,
   "n_seeds_used_warm": 0,
-  "best_used_warm": false,
+  "best_used_warm": true,
+  "transfer_under_fallback": true,
+  "warm_ship_reason": "transfer_under_fallback",
+  "polish_compare": {
+    "per_n": {
+      "6": {
+        "Med": 2.5203152894973755,
+        "B90": 5.162921428680421,
+        "QAOA_Med": 2.824209459663221,
+        "QAOA_B90": 6.100235667170979,
+        "R": 0.8923967310122656,
+        "verdict": "BEAT"
+      },
+      "9": {
+        "Med": 5.062451362609863,
+        "B90": 12.745094013214112,
+        "QAOA_Med": 5.324182849348025,
+        "QAOA_B90": 13.687478650790245,
+        "R": 0.9508410033719611,
+        "verdict": "BEAT"
+      },
+      "12": {
+        "Med": 10.224331378936768,
+        "B90": 31.990579223632814,
+        "QAOA_Med": 9.957718922826896,
+        "QAOA_B90": 31.324686904773255,
+        "R": 1.0267744508733516,
+        "verdict": "UNDER"
+      },
+      "15": {
+        "Med": 21.863080978393555,
+        "B90": 74.37871627807618,
+        "QAOA_Med": 20.314036487170185,
+        "QAOA_B90": 65.36508564931796,
+        "R": 1.0762548837697374,
+        "verdict": "UNDER"
+      }
+    },
+    "overall": "UNDER",
+    "under": true
+  },
   "qaoa_source": "paper_n6",
   "eval_ns_core": [
     6,
