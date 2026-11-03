@@ -1,0 +1,29 @@
+Zach NEW LOCK (nonstop overnight beat-QAOA):
+
+HARD CONSTRAINTS
+- Train ONLY n∈{6,9}. No n12/n15 in training loss or early-stop. Holdout for eval only.
+- Eval / success: scale1000 B=1000 on CORE n∈{6,9,12,15}. Must BEAT QAOA with R=Med/Med_QAOA ≤ 0.98 on ALL FOUR (esp. transfer n12+n15).
+- Primary depths: L=2 (shallow) and L=16 (deep) only.
+- Gate sequence LOCKED: Hamming-shell SNAP + Nov1st X-sandwich, W=H^{⊗3}. Training/protocol only (train set, optimizer, loss, freezes, n-scaling of angles, init).
+- Fair QAOA: paper-init n6 refs already exist for L={2,16}.
+- 8 cores. Prefer direct implementable ideas.
+
+CONTEXT (use this)
+- Prior CLEAR BEAT at L=16 used CORE-RATIO train{6,9,12,15}: seed0 n15 Med 2.547 vs Q 2.888 (R≈0.882). That VIOLATES the new train{6,9}-only lock — we must rediscover under {6,9}.
+- Prior free polish @n6-only: BEAT n6/9, UNDER n12/15 (size overfit / dual-breaking c2,c3 sized for 2 cavities).
+- You previously said train{6,9} alone is weak unless strength scaling / dual-anchor / ratio loss; preferred {9,12}. Zach now FORCES {6,9}.
+- Shallow L=2 n15 capacity ~0.983 even when train included n15; with {6,9} may be harder — still try both depths.
+- In-cavity pair share 2/(n-1): n6=0.40, n9=0.25, n12=0.18, n15=0.14. Shared c2,c3 overshoots at larger n unless scaled.
+- Shell: φ_k = c1·k + c2·k² + c3·k³, k=0..3. QAOA dual: c1=-β, c2=c3=0.
+- Existing trainer: Nov_3rd/scripts/train_beat_idea.py + beat_params.scale_c23 (κ·2/(n-1)).
+
+ASK
+Give EXACTLY 3 ranked training-only ideas under train{6,9}→eval CORE beat at L=2 AND L=16.
+For each idea include:
+1. Name + one-line claim
+2. Knobs: what is free / frozen; how c2,c3 scale with n at train AND at eval transfer; loss; opt; init; seeds; steps
+3. Why it can transfer to n12/n15 despite never training them
+4. Kill criteria + honest expected R at n15 for L=2 and L=16
+5. Which to run first and wall estimate on 8 cores
+
+Also: if you believe NO train{6,9} protocol can clear-beat n15 at L=2 under this head, say so explicitly and still give the best-effort shallow idea + focus deep L=16.

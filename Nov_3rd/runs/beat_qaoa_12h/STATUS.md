@@ -1,16 +1,14 @@
-# STATUS — 2026-11-03 22:21 Asia/Shanghai
+# STATUS — 2026-11-03 22:45 Asia/Shanghai
 
-## DONE
-- R0 dual PASS L∈{1,2,16}
-- **L=16 CORE-RATIO CLEAR BEAT** all CORE, 3 seeds (n15 R≈0.88–0.90)
-- Shallow L=1/2: BEAT n12; **n15 capacity-limited** under Hamming-shell
+## LOCK (t2563u)
+Train ONLY {6,9} → eval CORE {6,9,12,15} R≤0.98 @ L=2 and L=16. Gates locked.
+Idea-gen: **R1=Opus** · **R2+=Grok cursor-grok-4.6-high**.
+Runs: **box (shallow) + CloudAgent (deep L=16)** parallel; paths under `train69/<idea>/`.
 
-## Closing check (Opus R3 #1) — DECLARE
-Dense n15 pack N=1000 disjoint from train+scale1000; 803-start global search + LBFGS refine.
-- **best_dense_R = 0.9803** (>0.980 declare bar; reopen needs ≤0.978)
-- capacity_proven=True, reopen=False
-- Artifacts: `round_2/dense_n15/`
+## NOW
+- R1 Opus ideas in OPUS_TRAIN69_LOOP.md
+- Pushing trainer; CloudAgent → Idea1 L16 + Idea2 L16
+- Box → Idea1/3 L=2 shallow only (venv-explore)
 
-## OPEN
-- None for shallow n15 under locked gate sequence (training-only exhausted per Opus)
-- Optional later: unlock gate/head (Arm C-style) — out of this plan's scope
+## PRIOR REF (violates train{6,9} lock)
+L=16 CORE-RATIO train{6,9,12,15}: CLEAR BEAT n15 R≈0.88–0.90
