@@ -100,3 +100,10 @@ Gate = Med(inv)/QAOA_Med. Loss `--loss med_align` = log(soft_quantile(inv_p)/QAO
 **ALL_CORE_BEAT = False.** Champ still `pareto_blend/eval_L2_a0.80_s1.json` (n6=0.9573 n9=0.9782 n12=0.9858 n15=0.9853).
 Cloud bc-0fa5a09f + bc-5198772e still RUNNING on med_align. Capacity NOT declared.
 
+## L=2 CAPACITY NEAR-MISS (2026-11-04 ~00:25 Asia/Shanghai)
+
+**ALL_CORE_BEAT = False.** Empirical basin claim under locked gates/train{6,9}.
+Best: pareto α=0.80 s1 — n6=0.9573 BEAT, n9=0.9782 BEAT, n12=0.9858 TIE, n15=0.9853 TIE (knee 0.9858).
+≥163 n6&n9-BEAT CORE evals; radial ε local min at champ; med_align/dense/n9med/hinge/soft_q=0.4 do not improve knee.
+Details: `CAPACITY_L2_EVIDENCE.md`.
+
