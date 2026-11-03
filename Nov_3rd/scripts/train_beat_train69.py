@@ -34,6 +34,25 @@ from explore_OCT29.lib.qaoa import qaoa_psucc, inv_p_from_psucc
 
 from beat_params import phi_from_c, project_ball, warm_from_qaoa
 
+
+def project_ball_delta(c2, c3, a2, a3, rho: float):
+    """Project (c2,c3) onto the ℓ2 ball of radius rho centered at (a2,a3)."""
+    with torch.no_grad():
+        d2 = c2 - a2
+        d3 = c3 - a3
+        nrm = torch.sqrt((d2.reshape(-1).pow(2).sum() + d3.reshape(-1).pow(2).sum()))
+        if float(nrm) > rho and float(nrm) > 0:
+            s = rho / nrm
+            c2.copy_(a2 + d2 * s)
+            c3.copy_(a3 + d3 * s)
+
+
+def apply_trust_ball(c2, c3, rho, anchor):
+    if anchor is None:
+        project_ball(c2, c3, rho)
+    else:
+        project_ball_delta(c2, c3, anchor[0], anchor[1], rho)
+
 OUT_ROOT = S.OUT / "beat_qaoa_12h" / "train69"
 TRAIN_PACKS = S.OUT / "beat_qaoa_12h" / "train_packs"
 TRAIN_NS = [6, 9]
@@ -268,6 +287,7 @@ def train_one(
     out_dir: Path,
     loss_mode: str = "log_ratio",
     soft_q: float = 0.5,
+    init_pt: dict | None = None,
 ):
     torch.manual_seed(seed)
     np.random.seed(seed)
@@ -275,6 +295,22 @@ def train_one(
 
     betas, gammas = load_qaoa(L)
     gamma, c1, c2, c3, p, trainables = make_params(idea, betas, gammas, device, p0=p0, freeze_p=freeze_p)
+    ball_anchor = None
+    if init_pt is not None:
+        if idea != "trust69":
+            raise ValueError("--init_pt warm-start is trust69 only (freeze γ,c1; polish c2,c3)")
+        ig = init_pt["gamma"].to(device).float().reshape(-1).detach()
+        ic1 = init_pt["c1"].to(device).float().reshape(-1).detach()
+        ic2 = init_pt["c2"].to(device).float().reshape(-1).detach()
+        ic3 = init_pt["c3"].to(device).float().reshape(-1).detach()
+        gamma = ig.clone()
+        c1 = ic1.clone()
+        c2 = torch.nn.Parameter(ic2.clone())
+        c3 = torch.nn.Parameter(ic3.clone())
+        p = None
+        trainables = [c2, c3]
+        ball_anchor = (ic2.clone(), ic3.clone())
+        log(f"{idea} L{L} s{seed}: warm-start init_pt freeze γ,c1; ball around c2,c3 rho={rho}")
 
     bundles = {}
     for n in TRAIN_NS:
@@ -338,7 +374,7 @@ def train_one(
             with torch.no_grad():
                 p.clamp_(-1.0, 2.0)
         if idea == "trust69" and rho is not None:
-            project_ball(c2, c3, rho)
+            apply_trust_ball(c2, c3, rho, ball_anchor)
         hist.append({"phase": "adam", "step": step, "loss": float(loss.detach()), "lam": lam})
         if step % 25 == 0 or step == adam_steps - 1:
             extra = f" p={float(p):.3f}" if p is not None else ""
@@ -378,7 +414,7 @@ def train_one(
             with torch.no_grad():
                 p.clamp_(-1.0, 2.0)
         if idea == "trust69" and rho is not None:
-            project_ball(c2, c3, rho)
+            apply_trust_ball(c2, c3, rho, ball_anchor)
         hist.append({"phase": "lbfgs", "round": r, "loss": loss_f, "lam": lam})
         log(f"{idea} L{L} s{seed} lbfgs r{r}/{lbfgs_rounds} loss={loss_f:.5f}")
         maybe_update_best(f"lbfgs{r}")
@@ -444,6 +480,8 @@ def train_one(
         "soft_med": soft_med,
         "loss_mode": loss_mode,
         "soft_q": soft_q,
+        "init_pt": None if init_pt is None else str(init_pt.get("_path", "")),
+        "ball_anchor": "delta" if ball_anchor is not None else "zero",
     }
     out_dir.mkdir(parents=True, exist_ok=True)
     pt = out_dir / f"params_L{L}_seed{seed}.pt"
@@ -572,6 +610,8 @@ def main():
     ap.add_argument("--eval_only", type=str, default="")
     ap.add_argument("--skip_eval", action="store_true")
     ap.add_argument("--tag", type=str, default="", help="subdir tag under idea/")
+    ap.add_argument("--init_pt", type=str, default="",
+                    help="trust69 warm-start; freeze γ,c1; ρ-ball is centered on loaded c2,c3")
     args = ap.parse_args()
 
     os.environ["OMP_NUM_THREADS"] = str(args.threads)
@@ -646,6 +686,10 @@ def main():
         out_dir=out_dir,
         loss_mode=args.loss_mode,
         soft_q=float(args.soft_q),
+        init_pt=(
+            {**torch.load(args.init_pt, map_location="cpu", weights_only=False), "_path": args.init_pt}
+            if args.init_pt else None
+        ),
     )
     if not args.skip_eval:
         rows = eval_state(state, device, EVAL_NS)

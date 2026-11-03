@@ -38,6 +38,8 @@ def main():
     ap.add_argument("--ratio_tags", type=str, default="s1,s0")
     ap.add_argument("--adam_steps", type=int, default=400)
     ap.add_argument("--delta", type=float, default=0.025)
+    ap.add_argument("--alphas", type=str, default="0.65,0.70,0.72,0.75,0.78,0.80,0.82,0.85",
+                    help="comma list; Idea E uses 0.74..0.84 step 0.01")
     args = ap.parse_args()
     import os
     os.environ["OMP_NUM_THREADS"] = str(args.threads)
@@ -57,7 +59,7 @@ def main():
     hold = rng.choice(len(E9), size=max(1, int(0.3 * len(E9))), replace=False)
     pool = np.array([i for i in range(len(E9)) if i not in set(hold.tolist())])
     qref = load_qaoa_scale_ref(L)
-    alphas = [0.65, 0.70, 0.72, 0.75, 0.78, 0.80, 0.82, 0.85]
+    alphas = [float(x) for x in args.alphas.split(",") if x.strip()]
     ratio_map = {
         "s0": BASE / "alpha_ray/params_L2_ratio69_s0_s0.pt",
         "s1": BASE / "alpha_ray/params_L2_ratio69_s0_s1.pt",
