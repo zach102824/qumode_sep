@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Idea C: warm-start from pareto champ; freeze γ,c1; polish c2,c3 with med_align in tiny ρ ball."""
+"""Idea C: warm-start from pareto champ; freeze γ,c1; polish c2,c3 with med_align in delta-ball around champ (NOT QAOA-origin ball)."""
 from __future__ import annotations
 import argparse, json, math, os, sys, time
 from pathlib import Path
@@ -13,13 +13,26 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from Nov_3rd import settings as S
 from Nov_3rd.ansatz import make_sim
 from Nov_3rd.data_io import load_qaoa, log
-from beat_params import phi_from_c, project_ball
+from beat_params import phi_from_c
 from train_beat_train69 import (
     EVAL_NS, OUT_ROOT, TRAIN_NS, batch_loss, eval_state, holdout_score,
     load_train_n, precompute_qaoa_inv, snapshot_params, write_eval,
 )
 
 CHAMP = OUT_ROOT / "champion" / "params_L2_train69_pareto_a080_s1.pt"
+
+
+def project_delta_ball(c2, c3, c2_0, c3_0, rho: float):
+    """Project (c2,c3) onto ℓ2 ball of radius rho centered at (c2_0,c3_0)."""
+    with torch.no_grad():
+        d2 = c2 - c2_0
+        d3 = c3 - c3_0
+        v = torch.cat([d2.reshape(-1), d3.reshape(-1)])
+        nrm = float(v.norm().item())
+        if nrm > rho and nrm > 0:
+            scale = rho / nrm
+            c2.copy_(c2_0 + d2 * scale)
+            c3.copy_(c3_0 + d3 * scale)
 
 
 def main():
@@ -43,7 +56,7 @@ def main():
     L = 2
     idea = "trust69"
     weights = {6: args.w6, 9: args.w9}
-    out_dir = OUT_ROOT / "trust69" / f"med_align_warm_rho{args.rho:g}"
+    out_dir = OUT_ROOT / "trust69" / f"med_align_delta_rho{args.rho:g}"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     init = torch.load(args.init, map_location="cpu", weights_only=False)
@@ -64,15 +77,17 @@ def main():
         gamma = init["gamma"].to(device).detach().clone().requires_grad_(False)
         c1 = init["c1"].to(device).detach().clone().requires_grad_(False)
         # perturb c2,c3 inside ball
-        c2 = init["c2"].to(device).detach().clone()
-        c3 = init["c3"].to(device).detach().clone()
+        c2_0 = init["c2"].to(device).detach().clone()
+        c3_0 = init["c3"].to(device).detach().clone()
+        c2 = c2_0.clone()
+        c3 = c3_0.clone()
         if seed > 0:
             with torch.no_grad():
                 noise = torch.randn(c2.numel() + c3.numel())
                 noise = noise / (noise.norm() + 1e-12) * (args.rho * float(rng.uniform(0.2, 0.9)))
                 c2 = c2 + noise[: c2.numel()].reshape_as(c2).to(device)
                 c3 = c3 + noise[c2.numel() :].reshape_as(c3).to(device)
-                project_ball(c2, c3, args.rho)
+                project_delta_ball(c2, c3, c2_0, c3_0, args.rho)
         c2 = c2.detach().requires_grad_(True)
         c3 = c3.detach().requires_grad_(True)
         p = None
@@ -96,7 +111,7 @@ def main():
             loss.backward()
             torch.nn.utils.clip_grad_norm_(trainables, 5.0)
             opt.step()
-            project_ball(c2, c3, args.rho)
+            project_delta_ball(c2, c3, c2_0, c3_0, args.rho)
             if step % 25 == 0 or step == args.adam_steps - 1:
                 sc = holdout_score(
                     idea, bundles[9], gamma, c1, c2, c3, p, hold_idx,
