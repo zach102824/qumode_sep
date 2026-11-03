@@ -1,0 +1,82 @@
+{
+  "seeds": [
+    {
+      "seed": 0,
+      "score": 1.4795444083213807,
+      "round": 16,
+      "train_med": 1.4198664426803589,
+      "warm_med": 1.5256945490837097,
+      "used_warm": false,
+      "rejected_polish": false
+    },
+    {
+      "seed": 1,
+      "score": 1.5046898245811462,
+      "round": 17,
+      "train_med": 1.4296980500221252,
+      "warm_med": 1.5256945490837097,
+      "used_warm": false,
+      "rejected_polish": false
+    },
+    {
+      "seed": 2,
+      "score": 1.4910958838462829,
+      "round": 13,
+      "train_med": 1.4118012189865112,
+      "warm_med": 1.5256945490837097,
+      "used_warm": false,
+      "rejected_polish": false
+    }
+  ],
+  "best_seed": 0,
+  "L": 8,
+  "n_seeds_used_warm": 0,
+  "best_used_warm": true,
+  "transfer_under_fallback": true,
+  "warm_ship_reason": "transfer_under_fallback",
+  "polish_compare": {
+    "per_n": {
+      "6": {
+        "Med": 1.4075457453727722,
+        "B90": 2.8986519813537597,
+        "QAOA_Med": 1.6776310057898431,
+        "QAOA_B90": 3.779728323750381,
+        "R": 0.8390079466313198,
+        "verdict": "BEAT"
+      },
+      "9": {
+        "Med": 2.406590461730957,
+        "B90": 6.867740869522096,
+        "QAOA_Med": 2.3961404102697843,
+        "QAOA_B90": 7.169028429886307,
+        "R": 1.004361201629247,
+        "verdict": "TIE"
+      },
+      "12": {
+        "Med": 4.470323324203491,
+        "B90": 16.21389884948731,
+        "QAOA_Med": 3.6489386480562533,
+        "QAOA_B90": 14.375165773800266,
+        "R": 1.2251023531417224,
+        "verdict": "UNDER"
+      },
+      "15": {
+        "Med": 8.294410228729248,
+        "B90": 36.914393234252955,
+        "QAOA_Med": 5.966032782077233,
+        "QAOA_B90": 27.257141062676713,
+        "R": 1.3902723185911372,
+        "verdict": "UNDER"
+      }
+    },
+    "overall": "UNDER",
+    "under": true
+  },
+  "qaoa_source": "paper_n6",
+  "eval_ns_core": [
+    6,
+    9,
+    12,
+    15
+  ]
+}
