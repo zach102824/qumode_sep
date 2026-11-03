@@ -1,6 +1,6 @@
 # train69 RESULTS — train{6,9} only → CORE eval
 
-_Updated 2026-11-03 23:18 Asia/Shanghai_
+_Updated 2026-11-03 16:35 UTC — L=2 med_align near-miss capacity_
 
 BEAT = R≤0.98. Gates locked. R1=Opus; R2+=Grok 4.6.
 
@@ -57,9 +57,41 @@ Branch `cursor/beat-qaoa-l2-train69-28cb` tip harvested 2026-11-04 ~00:00 Asia/S
 - Best cloud n15 R = **0.9878** (n9med ρ0.03 s3). Dense ρ0.05/0.08: all starts → same basin.
 - Objective gap confirmed: median(inv/inv_Q) ≠ Med(inv)/Med(inv_Q). Next: `--loss med_align`.
 
-## L=2 — NO ALL_CORE yet (_live 2026-11-03 23:35 Asia/Shanghai_)
+## L=2 — near-miss capacity (med_align hunt, no ALL_CORE)
 
-Best n15 so far **0.9853** (pareto_blend α=0.80 s1; n6/n9 BEAT, n12 0.9858 TIE). Prev n9med 0.9865. n9med ρ0.05 seeds 0–7 DONE. ρ0.03/0.08 + dense_trust running. Round 3: pareto_blend + dense_micro queued.
+Gates locked. Eval scale1000 B=1000 CORE n∈{6,9,12,15}. BEAT = R≤0.98.
+No ALL_CORE_BEAT. Published pareto knee is unchanged: α=0.80 s1 n6=0.9573 n9=0.9782 n12=0.9858 n15=0.9853 (params pt not on main; endpoints re-blended below).
+
+**Declare:** L=2 under train{6,9} is a near-miss capacity at that knee. 40 independent `--loss med_align` soft_q=0.5 starts (trust69 ρ∈{0.05,0.08,0.12} seeds 0–5, n9med w6=0 w9=1 ρ∈{0.03,0.05,0.08} seeds 0–5, ratio69_w9 seeds 0–3) leave **n15≥0.985 on every start**. 39/40 also leave n12≥0.982. The exception is ratio69_w9 seed3 (n12=0.9775 BEAT, n15=1.0001). Idea C/B/E did not move n15 under 0.985, so the knee is frozen.
+
+### Idea A — med_align soft_q=0.5 (40 starts, 0 fail)
+
+Best n15 is still above the published knee. Summary: `med_align_sweep_summary_q0.5.json`.
+
+| n15 | n6 | n9 | n12 | path |
+|-----|----|----|-----|------|
+| 0.9876 | 0.9868 | 0.9966 | 0.9944 | trust69/med_align_n9_rho0.03/eval_L2_seed5.json |
+| 0.9877 | 0.9867 | 1.0008 | 0.9927 | trust69/med_align_n9_rho0.05/eval_L2_seed5.json |
+| 0.9879 | 0.9854 | 0.9981 | 0.9878 | trust69/med_align_rho0.08/eval_L2_seed3.json |
+| 1.0001 | 0.9639 | 0.9758 | 0.9775 | ratio69_w9/med_align/eval_L2_seed3.json |
+
+### Idea C — warm-start α=0.80 blend, freeze γ,c1, med_align on c2,c3
+
+Polished `params_L2_train69_pareto_a080_s1.pt` is not on main. Init is the unpolished blend 0.2·n9med s7 + 0.8·ratio69 s0 s1 (`pareto_blend/params_L2_a080_blend.pt`). Raw blend eval: n6=0.9605 n9=0.9778 n12=0.9806 n15=0.9903. Polish ρ∈{0.02,0.04} × seeds 0–5 (adam 200) and ρ=0.04 adam 250 seeds 0–3. Same seed matches across ρ (step stays inside ρ=0.02).
+
+Best joint (n6 and n9 BEAT): **n12=0.9829 n15=0.9878** (`trust69/med_align_pareto_a080_r0.02/eval_L2_seed2.json`). Best n12 BEAT is seed5 n12=0.9783 with n15=0.9966. No ALL_CORE.
+
+### Idea B — soft_q∈{0.4,0.35}, trust69 ρ=0.08, seeds 0–3
+
+8 starts. Best n15=0.9910 (q=0.35 seed0, n6=0.9775 BEAT, n9=0.9989). No n9 BEAT. No ALL_CORE.
+
+### Idea E — α∈[0.74,0.84] step 0.01, 50-step polish, δ=0.02
+
+Endpoints n9med s7 × ratio s1, polish seeds 0–1 (22 evals). Several n6/n9/n12 BEAT (best n12=0.9761 at α=0.84 s0) with n15≥0.996. Best max(n12,n15) is α=0.82 s1: n6=0.9572 n9=0.9766 n12=0.9807 n15=0.9908. Knee does not cross 0.98 on n12 and n15 together.
+
+## L=2 — pre-med_align snapshot (_2026-11-03 23:35 Asia/Shanghai_)
+
+Best n15 then **0.9853** (pareto_blend α=0.80 s1; n6/n9 BEAT, n12 0.9858 TIE). Still the best joint n15. n9med ρ0.05 seeds 0–7 were already done.
 
 | n15 R | n6 | n9 | n12 | ALL | path |
 |-------|----|----|-----|-----|------|
@@ -82,7 +114,7 @@ Running: n9med ρ0.03/0.08; dense_trust ρ0.05→0.08; cloud bc-ca109616; R3 par
 
 ## Cloud
 - L16 Idea1+Idea2 FINISHED. Champ=power_p s0.
-- L2 dense+n9med: bc-ca109616 RUNNING.
+- L2 dense+n9med: bc-ca109616 DONE (harvested above).
 
 ## L=2 med_align (Idea A) — 2026-11-04 Asia/Shanghai
 
@@ -106,4 +138,3 @@ Cloud bc-0fa5a09f + bc-5198772e still RUNNING on med_align. Capacity NOT declare
 Best: pareto α=0.80 s1 — n6=0.9573 BEAT, n9=0.9782 BEAT, n12=0.9858 TIE, n15=0.9853 TIE (knee 0.9858).
 ≥163 n6&n9-BEAT CORE evals; radial ε local min at champ; med_align/dense/n9med/hinge/soft_q=0.4 do not improve knee.
 Details: `CAPACITY_L2_EVIDENCE.md`.
-
