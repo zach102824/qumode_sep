@@ -1,28 +1,28 @@
 # SNAP-easy executor status
 
-_Updated 2026-11-03 07:46 Asia/Shanghai_
+_Updated 2026-11-03 09:32 Asia/Shanghai_
 
 ## Alive
-- kerr_polish **1073389** — `kp_fewm2_cvar975_n12n15_long_s22` ~80/1400
+- kerr_polish **1073389** — `kp_fewm2_cvar097_n12n15_hiLeak_s22` just started (~40/1200)
 - angle polish **624526** (untouched)
-- watch **1073382** (explore paused; NEW IDEA in watch arm-list, NOT in current polish argv)
+- watch **1073382** (explore paused; NEW IDEA in watch launch arm-list, NOT in live polish argv)
 - STOP / BEAT_SEALED_2PARAM: absent
 
 ## Best ≤2-param (completed full)
 `kp_fewm2_adam1800_n12n15_s55_full` bottleneck **1.233×** (n18 2.037/13.998) — no dual-beat
 
-## Slow arm DONE (all ≥1.235×)
-| tag | n18 Med/B90 | bottleneck |
-|-----|-------------|------------|
-| adam1800 s55 | 2.037/13.998 | **1.233×** BEST |
-| slow s22 | 2.025/14.577 | 1.284× |
-| slow s10 | 2.037/14.024 | 1.235× |
-| slow s0 | 2.025/14.395 | 1.268× |
-| slow s33 | 2.033/14.066 | 1.239× |
-| slow s44 | 2.034/14.240 | 1.254× |
-| slow s55 | 2.036/14.017 | 1.235× |
+## cvar975 DONE (all 6 seeds) — no beat; floor intact
+| seed | n18 Med/B90 | bottleneck |
+|------|-------------|------------|
+| 22 | 2.017/14.671 | 1.292× |
+| 10 | 2.038/14.028 | 1.236× |
+| 0 | 2.025/14.531 | 1.280× |
+| 33 | 2.032/14.099 | 1.242× |
+| 44 | 2.039/14.034 | 1.236× |
+| 55 | 2.037/14.017 | 1.235× |
 
 ## Now / next
-cvar975 (6 seeds) → hiLeak (6 seeds) → **kill+relaunch NEW IDEA** → n15-from-polish → n15n18 last
+hiLeak (6 seeds, 1200 steps) → **kill+relaunch NEW IDEA** (watch arm-list: gproj/shared/softplus/shell; skip-done) → n15-from-polish → n15n18 last
 
-Floor still ~1.23–1.24×. Current polish argv lacks NEW IDEA — relaunch after hiLeak.
+Floor still **1.233×**. Live polish argv still lacks NEW IDEA.
+ETA hiLeak ≈ 6×~15 min ≈ 1.5h.
