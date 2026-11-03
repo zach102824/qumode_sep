@@ -47,30 +47,29 @@ Edges ratio69_w9 on n12/n15. p_final≈0.0515. Params: `champion/params_L16_trai
 | 4 | 0.9339 | 0.8905 | 0.8881 | 0.8990 |
 | 5 | 0.9376 | 0.9008 | 0.8994 | 0.9135 |
 
-## L=2 — NO ALL_CORE yet (_live 2026-11-03 23:24 Asia/Shanghai_)
+## L=2 — NO ALL_CORE yet (_live 2026-11-03 23:35 Asia/Shanghai_)
 
-Best n15 so far **0.9867** (n9med ρ0.05 s2). Alpha_ray L16-distill rays DEAD. Shrink_p BEATs n6/9(/12) but n15≥1.00.
+Best n15 so far **0.9865** (n9med ρ0.05 s7). n9med ρ0.05 seeds 0–7 DONE. ρ0.03/0.08 + dense_trust running. Round 3: pareto_blend + dense_micro queued.
 
 | n15 R | n6 | n9 | n12 | ALL | path |
 |-------|----|----|-----|-----|------|
+| 0.9865 | 0.9873 | 1.0016 | 0.9957 | False | trust69/n9med_rho005/eval_L2_seed7.json |
+| 0.9866 | 0.9871 | 1.0018 | 0.9953 | False | trust69/n9med_rho005/eval_L2_seed5.json |
 | 0.9867 | 0.9888 | 1.0009 | 0.9953 | False | trust69/n9med_rho005/eval_L2_seed2.json |
 | 0.9871 | 0.9859 | 1.0018 | 0.9944 | False | trust69/rho0.05/eval_L2_seed0.json |
 | 0.9882 | 0.9795 | 1.0015 | 0.9933 | False | alpha_ray/eval_L2_n9med_s0_s1.json |
 | 0.9883 | 0.9815 | 1.0026 | 0.9962 | False | trust69/n9med_rho005/eval_L2_seed0.json |
 | 0.9884 | 0.9900 | 0.9964 | 0.9915 | False | trust69/n9med_rho005/eval_L2_seed3.json |
 | 0.9885 | 0.9896 | 0.9980 | 0.9925 | False | trust69/n9med_rho005/eval_L2_seed1.json |
+| 0.9888 | 0.9852 | 0.9988 | 0.9991 | False | trust69/n9med_rho0.03/eval_L2_seed0.json |
 | 0.9893 | 0.9824 | 1.0012 | 0.9973 | False | alpha_ray/eval_L2_n9med_s0_s0.json |
+| 0.9894 | 0.9901 | 0.9973 | 0.9933 | False | trust69/n9med_rho005/eval_L2_seed6.json |
 | 0.9910 | 0.9739 | 1.0016 | 0.9925 | False | alpha_ray/eval_L2_trust_rho005_s0.json |
-| 0.9924 | 0.9768 | 0.9993 | 0.9906 | False | alpha_ray/eval_L2_trust_rho005_s1.json |
-| 0.9931 | 0.9733 | 0.9965 | 0.9911 | False | trust69/eval_L2_seed0.json |
 | 0.9936 | 0.9813 | 1.0028 | 0.9963 | False | trust69/n9med_rho005/eval_L2_seed4.json |
-| 0.9940 | 0.9719 | 0.9919 | 0.9900 | False | alpha_ray/eval_L2_trust_rho01_s1.json |
-| 0.9963 | 0.9697 | 0.9952 | 0.9912 | False | alpha_ray/eval_L2_trust_rho01_s0.json |
-| 0.9977 | 0.9705 | 0.9912 | 0.9853 | False | trust69/rho0.2/eval_L2_seed0.json |
 | 0.9982 | 0.9570 | 0.9765 | 0.9786 | False | alpha_ray/eval_L2_ratio69_s0_s1.json |
 
-Running: n9med ρ0.05 s5–7 → then ρ∈{0.03,0.08}; dense trust-ball search next.
+Running: n9med ρ0.03/0.08; dense_trust ρ0.05→0.08; cloud bc-ca109616; R3 pareto_blend+dense_micro.
 
 ## Cloud
 - L16 Idea1+Idea2 FINISHED. Champ=power_p s0.
-
+- L2 dense+n9med: bc-ca109616 RUNNING.
