@@ -1,6 +1,6 @@
 # train69 RESULTS — train{6,9} only → CORE eval
 
-_Updated 2026-11-03 23:18 Asia/Shanghai_
+_Updated 2026-11-04 00:40 Asia/Shanghai — L=2 CAPACITY FINAL_
 
 BEAT = R≤0.98. Gates locked. R1=Opus; R2+=Grok 4.6.
 
@@ -57,53 +57,31 @@ Branch `cursor/beat-qaoa-l2-train69-28cb` tip harvested 2026-11-04 ~00:00 Asia/S
 - Best cloud n15 R = **0.9878** (n9med ρ0.03 s3). Dense ρ0.05/0.08: all starts → same basin.
 - Objective gap confirmed: median(inv/inv_Q) ≠ Med(inv)/Med(inv_Q). Next: `--loss med_align`.
 
-## L=2 — NO ALL_CORE yet (_live 2026-11-03 23:35 Asia/Shanghai_)
+## L=2 — CAPACITY NEAR-MISS FINAL (2026-11-04 ~00:40 Asia/Shanghai)
 
-Best n15 so far **0.9853** (pareto_blend α=0.80 s1; n6/n9 BEAT, n12 0.9858 TIE). Prev n9med 0.9865. n9med ρ0.05 seeds 0–7 DONE. ρ0.03/0.08 + dense_trust running. Round 3: pareto_blend + dense_micro queued.
+**ALL_CORE_BEAT = False.** Soft_q clouds + box soft_q closed; declare stands.
+
+Champ unchanged: pareto_blend α=0.80 s1 — n6 **0.9573 BEAT**, n9 **0.9782 BEAT**, n12 **0.9858 TIE**, n15 **0.9853 TIE** (knee **0.9858**).
+≥230 n6&n9-BEAT CORE evals on box; **0** ALL_CORE across box + clouds.
+
+### Soft_q cloud harvest
+- **bc-5198772e** Round3 denser → `cursor/train69-l2-round3-denser-76da`: pareto_fine 280 evals; best n15=0.9850 with n9 TIE; among n6&n9 BEAT, knee ≥0.9867; n6+n9+n12 BEAT forces n15≥0.9891. **no ALL_CORE**.
+- **bc-0fa5a09f** med_align → `cursor/l2-med-align-sweeps-b563`: 40 soft_q=0.5 + Ideas C/B/E; n15≥0.985 on every primary start; published knee unchanged. **no ALL_CORE**.
+- Box soft_q_delta q∈{0.4,0.35}×ρ∈{0.015,0.025,0.04}×s0–3: **24/24** False; best softq n6&n9-BEAT knee ≈0.9894.
+
+### Earlier L=2 snapshot (pre-finalize)
+Best n15 among n6&n9 BEAT remains **0.9853**. Dense/n9med/med_align/hinge/radial did not improve the knee.
 
 | n15 R | n6 | n9 | n12 | ALL | path |
 |-------|----|----|-----|-----|------|
+| 0.9853 | 0.9573 | 0.9782 | 0.9858 | False | pareto_blend/eval_L2_a0.80_s1.json |
 | 0.9865 | 0.9873 | 1.0016 | 0.9957 | False | trust69/n9med_rho005/eval_L2_seed7.json |
-| 0.9866 | 0.9871 | 1.0018 | 0.9953 | False | trust69/n9med_rho005/eval_L2_seed5.json |
-| 0.9867 | 0.9888 | 1.0009 | 0.9953 | False | trust69/n9med_rho005/eval_L2_seed2.json |
-| 0.9871 | 0.9859 | 1.0018 | 0.9944 | False | trust69/rho0.05/eval_L2_seed0.json |
-| 0.9882 | 0.9795 | 1.0015 | 0.9933 | False | alpha_ray/eval_L2_n9med_s0_s1.json |
-| 0.9883 | 0.9815 | 1.0026 | 0.9962 | False | trust69/n9med_rho005/eval_L2_seed0.json |
-| 0.9884 | 0.9900 | 0.9964 | 0.9915 | False | trust69/n9med_rho005/eval_L2_seed3.json |
-| 0.9885 | 0.9896 | 0.9980 | 0.9925 | False | trust69/n9med_rho005/eval_L2_seed1.json |
-| 0.9888 | 0.9852 | 0.9988 | 0.9991 | False | trust69/n9med_rho0.03/eval_L2_seed0.json |
-| 0.9893 | 0.9824 | 1.0012 | 0.9973 | False | alpha_ray/eval_L2_n9med_s0_s0.json |
-| 0.9894 | 0.9901 | 0.9973 | 0.9933 | False | trust69/n9med_rho005/eval_L2_seed6.json |
-| 0.9910 | 0.9739 | 1.0016 | 0.9925 | False | alpha_ray/eval_L2_trust_rho005_s0.json |
-| 0.9936 | 0.9813 | 1.0028 | 0.9963 | False | trust69/n9med_rho005/eval_L2_seed4.json |
-| 0.9982 | 0.9570 | 0.9765 | 0.9786 | False | alpha_ray/eval_L2_ratio69_s0_s1.json |
+| 0.9878 | — | — | — | False | cloud n9med ρ0.03 s3 (pre-med_align best) |
 
-Running: n9med ρ0.03/0.08; dense_trust ρ0.05→0.08; cloud bc-ca109616; R3 pareto_blend+dense_micro.
-
-## Cloud
+## Cloud (closed)
 - L16 Idea1+Idea2 FINISHED. Champ=power_p s0.
-- L2 dense+n9med: bc-ca109616 RUNNING.
+- L2 dense+n9med bc-ca109616 FINISHED no-BEAT.
+- L2 Round3 denser bc-5198772e FINISHED no-BEAT.
+- L2 med_align bc-0fa5a09f FINISHED no-BEAT.
 
-## L=2 med_align (Idea A) — 2026-11-04 Asia/Shanghai
-
-Gate = Med(inv)/QAOA_Med. Loss `--loss med_align` = log(soft_quantile(inv_p)/QAOA_Med_train).
-
-| variant | best knee max(R12,R15) | notes |
-|---------|------------------------|-------|
-| trust69 QAOA-warm ρ0.05–0.12 | ~0.990–0.997 | R9≈1.00 same basin as dense |
-| n9med med_align | ~0.989–0.993 | R9 still ~1.00 on CORE |
-| origin-ball "warm" ρ0.04 (BUG) | 0.996 (3 BEAT n6/9/12) | projected toward QAOA origin; Pareto slide |
-| champ↔warm blend | **0.9858 at a=1** | smooth front; champ dominates knee |
-| delta-ball around champ ρ0.01 | 0.9866 best so far | no beat of champ knee |
-| radial ε on champ | **0.9858 at ε=0** | ε≠0 raises knee; local min at champ |
-
-**ALL_CORE_BEAT = False.** Champ still `pareto_blend/eval_L2_a0.80_s1.json` (n6=0.9573 n9=0.9782 n12=0.9858 n15=0.9853).
-Cloud bc-0fa5a09f + bc-5198772e still RUNNING on med_align. Capacity NOT declared.
-
-## L=2 CAPACITY NEAR-MISS (2026-11-04 ~00:25 Asia/Shanghai)
-
-**ALL_CORE_BEAT = False.** Empirical basin claim under locked gates/train{6,9}.
-Best: pareto α=0.80 s1 — n6=0.9573 BEAT, n9=0.9782 BEAT, n12=0.9858 TIE, n15=0.9853 TIE (knee 0.9858).
-≥163 n6&n9-BEAT CORE evals; radial ε local min at champ; med_align/dense/n9med/hinge/soft_q=0.4 do not improve knee.
-Details: `CAPACITY_L2_EVIDENCE.md`.
-
+Details: `CAPACITY_L2_EVIDENCE.md`. **L=2 shallow hunt wrapped.**
