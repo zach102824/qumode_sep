@@ -244,8 +244,11 @@ def t9_train_count(s: Suite):
 
 
 def t10_eval_ns(s: Suite):
-    s.check("T10_eval_range", S.EVAL_NS == tuple(range(6, 19)))
-    s.check("T10_sim_ns", S.EVAL_NS_SIM == (6, 9, 12, 15, 18), str(S.EVAL_NS_SIM))
+    s.check("T10_eval_range", S.EVAL_NS == tuple(range(6, 22)))
+    s.check("T10_sim_ns", S.EVAL_NS_SIM == (6, 9, 12, 15), str(S.EVAL_NS_SIM))
+    s.check("T10_core", S.EVAL_NS_CORE == (6, 9, 12, 15), str(S.EVAL_NS_CORE))
+    s.check("T10_pass2", S.EVAL_NS_PASS2 == (18,), str(S.EVAL_NS_PASS2))
+    s.check("T10_pass3", S.EVAL_NS_PASS3 == (21,), str(S.EVAL_NS_PASS3))
 
 
 def t11_killed_form(s: Suite):

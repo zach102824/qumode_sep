@@ -153,7 +153,7 @@ def eval_scale_ladder(
     max_count: int = S.SCALE_B,
 ) -> dict:
     if ns is None:
-        ns = list(S.EVAL_NS_SIM)
+        ns = list(S.EVAL_NS_CORE)
     ladder = {}
     for n in ns:
         pack = S.SCALE1000_DIR / f"data_n{n}.npz"
@@ -202,9 +202,23 @@ def eval_scale_ladder(
     return ladder
 
 
-def ensure_qaoa_paper_n6(L: int, *, device: torch.device | None = None, force: bool = False) -> Path:
-    """Train+eval paper-init QAOA into qaoa_angles/L{L}/ if missing or not paper-n6."""
+def ensure_qaoa_paper_n6(
+    L: int,
+    *,
+    device: torch.device | None = None,
+    force: bool = False,
+    ns=None,
+) -> Path:
+    """Train+eval paper-init QAOA into qaoa_angles/L{L}/ if missing or not paper-n6.
+
+    ``ns`` defaults to EVAL_NS_CORE (6,9,12,15) — do NOT pull n18/n21 into the
+    primary ladder (t2495u). Pass EVAL_NS_PASS2 / PASS3 for later fills.
+    """
     L = int(L)
+    if ns is None:
+        ns = list(S.EVAL_NS_CORE)
+    else:
+        ns = [int(x) for x in ns]
     out = S.QAOA_DIR / f"L{L}"
     out.mkdir(parents=True, exist_ok=True)
     angles_path = out / "angles.json"
@@ -230,14 +244,13 @@ def ensure_qaoa_paper_n6(L: int, *, device: torch.device | None = None, force: b
         blob = json.loads(angles_path.read_text())
         log(f"QAOA L{L}: reuse paper-n6 angles @ {angles_path}")
 
-    # ensure scale1000 results cover EVAL_NS_SIM
+    # ensure scale1000 results cover requested ns (CORE by default)
     need_eval = force or not results_path.exists()
-    existing = {}
     if results_path.exists() and not force:
         try:
             existing = json.loads(results_path.read_text())
             ladder = {int(k): v for k, v in (existing.get("ladder") or {}).items()}
-            if all(n in ladder for n in S.EVAL_NS_SIM):
+            if all(n in ladder for n in ns):
                 need_eval = False
             else:
                 need_eval = True
@@ -254,9 +267,11 @@ def ensure_qaoa_paper_n6(L: int, *, device: torch.device | None = None, force: b
                 have = {int(k) for k in (json.loads(results_path.read_text()).get("ladder") or {})}
             except Exception:
                 have = set()
-        missing = [n for n in S.EVAL_NS_SIM if n not in have]
+        missing = [n for n in ns if n not in have]
         if force:
-            missing = list(S.EVAL_NS_SIM)
+            missing = list(ns)
+        # skip ns with no pack
+        missing = [n for n in missing if (S.SCALE1000_DIR / f"data_n{n}.npz").exists()]
         log(f"QAOA L{L}: eval scale1000 ns={missing}")
         fresh = eval_scale_ladder(L, betas, gammas, device=device, ns=missing)
         if results_path.exists() and not force:

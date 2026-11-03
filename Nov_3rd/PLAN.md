@@ -26,7 +26,7 @@ Warm dual-QAOA map (locked):
 | Init | **QAOA-warm** |
 | Train | **n=6 × 1000**, **L-BFGS only** |
 | L | **\{1,4,8,12,16,20,24,28,32\}** small→large |
-| Eval n | **6→18** (sim: 6,9,12,15,18), scale1000 **B=1000** |
+| Eval n | **CORE first** (6,9,12,15) all L → then **18** → then **21**; B=1000 |
 | QAOA angle init | **β=0.01, γ=−0.01**, **nstart=1** (arXiv:2208.06909 §Parameter optimization; one train) |
 | QAOA convention | qaoa_ref \(U_C=e^{-i\gamma C_n}\), \(U_B=e^{-i\beta X/2}\) |
 

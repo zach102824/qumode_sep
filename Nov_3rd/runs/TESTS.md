@@ -1,8 +1,8 @@
 # Nov_3rd — TESTS
 
-_Asia/Shanghai 2026-11-03 16:22_
+_Asia/Shanghai 2026-11-03 16:29_
 
-**48 passed / 0 failed**
+**50 passed / 0 failed**
 
 ## Passed
 - T1a_locks_ok
@@ -28,7 +28,6 @@ _Asia/Shanghai 2026-11-03 16:22_
 - T3_C_n9
 - T3_C_n12
 - T3_C_n15
-- T3_C_n18
 - T3_W_is_H3
 - T3_W_hermitian
 - T4_phi_shape
@@ -44,6 +43,9 @@ _Asia/Shanghai 2026-11-03 16:22_
 - T9_max_train_1000
 - T10_eval_range
 - T10_sim_ns
+- T10_core
+- T10_pass2
+- T10_pass3
 - T11_vacuum_start
 - T11_final_W_comment
 - T11_no_killed_prepW_arm
