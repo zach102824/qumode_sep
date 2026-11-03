@@ -9,7 +9,7 @@ _Asia/Shanghai 2026-11-03 — Zach t2442–t2458_
 |0\rangle \xrightarrow{[U_c^{X}\to\mathrm{bare\,SNAP}]^{L}} W \to \text{Fock},
 \quad U_c^{X}=W\,D\,W,\quad D=\mathrm{e}^{-i\gamma E},\quad W=H^{\otimes 3}.
 \]
-**3 bits/cavity**. Binary. QAOA-warm shared shell. Train n=6×1000, **L-BFGS only**.
+**3 bits/cavity**. Binary. QAOA-warm shared **Hamming-shell SNAP** (φ_k, k=0..3 via popcount; code `SNAP_HEAD="shell"`). Train n=6×1000, **L-BFGS only**.
 
 Warm dual-QAOA map (locked):
 \[
@@ -22,7 +22,7 @@ Warm dual-QAOA map (locked):
 | knob | value |
 |------|-------|
 | bits/cavity | **3** |
-| W / SNAP | **BinH** / **shell** (shared cavities, per layer) |
+| W / SNAP | **BinH** / **Hamming-shell** (φ_k k=0..3; shared cavities, per layer) |
 | Init | **QAOA-warm** |
 | Train | **n=6 × 1000**, **L-BFGS only** |
 | L | **\{1,4,8,12,16,20,24,28,32\}** small→large |
