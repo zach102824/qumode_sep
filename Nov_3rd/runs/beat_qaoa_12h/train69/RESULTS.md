@@ -138,3 +138,13 @@ Cloud bc-0fa5a09f + bc-5198772e still RUNNING on med_align. Capacity NOT declare
 Best: pareto α=0.80 s1 — n6=0.9573 BEAT, n9=0.9782 BEAT, n12=0.9858 TIE, n15=0.9853 TIE (knee 0.9858).
 ≥163 n6&n9-BEAT CORE evals; radial ε local min at champ; med_align/dense/n9med/hinge/soft_q=0.4 do not improve knee.
 Details: `CAPACITY_L2_EVIDENCE.md`.
+
+## L=2 delta-ball warm (2026-11-03 16:52 UTC)
+
+Origin-ball polish is the wrong geometry: champ ‖(c2,c3)‖=0.0519, so ρ≤0.04 around 0 shrinks toward QAOA. `train69_med_align_warm.py` projects the step onto a ball **centered on the champ**. γ,c1 frozen. QAOA-warm med_align sweeps (ρ around 0) are unchanged and still in this branch.
+
+Champ restored by replaying `train69_pareto_blend.py` (bit-match to the published knee): `pareto_blend/eval_L2_a0.80_s1.json` and `champion/params_L2_train69_pareto_a080_s1.pt` — n6=0.9573 n9=0.9782 n12=0.9858 n15=0.9853.
+
+Delta grid: ρ∈{0.01,0.02,0.03,0.04} × soft_q∈{0.5} and ρ∈{0.02,0.04} × soft_q∈{0.4,0.35}, seeds 0–5, 200 Adam. 48 scale1000 CORE evals. **ALL_CORE_BEAT = False.**
+
+Best joint: `trust69/med_align_delta_rho0.01_q0.5/eval_L2_seed5.json` — n6=0.9574 BEAT, n9=0.9773 BEAT, n12=0.9851 TIE, n15=0.9851 TIE. Displacement from champ ‖Δ(c2,c3)‖=0.0072 (inside ρ=0.01); ‖(c2,c3)‖ stays 0.0508. Knee improves 0.9858→0.9851 and still misses 0.98 by ~0.005. soft_q=0.4 best n12=0.9799 BEAT with n15=0.9894 (`med_align_delta_rho0.04_q0.4/eval_L2_seed2.json`).

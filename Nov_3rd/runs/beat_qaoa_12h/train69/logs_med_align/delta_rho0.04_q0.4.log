@@ -1,0 +1,395 @@
+16:48:29 [Nov_3rd] warm init=/agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/champion/params_L2_train69_pareto_a080_s1.pt rho=0.04 qmed={6: 4.899146556854248, 9: 12.524079322814941}
+/agent/repos/qumode_sep/Nov_3rd/scripts/train69_med_align_warm.py:120: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  log(f"warm s{seed} adam{step} loss={float(loss):.5f} hold={sc:.5f}")
+16:48:30 [Nov_3rd] warm s0 adam0 loss=-0.21451 hold=-0.19669
+16:48:32 [Nov_3rd] warm s0 adam25 loss=-0.15051 hold=-0.19844
+16:48:35 [Nov_3rd] warm s0 adam50 loss=-0.14571 hold=-0.19844
+16:48:37 [Nov_3rd] warm s0 adam75 loss=-0.34173 hold=-0.19846
+16:48:39 [Nov_3rd] warm s0 adam100 loss=-0.26308 hold=-0.19801
+16:48:41 [Nov_3rd] warm s0 adam125 loss=-0.12501 hold=-0.19780
+16:48:43 [Nov_3rd] warm s0 adam150 loss=-0.32162 hold=-0.19862
+16:48:45 [Nov_3rd] warm s0 adam175 loss=-0.10327 hold=-0.19788
+16:48:48 [Nov_3rd] warm s0 adam199 loss=-0.12575 hold=-0.19805
+16:48:48 [Nov_3rd] eval n6 100/1000 Med≈4.788 (3426.97/s)
+16:48:48 [Nov_3rd] eval n6 200/1000 Med≈4.892 (3727.62/s)
+16:48:48 [Nov_3rd] eval n6 300/1000 Med≈5.047 (3861.31/s)
+16:48:48 [Nov_3rd] eval n6 400/1000 Med≈4.998 (3925.99/s)
+16:48:48 [Nov_3rd] eval n6 500/1000 Med≈5.091 (3975.59/s)
+16:48:48 [Nov_3rd] eval n6 600/1000 Med≈5.041 (4007.91/s)
+16:48:48 [Nov_3rd] eval n6 700/1000 Med≈5.091 (4025.00/s)
+16:48:48 [Nov_3rd] eval n6 800/1000 Med≈5.121 (4036.49/s)
+16:48:48 [Nov_3rd] eval n6 900/1000 Med≈5.109 (4046.53/s)
+16:48:48 [Nov_3rd] eval n6 1000/1000 Med≈5.115 (4059.08/s)
+16:48:48 [Nov_3rd] eval trust69 L2 n6: Med=5.1146 Q=5.3257 R=0.9604 BEAT
+16:48:48 [Nov_3rd] eval n9 100/1000 Med≈10.883 (2679.47/s)
+16:48:48 [Nov_3rd] eval n9 200/1000 Med≈10.674 (2633.98/s)
+16:48:48 [Nov_3rd] eval n9 300/1000 Med≈11.712 (2666.02/s)
+16:48:48 [Nov_3rd] eval n9 400/1000 Med≈12.694 (2676.44/s)
+16:48:48 [Nov_3rd] eval n9 500/1000 Med≈12.528 (2685.16/s)
+16:48:48 [Nov_3rd] eval n9 600/1000 Med≈12.213 (2690.13/s)
+16:48:48 [Nov_3rd] eval n9 700/1000 Med≈12.403 (2697.39/s)
+16:48:48 [Nov_3rd] eval n9 800/1000 Med≈12.286 (2699.29/s)
+16:48:48 [Nov_3rd] eval n9 900/1000 Med≈12.381 (2703.64/s)
+16:48:48 [Nov_3rd] eval n9 1000/1000 Med≈12.367 (2708.39/s)
+16:48:48 [Nov_3rd] eval trust69 L2 n9: Med=12.3669 Q=12.6416 R=0.9783 BEAT
+16:48:48 [Nov_3rd] eval n12 100/1000 Med≈32.457 (1360.68/s)
+16:48:48 [Nov_3rd] eval n12 200/1000 Med≈32.512 (1377.54/s)
+16:48:48 [Nov_3rd] eval n12 300/1000 Med≈31.305 (1362.92/s)
+16:48:49 [Nov_3rd] eval n12 400/1000 Med≈29.384 (1369.67/s)
+16:48:49 [Nov_3rd] eval n12 500/1000 Med≈29.004 (1370.40/s)
+16:48:49 [Nov_3rd] eval n12 600/1000 Med≈29.283 (1375.87/s)
+16:48:49 [Nov_3rd] eval n12 700/1000 Med≈29.372 (1377.91/s)
+16:48:49 [Nov_3rd] eval n12 800/1000 Med≈29.333 (1381.23/s)
+16:48:49 [Nov_3rd] eval n12 900/1000 Med≈29.283 (1385.58/s)
+16:48:49 [Nov_3rd] eval n12 1000/1000 Med≈28.972 (1387.94/s)
+16:48:49 [Nov_3rd] eval trust69 L2 n12: Med=28.9720 Q=29.6063 R=0.9786 BEAT
+16:48:50 [Nov_3rd] eval n15 50/1000 Med≈78.421 (293.82/s)
+16:48:50 [Nov_3rd] eval n15 100/1000 Med≈71.788 (295.54/s)
+16:48:50 [Nov_3rd] eval n15 150/1000 Med≈70.395 (297.06/s)
+16:48:50 [Nov_3rd] eval n15 200/1000 Med≈77.041 (297.51/s)
+16:48:50 [Nov_3rd] eval n15 250/1000 Med≈79.958 (297.94/s)
+16:48:51 [Nov_3rd] eval n15 300/1000 Med≈81.104 (296.70/s)
+16:48:51 [Nov_3rd] eval n15 350/1000 Med≈80.856 (296.63/s)
+16:48:51 [Nov_3rd] eval n15 400/1000 Med≈80.596 (295.37/s)
+16:48:51 [Nov_3rd] eval n15 450/1000 Med≈79.199 (295.13/s)
+16:48:51 [Nov_3rd] eval n15 500/1000 Med≈78.116 (294.21/s)
+16:48:51 [Nov_3rd] eval n15 550/1000 Med≈77.953 (293.53/s)
+16:48:52 [Nov_3rd] eval n15 600/1000 Med≈77.206 (293.10/s)
+16:48:52 [Nov_3rd] eval n15 650/1000 Med≈77.857 (292.95/s)
+16:48:52 [Nov_3rd] eval n15 700/1000 Med≈77.931 (292.52/s)
+16:48:52 [Nov_3rd] eval n15 750/1000 Med≈76.871 (292.61/s)
+16:48:52 [Nov_3rd] eval n15 800/1000 Med≈76.333 (292.74/s)
+16:48:52 [Nov_3rd] eval n15 850/1000 Med≈76.539 (292.70/s)
+16:48:53 [Nov_3rd] eval n15 900/1000 Med≈76.166 (291.96/s)
+16:48:53 [Nov_3rd] eval n15 950/1000 Med≈75.334 (291.86/s)
+16:48:53 [Nov_3rd] eval n15 1000/1000 Med≈75.766 (291.36/s)
+16:48:53 [Nov_3rd] eval trust69 L2 n15: Med=75.7656 Q=76.0878 R=0.9958 TIE
+16:48:53 [Nov_3rd] wrote /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/trust69/med_align_delta_rho0.04_q0.4/eval_L2_seed0.json ALL_CORE_BEAT=False
+16:48:53 [Nov_3rd] warm s0 ALL=False R={6: 0.9603640723389963, 9: 0.9782699932981483, 12: 0.9785754818529343, 15: 0.9957651725670956}
+16:48:53 [Nov_3rd] warm s1 adam0 loss=-0.11811 hold=-0.18438
+16:48:55 [Nov_3rd] warm s1 adam25 loss=-0.20919 hold=-0.23181
+16:48:58 [Nov_3rd] warm s1 adam50 loss=-0.25238 hold=-0.24566
+16:49:00 [Nov_3rd] warm s1 adam75 loss=-0.12452 hold=-0.24649
+16:49:02 [Nov_3rd] warm s1 adam100 loss=-0.02610 hold=-0.24664
+16:49:05 [Nov_3rd] warm s1 adam125 loss=-0.27295 hold=-0.24669
+16:49:07 [Nov_3rd] warm s1 adam150 loss=-0.08991 hold=-0.24665
+16:49:09 [Nov_3rd] warm s1 adam175 loss=-0.10690 hold=-0.24676
+16:49:11 [Nov_3rd] warm s1 adam199 loss=-0.11970 hold=-0.24670
+16:49:11 [Nov_3rd] eval n6 100/1000 Med≈4.792 (4242.93/s)
+16:49:11 [Nov_3rd] eval n6 200/1000 Med≈4.907 (4205.85/s)
+16:49:11 [Nov_3rd] eval n6 300/1000 Med≈5.048 (4204.59/s)
+16:49:11 [Nov_3rd] eval n6 400/1000 Med≈5.008 (4200.48/s)
+16:49:11 [Nov_3rd] eval n6 500/1000 Med≈5.092 (4211.39/s)
+16:49:11 [Nov_3rd] eval n6 600/1000 Med≈5.052 (4213.13/s)
+16:49:11 [Nov_3rd] eval n6 700/1000 Med≈5.090 (4210.65/s)
+16:49:11 [Nov_3rd] eval n6 800/1000 Med≈5.121 (4206.50/s)
+16:49:11 [Nov_3rd] eval n6 900/1000 Med≈5.114 (4209.75/s)
+16:49:11 [Nov_3rd] eval n6 1000/1000 Med≈5.116 (4208.44/s)
+16:49:11 [Nov_3rd] eval trust69 L2 n6: Med=5.1157 Q=5.3257 R=0.9606 BEAT
+16:49:11 [Nov_3rd] eval n9 100/1000 Med≈10.866 (2433.10/s)
+16:49:11 [Nov_3rd] eval n9 200/1000 Med≈10.680 (2015.41/s)
+16:49:11 [Nov_3rd] eval n9 300/1000 Med≈11.712 (2131.04/s)
+16:49:11 [Nov_3rd] eval n9 400/1000 Med≈12.692 (2250.84/s)
+16:49:12 [Nov_3rd] eval n9 500/1000 Med≈12.522 (2326.55/s)
+16:49:12 [Nov_3rd] eval n9 600/1000 Med≈12.202 (2381.31/s)
+16:49:12 [Nov_3rd] eval n9 700/1000 Med≈12.409 (2420.80/s)
+16:49:12 [Nov_3rd] eval n9 800/1000 Med≈12.263 (2413.27/s)
+16:49:12 [Nov_3rd] eval n9 900/1000 Med≈12.382 (2440.95/s)
+16:49:12 [Nov_3rd] eval n9 1000/1000 Med≈12.364 (2464.52/s)
+16:49:12 [Nov_3rd] eval trust69 L2 n9: Med=12.3635 Q=12.6416 R=0.9780 BEAT
+16:49:12 [Nov_3rd] eval n12 100/1000 Med≈32.409 (1351.61/s)
+16:49:12 [Nov_3rd] eval n12 200/1000 Med≈32.416 (1376.20/s)
+16:49:12 [Nov_3rd] eval n12 300/1000 Med≈31.347 (1381.05/s)
+16:49:12 [Nov_3rd] eval n12 400/1000 Med≈29.429 (1383.29/s)
+16:49:12 [Nov_3rd] eval n12 500/1000 Med≈29.035 (1386.43/s)
+16:49:12 [Nov_3rd] eval n12 600/1000 Med≈29.263 (1383.30/s)
+16:49:12 [Nov_3rd] eval n12 700/1000 Med≈29.417 (1385.90/s)
+16:49:12 [Nov_3rd] eval n12 800/1000 Med≈29.340 (1387.60/s)
+16:49:12 [Nov_3rd] eval n12 900/1000 Med≈29.306 (1389.92/s)
+16:49:12 [Nov_3rd] eval n12 1000/1000 Med≈29.019 (1381.95/s)
+16:49:12 [Nov_3rd] eval trust69 L2 n12: Med=29.0186 Q=29.6063 R=0.9801 TIE
+16:49:13 [Nov_3rd] eval n15 50/1000 Med≈78.565 (298.59/s)
+16:49:13 [Nov_3rd] eval n15 100/1000 Med≈71.631 (295.99/s)
+16:49:14 [Nov_3rd] eval n15 150/1000 Med≈70.318 (297.97/s)
+16:49:14 [Nov_3rd] eval n15 200/1000 Med≈77.143 (297.91/s)
+16:49:14 [Nov_3rd] eval n15 250/1000 Med≈80.069 (298.23/s)
+16:49:14 [Nov_3rd] eval n15 300/1000 Med≈81.357 (298.75/s)
+16:49:14 [Nov_3rd] eval n15 350/1000 Med≈80.888 (299.08/s)
+16:49:14 [Nov_3rd] eval n15 400/1000 Med≈80.767 (299.27/s)
+16:49:15 [Nov_3rd] eval n15 450/1000 Med≈79.354 (298.63/s)
+16:49:15 [Nov_3rd] eval n15 500/1000 Med≈78.290 (298.98/s)
+16:49:15 [Nov_3rd] eval n15 550/1000 Med≈78.051 (299.21/s)
+16:49:15 [Nov_3rd] eval n15 600/1000 Med≈77.352 (299.50/s)
+16:49:15 [Nov_3rd] eval n15 650/1000 Med≈77.772 (299.63/s)
+16:49:15 [Nov_3rd] eval n15 700/1000 Med≈77.985 (299.78/s)
+16:49:16 [Nov_3rd] eval n15 750/1000 Med≈76.955 (298.50/s)
+16:49:16 [Nov_3rd] eval n15 800/1000 Med≈76.310 (297.99/s)
+16:49:16 [Nov_3rd] eval n15 850/1000 Med≈76.617 (298.20/s)
+16:49:16 [Nov_3rd] eval n15 900/1000 Med≈76.090 (298.41/s)
+16:49:16 [Nov_3rd] eval n15 950/1000 Med≈75.251 (298.60/s)
+16:49:16 [Nov_3rd] eval n15 1000/1000 Med≈75.345 (298.81/s)
+16:49:16 [Nov_3rd] eval trust69 L2 n15: Med=75.3448 Q=76.0878 R=0.9902 TIE
+16:49:16 [Nov_3rd] wrote /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/trust69/med_align_delta_rho0.04_q0.4/eval_L2_seed1.json ALL_CORE_BEAT=False
+16:49:16 [Nov_3rd] warm s1 ALL=False R={6: 0.9605625275130479, 9: 0.9780053894515061, 12: 0.9801481291007027, 15: 0.9902339799783646}
+16:49:17 [Nov_3rd] warm s2 adam0 loss=-0.17156 hold=-0.07383
+16:49:19 [Nov_3rd] warm s2 adam25 loss=-0.29141 hold=-0.09738
+16:49:21 [Nov_3rd] warm s2 adam50 loss=-0.07480 hold=-0.09866
+16:49:23 [Nov_3rd] warm s2 adam75 loss=-0.23087 hold=-0.09861
+16:49:25 [Nov_3rd] warm s2 adam100 loss=-0.01782 hold=-0.09869
+16:49:28 [Nov_3rd] warm s2 adam125 loss=-0.27468 hold=-0.09913
+16:49:30 [Nov_3rd] warm s2 adam150 loss=-0.19117 hold=-0.09884
+16:49:32 [Nov_3rd] warm s2 adam175 loss=-0.21455 hold=-0.09891
+16:49:34 [Nov_3rd] warm s2 adam199 loss=-0.24146 hold=-0.09841
+16:49:34 [Nov_3rd] eval n6 100/1000 Med≈4.801 (4173.69/s)
+16:49:34 [Nov_3rd] eval n6 200/1000 Med≈4.912 (4198.23/s)
+16:49:34 [Nov_3rd] eval n6 300/1000 Med≈5.049 (4202.70/s)
+16:49:34 [Nov_3rd] eval n6 400/1000 Med≈5.012 (4199.71/s)
+16:49:34 [Nov_3rd] eval n6 500/1000 Med≈5.098 (4205.03/s)
+16:49:34 [Nov_3rd] eval n6 600/1000 Med≈5.058 (4197.66/s)
+16:49:34 [Nov_3rd] eval n6 700/1000 Med≈5.089 (4194.63/s)
+16:49:34 [Nov_3rd] eval n6 800/1000 Med≈5.118 (4192.26/s)
+16:49:34 [Nov_3rd] eval n6 900/1000 Med≈5.103 (4183.12/s)
+16:49:34 [Nov_3rd] eval n6 1000/1000 Med≈5.115 (4179.03/s)
+16:49:34 [Nov_3rd] eval trust69 L2 n6: Med=5.1151 Q=5.3257 R=0.9605 BEAT
+16:49:34 [Nov_3rd] eval n9 100/1000 Med≈10.862 (2661.23/s)
+16:49:34 [Nov_3rd] eval n9 200/1000 Med≈10.660 (2684.13/s)
+16:49:34 [Nov_3rd] eval n9 300/1000 Med≈11.713 (2690.67/s)
+16:49:34 [Nov_3rd] eval n9 400/1000 Med≈12.714 (2693.94/s)
+16:49:34 [Nov_3rd] eval n9 500/1000 Med≈12.547 (2694.29/s)
+16:49:34 [Nov_3rd] eval n9 600/1000 Med≈12.166 (2668.77/s)
+16:49:35 [Nov_3rd] eval n9 700/1000 Med≈12.409 (2670.91/s)
+16:49:35 [Nov_3rd] eval n9 800/1000 Med≈12.264 (2674.45/s)
+16:49:35 [Nov_3rd] eval n9 900/1000 Med≈12.395 (2676.71/s)
+16:49:35 [Nov_3rd] eval n9 1000/1000 Med≈12.383 (2679.84/s)
+16:49:35 [Nov_3rd] eval trust69 L2 n9: Med=12.3833 Q=12.6416 R=0.9796 BEAT
+16:49:35 [Nov_3rd] eval n12 100/1000 Med≈32.421 (1410.75/s)
+16:49:35 [Nov_3rd] eval n12 200/1000 Med≈32.421 (1417.89/s)
+16:49:35 [Nov_3rd] eval n12 300/1000 Med≈31.346 (1418.91/s)
+16:49:35 [Nov_3rd] eval n12 400/1000 Med≈29.413 (1420.29/s)
+16:49:35 [Nov_3rd] eval n12 500/1000 Med≈29.023 (1416.60/s)
+16:49:35 [Nov_3rd] eval n12 600/1000 Med≈29.298 (1417.88/s)
+16:49:35 [Nov_3rd] eval n12 700/1000 Med≈29.392 (1418.67/s)
+16:49:35 [Nov_3rd] eval n12 800/1000 Med≈29.341 (1420.08/s)
+16:49:35 [Nov_3rd] eval n12 900/1000 Med≈29.323 (1420.97/s)
+16:49:35 [Nov_3rd] eval n12 1000/1000 Med≈29.010 (1421.51/s)
+16:49:35 [Nov_3rd] eval trust69 L2 n12: Med=29.0105 Q=29.6063 R=0.9799 BEAT
+16:49:36 [Nov_3rd] eval n15 50/1000 Med≈78.673 (294.57/s)
+16:49:36 [Nov_3rd] eval n15 100/1000 Med≈71.510 (296.44/s)
+16:49:36 [Nov_3rd] eval n15 150/1000 Med≈70.157 (295.60/s)
+16:49:37 [Nov_3rd] eval n15 200/1000 Med≈77.062 (296.08/s)
+16:49:37 [Nov_3rd] eval n15 250/1000 Med≈79.828 (295.78/s)
+16:49:37 [Nov_3rd] eval n15 300/1000 Med≈81.169 (296.50/s)
+16:49:37 [Nov_3rd] eval n15 350/1000 Med≈80.923 (297.04/s)
+16:49:37 [Nov_3rd] eval n15 400/1000 Med≈80.647 (297.27/s)
+16:49:37 [Nov_3rd] eval n15 450/1000 Med≈79.144 (297.62/s)
+16:49:38 [Nov_3rd] eval n15 500/1000 Med≈78.287 (297.78/s)
+16:49:38 [Nov_3rd] eval n15 550/1000 Med≈78.007 (298.05/s)
+16:49:38 [Nov_3rd] eval n15 600/1000 Med≈77.289 (298.20/s)
+16:49:38 [Nov_3rd] eval n15 650/1000 Med≈77.680 (298.32/s)
+16:49:38 [Nov_3rd] eval n15 700/1000 Med≈78.007 (298.45/s)
+16:49:38 [Nov_3rd] eval n15 750/1000 Med≈76.775 (298.11/s)
+16:49:39 [Nov_3rd] eval n15 800/1000 Med≈76.399 (297.19/s)
+16:49:39 [Nov_3rd] eval n15 850/1000 Med≈76.641 (296.94/s)
+16:49:39 [Nov_3rd] eval n15 900/1000 Med≈76.047 (296.24/s)
+16:49:39 [Nov_3rd] eval n15 950/1000 Med≈75.008 (295.81/s)
+16:49:39 [Nov_3rd] eval n15 1000/1000 Med≈75.285 (295.90/s)
+16:49:39 [Nov_3rd] eval trust69 L2 n15: Med=75.2846 Q=76.0878 R=0.9894 TIE
+16:49:39 [Nov_3rd] wrote /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/trust69/med_align_delta_rho0.04_q0.4/eval_L2_seed2.json ALL_CORE_BEAT=False
+16:49:39 [Nov_3rd] warm s2 ALL=False R={6: 0.9604504739825604, 9: 0.9795719649267373, 12: 0.9798746504408045, 15: 0.9894436448778094}
+16:49:39 [Nov_3rd] warm s3 adam0 loss=-0.06732 hold=-0.24037
+16:49:42 [Nov_3rd] warm s3 adam25 loss=-0.18908 hold=-0.24166
+16:49:44 [Nov_3rd] warm s3 adam50 loss=-0.07689 hold=-0.24234
+16:49:46 [Nov_3rd] warm s3 adam75 loss=-0.23346 hold=-0.23963
+16:49:48 [Nov_3rd] warm s3 adam100 loss=-0.18732 hold=-0.23781
+16:49:50 [Nov_3rd] warm s3 adam125 loss=-0.21872 hold=-0.24411
+16:49:53 [Nov_3rd] warm s3 adam150 loss=-0.17673 hold=-0.24164
+16:49:55 [Nov_3rd] warm s3 adam175 loss=-0.13025 hold=-0.24329
+16:49:57 [Nov_3rd] warm s3 adam199 loss=-0.19679 hold=-0.24264
+16:49:57 [Nov_3rd] eval n6 100/1000 Med≈4.818 (4119.98/s)
+16:49:57 [Nov_3rd] eval n6 200/1000 Med≈4.906 (4115.94/s)
+16:49:57 [Nov_3rd] eval n6 300/1000 Med≈5.057 (4135.39/s)
+16:49:57 [Nov_3rd] eval n6 400/1000 Med≈5.018 (4134.66/s)
+16:49:57 [Nov_3rd] eval n6 500/1000 Med≈5.091 (4138.16/s)
+16:49:57 [Nov_3rd] eval n6 600/1000 Med≈5.043 (4137.54/s)
+16:49:57 [Nov_3rd] eval n6 700/1000 Med≈5.091 (4133.98/s)
+16:49:57 [Nov_3rd] eval n6 800/1000 Med≈5.121 (4132.47/s)
+16:49:57 [Nov_3rd] eval n6 900/1000 Med≈5.105 (4108.06/s)
+16:49:57 [Nov_3rd] eval n6 1000/1000 Med≈5.112 (4089.56/s)
+16:49:57 [Nov_3rd] eval trust69 L2 n6: Med=5.1120 Q=5.3257 R=0.9599 BEAT
+16:49:57 [Nov_3rd] eval n9 100/1000 Med≈10.861 (2530.96/s)
+16:49:57 [Nov_3rd] eval n9 200/1000 Med≈10.667 (2607.70/s)
+16:49:57 [Nov_3rd] eval n9 300/1000 Med≈11.714 (2623.88/s)
+16:49:57 [Nov_3rd] eval n9 400/1000 Med≈12.756 (2635.24/s)
+16:49:57 [Nov_3rd] eval n9 500/1000 Med≈12.513 (2641.69/s)
+16:49:57 [Nov_3rd] eval n9 600/1000 Med≈12.170 (2649.29/s)
+16:49:57 [Nov_3rd] eval n9 700/1000 Med≈12.427 (2651.76/s)
+16:49:57 [Nov_3rd] eval n9 800/1000 Med≈12.273 (2656.23/s)
+16:49:57 [Nov_3rd] eval n9 900/1000 Med≈12.392 (2662.36/s)
+16:49:58 [Nov_3rd] eval n9 1000/1000 Med≈12.380 (2664.62/s)
+16:49:58 [Nov_3rd] eval trust69 L2 n9: Med=12.3804 Q=12.6416 R=0.9793 BEAT
+16:49:58 [Nov_3rd] eval n12 100/1000 Med≈32.443 (1400.46/s)
+16:49:58 [Nov_3rd] eval n12 200/1000 Med≈32.442 (1405.53/s)
+16:49:58 [Nov_3rd] eval n12 300/1000 Med≈31.326 (1402.32/s)
+16:49:58 [Nov_3rd] eval n12 400/1000 Med≈29.371 (1402.38/s)
+16:49:58 [Nov_3rd] eval n12 500/1000 Med≈29.005 (1402.69/s)
+16:49:58 [Nov_3rd] eval n12 600/1000 Med≈29.297 (1401.19/s)
+16:49:58 [Nov_3rd] eval n12 700/1000 Med≈29.365 (1399.91/s)
+16:49:58 [Nov_3rd] eval n12 800/1000 Med≈29.329 (1399.47/s)
+16:49:58 [Nov_3rd] eval n12 900/1000 Med≈29.297 (1398.01/s)
+16:49:58 [Nov_3rd] eval n12 1000/1000 Med≈28.939 (1397.71/s)
+16:49:58 [Nov_3rd] eval trust69 L2 n12: Med=28.9388 Q=29.6063 R=0.9775 BEAT
+16:49:59 [Nov_3rd] eval n15 50/1000 Med≈78.611 (297.33/s)
+16:49:59 [Nov_3rd] eval n15 100/1000 Med≈71.387 (298.86/s)
+16:49:59 [Nov_3rd] eval n15 150/1000 Med≈70.006 (298.64/s)
+16:50:00 [Nov_3rd] eval n15 200/1000 Med≈76.914 (299.73/s)
+16:50:00 [Nov_3rd] eval n15 250/1000 Med≈79.693 (300.25/s)
+16:50:00 [Nov_3rd] eval n15 300/1000 Med≈80.800 (300.62/s)
+16:50:00 [Nov_3rd] eval n15 350/1000 Med≈80.800 (301.16/s)
+16:50:00 [Nov_3rd] eval n15 400/1000 Med≈80.694 (301.17/s)
+16:50:00 [Nov_3rd] eval n15 450/1000 Med≈79.084 (301.33/s)
+16:50:01 [Nov_3rd] eval n15 500/1000 Med≈78.068 (300.64/s)
+16:50:01 [Nov_3rd] eval n15 550/1000 Med≈77.751 (300.53/s)
+16:50:01 [Nov_3rd] eval n15 600/1000 Med≈77.004 (300.90/s)
+16:50:01 [Nov_3rd] eval n15 650/1000 Med≈77.520 (301.27/s)
+16:50:01 [Nov_3rd] eval n15 700/1000 Med≈77.751 (301.53/s)
+16:50:01 [Nov_3rd] eval n15 750/1000 Med≈76.626 (301.77/s)
+16:50:02 [Nov_3rd] eval n15 800/1000 Med≈76.162 (301.66/s)
+16:50:02 [Nov_3rd] eval n15 850/1000 Med≈76.317 (301.23/s)
+16:50:02 [Nov_3rd] eval n15 900/1000 Med≈76.152 (301.23/s)
+16:50:02 [Nov_3rd] eval n15 950/1000 Med≈75.171 (301.44/s)
+16:50:02 [Nov_3rd] eval n15 1000/1000 Med≈75.593 (301.54/s)
+16:50:02 [Nov_3rd] eval trust69 L2 n15: Med=75.5926 Q=76.0878 R=0.9935 TIE
+16:50:02 [Nov_3rd] wrote /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/trust69/med_align_delta_rho0.04_q0.4/eval_L2_seed3.json ALL_CORE_BEAT=False
+16:50:02 [Nov_3rd] warm s3 ALL=False R={6: 0.9598798649935097, 9: 0.979335085075431, 12: 0.977455056855615, 15: 0.9934913297511491}
+16:50:02 [Nov_3rd] warm s4 adam0 loss=-0.13813 hold=-0.13923
+16:50:04 [Nov_3rd] warm s4 adam25 loss=-0.13405 hold=-0.18843
+16:50:07 [Nov_3rd] warm s4 adam50 loss=-0.19556 hold=-0.20074
+16:50:09 [Nov_3rd] warm s4 adam75 loss=-0.15061 hold=-0.20187
+16:50:11 [Nov_3rd] warm s4 adam100 loss=-0.14775 hold=-0.20363
+16:50:13 [Nov_3rd] warm s4 adam125 loss=-0.08125 hold=-0.20261
+16:50:16 [Nov_3rd] warm s4 adam150 loss=-0.20471 hold=-0.20250
+16:50:18 [Nov_3rd] warm s4 adam175 loss=-0.13903 hold=-0.20321
+16:50:20 [Nov_3rd] warm s4 adam199 loss=-0.14327 hold=-0.20246
+16:50:20 [Nov_3rd] eval n6 100/1000 Med≈4.750 (4167.09/s)
+16:50:20 [Nov_3rd] eval n6 200/1000 Med≈4.868 (4197.45/s)
+16:50:20 [Nov_3rd] eval n6 300/1000 Med≈5.040 (4202.92/s)
+16:50:20 [Nov_3rd] eval n6 400/1000 Med≈4.978 (3933.12/s)
+16:50:20 [Nov_3rd] eval n6 500/1000 Med≈5.082 (3983.22/s)
+16:50:20 [Nov_3rd] eval n6 600/1000 Med≈5.029 (4006.10/s)
+16:50:20 [Nov_3rd] eval n6 700/1000 Med≈5.082 (4034.87/s)
+16:50:20 [Nov_3rd] eval n6 800/1000 Med≈5.111 (4057.16/s)
+16:50:20 [Nov_3rd] eval n6 900/1000 Med≈5.086 (4070.00/s)
+16:50:20 [Nov_3rd] eval n6 1000/1000 Med≈5.093 (4083.72/s)
+16:50:20 [Nov_3rd] eval trust69 L2 n6: Med=5.0925 Q=5.3257 R=0.9562 BEAT
+16:50:20 [Nov_3rd] eval n9 100/1000 Med≈10.944 (2679.83/s)
+16:50:20 [Nov_3rd] eval n9 200/1000 Med≈10.653 (2686.07/s)
+16:50:20 [Nov_3rd] eval n9 300/1000 Med≈11.710 (2685.39/s)
+16:50:20 [Nov_3rd] eval n9 400/1000 Med≈12.727 (2690.99/s)
+16:50:20 [Nov_3rd] eval n9 500/1000 Med≈12.528 (2695.09/s)
+16:50:20 [Nov_3rd] eval n9 600/1000 Med≈12.222 (2698.26/s)
+16:50:20 [Nov_3rd] eval n9 700/1000 Med≈12.455 (2696.52/s)
+16:50:20 [Nov_3rd] eval n9 800/1000 Med≈12.333 (2696.62/s)
+16:50:20 [Nov_3rd] eval n9 900/1000 Med≈12.392 (2673.71/s)
+16:50:21 [Nov_3rd] eval n9 1000/1000 Med≈12.357 (2666.51/s)
+16:50:21 [Nov_3rd] eval trust69 L2 n9: Med=12.3570 Q=12.6416 R=0.9775 BEAT
+16:50:21 [Nov_3rd] eval n12 100/1000 Med≈32.580 (1403.18/s)
+16:50:21 [Nov_3rd] eval n12 200/1000 Med≈32.713 (1409.83/s)
+16:50:21 [Nov_3rd] eval n12 300/1000 Med≈31.478 (1409.78/s)
+16:50:21 [Nov_3rd] eval n12 400/1000 Med≈29.397 (1407.73/s)
+16:50:21 [Nov_3rd] eval n12 500/1000 Med≈29.028 (1407.88/s)
+16:50:21 [Nov_3rd] eval n12 600/1000 Med≈29.261 (1409.21/s)
+16:50:21 [Nov_3rd] eval n12 700/1000 Med≈29.360 (1408.80/s)
+16:50:21 [Nov_3rd] eval n12 800/1000 Med≈29.303 (1408.71/s)
+16:50:21 [Nov_3rd] eval n12 900/1000 Med≈29.276 (1409.78/s)
+16:50:21 [Nov_3rd] eval n12 1000/1000 Med≈28.939 (1409.49/s)
+16:50:21 [Nov_3rd] eval trust69 L2 n12: Med=28.9385 Q=29.6063 R=0.9774 BEAT
+16:50:22 [Nov_3rd] eval n15 50/1000 Med≈78.310 (285.62/s)
+16:50:22 [Nov_3rd] eval n15 100/1000 Med≈72.635 (290.17/s)
+16:50:22 [Nov_3rd] eval n15 150/1000 Med≈71.010 (293.76/s)
+16:50:23 [Nov_3rd] eval n15 200/1000 Med≈77.225 (294.27/s)
+16:50:23 [Nov_3rd] eval n15 250/1000 Med≈80.032 (295.62/s)
+16:50:23 [Nov_3rd] eval n15 300/1000 Med≈81.371 (296.69/s)
+16:50:23 [Nov_3rd] eval n15 350/1000 Med≈81.152 (297.44/s)
+16:50:23 [Nov_3rd] eval n15 400/1000 Med≈80.830 (297.22/s)
+16:50:23 [Nov_3rd] eval n15 450/1000 Med≈79.325 (297.65/s)
+16:50:24 [Nov_3rd] eval n15 500/1000 Med≈78.810 (297.67/s)
+16:50:24 [Nov_3rd] eval n15 550/1000 Med≈78.254 (297.86/s)
+16:50:24 [Nov_3rd] eval n15 600/1000 Med≈77.551 (297.99/s)
+16:50:24 [Nov_3rd] eval n15 650/1000 Med≈77.830 (298.39/s)
+16:50:24 [Nov_3rd] eval n15 700/1000 Med≈77.924 (298.70/s)
+16:50:24 [Nov_3rd] eval n15 750/1000 Med≈76.900 (298.98/s)
+16:50:25 [Nov_3rd] eval n15 800/1000 Med≈76.615 (298.43/s)
+16:50:25 [Nov_3rd] eval n15 850/1000 Med≈76.734 (298.64/s)
+16:50:25 [Nov_3rd] eval n15 900/1000 Med≈76.535 (298.84/s)
+16:50:25 [Nov_3rd] eval n15 950/1000 Med≈75.547 (299.11/s)
+16:50:25 [Nov_3rd] eval n15 1000/1000 Med≈76.032 (299.24/s)
+16:50:25 [Nov_3rd] eval trust69 L2 n15: Med=76.0319 Q=76.0878 R=0.9993 TIE
+16:50:25 [Nov_3rd] wrote /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/trust69/med_align_delta_rho0.04_q0.4/eval_L2_seed4.json ALL_CORE_BEAT=False
+16:50:25 [Nov_3rd] warm s4 ALL=False R={6: 0.9562178231048131, 9: 0.9774870450380266, 12: 0.9774439115533388, 15: 0.9992653784187362}
+16:50:25 [Nov_3rd] warm s5 adam0 loss=-0.11153 hold=0.00344
+16:50:27 [Nov_3rd] warm s5 adam25 loss=-0.26712 hold=-0.03859
+16:50:30 [Nov_3rd] warm s5 adam50 loss=-0.17279 hold=-0.04239
+16:50:32 [Nov_3rd] warm s5 adam75 loss=-0.20505 hold=-0.04176
+16:50:34 [Nov_3rd] warm s5 adam100 loss=-0.13938 hold=-0.04192
+16:50:36 [Nov_3rd] warm s5 adam125 loss=-0.16116 hold=-0.04319
+16:50:38 [Nov_3rd] warm s5 adam150 loss=-0.24755 hold=-0.04304
+16:50:41 [Nov_3rd] warm s5 adam175 loss=-0.19655 hold=-0.04265
+16:50:43 [Nov_3rd] warm s5 adam199 loss=-0.17957 hold=-0.04294
+16:50:43 [Nov_3rd] eval n6 100/1000 Med≈4.784 (4169.91/s)
+16:50:43 [Nov_3rd] eval n6 200/1000 Med≈4.889 (4198.86/s)
+16:50:43 [Nov_3rd] eval n6 300/1000 Med≈5.040 (4220.74/s)
+16:50:43 [Nov_3rd] eval n6 400/1000 Med≈4.996 (4217.95/s)
+16:50:43 [Nov_3rd] eval n6 500/1000 Med≈5.087 (4218.63/s)
+16:50:43 [Nov_3rd] eval n6 600/1000 Med≈5.034 (4221.80/s)
+16:50:43 [Nov_3rd] eval n6 700/1000 Med≈5.087 (4214.10/s)
+16:50:43 [Nov_3rd] eval n6 800/1000 Med≈5.133 (4215.02/s)
+16:50:43 [Nov_3rd] eval n6 900/1000 Med≈5.089 (4218.93/s)
+16:50:43 [Nov_3rd] eval n6 1000/1000 Med≈5.109 (4219.91/s)
+16:50:43 [Nov_3rd] eval trust69 L2 n6: Med=5.1092 Q=5.3257 R=0.9593 BEAT
+16:50:43 [Nov_3rd] eval n9 100/1000 Med≈10.906 (2684.54/s)
+16:50:43 [Nov_3rd] eval n9 200/1000 Med≈10.712 (2699.35/s)
+16:50:43 [Nov_3rd] eval n9 300/1000 Med≈11.679 (2709.18/s)
+16:50:43 [Nov_3rd] eval n9 400/1000 Med≈12.676 (2705.71/s)
+16:50:43 [Nov_3rd] eval n9 500/1000 Med≈12.490 (2709.99/s)
+16:50:43 [Nov_3rd] eval n9 600/1000 Med≈12.251 (2712.30/s)
+16:50:43 [Nov_3rd] eval n9 700/1000 Med≈12.411 (2710.38/s)
+16:50:43 [Nov_3rd] eval n9 800/1000 Med≈12.316 (2710.58/s)
+16:50:43 [Nov_3rd] eval n9 900/1000 Med≈12.381 (2711.94/s)
+16:50:43 [Nov_3rd] eval n9 1000/1000 Med≈12.355 (2710.42/s)
+16:50:43 [Nov_3rd] eval trust69 L2 n9: Med=12.3553 Q=12.6416 R=0.9774 BEAT
+16:50:43 [Nov_3rd] eval n12 100/1000 Med≈32.514 (1386.57/s)
+16:50:44 [Nov_3rd] eval n12 200/1000 Med≈32.600 (1403.03/s)
+16:50:44 [Nov_3rd] eval n12 300/1000 Med≈31.395 (1407.02/s)
+16:50:44 [Nov_3rd] eval n12 400/1000 Med≈29.375 (1407.94/s)
+16:50:44 [Nov_3rd] eval n12 500/1000 Med≈29.165 (1408.69/s)
+16:50:44 [Nov_3rd] eval n12 600/1000 Med≈29.335 (1408.80/s)
+16:50:44 [Nov_3rd] eval n12 700/1000 Med≈29.375 (1410.56/s)
+16:50:44 [Nov_3rd] eval n12 800/1000 Med≈29.357 (1411.83/s)
+16:50:44 [Nov_3rd] eval n12 900/1000 Med≈29.335 (1412.42/s)
+16:50:44 [Nov_3rd] eval n12 1000/1000 Med≈28.985 (1412.48/s)
+16:50:44 [Nov_3rd] eval trust69 L2 n12: Med=28.9846 Q=29.6063 R=0.9790 BEAT
+16:50:45 [Nov_3rd] eval n15 50/1000 Med≈78.481 (291.26/s)
+16:50:45 [Nov_3rd] eval n15 100/1000 Med≈72.087 (297.46/s)
+16:50:45 [Nov_3rd] eval n15 150/1000 Med≈70.581 (299.43/s)
+16:50:45 [Nov_3rd] eval n15 200/1000 Med≈77.215 (300.59/s)
+16:50:46 [Nov_3rd] eval n15 250/1000 Med≈80.049 (300.77/s)
+16:50:46 [Nov_3rd] eval n15 300/1000 Med≈81.015 (301.01/s)
+16:50:46 [Nov_3rd] eval n15 350/1000 Med≈80.899 (301.03/s)
+16:50:46 [Nov_3rd] eval n15 400/1000 Med≈80.899 (300.98/s)
+16:50:46 [Nov_3rd] eval n15 450/1000 Med≈79.521 (300.85/s)
+16:50:46 [Nov_3rd] eval n15 500/1000 Med≈78.576 (301.07/s)
+16:50:47 [Nov_3rd] eval n15 550/1000 Med≈77.781 (300.56/s)
+16:50:47 [Nov_3rd] eval n15 600/1000 Med≈77.518 (300.60/s)
+16:50:47 [Nov_3rd] eval n15 650/1000 Med≈77.630 (300.46/s)
+16:50:47 [Nov_3rd] eval n15 700/1000 Med≈77.712 (299.85/s)
+16:50:47 [Nov_3rd] eval n15 750/1000 Med≈76.673 (299.79/s)
+16:50:47 [Nov_3rd] eval n15 800/1000 Med≈76.351 (299.96/s)
+16:50:48 [Nov_3rd] eval n15 850/1000 Med≈76.491 (300.01/s)
+16:50:48 [Nov_3rd] eval n15 900/1000 Med≈76.351 (299.93/s)
+16:50:48 [Nov_3rd] eval n15 950/1000 Med≈75.700 (300.04/s)
+16:50:48 [Nov_3rd] eval n15 1000/1000 Med≈76.053 (300.02/s)
+16:50:48 [Nov_3rd] eval trust69 L2 n15: Med=76.0532 Q=76.0878 R=0.9995 TIE
+16:50:48 [Nov_3rd] wrote /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/trust69/med_align_delta_rho0.04_q0.4/eval_L2_seed5.json ALL_CORE_BEAT=False
+16:50:48 [Nov_3rd] warm s5 ALL=False R={6: 0.9593492783201827, 9: 0.9773570628775806, 12: 0.9789994865172736, 15: 0.9995450840471298}
+16:50:48 [Nov_3rd] warm DONE best_n15=(0.9894436448778094, False, '/agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/trust69/med_align_delta_rho0.04_q0.4/eval_L2_seed2.json', {6: 0.9604504739825604, 9: 0.9795719649267373, 12: 0.9798746504408045, 15: 0.9894436448778094})
