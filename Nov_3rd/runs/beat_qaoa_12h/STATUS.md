@@ -1,14 +1,16 @@
-# STATUS — 2026-11-03 21:40 Asia/Shanghai
+# STATUS — 2026-11-03 22:21 Asia/Shanghai
 
 ## DONE
-- R0 dual PASS; **L=16 CLEAR BEAT** 3 seeds; shallow n12 BEAT; n15 eval ~0.983
-- Global search on train: train R=0.9807 → eval 0.997 (no transfer)
-- Opus R3: recommend declare capacity after closing check
+- R0 dual PASS L∈{1,2,16}
+- **L=16 CORE-RATIO CLEAR BEAT** all CORE, 3 seeds (n15 R≈0.88–0.90)
+- Shallow L=1/2: BEAT n12; **n15 capacity-limited** under Hamming-shell
 
-## Running
-- **Closing check:** global search on dense n15 pack (N=1000, disjoint train+scale1000)
-  - If best dense R >0.980 → declare capacity (Opus #1)
-  - If ≤0.978 → reopen #2/#3
+## Closing check (Opus R3 #1) — DECLARE
+Dense n15 pack N=1000 disjoint from train+scale1000; 803-start global search + LBFGS refine.
+- **best_dense_R = 0.9803** (>0.980 declare bar; reopen needs ≤0.978)
+- capacity_proven=True, reopen=False
+- Artifacts: `round_2/dense_n15/`
 
 ## OPEN
-- Shallow n15 ≤0.98 pending closing check
+- None for shallow n15 under locked gate sequence (training-only exhausted per Opus)
+- Optional later: unlock gate/head (Arm C-style) — out of this plan's scope

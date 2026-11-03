@@ -67,3 +67,11 @@ Train scrape does **not** transfer to eval n15. Best *eval* n15 remains ~0.983 (
 
 ## Round 0
 Dual identity PASS R=1.000 at L∈{1,2,16} after refreshing stale QAOA ladders.
+
+
+---
+
+## Closing check DECLARE — shallow n15 capacity (2026-11-03 22:21 Asia/Shanghai)
+
+Dense disjoint n15 pack N=1000; global search → **best_dense_R=0.9803** (`capacity_proven=true`, reopen=false).
+Per Opus R3: stop shallow-n15 training hunt. Best *eval* n15 remains ~0.983 (free-φ). L=16 clear beat stands.
