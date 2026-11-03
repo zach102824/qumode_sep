@@ -61,7 +61,7 @@ def precompute_qaoa_inv(betas, gammas, E: torch.Tensor, n: int, device) -> torch
     return torch.as_tensor(np.concatenate(invs), dtype=torch.float32)
 
 
-def make_params(idea: str, betas, gammas, device, p0: float = 0.0, rho: float | None = None):
+def make_params(idea: str, betas, gammas, device, p0: float = 0.0, rho: float | None = None, freeze_p: bool = False):
     g0, c10, c20, c30 = [t.to(device) for t in warm_from_qaoa(betas, gammas)]
     if idea == "trust69":
         gamma = g0.detach().clone()
@@ -75,8 +75,12 @@ def make_params(idea: str, betas, gammas, device, p0: float = 0.0, rho: float | 
         c1 = torch.nn.Parameter(c10.clone())
         c2 = torch.nn.Parameter(torch.zeros_like(c20) + 1e-4)
         c3 = torch.nn.Parameter(torch.zeros_like(c30) + 1e-4)
-        p = torch.nn.Parameter(torch.tensor(float(p0), device=device))
-        trainables = [gamma, c1, c2, c3, p]
+        if freeze_p:
+            p = torch.tensor(float(p0), device=device)
+            trainables = [gamma, c1, c2, c3]
+        else:
+            p = torch.nn.Parameter(torch.tensor(float(p0), device=device))
+            trainables = [gamma, c1, c2, c3, p]
     else:  # ratio69 / ratio69_w9
         gamma = torch.nn.Parameter(g0.clone())
         c1 = torch.nn.Parameter(c10.clone())
@@ -219,6 +223,7 @@ def train_one(
     lam_p: float,
     rho: float | None,
     p0: float,
+    freeze_p: bool = False,
     max_train: int | None,
     holdout_frac: float,
     soft_med: bool,
@@ -230,7 +235,7 @@ def train_one(
     rng = np.random.default_rng(seed)
 
     betas, gammas = load_qaoa(L)
-    gamma, c1, c2, c3, p, trainables = make_params(idea, betas, gammas, device, p0=p0)
+    gamma, c1, c2, c3, p, trainables = make_params(idea, betas, gammas, device, p0=p0, freeze_p=freeze_p)
 
     bundles = {}
     for n in TRAIN_NS:
@@ -500,6 +505,7 @@ def main():
     ap.add_argument("--batch_per_n", type=int, default=32)
     ap.add_argument("--rho", type=float, default=0.1)
     ap.add_argument("--p0", type=float, default=0.0)
+    ap.add_argument("--freeze_p", action="store_true", help="keep p fixed at --p0 (power_p)")
     ap.add_argument("--max_train", type=int, default=None)
     ap.add_argument("--lam0", type=float, default=None)
     ap.add_argument("--lam1", type=float, default=None)
@@ -577,6 +583,7 @@ def main():
         lam_p=args.lam_p,
         rho=rho,
         p0=args.p0,
+        freeze_p=bool(args.freeze_p),
         max_train=args.max_train,
         holdout_frac=args.holdout_frac if idea != "ratio69" else 0.0,
         soft_med=soft_med,
