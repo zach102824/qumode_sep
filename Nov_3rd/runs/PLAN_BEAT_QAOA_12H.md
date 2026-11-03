@@ -1,6 +1,6 @@
 # PLAN: Beat QAOA 12h loop (training-only) — 2026-11-03 Asia/Shanghai
 
-**Status:** PLAN ONLY — awaiting Zach OK before any run.  
+**Status:** RUNNING (Zach GO t2552u) — R0 L1/L2 PASS; L16 dual + R1 training.  
 **Opus Round-1 ideas:** `OPUS_BEAT_QAOA_12H.md` · raw `explore_OCT29/runs/opus_ideas/opus_reply_20261103_2034_beat_qaoa_12h.md`  
 **Deliverables root:** `Nov_3rd/runs/beat_qaoa_12h/`
 
@@ -167,6 +167,6 @@ Supporting docs (already written):
 
 ---
 
-## Next step (waiting on Zach)
+## Next step
 
-**Do not start runs.** When Zach OKs: run R0 dual-identity gate, then R1 as scheduled (Idea1 L=2 + Idea1 L=16 seed0 + Ideas 2&3 @ L=2).
+**Started** 2026-11-03 20:42 Asia/Shanghai. See `beat_qaoa_12h/STATUS.md`.

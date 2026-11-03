@@ -1,9 +1,7 @@
 {
-  "pass": false,
+  "pass": true,
   "hash_disjoint_pass": true,
-  "pending_L": [
-    16
-  ],
+  "pending_L": [],
   "per_L": {
     "1": {
       "pass": true,
@@ -62,13 +60,41 @@
           "QAOA_Med": 76.08783622676893
         }
       }
+    },
+    "16": {
+      "pass": true,
+      "per_n": {
+        "6": {
+          "R": 1.0000024209511664,
+          "verdict": "PASS",
+          "Med": 1.2261468768119812,
+          "QAOA_Med": 1.226143908377456
+        },
+        "9": {
+          "R": 1.000003529574061,
+          "verdict": "PASS",
+          "Med": 1.5786561369895935,
+          "QAOA_Med": 1.5786505650255078
+        },
+        "12": {
+          "R": 1.000004142459756,
+          "verdict": "PASS",
+          "Med": 2.070733070373535,
+          "QAOA_Med": 2.070724492480659
+        },
+        "15": {
+          "R": 1.0000052331917646,
+          "verdict": "PASS",
+          "Med": 2.8880733251571655,
+          "QAOA_Med": 2.888058211394718
+        }
+      }
     }
   },
   "notes": [
-    "L16 QAOA results.json was STALE (legacy ladder kept after paper-n6 retrain). Force-refreshed in R0.",
-    "L2 QAOA was non-paper; archived to L2_legacy_nonpaper, retrained paper-n6, ladder refreshed.",
-    "ensure_qaoa.py patched: retrain now forces full CORE re-eval."
+    "R0 PASS dual identity L\u2208{1,2,16} after refreshing stale L2/L16 QAOA ladders",
+    "Fresh L16 QAOA Med: n6=1.226 n9=1.579 n12=2.071 n15=2.888"
   ],
-  "finished_partial": "2026-11-03 20:47:30 +0800",
+  "finished": "2026-11-03 20:49:51 +0800",
   "tz": "Asia/Shanghai"
 }
