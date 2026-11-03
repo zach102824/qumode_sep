@@ -10,9 +10,9 @@
     ],
     "train_loss": 2.2670726776123047,
     "nstart": 1,
-    "init_notes": "arXiv:2208.06909 Boulebnane\u2013Montanaro init \u03b2=0.01, \u03b3=-0.01 (primary); optional tiny jitter",
+    "init_notes": "arXiv:2208.06909 Boulebnane\u2013Montanaro \u00a7Parameter optimization: \u03b2_\u2113=0.01, \u03b3_\u2113=-0.01 for each layer; nstart=1",
     "angle_convention": "qaoa_ref: U_C=exp(-i \u03b3 Cn), U_B=exp(-i \u03b2 X/2), Cn=E*n/m",
-    "finished": "2026-11-03 15:50:40 +0800",
+    "finished": "2026-11-03 17:30:12 +0800",
     "source": "L1_train_n6 paper-init n6\u00d71000",
     "promoted_at": "2026-11-03 16:21:48 +0800",
     "note": "Canonical Nov_3rd fair same-L QAOA ref (arXiv:2208.06909 init)"
@@ -74,43 +74,22 @@
       "m": 149,
       "wall_s": 497.2615098953247,
       "source": "fresh"
+    },
+    "18": {
+      "median_inv_p": 960.3167786424841,
+      "B90_inv_p": 2638.2649346888234,
+      "mean_inv_p": 1285.1919170228,
+      "frac_inv_le_2": 0.0,
+      "B": 1000,
+      "n_finite": 1000,
+      "n": 18,
+      "split": "scale1000",
+      "L": 1,
+      "S": 7.372569983075254,
+      "m": 179,
+      "wall_s": 695.9086313247681,
+      "source": "fresh"
     }
   },
-  "nov_polished_L1_ref": {
-    "6": {
-      "median_inv_p": 9.502,
-      "B90_inv_p": 17.338
-    },
-    "9": {
-      "median_inv_p": 29.537,
-      "B90_inv_p": 62.135
-    },
-    "12": {
-      "median_inv_p": 93.283,
-      "B90_inv_p": 217.777
-    },
-    "15": {
-      "median_inv_p": 318.811,
-      "B90_inv_p": 792.468
-    }
-  },
-  "nov_warm_L1_ref": {
-    "6": {
-      "median_inv_p": 9.779,
-      "B90_inv_p": 19.191
-    },
-    "9": {
-      "median_inv_p": 29.279,
-      "B90_inv_p": 63.429
-    },
-    "12": {
-      "median_inv_p": 90.033,
-      "B90_inv_p": 216.627
-    },
-    "15": {
-      "median_inv_p": 289.893,
-      "B90_inv_p": 750.515
-    }
-  },
-  "updated": "2026-11-03 15:50:40 +0800"
+  "updated": "2026-11-03 17:30:12 +0800"
 }

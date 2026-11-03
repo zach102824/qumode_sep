@@ -1,0 +1,169 @@
+{
+  "meta": {
+    "recipe": "Nov_3rd",
+    "L": 1,
+    "phase": "n18",
+    "eval_ns": [
+      6,
+      9,
+      12,
+      15
+    ],
+    "b": 3,
+    "optimizer": "LBFGS_only",
+    "train_ns": [
+      6
+    ],
+    "max_train": 1000,
+    "scale_B": 1000,
+    "best_seed": 2,
+    "qaoa_ref": {
+      "6": {
+        "Med": 9.809713050037887,
+        "B90": 18.70398271923529
+      },
+      "9": {
+        "Med": 29.308515263961695,
+        "B90": 62.63568576716173
+      },
+      "12": {
+        "Med": 91.04217276151309,
+        "B90": 214.15809463573896
+      },
+      "15": {
+        "Med": 293.2323291714115,
+        "B90": 747.6365935094116
+      }
+    },
+    "qaoa_source": "paper_n6",
+    "train_summary": [
+      {
+        "seed": 0,
+        "score": 10.007533445358277,
+        "round": 2,
+        "train_med": 9.545034408569336,
+        "warm_med": 9.549105167388916,
+        "used_warm": false,
+        "rejected_polish": false
+      },
+      {
+        "seed": 1,
+        "score": 9.877493028640748,
+        "round": 11,
+        "train_med": 9.386191844940186,
+        "warm_med": 9.549105167388916,
+        "used_warm": false,
+        "rejected_polish": false
+      },
+      {
+        "seed": 2,
+        "score": 9.549105167388916,
+        "round": -1,
+        "train_med": 9.549105167388916,
+        "warm_med": 9.549105167388916,
+        "used_warm": true,
+        "rejected_polish": true
+      }
+    ],
+    "best_used_warm": true,
+    "best_warm_med": 9.549105167388916,
+    "best_train_med": 9.549105167388916,
+    "wall_s": 448.66341948509216,
+    "state": {
+      "gamma": [
+        -5.233087062835693
+      ],
+      "phi": [
+        [
+          -0.0,
+          -0.7366378307342529,
+          -1.4732756614685059,
+          -2.209913492202759
+        ]
+      ],
+      "L": 1,
+      "b": 3,
+      "W": "BinH",
+      "snap_mode": "shell",
+      "snap_shared_cavities": true,
+      "motif": "nov1st_final_x_sandwich",
+      "recipe": "Nov_3rd",
+      "train_ns": [
+        6
+      ],
+      "max_train": 1000,
+      "optimizer": "LBFGS_only",
+      "qaoa_warm": true,
+      "seed": 2,
+      "used_warm": true,
+      "rejected_polish": true,
+      "warm_med": 9.549105167388916
+    },
+    "betas": [
+      0.7366378307342529
+    ],
+    "gammas": [
+      -5.233087062835693
+    ],
+    "eval_ns_extra": [
+      18
+    ],
+    "wall_s_extra": 1144.1973819732666
+  },
+  "eval": {
+    "18": {
+      "n": 18,
+      "split": "scale1000",
+      "B": 1000,
+      "median_inv_p": 960.3171081542969,
+      "B90_inv_p": 2638.265966796875,
+      "mean_leak": 5.338788032531739e-07,
+      "L": 1,
+      "recipe": "Nov_3rd",
+      "wall_s": 440.81017875671387
+    }
+  },
+  "warm_eval": {
+    "18": {
+      "n": 18,
+      "split": "scale1000",
+      "B": 1000,
+      "median_inv_p": 960.3171081542969,
+      "B90_inv_p": 2638.265966796875,
+      "mean_leak": 5.338788032531739e-07,
+      "L": 1,
+      "recipe": "Nov_3rd",
+      "wall_s": 440.81017875671387
+    }
+  },
+  "compare": {
+    "per_n": {
+      "18": {
+        "Med": 960.3171081542969,
+        "B90": 2638.265966796875,
+        "QAOA_Med": 960.3167786424841,
+        "QAOA_B90": 2638.2649346888234,
+        "R": 1.000000343128247,
+        "verdict": "TIE"
+      }
+    },
+    "overall": "TIE",
+    "under": false
+  },
+  "warm_compare": {
+    "per_n": {
+      "18": {
+        "Med": 960.3171081542969,
+        "B90": 2638.265966796875,
+        "QAOA_Med": 960.3167786424841,
+        "QAOA_B90": 2638.2649346888234,
+        "R": 1.000000343128247,
+        "verdict": "TIE"
+      }
+    },
+    "overall": "TIE",
+    "under": false
+  },
+  "best_seed": 2,
+  "phase": "n18"
+}
