@@ -52,6 +52,13 @@ LBFGS_BATCH = 64
 LBFGS_LR = 0.25
 
 
+# QAOA train init — Boulebnane–Montanaro arXiv:2208.06909 §Parameter optimization
+# all β=0.01, all γ=-0.01; single start (nstart=1). Angle convention: see qaoa_init.
+QAOA_INIT_BETA = 0.01
+QAOA_INIT_GAMMA = -0.01
+QAOA_NSTART = 1
+
+
 def qaoa_angles_path(L: int) -> Path:
     return QAOA_DIR / f"L{L}" / "angles.json"
 
