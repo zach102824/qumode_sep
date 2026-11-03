@@ -49,7 +49,7 @@ Edges ratio69_w9 on n12/n15. p_final≈0.0515. Params: `champion/params_L16_trai
 
 ## L=2 — NO ALL_CORE yet (_live 2026-11-03 23:35 Asia/Shanghai_)
 
-Best n15 so far **0.9865** (n9med ρ0.05 s7). n9med ρ0.05 seeds 0–7 DONE. ρ0.03/0.08 + dense_trust running. Round 3: pareto_blend + dense_micro queued.
+Best n15 so far **0.9853** (pareto_blend α=0.80 s1; n6/n9 BEAT, n12 0.9858 TIE). Prev n9med 0.9865. n9med ρ0.05 seeds 0–7 DONE. ρ0.03/0.08 + dense_trust running. Round 3: pareto_blend + dense_micro queued.
 
 | n15 R | n6 | n9 | n12 | ALL | path |
 |-------|----|----|-----|-----|------|
