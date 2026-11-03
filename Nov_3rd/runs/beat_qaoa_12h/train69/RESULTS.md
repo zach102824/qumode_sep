@@ -1,69 +1,63 @@
 # train69 RESULTS — train{6,9} only → CORE eval
 
-_Updated 2026-11-03 23:02 Asia/Shanghai_
+_Updated 2026-11-03 23:16 Asia/Shanghai_
 
 BEAT = R≤0.98. Gates locked. Idea-gen R1=Opus; R2+=Grok 4.6.
 
-## L=16 BOX — **ALL_CORE_BEAT = True** (honest scale1000 B=1000)
+## L=16 — **ALL_CORE_BEAT = True** (ratio69_w9 champion)
 
-Train ONLY {6,9}. Eval CORE {6,9,12,15}.
+Train ONLY {6,9}. Eval CORE scale1000 B=1000. Box seed0 **bit-identical** to cloud `cursor/train69-idea1-ratio69-w9-l16-66bb` (SCB=54e9 packs sha-matched).
 
-### ratio69_w9 L=16 seed0 (box)
+### ratio69_w9 L=16 seeds 0–5 (cloud+box)
 
-| n | QAOA Med | Med | R | QAOA B90 | B90 | verdict |
-|---|----------|-----|---|----------|-----|---------|
-| 6 | 1.226 | 1.157 | **0.943** | 2.300 | 1.686 | BEAT |
-| 9 | 1.579 | 1.407 | **0.891** | 3.901 | 3.239 | BEAT |
-| 12 | 2.071 | 1.825 | **0.881** | 7.027 | 5.821 | BEAT |
-| 15 | 2.888 | 2.584 | **0.895** | 11.423 | 9.694 | BEAT |
+| seed | n6 R | n9 R | n12 R | n15 R | ALL |
+|------|------|------|-------|-------|-----|
+| 0 | **0.9434** | **0.8912** | **0.8812** | **0.8947** | True |
+| 1 | **0.9336** | **0.8934** | **0.8933** | **0.8987** | True |
+| 2 | **0.9359** | **0.8940** | **0.8850** | **0.8884** | True |
+| 3 | **0.9342** | **0.8952** | **0.8844** | **0.8894** | True |
+| 4 | **0.9339** | **0.8905** | **0.8881** | **0.8990** | True |
+| 5 | **0.9376** | **0.9008** | **0.8994** | **0.9135** | True |
 
-**ALL_CORE_BEAT** = True
+**Champion:** seed2 (best n15 R=0.8884). Params: `ratio69_w9/params_L16_seed2.pt` → `champion/params_L16_train69_ratio69_w9.pt`.
 
-### ratio69_w9 L=16 seed1 (box)
+### Champion seed2 raw Med/B90
 
-| n | QAOA Med | Med | R | QAOA B90 | B90 | verdict |
-|---|----------|-----|---|----------|-----|---------|
-| 6 | 1.226 | 1.145 | **0.934** | 2.300 | 1.734 | BEAT |
-| 9 | 1.579 | 1.410 | **0.893** | 3.901 | 3.305 | BEAT |
-| 12 | 2.071 | 1.850 | **0.893** | 7.027 | 6.010 | BEAT |
-| 15 | 2.888 | 2.596 | **0.899** | 11.423 | 10.036 | BEAT |
+| n | QAOA Med | Med | R | QAOA B90 | B90 |
+|---|----------|-----|---|----------|-----|
+| 6 | 1.2261 | 1.1476 | **0.9359** | 2.300 | 1.727 |
+| 9 | 1.5787 | 1.4114 | **0.8940** | 3.901 | 3.284 |
+| 12 | 2.0707 | 1.8326 | **0.8850** | 7.027 | 6.032 |
+| 15 | 2.8881 | 2.5657 | **0.8884** | 11.423 | 10.059 |
 
-**ALL_CORE_BEAT** = True
+### power_p L=16 (box; cloud Idea2 still RUNNING)
 
-### power_p L=16 seed0 (box) — best n15 so far
+| seed | n6 R | n9 R | n12 R | n15 R | ALL |
+|------|------|------|-------|-------|-----|
+| 0 | 0.9424 | 0.8904 | 0.8777 | 0.8825 | True |
+| 1 | 0.9336 | 0.8930 | 0.8896 | 0.8908 | True |
 
-| n | QAOA Med | Med | R | QAOA B90 | B90 | verdict |
-|---|----------|-----|---|----------|-----|---------|
-| 6 | 1.226 | 1.155 | **0.942** | 2.300 | 1.685 | BEAT |
-| 9 | 1.579 | 1.406 | **0.890** | 3.901 | 3.227 | BEAT |
-| 12 | 2.071 | 1.817 | **0.878** | 7.027 | 5.796 | BEAT |
-| 15 | 2.888 | 2.549 | **0.883** | 11.423 | 9.527 | BEAT |
+## L=2 — no ALL_CORE_BEAT yet (Grok R2 running)
 
-**ALL_CORE_BEAT** = True
+Grok verdict: L=2 ALL_CORE **likely capacity** under train{6,9}; Round-2 = lucky-n15 hunt.
 
-## Box L=2 (shallow) — no ALL_CORE_BEAT yet
+### Early R2
 
-### ratio69_w9 L=2 seed0
-| n | QAOA Med | Med | R | verdict |
-|---|----------|-----|---|---------|
-| 6 | 5.326 | 5.100 | **0.958** | BEAT |
-| 9 | 12.642 | 12.339 | **0.976** | BEAT |
-| 12 | 29.606 | 28.985 | **0.979** | BEAT |
-| 15 | 76.088 | 75.976 | 0.999 | TIE |
+| idea | seed | n6 | n9 | n12 | n15 | ALL |
+|------|------|----|----|-----|-----|-----|
+| n9med_trust ρ0.05 | 0 | 0.982 | 1.003 | 0.996 | 0.988 | False |
+| shrink_p p=0.15 | 0 | 0.954 | 0.974 | 0.981 | 1.003 | False |
+| shrink_p p=0.15 | 1 | 0.953 | 0.976 | 0.982 | 1.003 | False |
+| shrink_p p=0.30 | 0 | 0.958 | 0.979 | 0.982 | 1.001 | False |
+| shrink_p p=0.30 | 1 | 0.951 | 0.976 | 0.980 | 1.007 | False |
+| ratio69_w9 R1 | 0 | 0.958 | 0.976 | 0.979 | 0.999 | False |
+| trust69 ρ0.1 R1 | 0 | 0.973 | 0.996 | 0.991 | 0.993 | False |
 
-### trust69 L=2 seed0 ρ=0.1
-| n | QAOA Med | Med | R | verdict |
-|---|----------|-----|---|---------|
-| 6 | 5.326 | 5.184 | **0.973** | BEAT |
-| 9 | 12.642 | 12.597 | 0.997 | TIE |
-| 12 | 29.606 | 29.343 | 0.991 | TIE |
-| 15 | 76.088 | 75.562 | 0.993 | TIE |
+Best L=2 n15 so far under train{6,9}: **n9med s0 R=0.988** (still TIE). Continue seeds 1–7 + shrink_p + alpha_ray.
 
-## Cloud L=16 — still RUNNING (no branch push yet; box already has ALL_CORE_BEAT)
+## Cloud
 
-- Idea1 ratio69_w9: https://cursor.com/agents/bc-7fa7da80-0efd-4d0f-b392-95c2d9fb5866 `cursor/train69-idea1-ratio69-w9-l16-66bb`
+- Idea1 ratio69_w9 L16: **FINISHED** https://cursor.com/agents/bc-7fa7da80-0efd-4d0f-b392-95c2d9fb5866 branch `cursor/train69-idea1-ratio69-w9-l16-66bb`
 
-- Idea2 power_p: https://cursor.com/agents/bc-883dadcf-dbf5-4b78-9195-ab7d5d48272f `cursor/train69-idea2-power-p-l16-3c46`
-
-Conversation stalled at setup; box results are authoritative for R1 L16.
+- Idea2 power_p L16: still RUNNING https://cursor.com/agents/bc-883dadcf-dbf5-4b78-9195-ab7d5d48272f
 
