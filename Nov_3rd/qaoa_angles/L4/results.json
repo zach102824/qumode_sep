@@ -1,9 +1,42 @@
 {
   "meta": {
     "L": 4,
-    "note": "grown from QAOA L=2 then Adam minibatch\u00d7300 on train{9,12}"
+    "note": "grown from QAOA L=2 then Adam minibatch\u00d7300 on train{9,12}",
+    "train": "n6\u00d71000 sealed, paper init \u03b2=0.01 \u03b3=-0.01 nstart=1",
+    "betas": [
+      0.9268544316291809,
+      0.7609314918518066,
+      0.6064716577529907,
+      0.42519858479499817
+    ],
+    "gammas": [
+      -3.0581703186035156,
+      -5.066342830657959,
+      -6.096375465393066,
+      -7.1543684005737305
+    ],
+    "train_loss": 1.1107516288757324,
+    "nstart": 1,
+    "init_notes": "arXiv:2208.06909 Boulebnane\u2013Montanaro \u00a7Parameter optimization: \u03b2_\u2113=0.01, \u03b3_\u2113=-0.01 for each layer; nstart=1",
+    "angle_convention": "qaoa_ref: U_C=exp(-i \u03b3 Cn), U_B=exp(-i \u03b2 X/2), Cn=E*n/m",
+    "finished": "2026-11-03 16:41:27 +0800"
   },
   "ladder": {
+    "6": {
+      "median_inv_p": 2.824209459663221,
+      "B90_inv_p": 6.100235667170979,
+      "mean_inv_p": 3.6013494520865237,
+      "frac_inv_le_2": 0.241,
+      "B": 1000,
+      "n_finite": 1000,
+      "n": 6,
+      "split": "scale1000",
+      "L": 4,
+      "S": 1.423277946272369,
+      "m": 60,
+      "wall_s": 1.1262397766113281,
+      "source": "fresh"
+    },
     "9": {
       "median_inv_p": 5.324182849348025,
       "B90_inv_p": 13.687478650790245,
@@ -34,5 +67,6 @@
       "n": 15,
       "L": 4
     }
-  }
+  },
+  "updated": "2026-11-03 16:41:27 +0800"
 }
