@@ -47,6 +47,16 @@ Edges ratio69_w9 on n12/n15. p_final≈0.0515. Params: `champion/params_L16_trai
 | 4 | 0.9339 | 0.8905 | 0.8881 | 0.8990 |
 | 5 | 0.9376 | 0.9008 | 0.8994 | 0.9135 |
 
+## Cloud L2 harvest (bc-ca109616 → main)
+
+Branch `cursor/beat-qaoa-l2-train69-28cb` tip harvested 2026-11-04 ~00:00 Asia/Shanghai.
+
+- `train69_dense_trust_ball.py` (box) + `train69_dense_trust_ball_batched.py` (cloud batched forward)
+- `explore_OCT29/lib/qaoa.py` restored (QAOA L2 Med/B90 match recorded; scale1000 regen SCB≠DATA_MANIFEST sha)
+- n9med ρ0.03/0.08 × seeds 0–7 tables under `trust69/n9med_rho0.03|0.08/`
+- Best cloud n15 R = **0.9878** (n9med ρ0.03 s3). Dense ρ0.05/0.08: all starts → same basin.
+- Objective gap confirmed: median(inv/inv_Q) ≠ Med(inv)/Med(inv_Q). Next: `--loss med_align`.
+
 ## L=2 — NO ALL_CORE yet (_live 2026-11-04 00:30 Asia/Shanghai_)
 
 **ALL_CORE_BEAT = false.** Best n15 **0.9850** (pareto_fine t5×ratio69 s0, α=0.70 seed3, δ≤0.025, Adam 400 on n9 median). n6 0.9598 BEAT, n9 0.9822 TIE, n12 0.9817 TIE. Params: `pareto_fine/t5_rs0/params_L2_a0.70_s3.pt`.
@@ -79,3 +89,27 @@ pareto_fine DONE (this branch). Box may still be on n9med ρ0.03/0.08, dense_tru
 ## Cloud
 - L16 Idea1+Idea2 FINISHED. Champ=power_p s0.
 - L2 dense+n9med: bc-ca109616 RUNNING.
+
+## L=2 med_align (Idea A) — 2026-11-04 Asia/Shanghai
+
+Gate = Med(inv)/QAOA_Med. Loss `--loss med_align` = log(soft_quantile(inv_p)/QAOA_Med_train).
+
+| variant | best knee max(R12,R15) | notes |
+|---------|------------------------|-------|
+| trust69 QAOA-warm ρ0.05–0.12 | ~0.990–0.997 | R9≈1.00 same basin as dense |
+| n9med med_align | ~0.989–0.993 | R9 still ~1.00 on CORE |
+| origin-ball "warm" ρ0.04 (BUG) | 0.996 (3 BEAT n6/9/12) | projected toward QAOA origin; Pareto slide |
+| champ↔warm blend | **0.9858 at a=1** | smooth front; champ dominates knee |
+| delta-ball around champ ρ0.01 | 0.9866 best so far | no beat of champ knee |
+| radial ε on champ | **0.9858 at ε=0** | ε≠0 raises knee; local min at champ |
+
+**ALL_CORE_BEAT = False.** Champ still `pareto_blend/eval_L2_a0.80_s1.json` (n6=0.9573 n9=0.9782 n12=0.9858 n15=0.9853).
+Cloud bc-0fa5a09f + bc-5198772e still RUNNING on med_align. Capacity NOT declared.
+
+## L=2 CAPACITY NEAR-MISS (2026-11-04 ~00:25 Asia/Shanghai)
+
+**ALL_CORE_BEAT = False.** Empirical basin claim under locked gates/train{6,9}.
+Best: pareto α=0.80 s1 — n6=0.9573 BEAT, n9=0.9782 BEAT, n12=0.9858 TIE, n15=0.9853 TIE (knee 0.9858).
+≥163 n6&n9-BEAT CORE evals; radial ε local min at champ; med_align/dense/n9med/hinge/soft_q=0.4 do not improve knee.
+Details: `CAPACITY_L2_EVIDENCE.md`.
+
