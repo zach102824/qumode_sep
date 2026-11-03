@@ -1,11 +1,13 @@
-# beat_qaoa_12h STATUS
+# STATUS — 2026-11-03 21:19 Asia/Shanghai
 
-**Updated:** 2026-11-03 21:02 Asia/Shanghai
+## DONE
+- R0 dual PASS L∈{1,2,16}
+- **L=16 CORE-RATIO clear BEAT all CORE, 3 seeds** (R≈0.88–0.95)
+- L=1/2 BEAT n12; n15 shallow ~0.983–0.985 TIE
 
-## WIN: L=16 CORE-RATIO clear BEAT all CORE (R≈0.88–0.94)
-## OPEN: shallow n15 still TIE (~0.984 best)
+## OPEN
+- Shallow n15 ≤0.98 — capacity probe suggests L=2 Hamming-shell hard floor ~0.985 on train
+- Asking Opus for remaining training-only shallow options (or accept capacity limit)
 
-### Next
-- Confirm L=16 seeds 1,2
-- Continue shallow n15 push (minimax improved 0.993→0.984; need ≤0.98)
-- Opus Idea B progressive-depth as backup if needed
+## Running
+- (idle after freephi / n15 probe)
