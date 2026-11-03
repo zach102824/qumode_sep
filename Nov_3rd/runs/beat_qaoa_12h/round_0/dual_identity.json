@@ -1,0 +1,74 @@
+{
+  "pass": false,
+  "hash_disjoint_pass": true,
+  "pending_L": [
+    16
+  ],
+  "per_L": {
+    "1": {
+      "pass": true,
+      "per_n": {
+        "6": {
+          "R": 1.000000226403993,
+          "verdict": "PASS",
+          "Med": 9.809715270996094,
+          "QAOA_Med": 9.809713050037887
+        },
+        "9": {
+          "R": 1.0000001724111882,
+          "verdict": "PASS",
+          "Med": 29.308520317077637,
+          "QAOA_Med": 29.308515263961695
+        },
+        "12": {
+          "R": 1.0000003630079641,
+          "verdict": "PASS",
+          "Med": 91.04220581054688,
+          "QAOA_Med": 91.04217276151309
+        },
+        "15": {
+          "R": 1.0000001600342685,
+          "verdict": "PASS",
+          "Med": 293.2323760986328,
+          "QAOA_Med": 293.2323291714115
+        }
+      }
+    },
+    "2": {
+      "pass": true,
+      "per_n": {
+        "6": {
+          "R": 1.0000000428894231,
+          "verdict": "PASS",
+          "Med": 5.325684309005737,
+          "QAOA_Med": 5.32568408059022
+        },
+        "9": {
+          "R": 1.0000003626002802,
+          "verdict": "PASS",
+          "Med": 12.641592025756836,
+          "QAOA_Med": 12.641587441913686
+        },
+        "12": {
+          "R": 1.00000048940309,
+          "verdict": "PASS",
+          "Med": 29.606328010559082,
+          "QAOA_Med": 29.606313521137757
+        },
+        "15": {
+          "R": 1.0000007650753553,
+          "verdict": "PASS",
+          "Med": 76.08789443969727,
+          "QAOA_Med": 76.08783622676893
+        }
+      }
+    }
+  },
+  "notes": [
+    "L16 QAOA results.json was STALE (legacy ladder kept after paper-n6 retrain). Force-refreshed in R0.",
+    "L2 QAOA was non-paper; archived to L2_legacy_nonpaper, retrained paper-n6, ladder refreshed.",
+    "ensure_qaoa.py patched: retrain now forces full CORE re-eval."
+  ],
+  "finished_partial": "2026-11-03 20:47:30 +0800",
+  "tz": "Asia/Shanghai"
+}

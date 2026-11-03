@@ -226,6 +226,7 @@ def ensure_qaoa_paper_n6(
     device = device or torch.device("cpu")
 
     need_train = force or not _is_paper_n6(angles_path)
+    trained_now = False
     if need_train:
         # archive non-paper angles once
         if angles_path.exists() and not _is_paper_n6(angles_path):
@@ -240,13 +241,15 @@ def ensure_qaoa_paper_n6(
         blob = train_paper_n6(L, device=device)
         angles_path.write_text(json.dumps(_jsonable(blob), indent=2) + "\n")
         log(f"QAOA L{L}: wrote {angles_path} loss={blob['best']['loss']:.4f}")
+        trained_now = True
     else:
         blob = json.loads(angles_path.read_text())
         log(f"QAOA L{L}: reuse paper-n6 angles @ {angles_path}")
 
     # ensure scale1000 results cover requested ns (CORE by default)
-    need_eval = force or not results_path.exists()
-    if results_path.exists() and not force:
+    # CRITICAL: if angles were just retrained, ladder is stale — force full re-eval
+    need_eval = force or trained_now or not results_path.exists()
+    if results_path.exists() and not force and not trained_now:
         try:
             existing = json.loads(results_path.read_text())
             ladder = {int(k): v for k, v in (existing.get("ladder") or {}).items()}
@@ -260,21 +263,21 @@ def ensure_qaoa_paper_n6(
     if need_eval:
         betas = torch.tensor(blob["best"]["betas"], dtype=torch.float32, device=device)
         gammas = torch.tensor(blob["best"]["gammas"], dtype=torch.float32, device=device)
-        # fill only missing ns when partial results exist
+        # fill only missing ns when partial results exist; full refresh after retrain/force
         have = set()
-        if results_path.exists() and not force:
+        if results_path.exists() and not force and not trained_now:
             try:
                 have = {int(k) for k in (json.loads(results_path.read_text()).get("ladder") or {})}
             except Exception:
                 have = set()
         missing = [n for n in ns if n not in have]
-        if force:
+        if force or trained_now:
             missing = list(ns)
         # skip ns with no pack
         missing = [n for n in missing if (S.SCALE1000_DIR / f"data_n{n}.npz").exists()]
         log(f"QAOA L{L}: eval scale1000 ns={missing}")
         fresh = eval_scale_ladder(L, betas, gammas, device=device, ns=missing)
-        if results_path.exists() and not force:
+        if results_path.exists() and not force and not trained_now:
             old = json.loads(results_path.read_text())
             ladder = {int(k): v for k, v in (old.get("ladder") or {}).items()}
             ladder.update(fresh)
