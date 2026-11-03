@@ -47,6 +47,16 @@ Edges ratio69_w9 on n12/n15. p_final≈0.0515. Params: `champion/params_L16_trai
 | 4 | 0.9339 | 0.8905 | 0.8881 | 0.8990 |
 | 5 | 0.9376 | 0.9008 | 0.8994 | 0.9135 |
 
+## Cloud L2 harvest (bc-ca109616 → main)
+
+Branch `cursor/beat-qaoa-l2-train69-28cb` tip harvested 2026-11-04 ~00:00 Asia/Shanghai.
+
+- `train69_dense_trust_ball.py` (box) + `train69_dense_trust_ball_batched.py` (cloud batched forward)
+- `explore_OCT29/lib/qaoa.py` restored (QAOA L2 Med/B90 match recorded; scale1000 regen SCB≠DATA_MANIFEST sha)
+- n9med ρ0.03/0.08 × seeds 0–7 tables under `trust69/n9med_rho0.03|0.08/`
+- Best cloud n15 R = **0.9878** (n9med ρ0.03 s3). Dense ρ0.05/0.08: all starts → same basin.
+- Objective gap confirmed: median(inv/inv_Q) ≠ Med(inv)/Med(inv_Q). Next: `--loss med_align`.
+
 ## L=2 — NO ALL_CORE yet (_live 2026-11-03 23:35 Asia/Shanghai_)
 
 Best n15 so far **0.9853** (pareto_blend α=0.80 s1; n6/n9 BEAT, n12 0.9858 TIE). Prev n9med 0.9865. n9med ρ0.05 seeds 0–7 DONE. ρ0.03/0.08 + dense_trust running. Round 3: pareto_blend + dense_micro queued.

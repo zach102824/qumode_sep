@@ -112,19 +112,22 @@ def angles_for_n(idea, gamma, c1, c2, c3, p, n: int):
     return gamma, phi_from_c(c1, c2n, c3n)
 
 
-def soft_median(vals: torch.Tensor, temp: float = 0.05) -> torch.Tensor:
-    """Differentiable soft-median via sorted weights (approx)."""
+def soft_quantile(vals: torch.Tensor, q: float = 0.5, temp: float = 0.05) -> torch.Tensor:
+    """Differentiable soft-quantile via sorted softmax weights around q-index."""
     v = vals.reshape(-1)
     if v.numel() == 1:
         return v[0]
-    # soft quantile at 0.5 using temperature on ranks
     order = torch.argsort(v)
     vs = v[order]
-    # triangular / logistic weights around median index
-    mid = 0.5 * (v.numel() - 1)
+    mid = float(q) * (v.numel() - 1)
     idx = torch.arange(v.numel(), device=v.device, dtype=v.dtype)
     w = torch.softmax(-((idx - mid) / max(temp * v.numel(), 1e-3)).abs(), dim=0)
     return (w * vs).sum()
+
+
+def soft_median(vals: torch.Tensor, temp: float = 0.05) -> torch.Tensor:
+    """Differentiable soft-median via sorted weights (approx)."""
+    return soft_quantile(vals, q=0.5, temp=temp)
 
 
 def instance_log_ratios(sim, E, inv_q, g, phi, idx) -> torch.Tensor:
@@ -134,6 +137,14 @@ def instance_log_ratios(sim, E, inv_q, g, phi, idx) -> torch.Tensor:
         ratio = out["inv_p"].clamp(min=1e-12) / inv_q[int(j)].to(out["inv_p"].device).clamp(min=1e-12)
         ls.append(torch.log(ratio.clamp(min=1e-12)))
     return torch.stack(ls)
+
+
+def instance_inv_ps(sim, E, g, phi, idx) -> torch.Tensor:
+    invs = []
+    for j in idx:
+        out = sim.forward_nov3rd(E[int(j)], g, phi)
+        invs.append(out["inv_p"].clamp(min=1e-12))
+    return torch.stack(invs)
 
 
 def batch_loss(
@@ -150,25 +161,41 @@ def batch_loss(
     *,
     soft_med: bool = False,
     lam_p: float = 0.0,
+    loss_mode: str = "log_ratio",
+    qmed_map: dict | None = None,
+    soft_q: float = 0.5,
 ):
+    """loss_mode:
+      log_ratio — median/mean of per-instance log(inv/inv_Q)  (legacy)
+      med_align — log( soft_quantile(inv_p) / QAOA_Med_n ); matches gate Med/Med_Q
+    """
     terms = []
     wsum = 0.0
     for n, (E, inv_q, sim) in bundles.items():
         idx = idx_map[n]
         g, phi = angles_for_n(idea, gamma, c1, c2, c3, p, n)
-        logs = instance_log_ratios(sim, E, inv_q, g, phi, idx)
-        tn = soft_median(logs) if soft_med else logs.mean()
         w = float(weights.get(n, 1.0))
+        if loss_mode == "med_align":
+            invs = instance_inv_ps(sim, E, g, phi, idx)
+            sm = soft_quantile(invs, q=soft_q) if soft_med else invs.median()
+            if qmed_map is not None and n in qmed_map:
+                qmed = qmed_map[n]
+            else:
+                qmed = inv_q.detach().median()
+            if not torch.is_tensor(qmed):
+                qmed = torch.tensor(float(qmed), device=sm.device, dtype=sm.dtype)
+            else:
+                qmed = qmed.to(device=sm.device, dtype=sm.dtype)
+            tn = torch.log((sm / qmed.clamp(min=1e-12)).clamp(min=1e-12))
+        else:
+            logs = instance_log_ratios(sim, E, inv_q, g, phi, idx)
+            tn = soft_median(logs) if soft_med else logs.mean()
         terms.append(w * tn)
         wsum += w
-        # penalize scaled c2,c3 for power_p (avoid gauge)
         if idea == "power_p" and lam_c > 0:
             a = a_of_n(idea, n, p)
-            if torch.is_tensor(a):
-                terms.append(lam_c * w * ((c2 * a).pow(2).mean() + (c3 * a).pow(2).mean()))
-            else:
-                terms.append(lam_c * w * ((c2 * a).pow(2).mean() + (c3 * a).pow(2).mean()))
-            wsum += w  # keep scale roughly
+            terms.append(lam_c * w * ((c2 * a).pow(2).mean() + (c3 * a).pow(2).mean()))
+            wsum += w
     loss = torch.stack(terms).sum() / max(wsum, 1e-12)
     if idea != "power_p" and lam_c > 0:
         loss = loss + lam_c * (c2.pow(2).mean() + c3.pow(2).mean())
@@ -178,13 +205,23 @@ def batch_loss(
 
 
 @torch.no_grad()
-def holdout_score(idea, bundle_n9, gamma, c1, c2, c3, p, hold_idx, soft_med: bool = False) -> float:
+def holdout_score(
+    idea, bundle_n9, gamma, c1, c2, c3, p, hold_idx,
+    soft_med: bool = False, loss_mode: str = "log_ratio",
+    qmed9=None, soft_q: float = 0.5,
+) -> float:
     E, inv_q, sim = bundle_n9
     g, phi = angles_for_n(idea, gamma, c1, c2, c3, p, 9)
+    if loss_mode == "med_align":
+        invs = instance_inv_ps(sim, E, g, phi, hold_idx)
+        sm = soft_quantile(invs, q=soft_q) if soft_med else invs.median()
+        qmed = inv_q.median() if qmed9 is None else qmed9
+        if not torch.is_tensor(qmed):
+            qmed = torch.tensor(float(qmed), device=sm.device, dtype=sm.dtype)
+        return float(torch.log((sm / qmed.clamp(min=1e-12)).clamp(min=1e-12)).detach())
     logs = instance_log_ratios(sim, E, inv_q, g, phi, hold_idx)
     if soft_med:
         return float(soft_median(logs).detach())
-    # soft-median-ish: true median of log-ratios
     return float(logs.median().detach())
 
 
@@ -229,6 +266,8 @@ def train_one(
     soft_med: bool,
     weights: dict[int, float],
     out_dir: Path,
+    loss_mode: str = "log_ratio",
+    soft_q: float = 0.5,
 ):
     torch.manual_seed(seed)
     np.random.seed(seed)
@@ -245,6 +284,11 @@ def train_one(
         sim = make_sim(n, L, device)
         bundles[n] = (E, inv_q.to(device), sim)
 
+    # Fixed train-set QAOA Med per n (ratio-of-medians gate alignment)
+    qmed_map = {n: float(bundles[n][1].detach().median().cpu()) for n in bundles}
+    log(f"{idea} L{L} s{seed}: train QAOA Meds " + ", ".join(f"n{n}={qmed_map[n]:.4f}" for n in sorted(qmed_map)))
+    log(f"{idea} L{L} s{seed}: loss_mode={loss_mode} soft_q={soft_q}")
+
     # hold out ~20% of n9 for early-stop / checkpoint
     n9_B = len(bundles[9][0])
     perm = rng.permutation(n9_B)
@@ -260,7 +304,10 @@ def train_one(
     def maybe_update_best(step_tag: str):
         if n_hold == 0:
             return
-        sc = holdout_score(idea, bundles[9], gamma, c1, c2, c3, p, hold_idx, soft_med=soft_med)
+        sc = holdout_score(
+            idea, bundles[9], gamma, c1, c2, c3, p, hold_idx,
+            soft_med=soft_med, loss_mode=loss_mode, qmed9=qmed_map.get(9), soft_q=soft_q,
+        )
         hist.append({"phase": "holdout", "tag": step_tag, "hold_med_logR": sc})
         if sc < best["score"]:
             best["score"] = sc
@@ -281,7 +328,8 @@ def train_one(
                 idx_map[n] = rng.choice(len(bundles[n][0]), size=min(batch_per_n, len(bundles[n][0])), replace=False)
         opt.zero_grad()
         loss = batch_loss(
-            idea, bundles, gamma, c1, c2, c3, p, idx_map, lam, weights, soft_med=soft_med, lam_p=lam_p
+            idea, bundles, gamma, c1, c2, c3, p, idx_map, lam, weights,
+            soft_med=soft_med, lam_p=lam_p, loss_mode=loss_mode, qmed_map=qmed_map, soft_q=soft_q,
         )
         loss.backward()
         torch.nn.utils.clip_grad_norm_(trainables, 5.0)
@@ -313,7 +361,8 @@ def train_one(
         def closure():
             opt_l.zero_grad()
             lt = batch_loss(
-                idea, bundles, gamma, c1, c2, c3, p, idx_map, lam, weights, soft_med=soft_med, lam_p=lam_p
+                idea, bundles, gamma, c1, c2, c3, p, idx_map, lam, weights,
+                soft_med=soft_med, lam_p=lam_p, loss_mode=loss_mode, qmed_map=qmed_map, soft_q=soft_q,
             )
             lt.backward()
             torch.nn.utils.clip_grad_norm_(trainables, 5.0)
@@ -393,6 +442,8 @@ def train_one(
         "snap_head": S.SNAP_HEAD,
         "lock": "train69_only",
         "soft_med": soft_med,
+        "loss_mode": loss_mode,
+        "soft_q": soft_q,
     }
     out_dir.mkdir(parents=True, exist_ok=True)
     pt = out_dir / f"params_L{L}_seed{seed}.pt"
@@ -512,6 +563,10 @@ def main():
     ap.add_argument("--lam_p", type=float, default=1e-2)
     ap.add_argument("--holdout_frac", type=float, default=0.2)
     ap.add_argument("--soft_med", action="store_true")
+    ap.add_argument("--loss", dest="loss_mode", default="log_ratio",
+                    choices=["log_ratio", "med_align"],
+                    help="log_ratio=median of per-instance ratios; med_align=soft_quantile(1/p)/QAOA_Med")
+    ap.add_argument("--soft_q", type=float, default=0.5, help="quantile for med_align / soft_med (0.5=median)")
     ap.add_argument("--w6", type=float, default=None)
     ap.add_argument("--w9", type=float, default=None)
     ap.add_argument("--eval_only", type=str, default="")
@@ -589,6 +644,8 @@ def main():
         soft_med=soft_med,
         weights=weights,
         out_dir=out_dir,
+        loss_mode=args.loss_mode,
+        soft_q=float(args.soft_q),
     )
     if not args.skip_eval:
         rows = eval_state(state, device, EVAL_NS)
