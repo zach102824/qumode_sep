@@ -8,6 +8,7 @@ Warm-only vs QAOA: **TIE**
 Best seed = 0
 Warm recovery: no (polish train Med ≤ warm)
 
+Motif: Nov1st-final X-sandwich + **Hamming-shell SNAP** (QAOA-warm).
 QAOA ref: paper init β=0.01 γ=-0.01 nstart=1, train n6×1000.
 
 | n | QAOA Med | QAOA B90 | warm Med | warm B90 | R_warm | warm | acc Med | acc B90 | R_acc | acc |
@@ -20,3 +21,5 @@ QAOA ref: paper init β=0.01 γ=-0.01 nstart=1, train n6×1000.
 ## STOP
 At least one n UNDER QAOA (R>1.02) on accepted ckpt — do not climb L.
 
+## Note
+Warm-only (Hamming-shell SNAP dual) was **TIE** everywhere; free polish beat train Med so was kept, then **UNDER** on n12/n15 transfer. Ladder STOP — no L>4.
