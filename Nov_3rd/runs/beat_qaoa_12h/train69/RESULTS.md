@@ -1,63 +1,76 @@
 # train69 RESULTS — train{6,9} only → CORE eval
 
-_Updated 2026-11-03 23:16 Asia/Shanghai_
+_Updated 2026-11-03 23:18 Asia/Shanghai_
 
-BEAT = R≤0.98. Gates locked. Idea-gen R1=Opus; R2+=Grok 4.6.
+BEAT = R≤0.98. Gates locked. R1=Opus; R2+=Grok 4.6.
 
-## L=16 — **ALL_CORE_BEAT = True** (ratio69_w9 champion)
+## L=16 — **DONE / ALL_CORE_BEAT** under train{6,9}
 
-Train ONLY {6,9}. Eval CORE scale1000 B=1000. Box seed0 **bit-identical** to cloud `cursor/train69-idea1-ratio69-w9-l16-66bb` (SCB=54e9 packs sha-matched).
+### Champion: **power_p** learned seed0 (box ≡ cloud)
 
-### ratio69_w9 L=16 seeds 0–5 (cloud+box)
-
-| seed | n6 R | n9 R | n12 R | n15 R | ALL |
-|------|------|------|-------|-------|-----|
-| 0 | **0.9434** | **0.8912** | **0.8812** | **0.8947** | True |
-| 1 | **0.9336** | **0.8934** | **0.8933** | **0.8987** | True |
-| 2 | **0.9359** | **0.8940** | **0.8850** | **0.8884** | True |
-| 3 | **0.9342** | **0.8952** | **0.8844** | **0.8894** | True |
-| 4 | **0.9339** | **0.8905** | **0.8881** | **0.8990** | True |
-| 5 | **0.9376** | **0.9008** | **0.8994** | **0.9135** | True |
-
-**Champion:** seed2 (best n15 R=0.8884). Params: `ratio69_w9/params_L16_seed2.pt` → `champion/params_L16_train69_ratio69_w9.pt`.
-
-### Champion seed2 raw Med/B90
+Edges ratio69_w9 on n12/n15. p_final≈0.0515. Params: `champion/params_L16_train69_power_p.pt`.
 
 | n | QAOA Med | Med | R | QAOA B90 | B90 |
 |---|----------|-----|---|----------|-----|
-| 6 | 1.2261 | 1.1476 | **0.9359** | 2.300 | 1.727 |
-| 9 | 1.5787 | 1.4114 | **0.8940** | 3.901 | 3.284 |
-| 12 | 2.0707 | 1.8326 | **0.8850** | 7.027 | 6.032 |
-| 15 | 2.8881 | 2.5657 | **0.8884** | 11.423 | 10.059 |
+| 6 | 1.2261 | 1.1555 | **0.9424** | 2.300 | 1.685 |
+| 9 | 1.5787 | 1.4056 | **0.8904** | 3.901 | 3.227 |
+| 12 | 2.0707 | 1.8175 | **0.8777** | 7.027 | 5.796 |
+| 15 | 2.8881 | 2.5488 | **0.8825** | 11.423 | 9.527 |
 
-### power_p L=16 (box; cloud Idea2 still RUNNING)
+### power_p learned seeds 0–2
 
-| seed | n6 R | n9 R | n12 R | n15 R | ALL |
-|------|------|------|-------|-------|-----|
-| 0 | 0.9424 | 0.8904 | 0.8777 | 0.8825 | True |
-| 1 | 0.9336 | 0.8930 | 0.8896 | 0.8908 | True |
+| seed | p | n6 R | n9 R | n12 R | n15 R | ALL |
+|------|---|------|------|-------|-------|-----|
+| 0 | 0.0515 | 0.9424 | 0.8904 | 0.8777 | 0.8825 | True |
+| 1 | 0.0520 | 0.9336 | 0.8930 | 0.8896 | 0.8908 | True |
+| 2 | 0.0438 | 0.9350 | 0.8935 | 0.8833 | 0.8851 | True |
 
-## L=2 — no ALL_CORE_BEAT yet (Grok R2 running)
+### power_p p0 sweep (seed0) — all ALL_CORE_BEAT
 
-Grok verdict: L=2 ALL_CORE **likely capacity** under train{6,9}; Round-2 = lucky-n15 hunt.
+| tag | p_final | n6 | n9 | n12 | n15 |
+|-----|---------|----|----|-----|-----|
+| p-0.5 | -0.0162 | 0.9427 | 0.8915 | 0.8827 | 0.8941 |
+| p0 | 0.0515 | 0.9424 | 0.8904 | 0.8777 | 0.8825 |
+| p0.5 | 0.1038 | 0.9399 | 0.8960 | 0.8901 | 0.8961 |
+| p1 | 0.4101 | 0.9462 | 0.8909 | 0.8758 | 0.8817 |
 
-### Early R2
+(p1-init ends n15 R=**0.8817**, slight edge over learned-s0 0.8825; champ kept as learned-s0 per primary recipe.)
+
+### ratio69_w9 L=16 seeds 0–5 (also ALL_CORE; runner-up)
+
+| seed | n6 | n9 | n12 | n15 |
+|------|----|----|-----|-----|
+| 0 | 0.9434 | 0.8912 | 0.8812 | 0.8947 |
+| 1 | 0.9336 | 0.8934 | 0.8933 | 0.8987 |
+| 2 | 0.9359 | 0.8940 | 0.8850 | 0.8884 |
+| 3 | 0.9342 | 0.8952 | 0.8844 | 0.8894 |
+| 4 | 0.9339 | 0.8905 | 0.8881 | 0.8990 |
+| 5 | 0.9376 | 0.9008 | 0.8994 | 0.9135 |
+
+## L=2 — **NO ALL_CORE yet** (all remaining compute here)
+
+Grok R2: likely capacity; lucky-n15 hunt via n9med_trust / shrink_p / alpha_ray.
 
 | idea | seed | n6 | n9 | n12 | n15 | ALL |
 |------|------|----|----|-----|-----|-----|
-| n9med_trust ρ0.05 | 0 | 0.982 | 1.003 | 0.996 | 0.988 | False |
-| shrink_p p=0.15 | 0 | 0.954 | 0.974 | 0.981 | 1.003 | False |
-| shrink_p p=0.15 | 1 | 0.953 | 0.976 | 0.982 | 1.003 | False |
-| shrink_p p=0.30 | 0 | 0.958 | 0.979 | 0.982 | 1.001 | False |
-| shrink_p p=0.30 | 1 | 0.951 | 0.976 | 0.980 | 1.007 | False |
-| ratio69_w9 R1 | 0 | 0.958 | 0.976 | 0.979 | 0.999 | False |
-| trust69 ρ0.1 R1 | 0 | 0.973 | 0.996 | 0.991 | 0.993 | False |
+| ratio69_w9 R1 | 0 | 0.9576 | 0.9761 | 0.9790 | 0.9985 | False |
+| trust69 ρ0.1 R1 | 0 | 0.9733 | 0.9965 | 0.9911 | 0.9931 | False |
+| n9med ρ0.05 | 0 | 0.9815 | 1.0026 | 0.9962 | 0.9883 | False |
+| n9med ρ0.05 | 1 | 0.9896 | 0.9980 | 0.9925 | 0.9885 | False |
+| shrink_p=0.15 | 0 | 0.9536 | 0.9741 | 0.9814 | 1.0034 | False |
+| shrink_p=0.15 | 1 | 0.9527 | 0.9759 | 0.9818 | 1.0029 | False |
+| shrink_p=0.30 | 0 | 0.9581 | 0.9788 | 0.9816 | 1.0006 | False |
+| shrink_p=0.30 | 1 | 0.9507 | 0.9764 | 0.9795 | 1.0067 | False |
+| shrink_p=0.45 | 0 | 0.9592 | 0.9798 | 0.9777 | 1.0023 | False |
+| shrink_p=0.45 | 1 | 0.9542 | 0.9773 | 0.9851 | 1.0083 | False |
 
-Best L=2 n15 so far under train{6,9}: **n9med s0 R=0.988** (still TIE). Continue seeds 1–7 + shrink_p + alpha_ray.
+Best L=2 n15 so far: **n9med ρ0.05 s0 R=0.9883** (need ≤0.98).
 
 ## Cloud
 
-- Idea1 ratio69_w9 L16: **FINISHED** https://cursor.com/agents/bc-7fa7da80-0efd-4d0f-b392-95c2d9fb5866 branch `cursor/train69-idea1-ratio69-w9-l16-66bb`
+- Idea1 ratio69_w9: FINISHED `cursor/train69-idea1-ratio69-w9-l16-66bb`
 
-- Idea2 power_p L16: still RUNNING https://cursor.com/agents/bc-883dadcf-dbf5-4b78-9195-ab7d5d48272f
+- Idea2 power_p: FINISHED `cursor/train69-idea2-power-p-l16-3c46`
+
+- L=16 closed. Remaining: L=2 ONLY.
 
