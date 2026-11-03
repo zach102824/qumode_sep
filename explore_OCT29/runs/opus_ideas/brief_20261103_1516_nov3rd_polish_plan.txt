@@ -1,0 +1,40 @@
+# Opus 5.5 medium — Nov_3rd polish / angle-finding plan
+
+_Asia/Shanghai 2026-11-03 ~15:20 — Zach t2455–t2458_
+
+## Ask
+Give **3–5 concrete plan updates** on *how to find/polish angles* for Nov_3rd so we **tie or beat QAOA** on scale1000 \(n\in\{6,9,12,15,18\}\) for the L ladder (especially **L=1**, then deeper), **without destroying the dual-QAOA warm** that currently matches QAOA exactly.
+
+For each idea return: **name**, **why**, **cheapest decisive experiment**, **pass/kill**. Prefer keeping train **n=6×1000** if possible; say clearly **when n=6 must be abandoned**. No Hc-free projector tricks. Keep L-BFGS only (no Adam).
+
+## Recipe (locked)
+Motif Nov1st-final X-sandwich, 3 bits/cavity, BinH, shared shell SNAP:
+\[
+|0\rangle \xrightarrow{[U_c^{X}\to\mathrm{bare\,SNAP}]^{L}} W \to \text{Fock},
+\quad U_c^{X}=W\,D\,W,\quad D=e^{-i\gamma E},\quad W=H^{\otimes 3}.
+\]
+Warm dual-QAOA map:
+\[
+\gamma^{(\ell)}=\gamma^{(\ell)}_{\mathrm{QAOA}},\qquad \phi^{(\ell)}_j=-\beta^{(\ell)}_{\mathrm{QAOA}}\cdot j.
+\]
+Locks: train **n=6×1000**, **LBFGS_only**, \(L\in\{1,4,8,12,16,20,24,28,32\}\), eval scale1000 \(B=1000\), gate \(R=\mathrm{Med}/\mathrm{Med}_{QAOA}\) with BEAT \(\le0.98\), TIE \(\le1.02\), UNDER \(>1.02\). Ladder **STOP** on any UNDER.
+
+## Hard facts (L=1, 2026-11-03)
+1. **Warm-only = QAOA exactly** (circuit dual-correct):
+   - n6 Med=9.779 (= QAOA), n9=29.279 (\(R=1.000\)), n12=90.033 (\(R=1.000\)); n15 warm still running, expect ~289.9.
+2. **Free LBFGS polish on train n=6×1000 destroys the tie**:
+   - Drift: \(\|\Delta\phi\|\approx0.34\), \(\gamma:-5.45\to-5.17\).
+   - Polished scale1000: n9 Med=29.537 (\(R\approx1.009\)), n12=93.283 (\(R\approx1.036\) UNDER), n15=318.811 (\(R\approx1.100\) UNDER).
+   - All 3 seeds: train_med **worse than warm_med on n6 itself** (warm≈9.61 → ~9.7–10.0).
+3. Prior arms: **E0** warm=QAOA; **E1** free polish on sealed **n9+n12** beat n9/12 (~0.98–0.99×) but failed n15 (~1.003–1.017×); **E3 L=2** warm/grow PASS ~0.97×.
+4. Current protocol will add: always record warm baseline; reject polish if train Med > warm Med; still gate \(R\le1.02\).
+
+## Candidate directions (rank / refine / add)
+freeze-φ train-γ; trust-region / ℓ2 ball around warm; reject-if-worse-than-warm; train override n9+n12; grow L from warm before free polish; CVaR / robust surrogate under LBFGS_only; other angle-finding that preserves dual warm.
+
+## Return format
+1. One-liner for Zach
+2. Ideas 1..K (K=3–5), each: name / why / cheapest decisive experiment / pass / kill
+3. Explicit: keep n=6? or when to abandon n=6
+4. Recommended next 1–2 experiments in order (hours-scale, decisive)
+No long essay. No revive projector / Hc-free paths.
