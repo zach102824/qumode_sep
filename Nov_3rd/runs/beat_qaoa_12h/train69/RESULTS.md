@@ -70,7 +70,9 @@ Branch `cursor/beat-qaoa-l2-train69-28cb` tip harvested 2026-11-04 ~00:00 Asia/S
 | 12 | 0.9862 | TIE |
 | 15 | **0.98496** | TIE |
 
-Eval: `trust69/med_align_delta_rho0.03_q0.5/eval_L2_seed1.json`.
+A tighter delta ball (ρ=0.01, still centered on that checkpoint, ||delta||=0.0043) improves n15 to **0.9837** with n9 back under 0.98: `trust69/med_align_delta_rho0.01_q0.5/eval_L2_seed1.json` — n6 0.9594 BEAT, n9 0.9770 BEAT, n12 0.9871 TIE, n15 0.9837 TIE. Still not ALL_CORE (n12 and n15 above 0.98).
+
+Earlier ρ=0.03 seed1: `trust69/med_align_delta_rho0.03_q0.5/eval_L2_seed1.json` (n15 0.9850, n9 TIE).
 
 Among points with n6 and n9 both BEAT, published pareto α=0.80 s1 is still the knee (n15 0.9853, n12 0.9858). That checkpoint is not in git. A replay of the current blend script’s a=0.80 s1 lands at n15 0.9963; delta polish ρ=0.02 s5 of it keeps n6/n9 BEAT at n15 0.9863 (`med_align_delta_rho0.02_q0.5/eval_L2_seed5.json`).
 
@@ -78,6 +80,7 @@ QAOA-warm med_align (origin ball, separate from Idea C): trust ρ0.05/0.08 ×4, 
 
 | n15 R | n6 | n9 | n12 | ALL | path |
 |-------|----|----|-----|-----|------|
+| 0.9837 | 0.9594 | 0.9770 | 0.9871 | False | trust69/med_align_delta_rho0.01_q0.5/eval_L2_seed1.json |
 | 0.9850 | 0.9589 | 0.9806 | 0.9862 | False | trust69/med_align_delta_rho0.03_q0.5/eval_L2_seed1.json |
 | 0.9853 | 0.9573 | 0.9782 | 0.9858 | False | pareto_blend/eval_L2_a0.80_s1.json (box; pt not in git) |
 | 0.9850 | 0.9598 | 0.9822 | 0.9817 | False | pareto_fine/t5_rs0/eval_L2_a0.70_s3.json |
