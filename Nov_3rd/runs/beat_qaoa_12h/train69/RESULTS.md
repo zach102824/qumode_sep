@@ -57,9 +57,11 @@ Branch `cursor/beat-qaoa-l2-train69-28cb` tip harvested 2026-11-04 ~00:00 Asia/S
 - Best cloud n15 R = **0.9878** (n9med ρ0.03 s3). Dense ρ0.05/0.08: all starts → same basin.
 - Objective gap confirmed: median(inv/inv_Q) ≠ Med(inv)/Med(inv_Q). Next: `--loss med_align`.
 
-## L=2 — NO ALL_CORE yet (_live 2026-11-04 00:30 Asia/Shanghai_)
+## L=2 — NO ALL_CORE yet (_live 2026-11-04 00:42 Asia/Shanghai_)
 
-**ALL_CORE_BEAT = false.** Best n15 **0.9850** (pareto_fine t5×ratio69 s0, α=0.70 seed3, δ≤0.025, Adam 400 on n9 median). n6 0.9598 BEAT, n9 0.9822 TIE, n12 0.9817 TIE. Params: `pareto_fine/t5_rs0/params_L2_a0.70_s3.pt`.
+**ALL_CORE_BEAT = false.** Best n15 **0.9850** (pareto_fine t5×ratio69 s0, α=0.70 seed3) then med_align delta polish ρ=0.03 seed1 → n15 **0.98496**. Eval: `trust69/med_align_delta_rho0.03_q0.5/eval_L2_seed1.json`. n6 0.9589 BEAT, n9 0.9806 TIE, n12 0.9862 TIE, n15 0.9850 TIE. Params: `trust69/med_align_delta_rho0.03_q0.5/params_L2_seed1.pt`.
+
+Idea A QAOA-warm med_align (trust ρ0.05/0.08 ×4, n9-only ρ0.05 ×4, ratio69_w9 ×3): no ALL_CORE; best of those n15 is 0.9879 (trust ρ0.08 s3) with n9 still ~1.00. Idea C from reproduced pareto a=0.80 s1 (that replay is n15 0.9963, not the box 0.9853 pt, which is not in git) at ρ=0.02 s5 keeps n6/n9 BEAT with n12 0.9857 and n15 0.9863.
 
 Prev box pareto_blend α=0.80 s1 was n15 **0.9853** with n6/n9 BEAT and n12 0.9858. This fine grid edges n15 by 0.0003 and pulls n12 to 0.9817, but n9 slips back above 0.98. When n6, n9, and n12 are all BEAT, best n15 is **0.9891** (t5×ratio s1 α=0.70 s3). n9-median Adam inside the δ-ball moves off the n15 knee.
 
