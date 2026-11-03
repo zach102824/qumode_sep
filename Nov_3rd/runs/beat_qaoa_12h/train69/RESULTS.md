@@ -47,12 +47,18 @@ Edges ratio69_w9 on n12/n15. p_final≈0.0515. Params: `champion/params_L16_trai
 | 4 | 0.9339 | 0.8905 | 0.8881 | 0.8990 |
 | 5 | 0.9376 | 0.9008 | 0.8994 | 0.9135 |
 
-## L=2 — NO ALL_CORE yet (_live 2026-11-03 23:35 Asia/Shanghai_)
+## L=2 — NO ALL_CORE yet (_live 2026-11-04 00:30 Asia/Shanghai_)
 
-Best n15 so far **0.9853** (pareto_blend α=0.80 s1; n6/n9 BEAT, n12 0.9858 TIE). Prev n9med 0.9865. n9med ρ0.05 seeds 0–7 DONE. ρ0.03/0.08 + dense_trust running. Round 3: pareto_blend + dense_micro queued.
+**ALL_CORE_BEAT = false.** Best n15 **0.9850** (pareto_fine t5×ratio69 s0, α=0.70 seed3, δ≤0.025, Adam 400 on n9 median). n6 0.9598 BEAT, n9 0.9822 TIE, n12 0.9817 TIE. Params: `pareto_fine/t5_rs0/params_L2_a0.70_s3.pt`.
+
+Prev box pareto_blend α=0.80 s1 was n15 **0.9853** with n6/n9 BEAT and n12 0.9858. This fine grid edges n15 by 0.0003 and pulls n12 to 0.9817, but n9 slips back above 0.98. When n6, n9, and n12 are all BEAT, best n15 is **0.9891** (t5×ratio s1 α=0.70 s3). n9-median Adam inside the δ-ball moves off the n15 knee.
+
+Fine grid: α∈{0.65,0.70,0.72,0.75,0.78,0.80,0.82,0.85} × 6 polish seeds, pairs n9med {7,5,2} × ratio69 {s0,s1} (s7×s1 plus s5/s2 × both). 280 CORE evals, 0 ALL_CORE. Detail: `pareto_fine/RESULTS.md`.
 
 | n15 R | n6 | n9 | n12 | ALL | path |
 |-------|----|----|-----|-----|------|
+| 0.9850 | 0.9598 | 0.9822 | 0.9817 | False | pareto_fine/t5_rs0/eval_L2_a0.70_s3.json |
+| 0.9856 | 0.9596 | 0.9831 | 0.9824 | False | pareto_fine/t7_rs1/eval_raw_a0.65.json |
 | 0.9865 | 0.9873 | 1.0016 | 0.9957 | False | trust69/n9med_rho005/eval_L2_seed7.json |
 | 0.9866 | 0.9871 | 1.0018 | 0.9953 | False | trust69/n9med_rho005/eval_L2_seed5.json |
 | 0.9867 | 0.9888 | 1.0009 | 0.9953 | False | trust69/n9med_rho005/eval_L2_seed2.json |
@@ -68,7 +74,7 @@ Best n15 so far **0.9853** (pareto_blend α=0.80 s1; n6/n9 BEAT, n12 0.9858 TIE)
 | 0.9936 | 0.9813 | 1.0028 | 0.9963 | False | trust69/n9med_rho005/eval_L2_seed4.json |
 | 0.9982 | 0.9570 | 0.9765 | 0.9786 | False | alpha_ray/eval_L2_ratio69_s0_s1.json |
 
-Running: n9med ρ0.03/0.08; dense_trust ρ0.05→0.08; cloud bc-ca109616; R3 pareto_blend+dense_micro.
+pareto_fine DONE (this branch). Box may still be on n9med ρ0.03/0.08, dense_trust, and the original pareto_blend.
 
 ## Cloud
 - L16 Idea1+Idea2 FINISHED. Champ=power_p s0.
