@@ -107,11 +107,16 @@ def write_md(path: Path, blob: dict):
         "| n | QAOA Med | warm Med | warm R | warm | polished Med | polished R | polished |",
         "|---|----------|----------|--------|------|--------------|------------|----------|",
     ]
-    ns = sorted(set(warm["per_n"]) | set(pol["per_n"]) | set(qref))
+    ns = sorted({int(x) for x in list(warm["per_n"]) + list(pol["per_n"]) + list(qref)})
+    def _get(d, n):
+        if n in d: return d[n]
+        if str(n) in d: return d[str(n)]
+        return None
     for n in ns:
-        q = qref.get(n, {}).get("Med")
-        w = warm["per_n"].get(n)
-        p = pol["per_n"].get(n)
+        qr = _get(qref, n) or {}
+        q = qr.get("Med") if isinstance(qr, dict) else None
+        w = _get(warm["per_n"], n)
+        p = _get(pol["per_n"], n)
         qm = f"{q:.3f}" if q is not None else "—"
         wm = f"{w['Med']:.3f}" if w else "—"
         wr = f"{w['R']:.3f}×" if w and w["R"] is not None else "—"
