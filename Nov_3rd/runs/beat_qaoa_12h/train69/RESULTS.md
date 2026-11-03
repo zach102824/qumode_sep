@@ -47,30 +47,30 @@ Edges ratio69_w9 on n12/n15. p_final≈0.0515. Params: `champion/params_L16_trai
 | 4 | 0.9339 | 0.8905 | 0.8881 | 0.8990 |
 | 5 | 0.9376 | 0.9008 | 0.8994 | 0.9135 |
 
-## L=2 — **NO ALL_CORE yet** (all remaining compute here)
+## L=2 — NO ALL_CORE yet (_live 2026-11-03 23:24 Asia/Shanghai_)
 
-Grok R2: likely capacity; lucky-n15 hunt via n9med_trust / shrink_p / alpha_ray.
+Best n15 so far **0.9867** (n9med ρ0.05 s2). Alpha_ray L16-distill rays DEAD. Shrink_p BEATs n6/9(/12) but n15≥1.00.
 
-| idea | seed | n6 | n9 | n12 | n15 | ALL |
-|------|------|----|----|-----|-----|-----|
-| ratio69_w9 R1 | 0 | 0.9576 | 0.9761 | 0.9790 | 0.9985 | False |
-| trust69 ρ0.1 R1 | 0 | 0.9733 | 0.9965 | 0.9911 | 0.9931 | False |
-| n9med ρ0.05 | 0 | 0.9815 | 1.0026 | 0.9962 | 0.9883 | False |
-| n9med ρ0.05 | 1 | 0.9896 | 0.9980 | 0.9925 | 0.9885 | False |
-| shrink_p=0.15 | 0 | 0.9536 | 0.9741 | 0.9814 | 1.0034 | False |
-| shrink_p=0.15 | 1 | 0.9527 | 0.9759 | 0.9818 | 1.0029 | False |
-| shrink_p=0.30 | 0 | 0.9581 | 0.9788 | 0.9816 | 1.0006 | False |
-| shrink_p=0.30 | 1 | 0.9507 | 0.9764 | 0.9795 | 1.0067 | False |
-| shrink_p=0.45 | 0 | 0.9592 | 0.9798 | 0.9777 | 1.0023 | False |
-| shrink_p=0.45 | 1 | 0.9542 | 0.9773 | 0.9851 | 1.0083 | False |
+| n15 R | n6 | n9 | n12 | ALL | path |
+|-------|----|----|-----|-----|------|
+| 0.9867 | 0.9888 | 1.0009 | 0.9953 | False | trust69/n9med_rho005/eval_L2_seed2.json |
+| 0.9871 | 0.9859 | 1.0018 | 0.9944 | False | trust69/rho0.05/eval_L2_seed0.json |
+| 0.9882 | 0.9795 | 1.0015 | 0.9933 | False | alpha_ray/eval_L2_n9med_s0_s1.json |
+| 0.9883 | 0.9815 | 1.0026 | 0.9962 | False | trust69/n9med_rho005/eval_L2_seed0.json |
+| 0.9884 | 0.9900 | 0.9964 | 0.9915 | False | trust69/n9med_rho005/eval_L2_seed3.json |
+| 0.9885 | 0.9896 | 0.9980 | 0.9925 | False | trust69/n9med_rho005/eval_L2_seed1.json |
+| 0.9893 | 0.9824 | 1.0012 | 0.9973 | False | alpha_ray/eval_L2_n9med_s0_s0.json |
+| 0.9910 | 0.9739 | 1.0016 | 0.9925 | False | alpha_ray/eval_L2_trust_rho005_s0.json |
+| 0.9924 | 0.9768 | 0.9993 | 0.9906 | False | alpha_ray/eval_L2_trust_rho005_s1.json |
+| 0.9931 | 0.9733 | 0.9965 | 0.9911 | False | trust69/eval_L2_seed0.json |
+| 0.9936 | 0.9813 | 1.0028 | 0.9963 | False | trust69/n9med_rho005/eval_L2_seed4.json |
+| 0.9940 | 0.9719 | 0.9919 | 0.9900 | False | alpha_ray/eval_L2_trust_rho01_s1.json |
+| 0.9963 | 0.9697 | 0.9952 | 0.9912 | False | alpha_ray/eval_L2_trust_rho01_s0.json |
+| 0.9977 | 0.9705 | 0.9912 | 0.9853 | False | trust69/rho0.2/eval_L2_seed0.json |
+| 0.9982 | 0.9570 | 0.9765 | 0.9786 | False | alpha_ray/eval_L2_ratio69_s0_s1.json |
 
-Best L=2 n15 so far: **n9med ρ0.05 s0 R=0.9883** (need ≤0.98).
+Running: n9med ρ0.05 s5–7 → then ρ∈{0.03,0.08}; dense trust-ball search next.
 
 ## Cloud
-
-- Idea1 ratio69_w9: FINISHED `cursor/train69-idea1-ratio69-w9-l16-66bb`
-
-- Idea2 power_p: FINISHED `cursor/train69-idea2-power-p-l16-3c46`
-
-- L=16 closed. Remaining: L=2 ONLY.
+- L16 Idea1+Idea2 FINISHED. Champ=power_p s0.
 
