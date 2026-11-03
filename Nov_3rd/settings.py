@@ -27,7 +27,7 @@ BITS_PER_CAVITY = 3
 NF = 8
 W_FRAME = "BinH"
 
-SNAP_HEAD = "shell"
+SNAP_HEAD = "shell"  # Hamming-shell SNAP (Zach name)
 SNAP_SHARED_CAVITIES = True
 SNAP_SHARED_LAYERS = False
 QAOA_WARM = True

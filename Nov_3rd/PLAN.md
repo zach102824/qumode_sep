@@ -6,7 +6,7 @@ _Asia/Shanghai 2026-11-03 — Zach t2442–t2458_
 
 ## Motif
 \[
-|0\rangle \xrightarrow{[U_c^{X}\to\mathrm{bare\,SNAP}]^{L}} W \to \text{Fock},
+|0\rangle \xrightarrow{[U_c^{X}\to\mathrm{Hamming\text{-}shell\,SNAP}]^{L}} W \to \text{Fock},
 \quad U_c^{X}=W\,D\,W,\quad D=\mathrm{e}^{-i\gamma E},\quad W=H^{\otimes 3}.
 \]
 **3 bits/cavity**. Binary. QAOA-warm shared **Hamming-shell SNAP** (φ_k, k=0..3 via popcount; code `SNAP_HEAD="shell"`). Train n=6×1000, **L-BFGS only**.

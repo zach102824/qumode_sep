@@ -135,7 +135,8 @@ def write_L_results(L, rows, warm_rows, best_seed, meta, cmp, warm_cmp, phase="c
             else "Warm recovery: no (polish train Med ≤ warm)"
         ),
         "",
-        "QAOA ref: paper init β=0.01 γ=-0.01 nstart=1, train n6×1000.",
+        "Motif: Nov1st-final X-sandwich + **Hamming-shell SNAP** (QAOA-warm).
+QAOA ref: paper init β=0.01 γ=-0.01 nstart=1, train n6×1000.",
         "",
         "| n | QAOA Med | QAOA B90 | warm Med | warm B90 | R_warm | warm | "
         "acc Med | acc B90 | R_acc | acc |",

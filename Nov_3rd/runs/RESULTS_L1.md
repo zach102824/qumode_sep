@@ -8,6 +8,7 @@ Warm-only vs QAOA: **TIE**
 Best seed = 2
 Warm recovery: **yes** (polish rejected; exact QAOA dual shipped)
 
+Motif: Nov1st-final X-sandwich + **Hamming-shell SNAP** (QAOA-warm).
 QAOA ref: paper init β=0.01 γ=-0.01 nstart=1, train n6×1000.
 
 | n | QAOA Med | QAOA B90 | warm Med | warm B90 | R_warm | warm | acc Med | acc B90 | R_acc | acc |
