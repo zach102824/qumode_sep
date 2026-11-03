@@ -56,7 +56,7 @@ def main():
     L = 2
     idea = "trust69"
     weights = {6: args.w6, 9: args.w9}
-    out_dir = OUT_ROOT / "trust69" / f"med_align_delta_rho{args.rho:g}"
+    out_dir = OUT_ROOT / "trust69" / f"med_align_delta_rho{args.rho:g}_q{args.soft_q:g}"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     init = torch.load(args.init, map_location="cpu", weights_only=False)
