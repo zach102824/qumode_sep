@@ -1,0 +1,23 @@
+You are advising a train-only beat-QAOA loop. HARD LOCKS:
+- Gate sequence LOCKED: Hamming-shell SNAP + Nov1st X-sandwich, W=H⊗3. Do NOT propose gate/ansatz changes.
+- Train ONLY n∈{6,9}. Eval CORE n∈{6,9,12,15}. BEAT = R=Med/Med_QAOA ≤ 0.98.
+- Primary remaining gap: L=2 shallow — n15 stuck TIE (~0.999). L=16 already ALL_CORE_BEAT under train{6,9}.
+
+## Done so far (train{6,9})
+### L=16 ALL_CORE_BEAT (box, scale1000)
+- ratio69_w9 s0: R n6/9/12/15 = 0.943/0.891/0.881/0.895
+- ratio69_w9 s1: 0.934/0.893/0.893/0.899
+- power_p s0: 0.942/0.890/0.878/0.883  ← best n15
+
+### L=2 no ALL_CORE
+- ratio69_w9 s0: BEAT n6/9/12 (0.958/0.976/0.979); n15 0.999 TIE
+- ratio69_w9 s1: BEAT n6/9; n12 0.980 TIE; n15 1.002 TIE
+- trust69 ρ∈{0.05,0.1,0.2}: only n6 sometimes BEAT; n15 never ≤0.98
+
+### Prior (unlocked train{6,9,12,15}) shallow capacity
+- Dense n15 global search floor R≈0.9803 under same gate — reopen needed ≤0.978. With train{6,9} only, n15 is harder.
+
+## Ask
+Give exactly 3 ranked TRAIN-ONLY ideas for Round 2 aimed at L=2 ALL_CORE_BEAT (esp. n15≤0.98) under train{6,9}.
+Also say if L=2 ALL_CORE under this lock is likely impossible (capacity), and if so give 3 ideas that still maximize n15 R drop / maximize chance of lucky BEAT without unlocking gates.
+Each idea: name, free/frozen params, loss, opt schedule, seeds to try, kill criteria, why it could move n15 when ratio69_w9 failed.
