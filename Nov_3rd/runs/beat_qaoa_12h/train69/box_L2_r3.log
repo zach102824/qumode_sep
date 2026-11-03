@@ -1,0 +1,100 @@
+[23:35:26] START pareto_blend
+[23:41:19] DONE pareto_blend ec=0
+[23:42:13] START pareto_fine
+[23:56:48] START pareto_lucky
+[23:58:48] START dense_micro
+[00:01:04] START med_align trust+n9med
+[00:02:32] START med_align_warm
+[00:05:32] DONE med_align_warm ec=0
+[00:07:57] DONE med_align_warm_rho04 ec=0
+[00:08:34] START warm_tiny_softq
+[00:08:34] START sparse_cw_blend
+[00:09:41] DONE sparse_cw_blend ec=0
+[00:11:22] START med_align_DELTA_warm
+[00:12:12] START radial_eps
+[00:12:12] START med_align_ratio
+[00:14:54] DONE med_align_ratio ec=0
+[00:15:05] DONE radial_eps ec=0
+[00:15:28] START med_hinge
+[00:18:50] DONE med_align ec=0
+[00:19:20] DONE dense_micro ec=0
+[00:19:20] START soft_med_w6tiny
+[00:19:20] soft_med s0
+[00:19:42] START soft_q_delta
+[00:21:50] DONE med_hinge ec=0
+# trust69 L=2 seed=0 train{6,9}
+
+| n | QAOA Med | Med | R | verdict |
+|---|----------|-----|---|---------|
+| 6 | 5.3257 | 5.2323 | 0.9825 | TIE |
+| 9 | 12.6416 | 12.6808 | 1.0031 | TIE |
+| 12 | 29.6063 | 29.5296 | 0.9974 | TIE |
+| 15 | 76.0878 | 75.1872 | 0.9882 | TIE |
+
+**ALL_CORE_BEAT** = False
+
+[00:21:54] soft_med s1
+[00:23:02] DONE pareto_fine ec=0
+[00:24:07] DONE med_align_DELTA_warm ec=0
+# trust69 L=2 seed=1 train{6,9}
+
+| n | QAOA Med | Med | R | verdict |
+|---|----------|-----|---|---------|
+| 6 | 5.3257 | 5.2638 | 0.9884 | TIE |
+| 9 | 12.6416 | 12.6448 | 1.0003 | TIE |
+| 12 | 29.6063 | 29.4394 | 0.9944 | TIE |
+| 15 | 76.0878 | 75.0788 | 0.9867 | TIE |
+
+**ALL_CORE_BEAT** = False
+
+[00:24:23] soft_med s2
+# trust69 L=2 seed=2 train{6,9}
+
+| n | QAOA Med | Med | R | verdict |
+|---|----------|-----|---|---------|
+| 6 | 5.3257 | 5.2659 | 0.9888 | TIE |
+| 9 | 12.6416 | 12.6544 | 1.0010 | TIE |
+| 12 | 29.6063 | 29.4871 | 0.9960 | TIE |
+| 15 | 76.0878 | 75.0891 | 0.9869 | TIE |
+
+**ALL_CORE_BEAT** = False
+
+[00:26:48] soft_med s3
+# trust69 L=2 seed=3 train{6,9}
+
+| n | QAOA Med | Med | R | verdict |
+|---|----------|-----|---|---------|
+| 6 | 5.3257 | 5.2702 | 0.9896 | TIE |
+| 9 | 12.6416 | 12.6089 | 0.9974 | TIE |
+| 12 | 29.6063 | 29.3803 | 0.9924 | TIE |
+| 15 | 76.0878 | 75.1681 | 0.9879 | TIE |
+
+**ALL_CORE_BEAT** = False
+
+[00:35:44] soft_med s4
+# trust69 L=2 seed=4 train{6,9}
+
+| n | QAOA Med | Med | R | verdict |
+|---|----------|-----|---|---------|
+| 6 | 5.3257 | 5.2255 | 0.9812 | TIE |
+| 9 | 12.6416 | 12.6769 | 1.0028 | TIE |
+| 12 | 29.6063 | 29.5010 | 0.9964 | TIE |
+| 15 | 76.0878 | 75.5190 | 0.9925 | TIE |
+
+**ALL_CORE_BEAT** = False
+
+[00:38:03] soft_med s5
+[00:38:36] DONE pareto_lucky ec=0
+[00:39:07] DONE soft_q_delta ec=0
+# trust69 L=2 seed=5 train{6,9}
+
+| n | QAOA Med | Med | R | verdict |
+|---|----------|-----|---|---------|
+| 6 | 5.3257 | 5.2325 | 0.9825 | TIE |
+| 9 | 12.6416 | 12.6685 | 1.0021 | TIE |
+| 12 | 29.6063 | 29.4894 | 0.9961 | TIE |
+| 15 | 76.0878 | 75.2032 | 0.9884 | TIE |
+
+**ALL_CORE_BEAT** = False
+
+[00:40:21] soft_med s6

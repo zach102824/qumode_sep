@@ -112,6 +112,11 @@ def main():
             torch.nn.utils.clip_grad_norm_(trainables, 5.0)
             opt.step()
             project_delta_ball(c2, c3, c2_0, c3_0, args.rho)
+            with torch.no_grad():
+                delta = torch.cat([(c2 - c2_0).reshape(-1), (c3 - c3_0).reshape(-1)])
+                dnorm = float(delta.norm().item())
+            if dnorm > args.rho + 1e-4:
+                raise RuntimeError(f"delta-ball violated s{seed} step{step}: ||delta||={dnorm:.4f} > rho={args.rho}")
             if step % 25 == 0 or step == args.adam_steps - 1:
                 sc = holdout_score(
                     idea, bundles[9], gamma, c1, c2, c3, p, hold_idx,
@@ -120,6 +125,10 @@ def main():
                 log(f"warm s{seed} adam{step} loss={float(loss):.5f} hold={sc:.5f}")
                 if sc < best["score"]:
                     best = {"score": sc, "snap": snapshot_params(gamma, c1, c2, c3, p), "step": step}
+        with torch.no_grad():
+            cnorm = float(torch.cat([c2.reshape(-1), c3.reshape(-1)]).norm().item())
+            dnorm = float(torch.cat([(c2 - c2_0).reshape(-1), (c3 - c3_0).reshape(-1)]).norm().item())
+        log(f"warm s{seed} delta-ball ||c||={cnorm:.4f} ||delta||={dnorm:.4f} rho={args.rho} (centered on init, not origin)")
         snap = best["snap"] or snapshot_params(gamma, c1, c2, c3, p)
         state = {
             "idea": idea, "L": L, "seed": seed,

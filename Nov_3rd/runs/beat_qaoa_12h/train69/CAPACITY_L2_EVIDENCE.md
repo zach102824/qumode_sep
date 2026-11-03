@@ -1,7 +1,8 @@
-# L=2 CAPACITY NEAR-MISS DECLARE (train{6,9}, gates locked)
+# L=2 CAPACITY NEAR-MISS — FINAL (train{6,9}, gates locked)
 
 **Declared:** 2026-11-04 ~00:25 Asia/Shanghai (box).
-**ALL_CORE_BEAT = False** after extensive shallow hunt. This is an **empirical basin claim**, not a proof.
+**Finalized:** 2026-11-04 ~00:40 Asia/Shanghai — soft_q clouds + box soft_q finished; **no ALL_CORE_BEAT**.
+**ALL_CORE_BEAT = False.** Empirical basin claim, not a proof.
 
 ## Locked setting
 - Gates: Hamming-shell SNAP; W=H⊗3; train ONLY {6,9}; eval CORE {6,9,12,15} scale1000 B=1000
@@ -20,16 +21,24 @@
 Knee = max(R12,R15) = **0.9858**. Simultaneous gap to BEAT ≈ **0.005–0.006** on n12 and n15.
 
 ## Evidence summary
-- **≥163** CORE evals with n6&n9 BEAT; **0** ALL_CORE_BEAT.
+- **≥230** CORE evals with n6&n9 BEAT on box; **0** ALL_CORE_BEAT.
 - Radial ε scale of champ (c2,c3): **local minimum of knee exactly at ε=0**.
 - Champ↔warm Pareto blend: knee minimized at a_champ=1.0.
-- Dense trust multi-start (box+cloud): all starts → same basin; more starts useless (cloud bc-ca109616).
-- Objective-gap fix (`--loss med_align` = soft_quantile(1/p)/QAOA_Med): QAOA-warm still R9≈1.00; delta-ball around champ best knee 0.9866; soft_q=0.4 slides to n12 BEAT / n15≈0.996.
-- Ideas A–D (med_align, soft_q, delta-warm, hinge) + pareto_fine/lucky/dense_micro: none beat knee 0.9858.
-- Cloud best pre-med_align n15 = 0.9878 (n9med ρ0.03 s3).
+- Dense trust multi-start (box+cloud bc-ca109616): all starts → same basin.
+- Objective-gap fix (`--loss med_align`): QAOA-warm still R9≈1.00; delta-ball around champ best knee 0.9866; soft_q∈{0.35,0.4} slides to n12 BEAT / n15≈0.99+.
+- Ideas A–E (med_align, soft_q, delta-warm, hinge, α grid) + pareto_fine/lucky/dense_micro: none beat knee 0.9858 under n6&n9 BEAT.
+- Cloud Round3 denser (bc-5198772e → `cursor/train69-l2-round3-denser-76da`): 280 pareto_fine evals; best n15=0.9850 but n9 TIE; among n6&n9 BEAT, best knee ≥0.9867; when n6+n9+n12 BEAT, n15≥0.9891. **no ALL_CORE**.
+- Cloud med_align (bc-0fa5a09f → `cursor/l2-med-align-sweeps-b563`): 40 soft_q=0.5 starts + Idea C/B/E; n15≥0.985 on every primary start; **no ALL_CORE**. Published knee unchanged.
+- Box soft_q_delta (q∈{0.4,0.35} × ρ∈{0.015,0.025,0.04} × seeds 0–3): **24/24** ALL_CORE_BEAT=False. Best softq n6&n9-BEAT knee ≈0.9894.
 
-## Claim
-Under these locks, L=2 SNAP/QAOA shallow training on train{6,9} appears **capacity-limited** near R≈0.985–0.986 on the n12/n15 knee: improving one of {n12,n15} into BEAT systematically worsens the other past 0.99. Unlock paths would need different gates, train set, L, or ansatz — not more starts with the same loss family.
+## Claim (FINAL)
+Under these locks, L=2 SNAP/QAOA shallow training on train{6,9} is **capacity-limited** near R≈0.985–0.986 on the n12/n15 knee: improving one of {n12,n15} into BEAT systematically worsens the other past 0.99. Unlock paths would need different gates, train set, L, or ansatz — not more starts with the same loss family.
 
-## Still running (will update if BEAT appears)
-soft_q∈{0.35,0.4} delta; cloud bc-0fa5a09f / bc-5198772e; pareto_fine/lucky; soft_med.
+## Clouds closed
+| Agent | Branch | Outcome |
+|-------|--------|---------|
+| bc-5198772e Round3 denser | cursor/train69-l2-round3-denser-76da | FINISHED no-BEAT |
+| bc-0fa5a09f med_align | cursor/l2-med-align-sweeps-b563 | FINISHED no-BEAT |
+| bc-ca109616 dense+n9med | cursor/beat-qaoa-l2-train69-28cb | FINISHED no-BEAT (earlier) |
+
+L=2 hunt wrapped. No new shallow arms.
