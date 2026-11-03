@@ -7,7 +7,7 @@ Zach 2026-11-03 (t2442–t2444):
   Train n=6 only, 1000 samples
   Optimizer = L-BFGS only (no Adam)
   L ∈ {1,4,8,12,16,20,24,28,32}  (always this set)
-  Eval n from 9 to 18 (scale1000 B=1000; n%3==0 with b=3)
+  Eval n from 6 to 18 (scale1000 B=1000; n%3==0 with b=3)
 """
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ MAX_VAL = 40
 L_LIST = (1, 4, 8, 12, 16, 20, 24, 28, 32)
 
 # test n from 9 to 18 inclusive (Zach t2444)
-EVAL_N_LO, EVAL_N_HI = 9, 18
+EVAL_N_LO, EVAL_N_HI = 6, 18
 EVAL_NS = tuple(range(EVAL_N_LO, EVAL_N_HI + 1))
 # with b=3, only n % 3 == 0 are simulable; available scale1000 packs today: 9,12,15,18
 EVAL_NS_SIM = tuple(n for n in EVAL_NS if n % B_BITS == 0)

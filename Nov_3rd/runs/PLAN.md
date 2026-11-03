@@ -20,13 +20,13 @@ Fresh package `Nov_3rd/` — knobs only in `settings.py` (no `Nov/` defaults).
 | Init | **QAOA-warm** |
 | Train | **n=6 × 1000**, **L-BFGS only** |
 | **L** | **\{1, 4, 8, 12, 16, 20, 24, 28, 32\}** (always) |
-| **Eval n** | **9 → 18** inclusive; with \(b=3\) sim on \(n\in\{9,12,15,18\}\) (packs on disk); skip \(n\nmid 3\) |
+| **Eval n** | **6 → 18** inclusive; with \(b=3\) sim on \(n\in\{6,9,12,15,18\}\) (packs on disk); skip \(n\nmid 3\) |
 | Eval | scale1000 **B=1000**; Med/B90 (+ R vs QAOA same \(L\)) |
 
 ## Protocol
 1. **QAOA warm angles** for every \(L\) in the set (train via `explore_OCT29.scripts.eval_qaoa_L_scale1000 --L L` if `angles.json` missing). On disk now: L∈{1,4,8,16}; need {12,20,24,28,32}.
 2. For each \(L\): QAOA-warm → L-BFGS on n6×1000 (seeds 0,1,2) → best ckpt.
-3. Eval scale1000 B=1000 on n=9…18 (sim: 9,12,15,18).
+3. Eval scale1000 B=1000 on n=6…18 (sim: 6,9,12,15,18).
 4. Write `RESULTS_L{L}.md` + summary `RESULTS.md` under `Nov_3rd/runs/`.
 
 ## Run
