@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
-"""Nov_3rd ladder: L small→large; compare vs fair paper-n6 QAOA; STOP if UNDER.
+"""Nov_3rd ladder: L small→large; Hamming-shell SNAP vs fair paper-n6 QAOA.
 
-Eval order (Zach t2495u):
-  1) ALL L on n∈{6,9,12,15}  (CORE) — gate / STOP
+Eval order (Zach t2495u + t2527u):
+  1) ALL L on n∈{6,9,12,15}  (CORE)
   2) then n=18 across surviving L
   3) then n=21 across surviving L (skip if no scale1000 pack)
 
-Train: n=6×1000 L-BFGS only; warm-fallback recovers exact QAOA dual.
-QAOA refs: paper init β=0.01 γ=-0.01 nstart=1, train n6×1000.
+Selection (Zach t2527u):
+  - train Med warm-fallback stays (polish worse on n6 → ship warm)
+  - after CORE eval of polished ckpt: if any n R>1.02 vs QAOA,
+    discard polish and ship warm (TIE dual); KEEP climbing L
+    (do NOT STOP the ladder on polish transfer UNDER)
+
+Train: n=6×1000 L-BFGS only. QAOA refs: paper β=0.01 γ=-0.01 nstart=1.
 """
 from __future__ import annotations
 
@@ -130,13 +135,13 @@ def write_L_results(L, rows, warm_rows, best_seed, meta, cmp, warm_cmp, phase="c
         f"Warm-only vs QAOA: **{warm_cmp['overall']}**",
         f"Best seed = {best_seed}",
         (
-            "Warm recovery: **yes** (polish rejected; exact QAOA dual shipped)"
+            f"Warm recovery: **yes** ({meta.get('warm_ship_reason', 'warm shipped')}; exact QAOA dual)"
             if meta.get("best_used_warm")
-            else "Warm recovery: no (polish train Med ≤ warm)"
+            else "Warm recovery: no (polish kept; CORE R≤1.02)"
         ),
         "",
-        "Motif: Nov1st-final X-sandwich + **Hamming-shell SNAP** (QAOA-warm).
-QAOA ref: paper init β=0.01 γ=-0.01 nstart=1, train n6×1000.",
+        "Motif: Nov1st-final X-sandwich + **Hamming-shell SNAP** (QAOA-warm).",
+        "QAOA ref: paper init β=0.01 γ=-0.01 nstart=1, train n6×1000.",
         "",
         "| n | QAOA Med | QAOA B90 | warm Med | warm B90 | R_warm | warm | "
         "acc Med | acc B90 | R_acc | acc |",
@@ -163,10 +168,17 @@ QAOA ref: paper init β=0.01 γ=-0.01 nstart=1, train n6×1000.",
             f"{a.get('verdict', '')} |"
         )
     lines.append("")
-    if cmp["under"]:
+    if meta.get("transfer_under_fallback"):
         lines += [
-            "## STOP",
-            "At least one n UNDER QAOA (R>1.02) on accepted ckpt — do not climb L.",
+            "## Transfer-UNDER → ship warm (keep climbing)",
+            "Polished ckpt had R>1.02 on at least one CORE n; discarded polish,",
+            "shipped warm Hamming-shell SNAP dual (expect TIE). Ladder continues.",
+            "",
+        ]
+    elif cmp["under"]:
+        lines += [
+            "## NOTE",
+            "Accepted (warm) still UNDER vs QAOA on some n — logged; ladder still climbs (t2527u).",
             "",
         ]
     suffix = "" if phase == "core" else f"_{phase}"
@@ -256,13 +268,28 @@ def _available(ns):
     return out
 
 
-def run_core_ladder(device, E_train, E_val):
-    """Phase 1: train + eval CORE ns for every L; STOP on UNDER."""
+def _warm_state(L, betas0, gammas0, seed=0):
+    """Exact QAOA dual ckpt (Hamming-shell SNAP warm)."""
+    from Nov_3rd.train_bfgs import _ckpt_state
+    warm_phi = shell_phi_from_betas(betas0)
+    st = _ckpt_state(gamma=gammas0, phi=warm_phi, L=L, seed=seed)
+    st["used_warm"] = True
+    st["rejected_polish"] = True
+    return st, warm_phi
+
+
+def run_core_ladder(device, E_train, E_val, start_L=None, skip_train_L=None):
+    """Phase 1: train + eval CORE ns for every L.
+
+    Zach t2527u: polish transfer UNDER → ship warm, KEEP climbing (no STOP).
+    """
     ns = _available(S.EVAL_NS_CORE)
-    log(f"PHASE1 CORE start L={list(S.L_LIST)} ns={ns}")
+    L_run = [L for L in S.L_LIST if start_L is None or L >= int(start_L)]
+    skip_train_L = set(skip_train_L or [])
+    log(f"PHASE1 CORE start L={L_run} ns={ns} skip_train={sorted(skip_train_L)}")
     all_L = {}
     surviving = []
-    for L in S.L_LIST:
+    for L in L_run:
         t0 = time.time()
         log(f"=== L={L} ensure fair QAOA (ns={ns}) ===")
         ensure_qaoa_paper_n6(L, device=device, ns=ns)
@@ -275,30 +302,117 @@ def run_core_ladder(device, E_train, E_val):
         warm_cmp = compare_vs_qaoa(L, warm_rows, qref, betas0, gammas0, device)
         log(f"L={L} warm-only overall {warm_cmp['overall']}")
 
-        log(f"=== L={L} train (LBFGS + warm-fallback) ===")
-        best_all = None
-        seed_rows = []
-        for seed in S.SEEDS:
-            best = train_seed(
-                L=L, device=device, E_train=E_train,
-                betas0=betas0, gammas0=gammas0, seed=seed, E_val=E_val,
-            )
-            used_warm = bool(best.get("used_warm") or best.get("rejected_polish"))
-            if used_warm:
-                log(
-                    f"L{L} seed{seed}: warm recovered; "
-                    f"trainMed=warmMed≈{best['warm_med']:.4f}"
+        transfer_under_fallback = False
+        warm_ship_reason = None
+        polish_cmp_saved = None
+
+        if L in skip_train_L and (S.OUT / f"results_L{L}.json").exists():
+            log(f"=== L={L} REUSE prior train; apply t2527u ship-warm if polish UNDER ===")
+            prior = json.loads((S.OUT / f"results_L{L}.json").read_text())
+            seed_rows = prior.get("meta", {}).get("train_summary", [])
+            best_seed = prior.get("best_seed", 0)
+            best_all = {
+                "seed": best_seed,
+                "score": prior.get("meta", {}).get("best_train_med"),
+                "train_med": prior.get("meta", {}).get("best_train_med"),
+                "warm_med": prior.get("meta", {}).get("best_warm_med"),
+                "used_warm": bool(prior.get("meta", {}).get("best_used_warm")),
+                "rejected_polish": bool(prior.get("meta", {}).get("best_used_warm")),
+                "state": None,
+            }
+            # Prefer live warm_rows/warm_cmp just computed; prior polish compare if present
+            polish_cmp_saved = prior.get("compare")
+            used_warm_best = bool(best_all.get("used_warm") or best_all.get("rejected_polish"))
+            if used_warm_best:
+                rows, cmp = warm_rows, warm_cmp
+                warm_ship_reason = "train_med_fallback_reused"
+            else:
+                # Re-check prior polish vs QAOA; if UNDER → ship warm
+                prior_under = bool((polish_cmp_saved or {}).get("under"))
+                if not prior_under and polish_cmp_saved and polish_cmp_saved.get("per_n"):
+                    # recompute under from R if needed
+                    prior_under = any(
+                        (p.get("verdict") == "UNDER") or (p.get("R") is not None and p["R"] > TIE_HI)
+                        for p in polish_cmp_saved["per_n"].values()
+                    )
+                if prior_under or (polish_cmp_saved or {}).get("overall") == "UNDER":
+                    log(
+                        f"L={L}: prior polish UNDER on CORE — discard polish, "
+                        f"ship warm Hamming-shell dual, KEEP climbing (t2527u)"
+                    )
+                    st_warm, _ = _warm_state(L, betas0, gammas0, seed=best_seed)
+                    st_warm["reject_reason"] = "transfer_under_fallback"
+                    best_all["state"] = st_warm
+                    best_all["used_warm"] = True
+                    best_all["rejected_polish"] = True
+                    torch.save(st_warm, S.OUT / f"params_best_L{L}.pt")
+                    rows, cmp = warm_rows, warm_cmp
+                    used_warm_best = True
+                    transfer_under_fallback = True
+                    warm_ship_reason = "transfer_under_fallback"
+                else:
+                    # polish was OK — keep prior accepted eval if present
+                    rows = prior.get("eval") or warm_rows
+                    cmp = polish_cmp_saved or warm_cmp
+                    ck = S.OUT / f"params_best_L{L}.pt"
+                    if ck.exists():
+                        best_all["state"] = torch.load(ck, map_location=device, weights_only=False)
+        else:
+            log(f"=== L={L} train (LBFGS + warm-fallback) ===")
+            best_all = None
+            seed_rows = []
+            for seed in S.SEEDS:
+                best = train_seed(
+                    L=L, device=device, E_train=E_train,
+                    betas0=betas0, gammas0=gammas0, seed=seed, E_val=E_val,
                 )
-            seed_rows.append({
-                "seed": seed, "score": best["score"], "round": best["round"],
-                "train_med": best["train_med"], "warm_med": best["warm_med"],
-                "used_warm": used_warm,
-                "rejected_polish": bool(best.get("rejected_polish", False)),
-            })
-            torch.save(best["state"], S.OUT / f"params_seed{seed}_L{L}.pt")
-            if best_all is None or best["score"] < best_all["score"]:
-                best_all = {**best, "seed": seed}
-        torch.save(best_all["state"], S.OUT / f"params_best_L{L}.pt")
+                used_warm = bool(best.get("used_warm") or best.get("rejected_polish"))
+                if used_warm:
+                    log(
+                        f"L{L} seed{seed}: warm recovered (train Med); "
+                        f"trainMed=warmMed≈{best['warm_med']:.4f}"
+                    )
+                seed_rows.append({
+                    "seed": seed, "score": best["score"], "round": best["round"],
+                    "train_med": best["train_med"], "warm_med": best["warm_med"],
+                    "used_warm": used_warm,
+                    "rejected_polish": bool(best.get("rejected_polish", False)),
+                })
+                torch.save(best["state"], S.OUT / f"params_seed{seed}_L{L}.pt")
+                if best_all is None or best["score"] < best_all["score"]:
+                    best_all = {**best, "seed": seed}
+            torch.save(best_all["state"], S.OUT / f"params_best_L{L}.pt")
+
+            used_warm_best = bool(best_all.get("used_warm") or best_all.get("rejected_polish"))
+            if used_warm_best:
+                log(f"=== L={L} accepted == warm (train-Med fallback; skip re-eval) ===")
+                rows, cmp = warm_rows, warm_cmp
+                warm_ship_reason = "train_med_fallback"
+            else:
+                log(f"=== L={L} polish CORE eval ===")
+                st = best_all["state"]
+                rows = eval_ladder(L, st["gamma"], st["phi"], device, ns=ns)
+                cmp = compare_vs_qaoa(L, rows, qref, betas0, gammas0, device)
+                polish_cmp_saved = cmp
+                if cmp["under"]:
+                    log(
+                        f"L={L}: polish UNDER on CORE (R>1.02) — discard polish, "
+                        f"ship warm Hamming-shell dual, KEEP climbing (t2527u)"
+                    )
+                    st_warm, _ = _warm_state(L, betas0, gammas0, seed=best_all["seed"])
+                    st_warm["reject_reason"] = "transfer_under_fallback"
+                    st_warm["polish_overall"] = cmp["overall"]
+                    best_all["state"] = st_warm
+                    best_all["used_warm"] = True
+                    best_all["rejected_polish"] = True
+                    torch.save(st_warm, S.OUT / f"params_best_L{L}.pt")
+                    rows, cmp = warm_rows, warm_cmp
+                    used_warm_best = True
+                    transfer_under_fallback = True
+                    warm_ship_reason = "transfer_under_fallback"
+                else:
+                    log(f"L={L}: polish CORE OK ({cmp['overall']}) — ship polish")
+
         (S.OUT / f"train_summary_L{L}.json").write_text(
             json.dumps(
                 _jsonable({
@@ -306,9 +420,10 @@ def run_core_ladder(device, E_train, E_val):
                     "best_seed": best_all["seed"],
                     "L": L,
                     "n_seeds_used_warm": sum(1 for r in seed_rows if r.get("used_warm")),
-                    "best_used_warm": bool(
-                        best_all.get("used_warm") or best_all.get("rejected_polish")
-                    ),
+                    "best_used_warm": used_warm_best,
+                    "transfer_under_fallback": transfer_under_fallback,
+                    "warm_ship_reason": warm_ship_reason,
+                    "polish_compare": polish_cmp_saved,
                     "qaoa_source": "paper_n6",
                     "eval_ns_core": list(ns),
                 }),
@@ -316,15 +431,10 @@ def run_core_ladder(device, E_train, E_val):
             )
         )
 
-        used_warm_best = bool(best_all.get("used_warm") or best_all.get("rejected_polish"))
-        if used_warm_best:
-            log(f"=== L={L} accepted == warm (skip re-eval) ===")
-            rows, cmp = warm_rows, warm_cmp
-        else:
-            log(f"=== L={L} accepted CORE eval ===")
-            st = best_all["state"]
-            rows = eval_ladder(L, st["gamma"], st["phi"], device, ns=ns)
-            cmp = compare_vs_qaoa(L, rows, qref, betas0, gammas0, device)
+        if best_all.get("state") is None:
+            st_warm, _ = _warm_state(L, betas0, gammas0, seed=best_all["seed"])
+            best_all["state"] = st_warm
+            torch.save(st_warm, S.OUT / f"params_best_L{L}.pt")
 
         meta = {
             "recipe": S.RECIPE_NAME, "L": L, "phase": "core",
@@ -335,6 +445,9 @@ def run_core_ladder(device, E_train, E_val):
             "qaoa_source": "paper_n6",
             "train_summary": seed_rows,
             "best_used_warm": used_warm_best,
+            "transfer_under_fallback": transfer_under_fallback,
+            "warm_ship_reason": warm_ship_reason,
+            "polish_compare": polish_cmp_saved,
             "best_warm_med": best_all.get("warm_med"),
             "best_train_med": best_all.get("train_med"),
             "wall_s": time.time() - t0,
@@ -350,16 +463,13 @@ def run_core_ladder(device, E_train, E_val):
         }
         write_summary(all_L, "core")
         log(
-            f"L={L} CORE overall {cmp['overall']} (warm {warm_cmp['overall']}) "
-            f"wall={meta['wall_s']/60:.1f}min"
+            f"L={L} CORE accepted={cmp['overall']} (warm {warm_cmp['overall']}; "
+            f"ship={warm_ship_reason or 'polish'}) "
+            f"wall={meta['wall_s']/60:.1f}min — keep climbing"
         )
         _git_push_L(L, cmp, warm_cmp, "core")
-        if cmp["under"]:
-            log(f"STOP CORE ladder at L={L}: UNDER — no further L / no n18")
-            write_summary(all_L, "core")
-            return all_L, surviving  # surviving = Ls before UNDER
         surviving.append(L)
-    log("PHASE1 CORE DONE — all L TIE/BEAT on n∈{6,9,12,15}")
+    log("PHASE1 CORE DONE — climbed all requested L (t2527u: no STOP on polish UNDER)")
     return all_L, surviving
 
 
@@ -382,13 +492,23 @@ def run_extend_pass(all_L, surviving, ns_pass, phase, device):
         qref = load_qaoa_scale_ref(L)
         warm_cmp = compare_vs_qaoa(L, warm_rows, qref, betas0, gammas0, device)
         used_warm = bool(st.get("used_warm") or st.get("rejected_polish"))
+        # Also honor CORE all_L meta if ckpt predates reject_reason flag
+        meta0 = (all_L.get(L) or {}).get("meta") or {}
+        if meta0.get("best_used_warm") or meta0.get("transfer_under_fallback"):
+            used_warm = True
         if used_warm:
             rows, cmp = warm_rows, warm_cmp
-            log(f"L={L} {phase}: accepted==warm")
+            log(f"L={L} {phase}: accepted==warm (ship={meta0.get('warm_ship_reason', 'warm')})")
         else:
             log(f"=== L={L} {phase} accepted eval ===")
             rows = eval_ladder(L, st["gamma"], st["phi"], device, ns=ns)
             cmp = compare_vs_qaoa(L, rows, qref, betas0, gammas0, device)
+            if cmp["under"]:
+                log(
+                    f"L={L} {phase}: polish UNDER on extra ns — ship warm for this pass "
+                    f"(CORE already decided; t2527u)"
+                )
+                rows, cmp = warm_rows, warm_cmp
         # merge into core rows for summary convenience
         merged_eval = dict(all_L[L]["eval"])
         merged_eval.update(rows)
@@ -416,7 +536,31 @@ def run_extend_pass(all_L, surviving, ns_pass, phase, device):
     return all_L
 
 
-def main():
+def _load_prior_L(L, device):
+    """Load a previously written CORE results_L{L}.json into all_L entry."""
+    p = S.OUT / f"results_L{L}.json"
+    if not p.exists():
+        return None
+    blob = json.loads(p.read_text())
+    return {
+        "meta": blob.get("meta", {}),
+        "eval": {int(k): v for k, v in (blob.get("eval") or {}).items()},
+        "warm_eval": {int(k): v for k, v in (blob.get("warm_eval") or {}).items()},
+        "compare": blob.get("compare", {}),
+        "warm_compare": blob.get("warm_compare", {}),
+        "best_seed": blob.get("best_seed"),
+    }
+
+
+def main(argv=None):
+    import argparse
+    ap = argparse.ArgumentParser(description="Nov_3rd Hamming-shell SNAP ladder")
+    ap.add_argument("--start-L", type=int, default=None,
+                    help="First L in L_LIST to (re)run; prior smaller L loaded if present")
+    ap.add_argument("--skip-train-L", type=int, nargs="*", default=[],
+                    help="Reuse prior train/RESULTS for these L; apply t2527u ship-warm rule")
+    args = ap.parse_args(argv)
+
     _set_threads(S.NUM_THREADS)
     S.assert_locked(
         b=S.B_BITS, W_frame=S.W_FRAME, snap_head=S.SNAP_HEAD,
@@ -437,13 +581,43 @@ def main():
         f"eval plan: CORE={list(S.EVAL_NS_CORE)} → PASS2={list(S.EVAL_NS_PASS2)} "
         f"→ PASS3={list(S.EVAL_NS_PASS3)}; train={S.TRAIN_NS}×{S.MAX_TRAIN}"
     )
+    log(
+        f"t2527u rule: polish CORE UNDER → ship warm (TIE dual), KEEP climbing; "
+        f"start_L={args.start_L} skip_train_L={args.skip_train_L}"
+    )
 
     S.OUT.mkdir(parents=True, exist_ok=True)
     device = torch.device("cpu")
     E_train = load_train_E(device)
     E_val, _ = load_split_E(6, "val", S.MAX_VAL, device, data_dir=S.SEALED_DATA)
 
-    all_L, surviving = run_core_ladder(device, E_train, E_val)
+    # Prefill all_L / surviving with prior L < start_L (e.g. L=1 when restarting at 4)
+    prefill = {}
+    pre_surv = []
+    if args.start_L is not None:
+        for L in S.L_LIST:
+            if L >= int(args.start_L):
+                break
+            prior = _load_prior_L(L, device)
+            if prior is None:
+                log(f"WARN: missing prior results_L{L}.json before start_L={args.start_L}")
+                continue
+            prefill[L] = prior
+            pre_surv.append(L)
+            log(f"prefill L={L} overall={prior.get('compare', {}).get('overall')}")
+
+    all_L, surviving = run_core_ladder(
+        device, E_train, E_val,
+        start_L=args.start_L,
+        skip_train_L=args.skip_train_L,
+    )
+    # merge prefill
+    merged = dict(prefill)
+    merged.update(all_L)
+    all_L = merged
+    surviving = pre_surv + [L for L in surviving if L not in pre_surv]
+    write_summary(all_L, "core")
+
     if not surviving:
         log("No surviving L — stop before n18/n21")
         sys.exit(4)

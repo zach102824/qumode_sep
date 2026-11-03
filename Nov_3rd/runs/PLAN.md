@@ -9,7 +9,7 @@ _Asia/Shanghai 2026-11-03 — Zach t2442–t2458_
 |0\rangle \xrightarrow{[U_c^{X}\to\mathrm{Hamming\text{-}shell\,SNAP}]^{L}} W \to \text{Fock},
 \quad U_c^{X}=W\,D\,W,\quad D=\mathrm{e}^{-i\gamma E},\quad W=H^{\otimes 3}.
 \]
-**3 bits/cavity**. Binary. QAOA-warm shared **Hamming-shell SNAP**. Train n=6×1000, **L-BFGS only**.
+**3 bits/cavity**. Binary. QAOA-warm shared **Hamming-shell SNAP** (φ_k, k=0..3 via popcount; code `SNAP_HEAD="shell"`). Train n=6×1000, **L-BFGS only**.
 
 Warm dual-QAOA map (locked):
 \[
@@ -18,11 +18,19 @@ Warm dual-QAOA map (locked):
 \quad (j=0,\ldots,7;\ \mathrm{shared\ across\ cavities}).
 \]
 
+## Selection rule (locked 2026-11-03, Zach t2527u)
+Name: **Hamming-shell SNAP**.
+
+1. Train-Med warm-fallback stays (`train_bfgs.reject_polish_for_warm`).
+2. After CORE eval of polished ckpt: if any \(n\) has \(R>1.02\) vs QAOA → **ship warm**
+   (exact QAOA dual), overall gate = warm’s (expect TIE), **keep climbing L**.
+3. No ladder STOP on polish transfer UNDER.
+
 ## Locked
 | knob | value |
 |------|-------|
 | bits/cavity | **3** |
-| W / SNAP | **BinH** / **Hamming-shell SNAP** (shared cavities, per layer; code `SNAP_HEAD="shell"`) |
+| W / SNAP | **BinH** / **Hamming-shell** (φ_k k=0..3; shared cavities, per layer) |
 | Init | **QAOA-warm** |
 | Train | **n=6 × 1000**, **L-BFGS only** |
 | L | **\{1,4,8,12,16,20,24,28,32\}** small→large |
@@ -36,11 +44,14 @@ Canonical angles live in `qaoa_angles/L{L}/` and **must** be paper-init n6×1000
 (`ensure_qaoa_paper_n6` / `qaoa_init.py`). Old n9+n12 / grown multi-start angles
 are archived as `L{L}_n912_legacy` or `L{L}_legacy_nonpaper`.
 
-`run_final` always:
+`run_final` always (Zach t2527u):
 1. ensures paper-n6 QAOA for that L (+ scale1000 Med/B90 refs),
-2. records warm-only baseline (exact dual),
-3. polishes with warm-fallback,
-4. gates accepted ckpt vs same-L QAOA; STOP on UNDER.
+2. records warm-only baseline (exact dual / Hamming-shell SNAP),
+3. polishes with **train-Med warm-fallback** (if train Med > warm → ship warm),
+4. CORE-evals polished ckpt vs same-L QAOA;
+5. **if any CORE n has R>1.02 (UNDER)** → discard polish, **ship warm** (expect TIE dual),
+   log clearly, and **KEEP climbing L** (do **not** STOP the ladder on polish transfer UNDER).
+6. overall accepted gate = whatever was shipped (warm or polish).
 
 ## QAOA parameter init
 Retrain / new QAOA angles under `Nov_3rd/` use **only** the Boulebnane–Montanaro paper init (arXiv:2208.06909 §Parameter optimization): every layer starts at β=0.01, γ=−0.01, with **nstart=1** (no multi-start paper-k4 / linear-ramp / random). Shared helper: `Nov_3rd/qaoa_init.py`. Convention: qaoa_ref \(U_C=\mathrm{exp}(-i\gamma C_n)\), \(U_B=\mathrm{exp}(-i\beta X/2)\).
@@ -90,14 +101,17 @@ Script / log: `scripts/debug_L1_warm_vs_polished.py`, `runs/debug_L1_warm_vs_pol
 1. Ensure `qaoa_angles/L{L}/angles.json` for that \(L\).
 2. **Always record warm-only baseline** on scale1000 \(\{6,9,12,15,18\}\) (and a cheap n6 train-set Med). Expect \(R\approx 1.00\) vs QAOA at L=1; keep the warm Med table.
 3. Optional free L-BFGS polish (seeds 0,1,2) from warm init, train n6×1000.
-4. **STOP / reject polish** if any seed’s train Med \(>\) warm Med on the train distribution (n6). Keep warm ckpt instead.
-5. Eval accepted ckpt on scale1000; gate vs QAOA same \(L\):
+4. **Reject polish on train Med** if any seed’s train Med \(>\) warm Med on n6. Keep warm ckpt instead.
+5. Eval polished (or warm) ckpt on scale1000 CORE \(n\in\{6,9,12,15\}\); gate vs QAOA same \(L\):
    - \(R=\mathrm{Med}/\mathrm{Med}_{QAOA}\)
    - **BEAT** if \(R\le 0.98\); **TIE** if \(0.98<R\le 1.02\); **UNDER** if \(R>1.02\)
-6. If any eval \(n\) is UNDER → **STOP** ladder; debug angles (do not climb \(L\)).
-7. Else write `runs/RESULTS_L{L}.md` and proceed.
+6. **If polish is UNDER on any CORE \(n\)** (Zach t2527u): discard polish, **ship warm**
+   Hamming-shell SNAP dual (overall = warm’s gate, expect TIE), and **KEEP climbing \(L\)**.
+   Do **not** STOP the ladder on polish transfer UNDER.
+7. Write `runs/RESULTS_L{L}.md` (log warm-ship reason) and proceed to next \(L\).
 
 **Do not ship** a polished checkpoint that lost to warm on train Med.
+**Do not ship** a polished checkpoint that is UNDER on CORE transfer — ship warm instead and continue.
 
 **Code enforcement (train_bfgs.py):** `reject_polish_for_warm(train_med, warm_med)` is applied at the end of every `train_seed` call. Mid-loop never crowns a round with `train_med > warm_med`. If polish is missing or worse, the returned state is the exact QAOA dual (φ_j=-β·j, γ=γ_QAOA), with `used_warm=True` / `rejected_polish=True` logged and written into ckpts / `train_summary_L*.json` / RESULTS.
 

@@ -40,7 +40,7 @@ MAX_VAL = 40
 L_LIST = (1, 4, 8, 12, 16, 20, 24, 28, 32)
 
 # Eval phasing (t2495u): core first for every L, then extend.
-EVAL_NS_CORE = (6, 9, 12, 15)       # phase 1 — gate ladder / STOP
+EVAL_NS_CORE = (6, 9, 12, 15)       # phase 1 — CORE gate; polish UNDER → ship warm, keep climbing (t2527u)
 EVAL_NS_PASS2 = (18,)               # phase 2 — after all L pass core
 EVAL_NS_PASS3 = (21,)               # phase 3 — after pass2 (pack may be missing)
 EVAL_NS_SIM = EVAL_NS_CORE          # primary sim / gate set
