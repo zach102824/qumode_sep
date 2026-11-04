@@ -1,0 +1,113 @@
+{
+  "verdict": "PASS",
+  "null": false,
+  "reason": "frozen n=12 L=16 Walsh R=0.096 (instance 95% CI 0.091\u20130.102) and n=15 R=0.106 (CI 0.100\u20130.117) both stay BEAT. 5/5 and 5/5 seeds beat. Paired majorities 5/5 and 5/5. Drop vs \u03bc=0 unsat Walsh 0.844. Instance product-gap tails: n=12 frac gap<0.02 = 0.008 (1/128), frac gap<0.05 = 1.000; n=15 frac gap<0.02 = 0.000 (0/64), frac gap<0.05 = 1.000. At least 95% of each sealed size has gap \u2265 0.02. n=18 probe L=16 Walsh R=0.120 Med \u03b5=0.0002 on B=16 (peak 0.000, product gap 0.026); exploratory, not gated. PR #28 point estimates were n=12 R=0.097 and n=15 R=0.119.",
+  "R12": 0.09582000711482506,
+  "R15": 0.10592995753581291,
+  "ci12": [
+    0.09059945861613883,
+    0.1024161605577531
+  ],
+  "ci15": [
+    0.1003512461015978,
+    0.1172493854804048
+  ],
+  "prior_R12": 0.09675474400205866,
+  "prior_R15": 0.11904036219488356,
+  "published_R": 0.94,
+  "n18": {
+    "status": "probe",
+    "R": 0.12008014920138932,
+    "med": 0.00019900390181446268,
+    "B": 16,
+    "peak_med": 5.2708665620689206e-05,
+    "prod_gap_med": 0.02615742851346982,
+    "mark": "BEAT",
+    "probe_s": 3.783717632293701
+  },
+  "mu": -1.0,
+  "lam": 0.75,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "B_hold": 256,
+  "B_transfer": 128,
+  "B_n15": 64,
+  "gap_coverage": 0.95,
+  "gap_tails": {
+    "6:train": {
+      "n_inst": 128,
+      "n_gap_lt_0p02": 0,
+      "n_gap_lt_0p05": 125,
+      "frac_gap_lt_0p02": 0.0,
+      "frac_gap_lt_0p05": 0.9765625,
+      "frac_gap_ge_0p02": 1.0,
+      "gap_min": 0.02005159501797599,
+      "prod_gap_med": 0.03419479681444541
+    },
+    "6:hold": {
+      "n_inst": 256,
+      "n_gap_lt_0p02": 5,
+      "n_gap_lt_0p05": 247,
+      "frac_gap_lt_0p02": 0.01953125,
+      "frac_gap_lt_0p05": 0.96484375,
+      "frac_gap_ge_0p02": 0.98046875,
+      "gap_min": 0.015676667570905526,
+      "prod_gap_med": 0.03414366259488516
+    },
+    "9:train": {
+      "n_inst": 128,
+      "n_gap_lt_0p02": 0,
+      "n_gap_lt_0p05": 128,
+      "frac_gap_lt_0p02": 0.0,
+      "frac_gap_lt_0p05": 1.0,
+      "frac_gap_ge_0p02": 1.0,
+      "gap_min": 0.021795194996791382,
+      "prod_gap_med": 0.02960137585211816
+    },
+    "9:hold": {
+      "n_inst": 256,
+      "n_gap_lt_0p02": 4,
+      "n_gap_lt_0p05": 256,
+      "frac_gap_lt_0p02": 0.015625,
+      "frac_gap_lt_0p05": 1.0,
+      "frac_gap_ge_0p02": 0.984375,
+      "gap_min": 0.018008931929231548,
+      "prod_gap_med": 0.029030871794334452
+    },
+    "12:transfer": {
+      "n_inst": 128,
+      "n_gap_lt_0p02": 1,
+      "n_gap_lt_0p05": 128,
+      "frac_gap_lt_0p02": 0.0078125,
+      "frac_gap_lt_0p05": 1.0,
+      "frac_gap_ge_0p02": 0.9921875,
+      "gap_min": 0.019220536745005012,
+      "prod_gap_med": 0.027709844469366876
+    },
+    "15:transfer": {
+      "n_inst": 64,
+      "n_gap_lt_0p02": 0,
+      "n_gap_lt_0p05": 64,
+      "frac_gap_lt_0p02": 0.0,
+      "frac_gap_lt_0p05": 1.0,
+      "frac_gap_ge_0p02": 1.0,
+      "gap_min": 0.023321097739966726,
+      "prod_gap_med": 0.027320111485184265
+    },
+    "18:probe": {
+      "n_inst": 16,
+      "n_gap_lt_0p02": 0,
+      "n_gap_lt_0p05": 16,
+      "frac_gap_lt_0p02": 0.0,
+      "frac_gap_lt_0p05": 1.0,
+      "frac_gap_ge_0p02": 1.0,
+      "gap_min": 0.02384241760623437,
+      "prod_gap_med": 0.02615742851346982
+    }
+  }
+}

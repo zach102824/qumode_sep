@@ -21,9 +21,11 @@ from Nov_3rd.unsat_rank2_xx import (
     best_product_unsat,
     bootstrap_ratio,
     clearly_below,
+    GAP_COVERAGE,
     decide_deepen,
     decide_unsat_xx,
     dense_gap,
+    product_gap_tail,
     paired_instance_counts,
     paired_seed_table,
     plus_energy,
@@ -326,3 +328,59 @@ def test_deepen_kill_still_ignores_a_passing_n18_note():
     )
     assert out["verdict"] == "KILL", out
     assert "n=18 probe" in out["reason"]
+
+
+def _with_coverage(frac12, frac15, n12=128, n15=64):
+    q = _quantum()
+
+    def fill(n, frac, n_inst):
+        n_lt = int(round((1.0 - frac) * n_inst))
+        # Keep the stored fraction exact so the gate does not depend on rounding.
+        q[n]["n_inst"] = n_inst
+        q[n]["n_gap_lt_0p02"] = n_lt
+        q[n]["n_gap_lt_0p05"] = n_inst // 2
+        q[n]["frac_gap_lt_0p02"] = 1.0 - frac
+        q[n]["frac_gap_lt_0p05"] = 0.5
+        q[n]["frac_gap_ge_0p02"] = frac
+        q[n]["n_gap_ge_0p02"] = n_inst - n_lt
+        q[n]["gap_min"] = 0.019 if frac < GAP_COVERAGE else 0.021
+
+    fill(12, frac12, n12)
+    fill(15, frac15, n15)
+    return q
+
+
+def test_product_gap_tail_counts_open_floors():
+    gap = np.array([0.019, 0.02, 0.049, 0.05, 0.08])
+    tail = product_gap_tail(gap, peak=np.array([0.1, 0.2, 0.3, 0.4, 0.5]))
+    assert tail["n_gap_lt_0p02"] == 1
+    assert tail["n_gap_lt_0p05"] == 3
+    assert tail["n_gap_ge_0p02"] == 4
+    assert abs(tail["frac_gap_ge_0p02"] - 0.8) < 1e-12
+    assert abs(tail["gap_min"] - 0.019) < 1e-15
+    assert abs(tail["peak_max"] - 0.5) < 1e-15
+
+
+def test_round7_coverage_is_opt_in_and_names_a_quantumness_fail():
+    cells = _five(0.33, 0.36)
+    paired_k = {("walsh", 16, n): _paired_all()[n] for n in (12, 15)}
+    ci = _ci_for(cells, 0.50, 0.55)
+    plain = decide_deepen(cells, _quantum(), paired_k, ci)
+    assert plain["verdict"] == "PASS", plain
+    missing = decide_deepen(cells, _quantum(), paired_k, ci, gap_coverage=GAP_COVERAGE)
+    assert missing["verdict"] == "needs_edit", missing
+    assert missing["reason"].startswith("quantumness fail")
+    ok = decide_deepen(cells, _with_coverage(0.984375, 0.96875), paired_k, ci, gap_coverage=GAP_COVERAGE)
+    assert ok["verdict"] == "PASS", ok
+    assert "frac gap<0.02" in ok["reason"]
+    assert "frac gap<0.05" in ok["reason"]
+    # 1/64 is still inside 95%. 8/128 is not.
+    edge = decide_deepen(cells, _with_coverage(63 / 64, 1.0, n12=64, n15=32), paired_k, ci, gap_coverage=GAP_COVERAGE)
+    assert edge["verdict"] == "PASS", edge
+    bad = decide_deepen(cells, _with_coverage(120 / 128, 1.0), paired_k, ci, gap_coverage=GAP_COVERAGE)
+    assert bad["verdict"] == "needs_edit", bad
+    assert bad["null"] is False
+    assert bad["reason"].startswith("quantumness fail")
+    assert "n=12" in bad["reason"]
+    assert "frac < 0.05" in bad["reason"]
+    assert bad["quantum_ok"] is False
