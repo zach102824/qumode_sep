@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
-"""Deepen freeze of unsat λ=0.75 Walsh. Default μ=−0.25 (PR #25).
+"""Deepen freeze of unsat Walsh. Default λ=0.75, μ=−0.25 (PR #25).
 
 ``--mu -0.50`` reruns that pipeline on the PR #26 winner.
-``--mu -1.00`` is the Round 7 seal of the PR #28 edge, on the same budget,
-with an instance quantumness gate: at least 95% of n=12 and of n=15 formulas
-must have product gap ≥ 0.02. The scorer is unchanged: BinH U_c^X,
-Hamming-shell SNAP, Z histogram for unsat, X histogram for the field and
-intra-cavity XX. Angles are fit on n=6 and n=9. n=12 and n=15 are the sealed
-transfer. n=18 is a Lanczos probe and does not enter the loss, the checkpoint
-selection, or the PASS gate. n=21 is not loaded.
+``--mu -1.00`` is the Round 7 seal of the PR #28 edge (λ=0.75), on the same
+budget, with an instance quantumness gate: at least 95% of n=12 and of n=15
+formulas must have product gap ≥ 0.02.
+``--mu -1.00 --lam 1.00`` is the Round 8 seal of the PR #32 operating point.
+PASS still needs the L=16 Walsh BEAT on frozen n=12 and n=15 and that same
+95% instance gate. A shortfall is needs_edit. The scorer is unchanged:
+BinH U_c^X, Hamming-shell SNAP, Z histogram for unsat, X histogram for the
+field and intra-cavity XX. Angles are fit on n=6 and n=9. n=12 and n=15 are
+the sealed transfer. n=18 is a Lanczos probe and does not enter the loss, the
+checkpoint selection, or the PASS gate. n=21 is not loaded.
 
-    H = diag(unsat) − 0.75 Σ_i X_i + μ Σ_cav Σ_{i<j} X_i X_j
+    H = diag(unsat) − λ Σ_i X_i + μ Σ_cav Σ_{i<j} X_i X_j
 """
 from __future__ import annotations
 
@@ -61,6 +64,8 @@ PARENT = S.OUT / "quantum_h_explore" / "unsat_rank2_mu"
 SWEEP_CACHE = S.OUT / "quantum_h_explore" / "unsat_mu_sweep" / "cache"
 # PR #28 diagonals at μ=−1.00. A shorter prefix is reused only when seeds match.
 NEG_CACHE = S.OUT / "quantum_h_explore" / "unsat_mu_neg" / "cache"
+# PR #32 λ=1.00 diagonals at μ=−1.00. Prefixes only; the seal writes its own B.
+LAMBDA_CACHE = S.OUT / "quantum_h_explore" / "unsat_lambda_mu1" / "cache"
 # PR #23 ratio of medians, 3 seeds, transfer B=64 (n=12) and B=32 (n=15).
 # apply_mu(-0.50) replaces these with the PR #26 point estimates.
 PRIOR_R = {12: 0.33011169158114184, 15: 0.3554511757416401}
@@ -133,12 +138,46 @@ def apply_mu(mu: float) -> float:
     return MU
 
 
+def apply_lam(lam: float) -> float:
+    """Point the scorer at λ. 0.75 keeps the Round 5–7 seals. 1.00 is Round 8.
+
+    Call after ``apply_mu``. λ=1.00 is only defined on the μ=−1.00 edge.
+    """
+    global LAM, PRIOR_R, PRIOR_B, BRANCH, PRIOR_NOTE, ROUND_NAME, LOG_TAG, PROTOCOL
+    import Nov_3rd.unsat_rank2_xx as xx
+
+    lam = float(lam)
+    if abs(lam - 0.75) <= 1e-12:
+        LAM = 0.75
+    elif abs(lam - 1.00) <= 1e-12:
+        if abs(float(MU) - (-1.00)) > 1e-12:
+            raise SystemExit("λ=1.00 deepen is only defined at μ=−1.00")
+        LAM = 1.00
+        # PR #32 ratio of medians, 3 seeds, transfer B=64 (n=12) and B=32 (n=15).
+        PRIOR_R = {12: 0.07629004834603922, 15: 0.09580073235382872}
+        PRIOR_B = {12: 64, 15: 32}
+        BRANCH = "cursor/unsat-walsh-lam1-seal-a846"
+        PRIOR_NOTE = "PR #32"
+        ROUND_NAME = "Round 8 seal"
+        LOG_TAG = "unsatXX-r8"
+        PROTOCOL = "seal_lam1_mu100"
+    else:
+        raise SystemExit("deepen λ must be 0.75 or 1.00")
+    base.LAM = LAM
+    xx.LAM = LAM
+    return LAM
+
+
 def _tag() -> str:
     return f"m{MU:+.2f}".replace("+", "")
 
 
+def _lam_tag() -> str:
+    return f"{float(LAM):.2f}"
+
+
 def _cache_name(n: int, role: str, count: int) -> str:
-    return f"unsat_xx_n{n}_{role}_B{count}_l0.75_{_tag()}.npz"
+    return f"unsat_xx_n{n}_{role}_B{count}_l{_lam_tag()}_{_tag()}.npz"
 
 
 def _blob(path: Path) -> dict:
@@ -151,8 +190,10 @@ def _cache_dirs(out: Path):
     # matches this tag only, so the μ=−0.25 files in PARENT stay unused.
     # PR #28 wrote the μ=−1.00 prefixes under NEG_CACHE.
     dirs = [out / "cache", PARENT / "cache", SWEEP_CACHE]
-    if abs(float(MU) - (-1.00)) <= 1e-12:
+    if abs(float(MU) - (-1.00)) <= 1e-12 and abs(float(LAM) - 0.75) <= 1e-12:
         dirs.append(NEG_CACHE)
+    if abs(float(MU) - (-1.00)) <= 1e-12 and abs(float(LAM) - 1.00) <= 1e-12:
+        dirs.append(LAMBDA_CACHE)
     return dirs
 
 
@@ -169,7 +210,7 @@ def _find_prefix(out: Path, n: int, role: str, count: int):
     best = None
     best_b = -1
     prefix = f"unsat_xx_n{n}_{role}_B"
-    suffix = f"_l0.75_{_tag()}.npz"
+    suffix = f"_l{_lam_tag()}_{_tag()}.npz"
     for folder in _cache_dirs(out):
         if not folder.exists():
             continue
@@ -396,6 +437,8 @@ def probe_n18(args, out: Path, sims, prepared, quantum) -> dict:
 def _check_protocol(rec: dict, args) -> None:
     if rec.get("protocol") != PROTOCOL:
         raise RuntimeError(f"resume protocol {rec.get('protocol')}")
+    if abs(float(rec.get("lam", -1.0)) - float(LAM)) > 1e-12 or abs(float(rec.get("mu", 99.0)) - float(MU)) > 1e-12:
+        raise RuntimeError(f"resume λ/μ {rec.get('lam')}/{rec.get('mu')} != {LAM}/{MU}")
     expect = {
         "B_train": args.B_train,
         "B_hold": args.B_hold,
@@ -579,10 +622,13 @@ def render(payload: dict) -> str:
     q = payload["quantum"]
     cells = payload["cells"]
     mu_s = _mu_text(payload["mu"])
+    lam = float(payload.get("lam", LAM))
+    lam_s = f"{lam:.2f}"
+    round8 = abs(float(payload["mu"]) + 1.00) < 1e-9 and abs(lam - 1.00) < 1e-9
     round_name = payload.get("round_name", ROUND_NAME)
     prior_note = payload.get("prior_note", PRIOR_NOTE)
     lines = []
-    lines.append(f"# RESULTS — {round_name}, unsat λ=0.75 + μ={mu_s} Walsh freeze")
+    lines.append(f"# RESULTS — {round_name}, unsat λ={lam_s} + μ={mu_s} Walsh freeze")
     lines.append("")
     lines.append(f"**Verdict: {v['verdict']}**")
     lines.append("")
@@ -590,7 +636,22 @@ def render(payload: dict) -> str:
     lines.append("")
     lines.append("## Setup")
     lines.append("")
-    if abs(float(payload["mu"]) - (-1.00)) < 1e-9:
+    if round8:
+        lines.append(
+            "Same gate as the PR #30 seal: BinH U_c^X, Hamming-shell SNAP. "
+            "The Hamiltonian is the PR #32 operating point, λ=1.00 and μ=−1.00. "
+            "Intra-cavity XX is scored from the X histogram. "
+            "Angles are fit on n=6 and n=9. The sealed scores at n=12 and n=15, and the n=18 probe, "
+            "use those frozen angles. n=21 was not loaded. "
+            "PR #32 froze this cell at 3 seeds (n=12 L=16 Walsh R=0.076 on B=64, median product gap 0.021, "
+            "19/64 instances under 0.02; n=15 R=0.096 on B=32, 13/32 under 0.02). "
+            "PR #30 sealed λ=0.75 at this μ with n=12 R=0.096 and 127/128 instances at gap ≥ 0.02. "
+            "This run keeps the PR #30 budget and asks whether λ=1.00 still BEATs and clears that 95% instance gap."
+        )
+        hold_note = "PR #32 used 128"
+        transfer_note = f"PR #32 used {PRIOR_B[12]} and {PRIOR_B[15]}"
+        budget_note = "That is the PR #30 optimizer budget on the larger selection holdout."
+    elif abs(float(payload["mu"]) - (-1.00)) < 1e-9:
         lines.append(
             "Same gate as the PR #27 seal: BinH U_c^X, Hamming-shell SNAP. "
             "The Hamiltonian is the PR #28 edge, μ=−1.00. "
@@ -627,9 +688,9 @@ def render(payload: dict) -> str:
         budget_note = "That is the PR #23 optimizer budget on a larger selection holdout."
     lines.append("")
     lines.append("```text")
-    lines.append(f"H = diag(unsat) − 0.75 Σ_i X_i + μ Σ_cav Σ_{{i<j}} X_i X_j ,  μ = {mu_s}")
+    lines.append(f"H = diag(unsat) − {lam_s} Σ_i X_i + μ Σ_cav Σ_{{i<j}} X_i X_j ,  μ = {mu_s}")
     lines.append("U_c^X = W exp(−i γ C_n) W ,  W = H^{⊗3} ,  C_n = (n/m) unsat − max")
-    lines.append("⟨H⟩ = Σ_z p_Z(z) unsat(z) − 0.75 Σ_i ⟨X_i⟩ + μ Σ_cav Σ_{i<j} ⟨X_i X_j⟩")
+    lines.append(f"⟨H⟩ = Σ_z p_Z(z) unsat(z) − {lam_s} Σ_i ⟨X_i⟩ + μ Σ_cav Σ_{{i<j}} ⟨X_i X_j⟩")
     lines.append("ε = (⟨H⟩ − E_0) / n")
     lines.append("```")
     lines.append("")
@@ -690,10 +751,15 @@ def render(payload: dict) -> str:
         )
     if abs(float(payload["mu"]) - (-1.00)) < 1e-9:
         lines.append("")
+        gate_line = (
+            "Round 8 keeps the Round 7 instance gate and needs"
+            if round8
+            else "The Round 7 seal needs"
+        )
         lines.append(
             "Instance product-gap tails. A count is the number of formulas with "
             "(E_prod − E_0) / |E_0| strictly below the bar. "
-            "The Round 7 seal needs at least 95% of the n=12 instances and at least 95% of the n=15 instances "
+            f"{gate_line} at least 95% of the n=12 instances and at least 95% of the n=15 instances "
             "at or above 0.02. The fraction below 0.05 is reported and does not gate the call. "
             "n=6, n=9, and the n=18 probe are the same count and are not part of that gate."
         )
@@ -818,8 +884,13 @@ def render(payload: dict) -> str:
         "have peak < 0.5 and median product gap ≥ 0.02."
     )
     if abs(float(payload["mu"]) - (-1.00)) < 1e-9:
+        round_label = (
+            "Round 8 keeps that gate and also requires"
+            if round8
+            else "Round 7 also requires"
+        )
         rule += (
-            " Round 7 also requires at least 95% of the n=12 instances and at least 95% of the n=15 instances "
+            f" {round_label} at least 95% of the n=12 instances and at least 95% of the n=15 instances "
             "to have product gap ≥ 0.02. A shortfall on that fraction is needs_edit and is a quantumness fail, "
             "even when the median gap and the Walsh ratios still look like a BEAT. "
             "The fraction of instances with product gap < 0.05 is reported and does not move the call."
@@ -967,6 +1038,7 @@ def n18_for_decide(cells, quantum, status: dict) -> dict:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mu", type=float, default=-0.25)
+    ap.add_argument("--lam", type=float, default=0.75)
     ap.add_argument("--out", type=str, default="")
     ap.add_argument("--seeds", type=str, default="0,1,2,3,4")
     ap.add_argument("--Ls", type=str, default="2,16")
@@ -985,8 +1057,11 @@ def main():
     ap.add_argument("--no-resume", action="store_true")
     args = ap.parse_args()
     apply_mu(float(args.mu))
+    apply_lam(float(args.lam))
     if args.out == "":
-        if abs(MU - (-1.00)) <= 1e-12:
+        if abs(MU - (-1.00)) <= 1e-12 and abs(LAM - 1.00) <= 1e-12:
+            args.out = str(S.OUT / "quantum_h_explore" / "unsat_lam100_mu100_seal")
+        elif abs(MU - (-1.00)) <= 1e-12:
             args.out = str(S.OUT / "quantum_h_explore" / "unsat_mu100_seal")
         elif abs(MU - (-0.50)) <= 1e-12:
             args.out = str(S.OUT / "quantum_h_explore" / "unsat_mu050_seal")
@@ -1004,6 +1079,10 @@ def main():
         "unsat_mu050_seal" in out.parts or (out.name == "deepen" and "unsat_rank2_mu" in out.parts)
     ):
         raise SystemExit("refusing to overwrite the μ=−0.50 seal or the μ=−0.25 deepen directory")
+    if abs(LAM - 1.00) <= 1e-12 and "unsat_mu100_seal" in out.parts:
+        raise SystemExit("refusing to write the λ=1.00 seal into the λ=0.75 μ=−1.00 directory")
+    if abs(LAM - 0.75) <= 1e-12 and "unsat_lam100_mu100_seal" in out.parts:
+        raise SystemExit("refusing to write λ=0.75 into the λ=1.00 seal directory")
     if len(args.seeds) < 5 or len(set(args.seeds)) != len(args.seeds):
         raise SystemExit("deepen needs at least 5 distinct seeds")
     if args.B_train < 128 or args.B_hold < 256 or args.B_transfer < 128 or args.B_n15 < 64:

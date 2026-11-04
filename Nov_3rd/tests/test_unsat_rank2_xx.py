@@ -384,3 +384,14 @@ def test_round7_coverage_is_opt_in_and_names_a_quantumness_fail():
     assert "n=12" in bad["reason"]
     assert "frac < 0.05" in bad["reason"]
     assert bad["quantum_ok"] is False
+    # PR #32 λ=1.00 tails: 45/64 and 19/32 sit under the 95% bar even though the ratios BEAT.
+    pr32 = decide_deepen(
+        cells,
+        _with_coverage(45 / 64, 19 / 32, n12=64, n15=32),
+        paired_k,
+        ci,
+        gap_coverage=GAP_COVERAGE,
+    )
+    assert pr32["verdict"] == "needs_edit", pr32
+    assert pr32["reason"].startswith("quantumness fail")
+    assert "n=12" in pr32["reason"] and "n=15" in pr32["reason"]
