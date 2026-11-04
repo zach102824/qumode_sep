@@ -2,13 +2,13 @@
 
 **Status: LOCKED.** λ = 0.75, μ = 0. Shallow depth L = 2 only. Evidence is closed; this file does not re-seal n = 15 or n = 18, and it does not load n = 21.
 
-**Round 14:** paper lock unchanged; breadth still open (sparse p3 in flight elsewhere).
+**Round 15:** paper lock unchanged; B=2 compression OK; breadth (sparse p3) closed as KILL; power-law (#42) still soft only.
 
 \[
 H = \mathrm{diag}(\mathrm{unsat}) - 0.75 \sum_i X_i
 \]
 
-μ = 0, so there is no intra-cavity XX term. The ansatz is Walsh Hamming-shell SNAP (Walsh degrees 1..4, then one shared shell on popcount 0..3 inside every 3-qubit cavity). The baseline is Fourier QAOA on the same \(H\), same L-BFGS budget. Readout is the Z histogram (unsat) plus the X histogram (\(\langle X_i\rangle\)).
+μ = 0, so there is no intra-cavity XX term. The ansatz is Walsh Hamming-shell SNAP (Walsh degrees 1..4, then one shared shell on popcount 0..3 inside every 3-qubit cavity). The hardware-relevant quote for this L = 2 claim is the two-coefficient SNAP, \(\varphi_k = c_1 k + c_2 k^2\) (PR #57, B = 2). At L = 2 that arm matches the four-phase shell and the full eight-phase cavity; the seal table below is still the B = 4 shell. The baseline is Fourier QAOA on the same \(H\), same L-BFGS budget. Readout is the Z histogram (unsat) plus the X histogram (\(\langle X_i\rangle\)).
 
 ## Claim
 
@@ -76,7 +76,7 @@ Old SAFE n = 18 median Λ = 0.943 is above the 0.85 kill line used in that seal 
 
 ## Non-claims
 
-**L ≥ 8.** On the depth sweep, L = 8 and L = 16 lose to Fourier (R = 1.9232 and 2.1641). Fourier is lower on every paired n = 12 instance. A deep SNAP advantage is not claimed. L = 4 remains a soft lead (seal R = 0.8881 / 0.8684 / 0.8756 at n = 12 / 15 / 18; sweep R = 0.8687) and is outside the locked sentence.
+**L ≥ 8.** On the depth sweep, L = 8 and L = 16 lose to Fourier (R = 1.9232 and 2.1641). Fourier is lower on every paired n = 12 instance. A deep SNAP advantage is not claimed. L = 4 remains a soft lead on the locked four-phase shell (seal R = 0.8881 / 0.8684 / 0.8756 at n = 12 / 15 / 18; sweep R = 0.8687) and is outside the locked sentence. PR #57 keeps that L = 4 softness on B = 4 only. The two-coefficient arm and the full cavity win there (R = 0.6174 and 0.6399) and stay outside the locked sentence.
 
 **μ ≪ 0 and XX locking.** The locked Hamiltonian has μ = 0. The measured μ = −0.50 point drives median Λ to 0.941–0.943 (PR #41): each cavity sits near a single X-magnetization sector, Λ → 1, which is an effective-spin collapse even though the Z-peak stays small (n = 18 median 0.0002). That regime is not a second lock. Bakeoff cell B (λ = 0.50, μ = −0.15, HVA baseline, L = 2 R = 0.635, Λ12 = 0.741) cleared Λ ≤ 0.80 and lost the rank to μ = 0 on L = 2 R (PR #46). It is not NEW_SAFE.
 
@@ -143,6 +143,52 @@ Cavity Λ in that smoke is the largest eigenvalue of the 3-qubit reduced ground 
 
 Power-law (PR #42) is already soft. The non-claims section records it as needs_edit: frozen n = 12 R_Fourier = 0.937 at λ = 0.50, μ = −0.50, L = 4, every seed above 0.90. It stays out of the lock.
 
+## Round 15
+
+**Status:** paper lock unchanged; B=2 compression OK; breadth (sparse p3) closed as KILL; power-law (#42) still soft only.
+
+The tables above are the lock. Round 15 records two later outcomes and does not rewrite them. n = 21 was not loaded. Nothing in this append was retrained. The numerical lock stays λ = 0.75, μ = 0, L = 2, with the seal ratios R = 0.6209 / 0.6016 / 0.5880 at n = 12 / 15 / 18.
+
+### Walsh B-ablation — PASS (PR #57)
+
+Source: PR #57, `Nov_3rd/runs/quantum_h_explore/NEW_SAFE_B_ablation/RESULTS.md`. Same NEW_SAFE Hamiltonian, packs, and L-BFGS budget as the depth sweep. B counts free SNAP phase coefficients of the shared cavity mixer. Every SNAP arm keeps four Walsh weights on degrees 1..4. Fourier is the matched baseline. The hardware-relevant SNAP for the L = 2 claim is B = 2 (two coefficients). B = 4 and the full cavity are equivalent to it at L = 2.
+
+| arm | phases per layer | span |
+|:----|-----------------:|:-----|
+| B = 2 | 2 | \(\varphi_k = c_1 k + c_2 k^2\) on popcount \(k = 0..3\). Paper init \(\varphi_k = -\beta k\) sits in this span. |
+| B = 4 | 4 | free \(\varphi_0..\varphi_3\). This is the locked Hamming shell, and it reproduces PR #50. |
+| full | 8 | one phase per Fock state of the 3-bit cavity. |
+
+Frozen n = 12, five seeds. Median Λ of the ground state is 0.7477 at every arm.
+
+| L | arm | Medε | Medε Fourier | R | Medε / Medε(full) | paired SNAP < Fourier | call |
+|--:|:----|-----:|-------------:|------:|------------------:|----------------------:|:-----|
+| 2 | B = 2 | 0.4261 | 0.6876 | 0.6197 | 1.000 | 640/640 | win |
+| 2 | B = 4 | 0.4264 | 0.6876 | 0.6201 | 1.001 | 640/640 | win |
+| 2 | full | 0.4261 | 0.6876 | 0.6196 | 1.000 | 640/640 | win |
+| 4 | B = 2 | 0.1958 | 0.3172 | 0.6174 | 0.965 | 640/640 | win |
+| 4 | B = 4 | 0.2755 | 0.3172 | 0.8687 | 1.358 | 581/640 | soft |
+| 4 | full | 0.2030 | 0.3172 | 0.6399 | 1.000 | 640/640 | win |
+
+At L = 2, B = 2 matches the full shell (R ≈ 0.620, Medε 1.000× full) and is 0.999× the locked B = 4 shell. 5/5 seeds have R ≤ 0.85. B = 4 reproduces PR #50 at four decimals (Medε 0.4264 / 0.6876, R = 0.6201, Λ = 0.7477, all deltas 0). PASS is full R ≤ 0.85, Medε(B = 2) ≤ 1.3 × Medε(full), and B = 2 itself at R ≤ 0.85. All three hold.
+
+L = 4 is soft for B = 4 only (R = 0.8687, 2/5 seeds ≤ 0.85). B = 2 and full are wins there. That depth stays outside the locked sentence. n = 15 and n = 18 were not resealed.
+
+### Sparse p = 3 TFIM — KILL (PR #56)
+
+Source: PR #56, `Nov_3rd/runs/quantum_h_explore/sparse_p3_tfim_breadth/RESULTS.md`. Shortlist family B, μ = 0, a separate Hamiltonian:
+
+\[
+H = -\sum_{(i,j,k)\in T}\frac{J_{ijk}}{s}\, Z_i Z_j Z_k - \lambda \sum_i X_i,
+\qquad s=\sqrt{|T|/n},\quad J_{ijk}\in\{+1,-1\}.
+\]
+
+Cavity Λ in that smoke is the largest eigenvalue of the 3-qubit reduced ground state. The NEW_SAFE column above is \(\langle(\sum_{i\in c} X_i/3)^2\rangle\). No scored λ ∈ {0.50, 1.00, 1.50, 2.00} clears the cavity line (median Λ ≤ 0.80 and product gap/n ≥ 0.03 at n = 6, 9, and 12). The Λ curve bottoms at λ = 1. Scored medians there are 0.829 / 0.823 / 0.927 at n = 6 / 9 / 12. The floor quoted from that smoke is min Λ ≈ 0.829 at λ = 1 (the n = 6 cell, and the same 0.829 on the 8-instance diagnostic). The lowest full-val cell is 0.823 at n = 9, above 0.80. λ = 1.50 and 2.00 open a product gap and still sit above Λ = 0.87.
+
+L = 2 Walsh stays on the Fourier mixer. Median-seed R at n = 12 is 0.999 / 0.999 / 1.021 / 1.029 for λ = 0.50 / 1.00 / 1.50 / 2.00, and train loss moves by at most 0.001 after the Fourier warm start. Walsh ≈ Fourier. KILL. Sparse p = 3 is not a breadth family.
+
+Power-law (PR #42) is still soft only. The non-claims section records it as needs_edit: frozen n = 12 R_Fourier = 0.937 at λ = 0.50, μ = −0.50, L = 4, every seed above 0.90. It stays out of the lock.
+
 ## Source index
 
 | PR | what it locks | result directory |
@@ -156,5 +202,7 @@ Power-law (PR #42) is already soft. The non-claims section records it as needs_e
 | #42 | power-law family, needs_edit, not this claim | `Nov_3rd/runs/quantum_h_explore/powerlaw_tfim_breadth/` |
 | #53 | cost-only ablation, PASS; full motif required; lock tables unchanged | `Nov_3rd/runs/quantum_h_explore/cost_only_ablation_NEW_SAFE/` |
 | #54 | signed 3-local breadth, KILL; not a breadth family | `Nov_3rd/runs/quantum_h_explore/signed_3local_tf_breadth/` |
+| #56 | sparse p=3 TFIM breadth, KILL; no λ clears cavity Λ (min Λ ≈ 0.829 at λ = 1); Walsh ≈ Fourier | `Nov_3rd/runs/quantum_h_explore/sparse_p3_tfim_breadth/` |
+| #57 | Walsh B-ablation, PASS; L = 2 hardware quote is B = 2 (2 coeffs, R ≈ 0.620, Medε 1.000× full); B = 4 and full equivalent at L = 2 | `Nov_3rd/runs/quantum_h_explore/NEW_SAFE_B_ablation/` |
 
-Those directories live on the PR branches above. This branch adds only this dossier. Round 14 appends the outcomes in the section above and does not copy the #53 or #54 result trees. `qaoa_angles/`, `train69_ladder_fresh250/`, and `settings.py` were not written. n = 21 was not loaded, and nothing was retrained.
+Those directories live on the PR branches above. This branch adds only this dossier. Round 14 appends #53 and #54; Round 15 appends #56 and #57. Neither round copies those result trees. `qaoa_angles/`, `train69_ladder_fresh250/`, and `settings.py` were not written. n = 21 was not loaded, and nothing was retrained.
