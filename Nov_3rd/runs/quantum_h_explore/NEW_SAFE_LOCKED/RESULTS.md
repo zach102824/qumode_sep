@@ -1,6 +1,8 @@
 # NEW_SAFE locked — paper claim
 
-**Status: LOCKED.** λ = 0.75, μ = 0. Shallow depth L = 2 only. The locked SNAP is B = 2, \(\varphi_k = c_1 k + c_2 k^2\). The seal through n = 18 is PR #59. This update does not retrain, and it does not load n = 21.
+**Status: LOCKED.** λ = 0.75, μ = 0. The primary claim remains L = 2. Optional L = 8 on the locked mixer still beats Fourier (R = 0.7877 ≈ 0.79, PR #63). L = 16 loses (R = 1.2671; Fourier wins). The locked SNAP is B = 2, \(\varphi_k = c_1 k + c_2 k^2\). The seal through n = 18 is PR #59. This update does not retrain, and it does not load n = 21.
+
+**Round 18:** PR #63 is needs_edit against the absolute "L ≥ 8 loses." At frozen n = 12 on B = 2, L = 2 R = 0.6197 (win; the paper quote), L = 4 R = 0.6174 (win, outside the locked sentence), L = 8 R = 0.7877 (win, 4/5 seeds ≤ 0.85; the B = 4 shell lost here, R ≈ 1.92), and L = 16 R = 1.2671 (loss). No retrain. n = 21 was not loaded.
 
 **Round 16:** paper lock prefers B = 2. The seal table is PR #59 (R = 0.6197 / 0.5979 / 0.5828 at n = 12 / 15 / 18, Λ ≈ 0.75; Medε at or under the PR #51 B = 4 reference). Disordered λ is PR #60 (δ = 0.15 / 0.30, R = 0.6118 / 0.6156, Λ = 0.7586 / 0.7610, matching #49). B = 4 / #51 stays the equivalent reference. PR #58 already recorded Round 15 (B = 2 compression + sparse-p3 KILL).
 
@@ -14,7 +16,7 @@ H = \mathrm{diag}(\mathrm{unsat}) - 0.75 \sum_i X_i
 
 Trained only on \(n\in\{6,9\}\) and frozen, the B = 2 SNAP at L = 2 beats Fourier QAOA on this Hamiltonian through n = 18, and the ground state stays under the cavity line Λ ≤ 0.80. On the five-seed seal (PR #59) the excess-energy ratio \(R = \mathrm{Med}\varepsilon_{\mathrm{B=2}} / \mathrm{Med}\varepsilon_{\mathrm{Fourier}}\) is 0.6197 at n = 12 (128 instances), 0.5979 at n = 15 (64 instances), and 0.5828 at n = 18 (32 instances), with B = 2 below Fourier on every paired instance (640/640, 320/320, 160/160). Median cavity Λ of the true ground state is 0.7477 / 0.7489 / 0.7487 at those three sizes. The locked sentence is that shallow L = 2 transfer on \(\varphi_k = c_1 k + c_2 k^2\).
 
-The B = 4 shell (PR #51) is the equivalent reference. Medε ratios of B = 2 to B = 4 are 0.998 / 0.995 / 0.991, and ΔR against 0.6209 / 0.6016 / 0.5880 is −0.0012 / −0.0037 / −0.0052. Medε stays at or under the #51 column at every sealed size. L = 4 on the locked B = 2 arm is a win (PR #59, R = 0.6174 / 0.6252 / 0.6067) and sits outside the locked sentence. The B = 4 reference stays soft at that depth (PR #51, R = 0.8881 / 0.8684 / 0.8756).
+The B = 4 shell (PR #51) is the equivalent reference. Medε ratios of B = 2 to B = 4 are 0.998 / 0.995 / 0.991, and ΔR against 0.6209 / 0.6016 / 0.5880 is −0.0012 / −0.0037 / −0.0052. Medε stays at or under the #51 column at every sealed size. L = 4 on the locked B = 2 arm is a win (PR #59, R = 0.6174 / 0.6252 / 0.6067) and sits outside the locked sentence. The B = 4 reference stays soft at that depth (PR #51, R = 0.8881 / 0.8684 / 0.8756). PR #63 measures the same B = 2 mixer at deeper L on frozen n = 12. L = 8 still beats Fourier (R = 0.7877) and is optional. L = 16 loses (R = 1.2671). Neither depth replaces the L = 2 sentence.
 
 Medε is the median over seeds of each seed's median-over-instances excess \(\langle H\rangle - E_0\). Λ is the median, over cavities and instances, of \(\langle(\sum_{i\in c} X_i / 3)^2\rangle\) on the ground state. Cavity \(c\) owns qubits \([3c, 3c+3)\), qubit 0 = MSB. Train indices are \([0:200)\) on n = 6 and n = 9; the checkpoint is the n = 9 holdout \([200:250)\). L-BFGS is 40 rounds × max_iter 8, lr 0.25, history 16, strong Wolfe, grad clip 5, batch 64. Paper init β = 0.01, γ = γ_w = −0.01, φ_k = −β k, which sits in the B = 2 span.
 
@@ -42,7 +44,24 @@ The ratio stays under 1 and does not grow with n. The same n = 12 row on the bak
 
 ## Depth sweep R(L) at frozen n = 12
 
-Source: PR #50, `Nov_3rd/runs/quantum_h_explore/NEW_SAFE_L_sweep/RESULTS.md`. Same packs and budget as the bakeoff. This sweep trains the four-phase Hamming shell (B = 4), the equivalent reference at L = 2. Λ = 0.7477 at every depth (it is a property of the ground state). A depth is a win at R ≤ 0.85, soft in (0.85, 0.98), and a loss above 1.02. L ≥ 8 was not rerun on B = 2.
+The primary claim remains L = 2. On the locked mixer, optional L = 8 still beats Fourier and L = 16 loses. The B = 4 shell is the reference that lost at both L = 8 and L = 16. A depth is a win at R ≤ 0.85, soft in (0.85, 0.98), and a loss above 1.02. Λ = 0.7477 at every depth (it is a property of the ground state). n = 21 was not loaded.
+
+### Locked mixer, B = 2 (PR #63)
+
+Source: PR #63, `Nov_3rd/runs/quantum_h_explore/NEW_SAFE_B2_L_sweep/RESULTS.md`. Verdict needs_edit: "L ≥ 8 loses to Fourier" is false for \(\varphi_k = c_1 k + c_2 k^2\). Five seeds, train \(n\in\{6,9\}\), freeze n = 12 (128 instances), matched Fourier, L ∈ {2, 4, 8, 16}. This dossier does not retrain and does not copy that result tree.
+
+| L | seeds | Medε B = 2 | Medε Fourier | R | paired B = 2 < Fourier | seeds R ≤ 0.85 | call |
+|--:|------:|-----------:|-------------:|------:|-----------------------:|:---------------|:-----|
+| 2 | 5 | 0.4261 | 0.6876 | 0.6197 | 640/640 | 5/5 | win |
+| 4 | 5 | 0.1958 | 0.3172 | 0.6174 | 640/640 | 5/5 | win |
+| 8 | 5 | 0.0931 | 0.1182 | 0.7877 | 635/640 | 4/5 | win |
+| 16 | 5 | 0.1003 | 0.0792 | 1.2671 | 8/640 | 0/5 | loss |
+
+L = 2 reproduces PR #57 and the PR #59 n = 12 row at four decimals (Medε 0.4261 / 0.6876, R = 0.6197, Λ = 0.7477) and is the locked sentence. L = 4 is the same win as PR #57 (R = 0.6174) and stays outside that sentence. L = 8 is optional: R = 0.7877 ≈ 0.79, 4/5 seeds ≤ 0.85, B = 2 lower on 635/640. The B = 4 shell lost at this depth (PR #50, R = 1.9232 ≈ 1.92). L = 16 loses: R = 1.2671, 5/5 seeds have R ≥ 1, B = 2 lower on 8/640. Fourier takes the median at L = 16. The B = 4 gap there was larger (PR #50, R = 2.1641).
+
+### Equivalent reference, B = 4 (PR #50)
+
+Source: PR #50, `Nov_3rd/runs/quantum_h_explore/NEW_SAFE_L_sweep/RESULTS.md`. Same packs and budget as the bakeoff. This sweep trains the four-phase Hamming shell (B = 4), the equivalent reference at L = 2. Those L ≥ 8 losses belong to this shell.
 
 | L | seeds | Medε SNAP | Medε Fourier | R | paired SNAP < Fourier | call |
 |--:|------:|----------:|-------------:|------:|----------------------:|:-----|
@@ -52,7 +71,7 @@ Source: PR #50, `Nov_3rd/runs/quantum_h_explore/NEW_SAFE_L_sweep/RESULTS.md`. Sa
 | 8 | 3 | 0.2255 | 0.1173 | 1.9232 | 0/384 | loss |
 | 16 | 2 | 0.1726 | 0.0797 | 2.1641 | 0/256 | loss |
 
-L = 2 is also a win on the holdout (n = 6 R = 0.6135, n = 9 R = 0.6307). The locked B = 2 seal at this depth is R = 0.6197 (PR #59), 0.0004 under the B = 4 row above, with holdout R = 0.6061 at n = 6 and 0.6248 at n = 9. Fourier at L = 8 (Medε 0.1173) is already below SNAP at L = 16 (Medε 0.1726). L = 16 is a two-seed check.
+L = 2 is also a win on the holdout (n = 6 R = 0.6135, n = 9 R = 0.6307). The locked B = 2 seal at this depth is R = 0.6197 (PR #59), 0.0004 under the B = 4 row above, with holdout R = 0.6061 at n = 6 and 0.6248 at n = 9. On this B = 4 shell, Fourier at L = 8 (Medε 0.1173) is already below SNAP at L = 16 (Medε 0.1726). L = 16 is a two-seed check.
 
 ## Disordered λ
 
@@ -86,7 +105,7 @@ Old SAFE n = 18 median Λ = 0.943 is above the 0.85 kill line used in that seal 
 
 ## Non-claims
 
-**L ≥ 8.** On the B = 4 depth sweep, L = 8 and L = 16 lose to Fourier (R = 1.9232 and 2.1641). Fourier is lower on every paired n = 12 instance. A deep SNAP advantage is not claimed. B = 2 was not trained at L ≥ 8. L = 4 stays outside the locked sentence. On the locked B = 2 arm it is a win through n = 18 (PR #59, R = 0.6174 / 0.6252 / 0.6067; PR #57 n = 12 full-cavity R = 0.6399). The B = 4 reference stays soft there (PR #51 R = 0.8881 / 0.8684 / 0.8756; sweep R = 0.8687).
+**Depth past L = 2.** The primary claim remains L = 2. On the locked B = 2 mixer (PR #63), optional L = 8 still beats Fourier (R = 0.7877 ≈ 0.79, 4/5 seeds ≤ 0.85, lower on 635/640). L = 16 loses (R = 1.2671; B = 2 is lower on 8/640, and 5/5 seeds have R ≥ 1). A SNAP advantage at L = 16 is not claimed. The absolute "L ≥ 8 loses" is the B = 4 shell only (PR #50, R = 1.9232 and 2.1641, Fourier lower on every paired n = 12 instance of that sweep). L = 4 stays outside the locked sentence. On the locked B = 2 arm it is a win through n = 18 (PR #59, R = 0.6174 / 0.6252 / 0.6067; PR #57 n = 12 full-cavity R = 0.6399, and the B = 2 row R = 0.6174). The B = 4 reference stays soft there (PR #51 R = 0.8881 / 0.8684 / 0.8756; sweep R = 0.8687).
 
 **μ ≪ 0 and XX locking.** The locked Hamiltonian has μ = 0. The measured μ = −0.50 point drives median Λ to 0.941–0.943 (PR #41): each cavity sits near a single X-magnetization sector, Λ → 1, which is an effective-spin collapse even though the Z-peak stays small (n = 18 median 0.0002). That regime is not a second lock. Bakeoff cell B (λ = 0.50, μ = −0.15, HVA baseline, L = 2 R = 0.635, Λ12 = 0.741) cleared Λ ≤ 0.80 and lost the rank to μ = 0 on L = 2 R (PR #46). It is not NEW_SAFE.
 
@@ -206,7 +225,7 @@ Power-law (PR #42) is still soft only. The non-claims section records it as need
 
 **Status:** paper lock prefers B = 2, \(\varphi_k = c_1 k + c_2 k^2\). The frozen-size table is the PR #59 seal. The disordered-λ table is PR #60. B = 4 / PR #51 stays the equivalent reference. No retrain. n = 21 was not loaded.
 
-PR #58 already recorded Round 15 (B = 2 compression at frozen n = 12, and the sparse-p3 KILL). Round 16 promotes that compression to the paper quote once the same two coefficients hold through n = 18 and under the disorder of #49. The depth-sweep losses at L ≥ 8, the old-SAFE Λ appendix, and the Round 14 / 15 breadth kills stay as recorded. Result trees from #59 and #60 are not copied onto this branch.
+PR #58 already recorded Round 15 (B = 2 compression at frozen n = 12, and the sparse-p3 KILL). Round 16 promotes that compression to the paper quote once the same two coefficients hold through n = 18 and under the disorder of #49. The B = 4 depth sweep (PR #50) still records losses at L ≥ 8. Round 18 revises that sentence for the locked mixer: on B = 2, L = 8 still beats Fourier and L = 16 loses (PR #63). The old-SAFE Λ appendix and the Round 14 / 15 breadth kills stay as recorded. Result trees from #59 and #60 are not copied onto this branch.
 
 ### B = 2 seal through n = 18 — PASS (PR #59)
 
@@ -233,6 +252,29 @@ Source: PR #60, `Nov_3rd/runs/quantum_h_explore/disordered_lambda_NEW_SAFE_B2/RE
 
 Both pass bars hold: L = 2 R ≤ 0.85 and median Λ ≤ 0.80. Fourier reproduces the #49 numbers at four decimals, and the Λ table matches #49 (0.7586 / 0.7610). B = 2 Medε sits within 0.001 of the shell (0.4143 versus 0.4151, 0.4121 versus 0.4128). The closest Λ is still the n = 6 pack at δ = 0.30 (0.7956). L = 4 is outside the gate. B = 2 stays a win there (R = 0.6032 / 0.6398, 5/5), while the #49 shell was softer (0.8249 / 0.9699).
 
+## Round 18
+
+**Status:** the primary claim remains L = 2 on B = 2, \(\varphi_k = c_1 k + c_2 k^2\). Optional L = 8 still beats Fourier. L = 16 loses. The absolute "L ≥ 8 loses," and a paper quote of L = 2 only, are retired for this mixer. No retrain. n = 21 was not loaded. The #63 result tree is not copied onto this branch.
+
+PR #50 trained the four-phase shell and lost at L = 8 and L = 16 (R = 1.9232 and 2.1641). Round 16 kept those losses as the depth sentence while moving the L = 2 quote to B = 2. PR #63 reruns the depth ladder on the locked two-coefficient mixer. The honesty gate there asked for L = 2 R ≤ 0.85 and for both L = 8 and L = 16 to have R ≥ 1. L = 8 fails that bar, so the verdict is needs_edit. This section is that edit.
+
+### B = 2 depth at frozen n = 12 — needs_edit (PR #63)
+
+Source: PR #63, `Nov_3rd/runs/quantum_h_explore/NEW_SAFE_B2_L_sweep/RESULTS.md`. λ = 0.75, μ = 0. Train \(n\in\{6,9\}\), freeze n = 12, five seeds, matched Fourier. L ∈ {2, 4, 8, 16}. Median Λ of the ground state is 0.7477 at every depth, the same ground state as #50.
+
+| L | Medε B = 2 | Medε Fourier | R | paired B = 2 < Fourier | seeds R ≤ 0.85 | #50 B = 4 R | call |
+|--:|-----------:|-------------:|------:|-----------------------:|:---------------|------------:|:-----|
+| 2 | 0.4261 | 0.6876 | 0.6197 | 640/640 | 5/5 | 0.6201 | win |
+| 4 | 0.1958 | 0.3172 | 0.6174 | 640/640 | 5/5 | 0.8687 | win |
+| 8 | 0.0931 | 0.1182 | 0.7877 | 635/640 | 4/5 | 1.9232 | win |
+| 16 | 0.1003 | 0.0792 | 1.2671 | 8/640 | 0/5 | 2.1641 | loss |
+
+L = 2 does not soften. It reproduces PR #57, and the n = 12 row of PR #59, at four decimals (R = 0.6197, 5/5 seeds ≤ 0.85, 640/640 paired). That row stays the paper quote. L = 4 matches #57 (R = 0.6174) and stays outside the locked sentence. The B = 4 shell was only soft there (R = 0.8687).
+
+L = 8 is the edit. B = 2 wins (R = 0.7877 ≈ 0.79, 4/5 seeds ≤ 0.85, lower on 635/640). The B = 4 shell at this depth lost (R = 1.9232 ≈ 1.92, three seeds, Fourier lower on 0/384). L = 8 is optional. It is not promoted into the locked sentence, and n = 15 and n = 18 were not resealed at this depth.
+
+L = 16 loses. Fourier wins (R = 1.2671, 5/5 seeds ≥ 1, B = 2 lower on 8/640). The gap is smaller than the B = 4 R = 2.1641, and the depth where Fourier takes the median moves from 8 to 16. A deep SNAP advantage at L = 16 is not claimed.
+
 ## Source index
 
 | PR | what it locks | result directory |
@@ -240,7 +282,7 @@ Both pass bars hold: L = 2 R ≤ 0.85 and median Λ ≤ 0.80. Fourier reproduces
 | #45 | TF-only λ scan; n = 12 anchor at λ = 0.75 | `Nov_3rd/runs/quantum_h_explore/tf_only_shallow_Lambda/` |
 | #46 | bakeoff; NEW_SAFE = cell C | `Nov_3rd/runs/quantum_h_explore/bakeoff_Lambda_safe_top3/` |
 | #49 | disordered λ, B = 4 shell; equivalent reference for #60 | `Nov_3rd/runs/quantum_h_explore/disordered_lambda_NEW_SAFE/` |
-| #50 | R(L) at frozen n = 12 on the B = 4 shell; L ≥ 8 losses | `Nov_3rd/runs/quantum_h_explore/NEW_SAFE_L_sweep/` |
+| #50 | R(L) at frozen n = 12 on the B = 4 shell; that shell loses at L = 8 and L = 16 (R = 1.9232 / 2.1641) | `Nov_3rd/runs/quantum_h_explore/NEW_SAFE_L_sweep/` |
 | #51 | five-seed B = 4 seal through n = 18; equivalent reference for the locked B = 2 seal | `Nov_3rd/runs/quantum_h_explore/seal_NEW_SAFE_lam075_mu0_n18/` |
 | #41 | old SAFE (0.75, −0.50) Λ-kill appendix | `Nov_3rd/runs/quantum_h_explore/n18_shallow_lambda_seal/` |
 | #42 | power-law family, needs_edit, not this claim | `Nov_3rd/runs/quantum_h_explore/powerlaw_tfim_breadth/` |
@@ -250,5 +292,6 @@ Both pass bars hold: L = 2 R ≤ 0.85 and median Λ ≤ 0.80. Fourier reproduces
 | #57 | Walsh B-ablation, PASS at n = 12; B = 2 matches full (R = 0.6197, Medε 1.000× full). Round 16 promotes that arm | `Nov_3rd/runs/quantum_h_explore/NEW_SAFE_B_ablation/` |
 | #59 | locked five-seed B = 2 seal through n = 18, PASS; R = 0.6197 / 0.5979 / 0.5828, Λ ≈ 0.75; Medε ≤ #51 | `Nov_3rd/runs/quantum_h_explore/seal_NEW_SAFE_B2_n18/` |
 | #60 | disordered λ at B = 2, PASS; δ = 0.15 / 0.30, R = 0.6118 / 0.6156, Λ matches #49 | `Nov_3rd/runs/quantum_h_explore/disordered_lambda_NEW_SAFE_B2/` |
+| #63 | B = 2 depth sweep at frozen n = 12, needs_edit; primary L = 2 R = 0.6197, optional L = 8 R = 0.7877 still beats Fourier, L = 16 R = 1.2671 loses | `Nov_3rd/runs/quantum_h_explore/NEW_SAFE_B2_L_sweep/` |
 
-Those directories live on the PR branches above. This branch adds only this dossier. Round 14 appends #53 and #54; Round 15 appends #56 and #57; Round 16 retargets the paper quote to the B = 2 seal (#59) and the B = 2 disorder table (#60), and keeps #51 / #49 as the equivalent reference. None of these rounds copies those result trees. `qaoa_angles/`, `train69_ladder_fresh250/`, and `settings.py` were not written. n = 21 was not loaded, and nothing was retrained.
+Those directories live on the PR branches above. This branch adds only this dossier. Round 14 appends #53 and #54; Round 15 appends #56 and #57; Round 16 retargets the paper quote to the B = 2 seal (#59) and the B = 2 disorder table (#60), and keeps #51 / #49 as the equivalent reference. Round 18 records the B = 2 depth sweep (#63): the primary quote stays L = 2, optional L = 8 still beats Fourier, and L = 16 loses. None of these rounds copies those result trees. `qaoa_angles/`, `train69_ladder_fresh250/`, and `settings.py` were not written. n = 21 was not loaded, and nothing was retrained.
