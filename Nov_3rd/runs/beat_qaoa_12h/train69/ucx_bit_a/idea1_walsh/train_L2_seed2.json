@@ -1,0 +1,45 @@
+{
+  "arm": "graded_Hc_walsh_degree",
+  "label": "graded H_c",
+  "idea": "walsh_degree",
+  "L": 2,
+  "seed": 2,
+  "p": null,
+  "warm": "champ",
+  "warm_src": "/agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/champion/params_L2_train69_pareto_a080_s1.pt",
+  "wall_s": 31.575871467590332,
+  "holdout_best": -0.043824199587106705,
+  "holdout_best_step": "lbfgs6",
+  "gamma_spread": {
+    "per_layer": [
+      {
+        "mean": -4.175320148468018,
+        "std": 0.25140607357025146,
+        "max_abs_dev": 0.30838537216186523,
+        "values": [
+          -4.483705520629883,
+          -4.362128257751465,
+          -3.938032627105713,
+          -3.9174134731292725
+        ]
+      },
+      {
+        "mean": -6.894775867462158,
+        "std": 0.21009333431720734,
+        "max_abs_dev": 0.30239200592041016,
+        "values": [
+          -6.592383861541748,
+          -6.840875625610352,
+          -7.169717311859131,
+          -6.976126194000244
+        ]
+      }
+    ],
+    "rms_dev_from_equal": 0.23167242109775543
+  },
+  "c2_rms": 0.0806766226887703,
+  "c3_rms": 0.010533844120800495,
+  "params": "/agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/ucx_bit_a/idea1_walsh/params_L2_seed2.pt",
+  "B_train": 100,
+  "B_eval": 100
+}

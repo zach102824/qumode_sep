@@ -68,6 +68,64 @@ class Nov3rdAnsatz(GadgetAnsatz):
             "probs": probs,
         }
 
+    def forward_nov3rd_graded(
+        self,
+        E: torch.Tensor,
+        gamma_w: torch.Tensor,
+        phi: torch.Tensor,
+        Cn_parts: torch.Tensor,
+    ) -> dict:
+        """Graded H_c U_c^X = W exp(-i Σ_w γ_{ℓ,w} C_w) W, then Hamming-shell SNAP.
+
+        gamma_w: (L, K)  — K Walsh degrees (w=1..4)
+        Cn_parts: (K, *grid) already scaled by n/m, NOT amax-centered
+        Equal γ_w recovers forward_nov3rd (global phase after amax).
+        Success is still scored on the original unsat E (solutions unchanged
+        only when the γ_w are equal; otherwise the cost is a reweighted H_c).
+        """
+        L = self.L
+        K = int(Cn_parts.shape[0])
+        if tuple(gamma_w.shape) != (L, K):
+            raise ValueError(f"gamma_w shape {tuple(gamma_w.shape)} != {(L, K)}")
+        if tuple(phi.shape) != (L, S.B_BITS + 1):
+            raise ValueError(f"phi shape {tuple(phi.shape)} != {(L, S.B_BITS + 1)}")
+
+        gw = gamma_w.to(dtype=self.rdtype, device=self.lam.device)
+        phi = phi.to(dtype=self.rdtype, device=self.lam.device)
+        parts = Cn_parts.to(dtype=self.rdtype, device=self.lam.device)
+        psi = self.vacuum()
+        sl = tuple(slice(0, NU) for _ in range(self.C))
+        ones = (1,) * self.C
+
+        for ell in range(L):
+            psi = self._apply_all(psi, self.Wmat)
+            arg = (gw[ell].reshape(K, *ones) * parts).sum(dim=0)
+            arg = arg - arg.amax()
+            phase = torch.exp(-1j * arg.to(self.cdtype))
+            psi_new = psi.clone()
+            psi_new[sl] = psi[sl] * phase
+            psi = psi_new
+            psi = self._apply_all(psi, self.Wmat)
+            th = phi[ell][self.popcount]
+            psi = self._apply_all(psi, self._snap_theta(th))
+
+        psi = self._apply_all(psi, self.Wmat)
+        probs = psi.real.square() + psi.imag.square()
+        p_comp = probs[sl]
+        p_leak = (1.0 - p_comp.sum()).clamp(min=0.0)
+        E_grid = E.to(device=self.lam.device)[self.grid_to_x]
+        succ = p_comp[E_grid == 0].sum()
+        p_succ = succ.clamp(min=0.0)
+        inv_p = 1.0 / p_succ.clamp(min=1e-12)
+        return {
+            "p_succ": p_succ,
+            "p_leak": p_leak,
+            "inv_p": inv_p,
+            "norm": probs.sum(),
+            "arm": "Nov_3rd_graded_Hc",
+            "probs": probs,
+        }
+
 
 def make_W():
     S.assert_locked(W_frame=S.W_FRAME, b=S.B_BITS)
