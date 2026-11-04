@@ -1,0 +1,91 @@
+
+=== /usr/bin/python3 /agent/repos/qumode_sep/Nov_3rd/scripts/train_qn_rs.py --L 16 --seed 1 --Q 6 --Qp 6 --threads 4 --fourier-params /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/qn_rs/fourier_qaoa_ref/Q6/L16/params.pt --fourier-eval /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/qn_rs/fourier_qaoa_ref/Q6/L16/eval.json --packs /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/train_packs --out-dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/qn_rs/L16/seed1 --adam-steps 600 --lbfgs-rounds 12 --eval-B 1000 @ 2026-11-04 08:40:51 +0000 ===
+08:40:51 [Nov_3rd] QN-RS L=16 Q=6 Q'=6: Fourier modes from /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/qn_rs/fourier_qaoa_ref/Q6/L16/params.pt
+08:40:51 [Nov_3rd] QN-RS L16 s1: train n6 B=250 FQ_Med=1.1217
+08:40:52 [Nov_3rd] QN-RS L16 s1: train n9 B=250 FQ_Med=1.3485
+08:40:52 [Nov_3rd] QN-RS L16 s1: init holdout med logR=0.00000 params=25
+08:40:52 [Nov_3rd] QN-RS L16 s1: Phase A freeze u,v train s,w,p (13 params)
+08:40:52 [Nov_3rd] QN-RS L16 s1 A adam 0/600 loss=0.00000 hold=0.00313 p=0.000 ratio15=0.004 |s|=0.002 g=1.555
+08:40:53 [Nov_3rd] QN-RS L16 s1 A adam 25/600 loss=-0.01965 hold=-0.00381 p=0.017 ratio15=0.027 |s|=0.018 g=2.648 BEST
+08:40:54 [Nov_3rd] QN-RS L16 s1 A adam 50/600 loss=-0.00919 hold=-0.00451 p=0.040 ratio15=0.041 |s|=0.027 g=1.485 BEST
+08:40:54 [Nov_3rd] QN-RS L16 s1 A adam 75/600 loss=-0.00733 hold=-0.00978 p=0.066 ratio15=0.052 |s|=0.035 g=1.554 BEST
+08:40:55 [Nov_3rd] QN-RS L16 s1 A adam 100/600 loss=-0.01493 hold=-0.01286 p=0.092 ratio15=0.062 |s|=0.044 g=2.139 BEST
+08:40:56 [Nov_3rd] QN-RS L16 s1 A adam 125/600 loss=-0.04095 hold=-0.01253 p=0.113 ratio15=0.069 |s|=0.050 g=1.922
+08:40:56 [Nov_3rd] QN-RS L16 s1 A adam 150/600 loss=-0.02669 hold=-0.01229 p=0.138 ratio15=0.076 |s|=0.059 g=1.534
+08:40:57 [Nov_3rd] QN-RS L16 s1 A adam 175/600 loss=-0.03120 hold=-0.01011 p=0.166 ratio15=0.083 |s|=0.066 g=1.048
+08:40:58 [Nov_3rd] QN-RS L16 s1 A adam 200/600 loss=-0.02720 hold=-0.01303 p=0.191 ratio15=0.089 |s|=0.073 g=2.643 BEST
+08:40:58 [Nov_3rd] QN-RS L16 s1 A adam 225/600 loss=-0.02670 hold=-0.01549 p=0.218 ratio15=0.095 |s|=0.079 g=2.790 BEST
+08:40:59 [Nov_3rd] QN-RS L16 s1 A adam 250/600 loss=-0.01771 hold=-0.01645 p=0.246 ratio15=0.099 |s|=0.085 g=2.472 BEST
+08:41:00 [Nov_3rd] QN-RS L16 s1 A adam 275/600 loss=-0.02788 hold=-0.01603 p=0.259 ratio15=0.102 |s|=0.089 g=1.123
+08:41:01 [Nov_3rd] QN-RS L16 s1 A adam 300/600 loss=-0.03073 hold=-0.01213 p=0.280 ratio15=0.106 |s|=0.094 g=2.665
+08:41:01 [Nov_3rd] QN-RS L16 s1 A adam 325/600 loss=-0.03916 hold=-0.01449 p=0.298 ratio15=0.109 |s|=0.099 g=2.224
+08:41:02 [Nov_3rd] QN-RS L16 s1 A adam 350/600 loss=-0.04026 hold=-0.01408 p=0.312 ratio15=0.112 |s|=0.103 g=1.095
+08:41:03 [Nov_3rd] QN-RS L16 s1 A adam 375/600 loss=-0.03635 hold=-0.01557 p=0.331 ratio15=0.115 |s|=0.107 g=1.519
+08:41:03 [Nov_3rd] QN-RS L16 s1 A adam 400/600 loss=-0.03876 hold=-0.01505 p=0.348 ratio15=0.117 |s|=0.109 g=0.777
+08:41:04 [Nov_3rd] QN-RS L16 s1 A adam 425/600 loss=-0.02801 hold=-0.01475 p=0.360 ratio15=0.119 |s|=0.113 g=1.346
+08:41:05 [Nov_3rd] QN-RS L16 s1 A adam 450/600 loss=-0.05345 hold=-0.01660 p=0.373 ratio15=0.122 |s|=0.117 g=3.843 BEST
+08:41:06 [Nov_3rd] QN-RS L16 s1 A adam 475/600 loss=-0.03003 hold=-0.01634 p=0.383 ratio15=0.123 |s|=0.120 g=1.977
+08:41:06 [Nov_3rd] QN-RS L16 s1 A adam 500/600 loss=-0.03074 hold=-0.01716 p=0.398 ratio15=0.125 |s|=0.122 g=1.699 BEST
+08:41:07 [Nov_3rd] QN-RS L16 s1 A adam 525/600 loss=-0.03712 hold=-0.01349 p=0.406 ratio15=0.126 |s|=0.125 g=1.760
+08:41:08 [Nov_3rd] QN-RS L16 s1 A adam 550/600 loss=-0.04524 hold=-0.01357 p=0.419 ratio15=0.127 |s|=0.128 g=2.256
+08:41:08 [Nov_3rd] QN-RS L16 s1 A adam 575/600 loss=-0.03889 hold=-0.01753 p=0.429 ratio15=0.128 |s|=0.128 g=1.815 BEST
+08:41:09 [Nov_3rd] QN-RS L16 s1 A adam 599/600 loss=-0.02123 hold=-0.01622 p=0.442 ratio15=0.129 |s|=0.131 g=2.820
+08:41:09 [Nov_3rd] QN-RS L16 s1 A lbfgs 0/12 loss=-0.03161 hold=-0.01406
+08:41:10 [Nov_3rd] QN-RS L16 s1 A lbfgs 1/12 loss=-0.05167 hold=-0.01747
+08:41:10 [Nov_3rd] QN-RS L16 s1 A lbfgs 2/12 loss=-0.04609 hold=-0.01535
+08:41:10 [Nov_3rd] QN-RS L16 s1 A lbfgs 3/12 loss=-0.04911 hold=-0.01296
+08:41:10 [Nov_3rd] QN-RS L16 s1 A lbfgs 4/12 loss=-0.03277 hold=-0.01807 BEST
+08:41:11 [Nov_3rd] QN-RS L16 s1 A lbfgs 5/12 loss=-0.05047 hold=-0.01538
+08:41:11 [Nov_3rd] QN-RS L16 s1 A lbfgs 6/12 loss=-0.00712 hold=-0.01978 BEST
+08:41:11 [Nov_3rd] QN-RS L16 s1 A lbfgs 7/12 loss=-0.03183 hold=-0.01579
+08:41:12 [Nov_3rd] QN-RS L16 s1 A lbfgs 8/12 loss=-0.04226 hold=-0.01697
+08:41:12 [Nov_3rd] QN-RS L16 s1 A lbfgs 9/12 loss=-0.03852 hold=-0.01555
+08:41:12 [Nov_3rd] QN-RS L16 s1 A lbfgs 10/12 loss=-0.02864 hold=-0.00868
+08:41:12 [Nov_3rd] QN-RS L16 s1 A lbfgs 11/12 loss=-0.03321 hold=-0.01675
+08:41:12 [Nov_3rd] QN-RS L16 s1: Phase B starts from best holdout -0.01978 @ A-lbfgs6
+08:41:12 [Nov_3rd] QN-RS L16 s1: Phase B unfreeze all (25 params)
+08:41:12 [Nov_3rd] QN-RS L16 s1 B adam 0/600 loss=-0.03643 hold=-0.01226 p=0.443 ratio15=0.130 |s|=0.133 g=1.937
+08:41:13 [Nov_3rd] QN-RS L16 s1 B adam 25/600 loss=-0.03920 hold=-0.01390 p=0.443 ratio15=0.128 |s|=0.131 g=3.122
+08:41:14 [Nov_3rd] QN-RS L16 s1 B adam 50/600 loss=-0.05843 hold=-0.01623 p=0.446 ratio15=0.125 |s|=0.128 g=2.935
+08:41:15 [Nov_3rd] QN-RS L16 s1 B adam 75/600 loss=-0.03242 hold=-0.01716 p=0.447 ratio15=0.123 |s|=0.125 g=2.076
+08:41:15 [Nov_3rd] QN-RS L16 s1 B adam 100/600 loss=-0.02623 hold=-0.01826 p=0.445 ratio15=0.121 |s|=0.123 g=2.039
+08:41:16 [Nov_3rd] QN-RS L16 s1 B adam 125/600 loss=-0.05792 hold=-0.01947 p=0.444 ratio15=0.119 |s|=0.121 g=1.512
+08:41:17 [Nov_3rd] QN-RS L16 s1 B adam 150/600 loss=-0.05252 hold=-0.01821 p=0.443 ratio15=0.117 |s|=0.119 g=1.895
+08:41:18 [Nov_3rd] QN-RS L16 s1 B adam 175/600 loss=-0.03904 hold=-0.01721 p=0.441 ratio15=0.114 |s|=0.115 g=2.451
+08:41:18 [Nov_3rd] QN-RS L16 s1 B adam 200/600 loss=-0.05454 hold=-0.01613 p=0.432 ratio15=0.112 |s|=0.113 g=2.489
+08:41:19 [Nov_3rd] QN-RS L16 s1 B adam 225/600 loss=-0.03355 hold=-0.01667 p=0.428 ratio15=0.111 |s|=0.110 g=2.377
+08:41:20 [Nov_3rd] QN-RS L16 s1 B adam 250/600 loss=-0.06050 hold=-0.01962 p=0.424 ratio15=0.109 |s|=0.108 g=1.082
+08:41:21 [Nov_3rd] QN-RS L16 s1 B adam 275/600 loss=-0.05536 hold=-0.01829 p=0.420 ratio15=0.107 |s|=0.106 g=1.135
+08:41:21 [Nov_3rd] QN-RS L16 s1 B adam 300/600 loss=-0.04771 hold=-0.01908 p=0.412 ratio15=0.105 |s|=0.102 g=1.083
+08:41:22 [Nov_3rd] QN-RS L16 s1 B adam 325/600 loss=-0.07612 hold=-0.01676 p=0.408 ratio15=0.104 |s|=0.100 g=2.226
+08:41:23 [Nov_3rd] QN-RS L16 s1 B adam 350/600 loss=-0.03934 hold=-0.01951 p=0.401 ratio15=0.102 |s|=0.099 g=2.592
+08:41:24 [Nov_3rd] QN-RS L16 s1 B adam 375/600 loss=-0.06296 hold=-0.01831 p=0.398 ratio15=0.101 |s|=0.095 g=0.910
+08:41:24 [Nov_3rd] QN-RS L16 s1 B adam 400/600 loss=-0.04341 hold=-0.01862 p=0.396 ratio15=0.099 |s|=0.094 g=3.367
+08:41:25 [Nov_3rd] QN-RS L16 s1 B adam 425/600 loss=-0.02917 hold=-0.01805 p=0.387 ratio15=0.098 |s|=0.091 g=1.746
+08:41:26 [Nov_3rd] QN-RS L16 s1 B adam 450/600 loss=-0.02198 hold=-0.01998 p=0.381 ratio15=0.096 |s|=0.088 g=2.086 BEST
+08:41:26 [Nov_3rd] QN-RS L16 s1 B adam 475/600 loss=-0.03602 hold=-0.01538 p=0.376 ratio15=0.094 |s|=0.087 g=1.998
+08:41:27 [Nov_3rd] QN-RS L16 s1 B adam 500/600 loss=-0.06085 hold=-0.01402 p=0.378 ratio15=0.093 |s|=0.085 g=0.742
+08:41:28 [Nov_3rd] QN-RS L16 s1 B adam 525/600 loss=-0.05389 hold=-0.02012 p=0.372 ratio15=0.092 |s|=0.083 g=2.820 BEST
+08:41:29 [Nov_3rd] QN-RS L16 s1 B adam 550/600 loss=-0.02848 hold=-0.01919 p=0.368 ratio15=0.091 |s|=0.081 g=2.812
+08:41:29 [Nov_3rd] QN-RS L16 s1 B adam 575/600 loss=-0.04413 hold=-0.01839 p=0.362 ratio15=0.089 |s|=0.080 g=1.405
+08:41:30 [Nov_3rd] QN-RS L16 s1 B adam 599/600 loss=-0.02829 hold=-0.01817 p=0.364 ratio15=0.088 |s|=0.076 g=1.806
+08:41:30 [Nov_3rd] QN-RS L16 s1 B lbfgs 0/12 loss=-0.06480 hold=-0.01164
+08:41:31 [Nov_3rd] QN-RS L16 s1 B lbfgs 1/12 loss=-0.06312 hold=-0.01761
+08:41:31 [Nov_3rd] QN-RS L16 s1 B lbfgs 2/12 loss=-0.01891 hold=-0.01662
+08:41:31 [Nov_3rd] QN-RS L16 s1 B lbfgs 3/12 loss=-0.04677 hold=-0.01811
+08:41:32 [Nov_3rd] QN-RS L16 s1 B lbfgs 4/12 loss=-0.08063 hold=-0.01084
+08:41:32 [Nov_3rd] QN-RS L16 s1 B lbfgs 5/12 loss=-0.04438 hold=-0.01981
+08:41:32 [Nov_3rd] QN-RS L16 s1 B lbfgs 6/12 loss=-0.03987 hold=-0.01701
+08:41:32 [Nov_3rd] QN-RS L16 s1 B lbfgs 7/12 loss=-0.05164 hold=-0.01764
+08:41:33 [Nov_3rd] QN-RS L16 s1 B lbfgs 8/12 loss=-0.05465 hold=-0.01740
+08:41:33 [Nov_3rd] QN-RS L16 s1 B lbfgs 9/12 loss=-0.07302 hold=-0.01617
+08:41:33 [Nov_3rd] QN-RS L16 s1 B lbfgs 10/12 loss=-0.05247 hold=-0.01818
+08:41:34 [Nov_3rd] QN-RS L16 s1 B lbfgs 11/12 loss=-0.04930 hold=-0.01787
+08:41:34 [Nov_3rd] QN-RS L16 s1: restore best holdout -0.02012 @ B-adam525
+08:41:34 [Nov_3rd] QN-RS L16 s1 saved /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/qn_rs/L16/seed1/params.pt wall=42s p=0.3718 ratio15=0.0924 @ B-adam525
+08:41:34 [Nov_3rd] QN-RS L16 s1 n6: Med=1.1271 FQ=1.1471 Δ=-0.0200 CI=[-0.0293,-0.0123] pub=1.1471417505862727 wall=0.2s
+08:41:35 [Nov_3rd] QN-RS L16 s1 n9: Med=1.3603 FQ=1.4112 Δ=-0.0509 CI=[-0.0666,-0.0230] pub=1.4111617074249911 wall=0.6s
+08:41:38 [Nov_3rd] QN-RS L16 s1 n12: Med=1.7387 FQ=1.7653 Δ=-0.0266 CI=[-0.0533,+0.0030] pub=1.7653476890915212 wall=3.6s
+08:41:59 [Nov_3rd] QN-RS L16 s1 n15: Med=2.3736 FQ=2.3853 Δ=-0.0118 CI=[-0.0711,+0.0405] pub=2.3853191788935257 wall=20.2s
+08:41:59 [Nov_3rd] QN-RS wrote /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/qn_rs/L16/seed1/eval.json
+=== EXIT 0 ===

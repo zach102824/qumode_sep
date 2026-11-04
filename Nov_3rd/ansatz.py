@@ -168,6 +168,106 @@ class Nov3rdAnsatz(GadgetAnsatz):
             "graded_Hc": graded,
         }
 
+    def _apply_all_batch(self, psi: torch.Tensor, M: torch.Tensor) -> torch.Tensor:
+        """psi is (B, nf, ..., nf). Cavity axis c sits at dimension c+1."""
+        for c in range(self.C):
+            psi = self._apply_local(psi, M, c + 1)
+        return psi
+
+    def _parse_gamma(self, gamma: torch.Tensor):
+        L = self.L
+        gamma = gamma.to(dtype=self.rdtype, device=self.lam.device)
+        if gamma.ndim == 1:
+            if int(gamma.numel()) != L:
+                raise ValueError(f"gamma len {gamma.numel()} != L={L}")
+            return gamma.reshape(L), False
+        if gamma.ndim == 2:
+            if tuple(gamma.shape) != (L, 4):
+                raise ValueError(f"gamma shape {tuple(gamma.shape)} != {(L, 4)}")
+            return gamma, True
+        raise ValueError(f"gamma ndim {gamma.ndim} not in {{1,2}}")
+
+    def _cost_grid_batch(self, E: torch.Tensor) -> torch.Tensor:
+        """Scalar cost_Cn for a batch. E (B, 2^n) → (B, NU, ..., NU)."""
+        n = self.cfg.n
+        m = int(round(9.93 * n))
+        E = E.to(device=self.lam.device, dtype=self.rdtype)
+        Cn = E[:, self.grid_to_x] * (n / m)
+        dims = tuple(range(1, Cn.ndim))
+        return Cn - Cn.amax(dim=dims, keepdim=True)
+
+    def _walsh_grid_batch(self, E: torch.Tensor) -> torch.Tensor:
+        """Degree-1..4 Walsh pieces on the product grid, shape (B, 4, NU, ...)."""
+        n = self.cfg.n
+        m = int(round(9.93 * n))
+        f = E.to(device=self.lam.device, dtype=self.rdtype)
+        f = f * (n / float(m))
+        f = f - f.amax(dim=-1, keepdim=True)
+        N = int(f.shape[-1])
+        F = fwht_unnormalized(f)
+        comps = []
+        for w in range(4):
+            Fw = torch.where(self._walsh_degree_masks[w], F, torch.zeros_like(F))
+            fw = fwht_unnormalized(Fw) / float(N)
+            comps.append(fw[:, self.grid_to_x])
+        return torch.stack(comps, dim=1)
+
+    def forward_nov3rd_batch(
+        self,
+        E: torch.Tensor,
+        gamma: torch.Tensor,
+        phi: torch.Tensor,
+    ) -> dict:
+        """Batched forward_nov3rd. E: (B, 2^n). Returns inv_p, p_leak, p_succ each (B,).
+
+        Same angles on every row. Gradients flow into gamma and phi.
+        """
+        if E.ndim != 2:
+            raise ValueError(f"batch E must be (B, 2^n), got {tuple(E.shape)}")
+        L = self.L
+        gamma, graded = self._parse_gamma(gamma)
+        if tuple(phi.shape) != (L, S.B_BITS + 1):
+            raise ValueError(f"phi shape {tuple(phi.shape)} != {(L, S.B_BITS + 1)}")
+        phi = phi.to(dtype=self.rdtype, device=self.lam.device)
+        B = int(E.shape[0])
+        psi = torch.zeros((B,) + (self.nf,) * self.C, dtype=self.cdtype, device=self.lam.device)
+        psi[(slice(None),) + (0,) * self.C] = 1
+        sl = (slice(None),) + tuple(slice(0, NU) for _ in range(self.C))
+        if graded:
+            pieces = self._walsh_grid_batch(E)  # (B, 4, NU...)
+            gw_view = (1, 4) + (1,) * self.C
+        else:
+            Cn = self._cost_grid_batch(E)
+            pieces = None
+        for ell in range(L):
+            psi = self._apply_all_batch(psi, self.Wmat)
+            if graded:
+                diag = (pieces * gamma[ell].reshape(gw_view)).sum(dim=1)
+            else:
+                diag = Cn * gamma[ell]
+            if int(self.nf) != int(NU):
+                raise NotImplementedError("batched Nov_3rd forward expects nf == NU")
+            psi = psi * torch.exp(-1j * diag.to(self.cdtype))
+            psi = self._apply_all_batch(psi, self.Wmat)
+            th = phi[ell][self.popcount]
+            psi = self._apply_all_batch(psi, self._snap_theta(th))
+        psi = self._apply_all_batch(psi, self.Wmat)
+        probs = psi.real.square() + psi.imag.square()
+        p_comp = probs[sl]
+        comp_dims = tuple(range(1, p_comp.ndim))
+        p_comp_sum = p_comp.sum(dim=comp_dims)
+        p_leak = (1.0 - p_comp_sum).clamp(min=0.0)
+        E_grid = E.to(device=self.lam.device)[:, self.grid_to_x]
+        succ = torch.where(E_grid == 0, p_comp, torch.zeros_like(p_comp)).sum(dim=comp_dims)
+        p_succ = succ.clamp(min=0.0)
+        inv_p = 1.0 / p_succ.clamp(min=1e-12)
+        return {
+            "p_succ": p_succ,
+            "p_leak": p_leak,
+            "inv_p": inv_p,
+            "graded_Hc": graded,
+        }
+
 
 def make_W():
     S.assert_locked(W_frame=S.W_FRAME, b=S.B_BITS)
