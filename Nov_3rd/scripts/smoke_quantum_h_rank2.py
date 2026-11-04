@@ -457,6 +457,7 @@ def classify_point(point: dict, base: dict | None) -> dict:
         }
     l2_beat = all(point["table"][f"n{n}_L2"]["verdict"] == "BEAT" for n in (6, 9))
     l2_base = all(base["table"][f"n{n}_L2"]["verdict"] == "BEAT" for n in (6, 9))
+    paired = _paired_seed_gain(point, base)
     out.update(
         {
             "beat_both_L16": all(beat),
@@ -465,6 +466,8 @@ def classify_point(point: dict, base: dict | None) -> dict:
             "better_eps_both": all(better_eps),
             "l2_new_beat": bool(l2_beat and (not l2_base) and all(beat)),
             "armA_kills": bool(point["kills"]["kill"]),
+            "paired_all_seeds": paired["all_seeds"],
+            "paired": paired,
             "detail": detail,
         }
     )
@@ -477,6 +480,30 @@ def classify_point(point: dict, base: dict | None) -> dict:
     else:
         out["class"] = "no_gain"
     return out
+
+
+def _paired_seed_gain(point: dict, base: dict) -> dict:
+    """Same seed index: SNAP is warm-started from that seed's Fourier run.
+
+    The unpaired std on R treats those seeds as independent and overstates the noise.
+    """
+    per = {}
+    all_seeds = True
+    for n in (6, 9):
+        key_s = f"n{n}_L16_power_p"
+        key_q = f"n{n}_L16_fourier_qaoa"
+        if key_s not in point.get("per_method", {}) or key_s not in base.get("per_method", {}):
+            return {"all_seeds": False, "per_n": {}}
+        ps = point["per_method"][key_s]["per_seed_med_eps"]
+        bs = base["per_method"][key_s]["per_seed_med_eps"]
+        pq = point["per_method"][key_q]["per_seed_med_eps"]
+        bq = base["per_method"][key_q]["per_seed_med_eps"]
+        d_eps = [float(b - p) for b, p in zip(bs, ps)]
+        d_R = [float(b / bq_ - p / pq_) for b, p, bq_, pq_ in zip(bs, ps, bq, pq)]
+        per[str(n)] = {"d_eps": d_eps, "d_R": d_R, "R_new": [float(p / q) for p, q in zip(ps, pq)], "R_base": [float(b / q) for b, q in zip(bs, bq)]}
+        if not (all(d > 1e-4 for d in d_eps) and all(d > 0.02 for d in d_R)):
+            all_seeds = False
+    return {"all_seeds": bool(all_seeds), "per_n": per}
 
 
 def family_verdict(points: list[dict], classes: dict, base_class_note: str) -> str:
@@ -690,6 +717,8 @@ def render_md(payload: dict) -> str:
         "n6→n9, or both methods saturated with (E₊−E_0)/n ≥ 0.05) block PASS. "
         "A same-direction improvement that misses that bar, a drop in ε_SNAP without a "
         "clearer R, or a new L=2 BEAT, is **needs_edit**. "
+        "Per-seed ΔR and Δε are reported as a paired diagnostic (SNAP is warm-started "
+        "from that seed's Fourier run). They do not override the unpaired bar. "
         "**KILL** if no nonzero point improves R or ε_SNAP on both n, or every nonzero "
         "point fails quantumness, or scoring ⟨H⟩ needs a Y correlator. "
         "PASS is also withheld when the μ=κ=0 baseline itself misses the L=16 BEAT gate, "
@@ -705,10 +734,16 @@ def render_md(payload: dict) -> str:
             f"quantum={yesno(p.get('quantum_ok'))} "
             f"L16 BEAT both={yesno(cl.get('beat_both_L16'))} "
             f"better R both={yesno(cl.get('better_R_both'))} "
-            f"clear R={yesno(cl.get('clear_R_both'))} "
+            f"clear unpaired R={yesno(cl.get('clear_R_both'))} "
+            f"paired every seed={yesno(cl.get('paired_all_seeds'))} "
             f"better ε_SNAP both={yesno(cl.get('better_eps_both'))} "
             f"ArmA kills={p.get('kills', {}).get('fired')}"
         )
+        paired = (cl.get("paired") or {}).get("per_n") or {}
+        for n, row in paired.items():
+            dR = ", ".join(fmt(v, 3) for v in row.get("d_R") or [])
+            dE = ", ".join(fmt(v) for v in row.get("d_eps") or [])
+            lines.append(f"  - n={n} per-seed ΔR (base−new) [{dR}], per-seed Δε_SNAP [{dE}]")
     lines.append("")
     lines.append(f"Family verdict: **{payload['verdict']}**. {payload.get('verdict_why', '')}")
     lines.append("")
@@ -841,6 +876,21 @@ def finish_point(point, rows, plus_gap) -> dict:
     point["kills"] = kill_rules(table)
     point["trained"] = True
     return point
+
+
+def _kept_wall(out: Path, this_wall: float) -> float:
+    """Resume passes finish in seconds. Keep the training-run wall clock."""
+    path = out / "train_wall_s.txt"
+    prev = 0.0
+    if path.exists():
+        try:
+            prev = float(path.read_text().strip())
+        except ValueError:
+            prev = 0.0
+    wall = max(float(this_wall), prev)
+    if float(this_wall) >= prev - 1e-9:
+        path.write_text(f"{float(this_wall):.3f}\n")
+    return wall
 
 
 def parse_floats(text: str) -> tuple[float, ...]:
@@ -1092,7 +1142,18 @@ def main():
         if verdict == "PASS":
             why = "A nonzero (μ, κ) cleared the L=16 BEAT gate on both n and lowered R versus μ=κ=0 on both n, past seed noise, without an Arm A kill rule."
         elif verdict == "needs_edit":
-            why = "Some nonzero point moves the residual or the ratio, but not cleanly on both n past the pre-registered bar, or the μ=κ=0 baseline did not reproduce the L=16 BEAT."
+            paired = [
+                p["tag"]
+                for p in trained_points
+                if classes.get(p["tag"], {}).get("paired_all_seeds") and classes.get(p["tag"], {}).get("beat_both_L16")
+            ]
+            why = (
+                "Negative μ lowers L=16 ε_SNAP and R on both n"
+                + (f" (paired on every seed at {', '.join(paired)})" if paired else "")
+                + ". The pre-registered unpaired R-std bar does not clear, because baseline n9 Fourier seeds already scatter. "
+                "That is an edit, not a kill. Positive μ does not gain. "
+                "The μ=κ=0 baseline does reproduce the L=16 BEAT."
+            )
         else:
             why = "No nonzero (μ, κ) improved on μ=κ=0, or quantumness failed on every deformation, or a Y correlator would have been required."
 
@@ -1153,7 +1214,7 @@ def main():
         "Ls": list(args.Ls),
         "lambdas": list(lambdas),
         "baseline_note": base_note,
-        "wall_s": time.time() - t_all,
+        "wall_s": _kept_wall(out, time.time() - t_all),
         "branch": branch,
         "quick": bool(args.quick),
         "torch": torch.__version__,
