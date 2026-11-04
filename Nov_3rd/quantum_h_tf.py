@@ -3,7 +3,7 @@
 Hamiltonian (Opus sign)::
 
     H = H_c - λ Σ_i X_i
-    H_c = Σ_{(a,b,c)} J_abc Z_a Z_b Z_c,   J_abc = ±1
+    H_c = Σ_{(a,b,c)} J_abc Z_a Z_b Z_c
 
 Gate sequence is unchanged (BinH, b=3)::
 
@@ -16,10 +16,13 @@ X-histogram (circuit with the final W omitted)::
     ⟨H⟩ = Σ_z p_Z(z) H_c(z) - λ Σ_i ⟨X_i⟩
     ⟨X_i⟩ = 2 p_{X_i}(+) - 1
 
-Instances: existing 4-SAT packs do not store 3-local ``cls_s``. Clause
-supports are the cross-cavity triples inside those 4-clauses, with
-``J = ±1`` the product of the three literal signs (first occurrence).
-Degree is capped at 3 so ``m = n`` when the pack geometry allows it.
+Instances: existing 4-SAT packs do not store 3-local ``cls_s``. The support
+is the degree-capped cross-cavity triples inside those 4-clauses (degree ≤ 3,
+``m = n`` when the geometry allows it). Couplings are independent standard
+normals seeded by the formula, not the first-occurrence sign. At n=6 that
+sign lies in a spin-flip gauge orbit of one 3-regular design, so a large
+batch repeats two spectra and the Hamming shells stay at the Fourier warm
+start. Normal couplings on the same support are distinct Hamiltonians.
 Train rows come from ``beat_qaoa_12h/train_packs`` (E regenerated from the
 stored seed and checked). Holdout rows use the scale1000 seed base in
 ``regen_scale1000.py`` (the scale1000 npz itself is not in this checkout).
@@ -38,6 +41,8 @@ from explore_OCT29.scripts.binH_vs_grayH import build_W_BinH, build_grid_to_x_bi
 # regen_scale1000.py
 SCALE1000_BASE = 54_000_000_000
 POPCOUNT8 = np.array([bin(i).count("1") for i in range(8)], dtype=np.int64)
+# Seed offset for J ~ N(0,1) on the degree-capped cross-cavity support.
+J_RNG_SALT = 91
 
 
 @dataclass
@@ -111,6 +116,30 @@ def extract_e3lin(n: int, cl, m_target: int | None = None) -> list[tuple[int, in
         if len(chosen) >= m_target:
             break
     return chosen
+
+
+def apply_gaussian_J(clauses, seed: int, n: int):
+    """Independent N(0,1) couplings on a fixed cross-cavity support.
+
+    The degree-3 greedy support at n=6 is one 3-regular design. Its
+    first-occurrence signs have incidence rank 4 over GF(2), so spin-flip
+    gauge leaves two orbits, and the orbit that clears the product-gap gate
+    is a single spectrum. A large holdout therefore repeats two Hamiltonians
+    and the shells c2, c3 stay at the Fourier warm start.
+
+    Resampling the support at the same density drops the median product gap
+    under 2%. Denser graphs push the bitstring peak above 0.5 at λ=0.5.
+    Multiplicity-modulated ±1 splits E_0 but the optimal mixer stays linear.
+    Standard-normal J on this same support keeps the cavity packing, makes
+    each formula its own Hamiltonian, and gives the shells a gradient.
+    """
+    if not clauses:
+        return []
+    rng = np.random.default_rng(int(seed) + 1_000_003 * int(n) + J_RNG_SALT)
+    out = []
+    for a, b, c, _J in clauses:
+        out.append((int(a), int(b), int(c), float(rng.normal())))
+    return out
 
 
 def zzz_diag(n: int, clauses) -> np.ndarray:
@@ -210,7 +239,8 @@ def degrees_of(n: int, clauses) -> np.ndarray:
 
 
 def instance_from_clauses(n: int, seed: int, split: str, cl) -> E3Instance:
-    clauses = extract_e3lin(n, cl, m_target=n)
+    support = extract_e3lin(n, cl, m_target=n)
+    clauses = apply_gaussian_J(support, seed, n)
     if len(clauses) == 0:
         raise RuntimeError(f"n={n} seed={seed}: no cross-cavity triple")
     diag = zzz_diag(n, clauses)
@@ -624,18 +654,26 @@ def self_check(device="cpu") -> dict:
     gL = exact_ground(d, 3, lam=2.0)
     assert gL["E0"] < -2.0 * 3 + 0.2
 
-    # pack seed reproduces stored E, extraction yields ±1 cross-cavity clauses
+    # pack seed reproduces stored E; support stays cross-cavity degree ≤ 3,
+    # and N(0,1) couplings split the n=6 gauge orbit.
     from pathlib import Path
     from Nov_3rd import settings as S
 
     pack = Path(S.OUT / "beat_qaoa_12h" / "train_packs" / "train_n6.npz")
-    insts = load_train_instances(6, 2, pack)
+    insts = load_train_instances(6, 8, pack)
     for ins in insts:
         assert ins.m == 6, ins.m
-        assert set(J for *_, J in ins.clauses) <= {-1, 1}
         assert all(len({a // 3, b // 3, c // 3}) >= 2 for a, b, c, _J in ins.clauses)
         assert int(ins.degree.max()) == 3
+        js = [float(J) for *_, J in ins.clauses]
+        assert all(np.isfinite(js))
+        assert max(abs(j) for j in js) > 0
+    # First-occurrence ±1 collapses these eight formulas onto 2 spectra.
+    e0s = [exact_ground(ins.diag, 6, 0.5)["E0"] for ins in insts]
+    n_e0 = len(set(np.round(e0s, 5)))
+    assert n_e0 >= 6, n_e0
     report["pack_n6_m"] = [ins.m for ins in insts]
+    report["pack_n6_unique_E0"] = int(n_e0)
 
     # shell polynomial matches beat_params
     c1 = torch.tensor([0.2, -0.1], dtype=torch.float64)

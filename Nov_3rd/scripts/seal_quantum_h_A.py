@@ -16,10 +16,11 @@ seeds 0..2). Does not write qaoa_angles/ or train69_ladder_fresh250/.
 Verdict (pre-registered, primary head = power_p at L=16):
   KILL if the λ=0.5 quantumness gate fails on either n, or protocol R>1.02
   on both n.
-  PASS if the gate holds, protocol R≤0.98 on both n, a strict majority of
-  seeds have paired R_s≤0.98 on each n, the ε gap exceeds one seed-std on
-  at least one n, f stays ≤0.99 for some method or some n, and the positive
-  advantage does not shrink from n=6 to n=9 under the smoke shrink test.
+  PASS if the gate holds, protocol R≤0.98 on both n, the seed 95% CI of R
+  stays below 0.99 on both n, a strict majority of seeds have paired
+  R_s≤0.98 on each n, the ε gap exceeds one seed-std on at least one n,
+  f stays ≤0.99 for some method or some n, and the positive advantage does
+  not shrink from n=6 to n=9 under the smoke shrink test.
   needs_edit otherwise.
 Walsh, L=2, and the optional n=12 freeze are reported and do not flip PASS
 to KILL. A failed freeze is a caveat.
@@ -27,6 +28,7 @@ to KILL. A failed freeze is a caveat.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -65,7 +67,7 @@ from Nov_3rd.quantum_h_tf import (
 TRAIN_PACKS = S.OUT / "beat_qaoa_12h" / "train_packs"
 PAPER_BETA = 0.01
 PAPER_GAMMA = -0.01
-CODE_ID = "seal_A_v1"
+CODE_ID = "seal_A_r3_gaussJ"
 SMOKE_L16 = {
     6: {"qaoa": 0.0096, "power_p": 0.0086, "R": 0.889},
     9: {"qaoa": 0.0127, "power_p": 0.0098, "R": 0.770},
@@ -630,11 +632,17 @@ def decide(quantum_ok: bool, l16: dict) -> tuple[str, str]:
     outside = any(not l16[n]["within_one_seed_std"] for n in (6, 9))
     sat = all(l16[n]["saturated"] for n in (6, 9))
     shrink, shrink_detail = shrink_test(l16)
+    ci_clear = all(math.isfinite(l16[n]["R_ci95"][1]) and l16[n]["R_ci95"][1] < 0.99 for n in (6, 9))
     reasons = []
     if not beat:
         reasons.append(
             "protocol R is not ≤0.98 on both n "
             f"(n6={Rs[6]:.3f}, n9={Rs[9]:.3f})."
+        )
+    if not ci_clear:
+        reasons.append(
+            "the seed 95% CI of R hugs 1 "
+            f"(n6 hi={l16[6]['R_ci95'][1]:.3f}, n9 hi={l16[9]['R_ci95'][1]:.3f})."
         )
     if not majority:
         reasons.append(
@@ -648,12 +656,13 @@ def decide(quantum_ok: bool, l16: dict) -> tuple[str, str]:
         reasons.append("both methods have Med f>0.99 on both n, so the ratio is at the floor.")
     if shrink:
         reasons.append(f"the positive advantage shrinks n6→n9 ({shrink_detail}).")
-    if beat and majority and outside and not sat and not shrink:
+    if beat and ci_clear and majority and outside and not sat and not shrink:
         return (
             "PASS",
-            "L=16 power_p protocol R≤0.98 on n=6 and n=9, a strict majority of seeds "
-            "agree, the gap is outside one seed-std on at least one n, and the "
-            "smoke shrink and saturation checks do not fire.",
+            "L=16 power_p protocol R≤0.98 on n=6 and n=9, the seed 95% CI of R "
+            "stays below 0.99 on both n, a strict majority of seeds agree, the gap "
+            "is outside one seed-std on at least one n, and the smoke shrink and "
+            "saturation checks do not fire.",
         )
     return "needs_edit", " ".join(reasons) if reasons else "Seal criteria were not all met."
 
@@ -759,11 +768,23 @@ def load_bundle(n: int, B_train: int, B_hold: int) -> dict:
     }
 
 
+def _diag_digest(insts) -> str:
+    raw = np.stack([np.round(ins.diag, 8) for ins in insts], 0)
+    return hashlib.sha256(np.ascontiguousarray(raw).tobytes()).hexdigest()[:16]
+
+
 def ed_cached(path: Path, insts, n, lam, product_cap: int) -> list[dict]:
     seeds = np.asarray([ins.seed for ins in insts], dtype=np.int64)
+    digest = _diag_digest(insts)
     if path.exists():
         z = np.load(path, allow_pickle=False)
-        if np.array_equal(z["seeds"], seeds) and abs(float(z["lam"]) - lam) < 1e-12 and int(z["product_cap"]) == int(product_cap if product_cap > 0 else len(insts)):
+        cached_digest = str(z["digest"]) if "digest" in z.files else ""
+        if (
+            cached_digest == digest
+            and np.array_equal(z["seeds"], seeds)
+            and abs(float(z["lam"]) - lam) < 1e-12
+            and int(z["product_cap"]) == int(product_cap if product_cap > 0 else len(insts))
+        ):
             log(f"  ED cache hit {path.name}")
             rows = []
             for i in range(len(insts)):
@@ -789,6 +810,7 @@ def ed_cached(path: Path, insts, n, lam, product_cap: int) -> list[dict]:
     np.savez(
         path,
         seeds=seeds,
+        digest=np.array(digest),
         lam=np.float64(lam),
         product_cap=np.int32(product_cap if product_cap > 0 else len(insts)),
         E0=np.array([r["E0"] for r in rows]),
@@ -808,6 +830,7 @@ def ed_cached(path: Path, insts, n, lam, product_cap: int) -> list[dict]:
 def protocol_blob(args) -> dict:
     return {
         "code": CODE_ID,
+        "packing": "cross_cavity_deg3_gaussJ",
         "lam": float(args.lam),
         "B_train": int(args.B_train),
         "B_hold": int(args.B_hold),
@@ -836,7 +859,7 @@ def load_done(path: Path, proto: dict):
 
 def render_md(payload: dict) -> str:
     lines = []
-    lines.append("# RESULTS — seal family A (PR #13 recipe)")
+    lines.append("# RESULTS — seal family A, round 3 (n=6 spectral diversity)")
     lines.append("")
     lines.append(f"**Verdict: {payload['verdict']}**")
     lines.append("")
@@ -844,7 +867,11 @@ def render_md(payload: dict) -> str:
     lines.append("")
     lines.append("## Recipe")
     lines.append("")
-    lines.append("Same Hamiltonian and gate as the PR #13 smoke, at the λ that smoke locked:")
+    lines.append(
+        "Same gate as the PR #13 smoke, at the λ that smoke locked. "
+        "Couplings are standard normal on the degree-3 cross-cavity support "
+        "(first-occurrence ±1 tied at n=6):"
+    )
     lines.append("")
     lines.append(r"\[")
     lines.append(r"H = \sum_{(a,b,c)} J_{abc} Z_a Z_b Z_c \;-\; \lambda \sum_i X_i")
@@ -860,7 +887,8 @@ def render_md(payload: dict) -> str:
     lines.append("")
     lines.append(
         "Cross-cavity triples are taken from the existing 4-SAT packs. "
-        "`J=±1` is the product of the three literal signs. Degree cap 3, so `m=n` when the geometry allows it. "
+        "The support is still the degree-3 greedy extraction (`m=n` when the geometry allows it). "
+        "J is an independent standard normal, seeded by the formula id, not the first-occurrence sign. "
         "Train rows are the first `B_train` seeds of `beat_qaoa_12h/train_packs`. "
         "Holdout rows are the first `B_hold` satisfiable draws at scale1000 base `54_000_000_000`. "
         "`qaoa_angles/`, `train69_ladder_fresh250/`, and the phase-2 n21 ladder were not written."
@@ -1220,7 +1248,7 @@ def run_freeze(bundles, ed_cache, sims, args, proto, run_dir: Path, lam: float) 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", type=str, default=str(S.OUT / "quantum_h_explore" / "seal_A"))
+    ap.add_argument("--out", type=str, default=str(S.OUT / "quantum_h_explore" / "seal_A_r3"))
     ap.add_argument("--ns", type=str, default="6,9")
     ap.add_argument("--Ls", type=str, default="2,16")
     ap.add_argument("--seeds", type=str, default="0,1,2,3,4")
@@ -1245,7 +1273,7 @@ def main():
     args.freeze_seeds = tuple(int(x) for x in args.freeze_seeds.split(",") if x.strip())
     args.methods = tuple(x.strip() for x in args.methods.split(",") if x.strip())
 
-    torch.set_num_threads(4)
+    torch.set_num_threads(min(8, os.cpu_count() or 4))
     try:
         torch.set_num_interop_threads(1)
     except RuntimeError:
@@ -1343,6 +1371,9 @@ def main():
         "shrink": shrink,
         "shrink_detail": shrink_detail,
         "saturated": bool(l16_power) and 6 in l16_power and 9 in l16_power and all(l16_power[n]["saturated"] for n in (6, 9)),
+        "ci_clear": bool(l16_power) and 6 in l16_power and 9 in l16_power and all(
+            math.isfinite(l16_power[n]["R_ci95"][1]) and l16_power[n]["R_ci95"][1] < 0.99 for n in (6, 9)
+        ),
     }
     verdict, reason = decide(quantum_ok, l16_power)
 
@@ -1378,9 +1409,23 @@ def main():
         if nu is not None and nu <= 4:
             notes.append(
                 f"{key}: {nu} distinct E_0 values, majority fraction {s['E0_majority_frac']:.2f}. "
-                "At n=6 the cross-cavity degree-3 extraction is geometrically almost unique, "
-                "so a larger B repeats two spectra rather than drawing new Hamiltonians."
+                "Gaussian couplings did not split this split; the degree-3 support is still gauge-collapsed."
             )
+        elif nu is not None:
+            notes.append(
+                f"{key}: {nu} distinct E_0 values, majority fraction {s['E0_majority_frac']:.3f}."
+            )
+    notes.append(
+        "n=6 diagnosis: every packed formula contains all 18 cross-cavity triples, and the "
+        "degree-3 greedy support is a 3-regular design (incidence rank 4 over GF(2)). "
+        "First-occurrence J=±1 then has two spin-flip orbits. The orbit that clears the "
+        "product-gap gate is one spectrum, so B_hold=256 repeated it and c2, c3 stayed at 0. "
+        "Random supports at the same density drop the median product gap under 2%. "
+        "Denser graphs (m≈2n) push the bitstring peak above 0.5 at λ=0.5. "
+        "Multiplicity-modulated ±1 splits E_0 but the optimal mixer stays linear, so the "
+        "shells do not leave the Fourier warm start. J ~ N(0,1) on that same support "
+        "is the change that keeps the packing and moves the shells."
+    )
     notes.append(
         "The one-seed-std flag compares the median gap to the larger seed-std. "
         "One weak seed inflates that std above a median gap that the paired ratios and the "
