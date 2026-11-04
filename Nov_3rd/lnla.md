@@ -70,4 +70,17 @@ versus the champ on the fresh CORE is under 0.5%. Ship only if that bar is
 cleared and Med is below same-L QAOA on every CORE n.
 
 Code: `Nov_3rd/lnla.py`. Checks: `python Nov_3rd/tests/test_lnla.py`.
-Results land in `Nov_3rd/runs/beat_qaoa_12h/train69/lnla/`.
+Results: `Nov_3rd/runs/beat_qaoa_12h/train69/lnla/RESULTS.md`.
+
+## Smoke result
+
+**Kill.** On fresh CORE B=1000 the selected cells lose to the frozen champ at n=15.
+
+| L | selected (α, β) | train-score gain | fresh n15 Med gain vs champ |
+|---|---|---|---|
+| 2 | (−0.25, 1.00) | +0.51% | −3.07% (75.42 → 77.74) |
+| 16 | (1.00, 0.00) | +3.10% | −0.80% (2.613 → 2.634) |
+
+The |α|,|β| < 0.05 collapse kill does not fire. The n15 gain kill does.
+Tied β=κα is worse on n15 at both depths. The L=16 train gain did not transfer
+off the B=100 slice. Details, the 9×9 tables, and the heatmaps are in the run folder.

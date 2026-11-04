@@ -543,6 +543,44 @@ def md_table(headers: list[str], rows: list[list[str]]) -> list[str]:
     return out
 
 
+def show_path(p: str) -> str:
+    s = str(p)
+    root = str(_ROOT) + "/"
+    return s[len(root):] if s.startswith(root) else s
+
+
+def reading(payload: dict) -> list[str]:
+    lines = ["## Reading", ""]
+    for L, block in payload["cores"].items():
+        v = block["verdict_free"]
+        g = payload["grids"][str(L)]["best_free"]
+        lines.append(
+            f"L={L}: selected α={v['alpha']:.2f}, β={v['beta']:.2f} "
+            f"(train-score gain {g['train_gain_pct']:.3f}%). "
+            f"The collapse kill does not fire (|α| and |β| are not both under 0.05). "
+            f"Fresh n15 Med gain is {v['n15_gain_pct']:.3f}%, which is under 0.5% and is the kill."
+        )
+    lines += [
+        "",
+        "L=16's train pick sits on the α=+1 edge with β=0, so that cell changes only the cost weights. "
+        "Its best tied line (β = 0.5 α) is worse on fresh n15. "
+        "L=2's train pick sits on the β=+1 edge. "
+        "Both fresh n15 Medians went up versus the champ, so a wider (α, β) box is not supported.",
+        "",
+        "r_j is a narrow feature: on the train slice the median max(r)−min(r) is about 0.05 at n=6 and 0.10 at n=9. "
+        "On the fresh CORE it is about 0.05, 0.12, 0.15, 0.18 at n=6, 9, 12, 15. "
+        "The L=16 train score improved about 3% (lower Med) on B=100 and then reversed on the fresh packs "
+        "(n9, n12, and n15 Med all worse). That is the failure mode called out for this idea: "
+        "load can fit the training instances, and n=6 barely spreads r_j.",
+        "",
+        "The frozen champs still have lower Med than same-L QAOA on every fresh CORE n. LN-LA does not improve them. "
+        "At L=16 the selected cell still beats QAOA and loses to the champ. "
+        "At L=2 it loses to the champ at n=15 and also loses to QAOA there.",
+        "",
+    ]
+    return lines
+
+
 def render_results(payload: dict) -> str:
     lines = [
         "# LN-LA smoke — load-normalized graded H_c × load-adaptive cavity SNAP",
@@ -572,7 +610,7 @@ def render_results(payload: dict) -> str:
         [
             [
                 str(L),
-                f"`{meta['path']}`",
+                f"`{show_path(meta['path'])}`",
                 f"{meta['p']:.4f}",
                 meta["note"],
             ]
@@ -674,7 +712,8 @@ def render_results(payload: dict) -> str:
                 "",
             ]
         if block.get("qaoa_historical_note"):
-            lines += [block["qaoa_historical_note"], ""]
+            lines += [show_path(block["qaoa_historical_note"]), ""]
+    lines += reading(payload)
     lines += [
         "## Verdict",
         "",
@@ -686,7 +725,8 @@ def render_results(payload: dict) -> str:
         "Ship requires clearing that rule and Med < same-L QAOA Med on every n in {6,9,12,15}.",
         "",
     ]
-    return "\n".join(lines) + "\n"
+    text = "\n".join(lines) + "\n"
+    return text.replace(str(_ROOT) + "/", "")
 
 
 def ensure_l2_qaoa(packs: Path, out_dir: Path, device, threads: int) -> Path:
