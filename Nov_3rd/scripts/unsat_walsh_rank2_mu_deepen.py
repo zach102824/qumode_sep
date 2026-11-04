@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Round 5: tighter freeze of unsat λ=0.75 + μ=−0.25 Walsh.
+"""Deepen freeze of unsat λ=0.75 Walsh. Default μ=−0.25 (PR #25).
 
-Reuses the PR #23 scorer (BinH U_c^X, Hamming-shell SNAP, Z histogram for
-unsat, X histogram for the field and intra-cavity XX). Angles are fit on
-n=6 and n=9. n=12 and n=15 are the sealed transfer. n=18 is a Lanczos probe
-and does not enter the loss, the checkpoint selection, or the PASS gate.
-n=21 is not loaded.
+``--mu -0.50`` reruns that pipeline on the PR #26 winner. The scorer is
+unchanged: BinH U_c^X, Hamming-shell SNAP, Z histogram for unsat, X
+histogram for the field and intra-cavity XX. Angles are fit on n=6 and n=9.
+n=12 and n=15 are the sealed transfer. n=18 is a Lanczos probe and does not
+enter the loss, the checkpoint selection, or the PASS gate. n=21 is not loaded.
 
-    H = diag(unsat) − 0.75 Σ_i X_i − 0.25 Σ_cav Σ_{i<j} X_i X_j
+    H = diag(unsat) − 0.75 Σ_i X_i + μ Σ_cav Σ_{i<j} X_i X_j
 """
 from __future__ import annotations
 
@@ -53,16 +53,63 @@ base = importlib.util.module_from_spec(_SPEC)
 _SPEC.loader.exec_module(base)
 
 PARENT = S.OUT / "quantum_h_explore" / "unsat_rank2_mu"
+SWEEP_CACHE = S.OUT / "quantum_h_explore" / "unsat_mu_sweep" / "cache"
 # PR #23 ratio of medians, 3 seeds, transfer B=64 (n=12) and B=32 (n=15).
+# apply_mu(-0.50) replaces these with the PR #26 point estimates.
 PRIOR_R = {12: 0.33011169158114184, 15: 0.3554511757416401}
 PRIOR_B = {12: 64, 15: 32}
 BRANCH = "cursor/unsat-walsh-mu-deepen-5136"
+PRIOR_NOTE = "PR #23"
+ROUND_NAME = "Round 5 deepen"
+LOG_TAG = "unsatXX-r5"
 BOOT_SEED = 5136
 BOOT_DRAWS = 4000
 
 
 def log(*a):
-    print(time.strftime("%H:%M:%S"), "[unsatXX-r5]", *a, flush=True)
+    print(time.strftime("%H:%M:%S"), f"[{LOG_TAG}]", *a, flush=True)
+
+
+def _paths_mu(out: Path, L: int, method: str, seed: int):
+    """Checkpoint stem. A dot in the μ tag must not be Path.with_suffix."""
+    tag = f"{float(MU):+.2f}".replace("+", "").replace(".", "p")
+    stem = Path(out) / "runs" / f"mu{tag}_L{int(L)}_{method}_seed{int(seed)}"
+    return Path(str(stem) + ".json"), Path(str(stem) + ".pt")
+
+
+_PATHS_ORIG = base._paths
+
+
+def apply_mu(mu: float) -> float:
+    """Point the imported scorer at one operating point. Default stays −0.25."""
+    global MU, PRIOR_R, PRIOR_B, BRANCH, PRIOR_NOTE, ROUND_NAME, LOG_TAG
+    import Nov_3rd.unsat_rank2_xx as xx
+
+    mu = float(mu)
+    if abs(mu - (-0.25)) <= 1e-12:
+        MU = -0.25
+        PRIOR_R = {12: 0.33011169158114184, 15: 0.3554511757416401}
+        PRIOR_B = {12: 64, 15: 32}
+        BRANCH = "cursor/unsat-walsh-mu-deepen-5136"
+        PRIOR_NOTE = "PR #23"
+        ROUND_NAME = "Round 5 deepen"
+        LOG_TAG = "unsatXX-r5"
+        base._paths = _PATHS_ORIG
+    elif abs(mu - (-0.50)) <= 1e-12:
+        MU = -0.50
+        # PR #26 ratio of medians, 3 seeds, transfer B=64 (n=12) and B=32 (n=15).
+        PRIOR_R = {12: 0.15015595428732964, 15: 0.17579095507059755}
+        PRIOR_B = {12: 64, 15: 32}
+        BRANCH = "cursor/unsat-walsh-mu050-seal-9cbd"
+        PRIOR_NOTE = "PR #26"
+        ROUND_NAME = "Round 6 seal"
+        LOG_TAG = "unsatXX-r6"
+        base._paths = _paths_mu
+    else:
+        raise SystemExit("deepen μ must be −0.25 (PR #25) or −0.50 (PR #26 winner)")
+    base.MU = MU
+    xx.MU = MU
+    return MU
 
 
 def _tag() -> str:
@@ -79,7 +126,9 @@ def _blob(path: Path) -> dict:
 
 
 def _cache_dirs(out: Path):
-    return [out / "cache", PARENT / "cache"]
+    # PR #26 wrote the μ=−0.50 diagonals under the sweep cache. A prefix there
+    # matches this tag only, so the μ=−0.25 files in PARENT stay unused.
+    return [out / "cache", PARENT / "cache", SWEEP_CACHE]
 
 
 def _find_exact(out: Path, n: int, role: str, count: int):
@@ -488,12 +537,21 @@ def _fmt(x, nd=3):
     return f"{float(x):.{nd}f}"
 
 
+def _mu_text(mu: float) -> str:
+    mu = float(mu)
+    sign = "−" if mu < 0 else "+"
+    return f"{sign}{abs(mu):.2f}"
+
+
 def render(payload: dict) -> str:
     v = payload["verdict"]
     q = payload["quantum"]
     cells = payload["cells"]
+    mu_s = _mu_text(payload["mu"])
+    round_name = payload.get("round_name", ROUND_NAME)
+    prior_note = payload.get("prior_note", PRIOR_NOTE)
     lines = []
-    lines.append("# RESULTS — Round 5 deepen, unsat λ=0.75 + μ=−0.25 Walsh freeze")
+    lines.append(f"# RESULTS — {round_name}, unsat λ=0.75 + μ={mu_s} Walsh freeze")
     lines.append("")
     lines.append(f"**Verdict: {v['verdict']}**")
     lines.append("")
@@ -501,14 +559,29 @@ def render(payload: dict) -> str:
     lines.append("")
     lines.append("## Setup")
     lines.append("")
-    lines.append(
-        "Same gate and Hamiltonian as PR #23. Intra-cavity XX is scored from the X histogram. "
-        "Angles are fit on n=6 and n=9. The sealed scores at n=12 and n=15, and the n=18 probe, "
-        "use those frozen angles. n=21 was not loaded."
-    )
+    if abs(float(payload["mu"]) - (-0.50)) < 1e-9:
+        lines.append(
+            "Same gate as the PR #25 deepen: BinH U_c^X, Hamming-shell SNAP. "
+            "The Hamiltonian is the PR #26 winner, μ=−0.50. "
+            "Intra-cavity XX is scored from the X histogram. "
+            "Angles are fit on n=6 and n=9. The sealed scores at n=12 and n=15, and the n=18 probe, "
+            "use those frozen angles. n=21 was not loaded."
+        )
+        hold_note = "PR #26 used 128"
+        transfer_note = f"PR #26 used {PRIOR_B[12]} and {PRIOR_B[15]}"
+        budget_note = "That is the PR #25 optimizer budget on a larger selection holdout."
+    else:
+        lines.append(
+            "Same gate and Hamiltonian as PR #23. Intra-cavity XX is scored from the X histogram. "
+            "Angles are fit on n=6 and n=9. The sealed scores at n=12 and n=15, and the n=18 probe, "
+            "use those frozen angles. n=21 was not loaded."
+        )
+        hold_note = "PR #23 used 128"
+        transfer_note = f"PR #23 used {PRIOR_B[12]} and {PRIOR_B[15]}"
+        budget_note = "That is the PR #23 optimizer budget on a larger selection holdout."
     lines.append("")
     lines.append("```text")
-    lines.append("H = diag(unsat) − 0.75 Σ_i X_i + μ Σ_cav Σ_{i<j} X_i X_j ,  μ = −0.25")
+    lines.append(f"H = diag(unsat) − 0.75 Σ_i X_i + μ Σ_cav Σ_{{i<j}} X_i X_j ,  μ = {mu_s}")
     lines.append("U_c^X = W exp(−i γ C_n) W ,  W = H^{⊗3} ,  C_n = (n/m) unsat − max")
     lines.append("⟨H⟩ = Σ_z p_Z(z) unsat(z) − 0.75 Σ_i ⟨X_i⟩ + μ Σ_cav Σ_{i<j} ⟨X_i X_j⟩")
     lines.append("ε = (⟨H⟩ − E_0) / n")
@@ -516,19 +589,19 @@ def render(payload: dict) -> str:
     lines.append("")
     lines.append(
         f"Train B={payload['B_train']} per n from `beat_qaoa_12h/train_packs` (base 51e9). "
-        f"Selection holdout B={payload['B_hold']} per n (PR #23 used 128). "
+        f"Selection holdout B={payload['B_hold']} per n ({hold_note}). "
         f"Sealed transfer B={payload['B_transfer']} at n=12 and B={payload['B_n15']} at n=15 "
-        f"(PR #23 used {PRIOR_B[12]} and {PRIOR_B[15]}). "
+        f"({transfer_note}). "
         f"Seeds {payload['seeds']}. L={payload['Ls']}. "
         f"L-BFGS rounds {payload['rounds_L2']}/{payload['rounds_L16']}, "
         f"max_iter {payload['max_iter_L2']}/{payload['max_iter_L16']}, lr={payload['lr']}. "
-        "That is the PR #23 optimizer budget on a larger selection holdout. "
+        f"{budget_note} "
         "The checkpoint minimizes the worst of the two holdout ratios against that seed's Fourier. "
         "Early stop is 8 rounds without a 10⁻⁶ improvement."
     )
     lines.append("")
     lines.append(
-        f"PR #23 point estimates, 3 seeds: n=12 L=16 Walsh R={PRIOR_R[12]:.3f} on B={PRIOR_B[12]}, "
+        f"{prior_note} point estimates, 3 seeds: n=12 L=16 Walsh R={PRIOR_R[12]:.3f} on B={PRIOR_B[12]}, "
         f"n=15 L=16 Walsh R={PRIOR_R[15]:.3f} on B={PRIOR_B[15]}. "
         f"μ=0 comparison remains the published PR #19 ratio of medians "
         f"(n=12 L=16 Walsh R={PUBLISHED_N12_L16:.3f}), not a retrain."
@@ -643,7 +716,7 @@ def render(payload: dict) -> str:
             f"seed-resample CI {seed_ci['lo']:.3f}–{seed_ci['hi']:.3f}, "
             f"pooled paired wins {stat['paired']['win']}/{stat['paired']['n']} "
             f"(Wilson 95% {wlo:.3f}–{whi:.3f}; pairs repeat instances across seeds). "
-            f"PR #23 point estimate {PRIOR_R[n]:.3f}."
+            f"{payload.get('prior_note', PRIOR_NOTE)} point estimate {PRIOR_R[n]:.3f}."
         )
     if n18.get("status") == "probe" and "walsh|16|18" in cells:
         stat = payload["stats"]["walsh|16|18"]
@@ -781,7 +854,8 @@ def n18_for_decide(cells, quantum, status: dict) -> dict:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", type=str, default=str(PARENT / "deepen"))
+    ap.add_argument("--mu", type=float, default=-0.25)
+    ap.add_argument("--out", type=str, default="")
     ap.add_argument("--seeds", type=str, default="0,1,2,3,4")
     ap.add_argument("--Ls", type=str, default="2,16")
     ap.add_argument("--B-train", type=int, default=128)
@@ -798,12 +872,20 @@ def main():
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--no-resume", action="store_true")
     args = ap.parse_args()
+    apply_mu(float(args.mu))
+    if args.out == "":
+        if abs(MU - (-0.50)) <= 1e-12:
+            args.out = str(S.OUT / "quantum_h_explore" / "unsat_mu050_seal")
+        else:
+            args.out = str(PARENT / "deepen")
     args.seeds = [int(s) for s in args.seeds.split(",") if s != ""]
     args.Ls = [int(s) for s in args.Ls.split(",") if s != ""]
     out = Path(args.out)
     blocked = ("phase2", "train69_ladder", "qaoa_angles")
-    if any(part in blocked for part in out.parts) or out.name == "settings.py":
+    if any(part in blocked for part in out.parts) or out.name == "settings.py" or "n21" in out.parts:
         raise SystemExit("refusing to write into the n=21 ladder or frozen angle store")
+    if abs(MU - (-0.50)) <= 1e-12 and out.name == "deepen" and "unsat_rank2_mu" in out.parts:
+        raise SystemExit("refusing to overwrite the μ=−0.25 deepen directory")
     if len(args.seeds) < 5 or len(set(args.seeds)) != len(args.seeds):
         raise SystemExit("deepen needs at least 5 distinct seeds")
     if args.B_train < 128 or args.B_hold < 256 or args.B_transfer < 128 or args.B_n15 < 64:
@@ -833,7 +915,7 @@ def main():
         n18=n18_note,
     )
     prior = (
-        f"PR #23 point estimates were n=12 R={PRIOR_R[12]:.3f} and n=15 R={PRIOR_R[15]:.3f}."
+        f"{PRIOR_NOTE} point estimates were n=12 R={PRIOR_R[12]:.3f} and n=15 R={PRIOR_R[15]:.3f}."
     )
     verdict["reason"] = verdict["reason"].rstrip() + " " + prior
     log(f"VERDICT {verdict['verdict']}: {verdict['reason']}")
@@ -876,6 +958,8 @@ def main():
         "wall_s": time.time() - t0,
         "branch": BRANCH,
         "prior_R": {str(k): v for k, v in PRIOR_R.items()},
+        "prior_note": PRIOR_NOTE,
+        "round_name": ROUND_NAME,
     }
     write_all(out, payload)
 
