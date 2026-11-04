@@ -1,0 +1,25 @@
+# Opus 5.5 medium — U_c^X with per-X-string bit / a variation
+
+Context (Zach / Nov_3rd Hamming-shell SNAP, power_p champ):
+- Circuit: |0⟩ → [U_c^X → Hamming-shell SNAP]^L → final W → Fock
+- U_c^X = W D W, W=H^{⊗3}, D=exp(-i γ E) with E = unsat-clause count (single shared γ per layer)
+- SNAP: φ_k = c1·k + c2·k² + c3·k³ (k=popcount 0..3); power_p scales c2,c3 by a_n=(8/(n-1))^p
+- Train {6,9} only → eval CORE {6,9,12,15}; L∈{2,16}; BEAT iff R=Med/Med_QAOA ≤ 0.98
+- L=16 power_p ALL_CORE BEAT; L=2 capacity near-miss (~0.986)
+- HARD bans: no secret H_c projector / rename / densified-E / weighted-H_c that reconstructs clause projectors under the hood as "non-Hc"; Zach previously killed Cost-sandwich / projector arms that secretly encode Hc. Prefer honest qumode-native variations of the existing X-sandwich cost, not Arm-C projector gadgets.
+
+Zach question:
+For U_c^X, what if we also add a "bit / a" variation for each X-string?
+Interpretation to use: today one γ multiplies the full cost diagonal E. After W···W, that is equivalent to a phase built from X-type Pauli strings (clause parities in the X frame). Zach wants to free a coefficient a_s (or bit-scale) per X-string / per clause contribution inside U_c^X, not only a single γ.
+
+TASK:
+Give exactly **3 ranked ideas** for the best ways to add per-X-string (or per-clause) amplitude / bit-scale variation into U_c^X, compatible with Nov_3rd motif + train{6,9} transfer.
+
+For EACH idea:
+1. One-line name + formula for the modified U_c^X (every symbol defined)
+2. Why it should help Med / transfer vs plain γ·E
+3. Param count / how it scales with n,m (clauses)
+4. Cheapest decisive experiment (L, train set, kill/pass)
+5. Kill criteria + main failure mode (esp. secretly reconstructing Hc / overfitting n6)
+
+Also: one short paragraph ranking which of the 3 you think works BEST and why.
