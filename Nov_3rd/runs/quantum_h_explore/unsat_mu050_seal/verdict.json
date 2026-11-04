@@ -1,0 +1,40 @@
+{
+  "verdict": "PASS",
+  "null": false,
+  "reason": "frozen n=12 L=16 Walsh R=0.147 (instance 95% CI 0.141\u20130.157) and n=15 R=0.168 (CI 0.154\u20130.189) both stay BEAT. 5/5 and 5/5 seeds beat. Paired majorities 5/5 and 5/5. Drop vs \u03bc=0 unsat Walsh 0.793. n=18 probe L=16 Walsh R=0.186 Med \u03b5=0.0003 on B=16 (peak 0.000, product gap 0.061); exploratory, not gated. PR #26 point estimates were n=12 R=0.150 and n=15 R=0.176.",
+  "R12": 0.1466857116206471,
+  "R15": 0.1678327660307214,
+  "ci12": [
+    0.14118740247162676,
+    0.15661270808040417
+  ],
+  "ci15": [
+    0.15420820143081304,
+    0.1893251324579571
+  ],
+  "prior_R12": 0.15015595428732964,
+  "prior_R15": 0.17579095507059755,
+  "published_R": 0.94,
+  "n18": {
+    "status": "probe",
+    "R": 0.18591910470632328,
+    "med": 0.0003042398555001115,
+    "B": 16,
+    "peak_med": 0.00018555595379874187,
+    "prod_gap_med": 0.0607436013354799,
+    "mark": "BEAT",
+    "probe_s": 5.296555757522583
+  },
+  "mu": -0.5,
+  "lam": 0.75,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "B_hold": 256,
+  "B_transfer": 128,
+  "B_n15": 64
+}
