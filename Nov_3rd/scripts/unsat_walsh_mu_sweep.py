@@ -123,11 +123,11 @@ def _copy_anchor(anchor: Path, out: Path):
     log("PR #23 μ=−0.25 L=16 checkpoints are in place")
 
 
-def _build_caches(anchor: Path, out: Path, mus, workers: int):
-    """Reuse the PR #23 unsat diagonals. Only E0 changes with μ."""
+def _build_caches(anchor: Path, out: Path, mus, workers: int, diag_tag: str = "m-0.25"):
+    """Reuse one anchor's unsat diagonals. Only E0 changes with μ."""
     anchors = {}
     for n, role, count in SPECS:
-        src = anchor / "cache" / f"unsat_xx_n{n}_{role}_B{count}_l0.75_m-0.25.npz"
+        src = anchor / "cache" / f"unsat_xx_n{n}_{role}_B{count}_l0.75_{diag_tag}.npz"
         z = np.load(src)
         anchors[(n, role)] = {k: z[k] for k in ("score", "pulse", "seeds", "m", "lam")}
         if int(anchors[(n, role)]["score"].shape[0]) != int(count):
