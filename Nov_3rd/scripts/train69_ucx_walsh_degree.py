@@ -39,8 +39,8 @@ EVAL_NS = [6, 9, 12, 15]
 IDEA = "walsh_degree"  # graded H_c
 
 
-def load_train_n(n: int, max_count: int | None = None) -> torch.Tensor:
-    path = TRAIN_PACKS / f"train_n{n}.npz"
+def load_train_n(n: int, max_count: int | None = None, packs_dir: Path | None = None) -> torch.Tensor:
+    path = Path(packs_dir) / f"train_n{n}.npz" if packs_dir else TRAIN_PACKS / f"train_n{n}.npz"
     d = np.load(path, allow_pickle=True)
     E = np.asarray(d["train_E"])
     if max_count is not None:
@@ -265,7 +265,8 @@ def train_one(args, device):
     use_power_p = bool(args.power_p)
     bundles = {}
     for n in TRAIN_NS:
-        E = load_train_n(n, max_count=args.max_train).to(device)
+        packs_dir = Path(args.packs_dir) if getattr(args, "packs_dir", "") else None
+        E = load_train_n(n, max_count=args.max_train, packs_dir=packs_dir).to(device)
         log(f"{IDEA} L{L} seed{seed}: load train n{n} B={len(E)}")
         inv_q = precompute_qaoa_inv(betas, gammas, E.cpu(), n, device)
         sim = make_sim(n, L, device)
@@ -553,6 +554,7 @@ def main():
     ap.add_argument("--skip_eval", action="store_true")
     ap.add_argument("--tag", type=str, default="walsh_degree")
     ap.add_argument("--out_dir", type=str, default="")
+    ap.add_argument("--packs_dir", type=str, default="", help="override train npz directory")
     args = ap.parse_args()
 
     os.environ["OMP_NUM_THREADS"] = str(args.threads)

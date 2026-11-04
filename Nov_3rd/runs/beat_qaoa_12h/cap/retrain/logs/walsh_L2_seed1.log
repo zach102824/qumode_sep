@@ -1,0 +1,51 @@
+
+=== /usr/bin/python3 /agent/repos/qumode_sep/Nov_3rd/scripts/train69_ucx_walsh_degree.py --L 2 --seed 1 --threads 4 --max_train 100 --eval_B 1000 --skip_eval --packs_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/packs_walsh --out_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/walsh_L2 --w6 1 --w9 2 --adam_steps 400 --lbfgs_rounds 8 --batch_per_n 32 @ 2026-11-04 08:54:38 +0000 ===
+08:54:38 [Nov_3rd] walsh_degree L2 seed1: load train n6 B=100
+08:54:38 [Nov_3rd] walsh_degree L2 seed1: load train n9 B=100
+08:54:38 [Nov_3rd] walsh_degree L2 s1: train QAOA Meds n6=5.5418, n9=12.5748
+08:54:38 [Nov_3rd] walsh_degree L2 s1: n9 holdout=20 train_pool=80
+08:54:39 [Nov_3rd] walsh_degree L2 s1 adam 0/400 loss=0.00000 lam=1.00e-01 γ_mad=0.0009
+08:54:39 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.00158 @ adam0
+08:54:42 [Nov_3rd] walsh_degree L2 s1 adam 25/400 loss=-0.01897 lam=9.38e-02 γ_mad=0.0220
+08:54:43 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.00949 @ adam25
+08:54:46 [Nov_3rd] walsh_degree L2 s1 adam 50/400 loss=-0.02687 lam=8.76e-02 γ_mad=0.0436
+08:54:46 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.02229 @ adam50
+08:54:49 [Nov_3rd] walsh_degree L2 s1 adam 75/400 loss=-0.04529 lam=8.14e-02 γ_mad=0.0639
+08:54:49 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.03232 @ adam75
+08:54:52 [Nov_3rd] walsh_degree L2 s1 adam 100/400 loss=-0.05086 lam=7.52e-02 γ_mad=0.0836
+08:54:55 [Nov_3rd] walsh_degree L2 s1 adam 125/400 loss=-0.04720 lam=6.90e-02 γ_mad=0.1022
+08:54:55 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.03680 @ adam125
+08:54:59 [Nov_3rd] walsh_degree L2 s1 adam 150/400 loss=-0.05292 lam=6.28e-02 γ_mad=0.1202
+08:54:59 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.04184 @ adam150
+08:55:02 [Nov_3rd] walsh_degree L2 s1 adam 175/400 loss=-0.07042 lam=5.66e-02 γ_mad=0.1371
+08:55:02 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.04950 @ adam175
+08:55:05 [Nov_3rd] walsh_degree L2 s1 adam 200/400 loss=-0.05278 lam=5.04e-02 γ_mad=0.1535
+08:55:05 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.05742 @ adam200
+08:55:08 [Nov_3rd] walsh_degree L2 s1 adam 225/400 loss=-0.04902 lam=4.42e-02 γ_mad=0.1694
+08:55:08 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.06159 @ adam225
+08:55:11 [Nov_3rd] walsh_degree L2 s1 adam 250/400 loss=-0.05496 lam=3.80e-02 γ_mad=0.1846
+08:55:11 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.06251 @ adam250
+08:55:15 [Nov_3rd] walsh_degree L2 s1 adam 275/400 loss=-0.06857 lam=3.18e-02 γ_mad=0.1999
+08:55:15 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.06704 @ adam275
+08:55:18 [Nov_3rd] walsh_degree L2 s1 adam 300/400 loss=-0.07575 lam=2.56e-02 γ_mad=0.2147
+08:55:18 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.06902 @ adam300
+08:55:21 [Nov_3rd] walsh_degree L2 s1 adam 325/400 loss=-0.05436 lam=1.94e-02 γ_mad=0.2291
+08:55:21 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.07254 @ adam325
+08:55:24 [Nov_3rd] walsh_degree L2 s1 adam 350/400 loss=-0.05292 lam=1.32e-02 γ_mad=0.2431
+08:55:24 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.07429 @ adam350
+08:55:28 [Nov_3rd] walsh_degree L2 s1 adam 375/400 loss=-0.06526 lam=6.95e-03 γ_mad=0.2563
+08:55:28 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.07610 @ adam375
+08:55:31 [Nov_3rd] walsh_degree L2 s1 adam 399/400 loss=-0.07036 lam=1.00e-03 γ_mad=0.2681
+08:55:31 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.07691 @ adam399
+08:55:32 [Nov_3rd] walsh_degree L2 s1 lbfgs r0/8 loss=-0.06412
+08:55:33 [Nov_3rd] walsh_degree L2 s1 lbfgs r1/8 loss=-0.06636
+08:55:34 [Nov_3rd] walsh_degree L2 s1 lbfgs r2/8 loss=-0.05892
+08:55:36 [Nov_3rd] walsh_degree L2 s1 lbfgs r3/8 loss=-0.06661
+08:55:36 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.07700 @ lbfgs3
+08:55:37 [Nov_3rd] walsh_degree L2 s1 lbfgs r4/8 loss=-0.07486
+08:55:38 [Nov_3rd] walsh_degree L2 s1 lbfgs r5/8 loss=-0.06614
+08:55:38 [Nov_3rd] walsh_degree L2 s1 NEW BEST holdout=-0.07714 @ lbfgs5
+08:55:40 [Nov_3rd] walsh_degree L2 s1 lbfgs r6/8 loss=-0.05897
+08:55:41 [Nov_3rd] walsh_degree L2 s1 lbfgs r7/8 loss=-0.05211
+08:55:41 [Nov_3rd] walsh_degree L2 s1: restoring best holdout=-0.07714 @ lbfgs5
+08:55:41 [Nov_3rd] walsh_degree L2 s1 saved /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/walsh_L2/params_L2_seed1_B1000.pt wall=62s γ_mad=0.2704
