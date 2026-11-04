@@ -4,7 +4,9 @@
 ``--mu -0.50`` reruns that pipeline on the PR #26 winner.
 ``--mu -1.00`` is the Round 7 seal of the PR #28 edge, on the same budget,
 with an instance quantumness gate: at least 95% of n=12 and of n=15 formulas
-must have product gap ≥ 0.02. The scorer is unchanged: BinH U_c^X,
+must have product gap ≥ 0.02.
+``--mu -0.90`` is the Round 8 seal of the PR #31 EDGE champ, on that same
+budget and the same instance gate. The scorer is unchanged: BinH U_c^X,
 Hamming-shell SNAP, Z histogram for unsat, X histogram for the field and
 intra-cavity XX. Angles are fit on n=6 and n=9. n=12 and n=15 are the sealed
 transfer. n=18 is a Lanczos probe and does not enter the loss, the checkpoint
@@ -47,6 +49,7 @@ from Nov_3rd.unsat_rank2_xx import (
     decide_deepen,
     paired_seed_table,
     product_gap_tail,
+    uses_instance_gap_gate,
     wilson_interval,
 )
 
@@ -61,6 +64,8 @@ PARENT = S.OUT / "quantum_h_explore" / "unsat_rank2_mu"
 SWEEP_CACHE = S.OUT / "quantum_h_explore" / "unsat_mu_sweep" / "cache"
 # PR #28 diagonals at μ=−1.00. A shorter prefix is reused only when seeds match.
 NEG_CACHE = S.OUT / "quantum_h_explore" / "unsat_mu_neg" / "cache"
+# PR #31 diagonals at μ=−0.90. Same prefix rule.
+SAFE_CACHE = S.OUT / "quantum_h_explore" / "unsat_mu_safe" / "cache"
 # PR #23 ratio of medians, 3 seeds, transfer B=64 (n=12) and B=32 (n=15).
 # apply_mu(-0.50) replaces these with the PR #26 point estimates.
 PRIOR_R = {12: 0.33011169158114184, 15: 0.3554511757416401}
@@ -126,8 +131,19 @@ def apply_mu(mu: float) -> float:
         LOG_TAG = "unsatXX-r7"
         PROTOCOL = "seal_mu100"
         base._paths = _paths_mu
+    elif abs(mu - (-0.90)) <= 1e-12:
+        MU = -0.90
+        # PR #31 ratio of medians, 3 seeds, transfer B=64 (n=12) and B=32 (n=15).
+        PRIOR_R = {12: 0.0918444208231456, 15: 0.11714953927489877}
+        PRIOR_B = {12: 64, 15: 32}
+        BRANCH = "cursor/unsat-walsh-mu090-seal-7533"
+        PRIOR_NOTE = "PR #31"
+        ROUND_NAME = "Round 8 seal"
+        LOG_TAG = "unsatXX-r8"
+        PROTOCOL = "seal_mu090"
+        base._paths = _paths_mu
     else:
-        raise SystemExit("deepen μ must be −0.25, −0.50, or −1.00")
+        raise SystemExit("deepen μ must be −0.25, −0.50, −0.90, or −1.00")
     base.MU = MU
     xx.MU = MU
     return MU
@@ -153,6 +169,8 @@ def _cache_dirs(out: Path):
     dirs = [out / "cache", PARENT / "cache", SWEEP_CACHE]
     if abs(float(MU) - (-1.00)) <= 1e-12:
         dirs.append(NEG_CACHE)
+    if abs(float(MU) - (-0.90)) <= 1e-12:
+        dirs.append(SAFE_CACHE)
     return dirs
 
 
@@ -590,7 +608,23 @@ def render(payload: dict) -> str:
     lines.append("")
     lines.append("## Setup")
     lines.append("")
-    if abs(float(payload["mu"]) - (-1.00)) < 1e-9:
+    if abs(float(payload["mu"]) - (-0.90)) < 1e-9:
+        lines.append(
+            "Same gate as the PR #30 seal: BinH U_c^X, Hamming-shell SNAP. "
+            "The Hamiltonian is the PR #31 EDGE champ, μ=−0.90. "
+            "Intra-cavity XX is scored from the X histogram. "
+            "Angles are fit on n=6 and n=9. The sealed scores at n=12 and n=15, and the n=18 probe, "
+            "use those frozen angles. n=21 was not loaded. "
+            "PR #27 sealed μ=−0.50 at n=12 L=16 Walsh R=0.147 with product gap 0.064. "
+            "PR #30 sealed μ=−1.00 at n=12 R=0.096 (1/128 instances under 0.02). "
+            "PR #31 named μ=−0.90 the EDGE champ (n=12 R=0.092 on B=64, median product gap 0.032, "
+            "64/64 instances at or above 0.02). This run asks the larger sample to keep that BEAT "
+            "and the 95% instance gap."
+        )
+        hold_note = "PR #31 used 128"
+        transfer_note = f"PR #31 used {PRIOR_B[12]} and {PRIOR_B[15]}"
+        budget_note = "That is the PR #30 optimizer budget on a larger selection holdout."
+    elif abs(float(payload["mu"]) - (-1.00)) < 1e-9:
         lines.append(
             "Same gate as the PR #27 seal: BinH U_c^X, Hamming-shell SNAP. "
             "The Hamiltonian is the PR #28 edge, μ=−1.00. "
@@ -688,12 +722,13 @@ def render(payload: dict) -> str:
             f"{row['prod_gap_med']:.3f} | {row['med_eps_plus']:.3f} | {row['med_eps_bit']:.3f} | "
             f"{row['residual_max']:.1e} |"
         )
-    if abs(float(payload["mu"]) - (-1.00)) < 1e-9:
+    if uses_instance_gap_gate(payload["mu"]):
+        round_label = "Round 8" if abs(float(payload["mu"]) - (-0.90)) < 1e-9 else "Round 7"
         lines.append("")
         lines.append(
             "Instance product-gap tails. A count is the number of formulas with "
             "(E_prod − E_0) / |E_0| strictly below the bar. "
-            "The Round 7 seal needs at least 95% of the n=12 instances and at least 95% of the n=15 instances "
+            f"The {round_label} seal needs at least 95% of the n=12 instances and at least 95% of the n=15 instances "
             "at or above 0.02. The fraction below 0.05 is reported and does not gate the call. "
             "n=6, n=9, and the n=18 probe are the same count and are not part of that gate."
         )
@@ -817,9 +852,10 @@ def render(payload: dict) -> str:
         "on both the ratio of medians and the median per-seed ratio, and the n=12 and n=15 ground states "
         "have peak < 0.5 and median product gap ≥ 0.02."
     )
-    if abs(float(payload["mu"]) - (-1.00)) < 1e-9:
+    if uses_instance_gap_gate(payload["mu"]):
+        round_label = "Round 8" if abs(float(payload["mu"]) - (-0.90)) < 1e-9 else "Round 7"
         rule += (
-            " Round 7 also requires at least 95% of the n=12 instances and at least 95% of the n=15 instances "
+            f" {round_label} also requires at least 95% of the n=12 instances and at least 95% of the n=15 instances "
             "to have product gap ≥ 0.02. A shortfall on that fraction is needs_edit and is a quantumness fail, "
             "even when the median gap and the Walsh ratios still look like a BEAT. "
             "The fraction of instances with product gap < 0.05 is reported and does not move the call."
@@ -986,7 +1022,9 @@ def main():
     args = ap.parse_args()
     apply_mu(float(args.mu))
     if args.out == "":
-        if abs(MU - (-1.00)) <= 1e-12:
+        if abs(MU - (-0.90)) <= 1e-12:
+            args.out = str(S.OUT / "quantum_h_explore" / "unsat_mu090_seal")
+        elif abs(MU - (-1.00)) <= 1e-12:
             args.out = str(S.OUT / "quantum_h_explore" / "unsat_mu100_seal")
         elif abs(MU - (-0.50)) <= 1e-12:
             args.out = str(S.OUT / "quantum_h_explore" / "unsat_mu050_seal")
@@ -1004,6 +1042,12 @@ def main():
         "unsat_mu050_seal" in out.parts or (out.name == "deepen" and "unsat_rank2_mu" in out.parts)
     ):
         raise SystemExit("refusing to overwrite the μ=−0.50 seal or the μ=−0.25 deepen directory")
+    if abs(MU - (-0.90)) <= 1e-12 and (
+        "unsat_mu100_seal" in out.parts
+        or "unsat_mu050_seal" in out.parts
+        or (out.name == "deepen" and "unsat_rank2_mu" in out.parts)
+    ):
+        raise SystemExit("refusing to overwrite an earlier seal directory")
     if len(args.seeds) < 5 or len(set(args.seeds)) != len(args.seeds):
         raise SystemExit("deepen needs at least 5 distinct seeds")
     if args.B_train < 128 or args.B_hold < 256 or args.B_transfer < 128 or args.B_n15 < 64:
@@ -1025,7 +1069,7 @@ def main():
     qdec = quantum_for_decide(quantum)
     n18_note = n18_for_decide(cells, quantum, n18_status)
     # Gate reads only the sealed L=16 Walsh rows. power_p and L=2 stay in the table.
-    gap_coverage = float(GAP_COVERAGE) if abs(float(MU) - (-1.00)) <= 1e-12 else None
+    gap_coverage = float(GAP_COVERAGE) if uses_instance_gap_gate(MU) else None
     verdict = decide_deepen(
         cells,
         qdec,
