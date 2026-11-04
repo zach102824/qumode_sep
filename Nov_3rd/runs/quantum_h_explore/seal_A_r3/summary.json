@@ -1,0 +1,1278 @@
+{
+  "family": "A",
+  "name": "transverse-field Max-E3LIN2 seal",
+  "verdict": "PASS",
+  "verdict_reason": "L=16 power_p protocol R\u22640.98 on n=6 and n=9, the seed 95% CI of R stays below 0.99 on both n, a strict majority of seeds agree, the gap is outside one seed-std on at least one n, and the smoke shrink and saturation checks do not fire.",
+  "lam": 0.5,
+  "quantum": {
+    "train_n6": {
+      "n": 6,
+      "split": "train",
+      "summary": {
+        "B": 128,
+        "n_unique_E0": 128,
+        "E0_majority_frac": 0.0078125,
+        "B_product": 128,
+        "med_peak": 0.17380016303146995,
+        "frac_peak_lt_0.5": 1.0,
+        "med_prod_gap": 0.03331930147053422,
+        "frac_prod_gap_ge_0.02": 0.8046875,
+        "med_entropy": 1.284743546472625,
+        "med_chi": 1.3110473309255135,
+        "med_gap": 0.08755604449596088,
+        "med_E0": -5.176500066611464,
+        "med_E0_over_n": -0.8627500111019106,
+        "med_E_cl": -4.519885948671153,
+        "med_sx": 2.6486148682725776,
+        "quantum_pass": true
+      }
+    },
+    "hold_n6": {
+      "n": 6,
+      "split": "hold",
+      "summary": {
+        "B": 256,
+        "n_unique_E0": 256,
+        "E0_majority_frac": 0.00390625,
+        "B_product": 256,
+        "med_peak": 0.15471267120962742,
+        "frac_peak_lt_0.5": 1.0,
+        "med_prod_gap": 0.044007507106114535,
+        "frac_prod_gap_ge_0.02": 0.8515625,
+        "med_entropy": 1.2263428729495063,
+        "med_chi": 1.5214616549044604,
+        "med_gap": 0.1181406144295547,
+        "med_E0": -4.806041875663786,
+        "med_E0_over_n": -0.8010069792772978,
+        "med_E_cl": -4.085751621883466,
+        "med_sx": 3.000185916219098,
+        "quantum_pass": true
+      }
+    },
+    "train_n9": {
+      "n": 9,
+      "split": "train",
+      "summary": {
+        "B": 128,
+        "n_unique_E0": 128,
+        "E0_majority_frac": 0.0078125,
+        "B_product": 128,
+        "med_peak": 0.08770193877740821,
+        "frac_peak_lt_0.5": 1.0,
+        "med_prod_gap": 0.0305765033388235,
+        "frac_prod_gap_ge_0.02": 0.6171875,
+        "med_entropy": 1.615607353079788,
+        "med_chi": 2.936147816736434,
+        "med_gap": 0.056895763863002546,
+        "med_E0": -7.128833922056817,
+        "med_E0_over_n": -0.792092658006313,
+        "med_E_cl": -6.275502677898554,
+        "med_sx": 4.374110500335964,
+        "quantum_pass": true
+      }
+    },
+    "hold_n9": {
+      "n": 9,
+      "split": "hold",
+      "summary": {
+        "B": 256,
+        "n_unique_E0": 256,
+        "E0_majority_frac": 0.00390625,
+        "B_product": 256,
+        "med_peak": 0.08508667786677085,
+        "frac_peak_lt_0.5": 1.0,
+        "med_prod_gap": 0.028405262670582306,
+        "frac_prod_gap_ge_0.02": 0.6640625,
+        "med_entropy": 1.772445066554369,
+        "med_chi": 3.1525290055619695,
+        "med_gap": 0.05422803265431897,
+        "med_E0": -7.358407068300702,
+        "med_E0_over_n": -0.8176007853667446,
+        "med_E_cl": -6.483837833467078,
+        "med_sx": 4.0857838876190105,
+        "quantum_pass": true
+      }
+    }
+  },
+  "quantum_ok": true,
+  "spectrum": {
+    "train_n6": {
+      "n": 6,
+      "split": "train",
+      "B": 128,
+      "med_frac_deg": [
+        0.0,
+        3.393404887904845e-34,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "max_frac_deg": [
+        3.153922539742615e-34,
+        9.279616123803411e-33,
+        0.0,
+        1.0000000000000004,
+        0.0
+      ],
+      "med_off_deg3": 0.0
+    },
+    "hold_n6": {
+      "n": 6,
+      "split": "hold",
+      "B": 256,
+      "med_frac_deg": [
+        0.0,
+        3.6538619369132762e-34,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "max_frac_deg": [
+        3.4234917382111734e-34,
+        9.227828111147676e-33,
+        0.0,
+        1.0000000000000004,
+        0.0
+      ],
+      "med_off_deg3": 0.0
+    },
+    "train_n9": {
+      "n": 9,
+      "split": "train",
+      "B": 128,
+      "med_frac_deg": [
+        0.0,
+        1.7117502145347003e-34,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "max_frac_deg": [
+        3.7311583961917976e-33,
+        7.962320430855551e-33,
+        0.0,
+        1.0000000000000004,
+        0.0
+      ],
+      "med_off_deg3": 0.0
+    },
+    "hold_n9": {
+      "n": 9,
+      "split": "hold",
+      "B": 256,
+      "med_frac_deg": [
+        0.0,
+        1.3080307003385233e-34,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "max_frac_deg": [
+        2.9189050747525566e-33,
+        9.915437292027124e-33,
+        0.0,
+        1.0000000000000004,
+        0.0
+      ],
+      "med_off_deg3": 0.0
+    }
+  },
+  "walsh_note": "Off-degree-3 mass is 0.00e+00 (median over the larger split). Degrees 1, 2, and 4 are numerical zeros, so their \u03b3 weights have zero gradient and cannot grade the mixer. The shells c2 and c3 are the mixer grading, and they are already the power_p head. Trained |\u03b3_w \u2212 \u03b3_3| mean is 1.264e-02. Walsh-degree \u03b3 was still optimized, as a separate 7L head warm-started from the same Fourier dual.",
+  "cells": [
+    {
+      "n": 6,
+      "L": 2,
+      "med_eps_qaoa": 0.0637519630909386,
+      "ci_qaoa": [
+        0.06283334268682564,
+        0.0716338311205412
+      ],
+      "std_eps_qaoa": 0.0036572585912880676,
+      "med_f_qaoa": 0.7908567240898414,
+      "med_eps_snap": 0.06363669882336023,
+      "ci_snap": [
+        0.06283334268682564,
+        0.07076973908468545
+      ],
+      "std_eps_snap": 0.0033350349730974973,
+      "med_f_snap": 0.793431702706118,
+      "R": 0.99819198873274,
+      "R_ci95": [
+        0.987937375087454,
+        1.0
+      ],
+      "paired_R": [
+        1.0,
+        1.0,
+        0.99819198873274,
+        0.9922994547678027,
+        0.987937375087454
+      ],
+      "n_paired_beat": 0,
+      "n_seeds": 5,
+      "adv_eps": 0.00011526426757836605,
+      "verdict": "TIE",
+      "within_one_seed_std": true,
+      "saturated": false,
+      "n_params_qaoa": 4,
+      "n_params_snap": 8,
+      "instance_ci_snap": [
+        0.05237358601938828,
+        0.0737531020754075
+      ],
+      "instance_ci_qaoa": [
+        0.052486898788209675,
+        0.07363060899726168
+      ],
+      "method": "power_p"
+    },
+    {
+      "n": 6,
+      "L": 2,
+      "med_eps_qaoa": 0.0637519630909386,
+      "ci_qaoa": [
+        0.06283334268682564,
+        0.0716338311205412
+      ],
+      "std_eps_qaoa": 0.0036572585912880676,
+      "med_f_qaoa": 0.7908567240898414,
+      "med_eps_snap": 0.0636366988227608,
+      "ci_snap": [
+        0.06283334268682564,
+        0.0707697390844336
+      ],
+      "std_eps_snap": 0.00333503497018608,
+      "med_f_snap": 0.7934317026014184,
+      "R": 0.9981919887233373,
+      "R_ci95": [
+        0.9879373750839382,
+        1.0000000000000004
+      ],
+      "paired_R": [
+        1.0000000000000004,
+        1.0,
+        0.9981919887233373,
+        0.9922994551490392,
+        0.9879373750839382
+      ],
+      "n_paired_beat": 0,
+      "n_seeds": 5,
+      "adv_eps": 0.00011526426817780322,
+      "verdict": "TIE",
+      "within_one_seed_std": true,
+      "saturated": false,
+      "n_params_qaoa": 4,
+      "n_params_snap": 14,
+      "instance_ci_snap": [
+        0.0529216068935212,
+        0.07353923097454092
+      ],
+      "instance_ci_qaoa": [
+        0.052486898788209675,
+        0.07363060899726168
+      ],
+      "method": "walsh"
+    },
+    {
+      "n": 6,
+      "L": 16,
+      "med_eps_qaoa": 0.013490260303081944,
+      "ci_qaoa": [
+        0.011286307689000038,
+        0.01622465715012637
+      ],
+      "std_eps_qaoa": 0.001958116322690973,
+      "med_f_qaoa": 0.9475043980123877,
+      "med_eps_snap": 0.01117089898027997,
+      "ci_snap": [
+        0.009009513807444636,
+        0.01449632247731884
+      ],
+      "std_eps_snap": 0.0022220943502336177,
+      "med_f_snap": 0.9596479251976959,
+      "R": 0.8280714181421615,
+      "R_ci95": [
+        0.7982693769925808,
+        0.9027328740989774
+      ],
+      "paired_R": [
+        0.8280714181421615,
+        0.86134812036314,
+        0.8934748107885861,
+        0.7982693769925808,
+        0.9027328740989774
+      ],
+      "n_paired_beat": 5,
+      "n_seeds": 5,
+      "adv_eps": 0.0023193613228019733,
+      "verdict": "BEAT",
+      "within_one_seed_std": false,
+      "saturated": false,
+      "n_params_qaoa": 32,
+      "n_params_snap": 64,
+      "instance_ci_snap": [
+        0.009672925769215263,
+        0.01247538551017957
+      ],
+      "instance_ci_qaoa": [
+        0.010838666156393876,
+        0.016042989067611552
+      ],
+      "method": "power_p"
+    },
+    {
+      "n": 6,
+      "L": 16,
+      "med_eps_qaoa": 0.013490260303081944,
+      "ci_qaoa": [
+        0.011286307689000038,
+        0.01622465715012637
+      ],
+      "std_eps_qaoa": 0.001958116322690973,
+      "med_f_qaoa": 0.9475043980123877,
+      "med_eps_snap": 0.011170898208952933,
+      "ci_snap": [
+        0.009009513824726293,
+        0.014496322051290627
+      ],
+      "std_eps_snap": 0.0022220944519448197,
+      "med_f_snap": 0.9596478754188026,
+      "R": 0.8280713609655749,
+      "R_ci95": [
+        0.7982693785237864,
+        0.9027328874517168
+      ],
+      "paired_R": [
+        0.8280713609655749,
+        0.8613480191742252,
+        0.8934747845305143,
+        0.7982693785237864,
+        0.9027328874517168
+      ],
+      "n_paired_beat": 5,
+      "n_seeds": 5,
+      "adv_eps": 0.0023193620941290103,
+      "verdict": "BEAT",
+      "within_one_seed_std": false,
+      "saturated": false,
+      "n_params_qaoa": 32,
+      "n_params_snap": 112,
+      "instance_ci_snap": [
+        0.009696562869522288,
+        0.012475386185168524
+      ],
+      "instance_ci_qaoa": [
+        0.010838666156393876,
+        0.016042989067611552
+      ],
+      "method": "walsh"
+    },
+    {
+      "n": 9,
+      "L": 2,
+      "med_eps_qaoa": 0.0734428100671618,
+      "ci_qaoa": [
+        0.07326971061685954,
+        0.08833937173354509
+      ],
+      "std_eps_qaoa": 0.006681862014202732,
+      "med_f_qaoa": 0.7651235416070994,
+      "med_eps_snap": 0.0733301653566464,
+      "ci_snap": [
+        0.07326971061685954,
+        0.08765974243349575
+      ],
+      "std_eps_snap": 0.006414363073790558,
+      "med_f_snap": 0.7648933264044294,
+      "R": 0.9984662254833061,
+      "R_ci95": [
+        0.9923066093100676,
+        1.0
+      ],
+      "paired_R": [
+        0.998454720024718,
+        0.9985972986696149,
+        0.9984662254833061,
+        1.0,
+        0.9923066093100676
+      ],
+      "n_paired_beat": 0,
+      "n_seeds": 5,
+      "adv_eps": 0.00011264471051540548,
+      "verdict": "TIE",
+      "within_one_seed_std": true,
+      "saturated": false,
+      "n_params_qaoa": 4,
+      "n_params_snap": 8,
+      "instance_ci_snap": [
+        0.06687606499995447,
+        0.07958412947724142
+      ],
+      "instance_ci_qaoa": [
+        0.06710497849489436,
+        0.07997097152033275
+      ],
+      "method": "power_p"
+    },
+    {
+      "n": 9,
+      "L": 2,
+      "med_eps_qaoa": 0.0734428100671618,
+      "ci_qaoa": [
+        0.07326971061685954,
+        0.08833937173354509
+      ],
+      "std_eps_qaoa": 0.006681862014202732,
+      "med_f_qaoa": 0.7651235416070994,
+      "med_eps_snap": 0.07333016535664663,
+      "ci_snap": [
+        0.07326971061685963,
+        0.0876597424334957
+      ],
+      "std_eps_snap": 0.00641436307379036,
+      "med_f_snap": 0.7648933264044296,
+      "R": 0.9984662254833093,
+      "R_ci95": [
+        0.992306609310067,
+        1.0000000000000013
+      ],
+      "paired_R": [
+        0.9984547200247361,
+        0.9985972986696134,
+        0.9984662254833093,
+        1.0000000000000013,
+        0.992306609310067
+      ],
+      "n_paired_beat": 0,
+      "n_seeds": 5,
+      "adv_eps": 0.00011264471051516955,
+      "verdict": "TIE",
+      "within_one_seed_std": true,
+      "saturated": false,
+      "n_params_qaoa": 4,
+      "n_params_snap": 14,
+      "instance_ci_snap": [
+        0.06735958170820272,
+        0.07958412947724162
+      ],
+      "instance_ci_qaoa": [
+        0.06710497849489436,
+        0.07997097152033275
+      ],
+      "method": "walsh"
+    },
+    {
+      "n": 9,
+      "L": 16,
+      "med_eps_qaoa": 0.015305798589493868,
+      "ci_qaoa": [
+        0.012863701083056098,
+        0.020752008653357218
+      ],
+      "std_eps_qaoa": 0.0029169582048034523,
+      "med_f_qaoa": 0.9507648154111448,
+      "med_eps_snap": 0.012070533841002887,
+      "ci_snap": [
+        0.011043898835747672,
+        0.019124161044749084
+      ],
+      "std_eps_snap": 0.0032381657077974013,
+      "med_f_snap": 0.9567894186961136,
+      "R": 0.788624897317562,
+      "R_ci95": [
+        0.788624897317562,
+        0.9215571063119817
+      ],
+      "paired_R": [
+        0.8585319858135194,
+        0.8389322025563457,
+        0.8016775957590558,
+        0.9215571063119817,
+        0.788624897317562
+      ],
+      "n_paired_beat": 5,
+      "n_seeds": 5,
+      "adv_eps": 0.003235264748490981,
+      "verdict": "BEAT",
+      "within_one_seed_std": true,
+      "saturated": false,
+      "n_params_qaoa": 32,
+      "n_params_snap": 64,
+      "instance_ci_snap": [
+        0.010810087913648618,
+        0.014507538849934498
+      ],
+      "instance_ci_qaoa": [
+        0.013204937067201902,
+        0.017249264592940614
+      ],
+      "method": "power_p"
+    },
+    {
+      "n": 9,
+      "L": 16,
+      "med_eps_qaoa": 0.015305798589493868,
+      "ci_qaoa": [
+        0.012863701083056098,
+        0.020752008653357218
+      ],
+      "std_eps_qaoa": 0.0029169582048034523,
+      "med_f_qaoa": 0.9507648154111448,
+      "med_eps_snap": 0.012070537625294087,
+      "ci_snap": [
+        0.0110438990873097,
+        0.019048435718454083
+      ],
+      "std_eps_snap": 0.003205778755813057,
+      "med_f_snap": 0.9567894543617637,
+      "R": 0.7886251445631518,
+      "R_ci95": [
+        0.7886251445631518,
+        0.9179080462349588
+      ],
+      "paired_R": [
+        0.8585320053694797,
+        0.8389322257196006,
+        0.801677592559966,
+        0.9179080462349588,
+        0.7886251445631518
+      ],
+      "n_paired_beat": 5,
+      "n_seeds": 5,
+      "adv_eps": 0.003235260964199781,
+      "verdict": "BEAT",
+      "within_one_seed_std": false,
+      "saturated": false,
+      "n_params_qaoa": 32,
+      "n_params_snap": 112,
+      "instance_ci_snap": [
+        0.010586145073842602,
+        0.014317838714660426
+      ],
+      "instance_ci_qaoa": [
+        0.013204937067201902,
+        0.017249264592940614
+      ],
+      "method": "walsh"
+    }
+  ],
+  "per_method": {
+    "n6_L2_fourier_qaoa": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "per_seed_med_eps": [
+        0.0636635489287325,
+        0.06283334268682564,
+        0.0637519630909386,
+        0.06375950546022033,
+        0.0716338311205412
+      ],
+      "per_seed_med_f": [
+        0.7938229769457696,
+        0.7955024247693467,
+        0.7908567240898414,
+        0.7907869358278853,
+        0.7447230368187252
+      ],
+      "med_eps": 0.0637519630909386,
+      "ci95": [
+        0.06283334268682564,
+        0.0716338311205412
+      ],
+      "std_eps": 0.0036572585912880676,
+      "med_f": 0.7908567240898414,
+      "n_params": 4,
+      "instance_ci95_median_seed": [
+        0.052486898788209675,
+        0.07363060899726168
+      ],
+      "instance_ci_seed": 2
+    },
+    "n6_L2_power_p": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "per_seed_med_eps": [
+        0.0636635489287325,
+        0.06283334268682564,
+        0.06363669882336023,
+        0.06326852250444137,
+        0.07076973908468545
+      ],
+      "per_seed_med_f": [
+        0.7938229769457696,
+        0.7955024247693467,
+        0.7920316401379772,
+        0.793431702706118,
+        0.7468803781465774
+      ],
+      "med_eps": 0.06363669882336023,
+      "ci95": [
+        0.06283334268682564,
+        0.07076973908468545
+      ],
+      "std_eps": 0.0033350349730974973,
+      "med_f": 0.793431702706118,
+      "n_params": 8,
+      "instance_ci95_median_seed": [
+        0.05237358601938828,
+        0.0737531020754075
+      ],
+      "instance_ci_seed": 2
+    },
+    "n6_L2_walsh": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "per_seed_med_eps": [
+        0.06366354892873252,
+        0.06283334268682564,
+        0.0636366988227608,
+        0.06326852252874882,
+        0.0707697390844336
+      ],
+      "per_seed_med_f": [
+        0.7938229769457696,
+        0.7955024247693467,
+        0.792031640141412,
+        0.7934317026014184,
+        0.7468803781460995
+      ],
+      "med_eps": 0.0636366988227608,
+      "ci95": [
+        0.06283334268682564,
+        0.0707697390844336
+      ],
+      "std_eps": 0.00333503497018608,
+      "med_f": 0.7934317026014184,
+      "n_params": 14,
+      "instance_ci95_median_seed": [
+        0.0529216068935212,
+        0.07353923097454092
+      ],
+      "instance_ci_seed": 2
+    },
+    "n6_L16_fourier_qaoa": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "per_seed_med_eps": [
+        0.013490260303081944,
+        0.012737039231382363,
+        0.01622465715012637,
+        0.011286307689000038,
+        0.015183712416474834
+      ],
+      "per_seed_med_f": [
+        0.9475043980123877,
+        0.9497867867790892,
+        0.934291815400232,
+        0.9578035888812277,
+        0.9380795362884642
+      ],
+      "med_eps": 0.013490260303081944,
+      "ci95": [
+        0.011286307689000038,
+        0.01622465715012637
+      ],
+      "std_eps": 0.001958116322690973,
+      "med_f": 0.9475043980123877,
+      "n_params": 32,
+      "instance_ci95_median_seed": [
+        0.010838666156393876,
+        0.016042989067611552
+      ],
+      "instance_ci_seed": 0
+    },
+    "n6_L16_power_p": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "per_seed_med_eps": [
+        0.01117089898027997,
+        0.010971024800942772,
+        0.01449632247731884,
+        0.009009513807444636,
+        0.013706836349216656
+      ],
+      "per_seed_med_f": [
+        0.9597454744364361,
+        0.9596479251976959,
+        0.9404960854421314,
+        0.9668956046407853,
+        0.9472032947498767
+      ],
+      "med_eps": 0.01117089898027997,
+      "ci95": [
+        0.009009513807444636,
+        0.01449632247731884
+      ],
+      "std_eps": 0.0022220943502336177,
+      "med_f": 0.9596479251976959,
+      "n_params": 64,
+      "instance_ci95_median_seed": [
+        0.009672925769215263,
+        0.01247538551017957
+      ],
+      "instance_ci_seed": 0
+    },
+    "n6_L16_walsh": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "per_seed_med_eps": [
+        0.011170898208952933,
+        0.010971023512095595,
+        0.014496322051290627,
+        0.009009513824726293,
+        0.01370683655196081
+      ],
+      "per_seed_med_f": [
+        0.959745484025847,
+        0.9596478754188026,
+        0.9404960869618999,
+        0.9668956046286556,
+        0.947203292500129
+      ],
+      "med_eps": 0.011170898208952933,
+      "ci95": [
+        0.009009513824726293,
+        0.014496322051290627
+      ],
+      "std_eps": 0.0022220944519448197,
+      "med_f": 0.9596478754188026,
+      "n_params": 112,
+      "instance_ci95_median_seed": [
+        0.009696562869522288,
+        0.012475386185168524
+      ],
+      "instance_ci_seed": 0
+    },
+    "n9_L2_fourier_qaoa": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "per_seed_med_eps": [
+        0.07344346322565062,
+        0.07344085439216627,
+        0.0734428100671618,
+        0.07326971061685954,
+        0.08833937173354509
+      ],
+      "per_seed_med_f": [
+        0.7651547033497776,
+        0.7651235416070994,
+        0.7651459910309348,
+        0.7642126978829227,
+        0.7143822895458334
+      ],
+      "med_eps": 0.0734428100671618,
+      "ci95": [
+        0.07326971061685954,
+        0.08833937173354509
+      ],
+      "std_eps": 0.006681862014202732,
+      "med_f": 0.7651235416070994,
+      "n_params": 4,
+      "instance_ci95_median_seed": [
+        0.06710497849489436,
+        0.07997097152033275
+      ],
+      "instance_ci_seed": 2
+    },
+    "n9_L2_power_p": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "per_seed_med_eps": [
+        0.07332997251261267,
+        0.07333783880800576,
+        0.0733301653566464,
+        0.07326971061685954,
+        0.08765974243349575
+      ],
+      "per_seed_med_f": [
+        0.7652129423787909,
+        0.7648933264044294,
+        0.7652116810435152,
+        0.7642126978829227,
+        0.7170173176166261
+      ],
+      "med_eps": 0.0733301653566464,
+      "ci95": [
+        0.07326971061685954,
+        0.08765974243349575
+      ],
+      "std_eps": 0.006414363073790558,
+      "med_f": 0.7648933264044294,
+      "n_params": 8,
+      "instance_ci95_median_seed": [
+        0.06687606499995447,
+        0.07958412947724142
+      ],
+      "instance_ci_seed": 2
+    },
+    "n9_L2_walsh": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "per_seed_med_eps": [
+        0.073329972512614,
+        0.07333783880800565,
+        0.07333016535664663,
+        0.07326971061685963,
+        0.0876597424334957
+      ],
+      "per_seed_med_f": [
+        0.7652129423787963,
+        0.7648933264044296,
+        0.7652116810435153,
+        0.7642126978829225,
+        0.7170173176166266
+      ],
+      "med_eps": 0.07333016535664663,
+      "ci95": [
+        0.07326971061685963,
+        0.0876597424334957
+      ],
+      "std_eps": 0.00641436307379036,
+      "med_f": 0.7648933264044296,
+      "n_params": 14,
+      "instance_ci95_median_seed": [
+        0.06735958170820272,
+        0.07958412947724162
+      ],
+      "instance_ci_seed": 2
+    },
+    "n9_L16_fourier_qaoa": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "per_seed_med_eps": [
+        0.012863701083056098,
+        0.016292292401325445,
+        0.014972284742516488,
+        0.020752008653357218,
+        0.015305798589493868
+      ],
+      "per_seed_med_f": [
+        0.9564852640813235,
+        0.9468760666785787,
+        0.9515755266471843,
+        0.9308808386554446,
+        0.9507648154111448
+      ],
+      "med_eps": 0.015305798589493868,
+      "ci95": [
+        0.012863701083056098,
+        0.020752008653357218
+      ],
+      "std_eps": 0.0029169582048034523,
+      "med_f": 0.9507648154111448,
+      "n_params": 32,
+      "instance_ci95_median_seed": [
+        0.013204937067201902,
+        0.017249264592940614
+      ],
+      "instance_ci_seed": 4
+    },
+    "n9_L16_power_p": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "per_seed_med_eps": [
+        0.011043898835747672,
+        0.01366812874893597,
+        0.012002945235400613,
+        0.019124161044749084,
+        0.012070533841002887
+      ],
+      "per_seed_med_f": [
+        0.9616764951158948,
+        0.9533749001841172,
+        0.9576458301799144,
+        0.937959053248931,
+        0.9567894186961136
+      ],
+      "med_eps": 0.012070533841002887,
+      "ci95": [
+        0.011043898835747672,
+        0.019124161044749084
+      ],
+      "std_eps": 0.0032381657077974013,
+      "med_f": 0.9567894186961136,
+      "n_params": 64,
+      "instance_ci95_median_seed": [
+        0.010810087913648618,
+        0.014507538849934498
+      ],
+      "instance_ci_seed": 4
+    },
+    "n9_L16_walsh": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "per_seed_med_eps": [
+        0.0110438990873097,
+        0.013668129126318491,
+        0.012002945187502927,
+        0.019048435718454083,
+        0.012070537625294087
+      ],
+      "per_seed_med_f": [
+        0.9616764939981868,
+        0.9533749009370038,
+        0.9576458302507685,
+        0.9390506090275166,
+        0.9567894543617637
+      ],
+      "med_eps": 0.012070537625294087,
+      "ci95": [
+        0.0110438990873097,
+        0.019048435718454083
+      ],
+      "std_eps": 0.003205778755813057,
+      "med_f": 0.9567894543617637,
+      "n_params": 112,
+      "instance_ci95_median_seed": [
+        0.010586145073842602,
+        0.014317838714660426
+      ],
+      "instance_ci_seed": 4
+    }
+  },
+  "checks": {
+    "beat_both": true,
+    "majority": true,
+    "within_both": false,
+    "shrink": false,
+    "shrink_detail": "adv n6=0.00232 n9=0.00324 noise=0.00546",
+    "saturated": false,
+    "ci_clear": true
+  },
+  "freeze": {
+    "blurb": "One shared head trained on n=6 and n=9 together (equal weight on mean \u03b5), seeds [0, 1, 2], then frozen and scored on 64 scale1000 n=12 instances. n=12 is not in the loss and was not used to pick the checkpoint. Snap heads include the shell scale a_n=(8/(n\u22121))^p, p trained, p=0 at the warm start. E_0(n=12) is a Lanczos ground state of the sparse X-field Hamiltonian (checked against dense eigh on n=6). n=12 med peak=0.073, med E0/n=-0.849. Product gap on this probe uses only the first 8 instances.",
+    "rows": [
+      {
+        "L": 2,
+        "method": "fourier_qaoa",
+        "n_params": 4,
+        "med6": 0.06433838259634558,
+        "med9": 0.07284764383336848,
+        "med12": 0.10137927495285415,
+        "per_seed_12": [
+          0.10135363973536597,
+          0.10137927495285415,
+          0.10137943607584288
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "p": [
+          null,
+          null,
+          null
+        ],
+        "R12": 1.0,
+        "paired": ""
+      },
+      {
+        "L": 2,
+        "method": "power_p",
+        "n_params": 9,
+        "med6": 0.06432721606866217,
+        "med9": 0.07285070247839259,
+        "med12": 0.1015661111987461,
+        "per_seed_12": [
+          0.10160035988105068,
+          0.10140495230511601,
+          0.1015661111987461
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "p": [
+          0.00015098272371006602,
+          1.6541239619507653e-05,
+          4.665726219213575e-06
+        ],
+        "R12": 1.001842943204899,
+        "paired_R": [
+          1.002434250475157,
+          1.0002532800937254,
+          1.0018413509694764
+        ],
+        "paired": "0/3"
+      },
+      {
+        "L": 2,
+        "method": "walsh",
+        "n_params": 15,
+        "med6": 0.0643272160686621,
+        "med9": 0.07285070247839259,
+        "med12": 0.10156611119874612,
+        "per_seed_12": [
+          0.10160035988104962,
+          0.10140495230511608,
+          0.10156611119874612
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "p": [
+          0.00015098272370688337,
+          1.6541239619510702e-05,
+          4.665726219213377e-06
+        ],
+        "R12": 1.0018429432048992,
+        "paired_R": [
+          1.0024342504751467,
+          1.000253280093726,
+          1.0018413509694766
+        ],
+        "paired": "0/3"
+      },
+      {
+        "L": 16,
+        "method": "fourier_qaoa",
+        "n_params": 32,
+        "med6": 0.011277047849198732,
+        "med9": 0.016870621910048733,
+        "med12": 0.024716372551640532,
+        "per_seed_12": [
+          0.024716372551640532,
+          0.04333746795205995,
+          0.023412875922088995
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "p": [
+          null,
+          null,
+          null
+        ],
+        "R12": 1.0,
+        "paired": ""
+      },
+      {
+        "L": 16,
+        "method": "power_p",
+        "n_params": 65,
+        "med6": 0.008588313650211399,
+        "med9": 0.014259704590679451,
+        "med12": 0.020430914617295924,
+        "per_seed_12": [
+          0.020128425510228753,
+          0.03471486315806057,
+          0.020430914617295924
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "p": [
+          0.00339534194466757,
+          0.0014966861723631096,
+          0.002190430667603368
+        ],
+        "R12": 0.826614608377872,
+        "paired_R": [
+          0.814376198132389,
+          0.8010357964720566,
+          0.8726358387275386
+        ],
+        "paired": "3/3"
+      },
+      {
+        "L": 16,
+        "method": "walsh",
+        "n_params": 113,
+        "med6": 0.008588229762108638,
+        "med9": 0.014259702600870937,
+        "med12": 0.0204309566211347,
+        "per_seed_12": [
+          0.020128425894200573,
+          0.03471486315948631,
+          0.0204309566211347
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "p": [
+          0.0033953413246264894,
+          0.0014966861703653,
+          0.00219049506776111
+        ],
+        "R12": 0.8266163078116658,
+        "paired_R": [
+          0.8143762136675093,
+          0.8010357965049553,
+          0.8726376327762029
+        ],
+        "paired": "3/3"
+      }
+    ],
+    "note": "Transfer probe, not a PASS gate. L=2 power_p R12=1.002 (0/3 seeds), p=[0.00015098272371006602, 1.6541239619507653e-05, 4.665726219213575e-06] L=2 walsh R12=1.002 (0/3 seeds), p=[0.00015098272370688337, 1.6541239619510702e-05, 4.665726219213377e-06] L=16 power_p R12=0.827 (3/3 seeds), p=[0.00339534194466757, 0.0014966861723631096, 0.002190430667603368] L=16 walsh R12=0.827 (3/3 seeds), p=[0.0033953413246264894, 0.0014966861703653, 0.00219049506776111]",
+    "n12_quantum": {
+      "B": 64,
+      "n_unique_E0": 64,
+      "E0_majority_frac": 0.015625,
+      "B_product": 8,
+      "med_peak": 0.07272502682016307,
+      "frac_peak_lt_0.5": 1.0,
+      "med_prod_gap": 0.026345810867159973,
+      "frac_prod_gap_ge_0.02": 0.625,
+      "med_entropy": 1.8251431909069469,
+      "med_chi": null,
+      "med_gap": 0.014147253151091554,
+      "med_E0": -10.18960064517438,
+      "med_E0_over_n": -0.849133387097865,
+      "med_E_cl": -8.989236144127933,
+      "med_sx": 4.819305496181936,
+      "quantum_pass": true
+    },
+    "B": 64
+  },
+  "freeze_note": "Skipped.",
+  "self_check": {
+    "pack_n6_m": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "pack_n6_unique_E0": 8,
+    "circuit_max_abs_pZ": 2.06935301533262e-08,
+    "circuit_max_abs_pX": 4.596927047906263e-07,
+    "qaoa_point_max_abs_p": 4.4421986575282624e-10,
+    "plus_x": 1.0,
+    "x_hist_vs_pauli": 4.9960036108132044e-15,
+    "walsh_mass_n6_seed0": [
+      0.0,
+      1.3970485415628417e-34,
+      0.0,
+      1.0,
+      0.0
+    ],
+    "walsh_equal_gamma_max_abs_pZ": 1.734723475976807e-17,
+    "walsh_dead_grad": 7.708948177505671e-19,
+    "walsh_live_grad": 7.319790028548807,
+    "lanczos_vs_dense_E0": 5.329070518200751e-15,
+    "ok": true
+  },
+  "notes": [
+    "train_n6: 128 distinct E_0 values, majority fraction 0.01.",
+    "hold_n6: 256 distinct E_0 values, majority fraction 0.00.",
+    "train_n9: 128 distinct E_0 values, majority fraction 0.01.",
+    "hold_n9: 256 distinct E_0 values, majority fraction 0.00.",
+    "n=6 diagnosis: every packed formula contains all 18 cross-cavity triples, and the degree-3 greedy support is a 3-regular design (incidence rank 4 over GF(2)). First-occurrence J=\u00b11 then has two spin-flip orbits. The orbit that clears the product-gap gate is one spectrum, so B_hold=256 repeated it and c2, c3 stayed at 0. Random supports at the same density drop the median product gap under 2%. Denser graphs (m\u22482n) push the bitstring peak above 0.5 at \u03bb=0.5. Multiplicity-modulated \u00b11 splits E_0 but the optimal mixer stays linear, so the shells do not leave the Fourier warm start. J ~ N(0,1) on that same support is the change that keeps the packing and moves the shells.",
+    "The one-seed-std flag compares the median gap to the larger seed-std. One weak seed inflates that std above a median gap that the paired ratios and the instance bootstrap still see. Read it next to the seed CI of R, not instead of it.",
+    "n=6: extracted m median 6 (min 6, max 6), degree \u2264 3.",
+    "n=9: extracted m median 9 (min 8, max 9), degree \u2264 3.",
+    "power_p has 4L parameters and Fourier QAOA has 2L. Walsh-degree \u03b3 has 7L. The comparison is not matched-parameter. power_p and Walsh are polished from the trained Fourier dual, so a win is the extra shells (and, if the spectrum were not pure degree 3, the extra \u03b3 weights) on top of that mixer.",
+    "Holdout checkpoint selection uses the holdout median residual, the same rule as the smoke, applied to every head. Absolute \u03b5 is slightly optimistic. R compares heads selected the same way.",
+    "Seed 95% CIs are percentile bootstrap of the median over the training seeds (10_000 resamples). With five seeds the interval sits on the middle order statistics. The instance CI is a separate bootstrap of one seed's B_hold residuals.",
+    "n=6 L=16 power_p: median seed c2 rms=0.0213, c3 rms=0.0166.",
+    "n=6 L=16 walsh: median seed c2 rms=0.0213, c3 rms=0.0166.",
+    "n=9 L=16 power_p: median seed c2 rms=0.0229, c3 rms=0.0081.",
+    "n=9 L=16 walsh: median seed c2 rms=0.0229, c3 rms=0.0081."
+  ],
+  "B_train": 128,
+  "B_hold": 256,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "Ls": [
+    2,
+    16
+  ],
+  "methods": [
+    "fourier_qaoa",
+    "power_p",
+    "walsh"
+  ],
+  "wall_s": 412.88799238204956,
+  "branch": "cursor/n6-diversity-seal-a-74c3",
+  "protocol": {
+    "code": "seal_A_r3_gaussJ",
+    "packing": "cross_cavity_deg3_gaussJ",
+    "lam": 0.5,
+    "B_train": 128,
+    "B_hold": 256,
+    "rounds_L2": 18,
+    "rounds_L16": 24,
+    "max_iter_L2": 8,
+    "max_iter_L16": 8,
+    "lr": 0.35,
+    "B_n12": 64
+  }
+}

@@ -1,0 +1,597 @@
+15:55:07 [sealA] self-check
+15:55:07 [sealA] self-check ok walsh |Δp|=1.73e-17
+15:55:07 [sealA] load n=6 train=128 hold=256
+15:55:08 [sealA] load n=9 train=128 hold=256
+15:55:09 [sealA]   n=6 m 6/6/6 spec train med deg3=1.000000 off=0.00e+00
+15:55:09 [sealA]   n=9 m 8/9/9 spec train med deg3=1.000000 off=0.00e+00
+15:55:09 [sealA] ED n=6 train B=128 λ=0.5
+15:55:09 [sealA]   eigh n=6 32/128 (0.0s)
+15:55:09 [sealA]   eigh n=6 64/128 (0.0s)
+15:55:09 [sealA]   eigh n=6 96/128 (0.0s)
+15:55:09 [sealA]   eigh n=6 128/128 (0.0s)
+15:55:09 [sealA]   product n=6 on 128/128
+15:55:11 [sealA]   product n=6 done 2.2s
+15:55:11 [sealA]   n=6 train peak=0.174 prodΔ=0.033 pass=True
+15:55:11 [sealA] ED n=6 hold B=256 λ=0.5
+15:55:11 [sealA]   eigh n=6 32/256 (0.0s)
+15:55:11 [sealA]   eigh n=6 64/256 (0.1s)
+15:55:11 [sealA]   eigh n=6 96/256 (0.1s)
+15:55:11 [sealA]   eigh n=6 128/256 (0.1s)
+15:55:11 [sealA]   eigh n=6 160/256 (0.1s)
+15:55:11 [sealA]   eigh n=6 192/256 (0.2s)
+15:55:11 [sealA]   eigh n=6 224/256 (0.2s)
+15:55:11 [sealA]   eigh n=6 256/256 (0.2s)
+15:55:11 [sealA]   product n=6 on 256/256
+15:55:15 [sealA]   product n=6 done 4.2s
+15:55:15 [sealA]   n=6 hold peak=0.155 prodΔ=0.044 pass=True
+15:55:15 [sealA] ED n=9 train B=128 λ=0.5
+15:55:16 [sealA]   eigh n=9 32/128 (0.7s)
+15:55:16 [sealA]   eigh n=9 64/128 (1.2s)
+15:55:17 [sealA]   eigh n=9 96/128 (1.7s)
+15:55:17 [sealA]   eigh n=9 128/128 (2.3s)
+15:55:17 [sealA]   product n=9 on 128/128
+15:55:20 [sealA]   product n=9 done 2.8s
+15:55:20 [sealA]   n=9 train peak=0.088 prodΔ=0.031 pass=True
+15:55:20 [sealA] ED n=9 hold B=256 λ=0.5
+15:55:21 [sealA]   eigh n=9 32/256 (0.6s)
+15:55:21 [sealA]   eigh n=9 64/256 (1.1s)
+15:55:22 [sealA]   eigh n=9 96/256 (1.7s)
+15:55:22 [sealA]   eigh n=9 128/256 (2.2s)
+15:55:23 [sealA]   eigh n=9 160/256 (2.7s)
+15:55:24 [sealA]   eigh n=9 192/256 (3.2s)
+15:55:24 [sealA]   eigh n=9 224/256 (3.8s)
+15:55:25 [sealA]   eigh n=9 256/256 (4.3s)
+15:55:25 [sealA]   product n=9 on 256/256
+15:55:30 [sealA]   product n=9 done 5.4s
+15:55:30 [sealA]   n=9 hold peak=0.085 prodΔ=0.028 pass=True
+15:55:30 [sealA] train fourier_qaoa n=6 L=2 seed=0
+15:55:31 [sealA]   fourier_qaoa n=6 L=2 s=0 r=0 train ε=0.1228 hold ε=0.0948 f=0.665 best@0
+15:55:31 [sealA]   fourier_qaoa n=6 L=2 s=0 r=5 train ε=0.0787 hold ε=0.0638 f=0.791 best@3
+15:55:31 [sealA]   fourier_qaoa n=6 L=2 s=0 r=10 train ε=0.0787 hold ε=0.0638 f=0.791 best@3
+15:55:31 [sealA]   early stop fourier_qaoa n=6 L=2 seed=0 at r=11
+15:55:31 [sealA]   done hold ε=0.0637 wall=1.1s
+15:55:31 [sealA] train fourier_qaoa n=6 L=2 seed=1
+15:55:31 [sealA]   fourier_qaoa n=6 L=2 s=1 r=0 train ε=0.1267 hold ε=0.0996 f=0.665 best@0
+15:55:31 [sealA]   fourier_qaoa n=6 L=2 s=1 r=5 train ε=0.0786 hold ε=0.0638 f=0.791 best@3
+15:55:31 [sealA]   fourier_qaoa n=6 L=2 s=1 r=10 train ε=0.0787 hold ε=0.0638 f=0.791 best@3
+15:55:31 [sealA]   early stop fourier_qaoa n=6 L=2 seed=1 at r=11
+15:55:31 [sealA]   done hold ε=0.0628 wall=0.2s
+15:55:31 [sealA] train fourier_qaoa n=6 L=2 seed=2
+15:55:31 [sealA]   fourier_qaoa n=6 L=2 s=2 r=0 train ε=0.2019 hold ε=0.1620 f=0.465 best@0
+15:55:31 [sealA]   fourier_qaoa n=6 L=2 s=2 r=5 train ε=0.0787 hold ε=0.0638 f=0.791 best@4
+15:55:32 [sealA]   fourier_qaoa n=6 L=2 s=2 r=10 train ε=0.0787 hold ε=0.0638 f=0.791 best@4
+15:55:32 [sealA]   early stop fourier_qaoa n=6 L=2 seed=2 at r=12
+15:55:32 [sealA]   done hold ε=0.0638 wall=0.2s
+15:55:32 [sealA] train fourier_qaoa n=6 L=2 seed=3
+15:55:32 [sealA]   fourier_qaoa n=6 L=2 s=3 r=0 train ε=0.1233 hold ε=0.0953 f=0.663 best@0
+15:55:32 [sealA]   fourier_qaoa n=6 L=2 s=3 r=5 train ε=0.0787 hold ε=0.0638 f=0.791 best@5
+15:55:32 [sealA]   fourier_qaoa n=6 L=2 s=3 r=10 train ε=0.0787 hold ε=0.0638 f=0.791 best@5
+15:55:32 [sealA]   early stop fourier_qaoa n=6 L=2 seed=3 at r=13
+15:55:32 [sealA]   done hold ε=0.0638 wall=0.2s
+15:55:32 [sealA] train fourier_qaoa n=6 L=2 seed=4
+15:55:32 [sealA]   fourier_qaoa n=6 L=2 s=4 r=0 train ε=0.1372 hold ε=0.1020 f=0.633 best@0
+15:55:32 [sealA]   fourier_qaoa n=6 L=2 s=4 r=5 train ε=0.0897 hold ε=0.0721 f=0.744 best@1
+15:55:32 [sealA]   early stop fourier_qaoa n=6 L=2 seed=4 at r=9
+15:55:32 [sealA]   done hold ε=0.0716 wall=0.3s
+15:55:32 [sealA] train power_p n=6 L=2 seed=0 warm=fourier dual
+15:55:32 [sealA]   power_p n=6 L=2 s=0 r=0 train ε=0.0783 hold ε=0.0638 f=0.792 best@-1
+15:55:32 [sealA]   power_p n=6 L=2 s=0 r=5 train ε=0.0784 hold ε=0.0637 f=0.791 best@-1
+15:55:32 [sealA]   early stop power_p n=6 L=2 seed=0 at r=7
+15:55:32 [sealA]   done hold ε=0.0637 wall=0.2s best_round=-1
+15:55:32 [sealA] train power_p n=6 L=2 seed=1 warm=fourier dual
+15:55:32 [sealA]   power_p n=6 L=2 s=1 r=0 train ε=0.0788 hold ε=0.0634 f=0.794 best@-1
+15:55:32 [sealA]   power_p n=6 L=2 s=1 r=5 train ε=0.0783 hold ε=0.0639 f=0.791 best@-1
+15:55:33 [sealA]   early stop power_p n=6 L=2 seed=1 at r=7
+15:55:33 [sealA]   done hold ε=0.0628 wall=0.2s best_round=-1
+15:55:33 [sealA] train power_p n=6 L=2 seed=2 warm=fourier dual
+15:55:33 [sealA]   power_p n=6 L=2 s=2 r=0 train ε=0.0786 hold ε=0.0638 f=0.791 best@-1
+15:55:33 [sealA]   power_p n=6 L=2 s=2 r=5 train ε=0.0777 hold ε=0.0638 f=0.791 best@4
+15:55:33 [sealA]   power_p n=6 L=2 s=2 r=10 train ε=0.0778 hold ε=0.0637 f=0.792 best@8
+15:55:33 [sealA]   power_p n=6 L=2 s=2 r=15 train ε=0.0775 hold ε=0.0637 f=0.792 best@14
+15:55:33 [sealA]   power_p n=6 L=2 s=2 r=17 train ε=0.0774 hold ε=0.0637 f=0.792 best@14
+15:55:33 [sealA]   done hold ε=0.0636 wall=0.5s best_round=14
+15:55:33 [sealA] train power_p n=6 L=2 seed=3 warm=fourier dual
+15:55:33 [sealA]   power_p n=6 L=2 s=3 r=0 train ε=0.0785 hold ε=0.0638 f=0.791 best@0
+15:55:33 [sealA]   power_p n=6 L=2 s=3 r=5 train ε=0.0780 hold ε=0.0635 f=0.793 best@5
+15:55:33 [sealA]   power_p n=6 L=2 s=3 r=10 train ε=0.0777 hold ε=0.0637 f=0.792 best@5
+15:55:33 [sealA]   power_p n=6 L=2 s=3 r=15 train ε=0.0767 hold ε=0.0640 f=0.791 best@13
+15:55:33 [sealA]   power_p n=6 L=2 s=3 r=17 train ε=0.0771 hold ε=0.0637 f=0.792 best@13
+15:55:33 [sealA]   done hold ε=0.0633 wall=0.5s best_round=13
+15:55:33 [sealA] train power_p n=6 L=2 seed=4 warm=fourier dual
+15:55:33 [sealA]   power_p n=6 L=2 s=4 r=0 train ε=0.0897 hold ε=0.0712 f=0.745 best@0
+15:55:34 [sealA]   power_p n=6 L=2 s=4 r=5 train ε=0.0889 hold ε=0.0710 f=0.747 best@2
+15:55:34 [sealA]   power_p n=6 L=2 s=4 r=10 train ε=0.0887 hold ε=0.0710 f=0.747 best@2
+15:55:34 [sealA]   early stop power_p n=6 L=2 seed=4 at r=10
+15:55:34 [sealA]   done hold ε=0.0708 wall=0.3s best_round=2
+15:55:34 [sealA] train walsh n=6 L=2 seed=0 warm=fourier dual
+15:55:34 [sealA]   walsh n=6 L=2 s=0 r=0 train ε=0.0783 hold ε=0.0638 f=0.792 best@-1
+15:55:34 [sealA]   walsh n=6 L=2 s=0 r=5 train ε=0.0784 hold ε=0.0637 f=0.791 best@-1
+15:55:34 [sealA]   early stop walsh n=6 L=2 seed=0 at r=7
+15:55:34 [sealA]   done hold ε=0.0637 wall=0.2s best_round=-1
+15:55:34 [sealA] train walsh n=6 L=2 seed=1 warm=fourier dual
+15:55:34 [sealA]   walsh n=6 L=2 s=1 r=0 train ε=0.0788 hold ε=0.0634 f=0.794 best@-1
+15:55:34 [sealA]   walsh n=6 L=2 s=1 r=5 train ε=0.0783 hold ε=0.0639 f=0.791 best@-1
+15:55:34 [sealA]   early stop walsh n=6 L=2 seed=1 at r=7
+15:55:34 [sealA]   done hold ε=0.0628 wall=0.2s best_round=-1
+15:55:34 [sealA] train walsh n=6 L=2 seed=2 warm=fourier dual
+15:55:34 [sealA]   walsh n=6 L=2 s=2 r=0 train ε=0.0786 hold ε=0.0638 f=0.791 best@-1
+15:55:34 [sealA]   walsh n=6 L=2 s=2 r=5 train ε=0.0777 hold ε=0.0638 f=0.791 best@4
+15:55:34 [sealA]   walsh n=6 L=2 s=2 r=10 train ε=0.0778 hold ε=0.0637 f=0.792 best@8
+15:55:35 [sealA]   walsh n=6 L=2 s=2 r=15 train ε=0.0775 hold ε=0.0637 f=0.792 best@14
+15:55:35 [sealA]   walsh n=6 L=2 s=2 r=17 train ε=0.0774 hold ε=0.0637 f=0.792 best@14
+15:55:35 [sealA]   done hold ε=0.0636 wall=0.5s best_round=14
+15:55:35 [sealA] train walsh n=6 L=2 seed=3 warm=fourier dual
+15:55:35 [sealA]   walsh n=6 L=2 s=3 r=0 train ε=0.0785 hold ε=0.0638 f=0.791 best@0
+15:55:35 [sealA]   walsh n=6 L=2 s=3 r=5 train ε=0.0780 hold ε=0.0635 f=0.793 best@5
+15:55:35 [sealA]   walsh n=6 L=2 s=3 r=10 train ε=0.0777 hold ε=0.0637 f=0.792 best@5
+15:55:35 [sealA]   walsh n=6 L=2 s=3 r=15 train ε=0.0767 hold ε=0.0640 f=0.791 best@13
+15:55:35 [sealA]   walsh n=6 L=2 s=3 r=17 train ε=0.0771 hold ε=0.0637 f=0.792 best@13
+15:55:35 [sealA]   done hold ε=0.0633 wall=0.5s best_round=13
+15:55:35 [sealA] train walsh n=6 L=2 seed=4 warm=fourier dual
+15:55:35 [sealA]   walsh n=6 L=2 s=4 r=0 train ε=0.0897 hold ε=0.0712 f=0.745 best@0
+15:55:35 [sealA]   walsh n=6 L=2 s=4 r=5 train ε=0.0889 hold ε=0.0710 f=0.747 best@2
+15:55:35 [sealA]   walsh n=6 L=2 s=4 r=10 train ε=0.0887 hold ε=0.0710 f=0.747 best@2
+15:55:35 [sealA]   early stop walsh n=6 L=2 seed=4 at r=10
+15:55:35 [sealA]   done hold ε=0.0708 wall=0.3s best_round=2
+15:55:35 [sealA] train fourier_qaoa n=6 L=16 seed=0
+15:55:36 [sealA]   fourier_qaoa n=6 L=16 s=0 r=0 train ε=0.1252 hold ε=0.0966 f=0.664 best@0
+15:55:36 [sealA]   fourier_qaoa n=6 L=16 s=0 r=5 train ε=0.0426 hold ε=0.0337 f=0.888 best@5
+15:55:37 [sealA]   fourier_qaoa n=6 L=16 s=0 r=10 train ε=0.0280 hold ε=0.0189 f=0.925 best@9
+15:55:38 [sealA]   fourier_qaoa n=6 L=16 s=0 r=15 train ε=0.0228 hold ε=0.0153 f=0.939 best@15
+15:55:38 [sealA]   fourier_qaoa n=6 L=16 s=0 r=20 train ε=0.0184 hold ε=0.0148 f=0.941 best@19
+15:55:38 [sealA]   fourier_qaoa n=6 L=16 s=0 r=23 train ε=0.0158 hold ε=0.0135 f=0.948 best@23
+15:55:39 [sealA]   done hold ε=0.0135 wall=3.0s
+15:55:39 [sealA] train fourier_qaoa n=6 L=16 seed=1
+15:55:39 [sealA]   fourier_qaoa n=6 L=16 s=1 r=0 train ε=0.1380 hold ε=0.1070 f=0.640 best@0
+15:55:39 [sealA]   fourier_qaoa n=6 L=16 s=1 r=5 train ε=0.0713 hold ε=0.0592 f=0.815 best@5
+15:55:40 [sealA]   fourier_qaoa n=6 L=16 s=1 r=10 train ε=0.0322 hold ε=0.0229 f=0.910 best@10
+15:55:41 [sealA]   fourier_qaoa n=6 L=16 s=1 r=15 train ε=0.0236 hold ε=0.0158 f=0.938 best@15
+15:55:41 [sealA]   fourier_qaoa n=6 L=16 s=1 r=20 train ε=0.0193 hold ε=0.0149 f=0.939 best@19
+15:55:42 [sealA]   fourier_qaoa n=6 L=16 s=1 r=23 train ε=0.0161 hold ε=0.0127 f=0.950 best@23
+15:55:42 [sealA]   done hold ε=0.0127 wall=3.0s
+15:55:42 [sealA] train fourier_qaoa n=6 L=16 seed=2
+15:55:42 [sealA]   fourier_qaoa n=6 L=16 s=2 r=0 train ε=0.1308 hold ε=0.0992 f=0.644 best@0
+15:55:42 [sealA]   fourier_qaoa n=6 L=16 s=2 r=5 train ε=0.0601 hold ε=0.0502 f=0.839 best@5
+15:55:43 [sealA]   fourier_qaoa n=6 L=16 s=2 r=10 train ε=0.0331 hold ε=0.0235 f=0.903 best@10
+15:55:43 [sealA]   fourier_qaoa n=6 L=16 s=2 r=15 train ε=0.0280 hold ε=0.0194 f=0.922 best@15
+15:55:44 [sealA]   fourier_qaoa n=6 L=16 s=2 r=20 train ε=0.0250 hold ε=0.0169 f=0.932 best@19
+15:55:44 [sealA]   fourier_qaoa n=6 L=16 s=2 r=23 train ε=0.0234 hold ε=0.0162 f=0.934 best@21
+15:55:44 [sealA]   done hold ε=0.0162 wall=3.0s
+15:55:44 [sealA] train fourier_qaoa n=6 L=16 seed=3
+15:55:45 [sealA]   fourier_qaoa n=6 L=16 s=3 r=0 train ε=0.1192 hold ε=0.0935 f=0.676 best@0
+15:55:45 [sealA]   fourier_qaoa n=6 L=16 s=3 r=5 train ε=0.0367 hold ε=0.0276 f=0.893 best@5
+15:55:46 [sealA]   fourier_qaoa n=6 L=16 s=3 r=10 train ε=0.0254 hold ε=0.0162 f=0.934 best@10
+15:55:46 [sealA]   fourier_qaoa n=6 L=16 s=3 r=15 train ε=0.0193 hold ε=0.0149 f=0.940 best@14
+15:55:47 [sealA]   fourier_qaoa n=6 L=16 s=3 r=20 train ε=0.0154 hold ε=0.0131 f=0.951 best@19
+15:55:47 [sealA]   fourier_qaoa n=6 L=16 s=3 r=23 train ε=0.0134 hold ε=0.0113 f=0.958 best@23
+15:55:47 [sealA]   done hold ε=0.0113 wall=3.0s
+15:55:47 [sealA] train fourier_qaoa n=6 L=16 seed=4
+15:55:48 [sealA]   fourier_qaoa n=6 L=16 s=4 r=0 train ε=0.1132 hold ε=0.0867 f=0.692 best@0
+15:55:48 [sealA]   fourier_qaoa n=6 L=16 s=4 r=5 train ε=0.0407 hold ε=0.0305 f=0.874 best@5
+15:55:49 [sealA]   fourier_qaoa n=6 L=16 s=4 r=10 train ε=0.0279 hold ε=0.0194 f=0.921 best@10
+15:55:49 [sealA]   fourier_qaoa n=6 L=16 s=4 r=15 train ε=0.0240 hold ε=0.0160 f=0.934 best@15
+15:55:50 [sealA]   fourier_qaoa n=6 L=16 s=4 r=20 train ε=0.0232 hold ε=0.0166 f=0.934 best@17
+15:55:50 [sealA]   fourier_qaoa n=6 L=16 s=4 r=23 train ε=0.0215 hold ε=0.0152 f=0.938 best@23
+15:55:50 [sealA]   done hold ε=0.0152 wall=3.0s
+15:55:50 [sealA] train power_p n=6 L=16 seed=0 warm=fourier dual
+15:55:51 [sealA]   power_p n=6 L=16 s=0 r=0 train ε=0.0160 hold ε=0.0141 f=0.947 best@-1
+15:55:51 [sealA]   power_p n=6 L=16 s=0 r=5 train ε=0.0142 hold ε=0.0128 f=0.953 best@5
+15:55:52 [sealA]   power_p n=6 L=16 s=0 r=10 train ε=0.0139 hold ε=0.0124 f=0.954 best@9
+15:55:52 [sealA]   power_p n=6 L=16 s=0 r=15 train ε=0.0128 hold ε=0.0117 f=0.957 best@13
+15:55:53 [sealA]   power_p n=6 L=16 s=0 r=20 train ε=0.0125 hold ε=0.0116 f=0.958 best@19
+15:55:53 [sealA]   power_p n=6 L=16 s=0 r=23 train ε=0.0120 hold ε=0.0112 f=0.960 best@23
+15:55:53 [sealA]   done hold ε=0.0112 wall=2.8s best_round=23
+15:55:53 [sealA] train power_p n=6 L=16 seed=1 warm=fourier dual
+15:55:53 [sealA]   power_p n=6 L=16 s=1 r=0 train ε=0.0160 hold ε=0.0142 f=0.946 best@-1
+15:55:54 [sealA]   power_p n=6 L=16 s=1 r=5 train ε=0.0143 hold ε=0.0127 f=0.953 best@5
+15:55:55 [sealA]   power_p n=6 L=16 s=1 r=10 train ε=0.0149 hold ε=0.0128 f=0.953 best@9
+15:55:55 [sealA]   power_p n=6 L=16 s=1 r=15 train ε=0.0138 hold ε=0.0115 f=0.958 best@15
+15:55:56 [sealA]   power_p n=6 L=16 s=1 r=20 train ε=0.0126 hold ε=0.0114 f=0.958 best@19
+15:55:56 [sealA]   power_p n=6 L=16 s=1 r=23 train ε=0.0122 hold ε=0.0110 f=0.960 best@23
+15:55:56 [sealA]   done hold ε=0.0110 wall=2.8s best_round=23
+15:55:56 [sealA] train power_p n=6 L=16 seed=2 warm=fourier dual
+15:55:56 [sealA]   power_p n=6 L=16 s=2 r=0 train ε=0.0241 hold ε=0.0171 f=0.932 best@-1
+15:55:57 [sealA]   power_p n=6 L=16 s=2 r=5 train ε=0.0235 hold ε=0.0160 f=0.937 best@5
+15:55:57 [sealA]   power_p n=6 L=16 s=2 r=10 train ε=0.0225 hold ε=0.0164 f=0.936 best@9
+15:55:58 [sealA]   power_p n=6 L=16 s=2 r=15 train ε=0.0214 hold ε=0.0152 f=0.940 best@15
+15:55:58 [sealA]   power_p n=6 L=16 s=2 r=20 train ε=0.0189 hold ε=0.0153 f=0.938 best@19
+15:55:59 [sealA]   power_p n=6 L=16 s=2 r=23 train ε=0.0180 hold ε=0.0145 f=0.940 best@23
+15:55:59 [sealA]   done hold ε=0.0145 wall=2.8s best_round=23
+15:55:59 [sealA] train power_p n=6 L=16 seed=3 warm=fourier dual
+15:55:59 [sealA]   power_p n=6 L=16 s=3 r=0 train ε=0.0126 hold ε=0.0113 f=0.958 best@-1
+15:56:00 [sealA]   power_p n=6 L=16 s=3 r=5 train ε=0.0121 hold ε=0.0108 f=0.961 best@5
+15:56:00 [sealA]   power_p n=6 L=16 s=3 r=10 train ε=0.0115 hold ε=0.0107 f=0.962 best@9
+15:56:01 [sealA]   power_p n=6 L=16 s=3 r=15 train ε=0.0100 hold ε=0.0093 f=0.966 best@15
+15:56:01 [sealA]   power_p n=6 L=16 s=3 r=20 train ε=0.0100 hold ε=0.0093 f=0.966 best@19
+15:56:02 [sealA]   power_p n=6 L=16 s=3 r=23 train ε=0.0099 hold ε=0.0090 f=0.967 best@23
+15:56:02 [sealA]   done hold ε=0.0090 wall=2.8s best_round=23
+15:56:02 [sealA] train power_p n=6 L=16 seed=4 warm=fourier dual
+15:56:02 [sealA]   power_p n=6 L=16 s=4 r=0 train ε=0.0222 hold ε=0.0162 f=0.935 best@-1
+15:56:02 [sealA]   power_p n=6 L=16 s=4 r=5 train ε=0.0203 hold ε=0.0151 f=0.940 best@5
+15:56:03 [sealA]   power_p n=6 L=16 s=4 r=10 train ε=0.0190 hold ε=0.0156 f=0.937 best@9
+15:56:03 [sealA]   power_p n=6 L=16 s=4 r=15 train ε=0.0182 hold ε=0.0143 f=0.943 best@15
+15:56:04 [sealA]   power_p n=6 L=16 s=4 r=20 train ε=0.0173 hold ε=0.0147 f=0.942 best@17
+15:56:04 [sealA]   power_p n=6 L=16 s=4 r=23 train ε=0.0164 hold ε=0.0137 f=0.947 best@23
+15:56:05 [sealA]   done hold ε=0.0137 wall=2.9s best_round=23
+15:56:05 [sealA] train walsh n=6 L=16 seed=0 warm=fourier dual
+15:56:05 [sealA]   walsh n=6 L=16 s=0 r=0 train ε=0.0160 hold ε=0.0141 f=0.947 best@-1
+15:56:05 [sealA]   walsh n=6 L=16 s=0 r=5 train ε=0.0142 hold ε=0.0128 f=0.953 best@5
+15:56:06 [sealA]   walsh n=6 L=16 s=0 r=10 train ε=0.0139 hold ε=0.0124 f=0.954 best@9
+15:56:07 [sealA]   walsh n=6 L=16 s=0 r=15 train ε=0.0128 hold ε=0.0117 f=0.957 best@13
+15:56:07 [sealA]   walsh n=6 L=16 s=0 r=20 train ε=0.0125 hold ε=0.0116 f=0.958 best@19
+15:56:08 [sealA]   walsh n=6 L=16 s=0 r=23 train ε=0.0120 hold ε=0.0112 f=0.960 best@23
+15:56:08 [sealA]   done hold ε=0.0112 wall=3.2s best_round=23
+15:56:08 [sealA] train walsh n=6 L=16 seed=1 warm=fourier dual
+15:56:08 [sealA]   walsh n=6 L=16 s=1 r=0 train ε=0.0160 hold ε=0.0142 f=0.946 best@-1
+15:56:09 [sealA]   walsh n=6 L=16 s=1 r=5 train ε=0.0143 hold ε=0.0127 f=0.953 best@5
+15:56:09 [sealA]   walsh n=6 L=16 s=1 r=10 train ε=0.0149 hold ε=0.0128 f=0.953 best@9
+15:56:10 [sealA]   walsh n=6 L=16 s=1 r=15 train ε=0.0138 hold ε=0.0115 f=0.958 best@15
+15:56:11 [sealA]   walsh n=6 L=16 s=1 r=20 train ε=0.0126 hold ε=0.0114 f=0.958 best@19
+15:56:11 [sealA]   walsh n=6 L=16 s=1 r=23 train ε=0.0122 hold ε=0.0110 f=0.960 best@23
+15:56:11 [sealA]   done hold ε=0.0110 wall=3.2s best_round=23
+15:56:11 [sealA] train walsh n=6 L=16 seed=2 warm=fourier dual
+15:56:11 [sealA]   walsh n=6 L=16 s=2 r=0 train ε=0.0241 hold ε=0.0171 f=0.932 best@-1
+15:56:12 [sealA]   walsh n=6 L=16 s=2 r=5 train ε=0.0235 hold ε=0.0160 f=0.937 best@5
+15:56:12 [sealA]   walsh n=6 L=16 s=2 r=10 train ε=0.0225 hold ε=0.0164 f=0.936 best@9
+15:56:13 [sealA]   walsh n=6 L=16 s=2 r=15 train ε=0.0214 hold ε=0.0152 f=0.940 best@15
+15:56:14 [sealA]   walsh n=6 L=16 s=2 r=20 train ε=0.0189 hold ε=0.0153 f=0.938 best@19
+15:56:14 [sealA]   walsh n=6 L=16 s=2 r=23 train ε=0.0180 hold ε=0.0145 f=0.940 best@23
+15:56:14 [sealA]   done hold ε=0.0145 wall=3.2s best_round=23
+15:56:14 [sealA] train walsh n=6 L=16 seed=3 warm=fourier dual
+15:56:14 [sealA]   walsh n=6 L=16 s=3 r=0 train ε=0.0126 hold ε=0.0113 f=0.958 best@-1
+15:56:15 [sealA]   walsh n=6 L=16 s=3 r=5 train ε=0.0121 hold ε=0.0108 f=0.961 best@5
+15:56:16 [sealA]   walsh n=6 L=16 s=3 r=10 train ε=0.0115 hold ε=0.0107 f=0.962 best@9
+15:56:16 [sealA]   walsh n=6 L=16 s=3 r=15 train ε=0.0100 hold ε=0.0093 f=0.966 best@15
+15:56:17 [sealA]   walsh n=6 L=16 s=3 r=20 train ε=0.0100 hold ε=0.0093 f=0.966 best@19
+15:56:17 [sealA]   walsh n=6 L=16 s=3 r=23 train ε=0.0099 hold ε=0.0090 f=0.967 best@23
+15:56:17 [sealA]   done hold ε=0.0090 wall=3.2s best_round=23
+15:56:17 [sealA] train walsh n=6 L=16 seed=4 warm=fourier dual
+15:56:17 [sealA]   walsh n=6 L=16 s=4 r=0 train ε=0.0222 hold ε=0.0162 f=0.935 best@-1
+15:56:18 [sealA]   walsh n=6 L=16 s=4 r=5 train ε=0.0203 hold ε=0.0151 f=0.940 best@5
+15:56:19 [sealA]   walsh n=6 L=16 s=4 r=10 train ε=0.0190 hold ε=0.0156 f=0.937 best@9
+15:56:19 [sealA]   walsh n=6 L=16 s=4 r=15 train ε=0.0182 hold ε=0.0143 f=0.943 best@15
+15:56:20 [sealA]   walsh n=6 L=16 s=4 r=20 train ε=0.0173 hold ε=0.0147 f=0.942 best@17
+15:56:20 [sealA]   walsh n=6 L=16 s=4 r=23 train ε=0.0164 hold ε=0.0137 f=0.947 best@23
+15:56:20 [sealA]   done hold ε=0.0137 wall=3.2s best_round=23
+15:56:20 [sealA] train fourier_qaoa n=9 L=2 seed=0
+15:56:21 [sealA]   fourier_qaoa n=9 L=2 s=0 r=0 train ε=0.1784 hold ε=0.1942 f=0.398 best@0
+15:56:21 [sealA]   fourier_qaoa n=9 L=2 s=0 r=5 train ε=0.0781 hold ε=0.0734 f=0.765 best@5
+15:56:21 [sealA]   fourier_qaoa n=9 L=2 s=0 r=10 train ε=0.0781 hold ε=0.0734 f=0.765 best@7
+15:56:21 [sealA]   fourier_qaoa n=9 L=2 s=0 r=15 train ε=0.0781 hold ε=0.0734 f=0.765 best@7
+15:56:21 [sealA]   early stop fourier_qaoa n=9 L=2 seed=0 at r=15
+15:56:22 [sealA]   done hold ε=0.0734 wall=1.0s
+15:56:22 [sealA] train fourier_qaoa n=9 L=2 seed=1
+15:56:22 [sealA]   fourier_qaoa n=9 L=2 s=1 r=0 train ε=0.1141 hold ε=0.1088 f=0.647 best@0
+15:56:22 [sealA]   fourier_qaoa n=9 L=2 s=1 r=5 train ε=0.0783 hold ε=0.0735 f=0.764 best@5
+15:56:22 [sealA]   fourier_qaoa n=9 L=2 s=1 r=10 train ε=0.0781 hold ε=0.0734 f=0.765 best@6
+15:56:23 [sealA]   early stop fourier_qaoa n=9 L=2 seed=1 at r=14
+15:56:23 [sealA]   done hold ε=0.0734 wall=1.0s
+15:56:23 [sealA] train fourier_qaoa n=9 L=2 seed=2
+15:56:23 [sealA]   fourier_qaoa n=9 L=2 s=2 r=0 train ε=0.1625 hold ε=0.1695 f=0.458 best@0
+15:56:23 [sealA]   fourier_qaoa n=9 L=2 s=2 r=5 train ε=0.0787 hold ε=0.0738 f=0.763 best@5
+15:56:23 [sealA]   fourier_qaoa n=9 L=2 s=2 r=10 train ε=0.0781 hold ε=0.0734 f=0.765 best@7
+15:56:24 [sealA]   fourier_qaoa n=9 L=2 s=2 r=15 train ε=0.0781 hold ε=0.0734 f=0.765 best@7
+15:56:24 [sealA]   early stop fourier_qaoa n=9 L=2 seed=2 at r=15
+15:56:24 [sealA]   done hold ε=0.0734 wall=1.1s
+15:56:24 [sealA] train fourier_qaoa n=9 L=2 seed=3
+15:56:24 [sealA]   fourier_qaoa n=9 L=2 s=3 r=0 train ε=0.1437 hold ε=0.1587 f=0.513 best@0
+15:56:24 [sealA]   fourier_qaoa n=9 L=2 s=3 r=5 train ε=0.0784 hold ε=0.0733 f=0.764 best@5
+15:56:25 [sealA]   fourier_qaoa n=9 L=2 s=3 r=10 train ε=0.0781 hold ε=0.0734 f=0.765 best@5
+15:56:25 [sealA]   early stop fourier_qaoa n=9 L=2 seed=3 at r=13
+15:56:25 [sealA]   done hold ε=0.0733 wall=1.1s
+15:56:25 [sealA] train fourier_qaoa n=9 L=2 seed=4
+15:56:25 [sealA]   fourier_qaoa n=9 L=2 s=4 r=0 train ε=0.1168 hold ε=0.1106 f=0.641 best@0
+15:56:25 [sealA]   fourier_qaoa n=9 L=2 s=4 r=5 train ε=0.0882 hold ε=0.0905 f=0.715 best@2
+15:56:26 [sealA]   fourier_qaoa n=9 L=2 s=4 r=10 train ε=0.0882 hold ε=0.0906 f=0.714 best@2
+15:56:26 [sealA]   early stop fourier_qaoa n=9 L=2 seed=4 at r=10
+15:56:26 [sealA]   done hold ε=0.0883 wall=1.0s
+15:56:26 [sealA] train power_p n=9 L=2 seed=0 warm=fourier dual
+15:56:26 [sealA]   power_p n=9 L=2 s=0 r=0 train ε=0.0779 hold ε=0.0733 f=0.765 best@0
+15:56:26 [sealA]   power_p n=9 L=2 s=0 r=5 train ε=0.0781 hold ε=0.0734 f=0.765 best@1
+15:56:27 [sealA]   power_p n=9 L=2 s=0 r=10 train ε=0.0781 hold ε=0.0733 f=0.765 best@10
+15:56:27 [sealA]   power_p n=9 L=2 s=0 r=15 train ε=0.0782 hold ε=0.0735 f=0.765 best@10
+15:56:27 [sealA]   power_p n=9 L=2 s=0 r=17 train ε=0.0782 hold ε=0.0736 f=0.765 best@10
+15:56:27 [sealA]   done hold ε=0.0733 wall=1.7s best_round=10
+15:56:27 [sealA] train power_p n=9 L=2 seed=1 warm=fourier dual
+15:56:28 [sealA]   power_p n=9 L=2 s=1 r=0 train ε=0.0779 hold ε=0.0733 f=0.765 best@0
+15:56:28 [sealA]   power_p n=9 L=2 s=1 r=5 train ε=0.0781 hold ε=0.0734 f=0.765 best@0
+15:56:28 [sealA]   early stop power_p n=9 L=2 seed=1 at r=8
+15:56:28 [sealA]   done hold ε=0.0733 wall=0.9s best_round=0
+15:56:28 [sealA] train power_p n=9 L=2 seed=2 warm=fourier dual
+15:56:28 [sealA]   power_p n=9 L=2 s=2 r=0 train ε=0.0779 hold ε=0.0733 f=0.765 best@0
+15:56:29 [sealA]   power_p n=9 L=2 s=2 r=5 train ε=0.0781 hold ε=0.0734 f=0.765 best@1
+15:56:29 [sealA]   power_p n=9 L=2 s=2 r=10 train ε=0.0781 hold ε=0.0733 f=0.765 best@10
+15:56:30 [sealA]   power_p n=9 L=2 s=2 r=15 train ε=0.0782 hold ε=0.0735 f=0.765 best@10
+15:56:30 [sealA]   power_p n=9 L=2 s=2 r=17 train ε=0.0782 hold ε=0.0735 f=0.765 best@10
+15:56:30 [sealA]   done hold ε=0.0733 wall=1.7s best_round=10
+15:56:30 [sealA] train power_p n=9 L=2 seed=3 warm=fourier dual
+15:56:30 [sealA]   power_p n=9 L=2 s=3 r=0 train ε=0.0779 hold ε=0.0733 f=0.765 best@-1
+15:56:31 [sealA]   power_p n=9 L=2 s=3 r=5 train ε=0.0781 hold ε=0.0735 f=0.765 best@-1
+15:56:31 [sealA]   early stop power_p n=9 L=2 seed=3 at r=7
+15:56:31 [sealA]   done hold ε=0.0733 wall=0.8s best_round=-1
+15:56:31 [sealA] train power_p n=9 L=2 seed=4 warm=fourier dual
+15:56:31 [sealA]   power_p n=9 L=2 s=4 r=0 train ε=0.0862 hold ε=0.0877 f=0.717 best@0
+15:56:31 [sealA]   power_p n=9 L=2 s=4 r=5 train ε=0.0879 hold ε=0.0889 f=0.714 best@0
+15:56:32 [sealA]   early stop power_p n=9 L=2 seed=4 at r=8
+15:56:32 [sealA]   done hold ε=0.0877 wall=0.9s best_round=0
+15:56:32 [sealA] train walsh n=9 L=2 seed=0 warm=fourier dual
+15:56:32 [sealA]   walsh n=9 L=2 s=0 r=0 train ε=0.0779 hold ε=0.0733 f=0.765 best@0
+15:56:32 [sealA]   walsh n=9 L=2 s=0 r=5 train ε=0.0781 hold ε=0.0734 f=0.765 best@1
+15:56:33 [sealA]   walsh n=9 L=2 s=0 r=10 train ε=0.0781 hold ε=0.0733 f=0.765 best@10
+15:56:33 [sealA]   walsh n=9 L=2 s=0 r=15 train ε=0.0782 hold ε=0.0735 f=0.765 best@10
+15:56:33 [sealA]   walsh n=9 L=2 s=0 r=17 train ε=0.0782 hold ε=0.0736 f=0.765 best@10
+15:56:33 [sealA]   done hold ε=0.0733 wall=1.7s best_round=10
+15:56:33 [sealA] train walsh n=9 L=2 seed=1 warm=fourier dual
+15:56:33 [sealA]   walsh n=9 L=2 s=1 r=0 train ε=0.0779 hold ε=0.0733 f=0.765 best@0
+15:56:34 [sealA]   walsh n=9 L=2 s=1 r=5 train ε=0.0781 hold ε=0.0734 f=0.765 best@0
+15:56:34 [sealA]   early stop walsh n=9 L=2 seed=1 at r=8
+15:56:34 [sealA]   done hold ε=0.0733 wall=0.9s best_round=0
+15:56:34 [sealA] train walsh n=9 L=2 seed=2 warm=fourier dual
+15:56:34 [sealA]   walsh n=9 L=2 s=2 r=0 train ε=0.0779 hold ε=0.0733 f=0.765 best@0
+15:56:35 [sealA]   walsh n=9 L=2 s=2 r=5 train ε=0.0781 hold ε=0.0734 f=0.765 best@1
+15:56:35 [sealA]   walsh n=9 L=2 s=2 r=10 train ε=0.0781 hold ε=0.0733 f=0.765 best@10
+15:56:36 [sealA]   walsh n=9 L=2 s=2 r=15 train ε=0.0782 hold ε=0.0735 f=0.765 best@10
+15:56:36 [sealA]   walsh n=9 L=2 s=2 r=17 train ε=0.0782 hold ε=0.0735 f=0.765 best@10
+15:56:36 [sealA]   done hold ε=0.0733 wall=1.7s best_round=10
+15:56:36 [sealA] train walsh n=9 L=2 seed=3 warm=fourier dual
+15:56:36 [sealA]   walsh n=9 L=2 s=3 r=0 train ε=0.0779 hold ε=0.0733 f=0.765 best@-1
+15:56:37 [sealA]   walsh n=9 L=2 s=3 r=5 train ε=0.0781 hold ε=0.0735 f=0.765 best@-1
+15:56:37 [sealA]   early stop walsh n=9 L=2 seed=3 at r=7
+15:56:37 [sealA]   done hold ε=0.0733 wall=0.8s best_round=-1
+15:56:37 [sealA] train walsh n=9 L=2 seed=4 warm=fourier dual
+15:56:37 [sealA]   walsh n=9 L=2 s=4 r=0 train ε=0.0862 hold ε=0.0877 f=0.717 best@0
+15:56:37 [sealA]   walsh n=9 L=2 s=4 r=5 train ε=0.0879 hold ε=0.0889 f=0.714 best@0
+15:56:38 [sealA]   early stop walsh n=9 L=2 seed=4 at r=8
+15:56:38 [sealA]   done hold ε=0.0877 wall=0.9s best_round=0
+15:56:38 [sealA] train fourier_qaoa n=9 L=16 seed=0
+15:56:38 [sealA]   fourier_qaoa n=9 L=16 s=0 r=0 train ε=0.1127 hold ε=0.1075 f=0.652 best@0
+15:56:41 [sealA]   fourier_qaoa n=9 L=16 s=0 r=5 train ε=0.0376 hold ε=0.0328 f=0.897 best@5
+15:56:43 [sealA]   fourier_qaoa n=9 L=16 s=0 r=10 train ε=0.0233 hold ε=0.0184 f=0.940 best@10
+15:56:46 [sealA]   fourier_qaoa n=9 L=16 s=0 r=15 train ε=0.0190 hold ε=0.0164 f=0.949 best@14
+15:56:48 [sealA]   fourier_qaoa n=9 L=16 s=0 r=20 train ε=0.0164 hold ε=0.0133 f=0.956 best@20
+15:56:49 [sealA]   fourier_qaoa n=9 L=16 s=0 r=23 train ε=0.0150 hold ε=0.0133 f=0.953 best@22
+15:56:50 [sealA]   done hold ε=0.0129 wall=12.0s
+15:56:50 [sealA] train fourier_qaoa n=9 L=16 seed=1
+15:56:50 [sealA]   fourier_qaoa n=9 L=16 s=1 r=0 train ε=0.1140 hold ε=0.1082 f=0.650 best@0
+15:56:53 [sealA]   fourier_qaoa n=9 L=16 s=1 r=5 train ε=0.0471 hold ε=0.0445 f=0.851 best@5
+15:56:55 [sealA]   fourier_qaoa n=9 L=16 s=1 r=10 train ε=0.0316 hold ε=0.0254 f=0.922 best@10
+15:56:57 [sealA]   fourier_qaoa n=9 L=16 s=1 r=15 train ε=0.0256 hold ε=0.0204 f=0.930 best@15
+15:57:00 [sealA]   fourier_qaoa n=9 L=16 s=1 r=20 train ε=0.0210 hold ε=0.0173 f=0.944 best@20
+15:57:01 [sealA]   fourier_qaoa n=9 L=16 s=1 r=23 train ε=0.0192 hold ε=0.0166 f=0.948 best@22
+15:57:02 [sealA]   done hold ε=0.0163 wall=12.0s
+15:57:02 [sealA] train fourier_qaoa n=9 L=16 seed=2
+15:57:02 [sealA]   fourier_qaoa n=9 L=16 s=2 r=0 train ε=0.1122 hold ε=0.1068 f=0.654 best@0
+15:57:05 [sealA]   fourier_qaoa n=9 L=16 s=2 r=5 train ε=0.0451 hold ε=0.0424 f=0.860 best@4
+15:57:07 [sealA]   fourier_qaoa n=9 L=16 s=2 r=10 train ε=0.0299 hold ε=0.0239 f=0.923 best@10
+15:57:10 [sealA]   fourier_qaoa n=9 L=16 s=2 r=15 train ε=0.0228 hold ε=0.0188 f=0.937 best@14
+15:57:12 [sealA]   fourier_qaoa n=9 L=16 s=2 r=20 train ε=0.0187 hold ε=0.0159 f=0.949 best@20
+15:57:13 [sealA]   fourier_qaoa n=9 L=16 s=2 r=23 train ε=0.0178 hold ε=0.0150 f=0.951 best@22
+15:57:13 [sealA]   done hold ε=0.0150 wall=11.9s
+15:57:13 [sealA] train fourier_qaoa n=9 L=16 seed=3
+15:57:14 [sealA]   fourier_qaoa n=9 L=16 s=3 r=0 train ε=0.1142 hold ε=0.1078 f=0.652 best@0
+15:57:17 [sealA]   fourier_qaoa n=9 L=16 s=3 r=5 train ε=0.0489 hold ε=0.0462 f=0.845 best@5
+15:57:19 [sealA]   fourier_qaoa n=9 L=16 s=3 r=10 train ε=0.0335 hold ε=0.0291 f=0.910 best@10
+15:57:22 [sealA]   fourier_qaoa n=9 L=16 s=3 r=15 train ε=0.0312 hold ε=0.0248 f=0.917 best@15
+15:57:24 [sealA]   fourier_qaoa n=9 L=16 s=3 r=20 train ε=0.0276 hold ε=0.0212 f=0.930 best@20
+15:57:26 [sealA]   fourier_qaoa n=9 L=16 s=3 r=23 train ε=0.0267 hold ε=0.0210 f=0.928 best@22
+15:57:26 [sealA]   done hold ε=0.0208 wall=12.3s
+15:57:26 [sealA] train fourier_qaoa n=9 L=16 seed=4
+15:57:26 [sealA]   fourier_qaoa n=9 L=16 s=4 r=0 train ε=0.1158 hold ε=0.1123 f=0.635 best@0
+15:57:29 [sealA]   fourier_qaoa n=9 L=16 s=4 r=5 train ε=0.0537 hold ε=0.0512 f=0.830 best@5
+15:57:31 [sealA]   fourier_qaoa n=9 L=16 s=4 r=10 train ε=0.0324 hold ε=0.0261 f=0.918 best@10
+15:57:34 [sealA]   fourier_qaoa n=9 L=16 s=4 r=15 train ε=0.0242 hold ε=0.0196 f=0.934 best@14
+15:57:36 [sealA]   fourier_qaoa n=9 L=16 s=4 r=20 train ε=0.0191 hold ε=0.0161 f=0.948 best@20
+15:57:38 [sealA]   fourier_qaoa n=9 L=16 s=4 r=23 train ε=0.0181 hold ε=0.0153 f=0.951 best@23
+15:57:38 [sealA]   done hold ε=0.0153 wall=12.2s
+15:57:38 [sealA] train power_p n=9 L=16 seed=0 warm=fourier dual
+15:57:39 [sealA]   power_p n=9 L=16 s=0 r=0 train ε=0.0153 hold ε=0.0135 f=0.953 best@-1
+15:57:41 [sealA]   power_p n=9 L=16 s=0 r=5 train ε=0.0144 hold ε=0.0126 f=0.956 best@5
+15:57:44 [sealA]   power_p n=9 L=16 s=0 r=10 train ε=0.0139 hold ε=0.0123 f=0.956 best@9
+15:57:46 [sealA]   power_p n=9 L=16 s=0 r=15 train ε=0.0133 hold ε=0.0118 f=0.957 best@15
+15:57:49 [sealA]   power_p n=9 L=16 s=0 r=20 train ε=0.0123 hold ε=0.0114 f=0.960 best@19
+15:57:50 [sealA]   power_p n=9 L=16 s=0 r=23 train ε=0.0119 hold ε=0.0110 f=0.962 best@23
+15:57:50 [sealA]   done hold ε=0.0110 wall=12.2s best_round=23
+15:57:50 [sealA] train power_p n=9 L=16 seed=1 warm=fourier dual
+15:57:51 [sealA]   power_p n=9 L=16 s=1 r=0 train ε=0.0196 hold ε=0.0165 f=0.946 best@-1
+15:57:53 [sealA]   power_p n=9 L=16 s=1 r=5 train ε=0.0188 hold ε=0.0158 f=0.949 best@5
+15:57:56 [sealA]   power_p n=9 L=16 s=1 r=10 train ε=0.0186 hold ε=0.0155 f=0.949 best@9
+15:57:58 [sealA]   power_p n=9 L=16 s=1 r=15 train ε=0.0177 hold ε=0.0144 f=0.951 best@15
+15:58:01 [sealA]   power_p n=9 L=16 s=1 r=20 train ε=0.0167 hold ε=0.0142 f=0.952 best@19
+15:58:02 [sealA]   power_p n=9 L=16 s=1 r=23 train ε=0.0160 hold ε=0.0137 f=0.953 best@23
+15:58:03 [sealA]   done hold ε=0.0137 wall=12.4s best_round=23
+15:58:03 [sealA] train power_p n=9 L=16 seed=2 warm=fourier dual
+15:58:03 [sealA]   power_p n=9 L=16 s=2 r=0 train ε=0.0181 hold ε=0.0152 f=0.950 best@-1
+15:58:06 [sealA]   power_p n=9 L=16 s=2 r=5 train ε=0.0175 hold ε=0.0147 f=0.951 best@5
+15:58:08 [sealA]   power_p n=9 L=16 s=2 r=10 train ε=0.0167 hold ε=0.0140 f=0.953 best@10
+15:58:11 [sealA]   power_p n=9 L=16 s=2 r=15 train ε=0.0149 hold ε=0.0133 f=0.954 best@15
+15:58:13 [sealA]   power_p n=9 L=16 s=2 r=20 train ε=0.0139 hold ε=0.0122 f=0.957 best@20
+15:58:15 [sealA]   power_p n=9 L=16 s=2 r=23 train ε=0.0135 hold ε=0.0120 f=0.958 best@23
+15:58:15 [sealA]   done hold ε=0.0120 wall=12.5s best_round=23
+15:58:15 [sealA] train power_p n=9 L=16 seed=3 warm=fourier dual
+15:58:16 [sealA]   power_p n=9 L=16 s=3 r=0 train ε=0.0269 hold ε=0.0210 f=0.928 best@-1
+15:58:18 [sealA]   power_p n=9 L=16 s=3 r=5 train ε=0.0258 hold ε=0.0202 f=0.932 best@5
+15:58:21 [sealA]   power_p n=9 L=16 s=3 r=10 train ε=0.0253 hold ε=0.0203 f=0.933 best@9
+15:58:23 [sealA]   power_p n=9 L=16 s=3 r=15 train ε=0.0232 hold ε=0.0192 f=0.938 best@15
+15:58:26 [sealA]   power_p n=9 L=16 s=3 r=20 train ε=0.0233 hold ε=0.0192 f=0.938 best@15
+15:58:27 [sealA]   power_p n=9 L=16 s=3 r=23 train ε=0.0230 hold ε=0.0191 f=0.939 best@22
+15:58:27 [sealA]   done hold ε=0.0191 wall=12.4s best_round=22
+15:58:27 [sealA] train power_p n=9 L=16 seed=4 warm=fourier dual
+15:58:28 [sealA]   power_p n=9 L=16 s=4 r=0 train ε=0.0183 hold ε=0.0154 f=0.949 best@-1
+15:58:31 [sealA]   power_p n=9 L=16 s=4 r=5 train ε=0.0171 hold ε=0.0144 f=0.952 best@4
+15:58:33 [sealA]   power_p n=9 L=16 s=4 r=10 train ε=0.0151 hold ε=0.0131 f=0.955 best@10
+15:58:36 [sealA]   power_p n=9 L=16 s=4 r=15 train ε=0.0145 hold ε=0.0128 f=0.955 best@14
+15:58:38 [sealA]   power_p n=9 L=16 s=4 r=20 train ε=0.0138 hold ε=0.0123 f=0.956 best@20
+15:58:40 [sealA]   power_p n=9 L=16 s=4 r=23 train ε=0.0136 hold ε=0.0124 f=0.957 best@22
+15:58:40 [sealA]   done hold ε=0.0121 wall=12.4s best_round=22
+15:58:40 [sealA] train walsh n=9 L=16 seed=0 warm=fourier dual
+15:58:40 [sealA]   walsh n=9 L=16 s=0 r=0 train ε=0.0153 hold ε=0.0135 f=0.953 best@-1
+15:58:43 [sealA]   walsh n=9 L=16 s=0 r=5 train ε=0.0144 hold ε=0.0126 f=0.956 best@5
+15:58:45 [sealA]   walsh n=9 L=16 s=0 r=10 train ε=0.0139 hold ε=0.0123 f=0.956 best@9
+15:58:48 [sealA]   walsh n=9 L=16 s=0 r=15 train ε=0.0133 hold ε=0.0118 f=0.957 best@15
+15:58:50 [sealA]   walsh n=9 L=16 s=0 r=20 train ε=0.0123 hold ε=0.0114 f=0.960 best@19
+15:58:52 [sealA]   walsh n=9 L=16 s=0 r=23 train ε=0.0119 hold ε=0.0110 f=0.962 best@23
+15:58:52 [sealA]   done hold ε=0.0110 wall=12.2s best_round=23
+15:58:52 [sealA] train walsh n=9 L=16 seed=1 warm=fourier dual
+15:58:53 [sealA]   walsh n=9 L=16 s=1 r=0 train ε=0.0196 hold ε=0.0165 f=0.946 best@-1
+15:58:55 [sealA]   walsh n=9 L=16 s=1 r=5 train ε=0.0188 hold ε=0.0158 f=0.949 best@5
+15:58:58 [sealA]   walsh n=9 L=16 s=1 r=10 train ε=0.0186 hold ε=0.0155 f=0.949 best@9
+15:59:00 [sealA]   walsh n=9 L=16 s=1 r=15 train ε=0.0177 hold ε=0.0144 f=0.951 best@15
+15:59:03 [sealA]   walsh n=9 L=16 s=1 r=20 train ε=0.0167 hold ε=0.0142 f=0.952 best@19
+15:59:04 [sealA]   walsh n=9 L=16 s=1 r=23 train ε=0.0160 hold ε=0.0137 f=0.953 best@23
+15:59:04 [sealA]   done hold ε=0.0137 wall=12.3s best_round=23
+15:59:04 [sealA] train walsh n=9 L=16 seed=2 warm=fourier dual
+15:59:05 [sealA]   walsh n=9 L=16 s=2 r=0 train ε=0.0181 hold ε=0.0152 f=0.950 best@-1
+15:59:07 [sealA]   walsh n=9 L=16 s=2 r=5 train ε=0.0175 hold ε=0.0147 f=0.951 best@5
+15:59:10 [sealA]   walsh n=9 L=16 s=2 r=10 train ε=0.0167 hold ε=0.0140 f=0.953 best@10
+15:59:12 [sealA]   walsh n=9 L=16 s=2 r=15 train ε=0.0149 hold ε=0.0133 f=0.954 best@15
+15:59:15 [sealA]   walsh n=9 L=16 s=2 r=20 train ε=0.0139 hold ε=0.0122 f=0.957 best@20
+15:59:16 [sealA]   walsh n=9 L=16 s=2 r=23 train ε=0.0135 hold ε=0.0120 f=0.958 best@23
+15:59:16 [sealA]   done hold ε=0.0120 wall=11.9s best_round=23
+15:59:16 [sealA] train walsh n=9 L=16 seed=3 warm=fourier dual
+15:59:17 [sealA]   walsh n=9 L=16 s=3 r=0 train ε=0.0269 hold ε=0.0210 f=0.928 best@-1
+15:59:19 [sealA]   walsh n=9 L=16 s=3 r=5 train ε=0.0258 hold ε=0.0202 f=0.932 best@5
+15:59:22 [sealA]   walsh n=9 L=16 s=3 r=10 train ε=0.0253 hold ε=0.0203 f=0.933 best@9
+15:59:24 [sealA]   walsh n=9 L=16 s=3 r=15 train ε=0.0232 hold ε=0.0192 f=0.938 best@15
+15:59:27 [sealA]   walsh n=9 L=16 s=3 r=20 train ε=0.0233 hold ε=0.0192 f=0.938 best@15
+15:59:28 [sealA]   walsh n=9 L=16 s=3 r=23 train ε=0.0229 hold ε=0.0190 f=0.939 best@23
+15:59:28 [sealA]   done hold ε=0.0190 wall=12.0s best_round=23
+15:59:28 [sealA] train walsh n=9 L=16 seed=4 warm=fourier dual
+15:59:29 [sealA]   walsh n=9 L=16 s=4 r=0 train ε=0.0183 hold ε=0.0154 f=0.949 best@-1
+15:59:31 [sealA]   walsh n=9 L=16 s=4 r=5 train ε=0.0171 hold ε=0.0144 f=0.952 best@4
+15:59:34 [sealA]   walsh n=9 L=16 s=4 r=10 train ε=0.0151 hold ε=0.0131 f=0.955 best@10
+15:59:36 [sealA]   walsh n=9 L=16 s=4 r=15 train ε=0.0145 hold ε=0.0128 f=0.955 best@14
+15:59:39 [sealA]   walsh n=9 L=16 s=4 r=20 train ε=0.0138 hold ε=0.0123 f=0.956 best@20
+15:59:40 [sealA]   walsh n=9 L=16 s=4 r=23 train ε=0.0136 hold ε=0.0124 f=0.957 best@22
+15:59:40 [sealA]   done hold ε=0.0121 wall=12.0s best_round=22
+15:59:41 [sealA] freeze: shared train on n=6,9 then eval n=12 B=64
+15:59:41 [sealA] n=12 holdout m med=12
+15:59:42 [sealA]   eigh n=12 32/64 (1.1s)
+15:59:43 [sealA]   eigh n=12 64/64 (2.4s)
+15:59:43 [sealA]   product n=12 on 8/64
+15:59:43 [sealA]   product n=12 done 0.3s
+15:59:44 [sealA]   n12 peak=0.073 prodΔ=0.026 E0/n=-0.849 pass=True
+15:59:44 [sealA] train joint fourier_qaoa L=2 seed=0
+15:59:44 [sealA]   joint fourier_qaoa L=2 s=0 r=0 ε6=0.0967 ε9=0.1123 best@0
+15:59:44 [sealA]   joint fourier_qaoa L=2 s=0 r=5 ε6=0.0647 ε9=0.0731 best@5
+15:59:45 [sealA]   joint fourier_qaoa L=2 s=0 r=10 ε6=0.0643 ε9=0.0728 best@6
+15:59:45 [sealA]   early stop joint fourier_qaoa L=2 seed=0 at r=14
+15:59:45 [sealA]   joint done ε6=0.0643 ε9=0.0728 ε12=0.1014
+15:59:45 [sealA] train joint fourier_qaoa L=2 seed=1
+15:59:45 [sealA]   joint fourier_qaoa L=2 s=1 r=0 ε6=0.0962 ε9=0.1097 best@0
+15:59:45 [sealA]   joint fourier_qaoa L=2 s=1 r=5 ε6=0.0643 ε9=0.0728 best@5
+15:59:46 [sealA]   joint fourier_qaoa L=2 s=1 r=10 ε6=0.0643 ε9=0.0728 best@5
+15:59:46 [sealA]   early stop joint fourier_qaoa L=2 seed=1 at r=13
+15:59:46 [sealA]   joint done ε6=0.0643 ε9=0.0728 ε12=0.1014
+15:59:46 [sealA] train joint fourier_qaoa L=2 seed=2
+15:59:46 [sealA]   joint fourier_qaoa L=2 s=2 r=0 ε6=0.1034 ε9=0.1218 best@0
+15:59:46 [sealA]   joint fourier_qaoa L=2 s=2 r=5 ε6=0.0643 ε9=0.0728 best@5
+15:59:47 [sealA]   joint fourier_qaoa L=2 s=2 r=10 ε6=0.0643 ε9=0.0728 best@5
+15:59:47 [sealA]   early stop joint fourier_qaoa L=2 seed=2 at r=13
+15:59:47 [sealA]   joint done ε6=0.0643 ε9=0.0728 ε12=0.1014
+15:59:47 [sealA] train joint power_p L=2 seed=0
+15:59:47 [sealA]   joint power_p L=2 s=0 r=0 ε6=0.0643 ε9=0.0729 best@-1
+15:59:47 [sealA]   joint power_p L=2 s=0 r=5 ε6=0.0644 ε9=0.0730 best@4
+15:59:48 [sealA]   joint power_p L=2 s=0 r=10 ε6=0.0642 ε9=0.0731 best@4
+15:59:48 [sealA]   early stop joint power_p L=2 seed=0 at r=12
+15:59:48 [sealA]   joint done ε6=0.0642 ε9=0.0730 ε12=0.1016 p=0.00015098272371006602
+15:59:48 [sealA] train joint power_p L=2 seed=1
+15:59:48 [sealA]   joint power_p L=2 s=1 r=0 ε6=0.0643 ε9=0.0728 best@0
+15:59:49 [sealA]   joint power_p L=2 s=1 r=5 ε6=0.0643 ε9=0.0730 best@1
+15:59:49 [sealA]   early stop joint power_p L=2 seed=1 at r=9
+15:59:49 [sealA]   joint done ε6=0.0643 ε9=0.0728 ε12=0.1014 p=1.6541239619507653e-05
+15:59:49 [sealA] train joint power_p L=2 seed=2
+15:59:49 [sealA]   joint power_p L=2 s=2 r=0 ε6=0.0643 ε9=0.0729 best@0
+15:59:50 [sealA]   joint power_p L=2 s=2 r=5 ε6=0.0643 ε9=0.0730 best@0
+15:59:50 [sealA]   early stop joint power_p L=2 seed=2 at r=8
+15:59:50 [sealA]   joint done ε6=0.0643 ε9=0.0729 ε12=0.1016 p=4.665726219213575e-06
+15:59:50 [sealA] train joint walsh L=2 seed=0
+15:59:50 [sealA]   joint walsh L=2 s=0 r=0 ε6=0.0643 ε9=0.0729 best@-1
+15:59:51 [sealA]   joint walsh L=2 s=0 r=5 ε6=0.0644 ε9=0.0730 best@4
+15:59:52 [sealA]   joint walsh L=2 s=0 r=10 ε6=0.0642 ε9=0.0731 best@4
+15:59:52 [sealA]   early stop joint walsh L=2 seed=0 at r=12
+15:59:52 [sealA]   joint done ε6=0.0642 ε9=0.0730 ε12=0.1016 p=0.00015098272370688337
+15:59:52 [sealA] train joint walsh L=2 seed=1
+15:59:52 [sealA]   joint walsh L=2 s=1 r=0 ε6=0.0643 ε9=0.0728 best@0
+15:59:52 [sealA]   joint walsh L=2 s=1 r=5 ε6=0.0643 ε9=0.0730 best@1
+15:59:53 [sealA]   early stop joint walsh L=2 seed=1 at r=9
+15:59:53 [sealA]   joint done ε6=0.0643 ε9=0.0728 ε12=0.1014 p=1.6541239619510702e-05
+15:59:53 [sealA] train joint walsh L=2 seed=2
+15:59:53 [sealA]   joint walsh L=2 s=2 r=0 ε6=0.0643 ε9=0.0729 best@0
+15:59:54 [sealA]   joint walsh L=2 s=2 r=5 ε6=0.0643 ε9=0.0730 best@0
+15:59:54 [sealA]   early stop joint walsh L=2 seed=2 at r=8
+15:59:54 [sealA]   joint done ε6=0.0643 ε9=0.0729 ε12=0.1016 p=4.665726219213377e-06
+15:59:54 [sealA] train joint fourier_qaoa L=16 seed=0
+15:59:55 [sealA]   joint fourier_qaoa L=16 s=0 r=0 ε6=0.0920 ε9=0.1063 best@0
+15:59:58 [sealA]   joint fourier_qaoa L=16 s=0 r=5 ε6=0.0294 ε9=0.0429 best@5
+16:00:01 [sealA]   joint fourier_qaoa L=16 s=0 r=10 ε6=0.0162 ε9=0.0253 best@10
+16:00:03 [sealA]   joint fourier_qaoa L=16 s=0 r=15 ε6=0.0148 ε9=0.0204 best@14
+16:00:06 [sealA]   joint fourier_qaoa L=16 s=0 r=20 ε6=0.0129 ε9=0.0186 best@19
+16:00:08 [sealA]   joint fourier_qaoa L=16 s=0 r=23 ε6=0.0113 ε9=0.0169 best@23
+16:00:08 [sealA]   joint done ε6=0.0113 ε9=0.0169 ε12=0.0247
+16:00:08 [sealA] train joint fourier_qaoa L=16 seed=1
+16:00:09 [sealA]   joint fourier_qaoa L=16 s=1 r=0 ε6=0.1053 ε9=0.1173 best@0
+16:00:12 [sealA]   joint fourier_qaoa L=16 s=1 r=5 ε6=0.0593 ε9=0.0665 best@5
+16:00:14 [sealA]   joint fourier_qaoa L=16 s=1 r=10 ε6=0.0331 ε9=0.0469 best@10
+16:00:17 [sealA]   joint fourier_qaoa L=16 s=1 r=15 ε6=0.0195 ε9=0.0310 best@15
+16:00:20 [sealA]   joint fourier_qaoa L=16 s=1 r=20 ε6=0.0189 ε9=0.0283 best@20
+16:00:22 [sealA]   joint fourier_qaoa L=16 s=1 r=23 ε6=0.0175 ε9=0.0258 best@23
+16:00:22 [sealA]   joint done ε6=0.0175 ε9=0.0258 ε12=0.0433
+16:00:22 [sealA] train joint fourier_qaoa L=16 seed=2
+16:00:22 [sealA]   joint fourier_qaoa L=16 s=2 r=0 ε6=0.0982 ε9=0.1091 best@0
+16:00:25 [sealA]   joint fourier_qaoa L=16 s=2 r=5 ε6=0.0317 ε9=0.0428 best@5
+16:00:29 [sealA]   joint fourier_qaoa L=16 s=2 r=10 ε6=0.0172 ε9=0.0251 best@10
+16:00:32 [sealA]   joint fourier_qaoa L=16 s=2 r=15 ε6=0.0137 ε9=0.0187 best@15
+16:00:34 [sealA]   joint fourier_qaoa L=16 s=2 r=20 ε6=0.0113 ε9=0.0166 best@20
+16:00:36 [sealA]   joint fourier_qaoa L=16 s=2 r=23 ε6=0.0106 ε9=0.0163 best@22
+16:00:36 [sealA]   joint done ε6=0.0106 ε9=0.0159 ε12=0.0234
+16:00:36 [sealA] train joint power_p L=16 seed=0
+16:00:37 [sealA]   joint power_p L=16 s=0 r=0 ε6=0.0115 ε9=0.0171 best@-1
+16:00:40 [sealA]   joint power_p L=16 s=0 r=5 ε6=0.0109 ε9=0.0163 best@5
+16:00:42 [sealA]   joint power_p L=16 s=0 r=10 ε6=0.0105 ε9=0.0169 best@9
+16:00:45 [sealA]   joint power_p L=16 s=0 r=15 ε6=0.0092 ε9=0.0154 best@15
+16:00:48 [sealA]   joint power_p L=16 s=0 r=20 ε6=0.0086 ε9=0.0150 best@19
+16:00:50 [sealA]   joint power_p L=16 s=0 r=23 ε6=0.0081 ε9=0.0143 best@23
+16:00:50 [sealA]   joint done ε6=0.0081 ε9=0.0143 ε12=0.0201 p=0.00339534194466757
+16:00:50 [sealA] train joint power_p L=16 seed=1
+16:00:50 [sealA]   joint power_p L=16 s=1 r=0 ε6=0.0179 ε9=0.0258 best@-1
+16:00:53 [sealA]   joint power_p L=16 s=1 r=5 ε6=0.0170 ε9=0.0249 best@5
+16:00:56 [sealA]   joint power_p L=16 s=1 r=10 ε6=0.0169 ε9=0.0242 best@9
+16:00:58 [sealA]   joint power_p L=16 s=1 r=15 ε6=0.0163 ε9=0.0231 best@15
+16:01:01 [sealA]   joint power_p L=16 s=1 r=20 ε6=0.0164 ε9=0.0231 best@19
+16:01:03 [sealA]   joint power_p L=16 s=1 r=23 ε6=0.0155 ε9=0.0222 best@23
+16:01:03 [sealA]   joint done ε6=0.0155 ε9=0.0222 ε12=0.0347 p=0.0014966861723631096
+16:01:03 [sealA] train joint power_p L=16 seed=2
+16:01:04 [sealA]   joint power_p L=16 s=2 r=0 ε6=0.0108 ε9=0.0167 best@-1
+16:01:06 [sealA]   joint power_p L=16 s=2 r=5 ε6=0.0100 ε9=0.0155 best@5
+16:01:09 [sealA]   joint power_p L=16 s=2 r=10 ε6=0.0095 ε9=0.0152 best@9
+16:01:12 [sealA]   joint power_p L=16 s=2 r=15 ε6=0.0092 ε9=0.0145 best@15
+16:01:15 [sealA]   joint power_p L=16 s=2 r=20 ε6=0.0089 ε9=0.0146 best@19
+16:01:16 [sealA]   joint power_p L=16 s=2 r=23 ε6=0.0086 ε9=0.0141 best@23
+16:01:16 [sealA]   joint done ε6=0.0086 ε9=0.0141 ε12=0.0204 p=0.002190430667603368
+16:01:16 [sealA] train joint walsh L=16 seed=0
+16:01:17 [sealA]   joint walsh L=16 s=0 r=0 ε6=0.0115 ε9=0.0171 best@-1
+16:01:20 [sealA]   joint walsh L=16 s=0 r=5 ε6=0.0109 ε9=0.0163 best@5
+16:01:23 [sealA]   joint walsh L=16 s=0 r=10 ε6=0.0105 ε9=0.0169 best@9
+16:01:26 [sealA]   joint walsh L=16 s=0 r=15 ε6=0.0092 ε9=0.0154 best@15
+16:01:29 [sealA]   joint walsh L=16 s=0 r=20 ε6=0.0086 ε9=0.0150 best@19
+16:01:31 [sealA]   joint walsh L=16 s=0 r=23 ε6=0.0081 ε9=0.0143 best@23
+16:01:31 [sealA]   joint done ε6=0.0081 ε9=0.0143 ε12=0.0201 p=0.0033953413246264894
+16:01:31 [sealA] train joint walsh L=16 seed=1
+16:01:31 [sealA]   joint walsh L=16 s=1 r=0 ε6=0.0179 ε9=0.0258 best@-1
+16:01:34 [sealA]   joint walsh L=16 s=1 r=5 ε6=0.0170 ε9=0.0249 best@5
+16:01:37 [sealA]   joint walsh L=16 s=1 r=10 ε6=0.0169 ε9=0.0242 best@9
+16:01:40 [sealA]   joint walsh L=16 s=1 r=15 ε6=0.0163 ε9=0.0231 best@15
+16:01:43 [sealA]   joint walsh L=16 s=1 r=20 ε6=0.0164 ε9=0.0231 best@19
+16:01:45 [sealA]   joint walsh L=16 s=1 r=23 ε6=0.0155 ε9=0.0222 best@23
+16:01:45 [sealA]   joint done ε6=0.0155 ε9=0.0222 ε12=0.0347 p=0.0014966861703653
+16:01:45 [sealA] train joint walsh L=16 seed=2
+16:01:46 [sealA]   joint walsh L=16 s=2 r=0 ε6=0.0108 ε9=0.0167 best@-1
+16:01:49 [sealA]   joint walsh L=16 s=2 r=5 ε6=0.0100 ε9=0.0155 best@5
+16:01:52 [sealA]   joint walsh L=16 s=2 r=10 ε6=0.0095 ε9=0.0152 best@9
+16:01:55 [sealA]   joint walsh L=16 s=2 r=15 ε6=0.0092 ε9=0.0145 best@15
+16:01:58 [sealA]   joint walsh L=16 s=2 r=20 ε6=0.0089 ε9=0.0146 best@19
+16:02:00 [sealA]   joint walsh L=16 s=2 r=23 ε6=0.0086 ε9=0.0141 best@23
+16:02:00 [sealA]   joint done ε6=0.0086 ε9=0.0141 ε12=0.0204 p=0.00219049506776111
+16:02:00 [sealA] verdict PASS
+16:02:00 [sealA] L=16 power_p protocol R≤0.98 on n=6 and n=9, the seed 95% CI of R stays below 0.99 on both n, a strict majority of seeds agree, the gap is outside one seed-std on at least one n, and the smoke shrink and saturation checks do not fire.
+16:02:00 [sealA] wrote Nov_3rd/runs/quantum_h_explore/seal_A_r3 wall 412.9s
