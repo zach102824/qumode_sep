@@ -1,0 +1,112 @@
+
+=== CMD /workspace/venv-explore/bin/python /workspace/qumode_sep/Nov_3rd/scripts/train_beat_train69.py --idea power_p --L 32 --seed 0 --threads 2 --batch_per_n 32 --w6 1 --w9 2 --packs_dir /workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/train_packs --out_root /workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250 --qaoa_dir /workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/qaoa_angles --eval_ns 6,9,12,15 --beat_mode raw @ 2026-11-04 13:14:37 +0800 ===
+13:14:38 [Nov_3rd] power_p L32 seed0: load train n6 B=250
+13:14:39 [Nov_3rd] power_p L32 seed0: load train n9 B=250
+13:14:39 [Nov_3rd] power_p L32 s0: train QAOA Meds n6=1.0664, n9=1.1415
+13:14:39 [Nov_3rd] power_p L32 s0: loss_mode=log_ratio soft_q=0.5
+13:14:39 [Nov_3rd] power_p L32 s0: n9 holdout=50 train_pool=200
+/workspace/qumode_sep/Nov_3rd/scripts/train_beat_train69.py:345: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  extra = f" p={float(p):.3f}" if p is not None else ""
+13:14:41 [Nov_3rd] power_p L32 s0 adam 0/600 loss=-0.00018 lam=1.00e-01 p=0.001
+13:14:41 [Nov_3rd] power_p L32 s0 NEW BEST holdout=-0.00272 @ adam0
+13:15:11 [Nov_3rd] power_p L32 s0 adam 25/600 loss=-0.00279 lam=9.59e-02 p=0.007
+13:15:39 [Nov_3rd] power_p L32 s0 adam 50/600 loss=-0.01739 lam=9.17e-02 p=0.026
+13:16:08 [Nov_3rd] power_p L32 s0 adam 75/600 loss=-0.01446 lam=8.76e-02 p=0.036
+13:16:08 [Nov_3rd] power_p L32 s0 NEW BEST holdout=-0.00786 @ adam75
+13:16:37 [Nov_3rd] power_p L32 s0 adam 100/600 loss=-0.01745 lam=8.35e-02 p=0.049
+13:17:05 [Nov_3rd] power_p L32 s0 adam 125/600 loss=-0.02757 lam=7.93e-02 p=0.062
+13:17:33 [Nov_3rd] power_p L32 s0 adam 150/600 loss=-0.02134 lam=7.52e-02 p=0.060
+13:17:33 [Nov_3rd] power_p L32 s0 NEW BEST holdout=-0.01121 @ adam150
+13:18:02 [Nov_3rd] power_p L32 s0 adam 175/600 loss=-0.02846 lam=7.11e-02 p=0.066
+13:18:02 [Nov_3rd] power_p L32 s0 NEW BEST holdout=-0.01639 @ adam175
+13:18:34 [Nov_3rd] power_p L32 s0 adam 200/600 loss=-0.02366 lam=6.69e-02 p=0.080
+13:19:02 [Nov_3rd] power_p L32 s0 adam 225/600 loss=-0.03632 lam=6.28e-02 p=0.086
+13:19:28 [Nov_3rd] power_p L32 s0 adam 250/600 loss=-0.02476 lam=5.87e-02 p=0.075
+13:19:55 [Nov_3rd] power_p L32 s0 adam 275/600 loss=-0.03422 lam=5.45e-02 p=0.070
+13:20:21 [Nov_3rd] power_p L32 s0 adam 300/600 loss=-0.02605 lam=5.04e-02 p=0.068
+13:20:49 [Nov_3rd] power_p L32 s0 adam 325/600 loss=-0.02636 lam=4.63e-02 p=0.067
+13:20:49 [Nov_3rd] power_p L32 s0 NEW BEST holdout=-0.02097 @ adam325
+13:22:53 [Nov_3rd] power_p L32 s0 adam 350/600 loss=-0.03437 lam=4.22e-02 p=0.061
+13:23:22 [Nov_3rd] power_p L32 s0 adam 375/600 loss=-0.03802 lam=3.80e-02 p=0.056
+13:23:50 [Nov_3rd] power_p L32 s0 adam 400/600 loss=-0.04016 lam=3.39e-02 p=0.048
+13:24:19 [Nov_3rd] power_p L32 s0 adam 425/600 loss=-0.04613 lam=2.98e-02 p=0.054
+13:24:49 [Nov_3rd] power_p L32 s0 adam 450/600 loss=-0.03827 lam=2.56e-02 p=0.059
+13:25:17 [Nov_3rd] power_p L32 s0 adam 475/600 loss=-0.04303 lam=2.15e-02 p=0.059
+13:25:44 [Nov_3rd] power_p L32 s0 adam 500/600 loss=-0.03895 lam=1.74e-02 p=0.064
+13:26:12 [Nov_3rd] power_p L32 s0 adam 525/600 loss=-0.05261 lam=1.32e-02 p=0.067
+13:26:38 [Nov_3rd] power_p L32 s0 adam 550/600 loss=-0.03314 lam=9.10e-03 p=0.062
+13:27:05 [Nov_3rd] power_p L32 s0 adam 575/600 loss=-0.05159 lam=4.97e-03 p=0.061
+13:27:05 [Nov_3rd] power_p L32 s0 NEW BEST holdout=-0.02104 @ adam575
+13:27:30 [Nov_3rd] power_p L32 s0 adam 599/600 loss=-0.02637 lam=1.00e-03 p=0.059
+13:27:31 [Nov_3rd] power_p L32 s0 NEW BEST holdout=-0.02461 @ adam599
+13:27:40 [Nov_3rd] power_p L32 s0 lbfgs r0/12 loss=-0.04129
+13:27:51 [Nov_3rd] power_p L32 s0 lbfgs r1/12 loss=-0.02864
+13:28:00 [Nov_3rd] power_p L32 s0 lbfgs r2/12 loss=-0.06453
+13:28:10 [Nov_3rd] power_p L32 s0 lbfgs r3/12 loss=-0.04741
+13:28:20 [Nov_3rd] power_p L32 s0 lbfgs r4/12 loss=-0.03893
+13:28:30 [Nov_3rd] power_p L32 s0 lbfgs r5/12 loss=-0.04720
+13:28:41 [Nov_3rd] power_p L32 s0 lbfgs r6/12 loss=-0.02867
+13:28:51 [Nov_3rd] power_p L32 s0 lbfgs r7/12 loss=-0.05655
+13:29:02 [Nov_3rd] power_p L32 s0 lbfgs r8/12 loss=-0.02633
+13:29:12 [Nov_3rd] power_p L32 s0 lbfgs r9/12 loss=-0.06432
+13:29:23 [Nov_3rd] power_p L32 s0 lbfgs r10/12 loss=-0.04438
+13:29:34 [Nov_3rd] power_p L32 s0 lbfgs r11/12 loss=-0.04719
+13:29:34 [Nov_3rd] power_p L32 s0: restoring best holdout=-0.02461 @ adam599
+13:29:34 [Nov_3rd] power_p L32 s0 saved /workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/power_p/params_L32_seed0.pt wall=895s
+13:29:34 [Nov_3rd] eval n6 100/1000 Med≈1.038 (373.65/s)
+13:29:34 [Nov_3rd] eval n6 200/1000 Med≈1.042 (407.65/s)
+13:29:35 [Nov_3rd] eval n6 300/1000 Med≈1.044 (420.43/s)
+13:29:35 [Nov_3rd] eval n6 400/1000 Med≈1.043 (426.62/s)
+13:29:35 [Nov_3rd] eval n6 500/1000 Med≈1.046 (431.06/s)
+13:29:35 [Nov_3rd] eval n6 600/1000 Med≈1.045 (431.34/s)
+13:29:36 [Nov_3rd] eval n6 700/1000 Med≈1.045 (427.38/s)
+13:29:36 [Nov_3rd] eval n6 800/1000 Med≈1.044 (427.35/s)
+13:29:36 [Nov_3rd] eval n6 900/1000 Med≈1.044 (417.16/s)
+13:29:36 [Nov_3rd] eval n6 1000/1000 Med≈1.044 (409.22/s)
+13:29:36 [Nov_3rd] eval power_p L32 n6: Med=1.0440 Q=1.0617 BEAT B90=1.1900/1.4457 BEAT
+13:29:37 [Nov_3rd] eval n9 100/1000 Med≈1.099 (244.18/s)
+13:29:37 [Nov_3rd] eval n9 200/1000 Med≈1.100 (214.90/s)
+13:29:38 [Nov_3rd] eval n9 300/1000 Med≈1.108 (224.72/s)
+13:30:22 [Nov_3rd] eval n9 400/1000 Med≈1.118 (8.71/s)
+13:30:23 [Nov_3rd] eval n9 500/1000 Med≈1.118 (10.79/s)
+13:30:23 [Nov_3rd] eval n9 600/1000 Med≈1.117 (12.83/s)
+13:30:24 [Nov_3rd] eval n9 700/1000 Med≈1.116 (14.84/s)
+13:30:24 [Nov_3rd] eval n9 800/1000 Med≈1.116 (16.82/s)
+13:30:24 [Nov_3rd] eval n9 900/1000 Med≈1.115 (18.76/s)
+13:30:25 [Nov_3rd] eval n9 1000/1000 Med≈1.116 (20.66/s)
+13:30:25 [Nov_3rd] eval power_p L32 n9: Med=1.1161 Q=1.1626 BEAT B90=2.0220/2.3716 BEAT
+13:30:26 [Nov_3rd] eval n12 100/1000 Med≈1.266 (114.04/s)
+13:30:27 [Nov_3rd] eval n12 200/1000 Med≈1.266 (113.71/s)
+13:30:28 [Nov_3rd] eval n12 300/1000 Med≈1.264 (113.97/s)
+13:30:29 [Nov_3rd] eval n12 400/1000 Med≈1.247 (112.83/s)
+13:30:29 [Nov_3rd] eval n12 500/1000 Med≈1.243 (113.24/s)
+13:30:30 [Nov_3rd] eval n12 600/1000 Med≈1.231 (113.78/s)
+13:30:31 [Nov_3rd] eval n12 700/1000 Med≈1.248 (114.11/s)
+13:30:32 [Nov_3rd] eval n12 800/1000 Med≈1.248 (114.26/s)
+13:30:33 [Nov_3rd] eval n12 900/1000 Med≈1.236 (114.38/s)
+13:30:34 [Nov_3rd] eval n12 1000/1000 Med≈1.228 (113.97/s)
+13:30:34 [Nov_3rd] eval power_p L32 n12: Med=1.2279 Q=1.3083 BEAT B90=3.2969/3.6754 BEAT
+13:30:37 [Nov_3rd] eval n15 50/1000 Med≈1.513 (22.74/s)
+13:30:39 [Nov_3rd] eval n15 100/1000 Med≈1.572 (21.41/s)
+13:30:41 [Nov_3rd] eval n15 150/1000 Med≈1.469 (21.69/s)
+13:30:44 [Nov_3rd] eval n15 200/1000 Med≈1.558 (21.88/s)
+13:30:46 [Nov_3rd] eval n15 250/1000 Med≈1.558 (21.97/s)
+13:30:48 [Nov_3rd] eval n15 300/1000 Med≈1.554 (22.03/s)
+13:30:50 [Nov_3rd] eval n15 350/1000 Med≈1.546 (22.01/s)
+13:30:53 [Nov_3rd] eval n15 400/1000 Med≈1.546 (22.07/s)
+13:30:55 [Nov_3rd] eval n15 450/1000 Med≈1.535 (21.88/s)
+13:30:58 [Nov_3rd] eval n15 500/1000 Med≈1.506 (21.59/s)
+13:31:00 [Nov_3rd] eval n15 550/1000 Med≈1.506 (21.67/s)
+13:31:02 [Nov_3rd] eval n15 600/1000 Med≈1.500 (21.75/s)
+13:31:04 [Nov_3rd] eval n15 650/1000 Med≈1.499 (21.84/s)
+13:31:06 [Nov_3rd] eval n15 700/1000 Med≈1.485 (21.91/s)
+13:31:09 [Nov_3rd] eval n15 750/1000 Med≈1.468 (21.96/s)
+13:31:11 [Nov_3rd] eval n15 800/1000 Med≈1.468 (21.99/s)
+13:31:13 [Nov_3rd] eval n15 850/1000 Med≈1.471 (22.04/s)
+13:31:15 [Nov_3rd] eval n15 900/1000 Med≈1.472 (22.08/s)
+13:31:17 [Nov_3rd] eval n15 950/1000 Med≈1.469 (22.13/s)
+13:31:20 [Nov_3rd] eval n15 1000/1000 Med≈1.484 (22.16/s)
+13:31:20 [Nov_3rd] eval power_p L32 n15: Med=1.4843 Q=1.6064 BEAT B90=6.1916/6.5511 BEAT
+13:31:20 [Nov_3rd] wrote /workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/power_p/eval_L32_seed0.json ALL_CORE_BEAT=True
+=== EXIT 0 ===

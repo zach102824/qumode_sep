@@ -16,19 +16,19 @@ _Asia/Singapore (UTC+8) — started 2026-11-04 ~12:14_
 | Step | Status | Notes |
 |------|--------|-------|
 | PLAN.md | done | locked text |
-| Fresh packs | in progress | |
-| QAOA train69 path | pending | |
-| L=1 | pending | |
-| L=4 | pending | |
-| L=8 | pending | |
-| L=12 | pending | |
-| L=16 | pending | |
-| L=20 | pending | |
-| L=24 | pending | |
-| L=28 | pending | |
-| L=32 | pending | |
-| Phase1 RESULTS.md | pending | |
-| Phase2 | blocked | wait for parent |
+| Fresh packs | done | 250 n6 + 250 n9 |
+| QAOA train69 path | done | fresh per L |
+| L=1 | done | all CORE Med BEAT |
+| L=4 | done | all CORE Med BEAT |
+| L=8 | done | all CORE Med BEAT |
+| L=12 | done | all CORE Med BEAT |
+| L=16 | done | all CORE Med BEAT |
+| L=20 | done | all CORE Med BEAT |
+| L=24 | done | all CORE Med BEAT; n15 B90 UNDER |
+| L=28 | done | all CORE Med+B90 BEAT |
+| L=32 | done | all CORE Med+B90 BEAT |
+| Phase1 RESULTS.md | done | full L ladder Med+B90 |
+| Phase2 | blocked | n18/n21 wait for parent |
 
 ## Paths
 - Run: `Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/`
@@ -77,3 +77,21 @@ _Asia/Singapore (UTC+8) — started 2026-11-04 ~12:14_
 - [2026-11-04 12:47:03 +0800 Asia/Singapore] L=24: train QAOA fresh…
 
 - [2026-11-04 12:48:04 +0800 Asia/Singapore] L=24: train power_p seed0…
+
+- [2026-11-04 12:58:07 +0800 Asia/Singapore] L=24: DONE — RESULTS_L24.md written
+
+- [2026-11-04 12:58:07 +0800 Asia/Singapore] L=28: train QAOA fresh…
+
+- [2026-11-04 12:59:18 +0800 Asia/Singapore] L=28: train power_p seed0…
+
+- [2026-11-04 13:12:02 +0800 Asia/Singapore] L=28: DONE — RESULTS_L28.md written
+
+- [2026-11-04 13:12:02 +0800 Asia/Singapore] L=32: train QAOA fresh…
+
+- [2026-11-04 13:14:37 +0800 Asia/Singapore] L=32: train power_p seed0…
+
+- [2026-11-04 13:31:24 +0800 Asia/Singapore] L=32: DONE — RESULTS_L32.md written
+
+- [2026-11-04 13:31:24 +0800 Asia/Singapore] PHASE1 COMPLETE — all L in L_LIST have CORE Med/B90. Do NOT start Phase2.
+
+- [2026-11-04 13:33:52 +0800 Asia/Singapore] STATUS progress table marked Phase1 complete; Phase2 still blocked (do not start n18/n21).
