@@ -1,0 +1,92 @@
+{
+  "idea": "walsh_degree",
+  "label": "graded_Hc_walsh_degree",
+  "L": 2,
+  "seed": 1,
+  "train_ns": [
+    6,
+    9
+  ],
+  "per_n": {
+    "6": {
+      "Med": 4.715470552444458,
+      "B90": 10.34909830093384,
+      "QAOA_Med": 4.997969150543213,
+      "QAOA_B90": NaN,
+      "R": 0.9434773225704982,
+      "verdict": "BEAT",
+      "mean_leak": 3.9458274841308594e-07,
+      "B": 100,
+      "eval_wall_s": 0.05871391296386719
+    },
+    "9": {
+      "Med": 10.647935390472412,
+      "B90": 25.8662889480591,
+      "QAOA_Med": 11.19478702545166,
+      "QAOA_B90": NaN,
+      "R": 0.9511512247856109,
+      "verdict": "BEAT",
+      "mean_leak": 5.751848220825196e-07,
+      "B": 100,
+      "eval_wall_s": 0.07821440696716309
+    },
+    "12": {
+      "Med": 31.270358085632324,
+      "B90": 66.91174697875977,
+      "QAOA_Med": 33.17261505126953,
+      "QAOA_B90": NaN,
+      "R": 0.942655803207037,
+      "verdict": "BEAT",
+      "mean_leak": 7.37905502319336e-07,
+      "B": 100,
+      "eval_wall_s": 0.13809895515441895
+    },
+    "15": {
+      "Med": 70.86603927612305,
+      "B90": 218.84679260253924,
+      "QAOA_Med": 71.00180053710938,
+      "QAOA_B90": NaN,
+      "R": 0.9980879180533545,
+      "verdict": "TIE",
+      "mean_leak": 8.26120376586914e-07,
+      "B": 100,
+      "eval_wall_s": 0.5232939720153809
+    }
+  },
+  "finished": "2026-11-04 11:43:35 +0800",
+  "train": {
+    "idea": "walsh_degree",
+    "label": "graded_Hc_walsh_degree",
+    "L": 2,
+    "seed": 1,
+    "p": null,
+    "wall_s": 62.43945384025574,
+    "holdout_best": -0.059396520256996155,
+    "holdout_best_step": "lbfgs0",
+    "gamma_spread": {
+      "layer_std": [
+        0.34726494550704956,
+        0.3190121650695801
+      ],
+      "mean_abs_dev": 0.27348238229751587,
+      "gamma_w": [
+        [
+          -4.484510898590088,
+          -4.424420356750488,
+          -3.893071174621582,
+          -3.8203229904174805
+        ],
+        [
+          -6.491539478302002,
+          -6.8246026039123535,
+          -7.19704008102417,
+          -7.111423969268799
+        ]
+      ]
+    },
+    "max_train": 100,
+    "eval_B": 100,
+    "params": "/workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/ucx_bit_a/walsh_degree/params_L2_seed1_B100.pt"
+  },
+  "params": "/workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/ucx_bit_a/walsh_degree/params_L2_seed1_B100.pt"
+}
