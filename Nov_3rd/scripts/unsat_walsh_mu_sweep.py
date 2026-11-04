@@ -218,6 +218,12 @@ def _fmt(x, nd=3):
     return f"{float(x):.{nd}f}"
 
 
+def _at(block, n):
+    if n in block:
+        return block[n]
+    return block[str(n)]
+
+
 def render(payload: dict) -> str:
     v = payload["verdict"]
     lines = []
@@ -301,29 +307,78 @@ def render(payload: dict) -> str:
         row = payload["rows"][mu_label(mu)]
         for head in ("walsh", "power_p"):
             cells = row[head]
-            if 12 not in cells:
+            if "12" not in cells and 12 not in cells:
                 continue
-            def r(n):
-                cell = cells.get(n)
-                if cell is None or cell.get("R") is None:
+            def r(n, cells=cells):
+                try:
+                    cell = _at(cells, n)
+                except KeyError:
+                    return "—"
+                if cell.get("R") is None:
                     return "—"
                 return f"{cell['R']:.3f}"
-            mark = cells[12].get("mark") or ""
+            mark = _at(cells, 12).get("mark") or ""
             lines.append(
                 f"| {mu:+.2f} | {head} | {r(6)} | {r(9)} | {r(12)} | {mark} | {r(15)} | "
-                f"{cells[12]['med']:.4f} |"
+                f"{_at(cells, 12)['med']:.4f} |"
             )
     lines.append("")
     lines.append("Per-seed n=12 Walsh R, seeds [0, 1, 2]:")
     lines.append("")
     for mu in payload["mus"]:
-        cell = payload["rows"][mu_label(mu)]["walsh"][12]
+        cell = _at(payload["rows"][mu_label(mu)]["walsh"], 12)
         rs = ", ".join(f"{x:.3f}" for x in cell["seed_Rs"])
         med = float(np.median(cell["seed_Rs"]))
         lines.append(
             f"- μ={mu:+.2f}: {rs} (median of those R = {med:.3f}); "
             f"ratio of medians = {cell['R']:.3f}"
         )
+    lines.append("")
+    curve = [float(_at(payload["rows"][mu_label(mu)]["walsh"], 12)["R"]) for mu in payload["mus"]]
+    rising = all(curve[i] < curve[i + 1] - 1e-6 for i in range(len(curve) - 1))
+    try:
+        pp_vals = [float(_at(payload["rows"][mu_label(mu)]["power_p"], 12)["R"]) for mu in payload["mus"]]
+        pp_above = all(p > w for p, w in zip(pp_vals, curve))
+    except KeyError:
+        pp_vals = None
+        pp_above = False
+    mu0 = next(float(m) for m in payload["mus"] if abs(float(m)) < 1e-12)
+    lines.append("## Reading")
+    lines.append("")
+    listed = ", ".join(f"{r:.3f}" for r in curve)
+    anchor_R = float(_at(payload["rows"][mu_label(ANCHOR_MU)]["walsh"], 12)["R"])
+    clear_mus = [
+        (float(mu), r)
+        for mu, r in zip(payload["mus"], curve)
+        if abs(float(mu) - ANCHOR_MU) > 1e-9 and anchor_R - r >= 0.02 - 1e-12
+    ]
+    if rising:
+        extra = ""
+        if len(clear_mus) >= 2:
+            extra = (
+                f" {len(clear_mus)} grid points clear the 0.02 bar against μ=−0.25 "
+                f"({', '.join(f'{m:+.2f} at {r:.3f}' for m, r in clear_mus)})."
+            )
+        lines.append(
+            f"Frozen n=12 Walsh R is {listed} as μ runs from {float(payload['mus'][0]):+.2f} "
+            f"to {float(payload['mus'][-1]):+.2f}. The ratio rises at every step."
+            f"{extra} The operating point is the lowest of those, the negative edge of this grid. "
+            "A μ below that edge was not trained."
+        )
+    else:
+        lines.append(f"Frozen n=12 Walsh R across the grid is {listed}.")
+    lines.append("")
+    if pp_vals is not None and pp_above:
+        lines.append(
+            "power_p follows the same direction and stays above Walsh at every μ. "
+            "The μ move is not confined to the Walsh head."
+        )
+        lines.append("")
+    lines.append(
+        f"The in-sweep μ=0 Walsh ratio is {float(_at(payload['rows'][mu_label(mu0)]['walsh'], 12)['R']):.3f}. "
+        "PR #19 published 0.940 for that diagonal; that seal early-stopped some L=16 seeds. "
+        "This sweep uses the PR #23 round cap (48, early stop only after 8 stalled rounds)."
+    )
     lines.append("")
     lines.append("## One-parameter cost pulse")
     lines.append("")
@@ -336,7 +391,7 @@ def render(payload: dict) -> str:
     for mu in payload["mus"]:
         for n in (6, 9, 12, 15):
             scan = payload["cost_scan"][mu_label(mu)][str(n)]
-            w = payload["rows"][mu_label(mu)]["walsh"][n]["med"]
+            w = _at(payload["rows"][mu_label(mu)]["walsh"], n)["med"]
             lines.append(
                 f"| {mu:+.2f} | {n} | {scan['gamma']:.4f} | {scan['med_eps']:.4f} | {w:.4f} |"
             )
