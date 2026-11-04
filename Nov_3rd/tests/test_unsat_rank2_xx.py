@@ -19,12 +19,17 @@ from Nov_3rd.unsat_rank2_xx import (
     PUBLISHED_N12_L16,
     ZXScore,
     best_product_unsat,
+    bootstrap_ratio,
     clearly_below,
+    decide_deepen,
     decide_unsat_xx,
     dense_gap,
+    paired_instance_counts,
+    paired_seed_table,
     plus_energy,
     product_energy_unsat,
     statevector_energy,
+    wilson_interval,
 )
 
 
@@ -203,3 +208,121 @@ def test_clear_ratio_with_product_ground_state_is_not_a_pass():
     assert out["verdict"] == "needs_edit", out
     assert out["null"] is False
     assert "product gap" in out["reason"]
+
+
+def _five(r12, r15, r6=0.40, r9=0.40):
+    def mark(R):
+        if R <= 0.98:
+            return "BEAT"
+        if R <= 1.02:
+            return "TIE"
+        return "UNDER"
+
+    cells = {}
+    for n, R, seeds in (
+        (6, r6, [r6] * 5),
+        (9, r9, [r9] * 5),
+        (12, r12, [r12] * 5),
+        (15, r15, [r15] * 5),
+    ):
+        cells[("walsh", 16, n)] = {"R": float(R), "mark": mark(R), "seed_Rs": list(seeds)}
+    return cells
+
+
+def _paired_all(n_seeds=5, n_inst=32):
+    per = []
+    for _ in range(n_seeds):
+        per.append(paired_instance_counts(np.full(n_inst, 0.1), np.full(n_inst, 0.4)))
+    table = {
+        "per_seed": per,
+        "n_majority": n_seeds,
+        "n_seeds": n_seeds,
+        "win": n_seeds * n_inst,
+        "tie": 0,
+        "loss": 0,
+        "n": n_seeds * n_inst,
+    }
+    return {12: table, 15: table}
+
+
+def _ci_for(cells, hi12, hi15):
+    out = {}
+    for n, hi in ((12, hi12), (15, hi15)):
+        R = float(cells[("walsh", 16, n)]["R"])
+        out[("walsh", 16, n)] = {"R": R, "lo": R - 0.02, "hi": float(hi)}
+    return out
+
+
+def test_paired_counts_and_wilson():
+    row = paired_instance_counts([0.1, 0.2, 0.4], [0.3, 0.2, 0.3])
+    assert (row["win"], row["tie"], row["loss"], row["n"]) == (1, 1, 1, 3)
+    table = paired_seed_table(
+        [np.array([0.1, 0.1, 0.1, 0.9]), np.array([0.2, 0.2, 0.8, 0.9])],
+        [np.array([0.3, 0.3, 0.3, 0.3]), np.array([0.3, 0.3, 0.3, 0.3])],
+    )
+    assert table["n_majority"] == 1
+    lo, hi = wilson_interval(80, 100)
+    assert lo < 0.8 < hi
+    assert hi - lo < 0.2
+
+
+def test_instance_bootstrap_is_exact_on_a_constant_batch():
+    eps_m = [np.full(24, 0.30), np.full(24, 0.30)]
+    eps_b = [np.full(24, 1.00), np.full(24, 1.00)]
+    out = bootstrap_ratio(eps_m, eps_b, n_boot=200, seed=1, mode="instance")
+    assert abs(out["R"] - 0.30) < 1e-12
+    assert abs(out["lo"] - 0.30) < 1e-12
+    assert abs(out["hi"] - 0.30) < 1e-12
+    spread = bootstrap_ratio(
+        [np.full(12, 0.2), np.full(12, 0.4), np.full(12, 0.5)],
+        [np.full(12, 1.0), np.full(12, 1.0), np.full(12, 1.0)],
+        n_boot=300,
+        seed=2,
+        mode="both",
+    )
+    assert spread["lo"] <= spread["R"] <= spread["hi"]
+
+
+def test_deepen_pass_requires_both_sizes_inside_the_interval():
+    cells = _five(0.33, 0.36)
+    paired_k = {("walsh", 16, n): _paired_all()[n] for n in (12, 15)}
+    out = decide_deepen(
+        cells,
+        _quantum(),
+        paired_k,
+        _ci_for(cells, 0.50, 0.55),
+        n18={"status": "infeasible", "detail": "skipped"},
+    )
+    assert out["verdict"] == "PASS", out
+    assert "n=18 probe was not scored" in out["reason"]
+    soft = decide_deepen(cells, _quantum(), paired_k, _ci_for(cells, 1.05, 0.55))
+    assert soft["verdict"] == "needs_edit", soft
+    assert soft["null"] is False
+    assert "CI" in soft["reason"]
+
+
+def test_deepen_n15_tie_and_short_seed_list():
+    cells = _five(0.33, 1.00)
+    paired_k = {("walsh", 16, n): _paired_all()[n] for n in (12, 15)}
+    out = decide_deepen(cells, _quantum(), paired_k, _ci_for(cells, 0.40, 1.00))
+    assert out["verdict"] == "needs_edit", out
+    assert "n=15" in out["reason"]
+    short = decide_deepen(_cells(0.33, seed_Rs=[0.33, 0.33, 0.33]), _quantum(), paired_k, _ci_for(cells, 0.40, 0.40))
+    assert short["verdict"] == "needs_edit", short
+    assert "5" in short["reason"]
+
+
+def test_deepen_kill_still_ignores_a_passing_n18_note():
+    cells = _five(0.33, 0.36)
+    paired_k = {("walsh", 16, n): _paired_all()[n] for n in (12, 15)}
+    q = _quantum()
+    q[12] = {"peak_med": 0.8, "prod_gap_med": 0.2}
+    out = decide_deepen(
+        cells,
+        q,
+        paired_k,
+        _ci_for(cells, 0.40, 0.40),
+        n18={"status": "probe", "R": 0.40, "med": 0.001, "B": 16, "peak_med": 0.01, "prod_gap_med": 0.08},
+    )
+    assert out["verdict"] == "KILL", out
+    assert "n=18 probe" in out["reason"]

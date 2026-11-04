@@ -1,0 +1,995 @@
+16:44:43 [unsatXX-r5] out=/agent/repos/qumode_sep/Nov_3rd/runs/quantum_h_explore/unsat_rank2_mu/deepen μ=-0.25 λ=0.75 seeds=[0, 1, 2, 3, 4] B_hold=256
+16:44:43 [unsatXX-r5] cache hit n=6 train B=128 (cache)
+16:44:43 [unsatXX-r5]   n=6 train B=128 peak=0.095 S=0.314 gap=0.120 ε+=0.135 εbit=0.510
+16:44:43 [unsatXX-r5] prefix n=6 hold reused 128/256 from unsat_xx_n6_hold_B128_l0.75_m-0.25.npz
+16:44:43 [unsatXX-r5] ED n=6 hold tail 128 unsat λ=0.75 μ=-0.25
+16:44:47 [unsatXX-r5]   built n=6 hold B=256 in 3.4s peak_med=0.098
+16:44:47 [unsatXX-r5]   n=6 hold B=256 peak=0.098 S=0.320 gap=0.125 ε+=0.132 εbit=0.507
+16:44:47 [unsatXX-r5] cache hit n=9 train B=128 (cache)
+16:44:47 [unsatXX-r5]   n=9 train B=128 peak=0.028 S=0.380 gap=0.110 ε+=0.126 εbit=0.508
+16:44:47 [unsatXX-r5] prefix n=9 hold reused 128/256 from unsat_xx_n9_hold_B128_l0.75_m-0.25.npz
+16:44:47 [unsatXX-r5] ED n=9 hold tail 128 unsat λ=0.75 μ=-0.25
+16:44:54 [unsatXX-r5]   built n=9 hold B=256 in 7.2s peak_med=0.028
+16:44:54 [unsatXX-r5]   n=9 hold B=256 peak=0.028 S=0.368 gap=0.107 ε+=0.126 εbit=0.508
+16:44:55 [unsatXX-r5] prefix n=12 transfer reused 64/128 from unsat_xx_n12_transfer_B64_l0.75_m-0.25.npz
+16:44:55 [unsatXX-r5] ED n=12 transfer tail 64 unsat λ=0.75 μ=-0.25
+16:44:55 [unsatXX-r5]   ED n=12 1/64 0s
+16:44:56 [unsatXX-r5]   ED n=12 8/64 1s
+16:44:57 [unsatXX-r5]   ED n=12 16/64 2s
+16:44:58 [unsatXX-r5]   ED n=12 24/64 3s
+16:44:58 [unsatXX-r5]   ED n=12 32/64 4s
+16:44:59 [unsatXX-r5]   ED n=12 40/64 5s
+16:45:00 [unsatXX-r5]   ED n=12 48/64 6s
+16:45:01 [unsatXX-r5]   ED n=12 56/64 7s
+16:45:02 [unsatXX-r5]   ED n=12 64/64 7s
+16:45:02 [unsatXX-r5]   built n=12 transfer B=128 in 8.0s peak_med=0.008
+16:45:02 [unsatXX-r5]   n=12 transfer B=128 peak=0.008 S=0.408 gap=0.110 ε+=0.121 εbit=0.501
+16:45:03 [unsatXX-r5] prefix n=15 transfer reused 32/64 from unsat_xx_n15_transfer_B32_l0.75_m-0.25.npz
+16:45:03 [unsatXX-r5] ED n=15 transfer tail 32 unsat λ=0.75 μ=-0.25
+16:45:07 [unsatXX-r5]   ED n=15 1/32 4s
+16:45:20 [unsatXX-r5]   ED n=15 8/32 17s
+16:45:38 [unsatXX-r5]   ED n=15 16/32 36s
+16:45:54 [unsatXX-r5]   ED n=15 24/32 51s
+16:46:08 [unsatXX-r5]   ED n=15 32/32 65s
+16:46:08 [unsatXX-r5]   built n=15 transfer B=64 in 66.0s peak_med=0.002
+16:46:09 [unsatXX-r5]   n=15 transfer B=64 peak=0.002 S=0.411 gap=0.108 ε+=0.125 εbit=0.504
+16:46:09 [unsatXX] Lanczos vs dense n=6 |ΔE0|=7.99e-15
+16:46:09 [unsatXX] Lanczos vs dense n=9 |ΔE0|=1.95e-14
+16:46:09 [unsatXX] histogram vs ⟨ψ|H|ψ⟩ |Δ|=4.88e-15
+16:46:09 [unsatXX] μ=0 histogram vs Pauli |Δ|=3.55e-15
+16:46:15 [unsatXX-r5] n=18 feasibility probe 6.1s (limit 90s)
+16:46:15 [unsatXX-r5] ED n=18 probe tail 16 unsat λ=0.75 μ=-0.25
+16:46:22 [unsatXX-r5]   ED n=18 1/16 6s
+16:47:02 [unsatXX-r5]   ED n=18 8/16 46s
+16:47:49 [unsatXX-r5]   ED n=18 16/16 93s
+16:47:50 [unsatXX-r5]   built n=18 probe B=16 in 95.1s peak_med=0.001
+16:47:52 [unsatXX-r5]   n=18 probe B=16 peak=0.001 S=0.388 gap=0.107 ε+=0.126 εbit=0.504
+16:47:52 [unsatXX-r5] n18 status=ok
+16:47:52 [unsatXX-r5] train fourier_qaoa L=2 seed=0
+16:47:52 [unsatXX]   init fourier_qaoa L=2 s=0 ε6=0.1321 ε9=0.1259 score=0.1290
+16:47:53 [unsatXX]   fourier_qaoa L=2 s=0 r=0 ε6=0.0545 ε9=0.0550 score=0.0548 best=0.0548@r0
+16:47:53 [unsatXX]   fourier_qaoa L=2 s=0 r=1 ε6=0.0541 ε9=0.0546 score=0.0543 best=0.0543@r1
+16:47:53 [unsatXX]   fourier_qaoa L=2 s=0 r=2 ε6=0.0535 ε9=0.0538 score=0.0536 best=0.0536@r2
+16:47:53 [unsatXX]   fourier_qaoa L=2 s=0 r=3 ε6=0.0522 ε9=0.0521 score=0.0522 best=0.0522@r3
+16:47:53 [unsatXX]   fourier_qaoa L=2 s=0 r=4 ε6=0.0502 ε9=0.0505 score=0.0504 best=0.0504@r4
+16:47:54 [unsatXX]   fourier_qaoa L=2 s=0 r=5 ε6=0.0346 ε9=0.0333 score=0.0340 best=0.0340@r5
+16:47:54 [unsatXX]   fourier_qaoa L=2 s=0 r=6 ε6=0.0317 ε9=0.0310 score=0.0314 best=0.0314@r6
+16:47:54 [unsatXX]   fourier_qaoa L=2 s=0 r=7 ε6=0.0317 ε9=0.0310 score=0.0313 best=0.0313@r7
+16:47:54 [unsatXX]   fourier_qaoa L=2 s=0 r=8 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0313@r8
+16:47:54 [unsatXX]   fourier_qaoa L=2 s=0 r=9 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0313@r8
+16:47:54 [unsatXX]   fourier_qaoa L=2 s=0 r=12 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0313@r8
+16:47:54 [unsatXX]   fourier_qaoa L=2 s=0 r=15 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0313@r8
+16:47:54 [unsatXX]   early stop fourier_qaoa L=2 s=0 at r=16
+16:47:55 [unsatXX-r5]   frozen ε12=0.0296 ε15=0.0322 ε18=0.0314 wall=1.7s tag=r8
+16:47:55 [unsatXX-r5] train fourier_qaoa L=2 seed=1
+16:47:55 [unsatXX]   init fourier_qaoa L=2 s=1 ε6=0.1322 ε9=0.1259 score=0.1290
+16:47:55 [unsatXX]   fourier_qaoa L=2 s=1 r=0 ε6=0.0569 ε9=0.0577 score=0.0573 best=0.0573@r0
+16:47:55 [unsatXX]   fourier_qaoa L=2 s=1 r=1 ε6=0.0533 ε9=0.0538 score=0.0535 best=0.0535@r1
+16:47:56 [unsatXX]   fourier_qaoa L=2 s=1 r=2 ε6=0.0520 ε9=0.0521 score=0.0521 best=0.0521@r2
+16:47:56 [unsatXX]   fourier_qaoa L=2 s=1 r=3 ε6=0.0379 ε9=0.0365 score=0.0372 best=0.0372@r3
+16:47:56 [unsatXX]   fourier_qaoa L=2 s=1 r=4 ε6=0.0321 ε9=0.0310 score=0.0315 best=0.0315@r4
+16:47:56 [unsatXX]   fourier_qaoa L=2 s=1 r=5 ε6=0.0317 ε9=0.0310 score=0.0314 best=0.0314@r5
+16:47:56 [unsatXX]   fourier_qaoa L=2 s=1 r=6 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0313@r6
+16:47:56 [unsatXX]   fourier_qaoa L=2 s=1 r=7 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0313@r7
+16:47:56 [unsatXX]   fourier_qaoa L=2 s=1 r=9 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0313@r7
+16:47:56 [unsatXX]   fourier_qaoa L=2 s=1 r=12 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0313@r7
+16:47:56 [unsatXX]   fourier_qaoa L=2 s=1 r=15 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0313@r7
+16:47:56 [unsatXX]   early stop fourier_qaoa L=2 s=1 at r=15
+16:47:57 [unsatXX-r5]   frozen ε12=0.0296 ε15=0.0322 ε18=0.0314 wall=1.2s tag=r7
+16:47:57 [unsatXX-r5] train fourier_qaoa L=2 seed=2
+16:47:57 [unsatXX]   init fourier_qaoa L=2 s=2 ε6=0.1322 ε9=0.1260 score=0.1291
+16:47:58 [unsatXX]   fourier_qaoa L=2 s=2 r=0 ε6=0.1241 ε9=0.1169 score=0.1205 best=0.1205@r0
+16:47:58 [unsatXX]   fourier_qaoa L=2 s=2 r=1 ε6=0.0477 ε9=0.0484 score=0.0480 best=0.0480@r1
+16:47:58 [unsatXX]   fourier_qaoa L=2 s=2 r=2 ε6=0.0440 ε9=0.0415 score=0.0427 best=0.0427@r2
+16:47:58 [unsatXX]   fourier_qaoa L=2 s=2 r=3 ε6=0.0329 ε9=0.0319 score=0.0324 best=0.0324@r3
+16:47:58 [unsatXX]   fourier_qaoa L=2 s=2 r=4 ε6=0.0319 ε9=0.0309 score=0.0314 best=0.0314@r4
+16:47:58 [unsatXX]   fourier_qaoa L=2 s=2 r=5 ε6=0.0316 ε9=0.0308 score=0.0312 best=0.0312@r5
+16:47:58 [unsatXX]   fourier_qaoa L=2 s=2 r=6 ε6=0.0316 ε9=0.0309 score=0.0312 best=0.0312@r5
+16:47:59 [unsatXX]   fourier_qaoa L=2 s=2 r=9 ε6=0.0316 ε9=0.0309 score=0.0313 best=0.0312@r5
+16:47:59 [unsatXX]   fourier_qaoa L=2 s=2 r=12 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0312@r5
+16:47:59 [unsatXX]   early stop fourier_qaoa L=2 s=2 at r=13
+16:48:00 [unsatXX-r5]   frozen ε12=0.0294 ε15=0.0321 ε18=0.0314 wall=1.4s tag=r5
+16:48:00 [unsatXX-r5] train fourier_qaoa L=2 seed=3
+16:48:00 [unsatXX]   init fourier_qaoa L=2 s=3 ε6=0.1321 ε9=0.1258 score=0.1290
+16:48:00 [unsatXX]   fourier_qaoa L=2 s=3 r=0 ε6=0.0543 ε9=0.0547 score=0.0545 best=0.0545@r0
+16:48:00 [unsatXX]   fourier_qaoa L=2 s=3 r=1 ε6=0.0510 ε9=0.0510 score=0.0510 best=0.0510@r1
+16:48:00 [unsatXX]   fourier_qaoa L=2 s=3 r=2 ε6=0.0468 ε9=0.0479 score=0.0474 best=0.0474@r2
+16:48:00 [unsatXX]   fourier_qaoa L=2 s=3 r=3 ε6=0.0358 ε9=0.0344 score=0.0351 best=0.0351@r3
+16:48:01 [unsatXX]   fourier_qaoa L=2 s=3 r=4 ε6=0.0316 ε9=0.0308 score=0.0312 best=0.0312@r4
+16:48:01 [unsatXX]   fourier_qaoa L=2 s=3 r=6 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0312@r4
+16:48:01 [unsatXX]   fourier_qaoa L=2 s=3 r=9 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0312@r4
+16:48:01 [unsatXX]   fourier_qaoa L=2 s=3 r=12 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0312@r4
+16:48:01 [unsatXX]   early stop fourier_qaoa L=2 s=3 at r=12
+16:48:02 [unsatXX-r5]   frozen ε12=0.0294 ε15=0.0321 ε18=0.0314 wall=1.1s tag=r4
+16:48:02 [unsatXX-r5] train fourier_qaoa L=2 seed=4
+16:48:02 [unsatXX]   init fourier_qaoa L=2 s=4 ε6=0.1321 ε9=0.1259 score=0.1290
+16:48:02 [unsatXX]   fourier_qaoa L=2 s=4 r=0 ε6=0.0579 ε9=0.0583 score=0.0581 best=0.0581@r0
+16:48:02 [unsatXX]   fourier_qaoa L=2 s=4 r=1 ε6=0.0488 ε9=0.0485 score=0.0487 best=0.0487@r1
+16:48:02 [unsatXX]   fourier_qaoa L=2 s=4 r=2 ε6=0.0361 ε9=0.0355 score=0.0358 best=0.0358@r2
+16:48:03 [unsatXX]   fourier_qaoa L=2 s=4 r=3 ε6=0.0316 ε9=0.0309 score=0.0312 best=0.0312@r3
+16:48:03 [unsatXX]   fourier_qaoa L=2 s=4 r=6 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0312@r3
+16:48:03 [unsatXX]   fourier_qaoa L=2 s=4 r=9 ε6=0.0316 ε9=0.0310 score=0.0313 best=0.0312@r3
+16:48:03 [unsatXX]   early stop fourier_qaoa L=2 s=4 at r=11
+16:48:04 [unsatXX-r5]   frozen ε12=0.0294 ε15=0.0322 ε18=0.0314 wall=1.0s tag=r3
+16:48:04 [unsatXX-r5] train power_p L=2 seed=0
+16:48:04 [unsatXX]   init power_p L=2 s=0 ε6=0.0316 ε9=0.0310 score=1.0000
+16:48:04 [unsatXX]   power_p L=2 s=0 r=0 ε6=0.0289 ε9=0.0297 score=0.9579 best=0.9579@r0
+16:48:04 [unsatXX]   power_p L=2 s=0 r=1 ε6=0.0263 ε9=0.0287 score=0.9262 best=0.9262@r1
+16:48:05 [unsatXX]   power_p L=2 s=0 r=3 ε6=0.0258 ε9=0.0288 score=0.9312 best=0.9262@r1
+16:48:05 [unsatXX]   power_p L=2 s=0 r=6 ε6=0.0259 ε9=0.0288 score=0.9308 best=0.9262@r1
+16:48:06 [unsatXX]   power_p L=2 s=0 r=9 ε6=0.0257 ε9=0.0288 score=0.9289 best=0.9262@r1
+16:48:06 [unsatXX]   early stop power_p L=2 s=0 at r=9
+16:48:07 [unsatXX-r5]   frozen ε12=0.0286 ε15=0.0325 ε18=0.0319 wall=1.4s tag=r1
+16:48:07 [unsatXX-r5] train power_p L=2 seed=1
+16:48:07 [unsatXX]   init power_p L=2 s=1 ε6=0.0316 ε9=0.0310 score=1.0000
+16:48:07 [unsatXX]   power_p L=2 s=1 r=0 ε6=0.0289 ε9=0.0296 score=0.9578 best=0.9578@r0
+16:48:07 [unsatXX]   power_p L=2 s=1 r=1 ε6=0.0263 ε9=0.0287 score=0.9262 best=0.9262@r1
+16:48:07 [unsatXX]   power_p L=2 s=1 r=3 ε6=0.0258 ε9=0.0288 score=0.9311 best=0.9262@r1
+16:48:08 [unsatXX]   power_p L=2 s=1 r=6 ε6=0.0259 ε9=0.0288 score=0.9308 best=0.9262@r1
+16:48:08 [unsatXX]   power_p L=2 s=1 r=9 ε6=0.0257 ε9=0.0288 score=0.9289 best=0.9262@r1
+16:48:08 [unsatXX]   early stop power_p L=2 s=1 at r=9
+16:48:09 [unsatXX-r5]   frozen ε12=0.0286 ε15=0.0325 ε18=0.0319 wall=1.2s tag=r1
+16:48:09 [unsatXX-r5] train power_p L=2 seed=2
+16:48:09 [unsatXX]   init power_p L=2 s=2 ε6=0.0316 ε9=0.0308 score=1.0000
+16:48:09 [unsatXX]   power_p L=2 s=2 r=0 ε6=0.0290 ε9=0.0294 score=0.9530 best=0.9530@r0
+16:48:09 [unsatXX]   power_p L=2 s=2 r=1 ε6=0.0263 ε9=0.0287 score=0.9300 best=0.9300@r1
+16:48:09 [unsatXX]   power_p L=2 s=2 r=3 ε6=0.0258 ε9=0.0286 score=0.9285 best=0.9285@r3
+16:48:10 [unsatXX]   power_p L=2 s=2 r=6 ε6=0.0256 ε9=0.0287 score=0.9311 best=0.9285@r3
+16:48:10 [unsatXX]   power_p L=2 s=2 r=9 ε6=0.0257 ε9=0.0286 score=0.9260 best=0.9260@r9
+16:48:10 [unsatXX]   power_p L=2 s=2 r=12 ε6=0.0256 ε9=0.0285 score=0.9256 best=0.9256@r12
+16:48:11 [unsatXX]   power_p L=2 s=2 r=14 ε6=0.0256 ε9=0.0285 score=0.9250 best=0.9250@r14
+16:48:11 [unsatXX]   power_p L=2 s=2 r=15 ε6=0.0254 ε9=0.0286 score=0.9260 best=0.9250@r14
+16:48:11 [unsatXX]   power_p L=2 s=2 r=16 ε6=0.0255 ε9=0.0285 score=0.9243 best=0.9243@r16
+16:48:11 [unsatXX]   power_p L=2 s=2 r=17 ε6=0.0254 ε9=0.0285 score=0.9255 best=0.9243@r16
+16:48:12 [unsatXX-r5]   frozen ε12=0.0293 ε15=0.0337 ε18=0.0330 wall=2.1s tag=r16
+16:48:12 [unsatXX-r5] train power_p L=2 seed=3
+16:48:12 [unsatXX]   init power_p L=2 s=3 ε6=0.0316 ε9=0.0308 score=1.0000
+16:48:12 [unsatXX]   power_p L=2 s=3 r=0 ε6=0.0292 ε9=0.0298 score=0.9679 best=0.9679@r0
+16:48:12 [unsatXX]   power_p L=2 s=3 r=1 ε6=0.0264 ε9=0.0287 score=0.9305 best=0.9305@r1
+16:48:13 [unsatXX]   power_p L=2 s=3 r=3 ε6=0.0259 ε9=0.0288 score=0.9342 best=0.9305@r1
+16:48:13 [unsatXX]   power_p L=2 s=3 r=6 ε6=0.0256 ε9=0.0288 score=0.9352 best=0.9305@r1
+16:48:13 [unsatXX]   power_p L=2 s=3 r=8 ε6=0.0258 ε9=0.0285 score=0.9251 best=0.9251@r8
+16:48:13 [unsatXX]   power_p L=2 s=3 r=9 ε6=0.0256 ε9=0.0285 score=0.9257 best=0.9251@r8
+16:48:13 [unsatXX]   power_p L=2 s=3 r=11 ε6=0.0255 ε9=0.0285 score=0.9251 best=0.9251@r11
+16:48:14 [unsatXX]   power_p L=2 s=3 r=12 ε6=0.0253 ε9=0.0284 score=0.9216 best=0.9216@r12
+16:48:14 [unsatXX]   power_p L=2 s=3 r=13 ε6=0.0251 ε9=0.0284 score=0.9198 best=0.9198@r13
+16:48:14 [unsatXX]   power_p L=2 s=3 r=15 ε6=0.0246 ε9=0.0283 score=0.9186 best=0.9186@r15
+16:48:14 [unsatXX]   power_p L=2 s=3 r=16 ε6=0.0247 ε9=0.0283 score=0.9166 best=0.9166@r16
+16:48:14 [unsatXX]   power_p L=2 s=3 r=17 ε6=0.0246 ε9=0.0282 score=0.9156 best=0.9156@r17
+16:48:15 [unsatXX-r5]   frozen ε12=0.0293 ε15=0.0338 ε18=0.0331 wall=2.1s tag=r17
+16:48:15 [unsatXX-r5] train power_p L=2 seed=4
+16:48:15 [unsatXX]   init power_p L=2 s=4 ε6=0.0316 ε9=0.0309 score=1.0000
+16:48:15 [unsatXX]   power_p L=2 s=4 r=0 ε6=0.0291 ε9=0.0298 score=0.9650 best=0.9650@r0
+16:48:16 [unsatXX]   power_p L=2 s=4 r=1 ε6=0.0265 ε9=0.0287 score=0.9304 best=0.9304@r1
+16:48:16 [unsatXX]   power_p L=2 s=4 r=3 ε6=0.0258 ε9=0.0288 score=0.9334 best=0.9304@r1
+16:48:16 [unsatXX]   power_p L=2 s=4 r=6 ε6=0.0258 ε9=0.0287 score=0.9313 best=0.9304@r1
+16:48:16 [unsatXX]   power_p L=2 s=4 r=7 ε6=0.0257 ε9=0.0287 score=0.9303 best=0.9303@r7
+16:48:16 [unsatXX]   power_p L=2 s=4 r=9 ε6=0.0257 ε9=0.0287 score=0.9302 best=0.9302@r9
+16:48:17 [unsatXX]   power_p L=2 s=4 r=11 ε6=0.0257 ε9=0.0287 score=0.9298 best=0.9298@r11
+16:48:17 [unsatXX]   power_p L=2 s=4 r=12 ε6=0.0257 ε9=0.0287 score=0.9309 best=0.9298@r11
+16:48:17 [unsatXX]   power_p L=2 s=4 r=13 ε6=0.0257 ε9=0.0287 score=0.9294 best=0.9294@r13
+16:48:17 [unsatXX]   power_p L=2 s=4 r=15 ε6=0.0257 ε9=0.0287 score=0.9286 best=0.9286@r15
+16:48:17 [unsatXX]   power_p L=2 s=4 r=17 ε6=0.0257 ε9=0.0286 score=0.9278 best=0.9278@r17
+16:48:18 [unsatXX-r5]   frozen ε12=0.0292 ε15=0.0336 ε18=0.0329 wall=2.1s tag=r17
+16:48:18 [unsatXX-r5] train walsh L=2 seed=0
+16:48:18 [unsatXX]   init walsh L=2 s=0 ε6=0.0316 ε9=0.0310 score=1.0000
+16:48:19 [unsatXX]   walsh L=2 s=0 r=0 ε6=0.0286 ε9=0.0293 score=0.9470 best=0.9470@r0
+16:48:19 [unsatXX]   walsh L=2 s=0 r=1 ε6=0.0224 ε9=0.0256 score=0.8270 best=0.8270@r1
+16:48:19 [unsatXX]   walsh L=2 s=0 r=2 ε6=0.0204 ε9=0.0225 score=0.7255 best=0.7255@r2
+16:48:19 [unsatXX]   walsh L=2 s=0 r=3 ε6=0.0188 ε9=0.0213 score=0.6886 best=0.6886@r3
+16:48:19 [unsatXX]   walsh L=2 s=0 r=4 ε6=0.0178 ε9=0.0199 score=0.6415 best=0.6415@r4
+16:48:19 [unsatXX]   walsh L=2 s=0 r=5 ε6=0.0177 ε9=0.0194 score=0.6276 best=0.6276@r5
+16:48:19 [unsatXX]   walsh L=2 s=0 r=6 ε6=0.0165 ε9=0.0181 score=0.5856 best=0.5856@r6
+16:48:19 [unsatXX]   walsh L=2 s=0 r=7 ε6=0.0162 ε9=0.0177 score=0.5717 best=0.5717@r7
+16:48:20 [unsatXX]   walsh L=2 s=0 r=8 ε6=0.0159 ε9=0.0170 score=0.5501 best=0.5501@r8
+16:48:20 [unsatXX]   walsh L=2 s=0 r=9 ε6=0.0158 ε9=0.0167 score=0.5402 best=0.5402@r9
+16:48:20 [unsatXX]   walsh L=2 s=0 r=10 ε6=0.0153 ε9=0.0166 score=0.5351 best=0.5351@r10
+16:48:20 [unsatXX]   walsh L=2 s=0 r=11 ε6=0.0154 ε9=0.0162 score=0.5227 best=0.5227@r11
+16:48:20 [unsatXX]   walsh L=2 s=0 r=12 ε6=0.0152 ε9=0.0160 score=0.5185 best=0.5185@r12
+16:48:20 [unsatXX]   walsh L=2 s=0 r=13 ε6=0.0150 ε9=0.0159 score=0.5137 best=0.5137@r13
+16:48:20 [unsatXX]   walsh L=2 s=0 r=14 ε6=0.0148 ε9=0.0156 score=0.5039 best=0.5039@r14
+16:48:20 [unsatXX]   walsh L=2 s=0 r=15 ε6=0.0148 ε9=0.0155 score=0.5016 best=0.5016@r15
+16:48:21 [unsatXX]   walsh L=2 s=0 r=16 ε6=0.0148 ε9=0.0154 score=0.4975 best=0.4975@r16
+16:48:21 [unsatXX]   walsh L=2 s=0 r=17 ε6=0.0146 ε9=0.0152 score=0.4919 best=0.4919@r17
+16:48:22 [unsatXX-r5]   frozen ε12=0.0154 ε15=0.0167 ε18=0.0173 wall=2.3s tag=r17
+16:48:22 [unsatXX-r5] train walsh L=2 seed=1
+16:48:22 [unsatXX]   init walsh L=2 s=1 ε6=0.0316 ε9=0.0310 score=1.0000
+16:48:22 [unsatXX]   walsh L=2 s=1 r=0 ε6=0.0286 ε9=0.0293 score=0.9469 best=0.9469@r0
+16:48:22 [unsatXX]   walsh L=2 s=1 r=1 ε6=0.0224 ε9=0.0257 score=0.8288 best=0.8288@r1
+16:48:23 [unsatXX]   walsh L=2 s=1 r=2 ε6=0.0202 ε9=0.0221 score=0.7139 best=0.7139@r2
+16:48:23 [unsatXX]   walsh L=2 s=1 r=3 ε6=0.0189 ε9=0.0213 score=0.6873 best=0.6873@r3
+16:48:23 [unsatXX]   walsh L=2 s=1 r=4 ε6=0.0181 ε9=0.0203 score=0.6549 best=0.6549@r4
+16:48:23 [unsatXX]   walsh L=2 s=1 r=5 ε6=0.0178 ε9=0.0196 score=0.6342 best=0.6342@r5
+16:48:23 [unsatXX]   walsh L=2 s=1 r=6 ε6=0.0169 ε9=0.0186 score=0.6023 best=0.6023@r6
+16:48:23 [unsatXX]   walsh L=2 s=1 r=7 ε6=0.0167 ε9=0.0183 score=0.5926 best=0.5926@r7
+16:48:23 [unsatXX]   walsh L=2 s=1 r=8 ε6=0.0161 ε9=0.0178 score=0.5745 best=0.5745@r8
+16:48:23 [unsatXX]   walsh L=2 s=1 r=9 ε6=0.0161 ε9=0.0175 score=0.5641 best=0.5641@r9
+16:48:23 [unsatXX]   walsh L=2 s=1 r=10 ε6=0.0156 ε9=0.0169 score=0.5468 best=0.5468@r10
+16:48:24 [unsatXX]   walsh L=2 s=1 r=11 ε6=0.0156 ε9=0.0165 score=0.5316 best=0.5316@r11
+16:48:24 [unsatXX]   walsh L=2 s=1 r=12 ε6=0.0153 ε9=0.0164 score=0.5300 best=0.5300@r12
+16:48:24 [unsatXX]   walsh L=2 s=1 r=13 ε6=0.0153 ε9=0.0160 score=0.5169 best=0.5169@r13
+16:48:24 [unsatXX]   walsh L=2 s=1 r=15 ε6=0.0151 ε9=0.0157 score=0.5078 best=0.5078@r15
+16:48:24 [unsatXX]   walsh L=2 s=1 r=16 ε6=0.0148 ε9=0.0157 score=0.5074 best=0.5074@r16
+16:48:24 [unsatXX]   walsh L=2 s=1 r=17 ε6=0.0142 ε9=0.0142 score=0.4583 best=0.4583@r17
+16:48:26 [unsatXX-r5]   frozen ε12=0.0142 ε15=0.0150 ε18=0.0157 wall=2.3s tag=r17
+16:48:26 [unsatXX-r5] train walsh L=2 seed=2
+16:48:26 [unsatXX]   init walsh L=2 s=2 ε6=0.0316 ε9=0.0308 score=1.0000
+16:48:26 [unsatXX]   walsh L=2 s=2 r=0 ε6=0.0286 ε9=0.0288 score=0.9346 best=0.9346@r0
+16:48:26 [unsatXX]   walsh L=2 s=2 r=1 ε6=0.0238 ε9=0.0268 score=0.8680 best=0.8680@r1
+16:48:26 [unsatXX]   walsh L=2 s=2 r=2 ε6=0.0234 ε9=0.0261 score=0.8479 best=0.8479@r2
+16:48:26 [unsatXX]   walsh L=2 s=2 r=3 ε6=0.0178 ε9=0.0192 score=0.6224 best=0.6224@r3
+16:48:26 [unsatXX]   walsh L=2 s=2 r=4 ε6=0.0168 ε9=0.0183 score=0.5921 best=0.5921@r4
+16:48:26 [unsatXX]   walsh L=2 s=2 r=5 ε6=0.0167 ε9=0.0183 score=0.5919 best=0.5919@r5
+16:48:27 [unsatXX]   walsh L=2 s=2 r=6 ε6=0.0155 ε9=0.0159 score=0.5163 best=0.5163@r6
+16:48:27 [unsatXX]   walsh L=2 s=2 r=7 ε6=0.0149 ε9=0.0155 score=0.5032 best=0.5032@r7
+16:48:27 [unsatXX]   walsh L=2 s=2 r=8 ε6=0.0148 ε9=0.0153 score=0.4971 best=0.4971@r8
+16:48:27 [unsatXX]   walsh L=2 s=2 r=9 ε6=0.0146 ε9=0.0147 score=0.4762 best=0.4762@r9
+16:48:27 [unsatXX]   walsh L=2 s=2 r=10 ε6=0.0146 ε9=0.0146 score=0.4741 best=0.4741@r10
+16:48:27 [unsatXX]   walsh L=2 s=2 r=11 ε6=0.0142 ε9=0.0146 score=0.4732 best=0.4732@r11
+16:48:27 [unsatXX]   walsh L=2 s=2 r=12 ε6=0.0144 ε9=0.0144 score=0.4674 best=0.4674@r12
+16:48:27 [unsatXX]   walsh L=2 s=2 r=13 ε6=0.0142 ε9=0.0143 score=0.4631 best=0.4631@r13
+16:48:27 [unsatXX]   walsh L=2 s=2 r=14 ε6=0.0143 ε9=0.0142 score=0.4604 best=0.4604@r14
+16:48:28 [unsatXX]   walsh L=2 s=2 r=15 ε6=0.0141 ε9=0.0142 score=0.4608 best=0.4604@r14
+16:48:28 [unsatXX]   walsh L=2 s=2 r=16 ε6=0.0140 ε9=0.0140 score=0.4554 best=0.4554@r16
+16:48:28 [unsatXX]   walsh L=2 s=2 r=17 ε6=0.0142 ε9=0.0139 score=0.4519 best=0.4519@r17
+16:48:29 [unsatXX-r5]   frozen ε12=0.0141 ε15=0.0148 ε18=0.0154 wall=2.1s tag=r17
+16:48:29 [unsatXX-r5] train walsh L=2 seed=3
+16:48:29 [unsatXX]   init walsh L=2 s=3 ε6=0.0316 ε9=0.0308 score=1.0000
+16:48:29 [unsatXX]   walsh L=2 s=3 r=0 ε6=0.0289 ε9=0.0296 score=0.9600 best=0.9600@r0
+16:48:29 [unsatXX]   walsh L=2 s=3 r=1 ε6=0.0234 ε9=0.0264 score=0.8574 best=0.8574@r1
+16:48:29 [unsatXX]   walsh L=2 s=3 r=2 ε6=0.0214 ε9=0.0228 score=0.7407 best=0.7407@r2
+16:48:30 [unsatXX]   walsh L=2 s=3 r=3 ε6=0.0196 ε9=0.0219 score=0.7094 best=0.7094@r3
+16:48:30 [unsatXX]   walsh L=2 s=3 r=4 ε6=0.0181 ε9=0.0197 score=0.6398 best=0.6398@r4
+16:48:30 [unsatXX]   walsh L=2 s=3 r=5 ε6=0.0172 ε9=0.0188 score=0.6114 best=0.6114@r5
+16:48:30 [unsatXX]   walsh L=2 s=3 r=6 ε6=0.0166 ε9=0.0180 score=0.5846 best=0.5846@r6
+16:48:30 [unsatXX]   walsh L=2 s=3 r=7 ε6=0.0162 ε9=0.0174 score=0.5638 best=0.5638@r7
+16:48:30 [unsatXX]   walsh L=2 s=3 r=8 ε6=0.0159 ε9=0.0170 score=0.5526 best=0.5526@r8
+16:48:30 [unsatXX]   walsh L=2 s=3 r=9 ε6=0.0156 ε9=0.0165 score=0.5362 best=0.5362@r9
+16:48:30 [unsatXX]   walsh L=2 s=3 r=10 ε6=0.0154 ε9=0.0162 score=0.5253 best=0.5253@r10
+16:48:30 [unsatXX]   walsh L=2 s=3 r=11 ε6=0.0153 ε9=0.0157 score=0.5095 best=0.5095@r11
+16:48:31 [unsatXX]   walsh L=2 s=3 r=12 ε6=0.0149 ε9=0.0157 score=0.5094 best=0.5094@r12
+16:48:31 [unsatXX]   walsh L=2 s=3 r=13 ε6=0.0149 ε9=0.0155 score=0.5029 best=0.5029@r13
+16:48:31 [unsatXX]   walsh L=2 s=3 r=14 ε6=0.0147 ε9=0.0154 score=0.4987 best=0.4987@r14
+16:48:31 [unsatXX]   walsh L=2 s=3 r=15 ε6=0.0146 ε9=0.0149 score=0.4836 best=0.4836@r15
+16:48:31 [unsatXX]   walsh L=2 s=3 r=16 ε6=0.0146 ε9=0.0147 score=0.4782 best=0.4782@r16
+16:48:31 [unsatXX]   walsh L=2 s=3 r=17 ε6=0.0144 ε9=0.0145 score=0.4708 best=0.4708@r17
+16:48:32 [unsatXX-r5]   frozen ε12=0.0147 ε15=0.0157 ε18=0.0164 wall=2.0s tag=r17
+16:48:32 [unsatXX-r5] train walsh L=2 seed=4
+16:48:32 [unsatXX]   init walsh L=2 s=4 ε6=0.0316 ε9=0.0309 score=1.0000
+16:48:33 [unsatXX]   walsh L=2 s=4 r=0 ε6=0.0289 ε9=0.0295 score=0.9563 best=0.9563@r0
+16:48:33 [unsatXX]   walsh L=2 s=4 r=1 ε6=0.0233 ε9=0.0265 score=0.8570 best=0.8570@r1
+16:48:33 [unsatXX]   walsh L=2 s=4 r=2 ε6=0.0211 ε9=0.0223 score=0.7227 best=0.7227@r2
+16:48:33 [unsatXX]   walsh L=2 s=4 r=3 ε6=0.0192 ε9=0.0213 score=0.6914 best=0.6914@r3
+16:48:33 [unsatXX]   walsh L=2 s=4 r=4 ε6=0.0177 ε9=0.0191 score=0.6192 best=0.6192@r4
+16:48:33 [unsatXX]   walsh L=2 s=4 r=5 ε6=0.0168 ε9=0.0183 score=0.5922 best=0.5922@r5
+16:48:33 [unsatXX]   walsh L=2 s=4 r=6 ε6=0.0161 ε9=0.0168 score=0.5430 best=0.5430@r6
+16:48:33 [unsatXX]   walsh L=2 s=4 r=7 ε6=0.0156 ε9=0.0164 score=0.5303 best=0.5303@r7
+16:48:33 [unsatXX]   walsh L=2 s=4 r=8 ε6=0.0149 ε9=0.0156 score=0.5041 best=0.5041@r8
+16:48:34 [unsatXX]   walsh L=2 s=4 r=9 ε6=0.0147 ε9=0.0150 score=0.4859 best=0.4859@r9
+16:48:34 [unsatXX]   walsh L=2 s=4 r=10 ε6=0.0146 ε9=0.0144 score=0.4668 best=0.4668@r10
+16:48:34 [unsatXX]   walsh L=2 s=4 r=11 ε6=0.0145 ε9=0.0143 score=0.4642 best=0.4642@r11
+16:48:34 [unsatXX]   walsh L=2 s=4 r=12 ε6=0.0143 ε9=0.0143 score=0.4619 best=0.4619@r12
+16:48:34 [unsatXX]   walsh L=2 s=4 r=13 ε6=0.0143 ε9=0.0142 score=0.4615 best=0.4615@r13
+16:48:34 [unsatXX]   walsh L=2 s=4 r=14 ε6=0.0142 ε9=0.0141 score=0.4575 best=0.4575@r14
+16:48:34 [unsatXX]   walsh L=2 s=4 r=15 ε6=0.0142 ε9=0.0141 score=0.4581 best=0.4575@r14
+16:48:34 [unsatXX]   walsh L=2 s=4 r=16 ε6=0.0142 ε9=0.0140 score=0.4541 best=0.4541@r16
+16:48:34 [unsatXX]   walsh L=2 s=4 r=17 ε6=0.0141 ε9=0.0140 score=0.4543 best=0.4541@r16
+16:48:36 [unsatXX-r5]   frozen ε12=0.0141 ε15=0.0150 ε18=0.0156 wall=2.0s tag=r16
+16:48:36 [unsatXX-r5] train fourier_qaoa L=16 seed=0
+16:48:36 [unsatXX]   init fourier_qaoa L=16 s=0 ε6=0.1316 ε9=0.1253 score=0.1284
+16:48:37 [unsatXX]   fourier_qaoa L=16 s=0 r=0 ε6=0.0475 ε9=0.0472 score=0.0474 best=0.0474@r0
+16:48:38 [unsatXX]   fourier_qaoa L=16 s=0 r=1 ε6=0.0223 ε9=0.0203 score=0.0213 best=0.0213@r1
+16:48:38 [unsatXX]   fourier_qaoa L=16 s=0 r=2 ε6=0.0160 ε9=0.0146 score=0.0153 best=0.0153@r2
+16:48:39 [unsatXX]   fourier_qaoa L=16 s=0 r=3 ε6=0.0145 ε9=0.0122 score=0.0133 best=0.0133@r3
+16:48:39 [unsatXX]   fourier_qaoa L=16 s=0 r=4 ε6=0.0093 ε9=0.0080 score=0.0086 best=0.0086@r4
+16:48:40 [unsatXX]   fourier_qaoa L=16 s=0 r=5 ε6=0.0075 ε9=0.0063 score=0.0069 best=0.0069@r5
+16:48:41 [unsatXX]   fourier_qaoa L=16 s=0 r=6 ε6=0.0063 ε9=0.0052 score=0.0058 best=0.0058@r6
+16:48:41 [unsatXX]   fourier_qaoa L=16 s=0 r=7 ε6=0.0057 ε9=0.0046 score=0.0051 best=0.0051@r7
+16:48:42 [unsatXX]   fourier_qaoa L=16 s=0 r=8 ε6=0.0049 ε9=0.0042 score=0.0046 best=0.0046@r8
+16:48:42 [unsatXX]   fourier_qaoa L=16 s=0 r=9 ε6=0.0048 ε9=0.0040 score=0.0044 best=0.0044@r9
+16:48:43 [unsatXX]   fourier_qaoa L=16 s=0 r=10 ε6=0.0044 ε9=0.0038 score=0.0041 best=0.0041@r10
+16:48:43 [unsatXX]   fourier_qaoa L=16 s=0 r=11 ε6=0.0043 ε9=0.0036 score=0.0039 best=0.0039@r11
+16:48:44 [unsatXX]   fourier_qaoa L=16 s=0 r=12 ε6=0.0042 ε9=0.0035 score=0.0038 best=0.0038@r12
+16:48:44 [unsatXX]   fourier_qaoa L=16 s=0 r=13 ε6=0.0040 ε9=0.0033 score=0.0037 best=0.0037@r13
+16:48:45 [unsatXX]   fourier_qaoa L=16 s=0 r=14 ε6=0.0038 ε9=0.0031 score=0.0035 best=0.0035@r14
+16:48:46 [unsatXX]   fourier_qaoa L=16 s=0 r=15 ε6=0.0037 ε9=0.0031 score=0.0034 best=0.0034@r15
+16:48:46 [unsatXX]   fourier_qaoa L=16 s=0 r=16 ε6=0.0036 ε9=0.0030 score=0.0033 best=0.0033@r16
+16:48:47 [unsatXX]   fourier_qaoa L=16 s=0 r=17 ε6=0.0035 ε9=0.0029 score=0.0032 best=0.0032@r17
+16:48:47 [unsatXX]   fourier_qaoa L=16 s=0 r=18 ε6=0.0034 ε9=0.0029 score=0.0031 best=0.0031@r18
+16:48:48 [unsatXX]   fourier_qaoa L=16 s=0 r=19 ε6=0.0033 ε9=0.0028 score=0.0031 best=0.0031@r19
+16:48:49 [unsatXX]   fourier_qaoa L=16 s=0 r=20 ε6=0.0033 ε9=0.0027 score=0.0030 best=0.0030@r20
+16:48:49 [unsatXX]   fourier_qaoa L=16 s=0 r=21 ε6=0.0032 ε9=0.0027 score=0.0030 best=0.0030@r21
+16:48:50 [unsatXX]   fourier_qaoa L=16 s=0 r=22 ε6=0.0032 ε9=0.0026 score=0.0029 best=0.0029@r22
+16:48:50 [unsatXX]   fourier_qaoa L=16 s=0 r=23 ε6=0.0031 ε9=0.0026 score=0.0028 best=0.0028@r23
+16:48:51 [unsatXX]   fourier_qaoa L=16 s=0 r=24 ε6=0.0030 ε9=0.0025 score=0.0027 best=0.0027@r24
+16:48:51 [unsatXX]   fourier_qaoa L=16 s=0 r=25 ε6=0.0029 ε9=0.0025 score=0.0027 best=0.0027@r25
+16:48:52 [unsatXX]   fourier_qaoa L=16 s=0 r=26 ε6=0.0029 ε9=0.0023 score=0.0026 best=0.0026@r26
+16:48:52 [unsatXX]   fourier_qaoa L=16 s=0 r=27 ε6=0.0028 ε9=0.0023 score=0.0026 best=0.0026@r27
+16:48:53 [unsatXX]   fourier_qaoa L=16 s=0 r=28 ε6=0.0028 ε9=0.0023 score=0.0025 best=0.0025@r28
+16:48:53 [unsatXX]   fourier_qaoa L=16 s=0 r=29 ε6=0.0026 ε9=0.0021 score=0.0023 best=0.0023@r29
+16:48:54 [unsatXX]   fourier_qaoa L=16 s=0 r=30 ε6=0.0026 ε9=0.0020 score=0.0023 best=0.0023@r30
+16:48:54 [unsatXX]   fourier_qaoa L=16 s=0 r=31 ε6=0.0025 ε9=0.0020 score=0.0023 best=0.0023@r31
+16:48:55 [unsatXX]   fourier_qaoa L=16 s=0 r=32 ε6=0.0025 ε9=0.0020 score=0.0022 best=0.0022@r32
+16:48:55 [unsatXX]   fourier_qaoa L=16 s=0 r=33 ε6=0.0025 ε9=0.0019 score=0.0022 best=0.0022@r33
+16:48:56 [unsatXX]   fourier_qaoa L=16 s=0 r=34 ε6=0.0025 ε9=0.0019 score=0.0022 best=0.0022@r34
+16:48:56 [unsatXX]   fourier_qaoa L=16 s=0 r=35 ε6=0.0025 ε9=0.0019 score=0.0022 best=0.0022@r35
+16:48:57 [unsatXX]   fourier_qaoa L=16 s=0 r=36 ε6=0.0024 ε9=0.0019 score=0.0021 best=0.0021@r36
+16:48:57 [unsatXX]   fourier_qaoa L=16 s=0 r=37 ε6=0.0024 ε9=0.0018 score=0.0021 best=0.0021@r37
+16:48:58 [unsatXX]   fourier_qaoa L=16 s=0 r=38 ε6=0.0024 ε9=0.0018 score=0.0021 best=0.0021@r38
+16:48:58 [unsatXX]   fourier_qaoa L=16 s=0 r=39 ε6=0.0024 ε9=0.0018 score=0.0021 best=0.0021@r39
+16:48:59 [unsatXX]   fourier_qaoa L=16 s=0 r=41 ε6=0.0023 ε9=0.0017 score=0.0020 best=0.0020@r41
+16:49:00 [unsatXX]   fourier_qaoa L=16 s=0 r=42 ε6=0.0023 ε9=0.0017 score=0.0020 best=0.0020@r42
+16:49:01 [unsatXX]   fourier_qaoa L=16 s=0 r=43 ε6=0.0023 ε9=0.0017 score=0.0020 best=0.0020@r43
+16:49:01 [unsatXX]   fourier_qaoa L=16 s=0 r=44 ε6=0.0023 ε9=0.0017 score=0.0020 best=0.0020@r44
+16:49:02 [unsatXX]   fourier_qaoa L=16 s=0 r=45 ε6=0.0022 ε9=0.0017 score=0.0020 best=0.0020@r45
+16:49:02 [unsatXX]   fourier_qaoa L=16 s=0 r=46 ε6=0.0022 ε9=0.0017 score=0.0020 best=0.0020@r46
+16:49:03 [unsatXX]   fourier_qaoa L=16 s=0 r=47 ε6=0.0022 ε9=0.0017 score=0.0020 best=0.0020@r47
+16:49:06 [unsatXX-r5]   frozen ε12=0.0015 ε15=0.0015 ε18=0.0016 wall=26.8s tag=r47
+16:49:06 [unsatXX-r5] train fourier_qaoa L=16 seed=1
+16:49:06 [unsatXX]   init fourier_qaoa L=16 s=1 ε6=0.1323 ε9=0.1261 score=0.1292
+16:49:07 [unsatXX]   fourier_qaoa L=16 s=1 r=0 ε6=0.0467 ε9=0.0476 score=0.0471 best=0.0471@r0
+16:49:08 [unsatXX]   fourier_qaoa L=16 s=1 r=1 ε6=0.0287 ε9=0.0279 score=0.0283 best=0.0283@r1
+16:49:08 [unsatXX]   fourier_qaoa L=16 s=1 r=2 ε6=0.0243 ε9=0.0247 score=0.0245 best=0.0245@r2
+16:49:09 [unsatXX]   fourier_qaoa L=16 s=1 r=3 ε6=0.0200 ε9=0.0186 score=0.0193 best=0.0193@r3
+16:49:10 [unsatXX]   fourier_qaoa L=16 s=1 r=4 ε6=0.0171 ε9=0.0159 score=0.0165 best=0.0165@r4
+16:49:10 [unsatXX]   fourier_qaoa L=16 s=1 r=5 ε6=0.0157 ε9=0.0143 score=0.0150 best=0.0150@r5
+16:49:11 [unsatXX]   fourier_qaoa L=16 s=1 r=6 ε6=0.0114 ε9=0.0101 score=0.0108 best=0.0108@r6
+16:49:11 [unsatXX]   fourier_qaoa L=16 s=1 r=7 ε6=0.0094 ε9=0.0078 score=0.0086 best=0.0086@r7
+16:49:12 [unsatXX]   fourier_qaoa L=16 s=1 r=8 ε6=0.0082 ε9=0.0071 score=0.0077 best=0.0077@r8
+16:49:13 [unsatXX]   fourier_qaoa L=16 s=1 r=9 ε6=0.0083 ε9=0.0069 score=0.0076 best=0.0076@r9
+16:49:13 [unsatXX]   fourier_qaoa L=16 s=1 r=10 ε6=0.0076 ε9=0.0065 score=0.0071 best=0.0071@r10
+16:49:14 [unsatXX]   fourier_qaoa L=16 s=1 r=11 ε6=0.0077 ε9=0.0063 score=0.0070 best=0.0070@r11
+16:49:14 [unsatXX]   fourier_qaoa L=16 s=1 r=12 ε6=0.0069 ε9=0.0059 score=0.0064 best=0.0064@r12
+16:49:15 [unsatXX]   fourier_qaoa L=16 s=1 r=13 ε6=0.0068 ε9=0.0055 score=0.0061 best=0.0061@r13
+16:49:15 [unsatXX]   fourier_qaoa L=16 s=1 r=14 ε6=0.0066 ε9=0.0054 score=0.0060 best=0.0060@r14
+16:49:16 [unsatXX]   fourier_qaoa L=16 s=1 r=15 ε6=0.0063 ε9=0.0050 score=0.0057 best=0.0057@r15
+16:49:17 [unsatXX]   fourier_qaoa L=16 s=1 r=16 ε6=0.0061 ε9=0.0049 score=0.0055 best=0.0055@r16
+16:49:17 [unsatXX]   fourier_qaoa L=16 s=1 r=17 ε6=0.0058 ε9=0.0046 score=0.0052 best=0.0052@r17
+16:49:18 [unsatXX]   fourier_qaoa L=16 s=1 r=18 ε6=0.0055 ε9=0.0045 score=0.0050 best=0.0050@r18
+16:49:18 [unsatXX]   fourier_qaoa L=16 s=1 r=19 ε6=0.0053 ε9=0.0043 score=0.0048 best=0.0048@r19
+16:49:19 [unsatXX]   fourier_qaoa L=16 s=1 r=20 ε6=0.0051 ε9=0.0042 score=0.0046 best=0.0046@r20
+16:49:20 [unsatXX]   fourier_qaoa L=16 s=1 r=21 ε6=0.0049 ε9=0.0041 score=0.0045 best=0.0045@r21
+16:49:20 [unsatXX]   fourier_qaoa L=16 s=1 r=22 ε6=0.0048 ε9=0.0040 score=0.0044 best=0.0044@r22
+16:49:21 [unsatXX]   fourier_qaoa L=16 s=1 r=23 ε6=0.0047 ε9=0.0039 score=0.0043 best=0.0043@r23
+16:49:21 [unsatXX]   fourier_qaoa L=16 s=1 r=24 ε6=0.0046 ε9=0.0038 score=0.0042 best=0.0042@r24
+16:49:22 [unsatXX]   fourier_qaoa L=16 s=1 r=25 ε6=0.0045 ε9=0.0037 score=0.0041 best=0.0041@r25
+16:49:22 [unsatXX]   fourier_qaoa L=16 s=1 r=26 ε6=0.0044 ε9=0.0037 score=0.0040 best=0.0040@r26
+16:49:23 [unsatXX]   fourier_qaoa L=16 s=1 r=27 ε6=0.0044 ε9=0.0035 score=0.0040 best=0.0040@r27
+16:49:23 [unsatXX]   fourier_qaoa L=16 s=1 r=28 ε6=0.0042 ε9=0.0035 score=0.0039 best=0.0039@r28
+16:49:24 [unsatXX]   fourier_qaoa L=16 s=1 r=29 ε6=0.0042 ε9=0.0034 score=0.0038 best=0.0038@r29
+16:49:24 [unsatXX]   fourier_qaoa L=16 s=1 r=30 ε6=0.0041 ε9=0.0034 score=0.0037 best=0.0037@r30
+16:49:25 [unsatXX]   fourier_qaoa L=16 s=1 r=31 ε6=0.0040 ε9=0.0033 score=0.0037 best=0.0037@r31
+16:49:25 [unsatXX]   fourier_qaoa L=16 s=1 r=32 ε6=0.0040 ε9=0.0032 score=0.0036 best=0.0036@r32
+16:49:26 [unsatXX]   fourier_qaoa L=16 s=1 r=33 ε6=0.0039 ε9=0.0032 score=0.0036 best=0.0036@r33
+16:49:27 [unsatXX]   fourier_qaoa L=16 s=1 r=34 ε6=0.0039 ε9=0.0031 score=0.0035 best=0.0035@r34
+16:49:27 [unsatXX]   fourier_qaoa L=16 s=1 r=35 ε6=0.0039 ε9=0.0031 score=0.0035 best=0.0035@r35
+16:49:28 [unsatXX]   fourier_qaoa L=16 s=1 r=36 ε6=0.0038 ε9=0.0031 score=0.0034 best=0.0034@r36
+16:49:28 [unsatXX]   fourier_qaoa L=16 s=1 r=37 ε6=0.0038 ε9=0.0031 score=0.0034 best=0.0034@r37
+16:49:29 [unsatXX]   fourier_qaoa L=16 s=1 r=38 ε6=0.0038 ε9=0.0030 score=0.0034 best=0.0034@r38
+16:49:29 [unsatXX]   fourier_qaoa L=16 s=1 r=39 ε6=0.0037 ε9=0.0030 score=0.0034 best=0.0034@r39
+16:49:30 [unsatXX]   fourier_qaoa L=16 s=1 r=40 ε6=0.0037 ε9=0.0030 score=0.0033 best=0.0033@r40
+16:49:30 [unsatXX]   fourier_qaoa L=16 s=1 r=41 ε6=0.0037 ε9=0.0030 score=0.0033 best=0.0033@r41
+16:49:31 [unsatXX]   fourier_qaoa L=16 s=1 r=42 ε6=0.0036 ε9=0.0029 score=0.0033 best=0.0033@r42
+16:49:32 [unsatXX]   fourier_qaoa L=16 s=1 r=43 ε6=0.0036 ε9=0.0029 score=0.0033 best=0.0033@r43
+16:49:32 [unsatXX]   fourier_qaoa L=16 s=1 r=44 ε6=0.0036 ε9=0.0029 score=0.0032 best=0.0032@r44
+16:49:33 [unsatXX]   fourier_qaoa L=16 s=1 r=45 ε6=0.0036 ε9=0.0029 score=0.0032 best=0.0032@r45
+16:49:33 [unsatXX]   fourier_qaoa L=16 s=1 r=46 ε6=0.0035 ε9=0.0028 score=0.0032 best=0.0032@r46
+16:49:34 [unsatXX]   fourier_qaoa L=16 s=1 r=47 ε6=0.0035 ε9=0.0028 score=0.0032 best=0.0032@r47
+16:49:38 [unsatXX-r5]   frozen ε12=0.0027 ε15=0.0028 ε18=0.0029 wall=27.7s tag=r47
+16:49:38 [unsatXX-r5] train fourier_qaoa L=16 seed=2
+16:49:38 [unsatXX]   init fourier_qaoa L=16 s=2 ε6=0.1323 ε9=0.1261 score=0.1292
+16:49:39 [unsatXX]   fourier_qaoa L=16 s=2 r=0 ε6=0.0294 ε9=0.0292 score=0.0293 best=0.0293@r0
+16:49:40 [unsatXX]   fourier_qaoa L=16 s=2 r=1 ε6=0.0195 ε9=0.0184 score=0.0189 best=0.0189@r1
+16:49:41 [unsatXX]   fourier_qaoa L=16 s=2 r=2 ε6=0.0116 ε9=0.0101 score=0.0108 best=0.0108@r2
+16:49:41 [unsatXX]   fourier_qaoa L=16 s=2 r=3 ε6=0.0072 ε9=0.0062 score=0.0067 best=0.0067@r3
+16:49:42 [unsatXX]   fourier_qaoa L=16 s=2 r=4 ε6=0.0062 ε9=0.0051 score=0.0057 best=0.0057@r4
+16:49:42 [unsatXX]   fourier_qaoa L=16 s=2 r=5 ε6=0.0054 ε9=0.0045 score=0.0049 best=0.0049@r5
+16:49:43 [unsatXX]   fourier_qaoa L=16 s=2 r=6 ε6=0.0052 ε9=0.0043 score=0.0047 best=0.0047@r6
+16:49:43 [unsatXX]   fourier_qaoa L=16 s=2 r=7 ε6=0.0046 ε9=0.0040 score=0.0043 best=0.0043@r7
+16:49:44 [unsatXX]   fourier_qaoa L=16 s=2 r=8 ε6=0.0045 ε9=0.0038 score=0.0042 best=0.0042@r8
+16:49:44 [unsatXX]   fourier_qaoa L=16 s=2 r=9 ε6=0.0045 ε9=0.0037 score=0.0041 best=0.0041@r9
+16:49:45 [unsatXX]   fourier_qaoa L=16 s=2 r=10 ε6=0.0042 ε9=0.0035 score=0.0039 best=0.0039@r10
+16:49:46 [unsatXX]   fourier_qaoa L=16 s=2 r=11 ε6=0.0041 ε9=0.0033 score=0.0037 best=0.0037@r11
+16:49:46 [unsatXX]   fourier_qaoa L=16 s=2 r=12 ε6=0.0039 ε9=0.0032 score=0.0035 best=0.0035@r12
+16:49:47 [unsatXX]   fourier_qaoa L=16 s=2 r=13 ε6=0.0038 ε9=0.0031 score=0.0034 best=0.0034@r13
+16:49:47 [unsatXX]   fourier_qaoa L=16 s=2 r=14 ε6=0.0035 ε9=0.0030 score=0.0032 best=0.0032@r14
+16:49:48 [unsatXX]   fourier_qaoa L=16 s=2 r=15 ε6=0.0034 ε9=0.0029 score=0.0032 best=0.0032@r15
+16:49:48 [unsatXX]   fourier_qaoa L=16 s=2 r=16 ε6=0.0033 ε9=0.0028 score=0.0030 best=0.0030@r16
+16:49:49 [unsatXX]   fourier_qaoa L=16 s=2 r=17 ε6=0.0032 ε9=0.0026 score=0.0029 best=0.0029@r17
+16:49:49 [unsatXX]   fourier_qaoa L=16 s=2 r=18 ε6=0.0032 ε9=0.0026 score=0.0029 best=0.0029@r18
+16:49:50 [unsatXX]   fourier_qaoa L=16 s=2 r=19 ε6=0.0031 ε9=0.0025 score=0.0028 best=0.0028@r19
+16:49:50 [unsatXX]   fourier_qaoa L=16 s=2 r=20 ε6=0.0030 ε9=0.0025 score=0.0028 best=0.0028@r20
+16:49:51 [unsatXX]   fourier_qaoa L=16 s=2 r=21 ε6=0.0029 ε9=0.0024 score=0.0027 best=0.0027@r21
+16:49:52 [unsatXX]   fourier_qaoa L=16 s=2 r=22 ε6=0.0029 ε9=0.0023 score=0.0026 best=0.0026@r22
+16:49:52 [unsatXX]   fourier_qaoa L=16 s=2 r=23 ε6=0.0028 ε9=0.0022 score=0.0025 best=0.0025@r23
+16:49:53 [unsatXX]   fourier_qaoa L=16 s=2 r=24 ε6=0.0027 ε9=0.0021 score=0.0024 best=0.0024@r24
+16:49:53 [unsatXX]   fourier_qaoa L=16 s=2 r=25 ε6=0.0026 ε9=0.0021 score=0.0024 best=0.0024@r25
+16:49:54 [unsatXX]   fourier_qaoa L=16 s=2 r=26 ε6=0.0026 ε9=0.0021 score=0.0023 best=0.0023@r26
+16:49:54 [unsatXX]   fourier_qaoa L=16 s=2 r=27 ε6=0.0026 ε9=0.0020 score=0.0023 best=0.0023@r27
+16:49:55 [unsatXX]   fourier_qaoa L=16 s=2 r=28 ε6=0.0026 ε9=0.0020 score=0.0023 best=0.0023@r28
+16:49:56 [unsatXX]   fourier_qaoa L=16 s=2 r=29 ε6=0.0026 ε9=0.0019 score=0.0023 best=0.0023@r29
+16:49:56 [unsatXX]   fourier_qaoa L=16 s=2 r=30 ε6=0.0025 ε9=0.0019 score=0.0022 best=0.0022@r30
+16:49:57 [unsatXX]   fourier_qaoa L=16 s=2 r=31 ε6=0.0025 ε9=0.0019 score=0.0022 best=0.0022@r31
+16:49:57 [unsatXX]   fourier_qaoa L=16 s=2 r=32 ε6=0.0024 ε9=0.0018 score=0.0021 best=0.0021@r32
+16:49:58 [unsatXX]   fourier_qaoa L=16 s=2 r=33 ε6=0.0024 ε9=0.0018 score=0.0021 best=0.0021@r33
+16:49:58 [unsatXX]   fourier_qaoa L=16 s=2 r=34 ε6=0.0024 ε9=0.0018 score=0.0021 best=0.0021@r34
+16:49:59 [unsatXX]   fourier_qaoa L=16 s=2 r=35 ε6=0.0024 ε9=0.0018 score=0.0021 best=0.0021@r35
+16:49:59 [unsatXX]   fourier_qaoa L=16 s=2 r=36 ε6=0.0023 ε9=0.0018 score=0.0021 best=0.0021@r36
+16:50:00 [unsatXX]   fourier_qaoa L=16 s=2 r=37 ε6=0.0023 ε9=0.0017 score=0.0020 best=0.0020@r37
+16:50:01 [unsatXX]   fourier_qaoa L=16 s=2 r=38 ε6=0.0023 ε9=0.0017 score=0.0020 best=0.0020@r38
+16:50:01 [unsatXX]   fourier_qaoa L=16 s=2 r=39 ε6=0.0023 ε9=0.0017 score=0.0020 best=0.0020@r39
+16:50:02 [unsatXX]   fourier_qaoa L=16 s=2 r=40 ε6=0.0023 ε9=0.0017 score=0.0020 best=0.0020@r40
+16:50:02 [unsatXX]   fourier_qaoa L=16 s=2 r=41 ε6=0.0022 ε9=0.0017 score=0.0019 best=0.0019@r41
+16:50:03 [unsatXX]   fourier_qaoa L=16 s=2 r=42 ε6=0.0022 ε9=0.0017 score=0.0019 best=0.0019@r42
+16:50:03 [unsatXX]   fourier_qaoa L=16 s=2 r=43 ε6=0.0022 ε9=0.0016 score=0.0019 best=0.0019@r43
+16:50:04 [unsatXX]   fourier_qaoa L=16 s=2 r=44 ε6=0.0021 ε9=0.0016 score=0.0019 best=0.0019@r44
+16:50:05 [unsatXX]   fourier_qaoa L=16 s=2 r=45 ε6=0.0021 ε9=0.0015 score=0.0018 best=0.0018@r45
+16:50:05 [unsatXX]   fourier_qaoa L=16 s=2 r=46 ε6=0.0021 ε9=0.0015 score=0.0018 best=0.0018@r46
+16:50:06 [unsatXX]   fourier_qaoa L=16 s=2 r=47 ε6=0.0021 ε9=0.0015 score=0.0018 best=0.0018@r47
+16:50:09 [unsatXX-r5]   frozen ε12=0.0014 ε15=0.0014 ε18=0.0015 wall=27.5s tag=r47
+16:50:09 [unsatXX-r5] train fourier_qaoa L=16 seed=3
+16:50:09 [unsatXX]   init fourier_qaoa L=16 s=3 ε6=0.1326 ε9=0.1264 score=0.1295
+16:50:10 [unsatXX]   fourier_qaoa L=16 s=3 r=0 ε6=0.0516 ε9=0.0522 score=0.0519 best=0.0519@r0
+16:50:11 [unsatXX]   fourier_qaoa L=16 s=3 r=1 ε6=0.0286 ε9=0.0279 score=0.0282 best=0.0282@r1
+16:50:12 [unsatXX]   fourier_qaoa L=16 s=3 r=2 ε6=0.0263 ε9=0.0247 score=0.0255 best=0.0255@r2
+16:50:12 [unsatXX]   fourier_qaoa L=16 s=3 r=3 ε6=0.0186 ε9=0.0181 score=0.0184 best=0.0184@r3
+16:50:13 [unsatXX]   fourier_qaoa L=16 s=3 r=4 ε6=0.0155 ε9=0.0140 score=0.0147 best=0.0147@r4
+16:50:14 [unsatXX]   fourier_qaoa L=16 s=3 r=5 ε6=0.0116 ε9=0.0103 score=0.0109 best=0.0109@r5
+16:50:14 [unsatXX]   fourier_qaoa L=16 s=3 r=6 ε6=0.0074 ε9=0.0064 score=0.0069 best=0.0069@r6
+16:50:15 [unsatXX]   fourier_qaoa L=16 s=3 r=7 ε6=0.0054 ε9=0.0045 score=0.0049 best=0.0049@r7
+16:50:15 [unsatXX]   fourier_qaoa L=16 s=3 r=8 ε6=0.0048 ε9=0.0040 score=0.0044 best=0.0044@r8
+16:50:16 [unsatXX]   fourier_qaoa L=16 s=3 r=9 ε6=0.0047 ε9=0.0039 score=0.0043 best=0.0043@r9
+16:50:17 [unsatXX]   fourier_qaoa L=16 s=3 r=10 ε6=0.0045 ε9=0.0038 score=0.0041 best=0.0041@r10
+16:50:17 [unsatXX]   fourier_qaoa L=16 s=3 r=11 ε6=0.0044 ε9=0.0037 score=0.0041 best=0.0041@r11
+16:50:18 [unsatXX]   fourier_qaoa L=16 s=3 r=12 ε6=0.0043 ε9=0.0035 score=0.0039 best=0.0039@r12
+16:50:18 [unsatXX]   fourier_qaoa L=16 s=3 r=13 ε6=0.0041 ε9=0.0034 score=0.0038 best=0.0038@r13
+16:50:19 [unsatXX]   fourier_qaoa L=16 s=3 r=14 ε6=0.0040 ε9=0.0033 score=0.0036 best=0.0036@r14
+16:50:19 [unsatXX]   fourier_qaoa L=16 s=3 r=15 ε6=0.0038 ε9=0.0032 score=0.0035 best=0.0035@r15
+16:50:20 [unsatXX]   fourier_qaoa L=16 s=3 r=16 ε6=0.0037 ε9=0.0031 score=0.0034 best=0.0034@r16
+16:50:21 [unsatXX]   fourier_qaoa L=16 s=3 r=17 ε6=0.0037 ε9=0.0030 score=0.0033 best=0.0033@r17
+16:50:21 [unsatXX]   fourier_qaoa L=16 s=3 r=18 ε6=0.0036 ε9=0.0030 score=0.0033 best=0.0033@r18
+16:50:22 [unsatXX]   fourier_qaoa L=16 s=3 r=19 ε6=0.0035 ε9=0.0029 score=0.0032 best=0.0032@r19
+16:50:22 [unsatXX]   fourier_qaoa L=16 s=3 r=20 ε6=0.0034 ε9=0.0028 score=0.0031 best=0.0031@r20
+16:50:23 [unsatXX]   fourier_qaoa L=16 s=3 r=21 ε6=0.0033 ε9=0.0028 score=0.0031 best=0.0031@r21
+16:50:24 [unsatXX]   fourier_qaoa L=16 s=3 r=22 ε6=0.0033 ε9=0.0027 score=0.0030 best=0.0030@r22
+16:50:24 [unsatXX]   fourier_qaoa L=16 s=3 r=23 ε6=0.0032 ε9=0.0027 score=0.0030 best=0.0030@r23
+16:50:25 [unsatXX]   fourier_qaoa L=16 s=3 r=24 ε6=0.0032 ε9=0.0026 score=0.0029 best=0.0029@r24
+16:50:25 [unsatXX]   fourier_qaoa L=16 s=3 r=25 ε6=0.0031 ε9=0.0026 score=0.0028 best=0.0028@r25
+16:50:26 [unsatXX]   fourier_qaoa L=16 s=3 r=26 ε6=0.0031 ε9=0.0024 score=0.0028 best=0.0028@r26
+16:50:27 [unsatXX]   fourier_qaoa L=16 s=3 r=27 ε6=0.0030 ε9=0.0025 score=0.0027 best=0.0027@r27
+16:50:27 [unsatXX]   fourier_qaoa L=16 s=3 r=28 ε6=0.0029 ε9=0.0024 score=0.0026 best=0.0026@r28
+16:50:28 [unsatXX]   fourier_qaoa L=16 s=3 r=29 ε6=0.0029 ε9=0.0023 score=0.0026 best=0.0026@r29
+16:50:29 [unsatXX]   fourier_qaoa L=16 s=3 r=30 ε6=0.0029 ε9=0.0023 score=0.0026 best=0.0026@r30
+16:50:29 [unsatXX]   fourier_qaoa L=16 s=3 r=31 ε6=0.0028 ε9=0.0022 score=0.0025 best=0.0025@r31
+16:50:30 [unsatXX]   fourier_qaoa L=16 s=3 r=32 ε6=0.0027 ε9=0.0021 score=0.0024 best=0.0024@r32
+16:50:31 [unsatXX]   fourier_qaoa L=16 s=3 r=33 ε6=0.0026 ε9=0.0021 score=0.0023 best=0.0023@r33
+16:50:31 [unsatXX]   fourier_qaoa L=16 s=3 r=34 ε6=0.0024 ε9=0.0019 score=0.0022 best=0.0022@r34
+16:50:32 [unsatXX]   fourier_qaoa L=16 s=3 r=35 ε6=0.0023 ε9=0.0018 score=0.0021 best=0.0021@r35
+16:50:32 [unsatXX]   fourier_qaoa L=16 s=3 r=36 ε6=0.0023 ε9=0.0018 score=0.0020 best=0.0020@r36
+16:50:33 [unsatXX]   fourier_qaoa L=16 s=3 r=37 ε6=0.0022 ε9=0.0017 score=0.0020 best=0.0020@r37
+16:50:33 [unsatXX]   fourier_qaoa L=16 s=3 r=38 ε6=0.0022 ε9=0.0017 score=0.0019 best=0.0019@r38
+16:50:34 [unsatXX]   fourier_qaoa L=16 s=3 r=39 ε6=0.0022 ε9=0.0017 score=0.0019 best=0.0019@r39
+16:50:35 [unsatXX]   fourier_qaoa L=16 s=3 r=40 ε6=0.0021 ε9=0.0016 score=0.0019 best=0.0019@r40
+16:50:35 [unsatXX]   fourier_qaoa L=16 s=3 r=41 ε6=0.0021 ε9=0.0016 score=0.0019 best=0.0019@r41
+16:50:36 [unsatXX]   fourier_qaoa L=16 s=3 r=42 ε6=0.0021 ε9=0.0016 score=0.0019 best=0.0019@r42
+16:50:37 [unsatXX]   fourier_qaoa L=16 s=3 r=44 ε6=0.0021 ε9=0.0016 score=0.0018 best=0.0018@r44
+16:50:38 [unsatXX]   fourier_qaoa L=16 s=3 r=45 ε6=0.0021 ε9=0.0016 score=0.0018 best=0.0018@r45
+16:50:39 [unsatXX]   fourier_qaoa L=16 s=3 r=46 ε6=0.0020 ε9=0.0016 score=0.0018 best=0.0018@r46
+16:50:39 [unsatXX]   fourier_qaoa L=16 s=3 r=47 ε6=0.0021 ε9=0.0015 score=0.0018 best=0.0018@r47
+16:50:45 [unsatXX-r5]   frozen ε12=0.0014 ε15=0.0014 ε18=0.0015 wall=29.9s tag=r47
+16:50:45 [unsatXX-r5] train fourier_qaoa L=16 seed=4
+16:50:45 [unsatXX]   init fourier_qaoa L=16 s=4 ε6=0.1331 ε9=0.1269 score=0.1300
+16:50:46 [unsatXX]   fourier_qaoa L=16 s=4 r=0 ε6=0.0412 ε9=0.0405 score=0.0409 best=0.0409@r0
+16:50:46 [unsatXX]   fourier_qaoa L=16 s=4 r=1 ε6=0.0282 ε9=0.0275 score=0.0278 best=0.0278@r1
+16:50:47 [unsatXX]   fourier_qaoa L=16 s=4 r=2 ε6=0.0207 ε9=0.0192 score=0.0199 best=0.0199@r2
+16:50:48 [unsatXX]   fourier_qaoa L=16 s=4 r=3 ε6=0.0175 ε9=0.0161 score=0.0168 best=0.0168@r3
+16:50:48 [unsatXX]   fourier_qaoa L=16 s=4 r=4 ε6=0.0134 ε9=0.0117 score=0.0125 best=0.0125@r4
+16:50:49 [unsatXX]   fourier_qaoa L=16 s=4 r=5 ε6=0.0107 ε9=0.0092 score=0.0099 best=0.0099@r5
+16:50:49 [unsatXX]   fourier_qaoa L=16 s=4 r=6 ε6=0.0094 ε9=0.0079 score=0.0086 best=0.0086@r6
+16:50:50 [unsatXX]   fourier_qaoa L=16 s=4 r=7 ε6=0.0080 ε9=0.0071 score=0.0075 best=0.0075@r7
+16:50:51 [unsatXX]   fourier_qaoa L=16 s=4 r=8 ε6=0.0076 ε9=0.0065 score=0.0070 best=0.0070@r8
+16:50:51 [unsatXX]   fourier_qaoa L=16 s=4 r=9 ε6=0.0067 ε9=0.0058 score=0.0063 best=0.0063@r9
+16:50:52 [unsatXX]   fourier_qaoa L=16 s=4 r=10 ε6=0.0064 ε9=0.0054 score=0.0059 best=0.0059@r10
+16:50:52 [unsatXX]   fourier_qaoa L=16 s=4 r=11 ε6=0.0059 ε9=0.0051 score=0.0055 best=0.0055@r11
+16:50:53 [unsatXX]   fourier_qaoa L=16 s=4 r=12 ε6=0.0060 ε9=0.0049 score=0.0054 best=0.0054@r12
+16:50:53 [unsatXX]   fourier_qaoa L=16 s=4 r=13 ε6=0.0059 ε9=0.0049 score=0.0054 best=0.0054@r13
+16:50:54 [unsatXX]   fourier_qaoa L=16 s=4 r=14 ε6=0.0058 ε9=0.0048 score=0.0053 best=0.0053@r14
+16:50:55 [unsatXX]   fourier_qaoa L=16 s=4 r=15 ε6=0.0057 ε9=0.0047 score=0.0052 best=0.0052@r15
+16:50:55 [unsatXX]   fourier_qaoa L=16 s=4 r=16 ε6=0.0056 ε9=0.0047 score=0.0052 best=0.0052@r16
+16:50:56 [unsatXX]   fourier_qaoa L=16 s=4 r=17 ε6=0.0055 ε9=0.0046 score=0.0050 best=0.0050@r17
+16:50:56 [unsatXX]   fourier_qaoa L=16 s=4 r=18 ε6=0.0054 ε9=0.0045 score=0.0050 best=0.0050@r18
+16:50:57 [unsatXX]   fourier_qaoa L=16 s=4 r=19 ε6=0.0052 ε9=0.0044 score=0.0048 best=0.0048@r19
+16:50:57 [unsatXX]   fourier_qaoa L=16 s=4 r=20 ε6=0.0052 ε9=0.0044 score=0.0048 best=0.0048@r20
+16:50:58 [unsatXX]   fourier_qaoa L=16 s=4 r=21 ε6=0.0052 ε9=0.0043 score=0.0047 best=0.0047@r21
+16:50:59 [unsatXX]   fourier_qaoa L=16 s=4 r=22 ε6=0.0051 ε9=0.0043 score=0.0047 best=0.0047@r22
+16:50:59 [unsatXX]   fourier_qaoa L=16 s=4 r=23 ε6=0.0051 ε9=0.0043 score=0.0047 best=0.0047@r23
+16:51:00 [unsatXX]   fourier_qaoa L=16 s=4 r=24 ε6=0.0050 ε9=0.0043 score=0.0046 best=0.0046@r24
+16:51:00 [unsatXX]   fourier_qaoa L=16 s=4 r=25 ε6=0.0050 ε9=0.0043 score=0.0046 best=0.0046@r25
+16:51:01 [unsatXX]   fourier_qaoa L=16 s=4 r=26 ε6=0.0050 ε9=0.0042 score=0.0046 best=0.0046@r26
+16:51:02 [unsatXX]   fourier_qaoa L=16 s=4 r=27 ε6=0.0049 ε9=0.0042 score=0.0045 best=0.0045@r27
+16:51:02 [unsatXX]   fourier_qaoa L=16 s=4 r=28 ε6=0.0048 ε9=0.0041 score=0.0045 best=0.0045@r28
+16:51:03 [unsatXX]   fourier_qaoa L=16 s=4 r=29 ε6=0.0048 ε9=0.0040 score=0.0044 best=0.0044@r29
+16:51:03 [unsatXX]   fourier_qaoa L=16 s=4 r=30 ε6=0.0047 ε9=0.0040 score=0.0043 best=0.0043@r30
+16:51:04 [unsatXX]   fourier_qaoa L=16 s=4 r=31 ε6=0.0046 ε9=0.0040 score=0.0043 best=0.0043@r31
+16:51:04 [unsatXX]   fourier_qaoa L=16 s=4 r=32 ε6=0.0046 ε9=0.0039 score=0.0043 best=0.0043@r32
+16:51:05 [unsatXX]   fourier_qaoa L=16 s=4 r=33 ε6=0.0045 ε9=0.0039 score=0.0042 best=0.0042@r33
+16:51:05 [unsatXX]   fourier_qaoa L=16 s=4 r=34 ε6=0.0045 ε9=0.0038 score=0.0042 best=0.0042@r34
+16:51:06 [unsatXX]   fourier_qaoa L=16 s=4 r=35 ε6=0.0044 ε9=0.0038 score=0.0041 best=0.0041@r35
+16:51:06 [unsatXX]   fourier_qaoa L=16 s=4 r=36 ε6=0.0044 ε9=0.0038 score=0.0041 best=0.0041@r36
+16:51:07 [unsatXX]   fourier_qaoa L=16 s=4 r=37 ε6=0.0043 ε9=0.0037 score=0.0040 best=0.0040@r37
+16:51:08 [unsatXX]   fourier_qaoa L=16 s=4 r=38 ε6=0.0043 ε9=0.0037 score=0.0040 best=0.0040@r38
+16:51:08 [unsatXX]   fourier_qaoa L=16 s=4 r=39 ε6=0.0042 ε9=0.0037 score=0.0039 best=0.0039@r39
+16:51:09 [unsatXX]   fourier_qaoa L=16 s=4 r=40 ε6=0.0042 ε9=0.0036 score=0.0039 best=0.0039@r40
+16:51:09 [unsatXX]   fourier_qaoa L=16 s=4 r=41 ε6=0.0041 ε9=0.0036 score=0.0039 best=0.0039@r41
+16:51:10 [unsatXX]   fourier_qaoa L=16 s=4 r=42 ε6=0.0041 ε9=0.0036 score=0.0038 best=0.0038@r42
+16:51:10 [unsatXX]   fourier_qaoa L=16 s=4 r=43 ε6=0.0041 ε9=0.0035 score=0.0038 best=0.0038@r43
+16:51:11 [unsatXX]   fourier_qaoa L=16 s=4 r=44 ε6=0.0041 ε9=0.0035 score=0.0038 best=0.0038@r44
+16:51:11 [unsatXX]   fourier_qaoa L=16 s=4 r=45 ε6=0.0040 ε9=0.0035 score=0.0037 best=0.0037@r45
+16:51:12 [unsatXX]   fourier_qaoa L=16 s=4 r=46 ε6=0.0040 ε9=0.0034 score=0.0037 best=0.0037@r46
+16:51:12 [unsatXX]   fourier_qaoa L=16 s=4 r=47 ε6=0.0038 ε9=0.0034 score=0.0036 best=0.0036@r47
+16:51:18 [unsatXX-r5]   frozen ε12=0.0035 ε15=0.0035 ε18=0.0038 wall=27.8s tag=r47
+16:51:18 [unsatXX-r5] train power_p L=16 seed=0
+16:51:18 [unsatXX]   init power_p L=16 s=0 ε6=0.0022 ε9=0.0017 score=1.0000
+16:51:19 [unsatXX]   power_p L=16 s=0 r=0 ε6=0.0010 ε9=0.0009 score=0.5708 best=0.5708@r0
+16:51:20 [unsatXX]   power_p L=16 s=0 r=1 ε6=0.0010 ε9=0.0008 score=0.4932 best=0.4932@r1
+16:51:20 [unsatXX]   power_p L=16 s=0 r=2 ε6=0.0009 ε9=0.0008 score=0.4624 best=0.4624@r2
+16:51:21 [unsatXX]   power_p L=16 s=0 r=3 ε6=0.0009 ε9=0.0007 score=0.4504 best=0.4504@r3
+16:51:22 [unsatXX]   power_p L=16 s=0 r=4 ε6=0.0008 ε9=0.0007 score=0.4381 best=0.4381@r4
+16:51:22 [unsatXX]   power_p L=16 s=0 r=5 ε6=0.0008 ε9=0.0007 score=0.4348 best=0.4348@r5
+16:51:23 [unsatXX]   power_p L=16 s=0 r=6 ε6=0.0008 ε9=0.0007 score=0.4270 best=0.4270@r6
+16:51:23 [unsatXX]   power_p L=16 s=0 r=7 ε6=0.0008 ε9=0.0007 score=0.4221 best=0.4221@r7
+16:51:24 [unsatXX]   power_p L=16 s=0 r=8 ε6=0.0008 ε9=0.0007 score=0.4180 best=0.4180@r8
+16:51:24 [unsatXX]   power_p L=16 s=0 r=9 ε6=0.0008 ε9=0.0007 score=0.4153 best=0.4153@r9
+16:51:25 [unsatXX]   power_p L=16 s=0 r=10 ε6=0.0008 ε9=0.0007 score=0.4071 best=0.4071@r10
+16:51:26 [unsatXX]   power_p L=16 s=0 r=11 ε6=0.0008 ε9=0.0007 score=0.4058 best=0.4058@r11
+16:51:26 [unsatXX]   power_p L=16 s=0 r=12 ε6=0.0007 ε9=0.0007 score=0.4013 best=0.4013@r12
+16:51:27 [unsatXX]   power_p L=16 s=0 r=13 ε6=0.0008 ε9=0.0007 score=0.3999 best=0.3999@r13
+16:51:27 [unsatXX]   power_p L=16 s=0 r=14 ε6=0.0007 ε9=0.0007 score=0.3927 best=0.3927@r14
+16:51:28 [unsatXX]   power_p L=16 s=0 r=15 ε6=0.0007 ε9=0.0007 score=0.3929 best=0.3927@r14
+16:51:28 [unsatXX]   power_p L=16 s=0 r=16 ε6=0.0007 ε9=0.0006 score=0.3855 best=0.3855@r16
+16:51:29 [unsatXX]   power_p L=16 s=0 r=17 ε6=0.0007 ε9=0.0006 score=0.3850 best=0.3850@r17
+16:51:30 [unsatXX]   power_p L=16 s=0 r=18 ε6=0.0007 ε9=0.0006 score=0.3768 best=0.3768@r18
+16:51:30 [unsatXX]   power_p L=16 s=0 r=19 ε6=0.0007 ε9=0.0006 score=0.3744 best=0.3744@r19
+16:51:31 [unsatXX]   power_p L=16 s=0 r=20 ε6=0.0007 ε9=0.0006 score=0.3610 best=0.3610@r20
+16:51:31 [unsatXX]   power_p L=16 s=0 r=21 ε6=0.0007 ε9=0.0006 score=0.3604 best=0.3604@r21
+16:51:32 [unsatXX]   power_p L=16 s=0 r=22 ε6=0.0006 ε9=0.0006 score=0.3478 best=0.3478@r22
+16:51:33 [unsatXX]   power_p L=16 s=0 r=24 ε6=0.0006 ε9=0.0006 score=0.3467 best=0.3467@r24
+16:51:33 [unsatXX]   power_p L=16 s=0 r=25 ε6=0.0006 ε9=0.0006 score=0.3467 best=0.3467@r25
+16:51:34 [unsatXX]   power_p L=16 s=0 r=26 ε6=0.0006 ε9=0.0006 score=0.3459 best=0.3459@r26
+16:51:34 [unsatXX]   power_p L=16 s=0 r=27 ε6=0.0006 ε9=0.0006 score=0.3462 best=0.3459@r26
+16:51:35 [unsatXX]   power_p L=16 s=0 r=28 ε6=0.0006 ε9=0.0006 score=0.3454 best=0.3454@r28
+16:51:36 [unsatXX]   power_p L=16 s=0 r=29 ε6=0.0006 ε9=0.0006 score=0.3453 best=0.3453@r29
+16:51:36 [unsatXX]   power_p L=16 s=0 r=30 ε6=0.0006 ε9=0.0006 score=0.3449 best=0.3449@r30
+16:51:37 [unsatXX]   power_p L=16 s=0 r=32 ε6=0.0006 ε9=0.0006 score=0.3443 best=0.3443@r32
+16:51:38 [unsatXX]   power_p L=16 s=0 r=33 ε6=0.0006 ε9=0.0006 score=0.3445 best=0.3443@r32
+16:51:39 [unsatXX]   power_p L=16 s=0 r=34 ε6=0.0006 ε9=0.0006 score=0.3432 best=0.3432@r34
+16:51:40 [unsatXX]   power_p L=16 s=0 r=36 ε6=0.0006 ε9=0.0006 score=0.3427 best=0.3427@r36
+16:51:40 [unsatXX]   power_p L=16 s=0 r=37 ε6=0.0006 ε9=0.0006 score=0.3425 best=0.3425@r37
+16:51:41 [unsatXX]   power_p L=16 s=0 r=38 ε6=0.0006 ε9=0.0006 score=0.3423 best=0.3423@r38
+16:51:41 [unsatXX]   power_p L=16 s=0 r=39 ε6=0.0006 ε9=0.0006 score=0.3414 best=0.3414@r39
+16:51:43 [unsatXX]   power_p L=16 s=0 r=41 ε6=0.0006 ε9=0.0006 score=0.3409 best=0.3409@r41
+16:51:43 [unsatXX]   power_p L=16 s=0 r=42 ε6=0.0006 ε9=0.0006 score=0.3408 best=0.3408@r42
+16:51:44 [unsatXX]   power_p L=16 s=0 r=44 ε6=0.0006 ε9=0.0006 score=0.3385 best=0.3385@r44
+16:51:45 [unsatXX]   power_p L=16 s=0 r=45 ε6=0.0006 ε9=0.0006 score=0.3384 best=0.3384@r45
+16:51:46 [unsatXX]   power_p L=16 s=0 r=46 ε6=0.0006 ε9=0.0006 score=0.3363 best=0.3363@r46
+16:51:46 [unsatXX]   power_p L=16 s=0 r=47 ε6=0.0006 ε9=0.0006 score=0.3372 best=0.3363@r46
+16:51:52 [unsatXX-r5]   frozen ε12=0.0006 ε15=0.0007 ε18=0.0008 wall=28.3s tag=r46
+16:51:52 [unsatXX-r5] train power_p L=16 seed=1
+16:51:52 [unsatXX]   init power_p L=16 s=1 ε6=0.0035 ε9=0.0028 score=1.0000
+16:51:53 [unsatXX]   power_p L=16 s=1 r=0 ε6=0.0025 ε9=0.0022 score=0.7768 best=0.7768@r0
+16:51:53 [unsatXX]   power_p L=16 s=1 r=1 ε6=0.0024 ε9=0.0020 score=0.7321 best=0.7321@r1
+16:51:54 [unsatXX]   power_p L=16 s=1 r=2 ε6=0.0023 ε9=0.0020 score=0.7215 best=0.7215@r2
+16:51:54 [unsatXX]   power_p L=16 s=1 r=3 ε6=0.0023 ε9=0.0020 score=0.7108 best=0.7108@r3
+16:51:55 [unsatXX]   power_p L=16 s=1 r=4 ε6=0.0023 ε9=0.0020 score=0.7059 best=0.7059@r4
+16:51:56 [unsatXX]   power_p L=16 s=1 r=5 ε6=0.0023 ε9=0.0020 score=0.7045 best=0.7045@r5
+16:51:56 [unsatXX]   power_p L=16 s=1 r=6 ε6=0.0023 ε9=0.0020 score=0.7011 best=0.7011@r6
+16:51:57 [unsatXX]   power_p L=16 s=1 r=8 ε6=0.0022 ε9=0.0020 score=0.6992 best=0.6992@r8
+16:51:58 [unsatXX]   power_p L=16 s=1 r=9 ε6=0.0022 ε9=0.0020 score=0.6989 best=0.6989@r9
+16:51:58 [unsatXX]   power_p L=16 s=1 r=10 ε6=0.0022 ε9=0.0019 score=0.6974 best=0.6974@r10
+16:51:59 [unsatXX]   power_p L=16 s=1 r=11 ε6=0.0022 ε9=0.0019 score=0.6973 best=0.6973@r11
+16:51:59 [unsatXX]   power_p L=16 s=1 r=12 ε6=0.0022 ε9=0.0019 score=0.6955 best=0.6955@r12
+16:52:01 [unsatXX]   power_p L=16 s=1 r=14 ε6=0.0022 ε9=0.0019 score=0.6935 best=0.6935@r14
+16:52:01 [unsatXX]   power_p L=16 s=1 r=15 ε6=0.0022 ε9=0.0019 score=0.6926 best=0.6926@r15
+16:52:02 [unsatXX]   power_p L=16 s=1 r=16 ε6=0.0022 ε9=0.0019 score=0.6909 best=0.6909@r16
+16:52:02 [unsatXX]   power_p L=16 s=1 r=17 ε6=0.0022 ε9=0.0019 score=0.6890 best=0.6890@r17
+16:52:03 [unsatXX]   power_p L=16 s=1 r=18 ε6=0.0022 ε9=0.0019 score=0.6882 best=0.6882@r18
+16:52:03 [unsatXX]   power_p L=16 s=1 r=19 ε6=0.0022 ε9=0.0019 score=0.6846 best=0.6846@r19
+16:52:04 [unsatXX]   power_p L=16 s=1 r=21 ε6=0.0021 ε9=0.0019 score=0.6804 best=0.6804@r21
+16:52:06 [unsatXX]   power_p L=16 s=1 r=23 ε6=0.0021 ε9=0.0019 score=0.6767 best=0.6767@r23
+16:52:06 [unsatXX]   power_p L=16 s=1 r=24 ε6=0.0021 ε9=0.0019 score=0.6815 best=0.6767@r23
+16:52:07 [unsatXX]   power_p L=16 s=1 r=25 ε6=0.0021 ε9=0.0019 score=0.6734 best=0.6734@r25
+16:52:08 [unsatXX]   power_p L=16 s=1 r=27 ε6=0.0021 ε9=0.0019 score=0.6705 best=0.6705@r27
+16:52:09 [unsatXX]   power_p L=16 s=1 r=29 ε6=0.0021 ε9=0.0019 score=0.6675 best=0.6675@r29
+16:52:09 [unsatXX]   power_p L=16 s=1 r=30 ε6=0.0021 ε9=0.0019 score=0.6735 best=0.6675@r29
+16:52:10 [unsatXX]   power_p L=16 s=1 r=31 ε6=0.0020 ε9=0.0019 score=0.6656 best=0.6656@r31
+16:52:11 [unsatXX]   power_p L=16 s=1 r=33 ε6=0.0020 ε9=0.0019 score=0.6638 best=0.6638@r33
+16:52:12 [unsatXX]   power_p L=16 s=1 r=35 ε6=0.0020 ε9=0.0018 score=0.6619 best=0.6619@r35
+16:52:13 [unsatXX]   power_p L=16 s=1 r=36 ε6=0.0020 ε9=0.0019 score=0.6645 best=0.6619@r35
+16:52:13 [unsatXX]   power_p L=16 s=1 r=37 ε6=0.0020 ε9=0.0018 score=0.6602 best=0.6602@r37
+16:52:14 [unsatXX]   power_p L=16 s=1 r=39 ε6=0.0020 ε9=0.0018 score=0.6590 best=0.6590@r39
+16:52:15 [unsatXX]   power_p L=16 s=1 r=41 ε6=0.0020 ε9=0.0018 score=0.6577 best=0.6577@r41
+16:52:16 [unsatXX]   power_p L=16 s=1 r=42 ε6=0.0020 ε9=0.0018 score=0.6600 best=0.6577@r41
+16:52:16 [unsatXX]   power_p L=16 s=1 r=43 ε6=0.0020 ε9=0.0018 score=0.6564 best=0.6564@r43
+16:52:17 [unsatXX]   power_p L=16 s=1 r=45 ε6=0.0020 ε9=0.0018 score=0.6546 best=0.6546@r45
+16:52:19 [unsatXX]   power_p L=16 s=1 r=47 ε6=0.0020 ε9=0.0018 score=0.6528 best=0.6528@r47
+16:52:24 [unsatXX-r5]   frozen ε12=0.0018 ε15=0.0020 ε18=0.0022 wall=26.8s tag=r47
+16:52:24 [unsatXX-r5] train power_p L=16 seed=2
+16:52:24 [unsatXX]   init power_p L=16 s=2 ε6=0.0021 ε9=0.0015 score=1.0000
+16:52:25 [unsatXX]   power_p L=16 s=2 r=0 ε6=0.0009 ε9=0.0008 score=0.5504 best=0.5504@r0
+16:52:25 [unsatXX]   power_p L=16 s=2 r=1 ε6=0.0009 ε9=0.0007 score=0.4697 best=0.4697@r1
+16:52:26 [unsatXX]   power_p L=16 s=2 r=2 ε6=0.0008 ε9=0.0007 score=0.4336 best=0.4336@r2
+16:52:27 [unsatXX]   power_p L=16 s=2 r=3 ε6=0.0007 ε9=0.0006 score=0.4154 best=0.4154@r3
+16:52:27 [unsatXX]   power_p L=16 s=2 r=4 ε6=0.0007 ε9=0.0006 score=0.4058 best=0.4058@r4
+16:52:28 [unsatXX]   power_p L=16 s=2 r=5 ε6=0.0007 ε9=0.0006 score=0.3965 best=0.3965@r5
+16:52:28 [unsatXX]   power_p L=16 s=2 r=6 ε6=0.0007 ε9=0.0006 score=0.3896 best=0.3896@r6
+16:52:29 [unsatXX]   power_p L=16 s=2 r=7 ε6=0.0007 ε9=0.0006 score=0.3868 best=0.3868@r7
+16:52:30 [unsatXX]   power_p L=16 s=2 r=8 ε6=0.0007 ε9=0.0006 score=0.3791 best=0.3791@r8
+16:52:30 [unsatXX]   power_p L=16 s=2 r=9 ε6=0.0007 ε9=0.0006 score=0.3749 best=0.3749@r9
+16:52:31 [unsatXX]   power_p L=16 s=2 r=10 ε6=0.0007 ε9=0.0006 score=0.3707 best=0.3707@r10
+16:52:31 [unsatXX]   power_p L=16 s=2 r=11 ε6=0.0006 ε9=0.0006 score=0.3675 best=0.3675@r11
+16:52:32 [unsatXX]   power_p L=16 s=2 r=12 ε6=0.0006 ε9=0.0006 score=0.3636 best=0.3636@r12
+16:52:32 [unsatXX]   power_p L=16 s=2 r=13 ε6=0.0006 ε9=0.0006 score=0.3627 best=0.3627@r13
+16:52:33 [unsatXX]   power_p L=16 s=2 r=14 ε6=0.0006 ε9=0.0006 score=0.3592 best=0.3592@r14
+16:52:33 [unsatXX]   power_p L=16 s=2 r=15 ε6=0.0006 ε9=0.0006 score=0.3593 best=0.3592@r14
+16:52:34 [unsatXX]   power_p L=16 s=2 r=16 ε6=0.0006 ε9=0.0005 score=0.3557 best=0.3557@r16
+16:52:35 [unsatXX]   power_p L=16 s=2 r=18 ε6=0.0006 ε9=0.0005 score=0.3521 best=0.3521@r18
+16:52:35 [unsatXX]   power_p L=16 s=2 r=19 ε6=0.0006 ε9=0.0005 score=0.3519 best=0.3519@r19
+16:52:36 [unsatXX]   power_p L=16 s=2 r=20 ε6=0.0006 ε9=0.0005 score=0.3485 best=0.3485@r20
+16:52:36 [unsatXX]   power_p L=16 s=2 r=21 ε6=0.0006 ε9=0.0005 score=0.3507 best=0.3485@r20
+16:52:37 [unsatXX]   power_p L=16 s=2 r=22 ε6=0.0006 ε9=0.0005 score=0.3444 best=0.3444@r22
+16:52:38 [unsatXX]   power_p L=16 s=2 r=24 ε6=0.0006 ε9=0.0005 score=0.3371 best=0.3371@r24
+16:52:38 [unsatXX]   power_p L=16 s=2 r=25 ε6=0.0006 ε9=0.0005 score=0.3319 best=0.3319@r25
+16:52:39 [unsatXX]   power_p L=16 s=2 r=26 ε6=0.0006 ε9=0.0005 score=0.3304 best=0.3304@r26
+16:52:39 [unsatXX]   power_p L=16 s=2 r=27 ε6=0.0006 ε9=0.0005 score=0.3261 best=0.3261@r27
+16:52:40 [unsatXX]   power_p L=16 s=2 r=28 ε6=0.0006 ε9=0.0005 score=0.3259 best=0.3259@r28
+16:52:40 [unsatXX]   power_p L=16 s=2 r=29 ε6=0.0006 ε9=0.0005 score=0.3246 best=0.3246@r29
+16:52:41 [unsatXX]   power_p L=16 s=2 r=30 ε6=0.0006 ε9=0.0005 score=0.3244 best=0.3244@r30
+16:52:41 [unsatXX]   power_p L=16 s=2 r=31 ε6=0.0006 ε9=0.0005 score=0.3232 best=0.3232@r31
+16:52:42 [unsatXX]   power_p L=16 s=2 r=32 ε6=0.0006 ε9=0.0005 score=0.3230 best=0.3230@r32
+16:52:43 [unsatXX]   power_p L=16 s=2 r=33 ε6=0.0006 ε9=0.0005 score=0.3218 best=0.3218@r33
+16:52:43 [unsatXX]   power_p L=16 s=2 r=34 ε6=0.0006 ε9=0.0005 score=0.3214 best=0.3214@r34
+16:52:44 [unsatXX]   power_p L=16 s=2 r=35 ε6=0.0006 ε9=0.0005 score=0.3208 best=0.3208@r35
+16:52:44 [unsatXX]   power_p L=16 s=2 r=36 ε6=0.0006 ε9=0.0005 score=0.3203 best=0.3203@r36
+16:52:45 [unsatXX]   power_p L=16 s=2 r=37 ε6=0.0006 ε9=0.0005 score=0.3196 best=0.3196@r37
+16:52:45 [unsatXX]   power_p L=16 s=2 r=38 ε6=0.0006 ε9=0.0005 score=0.3191 best=0.3191@r38
+16:52:46 [unsatXX]   power_p L=16 s=2 r=39 ε6=0.0006 ε9=0.0005 score=0.3186 best=0.3186@r39
+16:52:46 [unsatXX]   power_p L=16 s=2 r=40 ε6=0.0006 ε9=0.0005 score=0.3180 best=0.3180@r40
+16:52:47 [unsatXX]   power_p L=16 s=2 r=42 ε6=0.0006 ε9=0.0005 score=0.3154 best=0.3154@r42
+16:52:48 [unsatXX]   power_p L=16 s=2 r=44 ε6=0.0005 ε9=0.0005 score=0.3056 best=0.3056@r44
+16:52:49 [unsatXX]   power_p L=16 s=2 r=45 ε6=0.0005 ε9=0.0005 score=0.3049 best=0.3049@r45
+16:52:50 [unsatXX]   power_p L=16 s=2 r=47 ε6=0.0005 ε9=0.0005 score=0.3046 best=0.3046@r47
+16:52:55 [unsatXX-r5]   frozen ε12=0.0005 ε15=0.0006 ε18=0.0007 wall=26.1s tag=r47
+16:52:55 [unsatXX-r5] train power_p L=16 seed=3
+16:52:55 [unsatXX]   init power_p L=16 s=3 ε6=0.0021 ε9=0.0015 score=1.0000
+16:52:56 [unsatXX]   power_p L=16 s=3 r=0 ε6=0.0010 ε9=0.0009 score=0.5966 best=0.5966@r0
+16:52:57 [unsatXX]   power_p L=16 s=3 r=1 ε6=0.0009 ε9=0.0008 score=0.5113 best=0.5113@r1
+16:52:57 [unsatXX]   power_p L=16 s=3 r=2 ε6=0.0008 ε9=0.0008 score=0.4898 best=0.4898@r2
+16:52:58 [unsatXX]   power_p L=16 s=3 r=3 ε6=0.0008 ε9=0.0007 score=0.4787 best=0.4787@r3
+16:52:58 [unsatXX]   power_p L=16 s=3 r=4 ε6=0.0008 ε9=0.0007 score=0.4668 best=0.4668@r4
+16:52:59 [unsatXX]   power_p L=16 s=3 r=5 ε6=0.0008 ε9=0.0007 score=0.4585 best=0.4585@r5
+16:53:00 [unsatXX]   power_p L=16 s=3 r=6 ε6=0.0008 ε9=0.0007 score=0.4517 best=0.4517@r6
+16:53:00 [unsatXX]   power_p L=16 s=3 r=7 ε6=0.0008 ε9=0.0007 score=0.4476 best=0.4476@r7
+16:53:01 [unsatXX]   power_p L=16 s=3 r=8 ε6=0.0008 ε9=0.0007 score=0.4424 best=0.4424@r8
+16:53:01 [unsatXX]   power_p L=16 s=3 r=9 ε6=0.0008 ε9=0.0007 score=0.4401 best=0.4401@r9
+16:53:02 [unsatXX]   power_p L=16 s=3 r=10 ε6=0.0008 ε9=0.0007 score=0.4349 best=0.4349@r10
+16:53:02 [unsatXX]   power_p L=16 s=3 r=11 ε6=0.0008 ε9=0.0007 score=0.4335 best=0.4335@r11
+16:53:03 [unsatXX]   power_p L=16 s=3 r=12 ε6=0.0007 ε9=0.0007 score=0.4283 best=0.4283@r12
+16:53:03 [unsatXX]   power_p L=16 s=3 r=13 ε6=0.0008 ε9=0.0007 score=0.4282 best=0.4282@r13
+16:53:04 [unsatXX]   power_p L=16 s=3 r=14 ε6=0.0007 ε9=0.0006 score=0.4228 best=0.4228@r14
+16:53:04 [unsatXX]   power_p L=16 s=3 r=15 ε6=0.0007 ε9=0.0006 score=0.4193 best=0.4193@r15
+16:53:05 [unsatXX]   power_p L=16 s=3 r=16 ε6=0.0007 ε9=0.0006 score=0.4188 best=0.4188@r16
+16:53:05 [unsatXX]   power_p L=16 s=3 r=17 ε6=0.0007 ε9=0.0006 score=0.4154 best=0.4154@r17
+16:53:06 [unsatXX]   power_p L=16 s=3 r=18 ε6=0.0007 ε9=0.0006 score=0.4152 best=0.4152@r18
+16:53:07 [unsatXX]   power_p L=16 s=3 r=19 ε6=0.0007 ε9=0.0006 score=0.4120 best=0.4120@r19
+16:53:07 [unsatXX]   power_p L=16 s=3 r=20 ε6=0.0007 ε9=0.0006 score=0.4114 best=0.4114@r20
+16:53:08 [unsatXX]   power_p L=16 s=3 r=21 ε6=0.0007 ε9=0.0006 score=0.4085 best=0.4085@r21
+16:53:08 [unsatXX]   power_p L=16 s=3 r=22 ε6=0.0007 ε9=0.0006 score=0.4070 best=0.4070@r22
+16:53:09 [unsatXX]   power_p L=16 s=3 r=23 ε6=0.0007 ε9=0.0006 score=0.4049 best=0.4049@r23
+16:53:09 [unsatXX]   power_p L=16 s=3 r=24 ε6=0.0007 ε9=0.0006 score=0.4057 best=0.4049@r23
+16:53:10 [unsatXX]   power_p L=16 s=3 r=25 ε6=0.0007 ε9=0.0006 score=0.4021 best=0.4021@r25
+16:53:10 [unsatXX]   power_p L=16 s=3 r=26 ε6=0.0007 ε9=0.0006 score=0.4004 best=0.4004@r26
+16:53:11 [unsatXX]   power_p L=16 s=3 r=27 ε6=0.0007 ε9=0.0006 score=0.3986 best=0.3986@r27
+16:53:12 [unsatXX]   power_p L=16 s=3 r=28 ε6=0.0007 ε9=0.0006 score=0.3941 best=0.3941@r28
+16:53:12 [unsatXX]   power_p L=16 s=3 r=29 ε6=0.0007 ε9=0.0006 score=0.3938 best=0.3938@r29
+16:53:13 [unsatXX]   power_p L=16 s=3 r=30 ε6=0.0007 ε9=0.0006 score=0.3881 best=0.3881@r30
+16:53:13 [unsatXX]   power_p L=16 s=3 r=31 ε6=0.0007 ε9=0.0006 score=0.3865 best=0.3865@r31
+16:53:14 [unsatXX]   power_p L=16 s=3 r=32 ε6=0.0007 ε9=0.0006 score=0.3846 best=0.3846@r32
+16:53:14 [unsatXX]   power_p L=16 s=3 r=33 ε6=0.0007 ε9=0.0006 score=0.3835 best=0.3835@r33
+16:53:15 [unsatXX]   power_p L=16 s=3 r=34 ε6=0.0007 ε9=0.0006 score=0.3829 best=0.3829@r34
+16:53:15 [unsatXX]   power_p L=16 s=3 r=35 ε6=0.0007 ε9=0.0006 score=0.3815 best=0.3815@r35
+16:53:16 [unsatXX]   power_p L=16 s=3 r=36 ε6=0.0007 ε9=0.0006 score=0.3814 best=0.3814@r36
+16:53:16 [unsatXX]   power_p L=16 s=3 r=37 ε6=0.0007 ε9=0.0006 score=0.3789 best=0.3789@r37
+16:53:17 [unsatXX]   power_p L=16 s=3 r=39 ε6=0.0007 ε9=0.0006 score=0.3772 best=0.3772@r39
+16:53:19 [unsatXX]   power_p L=16 s=3 r=41 ε6=0.0007 ε9=0.0006 score=0.3756 best=0.3756@r41
+16:53:19 [unsatXX]   power_p L=16 s=3 r=42 ε6=0.0007 ε9=0.0006 score=0.3762 best=0.3756@r41
+16:53:20 [unsatXX]   power_p L=16 s=3 r=43 ε6=0.0007 ε9=0.0006 score=0.3745 best=0.3745@r43
+16:53:21 [unsatXX]   power_p L=16 s=3 r=45 ε6=0.0007 ε9=0.0006 score=0.3738 best=0.3738@r45
+16:53:22 [unsatXX]   power_p L=16 s=3 r=47 ε6=0.0007 ε9=0.0006 score=0.3731 best=0.3731@r47
+16:53:27 [unsatXX-r5]   frozen ε12=0.0006 ε15=0.0007 ε18=0.0008 wall=26.5s tag=r47
+16:53:27 [unsatXX-r5] train power_p L=16 seed=4
+16:53:27 [unsatXX]   init power_p L=16 s=4 ε6=0.0038 ε9=0.0034 score=1.0000
+16:53:28 [unsatXX]   power_p L=16 s=4 r=0 ε6=0.0030 ε9=0.0029 score=0.8530 best=0.8530@r0
+16:53:29 [unsatXX]   power_p L=16 s=4 r=1 ε6=0.0028 ε9=0.0027 score=0.8080 best=0.8080@r1
+16:53:29 [unsatXX]   power_p L=16 s=4 r=2 ε6=0.0027 ε9=0.0027 score=0.7946 best=0.7946@r2
+16:53:30 [unsatXX]   power_p L=16 s=4 r=3 ε6=0.0027 ε9=0.0026 score=0.7756 best=0.7756@r3
+16:53:31 [unsatXX]   power_p L=16 s=4 r=4 ε6=0.0027 ε9=0.0026 score=0.7752 best=0.7752@r4
+16:53:31 [unsatXX]   power_p L=16 s=4 r=5 ε6=0.0026 ε9=0.0026 score=0.7643 best=0.7643@r5
+16:53:32 [unsatXX]   power_p L=16 s=4 r=6 ε6=0.0026 ε9=0.0026 score=0.7618 best=0.7618@r6
+16:53:32 [unsatXX]   power_p L=16 s=4 r=7 ε6=0.0026 ε9=0.0025 score=0.7533 best=0.7533@r7
+16:53:33 [unsatXX]   power_p L=16 s=4 r=8 ε6=0.0026 ε9=0.0025 score=0.7494 best=0.7494@r8
+16:53:33 [unsatXX]   power_p L=16 s=4 r=9 ε6=0.0026 ε9=0.0025 score=0.7483 best=0.7483@r9
+16:53:34 [unsatXX]   power_p L=16 s=4 r=10 ε6=0.0026 ε9=0.0025 score=0.7446 best=0.7446@r10
+16:53:34 [unsatXX]   power_p L=16 s=4 r=11 ε6=0.0025 ε9=0.0025 score=0.7349 best=0.7349@r11
+16:53:35 [unsatXX]   power_p L=16 s=4 r=12 ε6=0.0025 ε9=0.0025 score=0.7331 best=0.7331@r12
+16:53:35 [unsatXX]   power_p L=16 s=4 r=13 ε6=0.0025 ε9=0.0025 score=0.7266 best=0.7266@r13
+16:53:36 [unsatXX]   power_p L=16 s=4 r=15 ε6=0.0025 ε9=0.0024 score=0.7208 best=0.7208@r15
+16:53:37 [unsatXX]   power_p L=16 s=4 r=17 ε6=0.0025 ε9=0.0024 score=0.7162 best=0.7162@r17
+16:53:38 [unsatXX]   power_p L=16 s=4 r=18 ε6=0.0025 ε9=0.0024 score=0.7180 best=0.7162@r17
+16:53:39 [unsatXX]   power_p L=16 s=4 r=19 ε6=0.0025 ε9=0.0024 score=0.7121 best=0.7121@r19
+16:53:40 [unsatXX]   power_p L=16 s=4 r=21 ε6=0.0025 ε9=0.0024 score=0.7088 best=0.7088@r21
+16:53:41 [unsatXX]   power_p L=16 s=4 r=23 ε6=0.0025 ε9=0.0024 score=0.7070 best=0.7070@r23
+16:53:41 [unsatXX]   power_p L=16 s=4 r=24 ε6=0.0025 ε9=0.0024 score=0.7073 best=0.7070@r23
+16:53:42 [unsatXX]   power_p L=16 s=4 r=25 ε6=0.0024 ε9=0.0024 score=0.7052 best=0.7052@r25
+16:53:42 [unsatXX]   power_p L=16 s=4 r=26 ε6=0.0024 ε9=0.0024 score=0.7046 best=0.7046@r26
+16:53:43 [unsatXX]   power_p L=16 s=4 r=27 ε6=0.0024 ε9=0.0024 score=0.7029 best=0.7029@r27
+16:53:43 [unsatXX]   power_p L=16 s=4 r=28 ε6=0.0024 ε9=0.0024 score=0.7018 best=0.7018@r28
+16:53:44 [unsatXX]   power_p L=16 s=4 r=29 ε6=0.0024 ε9=0.0024 score=0.7013 best=0.7013@r29
+16:53:44 [unsatXX]   power_p L=16 s=4 r=30 ε6=0.0024 ε9=0.0024 score=0.7002 best=0.7002@r30
+16:53:45 [unsatXX]   power_p L=16 s=4 r=31 ε6=0.0024 ε9=0.0024 score=0.6989 best=0.6989@r31
+16:53:46 [unsatXX]   power_p L=16 s=4 r=32 ε6=0.0024 ε9=0.0024 score=0.6985 best=0.6985@r32
+16:53:46 [unsatXX]   power_p L=16 s=4 r=33 ε6=0.0024 ε9=0.0024 score=0.6971 best=0.6971@r33
+16:53:47 [unsatXX]   power_p L=16 s=4 r=34 ε6=0.0024 ε9=0.0024 score=0.6948 best=0.6948@r34
+16:53:48 [unsatXX]   power_p L=16 s=4 r=36 ε6=0.0024 ε9=0.0023 score=0.6931 best=0.6931@r36
+16:53:49 [unsatXX]   power_p L=16 s=4 r=38 ε6=0.0024 ε9=0.0023 score=0.6918 best=0.6918@r38
+16:53:49 [unsatXX]   power_p L=16 s=4 r=39 ε6=0.0023 ε9=0.0023 score=0.6882 best=0.6882@r39
+16:53:50 [unsatXX]   power_p L=16 s=4 r=40 ε6=0.0023 ε9=0.0023 score=0.6833 best=0.6833@r40
+16:53:50 [unsatXX]   power_p L=16 s=4 r=41 ε6=0.0023 ε9=0.0023 score=0.6778 best=0.6778@r41
+16:53:51 [unsatXX]   power_p L=16 s=4 r=42 ε6=0.0023 ε9=0.0023 score=0.6769 best=0.6769@r42
+16:53:52 [unsatXX]   power_p L=16 s=4 r=43 ε6=0.0023 ε9=0.0023 score=0.6730 best=0.6730@r43
+16:53:53 [unsatXX]   power_p L=16 s=4 r=45 ε6=0.0023 ε9=0.0023 score=0.6721 best=0.6721@r45
+16:53:54 [unsatXX]   power_p L=16 s=4 r=47 ε6=0.0023 ε9=0.0023 score=0.6720 best=0.6720@r47
+16:53:59 [unsatXX-r5]   frozen ε12=0.0024 ε15=0.0026 ε18=0.0029 wall=26.9s tag=r47
+16:53:59 [unsatXX-r5] train walsh L=16 seed=0
+16:53:59 [unsatXX]   init walsh L=16 s=0 ε6=0.0022 ε9=0.0017 score=1.0000
+16:54:00 [unsatXX]   walsh L=16 s=0 r=0 ε6=0.0010 ε9=0.0009 score=0.5661 best=0.5661@r0
+16:54:01 [unsatXX]   walsh L=16 s=0 r=1 ε6=0.0009 ε9=0.0008 score=0.4825 best=0.4825@r1
+16:54:02 [unsatXX]   walsh L=16 s=0 r=2 ε6=0.0008 ε9=0.0007 score=0.4485 best=0.4485@r2
+16:54:02 [unsatXX]   walsh L=16 s=0 r=3 ε6=0.0008 ε9=0.0007 score=0.4320 best=0.4320@r3
+16:54:03 [unsatXX]   walsh L=16 s=0 r=4 ε6=0.0008 ε9=0.0007 score=0.4152 best=0.4152@r4
+16:54:03 [unsatXX]   walsh L=16 s=0 r=5 ε6=0.0008 ε9=0.0007 score=0.4077 best=0.4077@r5
+16:54:04 [unsatXX]   walsh L=16 s=0 r=6 ε6=0.0007 ε9=0.0007 score=0.3942 best=0.3942@r6
+16:54:05 [unsatXX]   walsh L=16 s=0 r=7 ε6=0.0007 ε9=0.0006 score=0.3877 best=0.3877@r7
+16:54:05 [unsatXX]   walsh L=16 s=0 r=8 ε6=0.0007 ε9=0.0006 score=0.3769 best=0.3769@r8
+16:54:06 [unsatXX]   walsh L=16 s=0 r=9 ε6=0.0007 ε9=0.0006 score=0.3704 best=0.3704@r9
+16:54:06 [unsatXX]   walsh L=16 s=0 r=10 ε6=0.0007 ε9=0.0006 score=0.3601 best=0.3601@r10
+16:54:07 [unsatXX]   walsh L=16 s=0 r=11 ε6=0.0007 ε9=0.0006 score=0.3561 best=0.3561@r11
+16:54:08 [unsatXX]   walsh L=16 s=0 r=12 ε6=0.0007 ε9=0.0006 score=0.3465 best=0.3465@r12
+16:54:08 [unsatXX]   walsh L=16 s=0 r=13 ε6=0.0007 ε9=0.0006 score=0.3456 best=0.3456@r13
+16:54:09 [unsatXX]   walsh L=16 s=0 r=14 ε6=0.0007 ε9=0.0006 score=0.3352 best=0.3352@r14
+16:54:09 [unsatXX]   walsh L=16 s=0 r=15 ε6=0.0007 ε9=0.0006 score=0.3382 best=0.3352@r14
+16:54:10 [unsatXX]   walsh L=16 s=0 r=16 ε6=0.0007 ε9=0.0006 score=0.3326 best=0.3326@r16
+16:54:11 [unsatXX]   walsh L=16 s=0 r=18 ε6=0.0006 ε9=0.0005 score=0.3286 best=0.3286@r18
+16:54:13 [unsatXX]   walsh L=16 s=0 r=20 ε6=0.0006 ε9=0.0005 score=0.3217 best=0.3217@r20
+16:54:13 [unsatXX]   walsh L=16 s=0 r=21 ε6=0.0006 ε9=0.0005 score=0.3267 best=0.3217@r20
+16:54:14 [unsatXX]   walsh L=16 s=0 r=22 ε6=0.0006 ε9=0.0005 score=0.3181 best=0.3181@r22
+16:54:15 [unsatXX]   walsh L=16 s=0 r=24 ε6=0.0006 ε9=0.0005 score=0.3149 best=0.3149@r24
+16:54:16 [unsatXX]   walsh L=16 s=0 r=26 ε6=0.0006 ε9=0.0005 score=0.3119 best=0.3119@r26
+16:54:17 [unsatXX]   walsh L=16 s=0 r=27 ε6=0.0006 ε9=0.0005 score=0.3145 best=0.3119@r26
+16:54:17 [unsatXX]   walsh L=16 s=0 r=28 ε6=0.0006 ε9=0.0005 score=0.3081 best=0.3081@r28
+16:54:19 [unsatXX]   walsh L=16 s=0 r=30 ε6=0.0006 ε9=0.0005 score=0.3040 best=0.3040@r30
+16:54:20 [unsatXX]   walsh L=16 s=0 r=32 ε6=0.0006 ε9=0.0005 score=0.3015 best=0.3015@r32
+16:54:20 [unsatXX]   walsh L=16 s=0 r=33 ε6=0.0006 ε9=0.0005 score=0.3007 best=0.3007@r33
+16:54:21 [unsatXX]   walsh L=16 s=0 r=34 ε6=0.0006 ε9=0.0005 score=0.2972 best=0.2972@r34
+16:54:22 [unsatXX]   walsh L=16 s=0 r=35 ε6=0.0006 ε9=0.0005 score=0.2944 best=0.2944@r35
+16:54:22 [unsatXX]   walsh L=16 s=0 r=36 ε6=0.0005 ε9=0.0005 score=0.2919 best=0.2919@r36
+16:54:23 [unsatXX]   walsh L=16 s=0 r=37 ε6=0.0005 ε9=0.0005 score=0.2876 best=0.2876@r37
+16:54:24 [unsatXX]   walsh L=16 s=0 r=38 ε6=0.0005 ε9=0.0005 score=0.2830 best=0.2830@r38
+16:54:24 [unsatXX]   walsh L=16 s=0 r=39 ε6=0.0005 ε9=0.0005 score=0.2828 best=0.2828@r39
+16:54:25 [unsatXX]   walsh L=16 s=0 r=40 ε6=0.0005 ε9=0.0005 score=0.2813 best=0.2813@r40
+16:54:25 [unsatXX]   walsh L=16 s=0 r=41 ε6=0.0005 ε9=0.0005 score=0.2811 best=0.2811@r41
+16:54:26 [unsatXX]   walsh L=16 s=0 r=42 ε6=0.0005 ε9=0.0005 score=0.2806 best=0.2806@r42
+16:54:27 [unsatXX]   walsh L=16 s=0 r=43 ε6=0.0005 ε9=0.0005 score=0.2805 best=0.2805@r43
+16:54:27 [unsatXX]   walsh L=16 s=0 r=44 ε6=0.0005 ε9=0.0005 score=0.2799 best=0.2799@r44
+16:54:28 [unsatXX]   walsh L=16 s=0 r=45 ε6=0.0005 ε9=0.0005 score=0.2799 best=0.2799@r44
+16:54:29 [unsatXX]   walsh L=16 s=0 r=46 ε6=0.0005 ε9=0.0005 score=0.2788 best=0.2788@r46
+16:54:29 [unsatXX]   walsh L=16 s=0 r=47 ε6=0.0005 ε9=0.0005 score=0.2791 best=0.2788@r46
+16:54:36 [unsatXX-r5]   frozen ε12=0.0005 ε15=0.0005 ε18=0.0006 wall=29.8s tag=r46
+16:54:36 [unsatXX-r5] train walsh L=16 seed=1
+16:54:36 [unsatXX]   init walsh L=16 s=1 ε6=0.0035 ε9=0.0028 score=1.0000
+16:54:37 [unsatXX]   walsh L=16 s=1 r=0 ε6=0.0025 ε9=0.0021 score=0.7612 best=0.7612@r0
+16:54:38 [unsatXX]   walsh L=16 s=1 r=1 ε6=0.0023 ε9=0.0020 score=0.7060 best=0.7060@r1
+16:54:39 [unsatXX]   walsh L=16 s=1 r=2 ε6=0.0022 ε9=0.0019 score=0.6874 best=0.6874@r2
+16:54:39 [unsatXX]   walsh L=16 s=1 r=3 ε6=0.0022 ε9=0.0019 score=0.6715 best=0.6715@r3
+16:54:40 [unsatXX]   walsh L=16 s=1 r=4 ε6=0.0021 ε9=0.0018 score=0.6573 best=0.6573@r4
+16:54:40 [unsatXX]   walsh L=16 s=1 r=5 ε6=0.0021 ε9=0.0018 score=0.6494 best=0.6494@r5
+16:54:41 [unsatXX]   walsh L=16 s=1 r=6 ε6=0.0021 ε9=0.0018 score=0.6404 best=0.6404@r6
+16:54:42 [unsatXX]   walsh L=16 s=1 r=7 ε6=0.0020 ε9=0.0018 score=0.6331 best=0.6331@r7
+16:54:42 [unsatXX]   walsh L=16 s=1 r=8 ε6=0.0020 ε9=0.0018 score=0.6270 best=0.6270@r8
+16:54:43 [unsatXX]   walsh L=16 s=1 r=9 ε6=0.0020 ε9=0.0017 score=0.6151 best=0.6151@r9
+16:54:43 [unsatXX]   walsh L=16 s=1 r=10 ε6=0.0019 ε9=0.0017 score=0.6119 best=0.6119@r10
+16:54:44 [unsatXX]   walsh L=16 s=1 r=11 ε6=0.0019 ε9=0.0017 score=0.6028 best=0.6028@r11
+16:54:45 [unsatXX]   walsh L=16 s=1 r=12 ε6=0.0019 ε9=0.0017 score=0.6011 best=0.6011@r12
+16:54:45 [unsatXX]   walsh L=16 s=1 r=13 ε6=0.0019 ε9=0.0017 score=0.5944 best=0.5944@r13
+16:54:46 [unsatXX]   walsh L=16 s=1 r=14 ε6=0.0019 ε9=0.0017 score=0.5919 best=0.5919@r14
+16:54:46 [unsatXX]   walsh L=16 s=1 r=15 ε6=0.0018 ε9=0.0016 score=0.5847 best=0.5847@r15
+16:54:47 [unsatXX]   walsh L=16 s=1 r=16 ε6=0.0018 ε9=0.0016 score=0.5796 best=0.5796@r16
+16:54:48 [unsatXX]   walsh L=16 s=1 r=17 ε6=0.0018 ε9=0.0016 score=0.5757 best=0.5757@r17
+16:54:48 [unsatXX]   walsh L=16 s=1 r=18 ε6=0.0018 ε9=0.0016 score=0.5732 best=0.5732@r18
+16:54:49 [unsatXX]   walsh L=16 s=1 r=19 ε6=0.0018 ε9=0.0016 score=0.5668 best=0.5668@r19
+16:54:49 [unsatXX]   walsh L=16 s=1 r=20 ε6=0.0017 ε9=0.0016 score=0.5658 best=0.5658@r20
+16:54:50 [unsatXX]   walsh L=16 s=1 r=21 ε6=0.0017 ε9=0.0016 score=0.5579 best=0.5579@r21
+16:54:51 [unsatXX]   walsh L=16 s=1 r=22 ε6=0.0017 ε9=0.0016 score=0.5564 best=0.5564@r22
+16:54:51 [unsatXX]   walsh L=16 s=1 r=23 ε6=0.0017 ε9=0.0015 score=0.5529 best=0.5529@r23
+16:54:52 [unsatXX]   walsh L=16 s=1 r=24 ε6=0.0017 ε9=0.0015 score=0.5517 best=0.5517@r24
+16:54:52 [unsatXX]   walsh L=16 s=1 r=25 ε6=0.0017 ε9=0.0015 score=0.5486 best=0.5486@r25
+16:54:53 [unsatXX]   walsh L=16 s=1 r=26 ε6=0.0017 ε9=0.0015 score=0.5463 best=0.5463@r26
+16:54:54 [unsatXX]   walsh L=16 s=1 r=27 ε6=0.0017 ε9=0.0015 score=0.5432 best=0.5432@r27
+16:54:54 [unsatXX]   walsh L=16 s=1 r=28 ε6=0.0017 ε9=0.0015 score=0.5408 best=0.5408@r28
+16:54:55 [unsatXX]   walsh L=16 s=1 r=29 ε6=0.0017 ε9=0.0015 score=0.5378 best=0.5378@r29
+16:54:55 [unsatXX]   walsh L=16 s=1 r=30 ε6=0.0016 ε9=0.0015 score=0.5362 best=0.5362@r30
+16:54:56 [unsatXX]   walsh L=16 s=1 r=31 ε6=0.0016 ε9=0.0015 score=0.5330 best=0.5330@r31
+16:54:57 [unsatXX]   walsh L=16 s=1 r=32 ε6=0.0016 ε9=0.0015 score=0.5324 best=0.5324@r32
+16:54:57 [unsatXX]   walsh L=16 s=1 r=33 ε6=0.0016 ε9=0.0015 score=0.5289 best=0.5289@r33
+16:54:58 [unsatXX]   walsh L=16 s=1 r=34 ε6=0.0016 ε9=0.0015 score=0.5288 best=0.5288@r34
+16:54:58 [unsatXX]   walsh L=16 s=1 r=35 ε6=0.0016 ε9=0.0015 score=0.5256 best=0.5256@r35
+16:54:59 [unsatXX]   walsh L=16 s=1 r=36 ε6=0.0016 ε9=0.0015 score=0.5252 best=0.5252@r36
+16:55:00 [unsatXX]   walsh L=16 s=1 r=37 ε6=0.0016 ε9=0.0015 score=0.5224 best=0.5224@r37
+16:55:00 [unsatXX]   walsh L=16 s=1 r=38 ε6=0.0016 ε9=0.0015 score=0.5211 best=0.5211@r38
+16:55:01 [unsatXX]   walsh L=16 s=1 r=39 ε6=0.0016 ε9=0.0015 score=0.5194 best=0.5194@r39
+16:55:01 [unsatXX]   walsh L=16 s=1 r=40 ε6=0.0016 ε9=0.0014 score=0.5175 best=0.5175@r40
+16:55:02 [unsatXX]   walsh L=16 s=1 r=41 ε6=0.0016 ε9=0.0014 score=0.5168 best=0.5168@r41
+16:55:03 [unsatXX]   walsh L=16 s=1 r=42 ε6=0.0016 ε9=0.0014 score=0.5140 best=0.5140@r42
+16:55:04 [unsatXX]   walsh L=16 s=1 r=44 ε6=0.0016 ε9=0.0014 score=0.5119 best=0.5119@r44
+16:55:05 [unsatXX]   walsh L=16 s=1 r=45 ε6=0.0016 ε9=0.0014 score=0.5112 best=0.5112@r45
+16:55:05 [unsatXX]   walsh L=16 s=1 r=46 ε6=0.0016 ε9=0.0014 score=0.5099 best=0.5099@r46
+16:55:06 [unsatXX]   walsh L=16 s=1 r=47 ε6=0.0016 ε9=0.0014 score=0.5082 best=0.5082@r47
+16:55:13 [unsatXX-r5]   frozen ε12=0.0014 ε15=0.0015 ε18=0.0017 wall=29.5s tag=r47
+16:55:13 [unsatXX-r5] train walsh L=16 seed=2
+16:55:13 [unsatXX]   init walsh L=16 s=2 ε6=0.0021 ε9=0.0015 score=1.0000
+16:55:14 [unsatXX]   walsh L=16 s=2 r=0 ε6=0.0009 ε9=0.0008 score=0.5520 best=0.5520@r0
+16:55:15 [unsatXX]   walsh L=16 s=2 r=1 ε6=0.0009 ε9=0.0007 score=0.4710 best=0.4710@r1
+16:55:15 [unsatXX]   walsh L=16 s=2 r=2 ε6=0.0008 ε9=0.0007 score=0.4333 best=0.4333@r2
+16:55:16 [unsatXX]   walsh L=16 s=2 r=3 ε6=0.0007 ε9=0.0006 score=0.4134 best=0.4134@r3
+16:55:17 [unsatXX]   walsh L=16 s=2 r=4 ε6=0.0007 ε9=0.0006 score=0.4013 best=0.4013@r4
+16:55:17 [unsatXX]   walsh L=16 s=2 r=5 ε6=0.0007 ε9=0.0006 score=0.3912 best=0.3912@r5
+16:55:18 [unsatXX]   walsh L=16 s=2 r=6 ε6=0.0007 ε9=0.0006 score=0.3831 best=0.3831@r6
+16:55:19 [unsatXX]   walsh L=16 s=2 r=7 ε6=0.0007 ε9=0.0006 score=0.3775 best=0.3775@r7
+16:55:19 [unsatXX]   walsh L=16 s=2 r=8 ε6=0.0007 ε9=0.0006 score=0.3745 best=0.3745@r8
+16:55:20 [unsatXX]   walsh L=16 s=2 r=9 ε6=0.0006 ε9=0.0006 score=0.3664 best=0.3664@r9
+16:55:20 [unsatXX]   walsh L=16 s=2 r=10 ε6=0.0006 ε9=0.0006 score=0.3616 best=0.3616@r10
+16:55:21 [unsatXX]   walsh L=16 s=2 r=11 ε6=0.0006 ε9=0.0005 score=0.3569 best=0.3569@r11
+16:55:22 [unsatXX]   walsh L=16 s=2 r=12 ε6=0.0006 ε9=0.0005 score=0.3530 best=0.3530@r12
+16:55:22 [unsatXX]   walsh L=16 s=2 r=13 ε6=0.0006 ε9=0.0005 score=0.3497 best=0.3497@r13
+16:55:23 [unsatXX]   walsh L=16 s=2 r=14 ε6=0.0006 ε9=0.0005 score=0.3462 best=0.3462@r14
+16:55:23 [unsatXX]   walsh L=16 s=2 r=15 ε6=0.0006 ε9=0.0005 score=0.3428 best=0.3428@r15
+16:55:24 [unsatXX]   walsh L=16 s=2 r=16 ε6=0.0006 ε9=0.0005 score=0.3395 best=0.3395@r16
+16:55:25 [unsatXX]   walsh L=16 s=2 r=17 ε6=0.0006 ε9=0.0005 score=0.3385 best=0.3385@r17
+16:55:25 [unsatXX]   walsh L=16 s=2 r=18 ε6=0.0006 ε9=0.0005 score=0.3350 best=0.3350@r18
+16:55:26 [unsatXX]   walsh L=16 s=2 r=19 ε6=0.0006 ε9=0.0005 score=0.3337 best=0.3337@r19
+16:55:27 [unsatXX]   walsh L=16 s=2 r=20 ε6=0.0006 ε9=0.0005 score=0.3283 best=0.3283@r20
+16:55:27 [unsatXX]   walsh L=16 s=2 r=21 ε6=0.0006 ε9=0.0005 score=0.3283 best=0.3283@r21
+16:55:28 [unsatXX]   walsh L=16 s=2 r=22 ε6=0.0006 ε9=0.0005 score=0.3212 best=0.3212@r22
+16:55:29 [unsatXX]   walsh L=16 s=2 r=24 ε6=0.0006 ε9=0.0005 score=0.3161 best=0.3161@r24
+16:55:30 [unsatXX]   walsh L=16 s=2 r=26 ε6=0.0006 ε9=0.0005 score=0.3141 best=0.3141@r26
+16:55:31 [unsatXX]   walsh L=16 s=2 r=27 ε6=0.0006 ε9=0.0005 score=0.3155 best=0.3141@r26
+16:55:31 [unsatXX]   walsh L=16 s=2 r=28 ε6=0.0005 ε9=0.0005 score=0.3115 best=0.3115@r28
+16:55:33 [unsatXX]   walsh L=16 s=2 r=30 ε6=0.0005 ε9=0.0005 score=0.3093 best=0.3093@r30
+16:55:34 [unsatXX]   walsh L=16 s=2 r=32 ε6=0.0005 ε9=0.0005 score=0.3070 best=0.3070@r32
+16:55:35 [unsatXX]   walsh L=16 s=2 r=33 ε6=0.0005 ε9=0.0005 score=0.3069 best=0.3069@r33
+16:55:35 [unsatXX]   walsh L=16 s=2 r=34 ε6=0.0005 ε9=0.0005 score=0.3038 best=0.3038@r34
+16:55:36 [unsatXX]   walsh L=16 s=2 r=35 ε6=0.0005 ε9=0.0005 score=0.3036 best=0.3036@r35
+16:55:36 [unsatXX]   walsh L=16 s=2 r=36 ε6=0.0005 ε9=0.0005 score=0.3010 best=0.3010@r36
+16:55:38 [unsatXX]   walsh L=16 s=2 r=38 ε6=0.0005 ε9=0.0005 score=0.2990 best=0.2990@r38
+16:55:38 [unsatXX]   walsh L=16 s=2 r=39 ε6=0.0005 ε9=0.0005 score=0.3000 best=0.2990@r38
+16:55:39 [unsatXX]   walsh L=16 s=2 r=40 ε6=0.0005 ε9=0.0005 score=0.2974 best=0.2974@r40
+16:55:40 [unsatXX]   walsh L=16 s=2 r=42 ε6=0.0005 ε9=0.0005 score=0.2964 best=0.2964@r42
+16:55:42 [unsatXX]   walsh L=16 s=2 r=44 ε6=0.0005 ε9=0.0005 score=0.2938 best=0.2938@r44
+16:55:42 [unsatXX]   walsh L=16 s=2 r=45 ε6=0.0005 ε9=0.0005 score=0.2942 best=0.2938@r44
+16:55:43 [unsatXX]   walsh L=16 s=2 r=46 ε6=0.0005 ε9=0.0004 score=0.2907 best=0.2907@r46
+16:55:43 [unsatXX]   walsh L=16 s=2 r=47 ε6=0.0005 ε9=0.0004 score=0.2913 best=0.2907@r46
+16:55:51 [unsatXX-r5]   frozen ε12=0.0005 ε15=0.0005 ε18=0.0006 wall=30.3s tag=r46
+16:55:51 [unsatXX-r5] train walsh L=16 seed=3
+16:55:51 [unsatXX]   init walsh L=16 s=3 ε6=0.0021 ε9=0.0015 score=1.0000
+16:55:51 [unsatXX]   walsh L=16 s=3 r=0 ε6=0.0010 ε9=0.0009 score=0.5962 best=0.5962@r0
+16:55:52 [unsatXX]   walsh L=16 s=3 r=1 ε6=0.0009 ε9=0.0008 score=0.5168 best=0.5168@r1
+16:55:53 [unsatXX]   walsh L=16 s=3 r=2 ε6=0.0008 ε9=0.0007 score=0.4859 best=0.4859@r2
+16:55:54 [unsatXX]   walsh L=16 s=3 r=3 ε6=0.0008 ε9=0.0007 score=0.4670 best=0.4670@r3
+16:55:54 [unsatXX]   walsh L=16 s=3 r=4 ε6=0.0008 ε9=0.0007 score=0.4516 best=0.4516@r4
+16:55:55 [unsatXX]   walsh L=16 s=3 r=5 ε6=0.0008 ε9=0.0007 score=0.4441 best=0.4441@r5
+16:55:55 [unsatXX]   walsh L=16 s=3 r=6 ε6=0.0008 ε9=0.0007 score=0.4352 best=0.4352@r6
+16:55:56 [unsatXX]   walsh L=16 s=3 r=7 ε6=0.0008 ε9=0.0007 score=0.4284 best=0.4284@r7
+16:55:57 [unsatXX]   walsh L=16 s=3 r=8 ε6=0.0007 ε9=0.0006 score=0.4210 best=0.4210@r8
+16:55:57 [unsatXX]   walsh L=16 s=3 r=9 ε6=0.0007 ε9=0.0006 score=0.4155 best=0.4155@r9
+16:55:58 [unsatXX]   walsh L=16 s=3 r=10 ε6=0.0007 ε9=0.0006 score=0.4100 best=0.4100@r10
+16:55:59 [unsatXX]   walsh L=16 s=3 r=11 ε6=0.0007 ε9=0.0006 score=0.4066 best=0.4066@r11
+16:55:59 [unsatXX]   walsh L=16 s=3 r=12 ε6=0.0007 ε9=0.0006 score=0.4011 best=0.4011@r12
+16:56:00 [unsatXX]   walsh L=16 s=3 r=13 ε6=0.0007 ε9=0.0006 score=0.3967 best=0.3967@r13
+16:56:01 [unsatXX]   walsh L=16 s=3 r=14 ε6=0.0007 ε9=0.0006 score=0.3951 best=0.3951@r14
+16:56:01 [unsatXX]   walsh L=16 s=3 r=15 ε6=0.0007 ε9=0.0006 score=0.3923 best=0.3923@r15
+16:56:02 [unsatXX]   walsh L=16 s=3 r=16 ε6=0.0007 ε9=0.0006 score=0.3910 best=0.3910@r16
+16:56:02 [unsatXX]   walsh L=16 s=3 r=17 ε6=0.0007 ε9=0.0006 score=0.3842 best=0.3842@r17
+16:56:03 [unsatXX]   walsh L=16 s=3 r=18 ε6=0.0007 ε9=0.0006 score=0.3841 best=0.3841@r18
+16:56:04 [unsatXX]   walsh L=16 s=3 r=19 ε6=0.0007 ε9=0.0006 score=0.3777 best=0.3777@r19
+16:56:04 [unsatXX]   walsh L=16 s=3 r=20 ε6=0.0007 ε9=0.0006 score=0.3773 best=0.3773@r20
+16:56:05 [unsatXX]   walsh L=16 s=3 r=21 ε6=0.0007 ε9=0.0006 score=0.3720 best=0.3720@r21
+16:56:05 [unsatXX]   walsh L=16 s=3 r=22 ε6=0.0006 ε9=0.0006 score=0.3715 best=0.3715@r22
+16:56:06 [unsatXX]   walsh L=16 s=3 r=23 ε6=0.0007 ε9=0.0006 score=0.3672 best=0.3672@r23
+16:56:07 [unsatXX]   walsh L=16 s=3 r=24 ε6=0.0006 ε9=0.0006 score=0.3663 best=0.3663@r24
+16:56:07 [unsatXX]   walsh L=16 s=3 r=25 ε6=0.0006 ε9=0.0006 score=0.3624 best=0.3624@r25
+16:56:08 [unsatXX]   walsh L=16 s=3 r=26 ε6=0.0006 ε9=0.0006 score=0.3610 best=0.3610@r26
+16:56:09 [unsatXX]   walsh L=16 s=3 r=27 ε6=0.0006 ε9=0.0005 score=0.3581 best=0.3581@r27
+16:56:10 [unsatXX]   walsh L=16 s=3 r=29 ε6=0.0006 ε9=0.0005 score=0.3544 best=0.3544@r29
+16:56:10 [unsatXX]   walsh L=16 s=3 r=30 ε6=0.0006 ε9=0.0005 score=0.3552 best=0.3544@r29
+16:56:11 [unsatXX]   walsh L=16 s=3 r=31 ε6=0.0006 ε9=0.0005 score=0.3507 best=0.3507@r31
+16:56:12 [unsatXX]   walsh L=16 s=3 r=33 ε6=0.0006 ε9=0.0005 score=0.3479 best=0.3479@r33
+16:56:14 [unsatXX]   walsh L=16 s=3 r=35 ε6=0.0006 ε9=0.0005 score=0.3448 best=0.3448@r35
+16:56:14 [unsatXX]   walsh L=16 s=3 r=36 ε6=0.0006 ε9=0.0005 score=0.3461 best=0.3448@r35
+16:56:15 [unsatXX]   walsh L=16 s=3 r=37 ε6=0.0006 ε9=0.0005 score=0.3419 best=0.3419@r37
+16:56:16 [unsatXX]   walsh L=16 s=3 r=39 ε6=0.0006 ε9=0.0005 score=0.3385 best=0.3385@r39
+16:56:17 [unsatXX]   walsh L=16 s=3 r=41 ε6=0.0006 ε9=0.0005 score=0.3341 best=0.3341@r41
+16:56:18 [unsatXX]   walsh L=16 s=3 r=42 ε6=0.0006 ε9=0.0005 score=0.3372 best=0.3341@r41
+16:56:19 [unsatXX]   walsh L=16 s=3 r=43 ε6=0.0006 ε9=0.0005 score=0.3330 best=0.3330@r43
+16:56:19 [unsatXX]   walsh L=16 s=3 r=44 ε6=0.0006 ε9=0.0005 score=0.3272 best=0.3272@r44
+16:56:20 [unsatXX]   walsh L=16 s=3 r=45 ε6=0.0006 ε9=0.0005 score=0.3237 best=0.3237@r45
+16:56:20 [unsatXX]   walsh L=16 s=3 r=46 ε6=0.0006 ε9=0.0005 score=0.3179 best=0.3179@r46
+16:56:21 [unsatXX]   walsh L=16 s=3 r=47 ε6=0.0006 ε9=0.0005 score=0.3175 best=0.3175@r47
+16:56:28 [unsatXX-r5]   frozen ε12=0.0005 ε15=0.0006 ε18=0.0007 wall=30.4s tag=r47
+16:56:28 [unsatXX-r5] train walsh L=16 seed=4
+16:56:28 [unsatXX]   init walsh L=16 s=4 ε6=0.0038 ε9=0.0034 score=1.0000
+16:56:29 [unsatXX]   walsh L=16 s=4 r=0 ε6=0.0030 ε9=0.0029 score=0.8501 best=0.8501@r0
+16:56:30 [unsatXX]   walsh L=16 s=4 r=1 ε6=0.0028 ε9=0.0027 score=0.8010 best=0.8010@r1
+16:56:31 [unsatXX]   walsh L=16 s=4 r=2 ε6=0.0027 ε9=0.0027 score=0.7886 best=0.7886@r2
+16:56:31 [unsatXX]   walsh L=16 s=4 r=3 ε6=0.0027 ε9=0.0026 score=0.7615 best=0.7615@r3
+16:56:32 [unsatXX]   walsh L=16 s=4 r=4 ε6=0.0026 ε9=0.0025 score=0.7527 best=0.7527@r4
+16:56:32 [unsatXX]   walsh L=16 s=4 r=5 ε6=0.0025 ε9=0.0025 score=0.7415 best=0.7415@r5
+16:56:33 [unsatXX]   walsh L=16 s=4 r=6 ε6=0.0025 ε9=0.0025 score=0.7264 best=0.7264@r6
+16:56:34 [unsatXX]   walsh L=16 s=4 r=7 ε6=0.0025 ε9=0.0024 score=0.7205 best=0.7205@r7
+16:56:34 [unsatXX]   walsh L=16 s=4 r=8 ε6=0.0025 ε9=0.0024 score=0.7140 best=0.7140@r8
+16:56:35 [unsatXX]   walsh L=16 s=4 r=9 ε6=0.0024 ε9=0.0024 score=0.7099 best=0.7099@r9
+16:56:36 [unsatXX]   walsh L=16 s=4 r=10 ε6=0.0024 ε9=0.0024 score=0.7007 best=0.7007@r10
+16:56:36 [unsatXX]   walsh L=16 s=4 r=11 ε6=0.0024 ε9=0.0024 score=0.6991 best=0.6991@r11
+16:56:37 [unsatXX]   walsh L=16 s=4 r=12 ε6=0.0024 ε9=0.0023 score=0.6913 best=0.6913@r12
+16:56:37 [unsatXX]   walsh L=16 s=4 r=13 ε6=0.0023 ε9=0.0023 score=0.6894 best=0.6894@r13
+16:56:38 [unsatXX]   walsh L=16 s=4 r=14 ε6=0.0023 ε9=0.0023 score=0.6834 best=0.6834@r14
+16:56:39 [unsatXX]   walsh L=16 s=4 r=15 ε6=0.0023 ε9=0.0023 score=0.6796 best=0.6796@r15
+16:56:39 [unsatXX]   walsh L=16 s=4 r=16 ε6=0.0023 ε9=0.0023 score=0.6742 best=0.6742@r16
+16:56:40 [unsatXX]   walsh L=16 s=4 r=17 ε6=0.0022 ε9=0.0023 score=0.6718 best=0.6718@r17
+16:56:40 [unsatXX]   walsh L=16 s=4 r=18 ε6=0.0023 ε9=0.0023 score=0.6681 best=0.6681@r18
+16:56:41 [unsatXX]   walsh L=16 s=4 r=19 ε6=0.0022 ε9=0.0023 score=0.6665 best=0.6665@r19
+16:56:42 [unsatXX]   walsh L=16 s=4 r=20 ε6=0.0023 ε9=0.0022 score=0.6631 best=0.6631@r20
+16:56:42 [unsatXX]   walsh L=16 s=4 r=21 ε6=0.0022 ε9=0.0022 score=0.6610 best=0.6610@r21
+16:56:43 [unsatXX]   walsh L=16 s=4 r=22 ε6=0.0022 ε9=0.0022 score=0.6583 best=0.6583@r22
+16:56:43 [unsatXX]   walsh L=16 s=4 r=23 ε6=0.0022 ε9=0.0022 score=0.6564 best=0.6564@r23
+16:56:44 [unsatXX]   walsh L=16 s=4 r=24 ε6=0.0022 ε9=0.0022 score=0.6528 best=0.6528@r24
+16:56:45 [unsatXX]   walsh L=16 s=4 r=25 ε6=0.0022 ε9=0.0022 score=0.6514 best=0.6514@r25
+16:56:45 [unsatXX]   walsh L=16 s=4 r=26 ε6=0.0022 ε9=0.0022 score=0.6476 best=0.6476@r26
+16:56:46 [unsatXX]   walsh L=16 s=4 r=27 ε6=0.0022 ε9=0.0022 score=0.6459 best=0.6459@r27
+16:56:47 [unsatXX]   walsh L=16 s=4 r=28 ε6=0.0022 ε9=0.0022 score=0.6423 best=0.6423@r28
+16:56:47 [unsatXX]   walsh L=16 s=4 r=29 ε6=0.0022 ε9=0.0022 score=0.6404 best=0.6404@r29
+16:56:48 [unsatXX]   walsh L=16 s=4 r=30 ε6=0.0022 ε9=0.0022 score=0.6377 best=0.6377@r30
+16:56:49 [unsatXX]   walsh L=16 s=4 r=31 ε6=0.0021 ε9=0.0022 score=0.6364 best=0.6364@r31
+16:56:49 [unsatXX]   walsh L=16 s=4 r=32 ε6=0.0022 ε9=0.0021 score=0.6340 best=0.6340@r32
+16:56:50 [unsatXX]   walsh L=16 s=4 r=33 ε6=0.0021 ε9=0.0021 score=0.6326 best=0.6326@r33
+16:56:50 [unsatXX]   walsh L=16 s=4 r=34 ε6=0.0022 ε9=0.0021 score=0.6306 best=0.6306@r34
+16:56:51 [unsatXX]   walsh L=16 s=4 r=35 ε6=0.0021 ε9=0.0021 score=0.6284 best=0.6284@r35
+16:56:52 [unsatXX]   walsh L=16 s=4 r=36 ε6=0.0021 ε9=0.0021 score=0.6273 best=0.6273@r36
+16:56:52 [unsatXX]   walsh L=16 s=4 r=37 ε6=0.0021 ε9=0.0021 score=0.6244 best=0.6244@r37
+16:56:53 [unsatXX]   walsh L=16 s=4 r=38 ε6=0.0021 ε9=0.0021 score=0.6232 best=0.6232@r38
+16:56:54 [unsatXX]   walsh L=16 s=4 r=39 ε6=0.0021 ε9=0.0021 score=0.6204 best=0.6204@r39
+16:56:54 [unsatXX]   walsh L=16 s=4 r=40 ε6=0.0021 ε9=0.0021 score=0.6191 best=0.6191@r40
+16:56:55 [unsatXX]   walsh L=16 s=4 r=41 ε6=0.0021 ε9=0.0021 score=0.6166 best=0.6166@r41
+16:56:55 [unsatXX]   walsh L=16 s=4 r=42 ε6=0.0021 ε9=0.0021 score=0.6152 best=0.6152@r42
+16:56:56 [unsatXX]   walsh L=16 s=4 r=43 ε6=0.0021 ε9=0.0021 score=0.6129 best=0.6129@r43
+16:56:57 [unsatXX]   walsh L=16 s=4 r=44 ε6=0.0021 ε9=0.0021 score=0.6115 best=0.6115@r44
+16:56:57 [unsatXX]   walsh L=16 s=4 r=45 ε6=0.0021 ε9=0.0021 score=0.6092 best=0.6092@r45
+16:56:58 [unsatXX]   walsh L=16 s=4 r=46 ε6=0.0021 ε9=0.0021 score=0.6085 best=0.6085@r46
+16:56:59 [unsatXX]   walsh L=16 s=4 r=47 ε6=0.0021 ε9=0.0021 score=0.6059 best=0.6059@r47
+16:57:06 [unsatXX-r5]   frozen ε12=0.0022 ε15=0.0024 ε18=0.0027 wall=30.2s tag=r47
+16:57:17 [unsatXX-r5] VERDICT PASS: frozen n=12 L=16 Walsh R=0.342 (instance 95% CI 0.320–0.373) and n=15 R=0.375 (CI 0.340–0.412) both stay BEAT. 5/5 and 5/5 seeds beat. Paired majorities 5/5 and 5/5. Drop vs μ=0 unsat Walsh 0.598. n=18 probe L=16 Walsh R=0.411 Med ε=0.0007 on B=16 (peak 0.001, product gap 0.107); exploratory, not gated. PR #23 point estimates were n=12 R=0.330 and n=15 R=0.355.
+16:57:17 [unsatXX-r5] cost scan n=6 γ=0.0000 med ε=0.1322
+16:57:17 [unsatXX-r5] cost scan n=9 γ=0.0000 med ε=0.1258
+16:57:19 [unsatXX-r5] cost scan n=12 γ=0.0000 med ε=0.1202
+16:57:30 [unsatXX-r5] cost scan n=15 γ=0.0000 med ε=0.1245
+16:58:22 [unsatXX-r5] cost scan n=18 γ=0.0000 med ε=0.1242
+16:58:22 [unsatXX-r5] wrote /agent/repos/qumode_sep/Nov_3rd/runs/quantum_h_explore/unsat_rank2_mu/deepen/RESULTS.md verdict=PASS
+EXIT:0
