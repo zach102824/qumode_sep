@@ -1,0 +1,112 @@
+
+=== CMD /workspace/venv-explore/bin/python /workspace/qumode_sep/Nov_3rd/scripts/train_beat_train69.py --idea power_p --L 1 --seed 0 --threads 2 --batch_per_n 32 --w6 1 --w9 2 --packs_dir /workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/train_packs --out_root /workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250 --qaoa_dir /workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/qaoa_angles --eval_ns 6,9,12,15 --beat_mode raw @ 2026-11-04 12:16:43 +0800 ===
+12:16:44 [Nov_3rd] power_p L1 seed0: load train n6 B=250
+12:16:44 [Nov_3rd] power_p L1 seed0: load train n9 B=250
+12:16:44 [Nov_3rd] power_p L1 s0: train QAOA Meds n6=9.9564, n9=26.8395
+12:16:44 [Nov_3rd] power_p L1 s0: loss_mode=log_ratio soft_q=0.5
+12:16:44 [Nov_3rd] power_p L1 s0: n9 holdout=50 train_pool=200
+/workspace/qumode_sep/Nov_3rd/scripts/train_beat_train69.py:345: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  extra = f" p={float(p):.3f}" if p is not None else ""
+12:16:45 [Nov_3rd] power_p L1 s0 adam 0/600 loss=-0.00007 lam=1.00e-01 p=0.001
+12:16:45 [Nov_3rd] power_p L1 s0 NEW BEST holdout=-0.00075 @ adam0
+12:16:46 [Nov_3rd] power_p L1 s0 adam 25/600 loss=-0.00459 lam=9.59e-02 p=0.022
+12:16:46 [Nov_3rd] power_p L1 s0 NEW BEST holdout=-0.00707 @ adam25
+12:16:47 [Nov_3rd] power_p L1 s0 adam 50/600 loss=-0.00197 lam=9.17e-02 p=0.044
+12:16:47 [Nov_3rd] power_p L1 s0 NEW BEST holdout=-0.01029 @ adam50
+12:16:48 [Nov_3rd] power_p L1 s0 adam 75/600 loss=-0.00832 lam=8.76e-02 p=0.047
+12:16:49 [Nov_3rd] power_p L1 s0 adam 100/600 loss=-0.00403 lam=8.35e-02 p=0.058
+12:16:50 [Nov_3rd] power_p L1 s0 adam 125/600 loss=-0.00535 lam=7.93e-02 p=0.060
+12:16:51 [Nov_3rd] power_p L1 s0 adam 150/600 loss=-0.00598 lam=7.52e-02 p=0.060
+12:16:53 [Nov_3rd] power_p L1 s0 adam 175/600 loss=-0.00989 lam=7.11e-02 p=0.074
+12:16:54 [Nov_3rd] power_p L1 s0 adam 200/600 loss=-0.00849 lam=6.69e-02 p=0.079
+12:16:54 [Nov_3rd] power_p L1 s0 NEW BEST holdout=-0.01147 @ adam200
+12:16:55 [Nov_3rd] power_p L1 s0 adam 225/600 loss=-0.00641 lam=6.28e-02 p=0.082
+12:16:56 [Nov_3rd] power_p L1 s0 adam 250/600 loss=-0.00388 lam=5.87e-02 p=0.083
+12:16:57 [Nov_3rd] power_p L1 s0 adam 275/600 loss=-0.01071 lam=5.45e-02 p=0.083
+12:16:58 [Nov_3rd] power_p L1 s0 adam 300/600 loss=-0.00921 lam=5.04e-02 p=0.083
+12:16:59 [Nov_3rd] power_p L1 s0 adam 325/600 loss=-0.00544 lam=4.63e-02 p=0.081
+12:17:00 [Nov_3rd] power_p L1 s0 adam 350/600 loss=-0.00985 lam=4.22e-02 p=0.086
+12:17:01 [Nov_3rd] power_p L1 s0 adam 375/600 loss=-0.01028 lam=3.80e-02 p=0.086
+12:17:02 [Nov_3rd] power_p L1 s0 adam 400/600 loss=-0.00534 lam=3.39e-02 p=0.087
+12:17:03 [Nov_3rd] power_p L1 s0 adam 425/600 loss=-0.01602 lam=2.98e-02 p=0.091
+12:17:04 [Nov_3rd] power_p L1 s0 adam 450/600 loss=-0.00983 lam=2.56e-02 p=0.095
+12:17:06 [Nov_3rd] power_p L1 s0 adam 475/600 loss=-0.00719 lam=2.15e-02 p=0.091
+12:17:07 [Nov_3rd] power_p L1 s0 adam 500/600 loss=-0.00580 lam=1.74e-02 p=0.088
+12:17:07 [Nov_3rd] power_p L1 s0 NEW BEST holdout=-0.01236 @ adam500
+12:17:08 [Nov_3rd] power_p L1 s0 adam 525/600 loss=-0.00581 lam=1.32e-02 p=0.086
+12:17:09 [Nov_3rd] power_p L1 s0 adam 550/600 loss=-0.01119 lam=9.10e-03 p=0.089
+12:17:10 [Nov_3rd] power_p L1 s0 adam 575/600 loss=-0.00967 lam=4.97e-03 p=0.092
+12:17:11 [Nov_3rd] power_p L1 s0 adam 599/600 loss=-0.00775 lam=1.00e-03 p=0.095
+12:17:11 [Nov_3rd] power_p L1 s0 lbfgs r0/12 loss=-0.01130
+12:17:12 [Nov_3rd] power_p L1 s0 lbfgs r1/12 loss=-0.00770
+12:17:12 [Nov_3rd] power_p L1 s0 NEW BEST holdout=-0.01369 @ lbfgs1
+12:17:12 [Nov_3rd] power_p L1 s0 lbfgs r2/12 loss=-0.00675
+12:17:13 [Nov_3rd] power_p L1 s0 lbfgs r3/12 loss=-0.01173
+12:17:13 [Nov_3rd] power_p L1 s0 lbfgs r4/12 loss=-0.00123
+12:17:13 [Nov_3rd] power_p L1 s0 NEW BEST holdout=-0.01406 @ lbfgs4
+12:17:14 [Nov_3rd] power_p L1 s0 lbfgs r5/12 loss=-0.01078
+12:17:14 [Nov_3rd] power_p L1 s0 lbfgs r6/12 loss=-0.01115
+12:17:15 [Nov_3rd] power_p L1 s0 lbfgs r7/12 loss=-0.01029
+12:17:15 [Nov_3rd] power_p L1 s0 lbfgs r8/12 loss=-0.01065
+12:17:16 [Nov_3rd] power_p L1 s0 lbfgs r9/12 loss=-0.00747
+12:17:16 [Nov_3rd] power_p L1 s0 lbfgs r10/12 loss=-0.01276
+12:17:16 [Nov_3rd] power_p L1 s0 lbfgs r11/12 loss=-0.00693
+12:17:16 [Nov_3rd] power_p L1 s0: restoring best holdout=-0.01406 @ lbfgs4
+12:17:16 [Nov_3rd] power_p L1 s0 saved /workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/power_p/params_L1_seed0.pt wall=32s
+12:17:16 [Nov_3rd] eval n6 100/1000 Med≈9.522 (4492.66/s)
+12:17:16 [Nov_3rd] eval n6 200/1000 Med≈9.226 (5170.27/s)
+12:17:17 [Nov_3rd] eval n6 300/1000 Med≈9.641 (5508.09/s)
+12:17:17 [Nov_3rd] eval n6 400/1000 Med≈9.576 (5608.95/s)
+12:17:17 [Nov_3rd] eval n6 500/1000 Med≈9.503 (5498.94/s)
+12:17:17 [Nov_3rd] eval n6 600/1000 Med≈9.618 (5444.63/s)
+12:17:17 [Nov_3rd] eval n6 700/1000 Med≈9.630 (5393.11/s)
+12:17:17 [Nov_3rd] eval n6 800/1000 Med≈9.675 (5149.50/s)
+12:17:17 [Nov_3rd] eval n6 900/1000 Med≈9.657 (5258.92/s)
+12:17:17 [Nov_3rd] eval n6 1000/1000 Med≈9.650 (5356.36/s)
+12:17:17 [Nov_3rd] eval power_p L1 n6: Med=9.6498 Q=9.8870 BEAT B90=18.3241/18.8222 BEAT
+12:17:17 [Nov_3rd] eval n9 100/1000 Med≈27.443 (4330.14/s)
+12:17:17 [Nov_3rd] eval n9 200/1000 Med≈26.721 (4334.71/s)
+12:17:17 [Nov_3rd] eval n9 300/1000 Med≈27.944 (4350.40/s)
+12:17:17 [Nov_3rd] eval n9 400/1000 Med≈30.309 (4317.98/s)
+12:17:17 [Nov_3rd] eval n9 500/1000 Med≈28.570 (4324.62/s)
+12:17:17 [Nov_3rd] eval n9 600/1000 Med≈27.887 (4334.94/s)
+12:17:17 [Nov_3rd] eval n9 700/1000 Med≈28.474 (4338.09/s)
+12:17:17 [Nov_3rd] eval n9 800/1000 Med≈28.534 (4344.63/s)
+12:17:17 [Nov_3rd] eval n9 900/1000 Med≈28.543 (4335.40/s)
+12:17:17 [Nov_3rd] eval n9 1000/1000 Med≈28.734 (4328.82/s)
+12:17:17 [Nov_3rd] eval power_p L1 n9: Med=28.7336 Q=29.2098 BEAT B90=62.3041/62.5657 BEAT
+12:17:17 [Nov_3rd] eval n12 100/1000 Med≈103.019 (2034.02/s)
+12:17:17 [Nov_3rd] eval n12 200/1000 Med≈92.484 (2037.74/s)
+12:17:17 [Nov_3rd] eval n12 300/1000 Med≈91.765 (2042.75/s)
+12:17:17 [Nov_3rd] eval n12 400/1000 Med≈86.982 (2041.81/s)
+12:17:17 [Nov_3rd] eval n12 500/1000 Med≈87.578 (2039.56/s)
+12:17:17 [Nov_3rd] eval n12 600/1000 Med≈88.246 (2011.87/s)
+12:17:17 [Nov_3rd] eval n12 700/1000 Med≈89.122 (2008.13/s)
+12:17:17 [Nov_3rd] eval n12 800/1000 Med≈88.246 (2007.67/s)
+12:17:17 [Nov_3rd] eval n12 900/1000 Med≈87.726 (2007.15/s)
+12:17:17 [Nov_3rd] eval n12 1000/1000 Med≈89.058 (2009.48/s)
+12:17:17 [Nov_3rd] eval power_p L1 n12: Med=89.0577 Q=90.4429 BEAT B90=213.3561/214.4610 BEAT
+12:17:18 [Nov_3rd] eval n15 50/1000 Med≈296.443 (385.13/s)
+12:17:18 [Nov_3rd] eval n15 100/1000 Med≈302.836 (386.20/s)
+12:17:18 [Nov_3rd] eval n15 150/1000 Med≈296.929 (391.38/s)
+12:17:18 [Nov_3rd] eval n15 200/1000 Med≈302.836 (415.99/s)
+12:17:19 [Nov_3rd] eval n15 250/1000 Med≈302.836 (432.08/s)
+12:17:19 [Nov_3rd] eval n15 300/1000 Med≈313.751 (443.29/s)
+12:17:19 [Nov_3rd] eval n15 350/1000 Med≈308.968 (451.65/s)
+12:17:19 [Nov_3rd] eval n15 400/1000 Med≈308.968 (457.92/s)
+12:17:19 [Nov_3rd] eval n15 450/1000 Med≈298.434 (462.30/s)
+12:17:19 [Nov_3rd] eval n15 500/1000 Med≈292.958 (457.71/s)
+12:17:19 [Nov_3rd] eval n15 550/1000 Med≈292.958 (461.62/s)
+12:17:19 [Nov_3rd] eval n15 600/1000 Med≈290.654 (465.24/s)
+12:17:19 [Nov_3rd] eval n15 650/1000 Med≈290.654 (468.19/s)
+12:17:19 [Nov_3rd] eval n15 700/1000 Med≈289.918 (470.92/s)
+12:17:20 [Nov_3rd] eval n15 750/1000 Med≈286.970 (473.17/s)
+12:17:20 [Nov_3rd] eval n15 800/1000 Med≈288.991 (475.03/s)
+12:17:20 [Nov_3rd] eval n15 850/1000 Med≈289.918 (471.35/s)
+12:17:20 [Nov_3rd] eval n15 900/1000 Med≈291.465 (473.19/s)
+12:17:20 [Nov_3rd] eval n15 950/1000 Med≈288.545 (474.87/s)
+12:17:20 [Nov_3rd] eval n15 1000/1000 Med≈289.531 (476.59/s)
+12:17:20 [Nov_3rd] eval power_p L1 n15: Med=289.5312 Q=290.9709 BEAT B90=753.8078/750.2455 UNDER
+12:17:20 [Nov_3rd] wrote /workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/power_p/eval_L1_seed0.json ALL_CORE_BEAT=True
+=== EXIT 0 ===

@@ -5,4 +5,5 @@ _Beat mark: raw Med < QAOA Med → BEAT; equal → TIE; greater → UNDER. Same 
 | L | n6 SNAP Med | n6 Q Med | n6 Med | n6 SNAP B90 | n6 Q B90 | n6 B90 | n9 SNAP Med | n9 Q Med | n9 Med | n9 SNAP B90 | n9 Q B90 | n9 B90 | n12 SNAP Med | n12 Q Med | n12 Med | n12 SNAP B90 | n12 Q B90 | n12 B90 | n15 SNAP Med | n15 Q Med | n15 Med | n15 SNAP B90 | n15 Q B90 | n15 B90 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 1 | 9.6498 | 9.8870 | BEAT | 18.3241 | 18.8222 | BEAT | 28.7336 | 29.2098 | BEAT | 62.3041 | 62.5657 | BEAT | 89.0577 | 90.4429 | BEAT | 213.3561 | 214.4610 | BEAT | 289.5312 | 290.9709 | BEAT | 753.8078 | 750.2455 | UNDER |
+| 4 | 2.6276 | 2.8317 | BEAT | 5.5103 | 6.1126 | BEAT | 5.0719 | 5.4258 | BEAT | 12.9522 | 13.8769 | BEAT | 9.6818 | 10.0311 | BEAT | 30.3246 | 31.9176 | BEAT | 19.8845 | 20.3674 | BEAT | 68.0678 | 65.8982 | UNDER |
 
