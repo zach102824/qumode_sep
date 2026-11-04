@@ -385,3 +385,332 @@ def decide_unsat_xx(
     info["verdict"] = "needs_edit"
     info["reason"] = "; ".join(missed) if missed else "bars not all met"
     return info
+
+
+def paired_instance_counts(eps_method, eps_base, tol: float = 0.0) -> dict:
+    """Instance-paired comparison of two ε vectors on one frozen seed.
+
+    A win is method ε strictly below the Fourier ε by more than ``tol``.
+    """
+    a = np.asarray(eps_method, dtype=np.float64).reshape(-1)
+    b = np.asarray(eps_base, dtype=np.float64).reshape(-1)
+    if a.shape != b.shape or a.size < 1:
+        raise ValueError(f"paired shapes {a.shape} vs {b.shape}")
+    if not np.isfinite(a).all() or not np.isfinite(b).all():
+        raise ValueError("non-finite ε")
+    delta = a - b
+    win = int(np.sum(delta < -float(tol)))
+    tie = int(np.sum(np.abs(delta) <= float(tol)))
+    loss = int(np.sum(delta > float(tol)))
+    if win + tie + loss != int(a.size):
+        raise RuntimeError("paired partition")
+    return {
+        "win": win,
+        "tie": tie,
+        "loss": loss,
+        "n": int(a.size),
+        "win_frac": float(win / int(a.size)),
+    }
+
+
+def paired_seed_table(eps_method, eps_base, tol: float = 0.0) -> dict:
+    """Per-seed paired counts. A majority seed has strictly more wins than half the batch."""
+    if len(eps_method) != len(eps_base) or len(eps_method) < 1:
+        raise ValueError("paired seeds")
+    rows = [paired_instance_counts(a, b, tol=tol) for a, b in zip(eps_method, eps_base)]
+    return {
+        "per_seed": rows,
+        "n_majority": int(sum(1 for r in rows if r["win"] * 2 > r["n"])),
+        "n_seeds": len(rows),
+        "win": int(sum(r["win"] for r in rows)),
+        "tie": int(sum(r["tie"] for r in rows)),
+        "loss": int(sum(r["loss"] for r in rows)),
+        "n": int(sum(r["n"] for r in rows)),
+    }
+
+
+def wilson_interval(k: int, n: int, z: float = 1.959963984540054) -> tuple[float, float]:
+    """Wilson score interval for k successes in n trials. Descriptive on pooled pairs."""
+    k = int(k)
+    n = int(n)
+    if n < 1 or k < 0 or k > n:
+        raise ValueError(f"wilson k={k} n={n}")
+    p = k / n
+    z2 = float(z) ** 2
+    den = 1.0 + z2 / n
+    center = (p + z2 / (2.0 * n)) / den
+    half = float(z) * math.sqrt(p * (1.0 - p) / n + z2 / (4.0 * n * n)) / den
+    return float(center - half), float(center + half)
+
+
+def _median_ratio(eps_method, eps_base) -> float:
+    med_m = float(np.median([float(np.median(a)) for a in eps_method]))
+    med_b = float(np.median([float(np.median(b)) for b in eps_base]))
+    if abs(med_b) < 1e-15:
+        return float("nan")
+    return float(med_m / med_b)
+
+
+def bootstrap_ratio(eps_method, eps_base, n_boot: int = 4000, seed: int = 5136, mode: str = "instance") -> dict:
+    """95% interval for the ratio of medians.
+
+    The point is median-over-seeds of median-over-instances, the same R as the
+    transfer table. ``mode='instance'`` resamples instances inside each seed
+    and keeps every seed. ``mode='seed'`` resamples seeds and keeps their
+    instances. ``mode='both'`` resamples both.
+    """
+    if mode not in ("instance", "seed", "both"):
+        raise ValueError(mode)
+    methods = [np.asarray(a, dtype=np.float64).reshape(-1) for a in eps_method]
+    bases = [np.asarray(b, dtype=np.float64).reshape(-1) for b in eps_base]
+    if len(methods) < 2 or len(methods) != len(bases):
+        raise ValueError("bootstrap seeds")
+    width = methods[0].size
+    for a, b in zip(methods, bases):
+        if a.shape != b.shape or int(a.size) != int(width) or int(a.size) < 2:
+            raise ValueError("bootstrap instance axis")
+        if not np.isfinite(a).all() or not np.isfinite(b).all():
+            raise ValueError("non-finite ε")
+    point = _median_ratio(methods, bases)
+    if not math.isfinite(point):
+        raise RuntimeError("ratio of medians is not finite")
+    rng = np.random.default_rng(int(seed))
+    n_seed = len(methods)
+    draws = np.empty(int(n_boot), dtype=np.float64)
+    for t in range(int(n_boot)):
+        if mode == "instance":
+            pick = range(n_seed)
+        else:
+            pick = rng.integers(0, n_seed, size=n_seed)
+        ms = []
+        bs = []
+        for s in pick:
+            if mode == "seed":
+                ms.append(methods[int(s)])
+                bs.append(bases[int(s)])
+            else:
+                idx = rng.integers(0, width, size=width)
+                ms.append(methods[int(s)][idx])
+                bs.append(bases[int(s)][idx])
+        draws[t] = _median_ratio(ms, bs)
+    ok = draws[np.isfinite(draws)]
+    if int(ok.size) < int(n_boot) * 0.95:
+        raise RuntimeError("bootstrap ratios were non-finite")
+    lo, hi = np.quantile(ok, [0.025, 0.975])
+    return {
+        "R": float(point),
+        "lo": float(lo),
+        "hi": float(hi),
+        "n_boot": int(ok.size),
+        "n_seeds": int(n_seed),
+        "n_inst": int(width),
+        "seed": int(seed),
+        "mode": mode,
+    }
+
+
+def _n18_sentence(n18) -> str:
+    if not n18:
+        return ""
+    status = str(n18.get("status", ""))
+    if status == "probe" and n18.get("R") is not None:
+        peak = n18.get("peak_med")
+        gap = n18.get("prod_gap_med")
+        return (
+            f"n=18 probe L=16 Walsh R={float(n18['R']):.3f} "
+            f"Med ε={float(n18['med']):.4f} on B={int(n18['B'])} "
+            f"(peak {float(peak):.3f}, product gap {float(gap):.3f}); exploratory, not gated."
+        )
+    detail = n18.get("detail") or "Lanczos or the product bound did not finish in the probe budget."
+    return f"n=18 probe was not scored ({detail})."
+
+
+def _attach_n18(info: dict, n18) -> dict:
+    info["n18"] = n18
+    sentence = _n18_sentence(n18)
+    if sentence:
+        info["reason"] = info["reason"].rstrip() + " " + sentence
+    return info
+
+
+def decide_deepen(
+    cells: dict,
+    quantum: dict,
+    paired: dict,
+    ci: dict,
+    n18=None,
+    published_R: float = PUBLISHED_N12_L16,
+    min_drop: float = MIN_DROP,
+) -> dict:
+    """Round-5 seal of the μ=−0.25 Walsh freeze.
+
+    PASS when the frozen L=16 Walsh ratios at n=12 and n=15 both stay BEAT,
+    the instance-bootstrap 95% interval lies inside BEAT, every seed beats
+    its own Fourier, every seed wins a strict instance majority, the n=12
+    drop versus the μ=0 unsat seal stays at least 0.02, and the ground states
+    stay quantum. n=18 is reported and does not move the call.
+
+    KILL matches the three-seed rule: a bitstring ground state at n=6, 9, or
+    12; n=12 loses to Fourier and is not below the μ=0 ratio; or the L=16
+    Walsh advantage reverses from n=6 to n=12.
+    """
+    return _attach_n18(
+        _decide_deepen_body(cells, quantum, paired, ci, published_R, min_drop),
+        n18,
+    )
+
+
+def _decide_deepen_body(cells, quantum, paired, ci, published_R, min_drop) -> dict:
+    for n in (6, 9, 12, 15):
+        if n not in quantum:
+            return {
+                "verdict": "needs_edit",
+                "null": False,
+                "reason": f"quantumness missing at n={n}",
+            }
+    try:
+        cell12 = cells[("walsh", 16, 12)]
+        cell15 = cells[("walsh", 16, 15)]
+        r6 = float(cells[("walsh", 16, 6)]["R"])
+        r9 = float(cells[("walsh", 16, 9)]["R"])
+        mark6 = cells[("walsh", 16, 6)]["mark"]
+        mark9 = cells[("walsh", 16, 9)]["mark"]
+    except KeyError as exc:
+        return {"verdict": "needs_edit", "null": False, "reason": f"missing cell {exc}"}
+    seed12 = [float(x) for x in cell12["seed_Rs"]]
+    seed15 = [float(x) for x in cell15["seed_Rs"]]
+    n_seeds = len(seed12)
+    if n_seeds < 5 or len(seed15) != n_seeds:
+        return {
+            "verdict": "needs_edit",
+            "null": False,
+            "reason": f"deepen needs at least 5 matched seeds; got {n_seeds} and {len(seed15)}.",
+        }
+    for n in (6, 9, 12):
+        peak = float(quantum[n]["peak_med"])
+        if peak >= 0.5:
+            return {
+                "verdict": "KILL",
+                "null": False,
+                "reason": f"n={n} ground state is a bitstring (peak med {peak:.3f} ≥ 0.5).",
+            }
+    R = float(cell12["R"])
+    r15 = float(cell15["R"])
+    if mark6 == "BEAT" and mark9 == "UNDER" and R >= REVERSE_R:
+        return {
+            "verdict": "KILL",
+            "null": False,
+            "R12": R,
+            "R15": r15,
+            "reason": (
+                f"L=16 Walsh advantage reverses: n=6 R={r6:.3f}, n=9 R={r9:.3f}, "
+                f"n=12 R={R:.3f} ≥ {REVERSE_R}."
+            ),
+        }
+    if R > TIE_R and R + 1e-12 >= float(published_R):
+        return {
+            "verdict": "KILL",
+            "null": False,
+            "R12": R,
+            "R15": r15,
+            "reason": (
+                f"frozen n=12 Walsh R={R:.3f} does not beat Fourier QAOA and is not below "
+                f"the μ=0 unsat Walsh ratio {float(published_R):.3f}."
+            ),
+        }
+    clear = clearly_below(R, published_R, seed12, min_drop)
+    info = {
+        "clear": clear,
+        "R12": R,
+        "R15": r15,
+        "R6": r6,
+        "R9": r9,
+        "published_R": float(published_R),
+        "n_seeds": int(n_seeds),
+        "null": False,
+    }
+    if not clear["clear"]:
+        info["verdict"] = "needs_edit"
+        info["null"] = True
+        info["reason"] = (
+            f"null: frozen n=12 Walsh R={R:.3f} is not clearly below the μ=0 unsat Walsh "
+            f"ratio {float(published_R):.3f} (drop {clear['drop']:.3f}, "
+            f"seed-median drop {clear['seed_drop']:.3f}, bar {float(min_drop):.2f})."
+        )
+        return info
+
+    def _pull(store, n):
+        key = ("walsh", 16, n)
+        if key not in store:
+            return None
+        return store[key]
+
+    missed = []
+    ci12 = _pull(ci, 12)
+    ci15 = _pull(ci, 15)
+    p12 = _pull(paired, 12)
+    p15 = _pull(paired, 15)
+    if ci12 is None or ci15 is None:
+        missed.append("instance bootstrap CI missing at n=12 or n=15")
+    else:
+        for label, block, point in (("n=12", ci12, R), ("n=15", ci15, r15)):
+            if abs(float(block["R"]) - float(point)) > 1e-6:
+                missed.append(f"{label} CI point {float(block['R']):.4f} drifted from R {float(point):.4f}")
+            if float(block["hi"]) > BEAT_R + 1e-12:
+                missed.append(
+                    f"{label} instance 95% CI upper {float(block['hi']):.3f} is above {BEAT_R}"
+                )
+        info["ci12"] = [float(ci12["lo"]), float(ci12["hi"])]
+        info["ci15"] = [float(ci15["lo"]), float(ci15["hi"])]
+    n_beat12 = sum(r <= BEAT_R for r in seed12)
+    n_beat15 = sum(r <= BEAT_R for r in seed15)
+    info["n_seed_beat_12"] = int(n_beat12)
+    info["n_seed_beat_15"] = int(n_beat15)
+    if R > BEAT_R:
+        missed.append(f"n=12 R={R:.3f} is above {BEAT_R}")
+    if r15 > BEAT_R:
+        missed.append(f"n=15 R={r15:.3f} is above {BEAT_R}")
+    if n_beat12 < n_seeds:
+        missed.append(f"n=12 seeds beating Fourier {n_beat12}/{n_seeds}")
+    if n_beat15 < n_seeds:
+        missed.append(f"n=15 seeds beating Fourier {n_beat15}/{n_seeds}")
+    if clear["seed_median"] > BEAT_R:
+        missed.append(f"n=12 median per-seed R={clear['seed_median']:.3f} is above {BEAT_R}")
+    if float(np.median(seed15)) > BEAT_R:
+        missed.append(f"n=15 median per-seed R={float(np.median(seed15)):.3f} is above {BEAT_R}")
+    for label, block in (("n=12", p12), ("n=15", p15)):
+        if block is None:
+            missed.append(f"paired counts missing at {label}")
+            continue
+        if int(block["n_seeds"]) != n_seeds:
+            missed.append(f"{label} paired seed count {block['n_seeds']} != {n_seeds}")
+        elif int(block["n_majority"]) < n_seeds:
+            missed.append(
+                f"{label} instance majority on {int(block['n_majority'])}/{n_seeds} seeds "
+                f"(pooled wins {int(block['win'])}/{int(block['n'])})"
+            )
+    peak12 = float(quantum[12]["peak_med"])
+    gap12 = float(quantum[12]["prod_gap_med"])
+    peak15 = float(quantum[15]["peak_med"])
+    gap15 = float(quantum[15]["prod_gap_med"])
+    if not (peak12 < 0.5 and gap12 + 1e-12 >= PROD_GAP_MIN):
+        missed.append(f"n=12 quantumness fails (peak={peak12:.3f}, product gap={gap12:.3f})")
+    if not (peak15 < 0.5 and gap15 + 1e-12 >= PROD_GAP_MIN):
+        missed.append(f"n=15 quantumness fails (peak={peak15:.3f}, product gap={gap15:.3f})")
+    info["quantum_ok"] = bool(
+        peak12 < 0.5 and gap12 + 1e-12 >= PROD_GAP_MIN and peak15 < 0.5 and gap15 + 1e-12 >= PROD_GAP_MIN
+    )
+    if not missed:
+        info["verdict"] = "PASS"
+        info["reason"] = (
+            f"frozen n=12 L=16 Walsh R={R:.3f} "
+            f"(instance 95% CI {info['ci12'][0]:.3f}–{info['ci12'][1]:.3f}) and "
+            f"n=15 R={r15:.3f} (CI {info['ci15'][0]:.3f}–{info['ci15'][1]:.3f}) both stay BEAT. "
+            f"{n_beat12}/{n_seeds} and {n_beat15}/{n_seeds} seeds beat. "
+            f"Paired majorities {int(p12['n_majority'])}/{n_seeds} and {int(p15['n_majority'])}/{n_seeds}. "
+            f"Drop vs μ=0 unsat Walsh {clear['drop']:.3f}."
+        )
+        return info
+    info["verdict"] = "needs_edit"
+    info["reason"] = "; ".join(missed)
+    return info
