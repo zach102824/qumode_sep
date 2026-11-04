@@ -1,0 +1,113 @@
+{
+  "verdict": "needs_edit",
+  "null": false,
+  "reason": "quantumness fail: n=12 product gap \u2265 0.02 on 65.6% of instances (44/128 below 0.02, frac < 0.02 = 0.344, frac < 0.05 = 1.000); need \u2265 95%; quantumness fail: n=15 product gap \u2265 0.02 on 60.9% of instances (25/64 below 0.02, frac < 0.02 = 0.391, frac < 0.05 = 1.000); need \u2265 95% n=18 probe L=16 Walsh R=0.108 Med \u03b5=0.0001 on B=16 (peak 0.000, product gap 0.020); exploratory, not gated. PR #32 point estimates were n=12 R=0.076 and n=15 R=0.096.",
+  "R12": 0.07656419290946467,
+  "R15": 0.08944751937170997,
+  "ci12": [
+    0.07103194023723927,
+    0.08147173711687929
+  ],
+  "ci15": [
+    0.0837024970373381,
+    0.09612463440343766
+  ],
+  "prior_R12": 0.07629004834603922,
+  "prior_R15": 0.09580073235382872,
+  "published_R": 0.94,
+  "n18": {
+    "status": "probe",
+    "R": 0.10756150703513577,
+    "med": 0.00012663663013137396,
+    "B": 16,
+    "peak_med": 4.1249717172216386e-05,
+    "prod_gap_med": 0.01971194132194435,
+    "mark": "BEAT",
+    "probe_s": 4.843391180038452
+  },
+  "mu": -1.0,
+  "lam": 1.0,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "B_hold": 256,
+  "B_transfer": 128,
+  "B_n15": 64,
+  "gap_coverage": 0.95,
+  "gap_tails": {
+    "6:train": {
+      "n_inst": 128,
+      "n_gap_lt_0p02": 23,
+      "n_gap_lt_0p05": 128,
+      "frac_gap_lt_0p02": 0.1796875,
+      "frac_gap_lt_0p05": 1.0,
+      "frac_gap_ge_0p02": 0.8203125,
+      "gap_min": 0.014870407133198022,
+      "prod_gap_med": 0.02565400546387906
+    },
+    "6:hold": {
+      "n_inst": 256,
+      "n_gap_lt_0p02": 53,
+      "n_gap_lt_0p05": 256,
+      "frac_gap_lt_0p02": 0.20703125,
+      "frac_gap_lt_0p05": 1.0,
+      "frac_gap_ge_0p02": 0.79296875,
+      "gap_min": 0.011593789041971966,
+      "prod_gap_med": 0.025215695888001995
+    },
+    "9:train": {
+      "n_inst": 128,
+      "n_gap_lt_0p02": 24,
+      "n_gap_lt_0p05": 128,
+      "frac_gap_lt_0p02": 0.1875,
+      "frac_gap_lt_0p05": 1.0,
+      "frac_gap_ge_0p02": 0.8125,
+      "gap_min": 0.016426949953472977,
+      "prod_gap_med": 0.0220667128023291
+    },
+    "9:hold": {
+      "n_inst": 256,
+      "n_gap_lt_0p02": 75,
+      "n_gap_lt_0p05": 256,
+      "frac_gap_lt_0p02": 0.29296875,
+      "frac_gap_lt_0p05": 1.0,
+      "frac_gap_ge_0p02": 0.70703125,
+      "gap_min": 0.013786406750685067,
+      "prod_gap_med": 0.021659908985603313
+    },
+    "12:transfer": {
+      "n_inst": 128,
+      "n_gap_lt_0p02": 44,
+      "n_gap_lt_0p05": 128,
+      "frac_gap_lt_0p02": 0.34375,
+      "frac_gap_lt_0p05": 1.0,
+      "frac_gap_ge_0p02": 0.65625,
+      "gap_min": 0.01471419182645477,
+      "prod_gap_med": 0.020893975455683597
+    },
+    "15:transfer": {
+      "n_inst": 64,
+      "n_gap_lt_0p02": 25,
+      "n_gap_lt_0p05": 64,
+      "frac_gap_lt_0p02": 0.390625,
+      "frac_gap_lt_0p05": 1.0,
+      "frac_gap_ge_0p02": 0.609375,
+      "gap_min": 0.01772094072748366,
+      "prod_gap_med": 0.020658254181388634
+    },
+    "18:probe": {
+      "n_inst": 16,
+      "n_gap_lt_0p02": 8,
+      "n_gap_lt_0p05": 16,
+      "frac_gap_lt_0p02": 0.5,
+      "frac_gap_lt_0p05": 1.0,
+      "frac_gap_ge_0p02": 0.5,
+      "gap_min": 0.018032564686189554,
+      "prod_gap_med": 0.01971194132194435
+    }
+  }
+}
