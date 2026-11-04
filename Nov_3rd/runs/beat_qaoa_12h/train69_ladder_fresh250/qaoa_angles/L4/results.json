@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "L": 4,
+    "train": "train69 fresh 250 n6 + 250 n9, batch 32+32, paper init \u03b2=0.01 \u03b3=-0.01 nstart=1",
+    "packs_dir": "/workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/train_packs",
+    "betas": [
+      0.9292156100273132,
+      0.7564553022384644,
+      0.6076174378395081,
+      0.41266554594039917
+    ],
+    "gammas": [
+      -3.0491254329681396,
+      -5.03652286529541,
+      -5.989434242248535,
+      -7.057056427001953
+    ],
+    "train_loss": 1.4635862112045288,
+    "nstart": 1,
+    "init_notes": "arXiv:2208.06909 Boulebnane\u2013Montanaro \u00a7Parameter optimization: \u03b2_\u2113=0.01, \u03b3_\u2113=-0.01 for each layer; nstart=1",
+    "angle_convention": "qaoa_ref: U_C=exp(-i \u03b3 Cn), U_B=exp(-i \u03b2 X/2), Cn=E*n/m",
+    "finished": "2026-11-04 12:17:31 +0800"
+  },
+  "ladder": {
+    "6": {
+      "median_inv_p": 2.831675898949179,
+      "B90_inv_p": 6.112568827881212,
+      "mean_inv_p": 3.6107909929584463,
+      "frac_inv_le_2": 0.242,
+      "B": 1000,
+      "n_finite": 1000,
+      "n": 6,
+      "split": "scale1000",
+      "L": 4,
+      "S": 1.4256079208718238,
+      "m": 60,
+      "wall_s": 0.025360107421875,
+      "source": "fresh"
+    },
+    "9": {
+      "median_inv_p": 5.425784119159989,
+      "B90_inv_p": 13.876864844360954,
+      "mean_inv_p": 7.514696308775775,
+      "frac_inv_le_2": 0.015,
+      "B": 1000,
+      "n_finite": 1000,
+      "n": 9,
+      "split": "scale1000",
+      "L": 4,
+      "S": 2.160692740437145,
+      "m": 89,
+      "wall_s": 0.08202600479125977,
+      "source": "fresh"
+    },
+    "12": {
+      "median_inv_p": 10.031052349575777,
+      "B90_inv_p": 31.91755774818304,
+      "mean_inv_p": 16.25717115206679,
+      "frac_inv_le_2": 0.0,
+      "B": 1000,
+      "n_finite": 1000,
+      "n": 12,
+      "split": "scale1000",
+      "L": 4,
+      "S": 2.884420887336567,
+      "m": 119,
+      "wall_s": 0.7396543025970459,
+      "source": "fresh"
+    },
+    "15": {
+      "median_inv_p": 20.367359086569742,
+      "B90_inv_p": 65.89819612021498,
+      "mean_inv_p": 34.05487092895223,
+      "frac_inv_le_2": 0.0,
+      "B": 1000,
+      "n_finite": 1000,
+      "n": 15,
+      "split": "scale1000",
+      "L": 4,
+      "S": 3.601022321391573,
+      "m": 149,
+      "wall_s": 4.612917184829712,
+      "source": "fresh"
+    }
+  },
+  "updated": "2026-11-04 12:17:31 +0800"
+}
