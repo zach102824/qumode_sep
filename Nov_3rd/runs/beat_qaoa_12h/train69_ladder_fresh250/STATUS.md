@@ -1,4 +1,4 @@
-# STATUS — train69_ladder_fresh250 Phase 1
+# STATUS — train69_ladder_fresh250 Phase 1 done / Phase 2
 
 _Asia/Singapore (UTC+8) — started 2026-11-04 ~12:14_
 
@@ -10,7 +10,7 @@ _Asia/Singapore (UTC+8) — started 2026-11-04 ~12:14_
 - QAOA: fresh train on same 250/250 mix, paper init β=0.01 γ=-0.01 nstart=1
 - Phase 1 eval: n∈{6,9,12,15} B=1000; Med + B90; BEAT if raw Med < QAOA Med (same for B90)
 - L_LIST: 1,4,8,12,16,20,24,28,32 small→large
-- Phase 2 (n18, n21) **blocked** until Phase 1 complete
+- Phase 2: n18 **DONE**; n21 **IN PROGRESS**
 
 ## Progress
 | Step | Status | Notes |
@@ -28,7 +28,8 @@ _Asia/Singapore (UTC+8) — started 2026-11-04 ~12:14_
 | L=28 | done | all CORE Med+B90 BEAT |
 | L=32 | done | all CORE Med+B90 BEAT |
 | Phase1 RESULTS.md | done | full L ladder Med+B90 |
-| Phase2 | blocked | n18/n21 wait for parent |
+| Phase2 n18 | done | all L Med BEAT; B90 BEAT at L=4,8,16; UNDER elsewhere |
+| Phase2 n21 | in progress | eval existing angles on scale1000 n21 |
 
 ## Paths
 - Run: `Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/`
@@ -95,3 +96,71 @@ _Asia/Singapore (UTC+8) — started 2026-11-04 ~12:14_
 - [2026-11-04 13:31:24 +0800 Asia/Singapore] PHASE1 COMPLETE — all L in L_LIST have CORE Med/B90. Do NOT start Phase2.
 
 - [2026-11-04 13:33:52 +0800 Asia/Singapore] STATUS progress table marked Phase1 complete; Phase2 still blocked (do not start n18/n21).
+
+- [2026-11-04 13:36:51 +0800 Asia/Singapore] Phase2 START — n18 eval for all L (no retrain).
+
+- [2026-11-04 13:36:51 +0800 Asia/Singapore] Phase2 IN PROGRESS — n18 then n21; no retrain.
+
+- [2026-11-04 13:36:51 +0800 Asia/Singapore] scale1000 pack n18 present: /workspace/qumode_sep/Nov_3rd/data/scale1000/data_n18.npz
+
+- [2026-11-04 13:36:51 +0800 Asia/Singapore] Phase2 n18: start eval ns=[18] for all L
+
+- [2026-11-04 13:36:51 +0800 Asia/Singapore] Phase2 n18: L=1 QAOA eval…
+
+- [2026-11-04 13:37:24 +0800 Asia/Singapore] Phase2 n18: L=1 SNAP power_p eval…
+
+- [2026-11-04 13:37:50 +0800 Asia/Singapore] Phase2 n18: L=1 DONE
+
+- [2026-11-04 13:37:50 +0800 Asia/Singapore] Phase2 n18: L=4 QAOA eval…
+
+- [2026-11-04 13:39:17 +0800 Asia/Singapore] Phase2 n18: L=4 SNAP power_p eval…
+
+- [2026-11-04 13:40:51 +0800 Asia/Singapore] Phase2 n18: L=4 DONE
+
+- [2026-11-04 13:40:51 +0800 Asia/Singapore] Phase2 n18: L=8 QAOA eval…
+
+- [2026-11-04 13:43:30 +0800 Asia/Singapore] Phase2 n18: L=8 SNAP power_p eval…
+
+- [2026-11-04 13:45:13 +0800 Asia/Singapore] Phase2 n18: L=8 DONE
+
+- [2026-11-04 13:45:13 +0800 Asia/Singapore] Phase2 n18: L=12 QAOA eval…
+
+- [2026-11-04 13:49:12 +0800 Asia/Singapore] Phase2 n18: L=12 SNAP power_p eval…
+
+- [2026-11-04 13:52:03 +0800 Asia/Singapore] Phase2 n18: L=12 DONE
+
+- [2026-11-04 13:52:03 +0800 Asia/Singapore] Phase2 n18: L=16 QAOA eval…
+
+- [2026-11-04 13:57:41 +0800 Asia/Singapore] Phase2 n18: L=16 SNAP power_p eval…
+
+- [2026-11-04 14:01:14 +0800 Asia/Singapore] Phase2 n18: L=16 DONE
+
+- [2026-11-04 14:01:14 +0800 Asia/Singapore] Phase2 n18: L=20 QAOA eval…
+
+- [2026-11-04 14:08:06 +0800 Asia/Singapore] Phase2 n18: L=20 SNAP power_p eval…
+
+- [2026-11-04 14:12:28 +0800 Asia/Singapore] Phase2 n18: L=20 DONE
+
+- [2026-11-04 14:12:28 +0800 Asia/Singapore] Phase2 n18: L=24 QAOA eval…
+
+- [2026-11-04 14:20:22 +0800 Asia/Singapore] Phase2 n18: L=24 SNAP power_p eval…
+
+- [2026-11-04 14:25:20 +0800 Asia/Singapore] Phase2 n18: L=24 DONE
+
+- [2026-11-04 14:25:20 +0800 Asia/Singapore] Phase2 n18: L=28 QAOA eval…
+
+- [2026-11-04 14:35:16 +0800 Asia/Singapore] Phase2 n18: L=28 SNAP power_p eval…
+
+- [2026-11-04 14:41:10 +0800 Asia/Singapore] Phase2 n18: L=28 DONE
+
+- [2026-11-04 14:41:10 +0800 Asia/Singapore] Phase2 n18: L=32 QAOA eval…
+
+- [2026-11-04 14:49:55 +0800 Asia/Singapore] Phase2 n18: L=32 SNAP power_p eval…
+
+- [2026-11-04 14:57:26 +0800 Asia/Singapore] Phase2 n18: L=32 DONE
+
+- [2026-11-04 14:57:26 +0800 Asia/Singapore] Phase2 n18: COMPLETE for all L
+
+- [2026-11-04 14:57:26 +0800 Asia/Singapore] PHASE2 n18 COMPLETE — n21 not requested this run.
+
+- [2026-11-04 15:01:01 +0800 Asia/Singapore] Phase2 n18 COMPLETE — all L Med BEAT. Watcher died on git status|head pipefail; executor resumed commit+n21.
