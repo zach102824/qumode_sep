@@ -59,6 +59,8 @@ PUBLISHED_N12_L16 = float(PUBLISHED_WALSH_R[(16, 12)])
 MIN_DROP = float(CLEAR_DROP)
 # Same product-state bar as the Rank2 μ transfer.
 PROD_GAP_MIN = 0.02
+# Round 7 seal: this fraction of n=12 and of n=15 instances must sit at or above the bar.
+GAP_COVERAGE = 0.95
 
 
 def cavity_x_strings(pX: torch.Tensor, n_cav: int, sx8: torch.Tensor, xx8: torch.Tensor):
@@ -533,6 +535,76 @@ def _attach_n18(info: dict, n18) -> dict:
     return info
 
 
+def product_gap_tail(prod_gap: np.ndarray, peak: np.ndarray | None = None) -> dict:
+    """Instance counts under the product-gap bars 0.02 and 0.05.
+
+    An instance is under a bar when ``(E_prod − E_0) / |E_0|`` is strictly below it.
+    ``frac_gap_ge_0p02`` is the complement of the 0.02 count, which is the Round 7 coverage.
+    """
+    gap = np.asarray(prod_gap, dtype=np.float64).reshape(-1)
+    n = int(gap.size)
+    if n < 1:
+        raise ValueError("empty product-gap sample")
+    n02 = int(np.sum(gap < PROD_GAP_MIN))
+    n05 = int(np.sum(gap < 0.05))
+    out = {
+        "gap_min": float(np.min(gap)),
+        "gap_med": float(np.median(gap)),
+        "n_inst": n,
+        "n_gap_lt_0p02": n02,
+        "n_gap_lt_0p05": n05,
+        "frac_gap_lt_0p02": float(n02 / n),
+        "frac_gap_lt_0p05": float(n05 / n),
+        "n_gap_ge_0p02": int(n - n02),
+        "frac_gap_ge_0p02": float((n - n02) / n),
+    }
+    if peak is not None:
+        out["peak_max"] = float(np.max(np.asarray(peak, dtype=np.float64)))
+    return out
+
+
+def _coverage_misses(quantum: dict, gap_coverage: float | None) -> list:
+    """Round 7 gate. Empty when ``gap_coverage`` is unset, so earlier seals stay put."""
+    if gap_coverage is None:
+        return []
+    misses = []
+    need = float(gap_coverage)
+    for n in (12, 15):
+        row = quantum[n]
+        if "frac_gap_ge_0p02" not in row or "n_inst" not in row:
+            misses.append(f"quantumness fail: n={n} instance product-gap counts are missing")
+            continue
+        frac = float(row["frac_gap_ge_0p02"])
+        n_inst = int(row["n_inst"])
+        if frac + 1e-12 < need:
+            misses.append(
+                f"quantumness fail: n={n} product gap ≥ {PROD_GAP_MIN:.2f} on {frac:.1%} of instances "
+                f"({int(row['n_gap_lt_0p02'])}/{n_inst} below {PROD_GAP_MIN:.2f}, "
+                f"frac < 0.02 = {float(row['frac_gap_lt_0p02']):.3f}, "
+                f"frac < 0.05 = {float(row['frac_gap_lt_0p05']):.3f}); "
+                f"need ≥ {need:.0%}"
+            )
+    return misses
+
+
+def _coverage_sentence(quantum: dict, gap_coverage: float | None) -> str:
+    if gap_coverage is None:
+        return ""
+    bits = []
+    for n in (12, 15):
+        row = quantum[n]
+        bits.append(
+            f"n={n} frac gap<0.02 = {float(row['frac_gap_lt_0p02']):.3f} "
+            f"({int(row['n_gap_lt_0p02'])}/{int(row['n_inst'])}), "
+            f"frac gap<0.05 = {float(row['frac_gap_lt_0p05']):.3f}"
+        )
+    return (
+        " Instance product-gap tails: "
+        + "; ".join(bits)
+        + f". At least {float(gap_coverage):.0%} of each sealed size has gap ≥ {PROD_GAP_MIN:.2f}."
+    )
+
+
 def decide_deepen(
     cells: dict,
     quantum: dict,
@@ -541,6 +613,7 @@ def decide_deepen(
     n18=None,
     published_R: float = PUBLISHED_N12_L16,
     min_drop: float = MIN_DROP,
+    gap_coverage: float | None = None,
 ) -> dict:
     """Round-5 seal of the μ=−0.25 Walsh freeze.
 
@@ -550,17 +623,22 @@ def decide_deepen(
     drop versus the μ=0 unsat seal stays at least 0.02, and the ground states
     stay quantum. n=18 is reported and does not move the call.
 
+    ``gap_coverage`` is the Round 7 instance gate. When set, n=12 and n=15
+    each need that fraction of instances at product gap ≥ 0.02. A shortfall
+    is needs_edit and the reason starts with ``quantumness fail``. Leaving it
+    unset keeps the median-only quantumness check used by the earlier seals.
+
     KILL matches the three-seed rule: a bitstring ground state at n=6, 9, or
     12; n=12 loses to Fourier and is not below the μ=0 ratio; or the L=16
     Walsh advantage reverses from n=6 to n=12.
     """
     return _attach_n18(
-        _decide_deepen_body(cells, quantum, paired, ci, published_R, min_drop),
+        _decide_deepen_body(cells, quantum, paired, ci, published_R, min_drop, gap_coverage),
         n18,
     )
 
 
-def _decide_deepen_body(cells, quantum, paired, ci, published_R, min_drop) -> dict:
+def _decide_deepen_body(cells, quantum, paired, ci, published_R, min_drop, gap_coverage=None) -> dict:
     for n in (6, 9, 12, 15):
         if n not in quantum:
             return {
@@ -697,9 +775,15 @@ def _decide_deepen_body(cells, quantum, paired, ci, published_R, min_drop) -> di
         missed.append(f"n=12 quantumness fails (peak={peak12:.3f}, product gap={gap12:.3f})")
     if not (peak15 < 0.5 and gap15 + 1e-12 >= PROD_GAP_MIN):
         missed.append(f"n=15 quantumness fails (peak={peak15:.3f}, product gap={gap15:.3f})")
-    info["quantum_ok"] = bool(
+    coverage = _coverage_misses(quantum, gap_coverage)
+    if coverage:
+        missed = coverage + missed
+    med_ok = (
         peak12 < 0.5 and gap12 + 1e-12 >= PROD_GAP_MIN and peak15 < 0.5 and gap15 + 1e-12 >= PROD_GAP_MIN
     )
+    info["quantum_ok"] = bool(med_ok and not coverage)
+    if gap_coverage is not None:
+        info["gap_coverage"] = float(gap_coverage)
     if not missed:
         info["verdict"] = "PASS"
         info["reason"] = (
@@ -709,6 +793,7 @@ def _decide_deepen_body(cells, quantum, paired, ci, published_R, min_drop) -> di
             f"{n_beat12}/{n_seeds} and {n_beat15}/{n_seeds} seeds beat. "
             f"Paired majorities {int(p12['n_majority'])}/{n_seeds} and {int(p15['n_majority'])}/{n_seeds}. "
             f"Drop vs μ=0 unsat Walsh {clear['drop']:.3f}."
+            + _coverage_sentence(quantum, gap_coverage)
         )
         return info
     info["verdict"] = "needs_edit"

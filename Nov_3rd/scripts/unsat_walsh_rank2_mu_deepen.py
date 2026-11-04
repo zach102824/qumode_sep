@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Deepen freeze of unsat λ=0.75 Walsh. Default μ=−0.25 (PR #25).
 
-``--mu -0.50`` reruns that pipeline on the PR #26 winner. The scorer is
-unchanged: BinH U_c^X, Hamming-shell SNAP, Z histogram for unsat, X
-histogram for the field and intra-cavity XX. Angles are fit on n=6 and n=9.
-n=12 and n=15 are the sealed transfer. n=18 is a Lanczos probe and does not
-enter the loss, the checkpoint selection, or the PASS gate. n=21 is not loaded.
+``--mu -0.50`` reruns that pipeline on the PR #26 winner.
+``--mu -1.00`` is the Round 7 seal of the PR #28 edge, on the same budget,
+with an instance quantumness gate: at least 95% of n=12 and of n=15 formulas
+must have product gap ≥ 0.02. The scorer is unchanged: BinH U_c^X,
+Hamming-shell SNAP, Z histogram for unsat, X histogram for the field and
+intra-cavity XX. Angles are fit on n=6 and n=9. n=12 and n=15 are the sealed
+transfer. n=18 is a Lanczos probe and does not enter the loss, the checkpoint
+selection, or the PASS gate. n=21 is not loaded.
 
     H = diag(unsat) − 0.75 Σ_i X_i + μ Σ_cav Σ_{i<j} X_i X_j
 """
@@ -33,6 +36,7 @@ from Nov_3rd.quantum_h_tf import FockSim
 from Nov_3rd.quantum_h_transfer import center_cn, load_split, walsh_mass_fractions
 from Nov_3rd.seal_unsat import mark_of
 from Nov_3rd.unsat_rank2_xx import (
+    GAP_COVERAGE,
     LAM,
     MU,
     PUBLISHED_N12_L16,
@@ -42,6 +46,7 @@ from Nov_3rd.unsat_rank2_xx import (
     bootstrap_ratio,
     decide_deepen,
     paired_seed_table,
+    product_gap_tail,
     wilson_interval,
 )
 
@@ -54,6 +59,8 @@ _SPEC.loader.exec_module(base)
 
 PARENT = S.OUT / "quantum_h_explore" / "unsat_rank2_mu"
 SWEEP_CACHE = S.OUT / "quantum_h_explore" / "unsat_mu_sweep" / "cache"
+# PR #28 diagonals at μ=−1.00. A shorter prefix is reused only when seeds match.
+NEG_CACHE = S.OUT / "quantum_h_explore" / "unsat_mu_neg" / "cache"
 # PR #23 ratio of medians, 3 seeds, transfer B=64 (n=12) and B=32 (n=15).
 # apply_mu(-0.50) replaces these with the PR #26 point estimates.
 PRIOR_R = {12: 0.33011169158114184, 15: 0.3554511757416401}
@@ -62,6 +69,7 @@ BRANCH = "cursor/unsat-walsh-mu-deepen-5136"
 PRIOR_NOTE = "PR #23"
 ROUND_NAME = "Round 5 deepen"
 LOG_TAG = "unsatXX-r5"
+PROTOCOL = "deepen_r5"
 BOOT_SEED = 5136
 BOOT_DRAWS = 4000
 
@@ -82,7 +90,7 @@ _PATHS_ORIG = base._paths
 
 def apply_mu(mu: float) -> float:
     """Point the imported scorer at one operating point. Default stays −0.25."""
-    global MU, PRIOR_R, PRIOR_B, BRANCH, PRIOR_NOTE, ROUND_NAME, LOG_TAG
+    global MU, PRIOR_R, PRIOR_B, BRANCH, PRIOR_NOTE, ROUND_NAME, LOG_TAG, PROTOCOL
     import Nov_3rd.unsat_rank2_xx as xx
 
     mu = float(mu)
@@ -94,6 +102,7 @@ def apply_mu(mu: float) -> float:
         PRIOR_NOTE = "PR #23"
         ROUND_NAME = "Round 5 deepen"
         LOG_TAG = "unsatXX-r5"
+        PROTOCOL = "deepen_r5"
         base._paths = _PATHS_ORIG
     elif abs(mu - (-0.50)) <= 1e-12:
         MU = -0.50
@@ -104,9 +113,21 @@ def apply_mu(mu: float) -> float:
         PRIOR_NOTE = "PR #26"
         ROUND_NAME = "Round 6 seal"
         LOG_TAG = "unsatXX-r6"
+        PROTOCOL = "deepen_r5"
+        base._paths = _paths_mu
+    elif abs(mu - (-1.00)) <= 1e-12:
+        MU = -1.00
+        # PR #28 ratio of medians, 3 seeds, transfer B=64 (n=12) and B=32 (n=15).
+        PRIOR_R = {12: 0.09675474400205866, 15: 0.11904036219488356}
+        PRIOR_B = {12: 64, 15: 32}
+        BRANCH = "cursor/unsat-walsh-mu100-seal-3d9d"
+        PRIOR_NOTE = "PR #28"
+        ROUND_NAME = "Round 7 seal"
+        LOG_TAG = "unsatXX-r7"
+        PROTOCOL = "seal_mu100"
         base._paths = _paths_mu
     else:
-        raise SystemExit("deepen μ must be −0.25 (PR #25) or −0.50 (PR #26 winner)")
+        raise SystemExit("deepen μ must be −0.25, −0.50, or −1.00")
     base.MU = MU
     xx.MU = MU
     return MU
@@ -128,7 +149,11 @@ def _blob(path: Path) -> dict:
 def _cache_dirs(out: Path):
     # PR #26 wrote the μ=−0.50 diagonals under the sweep cache. A prefix there
     # matches this tag only, so the μ=−0.25 files in PARENT stay unused.
-    return [out / "cache", PARENT / "cache", SWEEP_CACHE]
+    # PR #28 wrote the μ=−1.00 prefixes under NEG_CACHE.
+    dirs = [out / "cache", PARENT / "cache", SWEEP_CACHE]
+    if abs(float(MU) - (-1.00)) <= 1e-12:
+        dirs.append(NEG_CACHE)
+    return dirs
 
 
 def _find_exact(out: Path, n: int, role: str, count: int):
@@ -272,8 +297,12 @@ def load_diagonal(n: int, role: str, count: int, out: Path, workers: int) -> dic
 
 
 def _meta(blob: dict, n: int, role: str) -> dict:
-    denom = np.maximum(np.abs(blob["e0"]), 1e-8)
-    gap = (blob["e_prod"] - blob["e0"]) / denom
+    if "prod_gap" in blob:
+        gap = np.asarray(blob["prod_gap"], dtype=np.float64)
+    else:
+        denom = np.maximum(np.abs(blob["e0"]), 1e-8)
+        gap = (blob["e_prod"] - blob["e0"]) / denom
+    tail = product_gap_tail(gap, blob["peak"])
     refs = base._ref_eps(blob["score"], blob["e0"], n)
     return {
         "n": int(n),
@@ -282,8 +311,9 @@ def _meta(blob: dict, n: int, role: str) -> dict:
         "peak_med": float(np.median(blob["peak"])),
         "entropy_med": float(np.median(blob["entropy"])),
         "residual_max": float(np.max(blob["residual"])),
-        "prod_gap_med": float(np.median(gap)),
+        "prod_gap_med": float(tail["gap_med"]),
         "seeds": [int(s) for s in np.asarray(blob["seeds"]).reshape(-1)],
+        **{k: v for k, v in tail.items() if k != "gap_med"},
         **refs,
     }
 
@@ -300,6 +330,7 @@ def _attach(sims, prepared, quantum, n, role, blob):
     log(
         f"  n={n} {role} B={meta['B']} peak={meta['peak_med']:.3f} "
         f"S={meta['entropy_med']:.3f} gap={meta['prod_gap_med']:.3f} "
+        f"frac<0.02={meta['frac_gap_lt_0p02']:.3f} frac<0.05={meta['frac_gap_lt_0p05']:.3f} "
         f"ε+={meta['med_eps_plus']:.3f} εbit={meta['med_eps_bit']:.3f}"
     )
 
@@ -363,7 +394,7 @@ def probe_n18(args, out: Path, sims, prepared, quantum) -> dict:
 
 
 def _check_protocol(rec: dict, args) -> None:
-    if rec.get("protocol") != "deepen_r5":
+    if rec.get("protocol") != PROTOCOL:
         raise RuntimeError(f"resume protocol {rec.get('protocol')}")
     expect = {
         "B_train": args.B_train,
@@ -399,7 +430,7 @@ def fit_deep(method, L, seed, train, hold, report, args, theta0, ref, out: Path,
     rec = base.fit_one(method, L, seed, train, hold, LAM, rounds, max_iter, args.lr, theta0, ref)
     rec["eval"] = base.evaluate(method, rec["theta"], report, LAM, L)
     base._check_select(rec)
-    rec["protocol"] = "deepen_r5"
+    rec["protocol"] = PROTOCOL
     rec["B_train"] = int(args.B_train)
     rec["B_hold"] = int(args.B_hold)
     rec["B_transfer"] = int(args.B_transfer)
@@ -559,7 +590,22 @@ def render(payload: dict) -> str:
     lines.append("")
     lines.append("## Setup")
     lines.append("")
-    if abs(float(payload["mu"]) - (-0.50)) < 1e-9:
+    if abs(float(payload["mu"]) - (-1.00)) < 1e-9:
+        lines.append(
+            "Same gate as the PR #27 seal: BinH U_c^X, Hamming-shell SNAP. "
+            "The Hamiltonian is the PR #28 edge, μ=−1.00. "
+            "Intra-cavity XX is scored from the X histogram. "
+            "Angles are fit on n=6 and n=9. The sealed scores at n=12 and n=15, and the n=18 probe, "
+            "use those frozen angles. n=21 was not loaded. "
+            "PR #27 sealed μ=−0.50 at n=12 L=16 Walsh R=0.147 with product gap 0.064. "
+            "PR #28 moved the same H to μ=−1.00 (n=12 R=0.097 on B=64, median product gap 0.028, "
+            "1/64 instances under 0.02). This run keeps that edge and asks the larger sample "
+            "to clear a 95% instance gap."
+        )
+        hold_note = "PR #28 used 128"
+        transfer_note = f"PR #28 used {PRIOR_B[12]} and {PRIOR_B[15]}"
+        budget_note = "That is the PR #25 and PR #27 optimizer budget on a larger selection holdout."
+    elif abs(float(payload["mu"]) - (-0.50)) < 1e-9:
         lines.append(
             "Same gate as the PR #25 deepen: BinH U_c^X, Hamming-shell SNAP. "
             "The Hamiltonian is the PR #26 winner, μ=−0.50. "
@@ -642,6 +688,25 @@ def render(payload: dict) -> str:
             f"{row['prod_gap_med']:.3f} | {row['med_eps_plus']:.3f} | {row['med_eps_bit']:.3f} | "
             f"{row['residual_max']:.1e} |"
         )
+    if abs(float(payload["mu"]) - (-1.00)) < 1e-9:
+        lines.append("")
+        lines.append(
+            "Instance product-gap tails. A count is the number of formulas with "
+            "(E_prod − E_0) / |E_0| strictly below the bar. "
+            "The Round 7 seal needs at least 95% of the n=12 instances and at least 95% of the n=15 instances "
+            "at or above 0.02. The fraction below 0.05 is reported and does not gate the call. "
+            "n=6, n=9, and the n=18 probe are the same count and are not part of that gate."
+        )
+        lines.append("")
+        lines.append("| n | role | B | n < 0.02 | frac < 0.02 | n < 0.05 | frac < 0.05 | min gap |")
+        lines.append("|--:|:-----|--:|---------:|------------:|---------:|------------:|--------:|")
+        for n, role in order_q:
+            row = q[f"{n}:{role}"]
+            lines.append(
+                f"| {n} | {role} | {row['B']} | {int(row['n_gap_lt_0p02'])} | "
+                f"{float(row['frac_gap_lt_0p02']):.3f} | {int(row['n_gap_lt_0p05'])} | "
+                f"{float(row['frac_gap_lt_0p05']):.3f} | {float(row['gap_min']):.4f} |"
+            )
     mass = payload["walsh_mass"]
     lines.append("")
     lines.append(
@@ -745,13 +810,22 @@ def render(payload: dict) -> str:
     lines.append("")
     lines.append("## Rule")
     lines.append("")
-    lines.append(
+    rule = (
         "PASS if frozen L=16 Walsh at n=12 and at n=15 both have ratio-of-medians ≤ 0.98, "
         "the instance-bootstrap 95% interval lies inside that BEAT line, every seed beats its own Fourier, "
         "every seed wins a strict majority of instances, the n=12 drop versus PR #19's 0.940 is at least 0.02 "
         "on both the ratio of medians and the median per-seed ratio, and the n=12 and n=15 ground states "
-        "have peak < 0.5 and product gap ≥ 0.02. power_p does not gate PASS. n=18 does not gate PASS."
+        "have peak < 0.5 and median product gap ≥ 0.02."
     )
+    if abs(float(payload["mu"]) - (-1.00)) < 1e-9:
+        rule += (
+            " Round 7 also requires at least 95% of the n=12 instances and at least 95% of the n=15 instances "
+            "to have product gap ≥ 0.02. A shortfall on that fraction is needs_edit and is a quantumness fail, "
+            "even when the median gap and the Walsh ratios still look like a BEAT. "
+            "The fraction of instances with product gap < 0.05 is reported and does not move the call."
+        )
+    rule += " power_p does not gate PASS. n=18 does not gate PASS."
+    lines.append(rule)
     lines.append("")
     lines.append(
         "A drop under 0.02, with none of the kill conditions, is a null and the call is needs_edit. "
@@ -820,6 +894,8 @@ def write_all(out: Path, payload: dict):
         "B_hold": payload["B_hold"],
         "B_transfer": payload["B_transfer"],
         "B_n15": payload["B_n15"],
+        "gap_coverage": payload.get("gap_coverage"),
+        "gap_tails": _gap_tails_public(payload),
     }
     (out / "verdict.json").write_text(json.dumps(base._jsonable(verdict), indent=2) + "\n")
     log(f"wrote {out / 'RESULTS.md'} verdict={verdict['verdict']}")
@@ -827,10 +903,46 @@ def write_all(out: Path, payload: dict):
 
 def quantum_for_decide(quantum: dict) -> dict:
     role = {6: "hold", 9: "hold", 12: "transfer", 15: "transfer"}
-    return {
-        n: {"peak_med": float(quantum[(n, role[n])]["peak_med"]), "prod_gap_med": float(quantum[(n, role[n])]["prod_gap_med"])}
-        for n in role
-    }
+    tail_keys = (
+        "frac_gap_ge_0p02",
+        "frac_gap_lt_0p02",
+        "frac_gap_lt_0p05",
+        "n_gap_lt_0p02",
+        "n_gap_lt_0p05",
+        "n_gap_ge_0p02",
+        "n_inst",
+        "gap_min",
+    )
+    out = {}
+    for n in role:
+        row = quantum[(n, role[n])]
+        item = {
+            "peak_med": float(row["peak_med"]),
+            "prod_gap_med": float(row["prod_gap_med"]),
+        }
+        for key in tail_keys:
+            if key in row:
+                item[key] = row[key]
+        out[n] = item
+    return out
+
+
+def _gap_tails_public(payload: dict) -> dict:
+    out = {}
+    for key, row in payload["quantum"].items():
+        if "frac_gap_lt_0p02" not in row:
+            continue
+        out[key] = {
+            "n_inst": int(row["n_inst"]),
+            "n_gap_lt_0p02": int(row["n_gap_lt_0p02"]),
+            "n_gap_lt_0p05": int(row["n_gap_lt_0p05"]),
+            "frac_gap_lt_0p02": float(row["frac_gap_lt_0p02"]),
+            "frac_gap_lt_0p05": float(row["frac_gap_lt_0p05"]),
+            "frac_gap_ge_0p02": float(row["frac_gap_ge_0p02"]),
+            "gap_min": float(row["gap_min"]),
+            "prod_gap_med": float(row["prod_gap_med"]),
+        }
+    return out
 
 
 def n18_for_decide(cells, quantum, status: dict) -> dict:
@@ -874,7 +986,9 @@ def main():
     args = ap.parse_args()
     apply_mu(float(args.mu))
     if args.out == "":
-        if abs(MU - (-0.50)) <= 1e-12:
+        if abs(MU - (-1.00)) <= 1e-12:
+            args.out = str(S.OUT / "quantum_h_explore" / "unsat_mu100_seal")
+        elif abs(MU - (-0.50)) <= 1e-12:
             args.out = str(S.OUT / "quantum_h_explore" / "unsat_mu050_seal")
         else:
             args.out = str(PARENT / "deepen")
@@ -886,6 +1000,10 @@ def main():
         raise SystemExit("refusing to write into the n=21 ladder or frozen angle store")
     if abs(MU - (-0.50)) <= 1e-12 and out.name == "deepen" and "unsat_rank2_mu" in out.parts:
         raise SystemExit("refusing to overwrite the μ=−0.25 deepen directory")
+    if abs(MU - (-1.00)) <= 1e-12 and (
+        "unsat_mu050_seal" in out.parts or (out.name == "deepen" and "unsat_rank2_mu" in out.parts)
+    ):
+        raise SystemExit("refusing to overwrite the μ=−0.50 seal or the μ=−0.25 deepen directory")
     if len(args.seeds) < 5 or len(set(args.seeds)) != len(args.seeds):
         raise SystemExit("deepen needs at least 5 distinct seeds")
     if args.B_train < 128 or args.B_hold < 256 or args.B_transfer < 128 or args.B_n15 < 64:
@@ -907,12 +1025,14 @@ def main():
     qdec = quantum_for_decide(quantum)
     n18_note = n18_for_decide(cells, quantum, n18_status)
     # Gate reads only the sealed L=16 Walsh rows. power_p and L=2 stay in the table.
+    gap_coverage = float(GAP_COVERAGE) if abs(float(MU) - (-1.00)) <= 1e-12 else None
     verdict = decide_deepen(
         cells,
         qdec,
         {k: paired[k] for k in paired if k[0] == "walsh" and k[1] == 16},
         {k: ci[k] for k in ci if k[0] == "walsh" and k[1] == 16},
         n18=n18_note,
+        gap_coverage=gap_coverage,
     )
     prior = (
         f"{PRIOR_NOTE} point estimates were n=12 R={PRIOR_R[12]:.3f} and n=15 R={PRIOR_R[15]:.3f}."
@@ -960,6 +1080,7 @@ def main():
         "prior_R": {str(k): v for k, v in PRIOR_R.items()},
         "prior_note": PRIOR_NOTE,
         "round_name": ROUND_NAME,
+        "gap_coverage": gap_coverage,
     }
     write_all(out, payload)
 
