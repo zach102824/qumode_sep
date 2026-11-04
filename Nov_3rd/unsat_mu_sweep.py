@@ -105,11 +105,20 @@ def _pack_challenger(mu: float, row: dict, anchor_R: float) -> dict:
     }
 
 
-def decide_mu_sweep(by_mu: dict) -> dict:
-    """PASS / needs_edit / KILL for the μ grid.
+def decide_mu_sweep(
+    by_mu: dict,
+    *,
+    grid: tuple[float, ...] = MU_GRID,
+    anchor_mu: float = ANCHOR_MU,
+    published_R: float = PUBLISHED_ANCHOR_R,
+    anchor_text: str = "μ=−0.25",
+    checkpoint_text: str = "the PR #23 checkpoint",
+) -> dict:
+    """PASS / needs_edit / KILL for a μ grid against one resumed checkpoint.
 
-    PASS when some quantum μ is clearly below the in-run μ=−0.25 n=12 Walsh
-    ratio, or when none is and μ=−0.25 remains the operating point.
+    Defaults are the PR #26 sweep: PASS when some quantum μ is clearly below
+    the in-run μ=−0.25 n=12 Walsh ratio, or when none is and μ=−0.25 remains
+    the operating point.
 
     needs_edit when the grid, the anchor checkpoint, or a clear challenger's
     transfer gate is incomplete.
@@ -117,7 +126,7 @@ def decide_mu_sweep(by_mu: dict) -> dict:
     KILL when the operating point's ground state is a bitstring, Walsh loses
     to Fourier there, or the L=16 advantage reverses.
     """
-    labels = [mu_label(m) for m in MU_GRID]
+    labels = [mu_label(m) for m in grid]
     missing = [lb for lb in labels if lb not in by_mu]
     if missing:
         return {
@@ -127,7 +136,7 @@ def decide_mu_sweep(by_mu: dict) -> dict:
             "operating_mu": None,
         }
 
-    anchor_label = mu_label(ANCHOR_MU)
+    anchor_label = mu_label(anchor_mu)
     anchor = by_mu[anchor_label]
     try:
         a_cell = _walsh(anchor, 12)
@@ -139,25 +148,25 @@ def decide_mu_sweep(by_mu: dict) -> dict:
         return {
             "verdict": "needs_edit",
             "null": False,
-            "reason": f"μ=−0.25 Walsh cell is missing n={exc}.",
+            "reason": f"{anchor_text} Walsh cell is missing n={exc}.",
             "operating_mu": None,
         }
     if len(a_seeds) < 3 or not all(math.isfinite(r) for r in a_seeds) or not math.isfinite(aR):
         return {
             "verdict": "needs_edit",
             "null": False,
-            "reason": "μ=−0.25 n=12 Walsh ratio is missing a 3-seed baseline.",
-            "operating_mu": ANCHOR_MU,
+            "reason": f"{anchor_text} n=12 Walsh ratio is missing a 3-seed baseline.",
+            "operating_mu": anchor_mu,
         }
-    if abs(aR - PUBLISHED_ANCHOR_R) > ANCHOR_TOL:
+    if abs(aR - published_R) > ANCHOR_TOL:
         return {
             "verdict": "needs_edit",
             "null": False,
             "reason": (
-                f"μ=−0.25 n=12 Walsh R={aR:.4f} does not match the PR #23 checkpoint "
-                f"{PUBLISHED_ANCHOR_R:.4f}."
+                f"{anchor_text} n=12 Walsh R={aR:.4f} does not match {checkpoint_text} "
+                f"{published_R:.4f}."
             ),
-            "operating_mu": ANCHOR_MU,
+            "operating_mu": anchor_mu,
             "R_anchor": aR,
         }
 
@@ -167,15 +176,15 @@ def decide_mu_sweep(by_mu: dict) -> dict:
         return {
             "verdict": "KILL",
             "null": False,
-            "reason": "μ=−0.25 " + "; ".join(bitstring) + ".",
-            "operating_mu": ANCHOR_MU,
+            "reason": f"{anchor_text} " + "; ".join(bitstring) + ".",
+            "operating_mu": anchor_mu,
             "R_anchor": aR,
         }
 
     packed = []
     incomplete = []
-    for mu in MU_GRID:
-        if abs(float(mu) - ANCHOR_MU) < 1e-12:
+    for mu in grid:
+        if abs(float(mu) - anchor_mu) < 1e-12:
             continue
         row = by_mu[mu_label(mu)]
         try:
@@ -187,14 +196,14 @@ def decide_mu_sweep(by_mu: dict) -> dict:
             "verdict": "needs_edit",
             "null": False,
             "reason": "Sweep cells are incomplete: " + "; ".join(incomplete) + ".",
-            "operating_mu": ANCHOR_MU,
+            "operating_mu": anchor_mu,
             "R_anchor": aR,
         }
 
     eligible = [c for c in packed if not c["q_fail"] and not c["reverses"]]
     disqualified = [c for c in packed if c["q_fail"] or c["reverses"]]
     clear = [c for c in eligible if c["clear"]["clear"] and c["R"] + 1e-12 < aR]
-    clear.sort(key=lambda c: (c["R"], abs(c["mu"] - ANCHOR_MU)))
+    clear.sort(key=lambda c: (c["R"], abs(c["mu"] - anchor_mu)))
     eligible_sorted = sorted(eligible, key=lambda c: c["R"])
 
     info = {
@@ -203,12 +212,21 @@ def decide_mu_sweep(by_mu: dict) -> dict:
         "n_clear": len(clear),
         "n_disqualified": len(disqualified),
         "null": False,
+        "disqualified": [
+            {
+                "mu": float(c["mu"]),
+                "R": float(c["R"]),
+                "q_fail": list(c["q_fail"]),
+                "reverses": bool(c["reverses"]),
+            }
+            for c in disqualified
+        ],
     }
     if eligible_sorted:
         info["best_quantum_mu"] = eligible_sorted[0]["mu"]
         info["best_quantum_R"] = eligible_sorted[0]["R"]
     else:
-        info["best_quantum_mu"] = ANCHOR_MU
+        info["best_quantum_mu"] = anchor_mu
         info["best_quantum_R"] = aR
 
     def _near_sentence() -> str:
@@ -254,7 +272,7 @@ def decide_mu_sweep(by_mu: dict) -> dict:
             info["verdict"] = "needs_edit"
             info["operating_mu"] = float(win["mu"])
             info["reason"] = (
-                f"μ={win['mu']:+.2f} n=12 R={win['R']:.3f} is clearly below μ=−0.25 "
+                f"μ={win['mu']:+.2f} n=12 R={win['R']:.3f} is clearly below {anchor_text} "
                 f"but does not clear the transfer gates: " + "; ".join(missed) + "."
             )
             return info
@@ -263,7 +281,7 @@ def decide_mu_sweep(by_mu: dict) -> dict:
         info["R12"] = float(win["R"])
         info["reason"] = (
             f"μ={win['mu']:+.2f} frozen n=12 L=16 Walsh R={win['R']:.3f} is a BEAT and clearly "
-            f"below the μ=−0.25 ratio {aR:.3f} "
+            f"below the {anchor_text} ratio {aR:.3f} "
             f"(drop {win['clear']['drop']:.3f}, seed-median R={win['clear']['seed_median']:.3f}). "
             f"{win['n_seed_beat']}/3 seeds beat. "
             f"n=12 peak {win['peak12']:.3f}, product gap {win['gap12']:.3f}. "
@@ -272,36 +290,36 @@ def decide_mu_sweep(by_mu: dict) -> dict:
         )
         return info
 
-    # No clear quantum improvement. Keep −0.25 if it still holds.
+    # No clear quantum improvement. Keep the anchor if it still holds.
     if anchor_q:
         info["verdict"] = "needs_edit"
-        info["operating_mu"] = ANCHOR_MU
-        info["reason"] = "μ=−0.25 quantumness fails: " + "; ".join(anchor_q) + "."
+        info["operating_mu"] = anchor_mu
+        info["reason"] = f"{anchor_text} quantumness fails: " + "; ".join(anchor_q) + "."
         return info
     if _reverses(anchor) or aR > TIE_R:
         info["verdict"] = "KILL"
-        info["operating_mu"] = ANCHOR_MU
+        info["operating_mu"] = anchor_mu
         info["reason"] = (
-            f"μ=−0.25 n=12 Walsh R={aR:.3f} loses to Fourier or the L=16 advantage reverses."
+            f"{anchor_text} n=12 Walsh R={aR:.3f} loses to Fourier or the L=16 advantage reverses."
         )
         return info
     if aR > BEAT_R or _seed_beats(a_cell) < 2 or _n15_flip(anchor):
         info["verdict"] = "needs_edit"
-        info["operating_mu"] = ANCHOR_MU
+        info["operating_mu"] = anchor_mu
         info["reason"] = (
-            f"μ=−0.25 remains the lowest clear ratio (R={aR:.3f}) but no longer clears "
+            f"{anchor_text} remains the lowest clear ratio (R={aR:.3f}) but no longer clears "
             f"the transfer gates (seed beats {_seed_beats(a_cell)}/3, "
             f"n=15 flip={_n15_flip(anchor)})."
         )
         return info
 
     info["verdict"] = "PASS"
-    info["operating_mu"] = ANCHOR_MU
+    info["operating_mu"] = anchor_mu
     info["R12"] = aR
     info["still_optimal"] = True
     info["reason"] = (
-        f"μ=−0.25 remains the operating point. Frozen n=12 L=16 Walsh R={aR:.3f} "
-        f"matches the PR #23 checkpoint and no other quantum μ on the grid drops it "
+        f"{anchor_text} remains the operating point. Frozen n=12 L=16 Walsh R={aR:.3f} "
+        f"matches {checkpoint_text} and no other quantum μ on the grid drops it "
         f"by {CLEAR_DROP:.2f}. {_near_sentence()}{_disq_sentence()}"
     )
     return info
