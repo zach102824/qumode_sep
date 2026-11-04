@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "L": 1,
+    "train": "train69 fresh 250 n6 + 250 n9, batch 32+32, paper init \u03b2=0.01 \u03b3=-0.01 nstart=1",
+    "packs_dir": "/workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/train_packs",
+    "betas": [
+      0.7498196363449097
+    ],
+    "gammas": [
+      -5.245133876800537
+    ],
+    "train_loss": 2.809725284576416,
+    "nstart": 1,
+    "init_notes": "arXiv:2208.06909 Boulebnane\u2013Montanaro \u00a7Parameter optimization: \u03b2_\u2113=0.01, \u03b3_\u2113=-0.01 for each layer; nstart=1",
+    "angle_convention": "qaoa_ref: U_C=exp(-i \u03b3 Cn), U_B=exp(-i \u03b2 X/2), Cn=E*n/m",
+    "finished": "2026-11-04 12:16:43 +0800"
+  },
+  "ladder": {
+    "6": {
+      "median_inv_p": 9.886970077364003,
+      "B90_inv_p": 18.822195712704264,
+      "mean_inv_p": 11.023056611156637,
+      "frac_inv_le_2": 0.0,
+      "B": 1000,
+      "n_finite": 1000,
+      "n": 6,
+      "split": "scale1000",
+      "L": 1,
+      "S": 2.6131272664562917,
+      "m": 60,
+      "wall_s": 0.01667952537536621,
+      "source": "fresh"
+    },
+    "9": {
+      "median_inv_p": 29.209806051616038,
+      "B90_inv_p": 62.56569503125665,
+      "mean_inv_p": 35.12241862724309,
+      "frac_inv_le_2": 0.0,
+      "B": 1000,
+      "n_finite": 1000,
+      "n": 9,
+      "split": "scale1000",
+      "L": 1,
+      "S": 3.7553608008928405,
+      "m": 89,
+      "wall_s": 0.026898860931396484,
+      "source": "fresh"
+    },
+    "12": {
+      "median_inv_p": 90.44289976315568,
+      "B90_inv_p": 214.461027772538,
+      "mean_inv_p": 111.56377551785455,
+      "frac_inv_le_2": 0.0,
+      "B": 1000,
+      "n_finite": 1000,
+      "n": 12,
+      "split": "scale1000",
+      "L": 1,
+      "S": 4.936423371444645,
+      "m": 119,
+      "wall_s": 0.19374775886535645,
+      "source": "fresh"
+    },
+    "15": {
+      "median_inv_p": 290.9709100494075,
+      "B90_inv_p": 750.2455452593603,
+      "mean_inv_p": 371.6075928355658,
+      "frac_inv_le_2": 0.0,
+      "B": 1000,
+      "n_finite": 1000,
+      "n": 15,
+      "split": "scale1000",
+      "L": 1,
+      "S": 6.146811921668273,
+      "m": 149,
+      "wall_s": 1.2685697078704834,
+      "source": "fresh"
+    }
+  },
+  "updated": "2026-11-04 12:16:43 +0800"
+}

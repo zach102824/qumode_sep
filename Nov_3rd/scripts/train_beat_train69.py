@@ -268,12 +268,13 @@ def train_one(
     out_dir: Path,
     loss_mode: str = "log_ratio",
     soft_q: float = 0.5,
+    qaoa_dir: Path | None = None,
 ):
     torch.manual_seed(seed)
     np.random.seed(seed)
     rng = np.random.default_rng(seed)
 
-    betas, gammas = load_qaoa(L)
+    betas, gammas = load_qaoa(L, qaoa_dir=qaoa_dir)
     gamma, c1, c2, c3, p, trainables = make_params(idea, betas, gammas, device, p0=p0, freeze_p=freeze_p)
 
     bundles = {}
@@ -469,8 +470,18 @@ def train_one(
     return state, meta
 
 
+def _mark_raw(snap_v: float, q_v: float) -> str:
+    if not (snap_v == snap_v and q_v == q_v):
+        return "NO_REF"
+    if snap_v < q_v:
+        return "BEAT"
+    if snap_v == q_v:
+        return "TIE"
+    return "UNDER"
+
+
 @torch.no_grad()
-def eval_state(state, device, ns=EVAL_NS, max_count=1000):
+def eval_state(state, device, ns=EVAL_NS, max_count=1000, qaoa_dir: Path | None = None, beat_mode: str = "ratio098"):
     idea = state["idea"]
     L = int(state["L"])
     gamma = state["gamma"].to(device)
@@ -480,7 +491,7 @@ def eval_state(state, device, ns=EVAL_NS, max_count=1000):
     p = state.get("p")
     if p is not None:
         p = torch.tensor(float(p), device=device)
-    qref = load_qaoa_scale_ref(L)
+    qref = load_qaoa_scale_ref(L, qaoa_dir=qaoa_dir)
     rows = {}
     for n in ns:
         g, phi = angles_for_n(idea, gamma, c1, c2, c3, p, n)
@@ -491,14 +502,19 @@ def eval_state(state, device, ns=EVAL_NS, max_count=1000):
         med = float(m["median_inv_p"])
         b90 = float(m["B90_inv_p"])
         R = med / qmed if qmed == qmed and qmed > 0 else float("nan")
-        if R != R:
-            v = "NO_REF"
-        elif R <= 0.98:
-            v = "BEAT"
-        elif R <= 1.02:
-            v = "TIE"
+        if beat_mode == "raw":
+            v = _mark_raw(med, qmed)
+            v_b90 = _mark_raw(b90, qb90)
         else:
-            v = "UNDER"
+            if R != R:
+                v = "NO_REF"
+            elif R <= 0.98:
+                v = "BEAT"
+            elif R <= 1.02:
+                v = "TIE"
+            else:
+                v = "UNDER"
+            v_b90 = _mark_raw(b90, qb90)
         rows[n] = {
             "Med": med,
             "B90": b90,
@@ -506,19 +522,27 @@ def eval_state(state, device, ns=EVAL_NS, max_count=1000):
             "QAOA_B90": qb90,
             "R": R,
             "verdict": v,
+            "verdict_B90": v_b90,
             "mean_leak": float(m["mean_leak"]),
             "B": int(m["B"]),
         }
-        log(f"eval {idea} L{L} n{n}: Med={med:.4f} Q={qmed:.4f} R={R:.4f} {v}")
+        log(
+            f"eval {idea} L{L} n{n}: Med={med:.4f} Q={qmed:.4f} {v} "
+            f"B90={b90:.4f}/{qb90:.4f} {v_b90}"
+        )
     return rows
 
 
-def write_eval(out_dir: Path, idea: str, L: int, seed, rows: dict, extra: dict | None = None):
+
+def write_eval(out_dir: Path, idea: str, L: int, seed, rows: dict, extra: dict | None = None, eval_ns=None, beat_mode: str = "ratio098"):
+    if eval_ns is None:
+        eval_ns = list(EVAL_NS)
     payload = {
         "idea": idea,
         "L": L,
         "seed": seed,
         "train_ns": list(TRAIN_NS),
+        "beat_mode": beat_mode,
         "per_n": {str(k): v for k, v in rows.items()},
         "finished": time.strftime("%Y-%m-%d %H:%M:%S %z"),
     }
@@ -527,26 +551,31 @@ def write_eval(out_dir: Path, idea: str, L: int, seed, rows: dict, extra: dict |
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / f"eval_L{L}_seed{seed}.json"
     path.write_text(json.dumps(payload, indent=2) + "\n")
+    title = "# %s L=%s seed=%s train{6,9} beat_mode=%s" % (idea, L, seed, beat_mode)
     lines = [
-        f"# {idea} L={L} seed={seed} train{{6,9}}",
+        title,
         "",
-        "| n | QAOA Med | Med | R | verdict |",
-        "|---|----------|-----|---|---------|",
+        "| n | SNAP Med | QAOA Med | Med mark | SNAP B90 | QAOA B90 | B90 mark |",
+        "|---|----------|----------|----------|----------|----------|----------|",
     ]
-    for n in EVAL_NS:
+    for n in eval_ns:
         r = rows[n]
-        lines.append(f"| {n} | {r['QAOA_Med']:.4f} | {r['Med']:.4f} | {r['R']:.4f} | {r['verdict']} |")
-    all_beat = all(rows[n]["verdict"] == "BEAT" for n in EVAL_NS)
-    lines += ["", f"**ALL_CORE_BEAT** = {all_beat}", ""]
+        lines.append(
+            "| %d | %.4f | %.4f | %s | %.4f | %.4f | %s |"
+            % (n, r["Med"], r["QAOA_Med"], r["verdict"], r["B90"], r["QAOA_B90"], r.get("verdict_B90", "N/A"))
+        )
+    all_beat = all(rows[n]["verdict"] == "BEAT" for n in eval_ns)
+    lines += ["", "**ALL_CORE_BEAT** = %s" % all_beat, ""]
     (out_dir / f"eval_L{L}_seed{seed}.md").write_text("\n".join(lines) + "\n")
     log(f"wrote {path} ALL_CORE_BEAT={all_beat}")
     return all_beat, path
 
 
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--idea", required=True, choices=list(IDEAS))
-    ap.add_argument("--L", type=int, required=True, choices=[2, 16])
+    ap.add_argument("--L", type=int, required=True)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--threads", type=int, default=2)
     ap.add_argument("--adam_steps", type=int, default=None)
@@ -572,6 +601,12 @@ def main():
     ap.add_argument("--eval_only", type=str, default="")
     ap.add_argument("--skip_eval", action="store_true")
     ap.add_argument("--tag", type=str, default="", help="subdir tag under idea/")
+    ap.add_argument("--packs_dir", type=str, default="", help="override TRAIN_PACKS")
+    ap.add_argument("--out_root", type=str, default="", help="override OUT_ROOT (idea/ under this)")
+    ap.add_argument("--qaoa_dir", type=str, default="", help="override QAOA angles/results root")
+    ap.add_argument("--eval_ns", type=str, default="6,9,12,15")
+    ap.add_argument("--beat_mode", type=str, default="ratio098", choices=["ratio098", "raw"],
+                    help="ratio098: R<=0.98 BEAT; raw: Med < QAOA Med")
     args = ap.parse_args()
 
     os.environ["OMP_NUM_THREADS"] = str(args.threads)
@@ -613,14 +648,26 @@ def main():
         rho = None
 
     weights = {6: float(w6), 9: float(w9)}
-    out_dir = OUT_ROOT / idea
+    global TRAIN_PACKS, OUT_ROOT, EVAL_NS
+    if args.packs_dir:
+        TRAIN_PACKS = Path(args.packs_dir)
+    out_root = Path(args.out_root) if args.out_root else OUT_ROOT
+    OUT_ROOT = out_root
+    qaoa_dir = Path(args.qaoa_dir) if args.qaoa_dir else None
+    eval_ns = [int(x) for x in args.eval_ns.split(",") if x.strip()]
+    EVAL_NS = eval_ns
+    beat_mode = args.beat_mode
+    out_dir = out_root / idea
     if args.tag:
         out_dir = out_dir / args.tag
 
     if args.eval_only:
         state = torch.load(args.eval_only, map_location="cpu", weights_only=False)
-        rows = eval_state(state, device, EVAL_NS)
-        write_eval(out_dir, state.get("idea", idea), int(state.get("L", args.L)), state.get("seed", "x"), rows, {"from": args.eval_only})
+        rows = eval_state(state, device, eval_ns, qaoa_dir=qaoa_dir, beat_mode=beat_mode)
+        write_eval(
+            out_dir, state.get("idea", idea), int(state.get("L", args.L)), state.get("seed", "x"),
+            rows, {"from": args.eval_only}, eval_ns=eval_ns, beat_mode=beat_mode,
+        )
         return 0
 
     state, meta = train_one(
@@ -646,10 +693,11 @@ def main():
         out_dir=out_dir,
         loss_mode=args.loss_mode,
         soft_q=float(args.soft_q),
+        qaoa_dir=qaoa_dir,
     )
     if not args.skip_eval:
-        rows = eval_state(state, device, EVAL_NS)
-        write_eval(out_dir, idea, args.L, args.seed, rows, {"train": meta})
+        rows = eval_state(state, device, eval_ns, qaoa_dir=qaoa_dir, beat_mode=beat_mode)
+        write_eval(out_dir, idea, args.L, args.seed, rows, {"train": meta}, eval_ns=eval_ns, beat_mode=beat_mode)
     return 0
 
 
