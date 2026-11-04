@@ -2,6 +2,8 @@
 
 **Status: LOCKED.** λ = 0.75, μ = 0. Shallow depth L = 2 only. Evidence is closed; this file does not re-seal n = 15 or n = 18, and it does not load n = 21.
 
+**Round 14:** paper lock unchanged; breadth still open (sparse p3 in flight elsewhere).
+
 \[
 H = \mathrm{diag}(\mathrm{unsat}) - 0.75 \sum_i X_i
 \]
@@ -107,6 +109,40 @@ Recomputed median Λ is 0.7612 (n = 6, B = 250), 0.7555 (n = 9, B = 250), and 0.
 
 Each seed matches the PR #50 L = 2 seed table at the printed four decimals, including the SNAP checkpoint round. The three-seed median equals the published five-seed median (R = 0.6201, Λ = 0.7477) because that median seed sits inside {0, 1, 2}. Against PR #51 the same median differs by 0.0007 in Medε SNAP, 0.0003 in Medε Fourier, and 0.0008 in R.
 
+## Round 14
+
+**Status:** paper lock unchanged; breadth still open (sparse p3 in flight elsewhere).
+
+The tables above are the lock. Round 14 records two later outcomes and does not rewrite them. n = 21 was not loaded. Nothing in this append was retrained.
+
+### Cost-only ablation — PASS (PR #53)
+
+Source: PR #53, `Nov_3rd/runs/quantum_h_explore/cost_only_ablation_NEW_SAFE/RESULTS.md`. Separate protocol from the seal: Adam then L-BFGS, checkpoint chosen on a disjoint n ∈ {6, 9} val slice, frozen primary n = 12 equal to indices [0:64] of `train_n12.npz`.
+
+The motif is two gates. The cost layer is the BinH conjugate of a diagonal Walsh pulse,
+
+\[
+U_c^X = W \exp\Bigl(-i\sum_{w=1}^{4}\gamma_{\ell,w} E_w\Bigr) W, \qquad W = H^{\otimes 3}
+\]
+
+per cavity. The mixer is the shared Hamming-shell SNAP on popcount \(k = 0..3\), \(\varphi_k = c_1 k + c_2 k^2 + c_3 k^3\), and a final \(W\) reads bitstrings. \(U_c^X\) is that cost pulse. The shell is the SNAP. Equal Walsh weights with \(c_2 = c_3 = 0\) and \(c_1 = -\beta\) reproduce the repo mixer \(\exp(-i\beta X/2)\).
+
+\(U_c^X\) alone freezes the shell at 0. Every diagonal waveform then collapses to a phase on \(|+\rangle^{\otimes n}\), and the lowest energy in that family is \(|+\rangle\) itself (\(\langle E_{\mathrm{unsat}}\rangle = \mathrm{mean}(E)\), \(\sum_i\langle X_i\rangle = n\)). SNAP-only freezes \(\gamma = 0\). Each layer returns the register to \(|0\rangle\) before the Z-diagonal shell, the shell contributes a global phase, and the closing \(W\) prepares \(|+\rangle\). On primary n = 12 both arms sit on that analytic row: Medε = 2.3598 (≈ 2.36). Trained cost-only seeds land there; the summed waveform has standard deviation about \(10^{-5}\).
+
+The full motif is required. Val-selected L = 2 on primary n = 12 gives Medε (Walsh SNAP + \(U_c^X\)) / cost-only / SNAP-only / Fourier = 0.4279 / 2.3598 / 2.3598 / 0.7290. Key ratios: \(r_B \approx 0.18\) (0.181) and \(r_D \approx 0.59\) (0.587), with \(r_C = 0.181\). PASS is every ratio ≤ 0.85. The same protocol at L = 4 also passes (\(r_B = 0.077\), \(r_D = 0.565\)) and stays outside the locked sentence. The locked sentence remains the L = 2 seal, R = 0.6209 / 0.6016 / 0.5880 at n = 12 / 15 / 18. The ablation Fourier Medε 0.7290 is the 64-instance slice; the seal Fourier Medε stays 0.6879 on B = 128. The QAOA-dual checkpoint inside the full motif matches Fourier. The remaining gap is Walsh grading of \(U_c^X\) together with the nonlinear shell. A diagonal GRAPE schedule of \(H_c\) is the cost-only family, whose best state is \(|+\rangle\).
+
+### Signed 3-local — KILL (PR #54)
+
+Source: PR #54, `Nov_3rd/runs/quantum_h_explore/signed_3local_tf_breadth/RESULTS.md`. Shortlist family D, μ = 0, a separate Hamiltonian:
+
+\[
+H = \sum_c J_c Z_i Z_j Z_k - \lambda \sum_i X_i, \qquad J_c\in\{+1,-1\}.
+\]
+
+Cavity Λ in that smoke is the largest eigenvalue of the 3-qubit reduced ground state (a cavity-product state has Λ = 1). The NEW_SAFE column above is a different quantity, \(\langle(\sum_{i\in c} X_i/3)^2\rangle\). At λ ∈ {0.50, 0.75, 1.00} this reduced-state Λ is ≈ 1.0 (n = 12 medians 1.000 / 1.000 / 1.000) and the product gap per qubit is ~0 (n = 12 medians 0.0001 / 0.0003 / 0.0009). The quantumness gate asked for median Λ ≤ 0.80 and gap/n ≥ 0.03 at n = 6, 9, and 12. Every scored λ misses both. L = 2 Walsh/Fourier R at n = 12 is 1.013 / 1.012 / 1.010, all above 0.98. KILL. Signed 3-local is not a breadth family.
+
+Power-law (PR #42) is already soft. The non-claims section records it as needs_edit: frozen n = 12 R_Fourier = 0.937 at λ = 0.50, μ = −0.50, L = 4, every seed above 0.90. It stays out of the lock.
+
 ## Source index
 
 | PR | what it locks | result directory |
@@ -118,5 +154,7 @@ Each seed matches the PR #50 L = 2 seed table at the printed four decimals, incl
 | #51 | five-seed seal through n = 18 | `Nov_3rd/runs/quantum_h_explore/seal_NEW_SAFE_lam075_mu0_n18/` |
 | #41 | old SAFE (0.75, −0.50) Λ-kill appendix | `Nov_3rd/runs/quantum_h_explore/n18_shallow_lambda_seal/` |
 | #42 | power-law family, needs_edit, not this claim | `Nov_3rd/runs/quantum_h_explore/powerlaw_tfim_breadth/` |
+| #53 | cost-only ablation, PASS; full motif required; lock tables unchanged | `Nov_3rd/runs/quantum_h_explore/cost_only_ablation_NEW_SAFE/` |
+| #54 | signed 3-local breadth, KILL; not a breadth family | `Nov_3rd/runs/quantum_h_explore/signed_3local_tf_breadth/` |
 
-Those directories live on the PR branches above. This branch adds only this dossier. `qaoa_angles/`, `train69_ladder_fresh250/`, and `settings.py` were not written.
+Those directories live on the PR branches above. This branch adds only this dossier. Round 14 appends the outcomes in the section above and does not copy the #53 or #54 result trees. `qaoa_angles/`, `train69_ladder_fresh250/`, and `settings.py` were not written. n = 21 was not loaded, and nothing was retrained.
