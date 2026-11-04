@@ -23,6 +23,7 @@ from Nov_3rd.unsat_rank2_xx import (
     clearly_below,
     GAP_COVERAGE,
     decide_deepen,
+    uses_instance_gap_gate,
     decide_unsat_xx,
     dense_gap,
     product_gap_tail,
@@ -359,6 +360,14 @@ def test_product_gap_tail_counts_open_floors():
     assert abs(tail["frac_gap_ge_0p02"] - 0.8) < 1e-12
     assert abs(tail["gap_min"] - 0.019) < 1e-15
     assert abs(tail["peak_max"] - 0.5) < 1e-15
+
+
+def test_round8_edge_uses_the_same_instance_gap_gate():
+    assert uses_instance_gap_gate(-1.00)
+    assert uses_instance_gap_gate(-0.90)
+    assert not uses_instance_gap_gate(-0.50)
+    assert not uses_instance_gap_gate(-0.25)
+    assert not uses_instance_gap_gate(-0.85)
 
 
 def test_round7_coverage_is_opt_in_and_names_a_quantumness_fail():

@@ -60,7 +60,15 @@ MIN_DROP = float(CLEAR_DROP)
 # Same product-state bar as the Rank2 μ transfer.
 PROD_GAP_MIN = 0.02
 # Round 7 seal: this fraction of n=12 and of n=15 instances must sit at or above the bar.
+# Round 8 reuses the same fraction on the PR #31 EDGE point. Earlier seals leave it unset.
 GAP_COVERAGE = 0.95
+INSTANCE_GAP_MUS = (-1.0, -0.90)
+
+
+def uses_instance_gap_gate(mu: float) -> bool:
+    """True when the sealed sizes must clear GAP_COVERAGE at product gap ≥ 0.02."""
+    mu = float(mu)
+    return any(abs(mu - item) <= 1e-12 for item in INSTANCE_GAP_MUS)
 
 
 def cavity_x_strings(pX: torch.Tensor, n_cav: int, sx8: torch.Tensor, xx8: torch.Tensor):
@@ -564,7 +572,7 @@ def product_gap_tail(prod_gap: np.ndarray, peak: np.ndarray | None = None) -> di
 
 
 def _coverage_misses(quantum: dict, gap_coverage: float | None) -> list:
-    """Round 7 gate. Empty when ``gap_coverage`` is unset, so earlier seals stay put."""
+    """Round 7 instance gate. Round 8 sets the same fraction. Empty when unset, so earlier seals stay put."""
     if gap_coverage is None:
         return []
     misses = []
