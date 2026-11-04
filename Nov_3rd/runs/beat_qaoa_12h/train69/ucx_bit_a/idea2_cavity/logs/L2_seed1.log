@@ -1,0 +1,57 @@
+03:49:59 [Nov_3rd] scale1000 n6 exists B=100
+03:49:59 [Nov_3rd] scale1000 n9 exists B=100
+03:49:59 [Nov_3rd] scale1000 n12 exists B=100
+03:49:59 [Nov_3rd] scale1000 n15 exists B=100
+03:49:59 [Nov_3rd] idea2_cavity L2 seed1: load train n6 B=100
+03:49:59 [Nov_3rd] n6 B=100 E_x_frac=0.5467 E_in_frac=0.4533 span={'1': 0.4533269194014434, '2': 0.5466730805985567}
+03:49:59 [Nov_3rd] idea2_cavity L2 seed1: load train n9 B=100
+03:49:59 [Nov_3rd] n9 B=100 E_x_frac=0.6304 E_in_frac=0.3696 span={'1': 0.36957455554912483, '2': 0.5047783544348288, '3': 0.12564709001604638}
+03:49:59 [Nov_3rd] train QAOA Meds n6=5.5418, n9=12.5748
+03:49:59 [Nov_3rd] n9 holdout=20 train_pool=80
+03:50:00 [Nov_3rd] adam 0/250 loss=-0.09312 dγ_rel=0.000 lam=1.00e-01
+03:50:00 [Nov_3rd] NEW BEST holdout=-0.46789 @ adam0
+03:50:01 [Nov_3rd] adam 25/250 loss=0.11487 dγ_rel=0.007 lam=9.01e-02
+03:50:01 [Nov_3rd] NEW BEST holdout=-0.47131 @ adam25
+03:50:02 [Nov_3rd] adam 50/250 loss=0.14977 dγ_rel=0.011 lam=8.01e-02
+03:50:03 [Nov_3rd] adam 75/250 loss=0.07184 dγ_rel=0.015 lam=7.02e-02
+03:50:03 [Nov_3rd] NEW BEST holdout=-0.48277 @ adam75
+03:50:04 [Nov_3rd] adam 100/250 loss=0.18073 dγ_rel=0.020 lam=6.02e-02
+03:50:05 [Nov_3rd] adam 125/250 loss=0.15307 dγ_rel=0.025 lam=5.03e-02
+03:50:05 [Nov_3rd] NEW BEST holdout=-0.48965 @ adam125
+03:50:05 [Nov_3rd] adam 150/250 loss=-0.08680 dγ_rel=0.030 lam=4.04e-02
+03:50:06 [Nov_3rd] adam 175/250 loss=0.14625 dγ_rel=0.035 lam=3.04e-02
+03:50:06 [Nov_3rd] NEW BEST holdout=-0.49350 @ adam175
+03:50:07 [Nov_3rd] adam 200/250 loss=0.10094 dγ_rel=0.040 lam=2.05e-02
+03:50:07 [Nov_3rd] NEW BEST holdout=-0.50118 @ adam200
+03:50:08 [Nov_3rd] adam 225/250 loss=0.13095 dγ_rel=0.045 lam=1.05e-02
+03:50:09 [Nov_3rd] adam 249/250 loss=0.00140 dγ_rel=0.051 lam=1.00e-03
+03:50:09 [Nov_3rd] lbfgs r0/6 loss=-0.06357
+03:50:09 [Nov_3rd] NEW BEST holdout=-0.51640 @ lbfgs0
+03:50:10 [Nov_3rd] lbfgs r1/6 loss=-0.01876
+03:50:10 [Nov_3rd] lbfgs r2/6 loss=0.07478
+03:50:10 [Nov_3rd] lbfgs r3/6 loss=0.18772
+03:50:11 [Nov_3rd] lbfgs r4/6 loss=-0.15283
+03:50:11 [Nov_3rd] lbfgs r5/6 loss=-0.00141
+03:50:11 [Nov_3rd] NEW BEST holdout=-0.52319 @ lbfgs5
+03:50:11 [Nov_3rd] restoring best holdout=-0.52319 @ lbfgs5
+03:50:11 [Nov_3rd] saved /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/ucx_bit_a/idea2_cavity/params_L2_seed1.pt wall=12s drift=0.054
+03:50:11 [Nov_3rd] n6 B=100 E_x_frac=0.5499 E_in_frac=0.4501 span={'1': 0.4500732914822306, '2': 0.5499267085177696}
+03:50:11 [Nov_3rd] eval n6 50/100 Med≈4.896 (3839.74/s)
+03:50:11 [Nov_3rd] eval n6 100/100 Med≈4.851 (3877.83/s)
+03:50:11 [Nov_3rd] eval idea2_cavity L2 n6: Med=4.8506 Q_same=5.0038 R=0.9694 BEAT E_x=0.550
+03:50:11 [Nov_3rd] n9 B=100 E_x_frac=0.6228 E_in_frac=0.3772 span={'1': 0.37718841385100893, '2': 0.4910119570472129, '3': 0.13179962910177806}
+03:50:11 [Nov_3rd] eval n9 50/100 Med≈11.785 (2579.24/s)
+03:50:11 [Nov_3rd] eval n9 100/100 Med≈11.005 (2574.58/s)
+03:50:11 [Nov_3rd] eval idea2_cavity L2 n9: Med=11.0051 Q_same=11.2179 R=0.9810 TIE E_x=0.623
+03:50:11 [Nov_3rd] n12 B=100 E_x_frac=0.6653 E_in_frac=0.3347 span={'1': 0.3346698601705397, '2': 0.47583371726964346, '3': 0.17811658347465043, '4': 0.011379839085166437}
+03:50:11 [Nov_3rd] eval n12 50/100 Med≈33.887 (1356.46/s)
+03:50:11 [Nov_3rd] eval n12 100/100 Med≈32.808 (1371.30/s)
+03:50:11 [Nov_3rd] eval idea2_cavity L2 n12: Med=32.8081 Q_same=33.2021 R=0.9881 TIE E_x=0.665
+03:50:12 [Nov_3rd] n15 B=100 E_x_frac=0.6714 E_in_frac=0.3286 span={'1': 0.32855380310814897, '2': 0.45501818610943134, '3': 0.19677817549136076, '4': 0.01964983529105899, '5': 0.0}
+03:50:12 [Nov_3rd] eval n15 25/100 Med≈76.545 (286.65/s)
+03:50:12 [Nov_3rd] eval n15 50/100 Med≈78.428 (288.01/s)
+03:50:12 [Nov_3rd] eval n15 75/100 Med≈70.471 (288.38/s)
+03:50:12 [Nov_3rd] eval n15 100/100 Med≈72.438 (288.99/s)
+03:50:13 [Nov_3rd] eval idea2_cavity L2 n15: Med=72.4380 Q_same=71.6819 R=1.0105 TIE E_x=0.671
+03:50:13 [Nov_3rd] wrote /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/ucx_bit_a/idea2_cavity/eval_L2_seed1.json ALL_CORE_BEAT=False worse_with_n=True
+03:50:13 [Nov_3rd] wrote /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/ucx_bit_a/idea2_cavity/RESULTS.md

@@ -1,0 +1,63 @@
+03:50:31 [Nov_3rd] scale1000 n6 exists B=100
+03:50:31 [Nov_3rd] scale1000 n9 exists B=100
+03:50:31 [Nov_3rd] scale1000 n12 exists B=100
+03:50:31 [Nov_3rd] scale1000 n15 exists B=100
+03:50:31 [Nov_3rd] idea2_cavity L2 seed0: load train n6 B=100
+03:50:31 [Nov_3rd] n6 B=100 E_x_frac=0.5467 E_in_frac=0.4533 span={'1': 0.4533269194014434, '2': 0.5466730805985567}
+03:50:31 [Nov_3rd] idea2_cavity L2 seed0: load train n9 B=100
+03:50:31 [Nov_3rd] n9 B=100 E_x_frac=0.6304 E_in_frac=0.3696 span={'1': 0.36957455554912483, '2': 0.5047783544348288, '3': 0.12564709001604638}
+03:50:31 [Nov_3rd] train QAOA Meds n6=5.5418, n9=12.5748
+03:50:31 [Nov_3rd] n9 holdout=20 train_pool=80
+03:50:31 [Nov_3rd] adam 0/250 loss=0.03602 dγ_rel=0.000 lam=1.00e-01
+03:50:31 [Nov_3rd] NEW BEST holdout=-0.03749 @ adam0
+03:50:32 [Nov_3rd] adam 25/250 loss=-0.06143 dγ_rel=0.006 lam=9.01e-02
+03:50:32 [Nov_3rd] NEW BEST holdout=-0.03818 @ adam25
+03:50:33 [Nov_3rd] adam 50/250 loss=-0.02673 dγ_rel=0.012 lam=8.01e-02
+03:50:33 [Nov_3rd] NEW BEST holdout=-0.03892 @ adam50
+03:50:34 [Nov_3rd] adam 75/250 loss=-0.21658 dγ_rel=0.018 lam=7.02e-02
+03:50:34 [Nov_3rd] NEW BEST holdout=-0.03970 @ adam75
+03:50:35 [Nov_3rd] adam 100/250 loss=-0.06512 dγ_rel=0.024 lam=6.02e-02
+03:50:35 [Nov_3rd] NEW BEST holdout=-0.04049 @ adam100
+03:50:35 [Nov_3rd] adam 125/250 loss=0.10210 dγ_rel=0.030 lam=5.03e-02
+03:50:35 [Nov_3rd] NEW BEST holdout=-0.04133 @ adam125
+03:50:36 [Nov_3rd] adam 150/250 loss=0.14211 dγ_rel=0.035 lam=4.04e-02
+03:50:36 [Nov_3rd] NEW BEST holdout=-0.04199 @ adam150
+03:50:37 [Nov_3rd] adam 175/250 loss=0.12800 dγ_rel=0.040 lam=3.04e-02
+03:50:37 [Nov_3rd] NEW BEST holdout=-0.04234 @ adam175
+03:50:38 [Nov_3rd] adam 200/250 loss=0.02418 dγ_rel=0.045 lam=2.05e-02
+03:50:38 [Nov_3rd] NEW BEST holdout=-0.04290 @ adam200
+03:50:38 [Nov_3rd] adam 225/250 loss=-0.11199 dγ_rel=0.051 lam=1.05e-02
+03:50:38 [Nov_3rd] NEW BEST holdout=-0.04335 @ adam225
+03:50:39 [Nov_3rd] adam 249/250 loss=-0.16599 dγ_rel=0.055 lam=1.00e-03
+03:50:39 [Nov_3rd] NEW BEST holdout=-0.04387 @ adam249
+03:50:39 [Nov_3rd] lbfgs r0/6 loss=-0.00524
+03:50:40 [Nov_3rd] NEW BEST holdout=-0.05098 @ lbfgs0
+03:50:40 [Nov_3rd] lbfgs r1/6 loss=-0.01030
+03:50:40 [Nov_3rd] lbfgs r2/6 loss=0.35467
+03:50:40 [Nov_3rd] NEW BEST holdout=-0.06365 @ lbfgs2
+03:50:40 [Nov_3rd] lbfgs r3/6 loss=0.02671
+03:50:41 [Nov_3rd] lbfgs r4/6 loss=-0.03095
+03:50:41 [Nov_3rd] lbfgs r5/6 loss=-0.04611
+03:50:41 [Nov_3rd] NEW BEST holdout=-0.06931 @ lbfgs5
+03:50:41 [Nov_3rd] restoring best holdout=-0.06931 @ lbfgs5
+03:50:41 [Nov_3rd] saved /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/ucx_bit_a/idea2_cavity/freeze_snap/params_L2_seed0.pt wall=10s drift=0.374
+03:50:41 [Nov_3rd] n6 B=100 E_x_frac=0.5499 E_in_frac=0.4501 span={'1': 0.4500732914822306, '2': 0.5499267085177696}
+03:50:41 [Nov_3rd] eval n6 50/100 Med≈5.242 (3914.13/s)
+03:50:41 [Nov_3rd] eval n6 100/100 Med≈4.972 (3952.45/s)
+03:50:41 [Nov_3rd] eval idea2_cavity L2 n6: Med=4.9718 Q_same=5.0038 R=0.9936 TIE E_x=0.550
+03:50:41 [Nov_3rd] n9 B=100 E_x_frac=0.6228 E_in_frac=0.3772 span={'1': 0.37718841385100893, '2': 0.4910119570472129, '3': 0.13179962910177806}
+03:50:41 [Nov_3rd] eval n9 50/100 Med≈11.421 (2615.13/s)
+03:50:41 [Nov_3rd] eval n9 100/100 Med≈11.103 (2628.06/s)
+03:50:41 [Nov_3rd] eval idea2_cavity L2 n9: Med=11.1033 Q_same=11.2179 R=0.9898 TIE E_x=0.623
+03:50:41 [Nov_3rd] n12 B=100 E_x_frac=0.6653 E_in_frac=0.3347 span={'1': 0.3346698601705397, '2': 0.47583371726964346, '3': 0.17811658347465043, '4': 0.011379839085166437}
+03:50:41 [Nov_3rd] eval n12 50/100 Med≈32.581 (1383.67/s)
+03:50:41 [Nov_3rd] eval n12 100/100 Med≈32.315 (1392.00/s)
+03:50:41 [Nov_3rd] eval idea2_cavity L2 n12: Med=32.3150 Q_same=33.2021 R=0.9733 BEAT E_x=0.665
+03:50:42 [Nov_3rd] n15 B=100 E_x_frac=0.6714 E_in_frac=0.3286 span={'1': 0.32855380310814897, '2': 0.45501818610943134, '3': 0.19677817549136076, '4': 0.01964983529105899, '5': 0.0}
+03:50:42 [Nov_3rd] eval n15 25/100 Med≈73.134 (286.45/s)
+03:50:42 [Nov_3rd] eval n15 50/100 Med≈77.315 (287.84/s)
+03:50:42 [Nov_3rd] eval n15 75/100 Med≈72.134 (288.41/s)
+03:50:43 [Nov_3rd] eval n15 100/100 Med≈72.634 (288.52/s)
+03:50:43 [Nov_3rd] eval idea2_cavity L2 n15: Med=72.6339 Q_same=71.6819 R=1.0133 TIE E_x=0.671
+03:50:43 [Nov_3rd] wrote /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/ucx_bit_a/idea2_cavity/freeze_snap/eval_L2_seed0.json ALL_CORE_BEAT=False worse_with_n=False
+03:50:43 [Nov_3rd] wrote /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69/ucx_bit_a/idea2_cavity/freeze_snap/RESULTS.md
