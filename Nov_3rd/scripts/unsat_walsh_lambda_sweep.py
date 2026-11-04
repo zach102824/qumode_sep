@@ -379,10 +379,21 @@ def render(payload: dict) -> str:
         + "."
     )
     gap_bits = []
+    thin = []
     for lam in payload["lams"]:
         q = _at(qrows[lam_label(lam)], 12)
-        gap_bits.append(f"{lam:.2f}:{_fmt(q['prod_gap_med'])} ({_pct_gap(q)} under 0.02)")
-    lines.append("n=12 product gap by λ: " + ", ".join(gap_bits) + ".")
+        gap_bits.append(
+            f"{lam:.2f} gap {_fmt(q['prod_gap_med'])}, {int(q['n_gap_below'])}/{int(q['n_inst'])} under 0.02"
+        )
+        if float(q["prod_gap_med"]) + 1e-12 < PROD_GAP_MIN:
+            thin.append(lam)
+    lines.append("n=12 product gap by λ: " + "; ".join(gap_bits) + ".")
+    if thin and not v.get("split"):
+        names = ", ".join(f"{float(lam):.2f}" for lam in thin)
+        lines.append(
+            f"λ={names} misses the median-gap gate and does not undercut the gap-safe minimum, "
+            "so the unconstrained winner and the safe winner are the same cell."
+        )
     if v.get("split"):
         u_lam = v.get("unconstrained_lam")
         s_lam = v.get("safe_lam")
