@@ -1,0 +1,45 @@
+
+=== CMD /workspace/venv-explore/bin/python /workspace/qumode_sep/Nov_3rd/scripts/train_beat_train69.py --idea power_p --L 24 --seed 0 --threads 2 --batch_per_n 32 --w6 1 --w9 2 --packs_dir /workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/train_packs --out_root /workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250 --qaoa_dir /workspace/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/qaoa_angles --eval_ns 6,9,12,15 --beat_mode raw @ 2026-11-04 12:48:04 +0800 ===
+12:48:05 [Nov_3rd] power_p L24 seed0: load train n6 B=250
+12:48:05 [Nov_3rd] power_p L24 seed0: load train n9 B=250
+12:48:05 [Nov_3rd] power_p L24 s0: train QAOA Meds n6=1.0875, n9=1.2100
+12:48:05 [Nov_3rd] power_p L24 s0: loss_mode=log_ratio soft_q=0.5
+12:48:05 [Nov_3rd] power_p L24 s0: n9 holdout=50 train_pool=200
+/workspace/qumode_sep/Nov_3rd/scripts/train_beat_train69.py:345: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  extra = f" p={float(p):.3f}" if p is not None else ""
+12:48:06 [Nov_3rd] power_p L24 s0 adam 0/600 loss=-0.00011 lam=1.00e-01 p=0.001
+12:48:06 [Nov_3rd] power_p L24 s0 NEW BEST holdout=-0.00376 @ adam0
+12:48:26 [Nov_3rd] power_p L24 s0 adam 25/600 loss=0.00046 lam=9.59e-02 p=0.011
+12:48:45 [Nov_3rd] power_p L24 s0 adam 50/600 loss=-0.01549 lam=9.17e-02 p=0.033
+12:49:04 [Nov_3rd] power_p L24 s0 adam 75/600 loss=-0.01535 lam=8.76e-02 p=0.046
+12:49:05 [Nov_3rd] power_p L24 s0 NEW BEST holdout=-0.00877 @ adam75
+12:49:23 [Nov_3rd] power_p L24 s0 adam 100/600 loss=-0.01903 lam=8.35e-02 p=0.064
+12:49:43 [Nov_3rd] power_p L24 s0 adam 125/600 loss=-0.02819 lam=7.93e-02 p=0.078
+12:49:43 [Nov_3rd] power_p L24 s0 NEW BEST holdout=-0.00953 @ adam125
+12:50:02 [Nov_3rd] power_p L24 s0 adam 150/600 loss=-0.01998 lam=7.52e-02 p=0.078
+12:50:03 [Nov_3rd] power_p L24 s0 NEW BEST holdout=-0.01348 @ adam150
+12:50:22 [Nov_3rd] power_p L24 s0 adam 175/600 loss=-0.02757 lam=7.11e-02 p=0.088
+12:50:22 [Nov_3rd] power_p L24 s0 NEW BEST holdout=-0.01813 @ adam175
+12:50:41 [Nov_3rd] power_p L24 s0 adam 200/600 loss=-0.02618 lam=6.69e-02 p=0.106
+12:51:01 [Nov_3rd] power_p L24 s0 adam 225/600 loss=-0.03472 lam=6.28e-02 p=0.109
+12:51:01 [Nov_3rd] power_p L24 s0 NEW BEST holdout=-0.02052 @ adam225
+12:51:21 [Nov_3rd] power_p L24 s0 adam 250/600 loss=-0.02613 lam=5.87e-02 p=0.098
+12:51:40 [Nov_3rd] power_p L24 s0 adam 275/600 loss=-0.03321 lam=5.45e-02 p=0.095
+12:51:59 [Nov_3rd] power_p L24 s0 adam 300/600 loss=-0.02876 lam=5.04e-02 p=0.093
+12:52:18 [Nov_3rd] power_p L24 s0 adam 325/600 loss=-0.02869 lam=4.63e-02 p=0.092
+12:52:19 [Nov_3rd] power_p L24 s0 NEW BEST holdout=-0.02211 @ adam325
+12:52:38 [Nov_3rd] power_p L24 s0 adam 350/600 loss=-0.03418 lam=4.22e-02 p=0.085
+12:52:58 [Nov_3rd] power_p L24 s0 adam 375/600 loss=-0.03977 lam=3.80e-02 p=0.080
+12:53:19 [Nov_3rd] power_p L24 s0 adam 400/600 loss=-0.04345 lam=3.39e-02 p=0.077
+12:53:39 [Nov_3rd] power_p L24 s0 adam 425/600 loss=-0.05055 lam=2.98e-02 p=0.083
+12:53:58 [Nov_3rd] power_p L24 s0 adam 450/600 loss=-0.03700 lam=2.56e-02 p=0.086
+12:54:17 [Nov_3rd] power_p L24 s0 adam 475/600 loss=-0.04297 lam=2.15e-02 p=0.088
+12:54:36 [Nov_3rd] power_p L24 s0 adam 500/600 loss=-0.03928 lam=1.74e-02 p=0.091
+12:54:56 [Nov_3rd] power_p L24 s0 adam 525/600 loss=-0.04989 lam=1.32e-02 p=0.095
+12:55:15 [Nov_3rd] power_p L24 s0 adam 550/600 loss=-0.03354 lam=9.10e-03 p=0.087
+12:55:35 [Nov_3rd] power_p L24 s0 adam 575/600 loss=-0.05445 lam=4.97e-03 p=0.087
+12:55:54 [Nov_3rd] power_p L24 s0 adam 599/600 loss=-0.02814 lam=1.00e-03 p=0.087
+12:56:01 [Nov_3rd] power_p L24 s0 lbfgs r0/12 loss=-0.04354
+12:56:09 [Nov_3rd] power_p L24 s0 lbfgs r1/12 loss=-0.02927
+12:56:16 [Nov_3rd] power_p L24 s0 lbfgs r2/12 loss=-0.06075
