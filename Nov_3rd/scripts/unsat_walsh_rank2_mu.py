@@ -260,8 +260,10 @@ def audit(prepared) -> dict:
 
 
 def _paths(out: Path, L: int, method: str, seed: int):
-    stem = out / "runs" / f"m-0.25_L{L}_{method}_seed{seed}"
-    return stem.with_suffix(".json"), stem.with_suffix(".pt")
+    # The μ tag contains a dot. Path.with_suffix would treat ".25_..." as the suffix
+    # and collapse every method and seed onto one file.
+    stem = out / "runs" / f"mu-0p25_L{int(L)}_{method}_seed{int(seed)}"
+    return Path(str(stem) + ".json"), Path(str(stem) + ".pt")
 
 
 def _slim(rec: dict) -> dict:
@@ -288,6 +290,11 @@ def _load_run(out: Path, L: int, method: str, seed: int):
     rec = json.loads(js.read_text())
     if abs(float(rec.get("mu", 99)) - MU) > 1e-12:
         raise RuntimeError(f"resume μ drift in {js.name}")
+    if rec.get("method") != method or int(rec.get("seed")) != int(seed) or int(rec.get("L")) != int(L):
+        raise RuntimeError(
+            f"resume identity drift in {js.name}: "
+            f"{rec.get('method')} L={rec.get('L')} seed={rec.get('seed')}"
+        )
     rec["theta"] = torch.load(pt, map_location="cpu", weights_only=False)
     rec["L"] = int(rec["L"])
     rec["seed"] = int(rec["seed"])
@@ -796,7 +803,7 @@ def bench_closure(prepared, args) -> float:
     loss = _loss("walsh", theta, train, LAM, 16)
     loss.backward()
     dt = time.time() - t0
-    log(f"walsh L=16 closure {dt:.3f}s loss={float(loss):.4f} on B={args.B_train}")
+    log(f"walsh L=16 closure {dt:.3f}s loss={float(loss.detach()):.4f} on B={args.B_train}")
     return dt
 
 
