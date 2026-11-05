@@ -136,13 +136,20 @@ def init_fourier(L: int) -> dict:
 def init_angles(method: str, L: int) -> dict:
     if method == "snap":
         return init_snap_b2(L)
+    if method == "shell":
+        # PR #42 Hamming shell: free φ_k on k=0..3, γ_2 only.
+        return init_snap(L)
     if method == "fourier":
         return init_fourier(L)
     raise ValueError(method)
 
 
 def bind_params(method: str, angles: dict) -> list[torch.nn.Parameter]:
-    keys = ("gamma2", "c1", "c2") if method == "snap" else ("betas", "gammas")
+    keys = {
+        "snap": ("gamma2", "c1", "c2"),
+        "shell": ("gamma2", "phi"),
+        "fourier": ("betas", "gammas"),
+    }[method]
     params = []
     for key in keys:
         p = torch.nn.Parameter(angles[key].detach().clone())
@@ -157,6 +164,8 @@ def prepare_model(method: str, Cn: torch.Tensor, angles: dict) -> torch.Tensor:
         # H_ZZ is pure Walsh degree 2 with zero mean, so γ_2 · Cn is the
         # graded cost. library_check asserts this against prepare_snap.
         return snap_state(Cn, angles["gamma2"], phi)
+    if method == "shell":
+        return prepare_snap(Cn, angles)
     if method == "fourier":
         return fourier_state(Cn, angles["betas"], angles["gammas"])
     raise ValueError(method)
@@ -188,6 +197,7 @@ def obs_one(psi: np.ndarray, n: int) -> dict:
         "q_ea": float(np.mean(z_acc ** 2)),
         "mean_x": float(np.mean(x_acc)),
         "mean_abs_z": float(np.mean(np.abs(z_acc))),
+        "cat": float(p[int(np.argmax(p))] + p[int(np.argmax(p)) ^ ((1 << int(n)) - 1)]),
     }
 
 
@@ -408,6 +418,14 @@ def lists_to_angles(raw: dict) -> dict:
 
 
 def shell_diag(method: str, angles: dict) -> dict:
+    if method == "shell":
+        phi = np.asarray(angles["phi"], dtype=np.float64)
+        return {
+            "shell": "hamming4",
+            "phi": "free k=0..3",
+            "shell_rms": shell_nonlinearity(phi),
+            "mean_abs_gamma2": float(np.mean(np.abs(np.asarray(angles["gamma2"], dtype=np.float64)))),
+        }
     if method != "snap":
         beta = np.asarray(angles["betas"], dtype=np.float64)
         gamma = np.asarray(angles["gammas"], dtype=np.float64)
@@ -568,7 +586,7 @@ def train_one(method: str, L: int, seed: int, lam: float, pools: dict) -> dict:
         "family": "powerlaw_tfim",
         "objective": "mean(1 - |<psi_GS|psi>|^2) joint n6/n9",
         "method": method,
-        "shell": "B2" if method == "snap" else "fourier_phi=-beta*k",
+        "shell": {"snap": "B2", "shell": "hamming4", "fourier": "fourier_phi=-beta*k"}[method],
         "L": int(L),
         "seed": int(seed),
         "lam": float(lam),
@@ -588,6 +606,62 @@ def train_one(method: str, L: int, seed: int, lam: float, pools: dict) -> dict:
     }
 
 
+def _optimize_rounds(method, angles, params, pools, lam, rng, *, start: int, stop: int, best: dict, hist: list) -> None:
+    tr6, tr9 = pools["train6"], pools["train9"]
+    n6 = int(tr6["diag"].shape[0])
+    n9 = int(tr9["diag"].shape[0])
+    b6 = min(BATCH // 2, n6)
+    b9 = min(BATCH - b6, n9)
+    tag = f"L{angles['gamma2'].shape[0] if method != 'fourier' else angles['betas'].shape[0]} {method}"
+
+    def snapshot() -> dict:
+        return eval_train_hold(method, angles, pools, lam, energy=False)
+
+    for r in range(start, stop):
+        opt = torch.optim.LBFGS(
+            params,
+            lr=LBFGS_LR,
+            max_iter=LBFGS_ITER,
+            history_size=16,
+            line_search_fn="strong_wolfe",
+        )
+        i6 = torch.tensor(rng.choice(n6, size=b6, replace=False), dtype=torch.long)
+        i9 = torch.tensor(rng.choice(n9, size=b9, replace=False), dtype=torch.long)
+
+        def closure():
+            opt.zero_grad()
+            loss = 0.5 * (
+                train_loss(method, angles, tr6, i6, 6) + train_loss(method, angles, tr9, i9, 9)
+            )
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(params, 5.0)
+            return loss
+
+        try:
+            loss = opt.step(closure)
+            loss_f = float(loss.detach()) if torch.is_tensor(loss) else float(loss)
+        except Exception as exc:
+            log(f"{tag} r{r} LBFGS skip: {exc}")
+            hist.append({"round": r, "skip": str(exc)})
+            continue
+        if not math_finite(loss_f):
+            with torch.no_grad():
+                for k, v in best["angles"].items():
+                    angles[k].data.copy_(v.to(dtype=angles[k].dtype))
+            hist.append({"round": r, "loss": None})
+            continue
+        ev = snapshot()
+        score = score_of(ev)
+        hist.append({"round": r, "loss": loss_f, "score": score, **{k: ev[k]["med_F"] for k in SPLITS4}})
+        if score > best["score"] + 1e-6:
+            best["score"] = score
+            best["round"] = r
+            best["angles"] = {k: v.detach().cpu().clone() for k, v in angles.items()}
+            log(f"{tag} r{r}/{stop} loss={loss_f:.4f} min4={score:.4f} *")
+        elif r % 10 == 0 or r + 1 == stop:
+            log(f"{tag} r{r}/{stop} loss={loss_f:.4f} min4={score:.4f} best={best['score']:.4f}@r{best['round']}")
+
+
 def train_job(lam: float, L: int, method: str, seed: int) -> str:
     path = seed_path(lam, L, method, seed)
     if train_complete(path):
@@ -604,6 +678,54 @@ def train_job(lam: float, L: int, method: str, seed: int) -> str:
         f"F9={ev['train9']['med_F']:.3f}/{ev['hold9']['med_F']:.3f} "
         f"wall={payload['wall_s']:.0f}s"
     )
+    return "ok"
+
+
+def continue_job(lam: float, L: int, method: str, seed: int, extra: int) -> str:
+    """More L-BFGS rounds from the saved checkpoint. Refreshes n=12 and n=15."""
+    path = seed_path(lam, L, method, seed)
+    payload = read_json(path)
+    if not payload.get("complete"):
+        raise RuntimeError(f"{path.name} is not a finished train")
+    torch.set_num_threads(int(os.environ.get("OMP_NUM_THREADS", "1")))
+    pools = load_split_pools(lam)
+    angles = lists_to_angles(payload["angles"])
+    params = bind_params(method, angles)
+    ev = eval_train_hold(method, angles, pools, lam, energy=False)
+    best = {
+        "score": score_of(ev),
+        "round": int(payload.get("best_round", -1)),
+        "angles": {k: v.detach().cpu().clone() for k, v in angles.items()},
+    }
+    hist = list(payload.get("hist") or [])
+    start = max((int(h["round"]) for h in hist if "round" in h), default=-1) + 1
+    rng = np.random.default_rng(int(seed) + 17 * int(L) + 10007 + start)
+    t0 = time.time()
+    log(f"continue {path.name} from r{start} min4={best['score']:.4f} +{extra}")
+    _optimize_rounds(
+        method, angles, params, pools, lam, rng,
+        start=start, stop=start + int(extra), best=best, hist=hist,
+    )
+    with torch.no_grad():
+        for k, v in best["angles"].items():
+            angles[k].data.copy_(v.to(dtype=angles[k].dtype))
+    final = eval_train_hold(method, angles, pools, lam, energy=True)
+    payload["angles"] = angles_to_lists(angles)
+    payload["diag_angles"] = shell_diag(method, payload["angles"])
+    payload["eval"] = final
+    payload["best_round"] = int(best["round"])
+    payload["best_score"] = float(best["score"])
+    payload["extended"] = True
+    payload["continued_rounds"] = int(payload.get("continued_rounds") or 0) + int(extra)
+    payload["hist"] = hist
+    payload["wall_s"] = float(payload.get("wall_s") or 0.0) + (time.time() - t0)
+    write_json(path, payload)
+    log(f"continued {path.name} min4={score_of(final):.4f} best@{payload['best_round']}")
+    for n in (12, 15):
+        cur = read_json(path)
+        cur.get("eval", {}).pop(f"n{n}", None)
+        write_json(path, cur)
+        attach_freeze(lam, L, method, seed, n)
     return "ok"
 
 
@@ -629,9 +751,15 @@ def attach_freeze(lam: float, L: int, method: str, seed: int, n: int) -> None:
 
 
 def phase_label(row: dict) -> str:
-    """Short reading of one (λ, n) diagnostic. Thresholds are descriptive, not a fit."""
+    """Short reading of one (λ, n) diagnostic. Thresholds are descriptive, not a fit.
+
+    q_EA is not a glass order parameter here: H commutes with Π_i X_i, the
+    ground state is even, and ⟨Z_i⟩ cancels between a bitstring and its flip.
+    """
     bits = []
-    if row["q_ea_med"] >= 0.30 or row["peak_med"] >= 0.30:
+    if row.get("cat_med", 0.0) >= 0.60 and row["q_ea_med"] < 0.05:
+        bits.append("Z2-even cat (weight on z* and its global flip; ⟨Z⟩ cancels)")
+    elif row["q_ea_med"] >= 0.30 or row["peak_med"] >= 0.30:
         bits.append("Z-localized")
     elif row["q_ea_med"] <= 0.15 and row["peak_med"] < 0.15:
         bits.append("Z-spread")
@@ -662,7 +790,8 @@ def build_phase(lam: float) -> dict:
     path = RUN / f"phase_l{lam:.2f}.json"
     if path.exists():
         old = read_json(path)
-        if old.get("protocol") == PROTOCOL and old.get("hold_b") == HOLD_B:
+        row9 = (old.get("rows") or {}).get("9") or {}
+        if old.get("protocol") == PROTOCOL and old.get("hold_b") == HOLD_B and "cat_med" in row9:
             log(f"phase cache hit λ={lam:.2f}")
             return old
     log(f"phase diagnostic λ={lam:.2f}")
@@ -671,7 +800,7 @@ def build_phase(lam: float) -> dict:
     for n in (6, 9):
         raw = build_pool(n, TRAIN_B + HOLD_B, lam)
         sl = slice(TRAIN_B, TRAIN_B + HOLD_B)
-        peaks, gaps, qea, mx, ipr, gaps_spec, e0s = [], [], [], [], [], [], []
+        peaks, gaps, qea, mx, ipr, gaps_spec, e0s, cats = [], [], [], [], [], [], [], []
         instances = []
         for i in range(TRAIN_B, TRAIN_B + HOLD_B):
             K = couplings(n, i)[1]
@@ -689,6 +818,7 @@ def build_phase(lam: float) -> dict:
             ipr.append(ob["ipr"])
             gaps_spec.append(spec)
             e0s.append(e0)
+            cats.append(ob["cat"])
             instances.append(
                 {
                     "index": i,
@@ -696,6 +826,7 @@ def build_phase(lam: float) -> dict:
                     "ipr": ob["ipr"],
                     "q_ea": ob["q_ea"],
                     "mean_x": ob["mean_x"],
+                    "cat": ob["cat"],
                     "prod_gap": pg,
                     "gap": spec,
                     "E0": e0,
@@ -712,6 +843,7 @@ def build_phase(lam: float) -> dict:
             "peak_med": _med(peaks),
             "ipr_med": _med(ipr),
             "q_ea_med": _med(qea),
+            "cat_med": _med(cats),
             "mean_x_med": _med(mx),
             "prod_gap_med": _med(gaps),
             "gap_med": _med(gaps_spec),
@@ -889,49 +1021,56 @@ def render_results(phases: dict, payloads: list[dict]) -> tuple[str, dict]:
     for lam in LAMS:
         lam_groups = {}
         for L in LADDER:
-            for method in ("snap", "fourier"):
+            for method in ("snap", "shell", "fourier"):
                 rows = groups.get((lam, L, method))
                 if rows:
                     lam_groups[(L, method)] = rows
         by_lam[lam] = {
             "snap": choose_L(lam_groups, "snap"),
+            "shell": choose_L(lam_groups, "shell"),
             "fourier": choose_L(lam_groups, "fourier"),
             "groups": lam_groups,
+        }
+
+    def _one(lam: float, method: str) -> dict | None:
+        chosen = by_lam[lam][method]
+        if not chosen["ladder"]:
+            return None
+        use_L = chosen["Lstar"] if chosen["Lstar"] is not None else chosen["best"]["L"]
+        rows = by_lam[lam]["groups"].get((use_L, method))
+        scored = next(s for s in chosen["ladder"] if s["L"] == use_L)
+        f12 = med_F(rows, "n12") if rows and all("n12" in r["eval"] for r in rows) else None
+        f15 = med_F(rows, "n15") if rows and all("n15" in r["eval"] for r in rows) else None
+        hit = chosen["Lstar"] is not None
+        f_train = scored["f_train"]
+        call = "no95" if not hit else call_one(True, f_train, f12)
+        return {
+            "lam": lam,
+            "method": method,
+            "call": call,
+            "Lstar": chosen["Lstar"],
+            "report_L": use_L,
+            "f_train": f_train,
+            "f_hold": scored["f_hold"],
+            "f12": f12,
+            "f15": f15,
+            "drop12": None if f12 is None else float(f_train) - float(f12),
+            "drop15": None if f15 is None else float(f_train) - float(f15),
         }
 
     lam_calls = []
     lam_detail = []
     for lam in LAMS:
-        snap = by_lam[lam]["snap"]
-        use_L = snap["Lstar"] if snap["Lstar"] is not None else (None if snap["best"] is None else snap["best"]["L"])
-        rows = None if use_L is None else by_lam[lam]["groups"].get((use_L, "snap"))
-        f12 = None if rows is None else med_F(rows, "n12") if all("n12" in r["eval"] for r in rows) else None
-        f15 = None if rows is None else med_F(rows, "n15") if all("n15" in r["eval"] for r in rows) else None
-        f_train = None if snap["Lstar"] is None and snap["best"] is None else (
-            snap["ladder"][[s["L"] for s in snap["ladder"]].index(use_L)]["f_train"] if use_L is not None else None
-        )
-        # f_train above uses the chosen depth's train min, including the no-hit best depth.
-        hit = snap["Lstar"] is not None
-        if hit:
-            f_train = next(s["f_train"] for s in snap["ladder"] if s["L"] == snap["Lstar"])
-        call = call_one(hit, f_train if hit else None, f12 if hit else None)
-        # When train never hits 95%, the call is no95 even if we froze the best depth.
-        if not hit:
+        methods = [d for d in (_one(lam, m) for m in ("snap", "shell")) if d is not None]
+        calls = [d["call"] for d in methods]
+        if "pass" in calls:
+            call = "pass"
+        elif "collapse" in calls:
+            call = "collapse"
+        else:
             call = "no95"
         lam_calls.append(call)
-        lam_detail.append(
-            {
-                "lam": lam,
-                "call": call,
-                "Lstar": snap["Lstar"],
-                "report_L": use_L,
-                "f_train": f_train,
-                "f12": f12,
-                "f15": f15,
-                "drop12": None if f_train is None or f12 is None else float(f_train) - float(f12),
-                "drop15": None if f_train is None or f15 is None else float(f_train) - float(f15),
-            }
-        )
+        lam_detail.append({"lam": lam, "call": call, "methods": methods})
     verdict = call_study(lam_calls)
 
     lines = []
@@ -974,10 +1113,12 @@ def render_results(phases: dict, payloads: list[dict]) -> tuple[str, dict]:
     )
     lines.append("")
     lines.append(
-        "SNAP shell is B=2: φ_k = c₁ k + c₂ k² on Hamming weight k=0..3, shared across cavities. "
-        "Paper init is c₁=−β, c₂=0, γ_2=−0.01, β=0.01, which is the linear shell φ_k=−β k. "
+        "Two SNAP shells, both with γ_2 only. **B=2** is φ_k = c₁ k + c₂ k². "
+        "**shell** is the PR #42 Hamming shell, free φ_k for k=0..3. "
+        "Paper init is c₁=−β, c₂=0 (and φ_k=−β k), γ_2=−0.01, β=0.01. "
         "Fourier uses that same linear mixer (standard QAOA X rotation) and a scalar γ. "
-        "At init the two states match; `library_check` asserts it."
+        "At init all three states match; `library_check` asserts the B=2 and graded shells against Fourier. "
+        "B=2 contains the Fourier mixer (c₂=0). The full shell contains B=2."
     )
     lines.append("")
     if phases:
@@ -1000,7 +1141,7 @@ def render_results(phases: dict, payloads: list[dict]) -> tuple[str, dict]:
     lines.append("|---|---|")
     lines.append("| λ | 0.25, 0.50 |")
     lines.append("| μ, α | 0, 1.5 |")
-    lines.append("| ansatz | SNAP B=2 (γ_2, c1, c2) and Fourier (β, γ) |")
+    lines.append("| ansatz | SNAP B=2 (γ_2, c1, c2), full Hamming shell (γ_2, φ_k), Fourier (β, γ) |")
     lines.append("| L | 1, 2, 4, 8, 12, 16, stop a λ once SNAP hits L* |")
     lines.append("| seeds | 0, 1, 2 |")
     lines.append(
@@ -1023,13 +1164,15 @@ def render_results(phases: dict, payloads: list[dict]) -> tuple[str, dict]:
     lines.append("")
     lines.append(
         "Diagnostics are the n=6 and n=9 **holdout** (B=32), the same index split as PR #42. "
-        "Peak is max_z |ψ(z)|². IPR is Σ_z p(z)². q_EA = (1/n) Σ_i ⟨Z_i⟩². "
+        "Peak is max_z |ψ(z)|². IPR is Σ_z p(z)². Cat weight is p(z*)+p(flip z*), the global spin flip. "
+        "q_EA = (1/n) Σ_i ⟨Z_i⟩². It is near zero in the even ground state because ⟨Z_i⟩ cancels "
+        "between z* and its flip, so it is not the order parameter on this H. "
         "⟨X⟩ is (1/n) Σ_i ⟨X_i⟩. Gap is E1−E0 from the dense spectrum. "
         "Product gap is (E_prod − E0)/|E0|."
     )
     lines.append("")
-    lines.append("| λ | n | peak | IPR | q_EA | ⟨X⟩ | E1−E0 | product gap | E0 | #42 quantumness | reading |")
-    lines.append("|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|---|")
+    lines.append("| λ | n | peak | cat | IPR | q_EA | ⟨X⟩ | E1−E0 | product gap | E0 | #42 quantumness | reading |")
+    lines.append("|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|---|")
     for lam in LAMS:
         phase = phases[lam]
         for n in ("6", "9"):
@@ -1037,9 +1180,9 @@ def render_results(phases: dict, payloads: list[dict]) -> tuple[str, dict]:
             q = row["quantum_summary"]
             qbit = "pass" if q["pass"] else "fail"
             lines.append(
-                f"| {lam:.2f} | {n} | {_fmt(row['peak_med'], 3)} | {_fmt(row['ipr_med'], 3)} | "
-                f"{_fmt(row['q_ea_med'], 3)} | {_fmt(row['mean_x_med'], 3)} | {_fmt(row['gap_med'], 4)} | "
-                f"{_fmt(row['prod_gap_med'], 4)} | {_fmt(row['E0_med'], 3)} | {qbit} "
+                f"| {lam:.2f} | {n} | {_fmt(row['peak_med'], 3)} | {_fmt(row.get('cat_med'), 3)} | "
+                f"{_fmt(row['ipr_med'], 3)} | {_fmt(row['q_ea_med'], 3)} | {_fmt(row['mean_x_med'], 3)} | "
+                f"{_fmt(row['gap_med'], 4)} | {_fmt(row['prod_gap_med'], 4)} | {_fmt(row['E0_med'], 3)} | {qbit} "
                 f"(peak<0.5 on {q['frac_peak_below']:.0%}, gap≥0.03 on {q['frac_gap_ok']:.0%}) | {row['label']} |"
             )
     lines.append("")
@@ -1048,11 +1191,14 @@ def render_results(phases: dict, payloads: list[dict]) -> tuple[str, dict]:
         a = phases[0.25]["rows"]["9"]
         b = phases[0.50]["rows"]["9"]
         lines.append(
-            f"On n=9 holdout, λ=0.25 has peak {_fmt(a['peak_med'], 3)}, q_EA {_fmt(a['q_ea_med'], 3)}, "
+            f"On n=9 holdout, λ=0.25 has peak {_fmt(a['peak_med'], 3)}, cat weight {_fmt(a.get('cat_med'), 3)}, "
             f"⟨X⟩ {_fmt(a['mean_x_med'], 3)}, gap {_fmt(a['gap_med'], 4)}, product gap {_fmt(a['prod_gap_med'], 4)}. "
-            f"λ=0.50 has peak {_fmt(b['peak_med'], 3)}, q_EA {_fmt(b['q_ea_med'], 3)}, "
+            f"λ=0.50 has peak {_fmt(b['peak_med'], 3)}, cat weight {_fmt(b.get('cat_med'), 3)}, "
             f"⟨X⟩ {_fmt(b['mean_x_med'], 3)}, gap {_fmt(b['gap_med'], 4)}, product gap {_fmt(b['prod_gap_med'], 4)}. "
-            "Both are read off these medians; neither number is a fitted critical λ."
+            "Both sit on the ordered side of this α=1.5 glass: the ground state is the even cat of a classical "
+            "bitstring, λ=0.25 more concentrated than λ=0.50, and a product state already matches E0. "
+            "That product state has fidelity at most about half a cat, which is why an energy residual can be "
+            "small while fidelity stays well below 0.95. These two λ are not a fitted critical point."
         )
         lines.append("")
     lines.append("## Ladder")
@@ -1063,20 +1209,25 @@ def render_results(phases: dict, payloads: list[dict]) -> tuple[str, dict]:
         "because a smaller L* already cleared the bar for that λ."
     )
     lines.append("")
-    lines.append("| λ | L | SNAP train6 | hold6 | train9 | hold9 | min4 | hit | Fourier min4 |")
-    lines.append("|---:|---:|---:|---:|---:|---:|---:|---|---:|")
+    lines.append("| λ | L | B=2 train6 | hold6 | train9 | hold9 | B=2 min4 | B=2 hit | shell min4 | Fourier min4 |")
+    lines.append("|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|")
     for lam in LAMS:
         snap_scored = {s["L"]: s for s in by_lam[lam]["snap"]["ladder"]}
+        shell_scored = {s["L"]: s for s in by_lam[lam]["shell"]["ladder"]}
         fou_scored = {s["L"]: s for s in by_lam[lam]["fourier"]["ladder"]}
-        Ls = sorted(set(snap_scored) | set(fou_scored))
+        Ls = sorted(set(snap_scored) | set(shell_scored) | set(fou_scored))
         for L in Ls:
             s = snap_scored.get(L)
+            h = shell_scored.get(L)
             f = fou_scored.get(L)
-            if s is None:
+            src = s or h or f
+            if src is None:
                 continue
             lines.append(
-                f"| {lam:.2f} | {L} | {_fmt(s['train6'])} | {_fmt(s['hold6'])} | {_fmt(s['train9'])} | "
-                f"{_fmt(s['hold9'])} | {_fmt(s['min4'])} | {'yes' if s['hit'] else 'no'} | "
+                f"| {lam:.2f} | {L} | {_fmt(None if s is None else s['train6'])} | "
+                f"{_fmt(None if s is None else s['hold6'])} | {_fmt(None if s is None else s['train9'])} | "
+                f"{_fmt(None if s is None else s['hold9'])} | {_fmt(None if s is None else s['min4'])} | "
+                f"{'yes' if s and s['hit'] else 'no'} | {_fmt(None if h is None else h['min4'])} | "
                 f"{_fmt(None if f is None else f['min4'])} |"
             )
     lines.append("")
@@ -1093,7 +1244,7 @@ def render_results(phases: dict, payloads: list[dict]) -> tuple[str, dict]:
     )
     lines.append("|---:|---:|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
     for lam in LAMS:
-        for method in ("snap", "fourier"):
+        for method in ("snap", "shell", "fourier"):
             chosen = by_lam[lam][method]
             report_L = chosen["Lstar"] if chosen["Lstar"] is not None else (
                 None if chosen["best"] is None else chosen["best"]["L"]
@@ -1119,65 +1270,93 @@ def render_results(phases: dict, payloads: list[dict]) -> tuple[str, dict]:
     lines.append("")
     lines.append("### Per seed at the reported SNAP depth")
     lines.append("")
-    lines.append("| λ | L | seed | train6 | hold6 | train9 | hold9 | n12 | n15 | best round | wall s | mean |c2| |")
-    lines.append("|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+    lines.append("| λ | method | L | seed | train6 | hold6 | train9 | hold9 | n12 | n15 | best round | wall s |")
+    lines.append("|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
     for lam in LAMS:
-        snap = by_lam[lam]["snap"]
-        report_L = snap["Lstar"] if snap["Lstar"] is not None else (
-            None if snap["best"] is None else snap["best"]["L"]
-        )
-        if report_L is None:
-            continue
-        for row in by_lam[lam]["groups"][(report_L, "snap")]:
-            ev = row["eval"]
-            c2 = (row.get("diag_angles") or {}).get("mean_abs_c2")
-            lines.append(
-                f"| {lam:.2f} | {report_L} | {row['seed']} | {_fmt(ev['train6']['med_F'])} | "
-                f"{_fmt(ev['hold6']['med_F'])} | {_fmt(ev['train9']['med_F'])} | {_fmt(ev['hold9']['med_F'])} | "
-                f"{_fmt((ev.get('n12') or {}).get('med_F'))} | {_fmt((ev.get('n15') or {}).get('med_F'))} | "
-                f"{row['best_round']} | {row['wall_s']:.0f} | {_fmt(c2)} |"
+        for method in ("snap", "shell"):
+            chosen = by_lam[lam][method]
+            report_L = chosen["Lstar"] if chosen["Lstar"] is not None else (
+                None if chosen["best"] is None else chosen["best"]["L"]
             )
+            if report_L is None:
+                continue
+            for row in by_lam[lam]["groups"][(report_L, method)]:
+                ev = row["eval"]
+                lines.append(
+                    f"| {lam:.2f} | {method} | {report_L} | {row['seed']} | {_fmt(ev['train6']['med_F'])} | "
+                    f"{_fmt(ev['hold6']['med_F'])} | {_fmt(ev['train9']['med_F'])} | {_fmt(ev['hold9']['med_F'])} | "
+                    f"{_fmt((ev.get('n12') or {}).get('med_F'))} | {_fmt((ev.get('n15') or {}).get('med_F'))} | "
+                    f"{row['best_round']} | {row['wall_s']:.0f} |"
+                )
     lines.append("")
     lines.append("## Call by λ")
     lines.append("")
     for d in lam_detail:
-        if d["Lstar"] is None:
-            lines.append(
-                f"- **λ={d['lam']:.2f}: cannot hit 95% at train.** "
-                f"Best SNAP depth in the trained ladder is L={d['report_L']} with "
-                f"min(train n6, train n9) F={_fmt(d['f_train'])}. "
-                f"Freeze at that depth: n12 F={_fmt(d['f12'])}, n15 F={_fmt(d['f15'])}."
-            )
-        else:
-            lines.append(
-                f"- **λ={d['lam']:.2f}: L*={d['Lstar']}.** "
-                f"Train min F={_fmt(d['f_train'])}. Frozen n12 F={_fmt(d['f12'])} "
-                f"(drop {_fmt(d['drop12'])}), n15 F={_fmt(d['f15'])} (drop {_fmt(d['drop15'])}). "
-                f"Cell call: {d['call']}."
-            )
+        lines.append(f"- **λ={d['lam']:.2f}: {d['call']}.**")
+        if not d["methods"]:
+            lines.append("  No SNAP rows.")
+            continue
+        for m in d["methods"]:
+            if m["Lstar"] is None:
+                lines.append(
+                    f"  - {m['method']}: cannot hit 95% at train. Best L={m['report_L']} with "
+                    f"min(train n6, train n9) F={_fmt(m['f_train'])}. "
+                    f"Freeze n12 F={_fmt(m['f12'])}, n15 F={_fmt(m['f15'])}."
+                )
+            else:
+                lines.append(
+                    f"  - {m['method']}: L*={m['Lstar']}. Train min F={_fmt(m['f_train'])}. "
+                    f"Frozen n12 F={_fmt(m['f12'])} (drop {_fmt(m['drop12'])}), "
+                    f"n15 F={_fmt(m['f15'])} (drop {_fmt(m['drop15'])}). Cell call: {m['call']}."
+                )
     lines.append("")
     lines.append(f"Slice call: **{verdict}**.")
     lines.append("")
     lines.append("## Reading")
     lines.append("")
-    # Filled by the caller if it wants to append a hand sentence; the generator states the numbers.
     bits = []
     for d in lam_detail:
-        if d["call"] == "pass":
-            bits.append(
-                f"λ={d['lam']:.2f} keeps a frozen n12 fidelity {_fmt(d['f12'])} "
-                f"after training to {_fmt(d['f_train'])} at L*={d['Lstar']}"
-            )
-        elif d["call"] == "collapse":
-            bits.append(
-                f"λ={d['lam']:.2f} hits the train bar at L*={d['Lstar']} and then drops to n12 F={_fmt(d['f12'])}"
-            )
-        else:
-            bits.append(
-                f"λ={d['lam']:.2f} never reaches train/holdout fidelity 0.95 "
-                f"(best min(train) {_fmt(d['f_train'])} at L={d['report_L']})"
-            )
+        parts = []
+        for m in d["methods"]:
+            if m["call"] == "pass":
+                parts.append(
+                    f"{m['method']} keeps n12 F={_fmt(m['f12'])} after train F={_fmt(m['f_train'])} at L*={m['Lstar']}"
+                )
+            elif m["call"] == "collapse":
+                parts.append(
+                    f"{m['method']} hits the train bar at L*={m['Lstar']} and drops to n12 F={_fmt(m['f12'])}"
+                )
+            else:
+                parts.append(
+                    f"{m['method']} peaks at train F={_fmt(m['f_train'])} on L={m['report_L']}"
+                )
+        bits.append(f"λ={d['lam']:.2f}: " + "; ".join(parts))
     lines.append(" ".join(s + "." for s in bits))
+    lines.append("")
+    near = by_lam[0.50]["groups"].get((16, "shell"))
+    if near and any(int(r.get("continued_rounds") or 0) > 0 for r in near):
+        sc = four_scores(near)
+        f12 = med_F(near, "n12") if all("n12" in r["eval"] for r in near) else None
+        f15 = med_F(near, "n15") if all("n15" in r["eval"] for r in near) else None
+        extra = max(int(r.get("continued_rounds") or 0) for r in near)
+        rounds = max(int(h.get("round", -1)) for r in near for h in r.get("hist") or [{"round": -1}])
+        lines.append(
+            f"The only near miss is the full Hamming shell at λ=0.50, L=16. "
+            f"It took the automatic +{EXTRA_ROUNDS} rounds and then {extra} more from that checkpoint "
+            f"(last logged round {rounds}). The restored checkpoint is not the last round. "
+            f"Median train min F={_fmt(sc['f_train'])}, hold min F={_fmt(sc['f_hold'])}, "
+            f"n12 F={_fmt(f12)}, n15 F={_fmt(f15)}. "
+            f"n=6 is already above 0.95; n=9 is the miss. "
+            f"That is still short of {TARGET:.2f}, so λ=0.50 has no L*. "
+            f"The frozen n=12 fidelity is already under {PASS_F12:.2f}, and n=15 falls further, "
+            f"so clearing the train bar with a longer run would still be a transfer miss on the written n=12 rule."
+        )
+        lines.append("")
+    lines.append(
+        "B=2 contains the Fourier mixer at c₂=0, but from the paper init it settles at a lower fidelity "
+        "than Fourier. The full Hamming shell beats Fourier at every depth in this slice and is the "
+        "ansatz the KILL refers to. Neither shell reaches a train L*."
+    )
     lines.append("")
     lines.append(
         "JSON per (λ, L, method, seed) is `L{L}_{method}_s{seed}_l{λ}.json` in this folder. "
@@ -1235,17 +1414,25 @@ def main():
     p = sub.add_parser("train")
     p.add_argument("--lam", type=float, required=True)
     p.add_argument("--L", type=int, required=True)
-    p.add_argument("--method", choices=("snap", "fourier"), required=True)
+    p.add_argument("--method", choices=("snap", "shell", "fourier"), required=True)
     p.add_argument("--seed", type=int, required=True)
     p.set_defaults(func=lambda a: train_job(a.lam, a.L, a.method, a.seed))
 
     p = sub.add_parser("freeze")
     p.add_argument("--lam", type=float, required=True)
     p.add_argument("--L", type=int, required=True)
-    p.add_argument("--method", choices=("snap", "fourier"), required=True)
+    p.add_argument("--method", choices=("snap", "shell", "fourier"), required=True)
     p.add_argument("--seed", type=int, required=True)
     p.add_argument("--n", type=int, required=True)
     p.set_defaults(func=lambda a: attach_freeze(a.lam, a.L, a.method, a.seed, a.n))
+
+    p = sub.add_parser("continue")
+    p.add_argument("--lam", type=float, required=True)
+    p.add_argument("--L", type=int, required=True)
+    p.add_argument("--method", choices=("snap", "shell", "fourier"), required=True)
+    p.add_argument("--seed", type=int, required=True)
+    p.add_argument("--extra", type=int, default=40)
+    p.set_defaults(func=lambda a: continue_job(a.lam, a.L, a.method, a.seed, a.extra))
 
     p = sub.add_parser("summarize")
     p.set_defaults(func=lambda a: cmd_summarize())
@@ -1255,6 +1442,7 @@ def main():
     p.add_argument("--lams", default="0.25,0.50")
     p.add_argument("--ladder", default="1,2,4,8,12,16")
     p.add_argument("--seeds", default="0,1,2")
+    p.add_argument("--methods", default="snap,fourier")
     p.set_defaults(func=lambda a: cmd_campaign(a))
 
     args = ap.parse_args()
@@ -1284,6 +1472,10 @@ def cmd_campaign(args) -> None:
     lams = _parse_floats(args.lams)
     ladder = _parse_ints(args.ladder)
     seeds = _parse_ints(args.seeds)
+    methods = tuple(m.strip() for m in str(args.methods).split(",") if m.strip())
+    stop_method = "shell" if "shell" in methods and "snap" not in methods else "snap"
+    if stop_method not in methods:
+        stop_method = methods[0]
     for lam in lams:
         build_phase(lam)
     pending_lams = set(lams)
@@ -1294,28 +1486,28 @@ def cmd_campaign(args) -> None:
         jobs = [
             ["train", "--lam", f"{lam:.2f}", "--L", str(L), "--method", method, "--seed", str(seed)]
             for lam in sorted(pending_lams)
-            for method in ("snap", "fourier")
+            for method in methods
             for seed in seeds
         ]
-        log(f"wave L={L} jobs={len(jobs)} lams={sorted(pending_lams)}")
+        log(f"wave L={L} jobs={len(jobs)} lams={sorted(pending_lams)} stop={stop_method}")
         _parallel(jobs, workers)
         still = set()
         for lam in pending_lams:
             rows = []
             ok = True
             for seed in seeds:
-                path = seed_path(lam, L, "snap", seed)
+                path = seed_path(lam, L, stop_method, seed)
                 if not train_complete(path):
                     ok = False
                     break
                 rows.append(read_json(path))
             if not ok:
-                log(f"λ={lam:.2f} L={L} SNAP incomplete — keep going")
+                log(f"λ={lam:.2f} L={L} {stop_method} incomplete — keep going")
                 still.add(lam)
                 continue
             sc = four_scores(rows)
             log(
-                f"λ={lam:.2f} L={L} SNAP min4={sc['min4']:.4f} "
+                f"λ={lam:.2f} L={L} {stop_method} min4={sc['min4']:.4f} "
                 f"train={sc['f_train']:.4f} hold={sc['f_hold']:.4f}"
             )
             if not hit_95(sc):
@@ -1329,7 +1521,7 @@ def cmd_campaign(args) -> None:
     reported = {}
     for lam in lams:
         lam_groups = {(L, m): rows for (Llam, L, m), rows in groups.items() if Llam == lam}
-        for method in ("snap", "fourier"):
+        for method in sorted({m for (_, m) in lam_groups}):
             chosen = choose_L(lam_groups, method)
             report_L = chosen["Lstar"] if chosen["Lstar"] is not None else (
                 None if chosen["best"] is None else chosen["best"]["L"]
