@@ -1,0 +1,19 @@
+22:31:22 [pagano] start ns=[6, 9, 12] Bs=[-0.1, -0.3, -0.8] alpha=1.0 grid=41
+22:31:22 [pagano] n=6 B/J0=-0.1 p2=False
+22:31:31 [pagano]   η=0.8823 (init 0.7486) S=0.6934 E=-2.2632/-3.7268 β=2.964 γ=0.274 (8.5s)
+22:31:31 [pagano] n=6 B/J0=-0.3 p2=False
+22:31:38 [pagano]   η=0.9384 (init 0.8303) S=0.6727 E=-3.1793/-3.9657 β=1.034 γ=0.222 (7.3s)
+22:31:38 [pagano] n=6 B/J0=-0.8 p2=False
+22:31:42 [pagano]   η=0.9885 (init 0.9254) S=0.2056 E=-5.7683/-5.9443 β=2.380 γ=0.152 (3.7s)
+22:31:42 [pagano] n=9 B/J0=-0.1 p2=False
+22:31:53 [pagano]   η=0.8930 (init 0.7817) S=0.6933 E=-3.3728/-5.7518 β=2.835 γ=0.253 (11.1s)
+Traceback (most recent call last):
+  File "/workspace/qumode_sep/quantum-p-spin/run_pagano_af_qaoa.py", line 395, in <module>
+    main()
+    ~~~~^^
+  File "/workspace/qumode_sep/quantum-p-spin/run_pagano_af_qaoa.py", line 389, in main
+    write_results(rows, out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/workspace/qumode_sep/quantum-p-spin/run_pagano_af_qaoa.py", line 299, in write_results
+    hit = next(r for r in p1 if r["n"] == n and r["B_over_J0"] == b)
+StopIteration
