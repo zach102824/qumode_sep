@@ -1,0 +1,284 @@
+{
+  "schema_version": "bw_strip_n18_gamma08_final_v1",
+  "status": "round4_complete_no_further_search",
+  "hamiltonian": "H = -sum_up ZZZ + sum_down ZZZ - Gamma * sum_i X_i",
+  "lambda": 1.0,
+  "gamma": 0.8,
+  "normalization": "triangle coefficients exactly -1 (up) and +1 (down); Gamma not divided by N or by Gamma*",
+  "target": "full 2^N ground state; no sublattice projection",
+  "geometry": {
+    "lx": 3,
+    "ly": 6,
+    "n": 18,
+    "sha256_canonical_json": "72597a804a743f44797ebd217af83bb3afc8de72be62ae971cd3ef6fa2d63be2",
+    "hash_note": "canonical JSON is utf-8 with sort_keys and separators (',', ':'). statevector hash is sha256 of little-endian float64 real bytes followed by float64 imag bytes, C-order, of the vector as produced here. A second hash rounds real and imag to 8 decimal places before the same packing.",
+    "up_corners": "(x,y),(x+1,y),(x+1,y+1)",
+    "down_corners": "(x,y),(x,y+1),(x+1,y+1)",
+    "bit": "index x+Lx*y is bit q, LSB = qubit 0"
+  },
+  "ground_state": {
+    "E0": -25.559302228060716,
+    "E1": -25.53365828212241,
+    "Emax": 25.559302228060616,
+    "gap": 0.02564394593830599,
+    "residual": 8.20357724544666e-14,
+    "emax_plus_e0": -9.947598300641403e-14,
+    "n_negative": 0,
+    "method": "eigsh on the full space",
+    "gs_sha256_f64": "6d8d948e71006d9c2d26b42fe02db63636ad43524ff15b393946648ba234310d",
+    "gs_sha256_round8": "8f6b0fba217e15d5ff88af770c232587f9301b70617ef432dc35d19a7c98d080",
+    "F_classical_subspace": 0.7861009410660416,
+    "F_equal_positive_cat": 0.7861009410660417
+  },
+  "round3_matched_grid": {
+    "label": "original matched-grid search, 8 random restarts, L<=5",
+    "F1_energy": 0.07863314381547523,
+    "F1max_grid": 0.08988406713299907,
+    "F1_fidelity_search": 0.09522872210943426,
+    "L1max_is_best_found_on_that_grid_not_a_theorem": true,
+    "grid_n": 17,
+    "L5_energy_selected_F": 0.4197711914716309,
+    "L5_energy_selected_E": -23.412114364224152,
+    "note": "Round 4 does not replace this row. It is the incomplete search that round 4 continued."
+  },
+  "within_seed_F_vs_E": {
+    "description": "3x4 L=5 angles evaluated on 3x6, then energy-polished. Lower energy, lower fidelity. Not the round-4 winner.",
+    "seed_type": "n12_transfer",
+    "L": 5,
+    "F_seed": 0.5235870342914763,
+    "E_seed": -23.4848692895061,
+    "F_polished": 0.47116960093956456,
+    "E_polished": -23.596041778178474
+  },
+  "round4_added_optimization": {
+    "budget": 48,
+    "starts_run": {
+      "L5": 32,
+      "L6": 32
+    },
+    "stop": "stall_rel_1e-4_over_16_starts",
+    "best_energy_selected": {
+      "L5": {
+        "L": 5,
+        "role": "round4_added_optimization_best_energy",
+        "also_best_fidelity_among_evaluated": true,
+        "not_a_separate_fidelity_optimization": true,
+        "E": -23.91728827275738,
+        "F": 0.610420656879744,
+        "eta": 0.9678783493255807,
+        "E_minus_E0": 1.6420139553033373,
+        "r_over_gap": 64.03125163551982,
+        "grad_norm_after_extra_polish": 0.00961710238413685,
+        "seed_type": "n15_transfer+extra_polish",
+        "start_id": 1,
+        "gammas": [
+          1.0566013822028322,
+          -0.14327947576588287,
+          1.300610056105183,
+          1.2871457919905562,
+          1.3080172963881114
+        ],
+        "betas": [
+          6.140780740548272,
+          5.319953823380101,
+          -2.7644324584057767,
+          -2.816590515584193,
+          -2.9688109324793737
+        ],
+        "observables": {
+          "S_half_bits": 3.857474574485314,
+          "cut_kind": "y < 3",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "clause_up": 0.4886653081369024,
+          "clause_down": -0.488665308136902,
+          "m_z": -1.5439038936193583e-16,
+          "F_classical_subspace": 0.4059159987317579,
+          "F_equal_positive_cat": 0.40591599873175793,
+          "classical_degeneracy": 48,
+          "manifold_definition": "sum of |amplitude|^2 on classical ground bitstrings; cat is the equal positive superposition"
+        },
+        "statevector": {
+          "sha256_f64_reim": "4d9bc9e8943e4db4482f0ef9ded4089cf28cbb6a06907a63e6ff58834ea4171f",
+          "sha256_round8_reim": "d9dbfa0a9b0834689d80c94c65b05a6407a2c0f5b8e7a7afe465e9d03508a0c5",
+          "norm": 1.0000000000000004,
+          "largest": [
+            {
+              "index": 183084,
+              "re": 0.06393228200150719,
+              "im": -0.06610027704171431
+            },
+            {
+              "index": 104007,
+              "re": 0.06393228200150719,
+              "im": -0.06610027704171431
+            },
+            {
+              "index": 207641,
+              "re": 0.06393228200150719,
+              "im": -0.06610027704171431
+            },
+            {
+              "index": 180716,
+              "re": 0.06393228200150719,
+              "im": -0.06610027704171431
+            },
+            {
+              "index": 30322,
+              "re": 0.06393228200150719,
+              "im": -0.06610027704171431
+            },
+            {
+              "index": 205273,
+              "re": 0.06393228200150719,
+              "im": -0.06610027704171431
+            },
+            {
+              "index": 31922,
+              "re": 0.06393228200150719,
+              "im": -0.06610027704171431
+            },
+            {
+              "index": 105607,
+              "re": 0.06393228200150719,
+              "im": -0.06610027704171431
+            }
+          ]
+        },
+        "replay_matches_saved_E": true,
+        "replay_matches_saved_F": true
+      },
+      "L6": {
+        "L": 6,
+        "role": "round4_added_optimization_best_energy",
+        "also_best_fidelity_among_evaluated": true,
+        "not_a_separate_fidelity_optimization": true,
+        "E": -24.702062791530587,
+        "F": 0.835805168290513,
+        "eta": 0.9832303826434472,
+        "E_minus_E0": 0.8572394365301292,
+        "r_over_gap": 33.42853079601982,
+        "grad_norm_after_extra_polish": 0.011365336624899327,
+        "seed_type": "n15_transfer+extra_polish",
+        "start_id": 1,
+        "gammas": [
+          1.1017335547916607,
+          -0.1677272999729611,
+          1.3108076111189944,
+          1.2914677739783371,
+          1.2795950723077663,
+          -0.25327680000847236
+        ],
+        "betas": [
+          6.139205556035888,
+          5.299396154973521,
+          -2.7725552244425336,
+          -2.802395858545816,
+          -2.8091757874379657,
+          0.1911587073524079
+        ],
+        "observables": {
+          "S_half_bits": 4.149582754473278,
+          "cut_kind": "y < 3",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "clause_up": 0.5477647638478667,
+          "clause_down": -0.5477647638478664,
+          "m_z": -3.4819755103912246e-16,
+          "F_classical_subspace": 0.5782643846946091,
+          "F_equal_positive_cat": 0.5782643846946093,
+          "classical_degeneracy": 48,
+          "manifold_definition": "sum of |amplitude|^2 on classical ground bitstrings; cat is the equal positive superposition"
+        },
+        "statevector": {
+          "sha256_f64_reim": "6f39972d8062e2de15403502ae742bfdc09f0c022d7aea99ef1f19cd721ba4a7",
+          "sha256_round8_reim": "255e9b57c19bbacfb5e077b11cfe38722bde043a930ca384f721a6d0f8f69bcf",
+          "norm": 1.000000000000001,
+          "largest": [
+            {
+              "index": 30322,
+              "re": -0.0010014527730620511,
+              "im": -0.10975505352138017
+            },
+            {
+              "index": 183084,
+              "re": -0.0010014527730620511,
+              "im": -0.10975505352138017
+            },
+            {
+              "index": 205273,
+              "re": -0.0010014527730620511,
+              "im": -0.10975505352138017
+            },
+            {
+              "index": 105607,
+              "re": -0.0010014527730620511,
+              "im": -0.10975505352138017
+            },
+            {
+              "index": 88126,
+              "re": -0.0010014527730620533,
+              "im": -0.10975505352138014
+            },
+            {
+              "index": 45771,
+              "re": -0.0010014527730620533,
+              "im": -0.10975505352138014
+            },
+            {
+              "index": 181874,
+              "re": -0.0010014527730620659,
+              "im": -0.10975505352138014
+            },
+            {
+              "index": 208007,
+              "re": -0.0010014527730620659,
+              "im": -0.10975505352138014
+            }
+          ]
+        },
+        "replay_matches_saved_E": true,
+        "replay_matches_saved_F": true
+      }
+    },
+    "best_fidelity_among_evaluated_points": "same states as best energy at L=5 and L=6; this is not a separate fidelity optimization at those depths",
+    "L1_only_disagreement": "round3 fidelity search F=0.0952 at higher energy than energy-selected F=0.0786"
+  },
+  "shared_gamma_diagnostic_not_primary": [
+    {
+      "L": 5,
+      "E": -19.770423,
+      "F": 0.0865
+    },
+    {
+      "L": 6,
+      "E": -21.601251,
+      "F": 0.1952
+    }
+  ],
+  "l1_statement": {
+    "strongest_best_found_L1": 0.08988406713299907,
+    "energy_selected_L1": 0.07863314381547523,
+    "fidelity_search_L1": 0.09522872210943426,
+    "grid": "round3 matched grid, 17 points per angle on [0, pi/4) x [0, pi), plus local search",
+    "status": "best value found on that search, not a theorem that no higher L=1 fidelity exists"
+  }
+}

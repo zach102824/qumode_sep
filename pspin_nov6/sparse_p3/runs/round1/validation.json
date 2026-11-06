@@ -1,0 +1,248 @@
+{
+  "pass": true,
+  "n_checks": 26,
+  "n_failed": 0,
+  "graph_id": "N6_seed11",
+  "failures": [],
+  "checks": [
+    {
+      "name": "identity_(sumZ)^3_N6",
+      "pass": true,
+      "detail": {
+        "max_abs_residual": 0.0
+      }
+    },
+    {
+      "name": "pauli_kron_matches_bit_diag",
+      "pass": true,
+      "detail": {
+        "max_abs": 0.0,
+        "n": 6,
+        "n_edges": 6
+      }
+    },
+    {
+      "name": "unique_classical_allplus_ground_state",
+      "pass": true,
+      "detail": {
+        "n_ground": 1,
+        "indices": [
+          0
+        ],
+        "all_plus_index_is_ground": true,
+        "energy": -6.0
+      }
+    },
+    {
+      "name": "gf2_full_rank",
+      "pass": true,
+      "detail": {
+        "rank": 6,
+        "n": 6
+      }
+    },
+    {
+      "name": "gamma0_dense_gs_is_allplus_product",
+      "pass": true,
+      "detail": {
+        "E0": -5.9999999999999964,
+        "F_allplus": 1.0,
+        "gap": 1.9999999999999911,
+        "degenerate": false
+      }
+    },
+    {
+      "name": "lanczos_matches_dense_ground_state",
+      "pass": true,
+      "detail": {
+        "overlap": 0.9999999999999998,
+        "E0_diff": 3.552713678800501e-15,
+        "gap_diff": 1.7763568394002505e-15,
+        "Emax_diff": 1.7763568394002505e-15,
+        "lanczos_residual": 6.333595856756739e-15,
+        "method": "eigsh_full_space"
+      }
+    },
+    {
+      "name": "spectrum_symmetric_Emax_equals_minus_E0",
+      "pass": true,
+      "detail": {
+        "emax_plus_e0": 5.329070518200751e-15,
+        "reason": "Conjugation by prod_i Y_i sends Z->-Z and X->-X. Odd-body ZZZ and the transverse field both flip, so H -> -H."
+      }
+    },
+    {
+      "name": "full_space_dimension",
+      "pass": true,
+      "detail": {
+        "dim": 64
+      }
+    },
+    {
+      "name": "stoquastic_gs_nonnegative",
+      "pass": true,
+      "detail": {
+        "n_negative": 0,
+        "gap": 1.113338259946202,
+        "degenerate": false
+      }
+    },
+    {
+      "name": "matvec_matches_dense",
+      "pass": true,
+      "detail": {
+        "max_abs": 1.2560739669470201e-15
+      }
+    },
+    {
+      "name": "cost_spectrum_same_parity",
+      "pass": true,
+      "detail": {
+        "max_abs_int_err": 0.0,
+        "M": 6,
+        "min": -6.0,
+        "max": 6.0
+      }
+    },
+    {
+      "name": "gamma_period_pi_exact",
+      "pass": true,
+      "detail": {
+        "overlap": 1.0
+      }
+    },
+    {
+      "name": "gamma_period_not_pi_over_2",
+      "pass": true,
+      "detail": {
+        "overlap_at_half_period": 0.022546184386521725
+      }
+    },
+    {
+      "name": "beta_period_pi_exact",
+      "pass": true,
+      "detail": {
+        "overlap": 1.0
+      }
+    },
+    {
+      "name": "beta_period_not_pi_over_2",
+      "pass": true,
+      "detail": {
+        "overlap_at_half_period": 0.0,
+        "note": "even-p \u03c0/2 claim does not hold for this odd-p sum-X mixer"
+      }
+    },
+    {
+      "name": "angle_conjugation_symmetry",
+      "pass": true,
+      "detail": {
+        "state_overlap_with_conjugate": 1.0000000000000009,
+        "energy_abs_diff": 0.0,
+        "F_abs_diff": 0.0
+      }
+    },
+    {
+      "name": "circuit_expm_replay",
+      "pass": true,
+      "detail": {
+        "max_abs": 1.6100486222975217e-16
+      }
+    },
+    {
+      "name": "principal_branch_same_state",
+      "pass": true,
+      "detail": {
+        "overlap": 1.0000000000000004,
+        "branches_gamma": [
+          1,
+          -1
+        ],
+        "branches_beta": [
+          -2,
+          1
+        ]
+      }
+    },
+    {
+      "name": "gauge_spin_flip_equivalence",
+      "pass": true,
+      "detail": {
+        "flipped_qubits": [
+          0,
+          2
+        ],
+        "gs_overlap": 0.9999999999999996,
+        "F_uniform": 0.02641221413020959,
+        "F_gauge": 0.02641221413020967,
+        "qaoa_state_overlap": 1.0000000000000004,
+        "spectrum_E0_diff": 3.552713678800501e-15
+      }
+    },
+    {
+      "name": "odd_p_global_sign_flip",
+      "pass": true,
+      "detail": {
+        "gs_overlap": 1.0,
+        "F_plusJ": 0.0238262143568162,
+        "F_minusJ": 0.023826214356816474,
+        "F_abs_diff": 2.740863092043355e-16,
+        "qaoa_state_overlap": 1.0000000000000027,
+        "note": "Same angles, fidelities to each model's own full-space ground state."
+      }
+    },
+    {
+      "name": "global_flip_matches_all_minus_gauge",
+      "pass": true,
+      "detail": {
+        "unique_couplings": [
+          -1.0
+        ]
+      }
+    },
+    {
+      "name": "entropy_product_and_bell",
+      "pass": true,
+      "detail": {
+        "S_product": -0.0,
+        "S_bell": 1.0,
+        "cut": "low bits 0..n//2-1 versus the complementary high bits"
+      }
+    },
+    {
+      "name": "l1_grid_matches_scalar_circuit",
+      "pass": true,
+      "detail": {
+        "max_abs_E_or_F": 4.440892098500626e-16
+      }
+    },
+    {
+      "name": "analytic_endpoint_energies",
+      "pass": true,
+      "detail": {
+        "E_plus": -4.199999999999999,
+        "expected_plus": -4.199999999999999,
+        "E_zero": -6.0,
+        "expected_zero": -6
+      }
+    },
+    {
+      "name": "sparse_differs_from_collective_p3",
+      "pass": true,
+      "detail": {
+        "max_abs_diagonal_diff": 4.0,
+        "sparse_terms": 6,
+        "collective_distinct_triples": 20,
+        "note": "Collective -(sum Z)^3/N^2 also generates a longitudinal field. This check only records that the diagonals differ."
+      }
+    },
+    {
+      "name": "product_overlap_at_zero_field",
+      "pass": true,
+      "detail": {
+        "F_product": 1.0,
+        "F_classical": 1.0
+      }
+    }
+  ]
+}
