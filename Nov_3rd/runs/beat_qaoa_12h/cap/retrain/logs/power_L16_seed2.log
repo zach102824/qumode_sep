@@ -1,0 +1,68 @@
+
+=== /usr/bin/python3 /agent/repos/qumode_sep/Nov_3rd/scripts/train_beat_train69.py --idea power_p --L 16 --seed 2 --threads 4 --batch_per_n 32 --w6 1 --w9 2 --packs_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/packs_power --out_root /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain --qaoa_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/qaoa_angles --eval_ns 6,9,12,15 --beat_mode raw --skip_eval @ 2026-11-04 09:08:48 +0000 ===
+09:08:49 [Nov_3rd] power_p L16 seed2: load train n6 B=250
+09:08:49 [Nov_3rd] power_p L16 seed2: load train n9 B=250
+09:08:49 [Nov_3rd] power_p L16 s2: train QAOA Meds n6=1.2010, n9=1.5137
+09:08:49 [Nov_3rd] power_p L16 s2: loss_mode=log_ratio soft_q=0.5
+09:08:49 [Nov_3rd] power_p L16 s2: n9 holdout=50 train_pool=200
+/agent/repos/qumode_sep/Nov_3rd/scripts/train_beat_train69.py:345: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  extra = f" p={float(p):.3f}" if p is not None else ""
+09:08:50 [Nov_3rd] power_p L16 s2 adam 0/600 loss=-0.00017 lam=1.00e-01 p=0.001
+09:08:51 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.00329 @ adam0
+09:09:02 [Nov_3rd] power_p L16 s2 adam 25/600 loss=-0.01173 lam=9.59e-02 p=0.019
+09:09:03 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.01973 @ adam25
+09:09:15 [Nov_3rd] power_p L16 s2 adam 50/600 loss=-0.01934 lam=9.17e-02 p=0.037
+09:09:15 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.03055 @ adam50
+09:09:27 [Nov_3rd] power_p L16 s2 adam 75/600 loss=-0.02546 lam=8.76e-02 p=0.041
+09:09:27 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.04094 @ adam75
+09:09:39 [Nov_3rd] power_p L16 s2 adam 100/600 loss=-0.02840 lam=8.35e-02 p=0.048
+09:09:39 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.04636 @ adam100
+09:09:52 [Nov_3rd] power_p L16 s2 adam 125/600 loss=-0.03431 lam=7.93e-02 p=0.048
+09:09:52 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.05064 @ adam125
+09:10:04 [Nov_3rd] power_p L16 s2 adam 150/600 loss=-0.06852 lam=7.52e-02 p=0.050
+09:10:04 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.06578 @ adam150
+09:10:18 [Nov_3rd] power_p L16 s2 adam 175/600 loss=-0.03695 lam=7.11e-02 p=0.061
+09:10:30 [Nov_3rd] power_p L16 s2 adam 200/600 loss=-0.05362 lam=6.69e-02 p=0.065
+09:10:31 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.06676 @ adam200
+09:10:43 [Nov_3rd] power_p L16 s2 adam 225/600 loss=-0.05458 lam=6.28e-02 p=0.063
+09:10:43 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.07366 @ adam225
+09:10:55 [Nov_3rd] power_p L16 s2 adam 250/600 loss=-0.05435 lam=5.87e-02 p=0.063
+09:10:55 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.07753 @ adam250
+09:11:08 [Nov_3rd] power_p L16 s2 adam 275/600 loss=-0.05438 lam=5.45e-02 p=0.057
+09:11:21 [Nov_3rd] power_p L16 s2 adam 300/600 loss=-0.04284 lam=5.04e-02 p=0.065
+09:11:21 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.08593 @ adam300
+09:11:33 [Nov_3rd] power_p L16 s2 adam 325/600 loss=-0.03833 lam=4.63e-02 p=0.064
+09:11:46 [Nov_3rd] power_p L16 s2 adam 350/600 loss=-0.04638 lam=4.22e-02 p=0.074
+09:11:47 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.08964 @ adam350
+09:11:59 [Nov_3rd] power_p L16 s2 adam 375/600 loss=-0.05262 lam=3.80e-02 p=0.073
+09:11:59 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.09000 @ adam375
+09:12:11 [Nov_3rd] power_p L16 s2 adam 400/600 loss=-0.05329 lam=3.39e-02 p=0.072
+09:12:11 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.10026 @ adam400
+09:12:24 [Nov_3rd] power_p L16 s2 adam 425/600 loss=-0.05661 lam=2.98e-02 p=0.054
+09:12:36 [Nov_3rd] power_p L16 s2 adam 450/600 loss=-0.05251 lam=2.56e-02 p=0.055
+09:12:36 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.10538 @ adam450
+09:12:49 [Nov_3rd] power_p L16 s2 adam 475/600 loss=-0.05734 lam=2.15e-02 p=0.056
+09:13:01 [Nov_3rd] power_p L16 s2 adam 500/600 loss=-0.05854 lam=1.74e-02 p=0.059
+09:13:13 [Nov_3rd] power_p L16 s2 adam 525/600 loss=-0.05265 lam=1.32e-02 p=0.060
+09:13:25 [Nov_3rd] power_p L16 s2 adam 550/600 loss=-0.05753 lam=9.10e-03 p=0.067
+09:13:38 [Nov_3rd] power_p L16 s2 adam 575/600 loss=-0.06470 lam=4.97e-03 p=0.074
+09:13:38 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.10751 @ adam575
+09:13:51 [Nov_3rd] power_p L16 s2 adam 599/600 loss=-0.05158 lam=1.00e-03 p=0.077
+09:13:51 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.10906 @ adam599
+09:13:56 [Nov_3rd] power_p L16 s2 lbfgs r0/12 loss=-0.06822
+09:14:01 [Nov_3rd] power_p L16 s2 lbfgs r1/12 loss=-0.04181
+09:14:06 [Nov_3rd] power_p L16 s2 lbfgs r2/12 loss=-0.06644
+09:14:07 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.11297 @ lbfgs2
+09:14:11 [Nov_3rd] power_p L16 s2 lbfgs r3/12 loss=-0.05050
+09:14:16 [Nov_3rd] power_p L16 s2 lbfgs r4/12 loss=-0.06043
+09:14:21 [Nov_3rd] power_p L16 s2 lbfgs r5/12 loss=-0.05827
+09:14:21 [Nov_3rd] power_p L16 s2 NEW BEST holdout=-0.11337 @ lbfgs5
+09:14:26 [Nov_3rd] power_p L16 s2 lbfgs r6/12 loss=-0.04823
+09:14:31 [Nov_3rd] power_p L16 s2 lbfgs r7/12 loss=-0.04869
+09:14:35 [Nov_3rd] power_p L16 s2 lbfgs r8/12 loss=-0.08098
+09:14:40 [Nov_3rd] power_p L16 s2 lbfgs r9/12 loss=-0.05599
+09:14:45 [Nov_3rd] power_p L16 s2 lbfgs r10/12 loss=-0.06097
+09:14:49 [Nov_3rd] power_p L16 s2 lbfgs r11/12 loss=-0.07755
+09:14:50 [Nov_3rd] power_p L16 s2: restoring best holdout=-0.11337 @ lbfgs5
+09:14:50 [Nov_3rd] power_p L16 s2 saved /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/power_p/params_L16_seed2.pt wall=360s

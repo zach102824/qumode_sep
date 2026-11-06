@@ -1,0 +1,115 @@
+08:53:35 [Nov_3rd] packed train n6 N=250 → /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/packs_walsh/train_n6.npz
+08:53:35 [Nov_3rd] packed train n9 N=250 → /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/packs_walsh/train_n9.npz
+08:53:35 [Nov_3rd] packed train n6 N=250 → /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/packs_power/train_n6.npz
+08:53:35 [Nov_3rd] packed train n9 N=250 → /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/packs_power/train_n9.npz
+08:53:35 [Nov_3rd] RUN /usr/bin/python3 /agent/repos/qumode_sep/Nov_3rd/scripts/train69_ucx_walsh_degree.py --L 2 --seed 0 --threads 4 --max_train 100 --eval_B 1000 --skip_eval --packs_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/packs_walsh --out_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/walsh_L2 --w6 1 --w9 2 --adam_steps 400 --lbfgs_rounds 8 --batch_per_n 32
+08:54:38 [Nov_3rd] RUN /usr/bin/python3 /agent/repos/qumode_sep/Nov_3rd/scripts/train69_ucx_walsh_degree.py --L 2 --seed 1 --threads 4 --max_train 100 --eval_B 1000 --skip_eval --packs_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/packs_walsh --out_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/walsh_L2 --w6 1 --w9 2 --adam_steps 400 --lbfgs_rounds 8 --batch_per_n 32
+08:55:41 [Nov_3rd] RUN /usr/bin/python3 /agent/repos/qumode_sep/Nov_3rd/scripts/train69_ucx_walsh_degree.py --L 2 --seed 2 --threads 4 --max_train 100 --eval_B 1000 --skip_eval --packs_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/packs_walsh --out_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/walsh_L2 --w6 1 --w9 2 --adam_steps 400 --lbfgs_rounds 8 --batch_per_n 32
+08:56:45 [Nov_3rd] RUN /usr/bin/python3 /agent/repos/qumode_sep/Nov_3rd/scripts/train_beat_train69.py --idea power_p --L 16 --seed 0 --threads 4 --batch_per_n 32 --w6 1 --w9 2 --packs_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/packs_power --out_root /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain --qaoa_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/qaoa_angles --eval_ns 6,9,12,15 --beat_mode raw --skip_eval
+09:02:46 [Nov_3rd] RUN /usr/bin/python3 /agent/repos/qumode_sep/Nov_3rd/scripts/train_beat_train69.py --idea power_p --L 16 --seed 1 --threads 4 --batch_per_n 32 --w6 1 --w9 2 --packs_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/packs_power --out_root /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain --qaoa_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/qaoa_angles --eval_ns 6,9,12,15 --beat_mode raw --skip_eval
+09:08:48 [Nov_3rd] RUN /usr/bin/python3 /agent/repos/qumode_sep/Nov_3rd/scripts/train_beat_train69.py --idea power_p --L 16 --seed 2 --threads 4 --batch_per_n 32 --w6 1 --w9 2 --packs_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/packs_power --out_root /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain --qaoa_dir /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/train69_ladder_fresh250/qaoa_angles --eval_ns 6,9,12,15 --beat_mode raw --skip_eval
+09:14:50 [Nov_3rd] n6: packed 1000 instances in 0.13s
+09:14:50 [Nov_3rd] n9: packed 1000 instances in 0.32s
+09:14:51 [Nov_3rd] n12: packed 1000 instances in 0.63s
+09:14:53 [Nov_3rd] n15: packed 1000 instances in 1.09s
+09:14:53 [Nov_3rd] eval walsh_L2 seed0 pi_max n6
+09:14:54 [Nov_3rd]   Med=4.8436 R=0.9095
+09:14:54 [Nov_3rd] eval walsh_L2 seed0 pi_max n9
+09:14:54 [Nov_3rd]   Med=11.6664 R=0.9229
+09:14:54 [Nov_3rd] eval walsh_L2 seed0 pi_max n12
+09:14:56 [Nov_3rd]   Med=28.4353 R=0.9604
+09:14:57 [Nov_3rd] eval walsh_L2 seed0 pi_max n15
+09:15:02 [Nov_3rd]   Med=72.6671 R=0.9550
+09:15:02 [Nov_3rd] eval walsh_L2 seed0 identity n6
+09:15:03 [Nov_3rd]   Med=4.7428 R=0.8906
+09:15:03 [Nov_3rd] eval walsh_L2 seed0 identity n9
+09:15:04 [Nov_3rd]   Med=11.8553 R=0.9378
+09:15:04 [Nov_3rd] eval walsh_L2 seed0 identity n12
+09:15:05 [Nov_3rd]   Med=28.9112 R=0.9765
+09:15:05 [Nov_3rd] eval walsh_L2 seed0 identity n15
+09:15:10 [Nov_3rd]   Med=75.1079 R=0.9871
+09:15:10 [Nov_3rd] eval walsh_L2 seed1 pi_max n6
+09:15:11 [Nov_3rd]   Med=4.9816 R=0.9354
+09:15:11 [Nov_3rd] eval walsh_L2 seed1 pi_max n9
+09:15:11 [Nov_3rd]   Med=12.0085 R=0.9499
+09:15:11 [Nov_3rd] eval walsh_L2 seed1 pi_max n12
+09:15:13 [Nov_3rd]   Med=27.7878 R=0.9386
+09:15:14 [Nov_3rd] eval walsh_L2 seed1 pi_max n15
+09:15:19 [Nov_3rd]   Med=70.4461 R=0.9259
+09:15:19 [Nov_3rd] eval walsh_L2 seed1 identity n6
+09:15:20 [Nov_3rd]   Med=4.9761 R=0.9344
+09:15:20 [Nov_3rd] eval walsh_L2 seed1 identity n9
+09:15:21 [Nov_3rd]   Med=11.9383 R=0.9444
+09:15:21 [Nov_3rd] eval walsh_L2 seed1 identity n12
+09:15:22 [Nov_3rd]   Med=28.2138 R=0.9530
+09:15:22 [Nov_3rd] eval walsh_L2 seed1 identity n15
+09:15:27 [Nov_3rd]   Med=74.3186 R=0.9767
+09:15:27 [Nov_3rd] eval walsh_L2 seed2 pi_max n6
+09:15:28 [Nov_3rd]   Med=4.9857 R=0.9362
+09:15:28 [Nov_3rd] eval walsh_L2 seed2 pi_max n9
+09:15:28 [Nov_3rd]   Med=12.0117 R=0.9502
+09:15:28 [Nov_3rd] eval walsh_L2 seed2 pi_max n12
+09:15:30 [Nov_3rd]   Med=27.8493 R=0.9407
+09:15:32 [Nov_3rd] eval walsh_L2 seed2 pi_max n15
+09:15:37 [Nov_3rd]   Med=70.8187 R=0.9307
+09:15:37 [Nov_3rd] eval walsh_L2 seed2 identity n6
+09:15:37 [Nov_3rd]   Med=4.9874 R=0.9365
+09:15:37 [Nov_3rd] eval walsh_L2 seed2 identity n9
+09:15:38 [Nov_3rd]   Med=11.9712 R=0.9470
+09:15:38 [Nov_3rd] eval walsh_L2 seed2 identity n12
+09:15:39 [Nov_3rd]   Med=28.2488 R=0.9541
+09:15:39 [Nov_3rd] eval walsh_L2 seed2 identity n15
+09:15:44 [Nov_3rd]   Med=73.9007 R=0.9713
+09:15:45 [Nov_3rd] n6: packed 1000 instances in 0.13s
+09:15:45 [Nov_3rd] n9: packed 1000 instances in 0.31s
+09:15:46 [Nov_3rd] n12: packed 1000 instances in 0.62s
+09:15:48 [Nov_3rd] n15: packed 1000 instances in 1.08s
+09:15:48 [Nov_3rd] eval power_L16 seed0 pi_max n6
+09:15:49 [Nov_3rd]   Med=1.1439 R=0.9277
+09:15:49 [Nov_3rd] eval power_L16 seed0 pi_max n9
+09:15:51 [Nov_3rd]   Med=1.4073 R=0.8863
+09:15:51 [Nov_3rd] eval power_L16 seed0 pi_max n12
+09:15:57 [Nov_3rd]   Med=1.8412 R=0.8829
+09:15:58 [Nov_3rd] eval power_L16 seed0 pi_max n15
+09:16:17 [Nov_3rd]   Med=2.6008 R=0.8929
+09:16:17 [Nov_3rd] eval power_L16 seed0 identity n6
+09:16:18 [Nov_3rd]   Med=1.1418 R=0.9260
+09:16:18 [Nov_3rd] eval power_L16 seed0 identity n9
+09:16:20 [Nov_3rd]   Med=1.4212 R=0.8950
+09:16:20 [Nov_3rd] eval power_L16 seed0 identity n12
+09:16:26 [Nov_3rd]   Med=1.8801 R=0.9015
+09:16:26 [Nov_3rd] eval power_L16 seed0 identity n15
+09:16:44 [Nov_3rd]   Med=2.6672 R=0.9157
+09:16:44 [Nov_3rd] eval power_L16 seed1 pi_max n6
+09:16:45 [Nov_3rd]   Med=1.1406 R=0.9250
+09:16:45 [Nov_3rd] eval power_L16 seed1 pi_max n9
+09:16:48 [Nov_3rd]   Med=1.3961 R=0.8792
+09:16:48 [Nov_3rd] eval power_L16 seed1 pi_max n12
+09:16:53 [Nov_3rd]   Med=1.8012 R=0.8637
+09:16:55 [Nov_3rd] eval power_L16 seed1 pi_max n15
+09:17:13 [Nov_3rd]   Med=2.5426 R=0.8730
+09:17:13 [Nov_3rd] eval power_L16 seed1 identity n6
+09:17:15 [Nov_3rd]   Med=1.1424 R=0.9265
+09:17:15 [Nov_3rd] eval power_L16 seed1 identity n9
+09:17:17 [Nov_3rd]   Med=1.4115 R=0.8889
+09:17:17 [Nov_3rd] eval power_L16 seed1 identity n12
+09:17:22 [Nov_3rd]   Med=1.8351 R=0.8800
+09:17:22 [Nov_3rd] eval power_L16 seed1 identity n15
+09:17:41 [Nov_3rd]   Med=2.5808 R=0.8861
+09:17:41 [Nov_3rd] eval power_L16 seed2 pi_max n6
+09:17:42 [Nov_3rd]   Med=1.1431 R=0.9270
+09:17:42 [Nov_3rd] eval power_L16 seed2 pi_max n9
+09:17:44 [Nov_3rd]   Med=1.3976 R=0.8801
+09:17:44 [Nov_3rd] eval power_L16 seed2 pi_max n12
+09:17:50 [Nov_3rd]   Med=1.8098 R=0.8679
+09:17:51 [Nov_3rd] eval power_L16 seed2 pi_max n15
+09:18:10 [Nov_3rd]   Med=2.5596 R=0.8788
+09:18:10 [Nov_3rd] eval power_L16 seed2 identity n6
+09:18:11 [Nov_3rd]   Med=1.1408 R=0.9252
+09:18:11 [Nov_3rd] eval power_L16 seed2 identity n9
+09:18:13 [Nov_3rd]   Med=1.4174 R=0.8926
+09:18:13 [Nov_3rd] eval power_L16 seed2 identity n12
+09:18:18 [Nov_3rd]   Med=1.8514 R=0.8878
+09:18:18 [Nov_3rd] eval power_L16 seed2 identity n15
+09:18:37 [Nov_3rd]   Med=2.6072 R=0.8951
+09:18:37 [Nov_3rd] wrote /agent/repos/qumode_sep/Nov_3rd/runs/beat_qaoa_12h/cap/retrain/RETRAIN.md
