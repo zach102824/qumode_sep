@@ -81,3 +81,20 @@ The same split on the earlier anchors: 3×4 Γ=0.7 differs by 2.81e-3, 3×5 Γ=0
 ## Stop
 
 N=12 **PASS**. N=15 **PASS**. N=16 **PASS**. N=18 **PASS**, with the three fidelities kept separate. No scaling and no speedup.
+
+## Follow-up: A round 4 on N=18, Γ=0.8
+
+Provenance: `cursor/sparse-p3-qaoa-round1-13b4` at `ce5b838a8efc471beb9c47c7f1950fa9b48d9cc9`, PR #71. Schema `bw_strip_n18_gamma08_final_v1`. No new search was run here.
+
+Geometry SHA-256 from this builder is `72597a804a743f44797ebd217af83bb3afc8de72be62ae971cd3ef6fa2d63be2`, matching the schema. Full-space E0 differs from theirs by 8e-14. The ground-state float64 hash does not match bit for bit. The hash after rounding real and imaginary parts to 8 decimals does match. Krylov residual is 4e-14.
+
+The new energy-selected states, cost then mixer, layer 0 first, match bitwise (float64 real-then-imag SHA-256) and in energy and fidelity.
+
+| L | published E | replay E | published F | replay F | ΔE | ΔF | result |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| 5 | −23.91728827275738 | −23.91728827275738 | 0.610420656879744 | 0.610420656879744 | 0 | −6e-16 | **PASS** |
+| 6 | −24.702062791530587 | −24.70206279153028 | 0.835805168290513 | 0.835805168290532 | 3e-13 | 2e-14 | **PASS** |
+
+Norms are 1 to 1e-15. L=1 refined maximum 0.095229 stays a best-found value, not a certificate. Against that value, the replayed L=6 fidelity 0.835805 is still at least twice as large and at least 0.4. The earlier blind 0.419771, transfer 0.523587, and polish 0.470995 are not replaced. This L=6 state has a lower energy than all three.
+
+Machine-readable result: `results_round4/n18_g08_round4_replay.json`.
