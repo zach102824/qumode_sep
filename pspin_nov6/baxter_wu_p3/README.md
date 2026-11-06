@@ -23,3 +23,5 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python3 run_round2.py
 ```
 
 Round-2 numbers are in `runs/round2/RESULTS.md`.
+
+Round 3 is a matched-Gamma rerun of the same strips, in `runs/round3/`. It does not replace the round-2 files. Canonical hashes and full-space energies are in `runs/round3/periods.json` and `runs/round3/canonical_geometry.json`.
