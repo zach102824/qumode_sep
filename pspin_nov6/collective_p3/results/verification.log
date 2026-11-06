@@ -1,0 +1,88 @@
+validation start
+mean-field Gamma_c = 3*sqrt(3)/4 = 1.299038105677; spinodal = 1.5
+N=6: exact cubic identity 0 failures; Pauli-vs-m^3 max abs 0.00e+00; field c1=-4.444444e-01; coll-distinct matches c1*sumZ to 4.44e-16
+N=8: exact cubic identity 0 failures; Pauli-vs-m^3 max abs 0.00e+00; field c1=-3.437500e-01; coll-distinct matches c1*sumZ to 0.00e+00
+N=10: exact cubic identity 0 failures; Pauli-vs-m^3 max abs 1.11e-16; field c1=-2.800000e-01; coll-distinct matches c1*sumZ to 4.44e-16
+N=12: exact cubic identity 0 failures; Pauli-vs-m^3 max abs 2.22e-16; field c1=-2.361111e-01; coll-distinct matches c1*sumZ to 8.88e-16
+N=6 Gamma=0.8: all-sector spectrum vs dense max abs 5.33e-15
+N=6 Gamma=1.25: all-sector spectrum vs dense max abs 1.51e-14
+N=8 Gamma=1.0: all-sector spectrum vs dense max abs 3.55e-14
+N=6 Gamma=0.6: full GS overlap 1.000000000000, E0 -6.52658663, gap_full 2.962e+00, S^2 ok, sector 3.0
+N=6 Gamma=1.0: full GS overlap 1.000000000000, E0 -7.55187469, gap_full 2.081e+00, S^2 ok, sector 3.0
+N=6 Gamma=1.35: full GS overlap 1.000000000000, E0 -8.98679737, gap_full 2.082e+00, S^2 ok, sector 3.0
+N=8 Gamma=0.6: full GS overlap 1.000000000000, E0 -8.63727946, gap_full 3.519e+00, S^2 ok, sector 4.0
+N=8 Gamma=1.0: full GS overlap 1.000000000000, E0 -9.86988743, gap_full 2.096e+00, S^2 ok, sector 4.0
+N=8 Gamma=1.35: full GS overlap 1.000000000000, E0 -11.69487202, gap_full 1.784e+00, S^2 ok, sector 4.0
+N=10 Gamma=0.6: full GS overlap 1.000000000000, E0 -10.75248352, gap_full 3.987e+00, S^2 ok, sector 5.0
+N=10 Gamma=1.0: full GS overlap 1.000000000000, E0 -12.19243067, gap_full 2.211e+00, S^2 ok, sector 5.0
+N=10 Gamma=1.35: full GS overlap 1.000000000000, E0 -14.38076962, gap_full 1.560e+00, S^2 ok, sector 5.0
+N=12 Gamma=1: embedded GS residual 1.00e-15, E0 -14.52048924, Emax 14.52048924
+Dicke <w=1|sum X|w=0> = 2.449490 matches sqrt(N)
+N=6: gamma period 28.274334 (gcd 8), half-period infidelity 8.696e-01; beta period pi, not pi/2
+N=8: gamma period 50.265482 (gcd 8), half-period infidelity 9.374e-01; beta period pi, not pi/2
+N=12: gamma period 113.097336 (gcd 8), half-period infidelity 8.112e-01; beta period pi, not pi/2
+N=16: gamma period 201.061930 (gcd 8), half-period infidelity 9.442e-01; beta period pi, not pi/2
+N=32: gamma period 804.247719 (gcd 8), half-period infidelity 9.507e-01; beta period pi, not pi/2
+entropy cut qubits[0:4): |+> 1.92e-15 bits, GHZ 1.000000 bits; |+> coherent F=1
+N=6: full statevector and expm replay overlap the block evolution
+N=10: full statevector and expm replay overlap the block evolution
+N=8: F(+J)=0.108849476459 F(-J)=0.108849476459; spectra and reversed GS match
+|+> is a sum-X eigenstate; L=0 energy -5.60000000
+Pagano interpolation: depth-3 linear midpoint and depth-5 cubic endpoints ok
+validation passed
+QAOA Gammas: 0.600, 0.800, 1.000, 1.150, 1.250, 1.350, 1.400
+done N=6 Gamma=0.6 in 2.8s
+done N=6 Gamma=0.8 in 2.7s
+done N=6 Gamma=1.0 in 2.6s
+done N=6 Gamma=1.15 in 2.5s
+done N=6 Gamma=1.25 in 2.4s
+done N=6 Gamma=1.35 in 2.2s
+done N=6 Gamma=1.4 in 2.4s
+done N=8 Gamma=0.6 in 3.3s
+done N=8 Gamma=0.8 in 2.5s
+done N=8 Gamma=1.0 in 2.5s
+done N=8 Gamma=1.15 in 2.8s
+done N=8 Gamma=1.25 in 2.3s
+done N=8 Gamma=1.35 in 2.3s
+done N=8 Gamma=1.4 in 2.4s
+done N=10 Gamma=0.6 in 3.2s
+done N=10 Gamma=0.8 in 3.0s
+done N=10 Gamma=1.0 in 2.8s
+done N=10 Gamma=1.15 in 2.4s
+done N=10 Gamma=1.25 in 2.6s
+done N=10 Gamma=1.35 in 2.5s
+done N=10 Gamma=1.4 in 2.4s
+done N=12 Gamma=0.6 in 3.9s
+done N=12 Gamma=0.8 in 3.3s
+done N=12 Gamma=1.0 in 3.2s
+done N=12 Gamma=1.15 in 3.4s
+done N=12 Gamma=1.25 in 2.9s
+done N=12 Gamma=1.35 in 2.8s
+done N=12 Gamma=1.4 in 2.8s
+done N=16 Gamma=0.6 in 4.1s
+done N=16 Gamma=0.8 in 3.8s
+done N=16 Gamma=1.0 in 3.7s
+done N=16 Gamma=1.15 in 3.7s
+done N=16 Gamma=1.25 in 3.4s
+done N=16 Gamma=1.35 in 2.8s
+done N=16 Gamma=1.4 in 2.8s
+done N=20 Gamma=0.6 in 5.5s
+done N=20 Gamma=0.8 in 4.6s
+done N=20 Gamma=1.0 in 4.4s
+done N=20 Gamma=1.15 in 4.4s
+done N=20 Gamma=1.25 in 4.0s
+done N=20 Gamma=1.35 in 3.3s
+done N=20 Gamma=1.4 in 3.4s
+done N=32 Gamma=0.6 in 5.8s
+done N=32 Gamma=0.8 in 6.8s
+done N=32 Gamma=1.0 in 6.3s
+done N=32 Gamma=1.15 in 6.1s
+done N=32 Gamma=1.25 in 5.4s
+done N=32 Gamma=1.35 in 4.5s
+done N=32 Gamma=1.4 in 4.3s
+plots: results/gs_phase_diagram.png, results/F_vs_invN_by_depth.png, results/F_vs_L_over_N.png
+VERDICT FAIL: low L1 plus material L3-L5 gain does not hold across N=8,10,12
+
+# follow-up checks after the search (data unchanged)
+N=6 Gamma=0.7 and N=8 Gamma=1.2: full spectrum equals its negative (global Y conjugation), max abs 8.88e-15 and 2.31e-14.
+Plots regenerated with bars = min-to-max local-search fidelity. Markers remain the best-energy fidelity.

@@ -1,0 +1,78 @@
+independent BW audit start
+terms 3x3: hash_match=True shared=0 M=18
+terms 3x4: hash_match=True shared=0 M=24
+terms 3x6: hash_match=True shared=0 M=36
+terms 3x5: hash_match=True shared=0 M=30
+sym 3x3: coloring=True mono_edges=0 z2=True translation=True outcomes=['ok', 'ok', 'ok', 'ok', 'ok', 'ok']
+sym 3x4: coloring=False mono_edges=3 z2=False translation=True outcomes=['conflict', 'conflict', 'conflict', 'conflict', 'conflict', 'conflict']
+sym 4x3: coloring=False mono_edges=3 z2=False translation=True outcomes=['conflict', 'conflict', 'conflict', 'conflict', 'conflict', 'conflict']
+sym 3x5: coloring=False mono_edges=3 z2=False translation=True outcomes=['conflict', 'conflict', 'conflict', 'conflict', 'conflict', 'conflict']
+sym 3x6: coloring=True mono_edges=0 z2=True translation=True outcomes=['ok', 'ok', 'ok', 'ok', 'ok', 'ok']
+classical 3x3: Emin=-8.0 deg=72 Emax=8.0 gamma_period=0.785398 half_not=True spread=2.45e-16
+classical 3x4: Emin=-16.0 deg=18 Emax=16.0 gamma_period=0.785398 half_not=True spread=4.90e-16
+classical 3x5: Emin=-16.0 deg=360 Emax=16.0 gamma_period=0.785398 half_not=True spread=4.90e-16
+classical 3x6: Emin=-24.0 deg=48 Emax=24.0 gamma_period=0.785398 half_not=True spread=7.35e-16
+N=9 dense vs Krylov: dE0=4.985e+02 gap_dense=504.035160 gap_krylov=0.749023 resid=1.394e-14
+Krylov 3x4 Gamma=0.7
+  E0=-16.80388241 gap=0.021423 resid=5.98e-14 neg=0 Tx=3.52e-13 Ty=5.76e-13 S=3.361 F+=0.0472 Pup=0.1242 Pman=0.884 Ucat=0.881 orb=0.542 n_orb=2
+  replay L=1 pubF=0.194377 myF=0.194377 dF=-4.996e-16 dE=-7.105e-15 conv=cost_then_mixer
+  replay L=2 pubF=0.439941 myF=0.439941 dF=-1.610e-15 dE=0.000e+00 conv=cost_then_mixer
+  replay L=3 pubF=0.492307 myF=0.492307 dF=-1.832e-15 dE=-3.553e-15 conv=cost_then_mixer
+  replay L=4 pubF=0.648325 myF=0.648325 dF=-2.109e-15 dE=0.000e+00 conv=cost_then_mixer
+  replay L=5 pubF=0.648325 myF=0.648325 dF=-2.109e-15 dE=0.000e+00 conv=cost_then_mixer
+  replay L=6 pubF=0.769535 myF=0.769535 dF=-2.998e-15 dE=0.000e+00 conv=cost_then_mixer
+  L1 grid 72x36
+  L1 best-found Fmax=0.2255 F_at_E=0.1944 gridF=0.2221
+Krylov 3x5 Gamma=0.6
+  E0=-18.58370666 gap=0.126025 resid=3.64e-14 neg=0 Tx=1.42e-13 Ty=1.08e-13 S=3.721 F+=0.0689 Pup=0.1399 Pman=0.894 Ucat=0.884 orb=0.057 n_orb=24
+  replay L=1 pubF=0.338788 myF=0.338788 dF=1.554e-15 dE=3.553e-15 conv=cost_then_mixer
+  replay L=2 pubF=0.704879 myF=0.704879 dF=-5.551e-16 dE=7.105e-15 conv=cost_then_mixer
+  replay L=3 pubF=0.766022 myF=0.766022 dF=4.441e-15 dE=0.000e+00 conv=cost_then_mixer
+  replay L=4 pubF=0.918256 myF=0.918256 dF=3.997e-15 dE=-4.263e-14 conv=cost_then_mixer
+  replay L=5 pubF=0.951360 myF=0.951360 dF=2.998e-15 dE=3.553e-15 conv=cost_then_mixer
+  L1 grid 48x24
+  L1 best-found Fmax=0.3693 F_at_E=0.3388 gridF=0.3520
+Krylov 3x6 Gamma=1.0
+  E0=-26.61075418 gap=0.100588 resid=6.18e-14 neg=0 Tx=6.53e-14 Ty=7.62e-14 S=4.002 F+=0.0511 Pup=0.1061 Pman=0.607 Ucat=0.607 orb=0.228 n_orb=4
+  replay L=1 pubF=0.181927 myF=0.181927 dF=1.105e-14 dE=-6.750e-14 conv=cost_then_mixer
+  replay L=2 pubF=0.342290 myF=0.342290 dF=-1.166e-15 dE=3.055e-13 conv=cost_then_mixer
+  replay L=3 pubF=0.506368 myF=0.506368 dF=1.543e-14 dE=5.684e-14 conv=cost_then_mixer
+  replay L=4 pubF=0.580990 myF=0.580990 dF=2.010e-14 dE=9.237e-14 conv=cost_then_mixer
+  replay L=5 pubF=0.665195 myF=0.665195 dF=-2.121e-14 dE=3.162e-13 conv=cost_then_mixer
+  L1 grid 36x18
+  L1 best-found Fmax=0.2059 F_at_E=0.1819 gridF=0.1961
+Krylov 3x4 Gamma=0.8
+  E0=-17.08406778 gap=0.042215 resid=4.95e-14 neg=0 Tx=2.89e-13 Ty=4.01e-13 S=3.318 F+=0.0700 Pup=0.1504 Pman=0.837 Ucat=0.835 orb=0.518 n_orb=2
+  L1 grid 72x36
+  L1 best-found Fmax=0.2695 F_at_E=0.2360 gridF=0.2646
+Krylov 3x4 Gamma=1.0
+  E0=-17.84214680 gap=0.139720 resid=5.79e-14 neg=0 Tx=1.87e-13 Ty=1.10e-13 S=3.116 F+=0.1550 Pup=0.2359 Pman=0.694 Ucat=0.693 orb=0.440 n_orb=2
+  L1 grid 72x36
+  L1 best-found Fmax=0.4031 F_at_E=0.3685 gridF=0.3924
+Krylov 3x5 Gamma=0.8
+  E0=-19.86028869 gap=0.227480 resid=6.21e-14 neg=0 Tx=5.79e-14 Ty=3.05e-14 S=3.409 F+=0.1265 Pup=0.2040 Pman=0.796 Ucat=0.788 orb=0.050 n_orb=24
+  replay L=1 pubF=0.426268 myF=0.426268 dF=-2.609e-15 dE=-3.553e-15 conv=cost_then_mixer
+  replay L=2 pubF=0.757866 myF=0.757866 dF=-4.108e-15 dE=1.066e-14 conv=cost_then_mixer
+  replay L=3 pubF=0.774426 myF=0.774426 dF=-2.998e-15 dE=1.066e-14 conv=cost_then_mixer
+  replay L=4 pubF=0.842749 myF=0.842749 dF=-7.550e-15 dE=-2.487e-14 conv=cost_then_mixer
+  replay L=5 pubF=0.954070 myF=0.954070 dF=2.109e-15 dE=-3.553e-15 conv=cost_then_mixer
+  L1 grid 48x24
+  L1 best-found Fmax=0.4597 F_at_E=0.4263 gridF=0.4424
+Krylov 3x5 Gamma=1.0
+  E0=-21.40511786 gap=0.402239 resid=2.23e-14 neg=0 Tx=9.09e-15 Ty=8.74e-15 S=2.989 F+=0.2200 Pup=0.2973 Pman=0.663 Ucat=0.658 orb=0.039 n_orb=24
+  replay L=1 pubF=0.543490 myF=0.543490 dF=3.220e-15 dE=-2.132e-14 conv=cost_then_mixer
+  replay L=2 pubF=0.784560 myF=0.784560 dF=2.776e-15 dE=-3.553e-15 conv=cost_then_mixer
+  replay L=3 pubF=0.925701 myF=0.925701 dF=5.329e-15 dE=3.553e-15 conv=cost_then_mixer
+  replay L=4 pubF=0.964831 myF=0.964831 dF=4.996e-15 dE=-7.105e-15 conv=cost_then_mixer
+  replay L=5 pubF=0.979369 myF=0.979369 dF=2.442e-15 dE=-7.105e-15 conv=cost_then_mixer
+  L1 grid 48x24
+  L1 best-found Fmax=0.5750 F_at_E=0.5435 gridF=0.5600
+Krylov 3x6 Gamma=0.8
+  E0=-25.55930223 gap=0.025644 resid=5.43e-14 neg=0 Tx=2.98e-13 Ty=2.52e-13 S=4.202 F+=0.0129 Pup=0.0547 Pman=0.786 Ucat=0.786 orb=0.295 n_orb=4
+  L1 grid 36x18
+  L1 best-found Fmax=0.0952 F_at_E=0.0786 gridF=0.0916
+elapsed_s 116.8
+
+# corrected dense check after the run (the in-script block fill was wrong and was fixed)
+N=9 Gamma=1 dense eigh E0=-12.494520543431255 gap=0.749023077637359
+Krylov E0=-12.49452054343128 gap=0.7490230776374407 residual=2.84e-14 dE=2.49e-14

@@ -1,0 +1,60 @@
+{
+  "schema_version": "bw_strip_n18_gamma08_final_v1",
+  "provenance_commit": "ce5b838a8efc471beb9c47c7f1950fa9b48d9cc9",
+  "provenance_pr": "https://github.com/zach102824/qumode_sep/pull/71",
+  "angle_convention": "cost then mixer, layer 0 closest to |+>, exp(-i gamma H_cost) then exp(-i beta sum X)",
+  "geometry_sha256_match": true,
+  "geometry_sha256": "72597a804a743f44797ebd217af83bb3afc8de72be62ae971cd3ef6fa2d63be2",
+  "ground_state": {
+    "E0": -25.559302228060638,
+    "gap": 0.02564394593847652,
+    "residual": 3.802094551341669e-14,
+    "n_negative": 0,
+    "norm": 1.0000000000000047,
+    "sha256_f64_match": false,
+    "sha256_round8_match": true,
+    "dE0": 7.815970093361102e-14,
+    "dgap": 1.7053025658242404e-13
+  },
+  "gamma_period": 0.7853981633974483,
+  "l1_refined_max_best_found_not_certified": 0.09522872210943426,
+  "replays": [
+    {
+      "L": 5,
+      "norm": 1.0000000000000013,
+      "E": -23.91728827275738,
+      "F": 0.6104206568797435,
+      "dE": 0.0,
+      "dF": -5.551115123125783e-16,
+      "sha256_f64_reim": "4d9bc9e8943e4db4482f0ef9ded4089cf28cbb6a06907a63e6ff58834ea4171f",
+      "sha256_round8_reim": "d9dbfa0a9b0834689d80c94c65b05a6407a2c0f5b8e7a7afe465e9d03508a0c5",
+      "sha256_f64_match": true,
+      "sha256_round8_match": true,
+      "published_norm": 1.0000000000000004,
+      "pass_1e-6": true,
+      "pass_1e-10": true,
+      "published_E": -23.91728827275738,
+      "published_F": 0.610420656879744,
+      "seed_type": "n15_transfer+extra_polish"
+    },
+    {
+      "L": 6,
+      "norm": 1.000000000000003,
+      "E": -24.70206279153028,
+      "F": 0.8358051682905315,
+      "dE": 3.055333763768431e-13,
+      "dF": 1.8540724511240114e-14,
+      "sha256_f64_reim": "6f39972d8062e2de15403502ae742bfdc09f0c022d7aea99ef1f19cd721ba4a7",
+      "sha256_round8_reim": "255e9b57c19bbacfb5e077b11cfe38722bde043a930ca384f721a6d0f8f69bcf",
+      "sha256_f64_match": true,
+      "sha256_round8_match": true,
+      "published_norm": 1.000000000000001,
+      "pass_1e-6": true,
+      "pass_1e-10": true,
+      "published_E": -24.702062791530587,
+      "published_F": 0.835805168290513,
+      "seed_type": "n15_transfer+extra_polish"
+    }
+  ],
+  "verdict": "PASS"
+}
