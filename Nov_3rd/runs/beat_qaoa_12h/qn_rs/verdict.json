@@ -1,0 +1,29 @@
+{
+  "overall": "needs_edit",
+  "L16": {
+    "depth": "L16",
+    "verdict": "needs_edit",
+    "n_pass_seeds": 0,
+    "n_seeds": 3,
+    "need": 2,
+    "seed_pass": [
+      false,
+      false,
+      false
+    ],
+    "n15_better_than_fourier": [
+      true,
+      true,
+      false
+    ],
+    "residual_ratios": [
+      0.08867678791284561,
+      0.09240593761205673,
+      0.09219866245985031
+    ],
+    "residuals_dead": false,
+    "no_n15_gain": false,
+    "rule": "pass if \u22652/3 seeds have n12 and n15 Med below Fourier QAOA with paired bootstrap 95% CI of (Med\u2212Med_FQ) excluding 0 on the better side, and \u2016a(15)\u00b7(r2,r3)\u2016/\u2016\u03b2\u2016 \u2265 0.10; kill if n15 is no better than Fourier QAOA on every seed, or every residual ratio is < 0.02; otherwise needs_edit"
+  },
+  "L32": null
+}
