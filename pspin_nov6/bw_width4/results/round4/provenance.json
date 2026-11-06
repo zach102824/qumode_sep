@@ -1,24 +1,21 @@
 {
-  "compiled_without_new_qaoa": true,
   "gamma": 0.8,
-  "normalization": "unscaled staggered Baxter-Wu; J_up=+1 in the user form is the same operator as -sum_up + sum_down",
+  "normalization": "unscaled staggered Baxter-Wu",
+  "no_new_optimization": true,
   "branch_A": {
     "name": "cursor/sparse-p3-qaoa-round1-13b4",
     "commit": "fbaac8375a9159678c0ece3e54bde60bbf62d5f1",
-    "qaoa_matched_csv_sha256": "92c3692f4c40c20b047ea6f8f2d476fbe41d08ae1f5c997578d32f3f4eed2a28",
-    "gs_energies_csv_sha256": "666276985de0bc72e726d80315b42291c2102101353e88717b0b531fbde9b379",
-    "n18_transfer_reopt_json_sha256": "0b3638a9c481290a534c3f366e90277f2d3473c0ee9aae66862fbd1401517fde",
-    "status": "snapshot at compile time; a later N=18 commit was not on the remote when this file was written"
+    "status": "unchanged at the last fetch of this compilation. No runs/round4 directory. N=18 numbers are this snapshot and are a lower bound on a later search."
   },
   "branch_B": {
     "name": "cursor/collective-p3-family-a-f461",
-    "commit": "c352e0f55bd9a4c2e89484f4dfeb63a1445435e2",
-    "report": "pspin_nov6/bw_independent_audit/REPORT.md",
-    "common_field_deep_replay": "not completed in that report. Stored-angle replay covers older anchors (3x4 Gamma 0.7 L=6, 3x5 Gamma 0.6 L=5, 3x6 Gamma 1.0 L=5) to ~1e-14. L=1 at Gamma 0.8 was checked for 3x4, 3x5, and 3x6. No deep replay of the Gamma=0.8 L=6 ladders or of the N=18 polish is stated there."
+    "commit": "8c060490b2b6a3bc6df77612b41080ab5b44efc6",
+    "report": "pspin_nov6/bw_independent_audit/REPORT_round4.md",
+    "common_field_replay": "published. Every stored Gamma=0.8 schedule B reran has |ΔF| inside 1e-10. Faces match. Schmidt upper bounds at Gamma=0.8 are in that report."
   },
-  "width4": {
-    "commit": "b8d2d35e96315a9083ac1dc164b3be987c8ed187",
-    "qaoa_csv_sha256": "706f0d72c6f6ec896458556560256b1d28645ff1d7e4e135d6ef8aab644f1696",
-    "role": "4x4 at Gamma 0.8. 4x3 not plotted as a second N=12."
-  }
+  "branch_C": {
+    "angles_commit_replayed_by_B": "b8d2d35e96315a9083ac1dc164b3be987c8ed187",
+    "note": "Round-4 compilation does not change the 4x4 angles."
+  },
+  "observable_replay_in_this_directory": "Stored angles were reapplied with cost then mixer. Published fidelities match to about 1e-14. Triangle and X errors in fig3 come from that replay. Sublattice magnetizations on 3x6 are numerical zeros and are not plotted."
 }
