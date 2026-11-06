@@ -209,6 +209,23 @@ def main():
     print("wrote", FIG)
 
 
+def n18_energy_curve(rows):
+    """Energy-selected N=18 schedule. Final L=5 and L=6 replace the earlier ladder."""
+    base = [r for r in rows if r["geom"] == "3x6" and r["kind"] == "energy_selected_ladder" and r["accepted"]]
+    final = {r["L"]: r for r in rows if r["geom"] == "3x6" and r["kind"] == "energy_selected_final" and r["accepted"]}
+    out = []
+    seen = set()
+    for r in base:
+        if r["L"] in final or r["L"] in seen:
+            continue
+        out.append(r)
+        seen.add(r["L"])
+    for r in final.values():
+        out.append(r)
+    out.sort(key=lambda r: r["L"])
+    return out
+
+
 def series(rows, geom, kind="energy_selected_ladder"):
     pts = [r for r in rows if r["geom"] == geom and r["kind"] == kind and r["accepted"]]
     pts.sort(key=lambda r: r["L"])
@@ -229,17 +246,20 @@ def plot(rows):
         Ls = [p["L"] for p in pts]
         Fs = [p["F_replay"] for p in pts]
         if geom == "3x6":
-            polish = next(r for r in rows if r["kind"].startswith("transfer") and r["accepted"])
-            # Replace the blind L=5 point: its energy is higher than the polish.
-            Ls = [L for L in Ls if L != 5] + [5]
-            Fs = [p["F_replay"] for p in pts if p["L"] != 5] + [polish["F_replay"]]
-            blind = next(p for p in pts if p["L"] == 5)
+            pts = n18_energy_curve(rows)
+            Ls = [p["L"] for p in pts]
+            Fs = [p["F_replay"] for p in pts]
             ax.plot(Ls, Fs, "-o", color=color, lw=1.8, ms=6, label=f"{label}, {nlab}", zorder=3)
-            ax.scatter([5.22], [0.5235870342914763], s=80, facecolors="none",
-                       edgecolors=color, linewidths=1.8, zorder=4,
-                       label="N=18 transferred F=0.524 (higher overlap, higher energy)")
-            ax.scatter([4.78], [blind["F_replay"]], marker="x", s=60, color=color, zorder=4,
-                       label="N=18 blind L=5 F=0.420 (neither best energy nor best F)")
+            ax.scatter([1.18], [0.09522872210943426], s=70, facecolors="none",
+                       edgecolors=color, linewidths=1.6, zorder=4,
+                       label="N=18 L=1 fidelity-max 0.095 (not a certificate)")
+            ax.scatter([4.72], [0.4197711914716309], marker="x", s=45, color=color, zorder=4,
+                       label="earlier N=18 L=5: blind 0.420")
+            ax.scatter([5.28], [0.5235870342914763], s=55, facecolors="none",
+                       edgecolors=color, linewidths=1.4, zorder=4,
+                       label="earlier N=18 L=5: transfer 0.524")
+            ax.scatter([4.88], [0.4709952444238817], marker="^", s=40, color=color, zorder=4,
+                       label="earlier N=18 L=5: polish 0.471")
         else:
             ax.plot(Ls, Fs, "-o", color=color, lw=1.8, ms=6, label=f"{label}, {nlab}", zorder=3)
     ax.set_xlabel("QAOA depth L")
@@ -248,9 +268,10 @@ def plot(rows):
     ax.set_ylim(0, 1.05)
     ax.set_xticks(range(0, 7))
     ax.grid(True, alpha=0.35)
-    ax.legend(loc="lower right", fontsize=8, framealpha=0.95)
-    ax.set_title("Γ = 0.8, unscaled staggered Baxter–Wu\nsolid: lowest energy found at that depth")
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.18), ncol=2, fontsize=7.5, framealpha=0.95)
+    ax.set_title("Γ = 0.8, unscaled staggered Baxter–Wu\nsolid: energy-selected state at that depth")
     fig.tight_layout()
+    fig.subplots_adjust(bottom=0.28)
     fig.savefig(FIG / "fig1_F_vs_L_gamma08.png", dpi=160)
     fig.savefig(FIG / "fig1_F_vs_L_gamma08.pdf")
     plt.close()
@@ -262,24 +283,23 @@ def plot(rows):
             "4x4": 0.4129654, "3x6": 0.09522872210943426}
     deep = {}
     for geom, *_ in order:
-        pts = series(rows, geom)
-        if geom == "3x6":
-            polish = next(r for r in rows if str(r["kind"]).startswith("transfer") and r["accepted"])
-            deep[geom] = polish["F_replay"]
-        else:
-            deep[geom] = pts[-1]["F_replay"]
+        pts = n18_energy_curve(rows) if geom == "3x6" else series(rows, geom)
+        deep[geom] = pts[-1]["F_replay"]
     inv = {"3x4": 1 / 12, "3x5": 1 / 15, "4x4": 1 / 16, "3x6": 1 / 18}
     fig, ax = plt.subplots(figsize=(8.2, 5.4))
     xs = [inv[g] for g, *_ in order]
     ax.scatter(xs, [grid[g] for g, *_ in order], marker="s", s=55, color="#b9770e",
-               label="L=1 fidelity-max (grid, then local search)", zorder=3)
+               label="L=1 fidelity-max, best-found, not a certificate", zorder=3)
     ax.scatter(xs, [deep[g] for g, *_ in order], marker="D", s=55, color="#196f3d",
-               label="deepest energy-selected F", zorder=3)
-    ax.scatter([1 / 18], [0.5235870342914763], s=90, facecolors="none",
-               edgecolors="#6c3483", linewidths=1.8, zorder=4,
-               label="N=18 transferred F (not best energy)")
-    ax.set_xticks(xs)
-    ax.set_xticklabels(["3×6\nN=18", "4×4\nN=16", "3×5\nN=15", "3×4\nN=12"])
+               label="deepest energy-selected F (N=18 is L=6)", zorder=3)
+    ax.scatter([1 / 18 - 0.0016], [0.4197711914716309], marker="x", s=40, color="#6c3483", zorder=4)
+    ax.scatter([1 / 18], [0.4709952444238817], marker="^", s=36, color="#6c3483", zorder=4)
+    ax.scatter([1 / 18 + 0.0016], [0.5235870342914763], s=50, facecolors="none",
+               edgecolors="#6c3483", linewidths=1.3, zorder=4,
+               label="earlier N=18 L=5 states, not the winner")
+    tick_pos = [1 / 18, 1 / 16, 1 / 15, 1 / 12]
+    tick_lab = ["3×6\nN=18", "4×4\nN=16", "3×5\nN=15", "3×4\nN=12"]
+    ax.set_xticks(tick_pos, tick_lab)
     ax.set_xlim(1 / 18 - 0.012, 1 / 12 + 0.012)
     ax.set_ylim(0, 1.05)
     ax.set_ylabel("squared ground-state overlap")
@@ -301,11 +321,7 @@ def plot(rows):
     ]
     for ax, key, title in panels:
         for geom, label, nlab, color in order:
-            pts = series(rows, geom)
-            if geom == "3x6":
-                polish = next(r for r in rows if str(r["kind"]).startswith("transfer") and r["accepted"])
-                pts = [p for p in pts if p["L"] != 5] + [polish]
-                pts.sort(key=lambda r: r["L"])
+            pts = n18_energy_curve(rows) if geom == "3x6" else series(rows, geom)
             ys = [p.get(key) for p in pts]
             if any(y is None for y in ys):
                 continue
