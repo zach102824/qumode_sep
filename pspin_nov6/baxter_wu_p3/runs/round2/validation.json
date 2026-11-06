@@ -1,0 +1,164 @@
+{
+  "pass": true,
+  "n_checks": 20,
+  "n_failed": 0,
+  "failures": [],
+  "checks": [
+    {
+      "name": "no_duplicate_or_coincident_faces_3x3",
+      "pass": true,
+      "detail": {
+        "M": 18,
+        "dup_up": 0,
+        "coinc": 0
+      }
+    },
+    {
+      "name": "faces_3x4",
+      "pass": true,
+      "detail": {
+        "M": 24,
+        "N": 12
+      }
+    },
+    {
+      "name": "faces_3x6",
+      "pass": true,
+      "detail": {
+        "M": 36,
+        "N": 18
+      }
+    },
+    {
+      "name": "faces_3x7",
+      "pass": true,
+      "detail": {
+        "M": 42,
+        "N": 21
+      }
+    },
+    {
+      "name": "kron_matches_bit_diagonal",
+      "pass": true,
+      "detail": {
+        "max_abs": 0.0
+      }
+    },
+    {
+      "name": "gamma_period_exact",
+      "pass": true,
+      "detail": {
+        "period": 0.7853981633974483,
+        "overlap": 1.0000000000000009
+      }
+    },
+    {
+      "name": "gamma_half_period_not",
+      "pass": true,
+      "detail": {
+        "overlap": 0.24209150883281394
+      }
+    },
+    {
+      "name": "beta_period_pi",
+      "pass": true,
+      "detail": {
+        "overlap": 1.0000000000000022
+      }
+    },
+    {
+      "name": "beta_half_not",
+      "pass": true,
+      "detail": {
+        "overlap": 0.0
+      }
+    },
+    {
+      "name": "expm_replay",
+      "pass": true,
+      "detail": {
+        "max_abs": 2.503356842941849e-16
+      }
+    },
+    {
+      "name": "lanczos_matches_dense_full_space",
+      "pass": true,
+      "detail": {
+        "overlap": 1.0000000000000004,
+        "dE": 1.4210854715202004e-14,
+        "dim": 512
+      }
+    },
+    {
+      "name": "spectrum_symmetric",
+      "pass": true,
+      "detail": {
+        "emax_plus_e0": -2.6645352591003757e-14
+      }
+    },
+    {
+      "name": "gs_nonnegative",
+      "pass": true,
+      "detail": {
+        "n_negative": 0,
+        "gap": 0.7490230776374283
+      }
+    },
+    {
+      "name": "entropy_product_and_bell",
+      "pass": true,
+      "detail": {
+        "S_product": -0.0,
+        "S_bell": 1.0
+      }
+    },
+    {
+      "name": "staggered_spectrum_differs_from_uniform",
+      "pass": true,
+      "detail": {
+        "stag_min": -8.0,
+        "uniform_min": -18.0
+      }
+    },
+    {
+      "name": "z2xz2_commutes_on_3x3",
+      "pass": true,
+      "detail": {
+        "max_abs": 0.0
+      }
+    },
+    {
+      "name": "n12_coloring_broken",
+      "pass": true,
+      "detail": {
+        "mono_edges": 3
+      }
+    },
+    {
+      "name": "n21_coloring_broken",
+      "pass": true,
+      "detail": {
+        "mono_edges": 3
+      }
+    },
+    {
+      "name": "n18_coloring_holds",
+      "pass": true,
+      "detail": {
+        "counts": [
+          6,
+          6,
+          6
+        ]
+      }
+    },
+    {
+      "name": "n9_staggered_not_gauge_equivalent",
+      "pass": true,
+      "detail": {
+        "rank": 7,
+        "left_kernel": 11
+      }
+    }
+  ]
+}
