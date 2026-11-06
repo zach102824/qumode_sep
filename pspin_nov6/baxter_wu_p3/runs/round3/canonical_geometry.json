@@ -1,0 +1,4332 @@
+{
+  "hash_note": "canonical JSON is utf-8 with sort_keys and separators (',', ':'). statevector hash is sha256 of little-endian float64 real bytes followed by float64 imag bytes, C-order, of the vector as produced here. A second hash rounds real and imag to 8 decimal places before the same packing.",
+  "normalization": "same \u00b11 triangle coefficients at every N; Gamma is not divided by N or by Gamma*",
+  "geometries": [
+    {
+      "payload": {
+        "H": "-sum_up ZZZ + sum_down ZZZ - Gamma * sum X",
+        "bit": "index x+Lx*y is bit q, LSB = qubit 0",
+        "down": [
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            4,
+            5
+          ],
+          [
+            2,
+            3,
+            5
+          ],
+          [
+            3,
+            6,
+            7
+          ],
+          [
+            4,
+            7,
+            8
+          ],
+          [
+            5,
+            6,
+            8
+          ],
+          [
+            0,
+            1,
+            6
+          ],
+          [
+            1,
+            2,
+            7
+          ],
+          [
+            0,
+            2,
+            8
+          ]
+        ],
+        "down_corners": "(x,y),(x,y+1),(x+1,y+1) mod periods",
+        "lambda": 1.0,
+        "lx": 3,
+        "ly": 3,
+        "n": 9,
+        "normalization": "triangle coefficients exactly -1 (up) and +1 (down); not divided by N",
+        "up": [
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            1,
+            2,
+            5
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            3,
+            4,
+            7
+          ],
+          [
+            4,
+            5,
+            8
+          ],
+          [
+            3,
+            5,
+            6
+          ],
+          [
+            1,
+            6,
+            7
+          ],
+          [
+            2,
+            7,
+            8
+          ],
+          [
+            0,
+            6,
+            8
+          ]
+        ],
+        "up_corners": "(x,y),(x+1,y),(x+1,y+1) mod periods"
+      },
+      "sha256": "5b7f5074b41d31162299802a290af4f3b5af98b7e39a43c4faf2ab4a68b4eedf",
+      "period": {
+        "delta": 8.0,
+        "gamma_period": 0.7853981633974483,
+        "scaled_gcd": 16,
+        "all_even_integers": true,
+        "gamma_shift_overlap": 0.9999999999999998,
+        "gamma_half_shift_overlap": 0.17563245081832346,
+        "gamma_period_verified": true,
+        "beta_period_pi_overlap": 0.9999999999999991,
+        "beta_half_overlap": 7.52316384526264e-37,
+        "beta_period_verified": true
+      },
+      "classical": {
+        "Emin": -8.0,
+        "Emax_diag": 8.0,
+        "degeneracy": 72,
+        "gs_indices_head": [
+          25,
+          44,
+          50,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          67,
+          71,
+          75,
+          89,
+          91,
+          99,
+          114
+        ],
+        "n_listed": 16
+      },
+      "gs": [
+        {
+          "lx": 3,
+          "ly": 3,
+          "n": 9,
+          "gamma": 0.4,
+          "E0": -9.436668271636103,
+          "E1": -9.248625660664514,
+          "Emax": 9.436668271636108,
+          "gap": 0.18804261097158914,
+          "gap_uncertain": false,
+          "residual": 2.401586323009507e-13,
+          "emax_plus_e0": 5.329070518200751e-15,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 512,
+          "S_bits": 2.813260822975777,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "F_product_optimized": 0.24902517387284387,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.24902517387284376,
+          "F_best_bit": 0.013481932174930256,
+          "F_classical_subspace": 0.9706991165946676,
+          "F_equal_positive_cat": 0.9706991165946679,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 72,
+          "m_z": 6.479577676879147e-15,
+          "clause_up": 0.43133016780234223,
+          "clause_down": -0.431330167802344,
+          "gs_hash": {
+            "sha256_f64_reim": "e1f51099394f4d15c4021b9bc8c38e31a0ba48ff25729036745804f71dbf93cf",
+            "sha256_round8_reim": "2583e8e921dc326c4cc89f98ef8d088e5132361381fbbe8b5700e0fa9cb5a044",
+            "norm": 1.0000000000000002,
+            "largest": [
+              {
+                "index": 498,
+                "re": 0.11611172281440947,
+                "im": 0.0
+              },
+              {
+                "index": 401,
+                "re": 0.11611172281440749,
+                "im": 0.0
+              },
+              {
+                "index": 356,
+                "re": 0.11611172281440679,
+                "im": 0.0
+              },
+              {
+                "index": 99,
+                "re": 0.11611172281440636,
+                "im": 0.0
+              },
+              {
+                "index": 261,
+                "re": 0.11611172281440604,
+                "im": 0.0
+              },
+              {
+                "index": 50,
+                "re": 0.11611172281440527,
+                "im": 0.0
+              },
+              {
+                "index": 58,
+                "re": 0.11611172281440449,
+                "im": 0.0
+              },
+              {
+                "index": 200,
+                "re": 0.11611172281440428,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 3,
+          "n": 9,
+          "gamma": 0.6,
+          "E0": -10.333108570071687,
+          "E1": -10.005056751966235,
+          "Emax": 10.333108570071701,
+          "gap": 0.32805181810545214,
+          "gap_uncertain": false,
+          "residual": 4.7976539612276675e-12,
+          "emax_plus_e0": 1.4210854715202004e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 512,
+          "S_bits": 2.607695916093756,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "F_product_optimized": 0.3233946681224493,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.3233946681224491,
+          "F_best_bit": 0.012967858617564894,
+          "F_classical_subspace": 0.9336858204552488,
+          "F_equal_positive_cat": 0.9336858204552492,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 72,
+          "m_z": -5.589257837421455e-13,
+          "clause_up": 0.4145400157589112,
+          "clause_down": -0.4145400157587401,
+          "gs_hash": {
+            "sha256_f64_reim": "e65da9e14aa0e93b305ca99441c014b8481a17332642a5800cdd22f17b7d2709",
+            "sha256_round8_reim": "2d1813eb2f1472dedd674b667fff9990c5c588b4ccc006303039a1d65e1018e0",
+            "norm": 1.0,
+            "largest": [
+              {
+                "index": 498,
+                "re": 0.11387650599471734,
+                "im": 0.0
+              },
+              {
+                "index": 473,
+                "re": 0.1138765059947085,
+                "im": 0.0
+              },
+              {
+                "index": 123,
+                "re": 0.11387650599466448,
+                "im": 0.0
+              },
+              {
+                "index": 142,
+                "re": 0.113876505994525,
+                "im": 0.0
+              },
+              {
+                "index": 492,
+                "re": 0.11387650599444456,
+                "im": 0.0
+              },
+              {
+                "index": 359,
+                "re": 0.11387650599443998,
+                "im": 0.0
+              },
+              {
+                "index": 300,
+                "re": 0.11387650599443568,
+                "im": 0.0
+              },
+              {
+                "index": 472,
+                "re": 0.1138765059944354,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 3,
+          "n": 9,
+          "gamma": 0.7,
+          "E0": -10.827062460027852,
+          "E1": -10.413144617648388,
+          "Emax": 10.82706246002785,
+          "gap": 0.4139178423794636,
+          "gap_uncertain": false,
+          "residual": 8.556153231369812e-14,
+          "emax_plus_e0": -1.7763568394002505e-15,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 512,
+          "S_bits": 2.4912981892581376,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "F_product_optimized": 0.36538739220036676,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.3653873922003666,
+          "F_best_bit": 0.012630220042126805,
+          "F_classical_subspace": 0.9093758430330872,
+          "F_equal_positive_cat": 0.9093758430330873,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 72,
+          "m_z": -6.38378239159465e-16,
+          "clause_up": 0.4034034429983754,
+          "clause_down": -0.40340344299837433,
+          "gs_hash": {
+            "sha256_f64_reim": "ea81e860190a7c77b684005be4b985018c4e23de45e41863c0891fd649cced7f",
+            "sha256_round8_reim": "67dbd96dc42b38b4cdbc3a9a394ab14fd6ea708984eea65b4ff87133b4026336",
+            "norm": 1.0,
+            "largest": [
+              {
+                "index": 285,
+                "re": 0.11238425175320074,
+                "im": 0.0
+              },
+              {
+                "index": 317,
+                "re": 0.11238425175320038,
+                "im": 0.0
+              },
+              {
+                "index": 123,
+                "re": 0.11238425175320002,
+                "im": 0.0
+              },
+              {
+                "index": 401,
+                "re": 0.1123842517532,
+                "im": 0.0
+              },
+              {
+                "index": 281,
+                "re": 0.11238425175319995,
+                "im": 0.0
+              },
+              {
+                "index": 217,
+                "re": 0.11238425175319974,
+                "im": 0.0
+              },
+              {
+                "index": 89,
+                "re": 0.11238425175319958,
+                "im": 0.0
+              },
+              {
+                "index": 201,
+                "re": 0.11238425175319953,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 3,
+          "n": 9,
+          "gamma": 0.8,
+          "E0": -11.351981703342878,
+          "E1": -10.839891220662627,
+          "Emax": 11.351981703342863,
+          "gap": 0.5120904826802501,
+          "gap_uncertain": false,
+          "residual": 3.3786248290460074e-13,
+          "emax_plus_e0": -1.4210854715202004e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 512,
+          "S_bits": 2.3661157157497743,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "F_product_optimized": 0.4098907294059887,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.4098907294059887,
+          "F_best_bit": 0.01224066286528918,
+          "F_classical_subspace": 0.8813277263006485,
+          "F_equal_positive_cat": 0.8813277263006486,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 72,
+          "m_z": -5.769304786993088e-15,
+          "clause_up": 0.39046591531092006,
+          "clause_down": -0.3904659153109176,
+          "gs_hash": {
+            "sha256_f64_reim": "fca9a562ca1266306e43d52fb90da6eaa7f69eb8427c4eac85439424d243d579",
+            "sha256_round8_reim": "64bc7a94acee08c24c7f3e6c6f2d3da323b54b1d73dcad7d9e93071db3b8b918",
+            "norm": 1.0,
+            "largest": [
+              {
+                "index": 464,
+                "re": 0.11063752919009526,
+                "im": 0.0
+              },
+              {
+                "index": 327,
+                "re": 0.11063752919009513,
+                "im": 0.0
+              },
+              {
+                "index": 472,
+                "re": 0.11063752919009473,
+                "im": 0.0
+              },
+              {
+                "index": 293,
+                "re": 0.1106375291900946,
+                "im": 0.0
+              },
+              {
+                "index": 407,
+                "re": 0.11063752919009444,
+                "im": 0.0
+              },
+              {
+                "index": 203,
+                "re": 0.1106375291900937,
+                "im": 0.0
+              },
+              {
+                "index": 285,
+                "re": 0.11063752919009232,
+                "im": 0.0
+              },
+              {
+                "index": 71,
+                "re": 0.11063752919009157,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": {
+            "E0": -11.351981703342878,
+            "gap": 0.5120904826802537,
+            "residual": 1.5994341605612383e-14,
+            "overlap_with_lanczos": 1.0,
+            "abs_E0_diff": 0.0
+          }
+        },
+        {
+          "lx": 3,
+          "ly": 3,
+          "n": 9,
+          "gamma": 1.0,
+          "E0": -12.494520543431245,
+          "E1": -11.74549746579381,
+          "Emax": 12.494520543431255,
+          "gap": 0.7490230776374354,
+          "gap_uncertain": false,
+          "residual": 1.7959541125436707e-14,
+          "emax_plus_e0": 1.0658141036401503e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 512,
+          "S_bits": 2.0946254150768233,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "F_product_optimized": 0.5028114081385459,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.5028114081385459,
+          "F_best_bit": 0.01132842246864436,
+          "F_classical_subspace": 0.8156464177423907,
+          "F_equal_positive_cat": 0.8156464177423907,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 72,
+          "m_z": 9.637352644315595e-18,
+          "clause_up": 0.3598639499295477,
+          "clause_down": -0.35986394992954773,
+          "gs_hash": {
+            "sha256_f64_reim": "d9844c2205d87e02fd42f5c9b13b8b21c30ab508f4d0863d2601c77e1033d276",
+            "sha256_round8_reim": "73207fa4acae1e5701a9bd00328c38e9dd8560d0855c838a9fd9e562548143d9",
+            "norm": 0.9999999999999997,
+            "largest": [
+              {
+                "index": 44,
+                "re": 0.10643506221468732,
+                "im": 0.0
+              },
+              {
+                "index": 67,
+                "re": 0.10643506221468732,
+                "im": 0.0
+              },
+              {
+                "index": 75,
+                "re": 0.10643506221468732,
+                "im": 0.0
+              },
+              {
+                "index": 199,
+                "re": 0.10643506221468726,
+                "im": 0.0
+              },
+              {
+                "index": 99,
+                "re": 0.10643506221468725,
+                "im": 0.0
+              },
+              {
+                "index": 61,
+                "re": 0.10643506221468725,
+                "im": 0.0
+              },
+              {
+                "index": 172,
+                "re": 0.10643506221468724,
+                "im": 0.0
+              },
+              {
+                "index": 201,
+                "re": 0.10643506221468724,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": {
+            "E0": -12.49452054343126,
+            "gap": 0.7490230776374069,
+            "residual": 1.196254844298652e-14,
+            "overlap_with_lanczos": 1.0000000000000004,
+            "abs_E0_diff": 1.5987211554602254e-14
+          }
+        },
+        {
+          "lx": 3,
+          "ly": 3,
+          "n": 9,
+          "gamma": 1.2,
+          "E0": -13.755863460094949,
+          "E1": -12.71411456531744,
+          "Emax": 13.755863460094941,
+          "gap": 1.041748894777509,
+          "gap_uncertain": false,
+          "residual": 2.5865522925710996e-13,
+          "emax_plus_e0": -7.105427357601002e-15,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 512,
+          "S_bits": 1.8106579949067583,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "F_product_optimized": 0.593623997197688,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.593623997197688,
+          "F_best_bit": 0.010306211045693077,
+          "F_classical_subspace": 0.7420471952897747,
+          "F_equal_positive_cat": 0.7420471952897749,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 72,
+          "m_z": -3.450943234876528e-15,
+          "clause_up": 0.32514870266457074,
+          "clause_down": -0.32514870266457263,
+          "gs_hash": {
+            "sha256_f64_reim": "f5854257a9fe01b9dc7643ef009dab955499d8f8fb1202bd7758c07c73ef4140",
+            "sha256_round8_reim": "b5363748c3ed76cc16f51bb3cca0f05408382c55e21b99054fa4167e566a9563",
+            "norm": 1.0000000000000002,
+            "largest": [
+              {
+                "index": 236,
+                "re": 0.10151951066515774,
+                "im": 0.0
+              },
+              {
+                "index": 498,
+                "re": 0.10151951066515705,
+                "im": 0.0
+              },
+              {
+                "index": 434,
+                "re": 0.10151951066515669,
+                "im": 0.0
+              },
+              {
+                "index": 57,
+                "re": 0.10151951066515605,
+                "im": 0.0
+              },
+              {
+                "index": 206,
+                "re": 0.10151951066515559,
+                "im": 0.0
+              },
+              {
+                "index": 293,
+                "re": 0.10151951066515504,
+                "im": 0.0
+              },
+              {
+                "index": 172,
+                "re": 0.10151951066515434,
+                "im": 0.0
+              },
+              {
+                "index": 142,
+                "re": 0.10151951066515431,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 3,
+          "n": 9,
+          "gamma": 1.4,
+          "E0": -15.123729196967506,
+          "E1": -13.738124663368108,
+          "Emax": 15.123729196967474,
+          "gap": 1.3856045335993983,
+          "gap_uncertain": false,
+          "residual": 4.479971737113806e-14,
+          "emax_plus_e0": -3.197442310920451e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 512,
+          "S_bits": 1.5370644307463468,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "F_product_optimized": 0.6745474287425607,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.6745474287425607,
+          "F_best_bit": 0.009274627443923749,
+          "F_classical_subspace": 0.6677731759624952,
+          "F_equal_positive_cat": 0.6677731759624954,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 72,
+          "m_z": 2.2898349882893854e-16,
+          "clause_up": 0.2897036094068436,
+          "clause_down": -0.2897036094068436,
+          "gs_hash": {
+            "sha256_f64_reim": "e328c303c66c81d16079edf803ae4975cf3596197b6b89c5ce4fdfc35f9ba0e4",
+            "sha256_round8_reim": "ea8f8ba0560a42339065c819d456af6479e24e0ea34d6f25d84c9254fb3b4465",
+            "norm": 1.0,
+            "largest": [
+              {
+                "index": 456,
+                "re": 0.09630486718709366,
+                "im": 0.0
+              },
+              {
+                "index": 480,
+                "re": 0.09630486718709365,
+                "im": 0.0
+              },
+              {
+                "index": 59,
+                "re": 0.09630486718709351,
+                "im": 0.0
+              },
+              {
+                "index": 488,
+                "re": 0.09630486718709344,
+                "im": 0.0
+              },
+              {
+                "index": 57,
+                "re": 0.09630486718709334,
+                "im": 0.0
+              },
+              {
+                "index": 496,
+                "re": 0.09630486718709326,
+                "im": 0.0
+              },
+              {
+                "index": 174,
+                "re": 0.09630486718709322,
+                "im": 0.0
+              },
+              {
+                "index": 293,
+                "re": 0.09630486718709319,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 3,
+          "n": 9,
+          "gamma": 1.6,
+          "E0": -16.580845361045448,
+          "E1": -14.810313685014707,
+          "Emax": 16.580845361045448,
+          "gap": 1.7705316760307408,
+          "gap_uncertain": false,
+          "residual": 9.675993344381125e-15,
+          "emax_plus_e0": 0.0,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 512,
+          "S_bits": 1.2921111354994532,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "F_product_optimized": 0.741509319963995,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.7415093199639948,
+          "F_best_bit": 0.008318424554741579,
+          "F_classical_subspace": 0.5989265679413902,
+          "F_equal_positive_cat": 0.5989265679413904,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 72,
+          "m_z": 1.0909483193365253e-16,
+          "clause_up": 0.25646481898242335,
+          "clause_down": -0.2564648189824234,
+          "gs_hash": {
+            "sha256_f64_reim": "15fbb01315a6fbe705e21b24aae319e7bcb692e331b6f366dfc5bcc73a3fcf42",
+            "sha256_round8_reim": "b4179e14ab4b2e73b4dccaa3e89fc40ceacba851382bc3af31d542cb7c16553b",
+            "norm": 0.9999999999999998,
+            "largest": [
+              {
+                "index": 352,
+                "re": 0.09120539761846104,
+                "im": 0.0
+              },
+              {
+                "index": 354,
+                "re": 0.09120539761846097,
+                "im": 0.0
+              },
+              {
+                "index": 370,
+                "re": 0.09120539761846093,
+                "im": 0.0
+              },
+              {
+                "index": 25,
+                "re": 0.09120539761846093,
+                "im": 0.0
+              },
+              {
+                "index": 285,
+                "re": 0.09120539761846091,
+                "im": 0.0
+              },
+              {
+                "index": 99,
+                "re": 0.09120539761846091,
+                "im": 0.0
+              },
+              {
+                "index": 356,
+                "re": 0.0912053976184609,
+                "im": 0.0
+              },
+              {
+                "index": 480,
+                "re": 0.09120539761846089,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 3,
+          "n": 9,
+          "gamma": 1.8,
+          "E0": -18.108967018310857,
+          "E1": -15.924064879130166,
+          "Emax": 18.10896701831086,
+          "gap": 2.184902139180691,
+          "gap_uncertain": false,
+          "residual": 1.1119148257215005e-14,
+          "emax_plus_e0": 3.552713678800501e-15,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 512,
+          "S_bits": 1.0842247368626166,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "F_product_optimized": 0.7942820768720703,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.7942820768720703,
+          "F_best_bit": 0.007482961564367604,
+          "F_classical_subspace": 0.5387732326344608,
+          "F_equal_positive_cat": 0.5387732326344609,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 72,
+          "m_z": 2.0045693500176437e-17,
+          "clause_up": 0.22707370752237596,
+          "clause_down": -0.227073707522376,
+          "gs_hash": {
+            "sha256_f64_reim": "bdb2b866c4c3d6c74abb3ba275525cedf221c9ea872d8904c9986a2e29da265b",
+            "sha256_round8_reim": "d5411ac9f1ebc3112454f82bc34a5f01cb6211f96cceecd1e0424e185b8a9cef",
+            "norm": 1.0,
+            "largest": [
+              {
+                "index": 391,
+                "re": 0.08650411299104571,
+                "im": 0.0
+              },
+              {
+                "index": 135,
+                "re": 0.08650411299104567,
+                "im": 0.0
+              },
+              {
+                "index": 199,
+                "re": 0.08650411299104566,
+                "im": 0.0
+              },
+              {
+                "index": 71,
+                "re": 0.0865041129910456,
+                "im": 0.0
+              },
+              {
+                "index": 67,
+                "re": 0.08650411299104556,
+                "im": 0.0
+              },
+              {
+                "index": 407,
+                "re": 0.08650411299104555,
+                "im": 0.0
+              },
+              {
+                "index": 203,
+                "re": 0.0865041129910455,
+                "im": 0.0
+              },
+              {
+                "index": 99,
+                "re": 0.08650411299104549,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 3,
+          "n": 9,
+          "gamma": 2.0,
+          "E0": -19.691858431989537,
+          "E1": -17.073468172947546,
+          "Emax": 19.691858431989512,
+          "gap": 2.618390259041991,
+          "gap_uncertain": false,
+          "residual": 1.2918125940757243e-14,
+          "emax_plus_e0": -2.4868995751603507e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 512,
+          "S_bits": 0.9134131348451302,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "F_product_optimized": 0.8348341225227764,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.8348341225227762,
+          "F_best_bit": 0.006778081459114523,
+          "F_classical_subspace": 0.4880218650562441,
+          "F_equal_positive_cat": 0.48802186505624434,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 72,
+          "m_z": -2.235865813481218e-17,
+          "clause_up": 0.20196476927516727,
+          "clause_down": -0.2019647692751673,
+          "gs_hash": {
+            "sha256_f64_reim": "1a10b031727968fc0a9858d9358e15c04236e2e945abbf53435ff6b977dc8c50",
+            "sha256_round8_reim": "de2eef0e1ffcef1be16b9671b3caf923f9fb223b0c0c7485f430c22c0ff407b9",
+            "norm": 0.9999999999999996,
+            "largest": [
+              {
+                "index": 135,
+                "re": 0.08232910456888574,
+                "im": 0.0
+              },
+              {
+                "index": 204,
+                "re": 0.08232910456888573,
+                "im": 0.0
+              },
+              {
+                "index": 400,
+                "re": 0.08232910456888572,
+                "im": 0.0
+              },
+              {
+                "index": 488,
+                "re": 0.08232910456888572,
+                "im": 0.0
+              },
+              {
+                "index": 456,
+                "re": 0.08232910456888572,
+                "im": 0.0
+              },
+              {
+                "index": 472,
+                "re": 0.08232910456888572,
+                "im": 0.0
+              },
+              {
+                "index": 200,
+                "re": 0.08232910456888572,
+                "im": 0.0
+              },
+              {
+                "index": 201,
+                "re": 0.08232910456888569,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        }
+      ]
+    },
+    {
+      "payload": {
+        "H": "-sum_up ZZZ + sum_down ZZZ - Gamma * sum X",
+        "bit": "index x+Lx*y is bit q, LSB = qubit 0",
+        "down": [
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            4,
+            5
+          ],
+          [
+            2,
+            3,
+            5
+          ],
+          [
+            3,
+            6,
+            7
+          ],
+          [
+            4,
+            7,
+            8
+          ],
+          [
+            5,
+            6,
+            8
+          ],
+          [
+            6,
+            9,
+            10
+          ],
+          [
+            7,
+            10,
+            11
+          ],
+          [
+            8,
+            9,
+            11
+          ],
+          [
+            0,
+            1,
+            9
+          ],
+          [
+            1,
+            2,
+            10
+          ],
+          [
+            0,
+            2,
+            11
+          ]
+        ],
+        "down_corners": "(x,y),(x,y+1),(x+1,y+1) mod periods",
+        "lambda": 1.0,
+        "lx": 3,
+        "ly": 4,
+        "n": 12,
+        "normalization": "triangle coefficients exactly -1 (up) and +1 (down); not divided by N",
+        "up": [
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            1,
+            2,
+            5
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            3,
+            4,
+            7
+          ],
+          [
+            4,
+            5,
+            8
+          ],
+          [
+            3,
+            5,
+            6
+          ],
+          [
+            6,
+            7,
+            10
+          ],
+          [
+            7,
+            8,
+            11
+          ],
+          [
+            6,
+            8,
+            9
+          ],
+          [
+            1,
+            9,
+            10
+          ],
+          [
+            2,
+            10,
+            11
+          ],
+          [
+            0,
+            9,
+            11
+          ]
+        ],
+        "up_corners": "(x,y),(x+1,y),(x+1,y+1) mod periods"
+      },
+      "sha256": "13a2dbf9a19186abab8cef6e9ff6096b3f6b241cb1a2171a9e33e3fd2ae276dd",
+      "period": {
+        "delta": 8.0,
+        "gamma_period": 0.7853981633974483,
+        "scaled_gcd": 16,
+        "all_even_integers": true,
+        "gamma_shift_overlap": 1.0,
+        "gamma_half_shift_overlap": 0.08921106600083252,
+        "gamma_period_verified": true,
+        "beta_period_pi_overlap": 0.9999999999999978,
+        "beta_half_overlap": 4.70197740328915e-38,
+        "beta_period_verified": true
+      },
+      "classical": {
+        "Emin": -16.0,
+        "Emax_diag": 16.0,
+        "degeneracy": 18,
+        "gs_indices_head": [
+          473,
+          492,
+          498,
+          571,
+          715,
+          1086,
+          1430,
+          1607,
+          1625,
+          2109,
+          2405,
+          2823,
+          2860,
+          3207,
+          3250,
+          3784
+        ],
+        "n_listed": 16
+      },
+      "gs": [
+        {
+          "lx": 3,
+          "ly": 4,
+          "n": 12,
+          "gamma": 0.4,
+          "E0": -16.246523724525765,
+          "E1": -16.244895138367575,
+          "Emax": 16.246523724525733,
+          "gap": 0.0016285861581906147,
+          "gap_uncertain": false,
+          "residual": 1.3435494096041864e-13,
+          "emax_plus_e0": -3.197442310920451e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 4096,
+          "S_bits": 3.4005778509694817,
+          "cut_kind": "y < 2",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "F_product_optimized": 0.06740269677547983,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.01569718508098275,
+          "F_best_bit": 0.06521655786581143,
+          "F_classical_subspace": 0.9678360753429166,
+          "F_equal_positive_cat": 0.9625988748350298,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 18,
+          "m_z": -1.9660199394403815e-17,
+          "clause_up": 0.6558206363594953,
+          "clause_down": -0.6558206363594953,
+          "gs_hash": {
+            "sha256_f64_reim": "0686d76bd6fe71ee24eb3d85b826a1b5f46e34e4c7617ffa1030022d874b74fa",
+            "sha256_round8_reim": "e6efb4f7429a36ee09a6c024294a528181db04270f987b6c940c188aa4c6226e",
+            "norm": 0.9999999999999998,
+            "largest": [
+              {
+                "index": 1625,
+                "re": 0.25537532744141794,
+                "im": 0.0
+              },
+              {
+                "index": 715,
+                "re": 0.2553753274413247,
+                "im": 0.0
+              },
+              {
+                "index": 1430,
+                "re": 0.2553753274407528,
+                "im": 0.0
+              },
+              {
+                "index": 2860,
+                "re": 0.25537532744058017,
+                "im": 0.0
+              },
+              {
+                "index": 3250,
+                "re": 0.2553753274402628,
+                "im": 0.0
+              },
+              {
+                "index": 2405,
+                "re": 0.25537532743991526,
+                "im": 0.0
+              },
+              {
+                "index": 2823,
+                "re": 0.21919107496955637,
+                "im": 0.0
+              },
+              {
+                "index": 2109,
+                "re": 0.21919107496929646,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": {
+            "E0_repeat": -16.24652372452568,
+            "gap_repeat": 0.0016285861581053496,
+            "abs_E0_diff": 8.526512829121202e-14,
+            "gs_overlap": 1.0
+          },
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 4,
+          "n": 12,
+          "gamma": 0.6,
+          "E0": -16.575468991610343,
+          "E1": -16.56531916771277,
+          "Emax": 16.57546899161048,
+          "gap": 0.01014982389757435,
+          "gap_uncertain": false,
+          "residual": 1.3078898320414496e-13,
+          "emax_plus_e0": 1.3855583347321954e-13,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 4096,
+          "S_bits": 3.3836223880109815,
+          "cut_kind": "y < 2",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "F_product_optimized": 0.03220437105643128,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.03220437105643128,
+          "F_best_bit": 0.06042602438899874,
+          "F_classical_subspace": 0.9204035082609996,
+          "F_equal_positive_cat": 0.9167534239954576,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 18,
+          "m_z": -1.9660199394403815e-17,
+          "clause_up": 0.6393487397324438,
+          "clause_down": -0.6393487397324437,
+          "gs_hash": {
+            "sha256_f64_reim": "2692bd67a93194e2fbcc28e0b5d860b5445e9a8d30fa7bcd5ae4e459bde9e048",
+            "sha256_round8_reim": "70532d3533a2ff6a9e14f8d9bae7988c3864775b88db38b470b6deb3c3cae136",
+            "norm": 1.0000000000000002,
+            "largest": [
+              {
+                "index": 1625,
+                "re": 0.2458170547154911,
+                "im": 0.0
+              },
+              {
+                "index": 3250,
+                "re": 0.2458170547154501,
+                "im": 0.0
+              },
+              {
+                "index": 715,
+                "re": 0.2458170547154023,
+                "im": 0.0
+              },
+              {
+                "index": 1430,
+                "re": 0.24581705471514467,
+                "im": 0.0
+              },
+              {
+                "index": 2860,
+                "re": 0.24581705471499532,
+                "im": 0.0
+              },
+              {
+                "index": 2405,
+                "re": 0.24581705471497414,
+                "im": 0.0
+              },
+              {
+                "index": 473,
+                "re": 0.21560909109021498,
+                "im": 0.0
+              },
+              {
+                "index": 1607,
+                "re": 0.21560909109021179,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": {
+            "E0_repeat": -16.575468991610652,
+            "gap_repeat": 0.010149823897926069,
+            "abs_E0_diff": 3.090860900556436e-13,
+            "gs_overlap": 0.9999999999999998
+          },
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 4,
+          "n": 12,
+          "gamma": 0.7,
+          "E0": -16.80388241255358,
+          "E1": -16.782459257025952,
+          "Emax": 16.803882412553527,
+          "gap": 0.021423155527628523,
+          "gap_uncertain": false,
+          "residual": 3.746502559874955e-14,
+          "emax_plus_e0": -5.3290705182007514e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 4096,
+          "S_bits": 3.360755564672385,
+          "cut_kind": "y < 2",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "F_product_optimized": 0.047182955402585325,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.047182955402585276,
+          "F_best_bit": 0.05710735617392626,
+          "F_classical_subspace": 0.8842842262721029,
+          "F_equal_positive_cat": 0.8814715106653959,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 18,
+          "m_z": -2.0816681711721685e-17,
+          "clause_up": 0.6264094003869725,
+          "clause_down": -0.6264094003869725,
+          "gs_hash": {
+            "sha256_f64_reim": "c13c702647b87de428b470357344f92d8d5e41377091b85fc3e6cc24e6168f4a",
+            "sha256_round8_reim": "c841759b569f7f3fc19c0102e8f031ede26b2c9de3f7ee595addbab4c5afcbd4",
+            "norm": 0.9999999999999998,
+            "largest": [
+              {
+                "index": 2405,
+                "re": 0.23897145472613723,
+                "im": 0.0
+              },
+              {
+                "index": 1625,
+                "re": 0.23897145472612438,
+                "im": 0.0
+              },
+              {
+                "index": 2860,
+                "re": 0.23897145472611192,
+                "im": 0.0
+              },
+              {
+                "index": 1430,
+                "re": 0.23897145472610307,
+                "im": 0.0
+              },
+              {
+                "index": 3250,
+                "re": 0.2389714547261012,
+                "im": 0.0
+              },
+              {
+                "index": 715,
+                "re": 0.23897145472609135,
+                "im": 0.0
+              },
+              {
+                "index": 492,
+                "re": 0.21245393407147145,
+                "im": 0.0
+              },
+              {
+                "index": 1086,
+                "re": 0.21245393407142787,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": {
+            "E0_repeat": -16.803882412553534,
+            "gap_repeat": 0.021423155527660498,
+            "abs_E0_diff": 4.618527782440651e-14,
+            "gs_overlap": 0.9999999999999996
+          },
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 4,
+          "n": 12,
+          "gamma": 0.8,
+          "E0": -17.08406777766207,
+          "E1": -17.041852485866336,
+          "Emax": 17.08406777766209,
+          "gap": 0.0422152917957348,
+          "gap_uncertain": false,
+          "residual": 4.9072102671978565e-14,
+          "emax_plus_e0": 1.7763568394002505e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 4096,
+          "S_bits": 3.3180939492141555,
+          "cut_kind": "y < 2",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "F_product_optimized": 0.07000895095119412,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.07000895095119412,
+          "F_best_bit": 0.05304674161307109,
+          "F_classical_subspace": 0.8365569554226213,
+          "F_equal_positive_cat": 0.8345324154935095,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 18,
+          "m_z": -6.3606527452482924e-18,
+          "clause_up": 0.6087807211081019,
+          "clause_down": -0.6087807211081019,
+          "gs_hash": {
+            "sha256_f64_reim": "24a01103a1d7f449739a648bc70683fb444002ec5eabe91f6a63d45405edbb39",
+            "sha256_round8_reim": "5eb0f8f470052d9ea822df4ddd73e1c6309f352716dcaf5cb1f61af3d366f64d",
+            "norm": 0.9999999999999994,
+            "largest": [
+              {
+                "index": 3250,
+                "re": 0.23031878258854854,
+                "im": 0.0
+              },
+              {
+                "index": 1430,
+                "re": 0.23031878258854108,
+                "im": 0.0
+              },
+              {
+                "index": 1625,
+                "re": 0.23031878258851962,
+                "im": 0.0
+              },
+              {
+                "index": 715,
+                "re": 0.23031878258851782,
+                "im": 0.0
+              },
+              {
+                "index": 2860,
+                "re": 0.23031878258846133,
+                "im": 0.0
+              },
+              {
+                "index": 2405,
+                "re": 0.23031878258845767,
+                "im": 0.0
+              },
+              {
+                "index": 3207,
+                "re": 0.20782133868316902,
+                "im": 0.0
+              },
+              {
+                "index": 1607,
+                "re": 0.20782133868315977,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": {
+            "E0_repeat": -17.084067777662053,
+            "gap_repeat": 0.04221529179586625,
+            "abs_E0_diff": 1.7763568394002505e-14,
+            "gs_overlap": 1.0000000000000004
+          },
+          "dense": {
+            "E0": -17.084067777662103,
+            "gap": 0.04221529179584138,
+            "residual": 2.591949307402738e-14,
+            "overlap_with_lanczos": 1.0,
+            "abs_E0_diff": 3.197442310920451e-14
+          }
+        },
+        {
+          "lx": 3,
+          "ly": 4,
+          "n": 12,
+          "gamma": 1.0,
+          "E0": -17.842146796500803,
+          "E1": -17.702426821363762,
+          "Emax": 17.842146796500856,
+          "gap": 0.13971997513704082,
+          "gap_uncertain": false,
+          "residual": 5.077598444922569e-14,
+          "emax_plus_e0": 5.3290705182007514e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 4096,
+          "S_bits": 3.1158264125069373,
+          "cut_kind": "y < 2",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "F_product_optimized": 0.15504359107765897,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.15504359107765894,
+          "F_best_bit": 0.04233155663816369,
+          "F_classical_subspace": 0.6942437649956298,
+          "F_equal_positive_cat": 0.6934365727104038,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 18,
+          "m_z": -2.0238440553062748e-17,
+          "clause_up": 0.5526819792579811,
+          "clause_down": -0.552681979257981,
+          "gs_hash": {
+            "sha256_f64_reim": "7251db2c592e5e9de4ec992d217bdd252330525971ce975dafd6db43314b33d2",
+            "sha256_round8_reim": "d05a07db44cb07277a57e7495e73313acf9376ac434638cb3a2ab47c37e3bb14",
+            "norm": 1.0,
+            "largest": [
+              {
+                "index": 1430,
+                "re": 0.20574634052192445,
+                "im": 0.0
+              },
+              {
+                "index": 2405,
+                "re": 0.20574634052192284,
+                "im": 0.0
+              },
+              {
+                "index": 2860,
+                "re": 0.20574634052192206,
+                "im": 0.0
+              },
+              {
+                "index": 715,
+                "re": 0.20574634052191315,
+                "im": 0.0
+              },
+              {
+                "index": 1625,
+                "re": 0.20574634052190321,
+                "im": 0.0
+              },
+              {
+                "index": 3250,
+                "re": 0.2057463405218962,
+                "im": 0.0
+              },
+              {
+                "index": 473,
+                "re": 0.19154077572124353,
+                "im": 0.0
+              },
+              {
+                "index": 571,
+                "re": 0.19154077572123182,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": {
+            "E0": -17.842146796500856,
+            "gap": 0.13971997513708345,
+            "residual": 1.638552818212949e-14,
+            "overlap_with_lanczos": 1.0,
+            "abs_E0_diff": 5.3290705182007514e-14
+          }
+        },
+        {
+          "lx": 3,
+          "ly": 4,
+          "n": 12,
+          "gamma": 1.2,
+          "E0": -18.946464726833902,
+          "E1": -18.57421650845887,
+          "Emax": 18.946464726833913,
+          "gap": 0.37224821837503086,
+          "gap_uncertain": false,
+          "residual": 4.5639409848085143e-14,
+          "emax_plus_e0": 1.0658141036401503e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 4096,
+          "S_bits": 2.6616674751098546,
+          "cut_kind": "y < 2",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "F_product_optimized": 0.30864972341332153,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.30864972341332153,
+          "F_best_bit": 0.029021531900615256,
+          "F_classical_subspace": 0.4930972373841848,
+          "F_equal_positive_cat": 0.4928828330187193,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 18,
+          "m_z": -7.517135062566164e-18,
+          "clause_up": 0.46417334792443943,
+          "clause_down": -0.4641733479244394,
+          "gs_hash": {
+            "sha256_f64_reim": "b452fb3367b64a6673a32d75a3ce5aa6c2b0cc29f81a8e0cb8cbc4f0a6680794",
+            "sha256_round8_reim": "292f220cf2784a71527a057abea235ba215d771d92eeab38e7f864163549fe78",
+            "norm": 0.9999999999999996,
+            "largest": [
+              {
+                "index": 2860,
+                "re": 0.17035707176579212,
+                "im": 0.0
+              },
+              {
+                "index": 1625,
+                "re": 0.17035707176578901,
+                "im": 0.0
+              },
+              {
+                "index": 2405,
+                "re": 0.17035707176578513,
+                "im": 0.0
+              },
+              {
+                "index": 715,
+                "re": 0.1703570717657823,
+                "im": 0.0
+              },
+              {
+                "index": 3250,
+                "re": 0.17035707176577664,
+                "im": 0.0
+              },
+              {
+                "index": 1430,
+                "re": 0.1703570717657703,
+                "im": 0.0
+              },
+              {
+                "index": 571,
+                "re": 0.16303579514443323,
+                "im": 0.0
+              },
+              {
+                "index": 2109,
+                "re": 0.1630357951444332,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 4,
+          "n": 12,
+          "gamma": 1.4,
+          "E0": -20.433422958431613,
+          "E1": -19.6657658975319,
+          "Emax": 20.433422958431635,
+          "gap": 0.7676570608997118,
+          "gap_uncertain": false,
+          "residual": 5.4361998057102966e-14,
+          "emax_plus_e0": 2.1316282072803006e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 4096,
+          "S_bits": 2.0565188987171905,
+          "cut_kind": "y < 2",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "F_product_optimized": 0.4861474851212376,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.48614748512123745,
+          "F_best_bit": 0.01751592082668084,
+          "F_classical_subspace": 0.3049427219019325,
+          "F_equal_positive_cat": 0.3048992250155374,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 18,
+          "m_z": 1.3877787807814457e-16,
+          "clause_up": 0.36846281832968963,
+          "clause_down": -0.3684628183296896,
+          "gs_hash": {
+            "sha256_f64_reim": "9be0a6a5b814a0f19268ab7989a4d2872ebe66d24638f9614b33010654ffdf22",
+            "sha256_round8_reim": "8eb1578f03825308ba0ef79be1998f2a202508ad9f291e741acb7ce085eea5f3",
+            "norm": 1.0000000000000002,
+            "largest": [
+              {
+                "index": 2405,
+                "re": 0.132347726941874,
+                "im": 0.0
+              },
+              {
+                "index": 2860,
+                "re": 0.13234772694187283,
+                "im": 0.0
+              },
+              {
+                "index": 1430,
+                "re": 0.13234772694187164,
+                "im": 0.0
+              },
+              {
+                "index": 3250,
+                "re": 0.13234772694186986,
+                "im": 0.0
+              },
+              {
+                "index": 715,
+                "re": 0.13234772694186483,
+                "im": 0.0
+              },
+              {
+                "index": 1625,
+                "re": 0.13234772694186464,
+                "im": 0.0
+              },
+              {
+                "index": 2823,
+                "re": 0.12905011847530215,
+                "im": 0.0
+              },
+              {
+                "index": 3207,
+                "re": 0.12905011847529851,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 4,
+          "n": 12,
+          "gamma": 1.6,
+          "E0": -22.216598499797456,
+          "E1": -20.95494886226093,
+          "Emax": 22.216598499797456,
+          "gap": 1.2616496375365251,
+          "gap_uncertain": false,
+          "residual": 2.5238707841960468e-14,
+          "emax_plus_e0": 0.0,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 4096,
+          "S_bits": 1.5494494842535802,
+          "cut_kind": "y < 2",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "F_product_optimized": 0.6245280794944612,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.6245280794944612,
+          "F_best_bit": 0.010537525489375385,
+          "F_classical_subspace": 0.186013443175985,
+          "F_equal_positive_cat": 0.18600447514124874,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 18,
+          "m_z": 7.517135062566164e-18,
+          "clause_up": 0.29533992431550066,
+          "clause_down": -0.29533992431550077,
+          "gs_hash": {
+            "sha256_f64_reim": "1f9aa6ae763643ef32317a34c3e5e4eeb6412ff29c88284a544bcc74c8da95aa",
+            "sha256_round8_reim": "8b0aebfeeaa02eee6ab3536d33566a374573478e0ba4af1613770d9cb61adead",
+            "norm": 0.9999999999999996,
+            "largest": [
+              {
+                "index": 3250,
+                "re": 0.10265244999207464,
+                "im": 0.0
+              },
+              {
+                "index": 1430,
+                "re": 0.10265244999207296,
+                "im": 0.0
+              },
+              {
+                "index": 2860,
+                "re": 0.1026524499920727,
+                "im": 0.0
+              },
+              {
+                "index": 2405,
+                "re": 0.10265244999207261,
+                "im": 0.0
+              },
+              {
+                "index": 715,
+                "re": 0.10265244999206911,
+                "im": 0.0
+              },
+              {
+                "index": 1625,
+                "re": 0.10265244999206731,
+                "im": 0.0
+              },
+              {
+                "index": 3207,
+                "re": 0.10115511613348296,
+                "im": 0.0
+              },
+              {
+                "index": 1086,
+                "re": 0.10115511613348273,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 4,
+          "n": 12,
+          "gamma": 1.8,
+          "E0": -24.184405181443854,
+          "E1": -22.39995754056255,
+          "Emax": 24.184405181443807,
+          "gap": 1.7844476408813037,
+          "gap_uncertain": false,
+          "residual": 3.037138563477728e-14,
+          "emax_plus_e0": -4.618527782440651e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 4096,
+          "S_bits": 1.1973284854826984,
+          "cut_kind": "y < 2",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "F_product_optimized": 0.7178786747777388,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.7178786747777388,
+          "F_best_bit": 0.006809555960837865,
+          "F_classical_subspace": 0.12111765922560282,
+          "F_equal_positive_cat": 0.12111548278787633,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 18,
+          "m_z": -5.522203065192836e-17,
+          "clause_up": 0.24534701597781908,
+          "clause_down": -0.24534701597781913,
+          "gs_hash": {
+            "sha256_f64_reim": "0819a8dd138102d54ddbbe6c7de169636ad34109f37b59ca1ba17bb16812e332",
+            "sha256_round8_reim": "a39a729af8e7b0fb72496f847e0b971d2bf7fe437c0c30b5b1f656886a93a854",
+            "norm": 1.0,
+            "largest": [
+              {
+                "index": 715,
+                "re": 0.08252003369387258,
+                "im": 0.0
+              },
+              {
+                "index": 1625,
+                "re": 0.08252003369387201,
+                "im": 0.0
+              },
+              {
+                "index": 1430,
+                "re": 0.08252003369387116,
+                "im": 0.0
+              },
+              {
+                "index": 3250,
+                "re": 0.082520033693871,
+                "im": 0.0
+              },
+              {
+                "index": 2405,
+                "re": 0.08252003369387051,
+                "im": 0.0
+              },
+              {
+                "index": 2860,
+                "re": 0.08252003369387025,
+                "im": 0.0
+              },
+              {
+                "index": 571,
+                "re": 0.08178239595647425,
+                "im": 0.0
+              },
+              {
+                "index": 473,
+                "re": 0.08178239595647409,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 4,
+          "n": 12,
+          "gamma": 2.0,
+          "E0": -26.265008375229957,
+          "E1": -23.959316023319534,
+          "Emax": 26.265008375229954,
+          "gap": 2.305692351910423,
+          "gap_uncertain": false,
+          "residual": 3.2039944185333996e-14,
+          "emax_plus_e0": -3.552713678800501e-15,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 4096,
+          "S_bits": 0.9554645086835433,
+          "cut_kind": "y < 2",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "F_product_optimized": 0.7809597735664531,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.7809597735664531,
+          "F_best_bit": 0.004760941147170342,
+          "F_classical_subspace": 0.08504159312958977,
+          "F_equal_positive_cat": 0.08504096305832534,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 18,
+          "m_z": -4.2934406030425976e-17,
+          "clause_up": 0.21024303135917902,
+          "clause_down": -0.21024303135917902,
+          "gs_hash": {
+            "sha256_f64_reim": "d3ff0c094e3e3d0b5617fe7daf41b91e36001d1e8582524bd8f0ff909269ab54",
+            "sha256_round8_reim": "e7c1a5a31e3a361a2a557f7fcc7cc42d1e45e8590b22f9f08d05179c13c501ec",
+            "norm": 1.0,
+            "largest": [
+              {
+                "index": 1625,
+                "re": 0.0689995735289019,
+                "im": 0.0
+              },
+              {
+                "index": 3250,
+                "re": 0.06899957352890185,
+                "im": 0.0
+              },
+              {
+                "index": 1430,
+                "re": 0.06899957352890174,
+                "im": 0.0
+              },
+              {
+                "index": 715,
+                "re": 0.06899957352890149,
+                "im": 0.0
+              },
+              {
+                "index": 2860,
+                "re": 0.06899957352890145,
+                "im": 0.0
+              },
+              {
+                "index": 2405,
+                "re": 0.06899957352890096,
+                "im": 0.0
+              },
+              {
+                "index": 492,
+                "re": 0.0686026883866859,
+                "im": 0.0
+              },
+              {
+                "index": 3984,
+                "re": 0.06860268838668585,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        }
+      ]
+    },
+    {
+      "payload": {
+        "H": "-sum_up ZZZ + sum_down ZZZ - Gamma * sum X",
+        "bit": "index x+Lx*y is bit q, LSB = qubit 0",
+        "down": [
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            4,
+            5
+          ],
+          [
+            2,
+            3,
+            5
+          ],
+          [
+            3,
+            6,
+            7
+          ],
+          [
+            4,
+            7,
+            8
+          ],
+          [
+            5,
+            6,
+            8
+          ],
+          [
+            6,
+            9,
+            10
+          ],
+          [
+            7,
+            10,
+            11
+          ],
+          [
+            8,
+            9,
+            11
+          ],
+          [
+            9,
+            12,
+            13
+          ],
+          [
+            10,
+            13,
+            14
+          ],
+          [
+            11,
+            12,
+            14
+          ],
+          [
+            0,
+            1,
+            12
+          ],
+          [
+            1,
+            2,
+            13
+          ],
+          [
+            0,
+            2,
+            14
+          ]
+        ],
+        "down_corners": "(x,y),(x,y+1),(x+1,y+1) mod periods",
+        "lambda": 1.0,
+        "lx": 3,
+        "ly": 5,
+        "n": 15,
+        "normalization": "triangle coefficients exactly -1 (up) and +1 (down); not divided by N",
+        "up": [
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            1,
+            2,
+            5
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            3,
+            4,
+            7
+          ],
+          [
+            4,
+            5,
+            8
+          ],
+          [
+            3,
+            5,
+            6
+          ],
+          [
+            6,
+            7,
+            10
+          ],
+          [
+            7,
+            8,
+            11
+          ],
+          [
+            6,
+            8,
+            9
+          ],
+          [
+            9,
+            10,
+            13
+          ],
+          [
+            10,
+            11,
+            14
+          ],
+          [
+            9,
+            11,
+            12
+          ],
+          [
+            1,
+            12,
+            13
+          ],
+          [
+            2,
+            13,
+            14
+          ],
+          [
+            0,
+            12,
+            14
+          ]
+        ],
+        "up_corners": "(x,y),(x+1,y),(x+1,y+1) mod periods"
+      },
+      "sha256": "dd2e895b2d95f9eda33b8fa1d4fa605a486a881a7baa194440a9f260f1b7fe77",
+      "period": {
+        "delta": 8.0,
+        "gamma_period": 0.7853981633974483,
+        "scaled_gcd": 16,
+        "all_even_integers": true,
+        "gamma_shift_overlap": 0.9999999999999967,
+        "gamma_half_shift_overlap": 0.05267476933549842,
+        "gamma_period_verified": true,
+        "beta_period_pi_overlap": 1.0000000000000715,
+        "beta_half_overlap": 7.346839692639297e-40,
+        "beta_period_verified": true
+      },
+      "classical": {
+        "Emin": -16.0,
+        "Emax_diag": 16.0,
+        "degeneracy": 360,
+        "gs_indices_head": [
+          473,
+          492,
+          498,
+          1625,
+          1650,
+          2841,
+          2860,
+          3244,
+          3250,
+          3673,
+          3698,
+          3756,
+          3762,
+          3784,
+          3785,
+          3786
+        ],
+        "n_listed": 16
+      },
+      "gs": [
+        {
+          "lx": 3,
+          "ly": 5,
+          "n": 15,
+          "gamma": 0.4,
+          "E0": -17.535360504775966,
+          "E1": -17.4685558700087,
+          "Emax": 17.535360504776005,
+          "gap": 0.06680463476726572,
+          "gap_uncertain": false,
+          "residual": 8.623538244108234e-14,
+          "emax_plus_e0": 3.907985046680551e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 32768,
+          "S_bits": 3.946847038192324,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "F_product_optimized": 0.037027987389607914,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.0370279873896079,
+          "F_best_bit": 0.003830006860108541,
+          "F_classical_subspace": 0.9560191558357932,
+          "F_equal_positive_cat": 0.9482836577894194,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 360,
+          "m_z": -6.059967342745646e-17,
+          "clause_up": 0.5214158135109263,
+          "clause_down": -0.5214158135109263,
+          "gs_hash": {
+            "sha256_f64_reim": "f68052dadbf67067efa2ddbf144e0a2045e32cde1f5a181a1bd2a3e0785a0bd3",
+            "sha256_round8_reim": "1bc6d82bdf2c72ff5fad6645366b90509fb3e64297ba2b171d4010cfff4cf4bd",
+            "norm": 0.9999999999999993,
+            "largest": [
+              {
+                "index": 11670,
+                "re": 0.0618870492115155,
+                "im": 0.0
+              },
+              {
+                "index": 26006,
+                "re": 0.061887049211515034,
+                "im": 0.0
+              },
+              {
+                "index": 9622,
+                "re": 0.06188704921151405,
+                "im": 0.0
+              },
+              {
+                "index": 11414,
+                "re": 0.06188704921151295,
+                "im": 0.0
+              },
+              {
+                "index": 26002,
+                "re": 0.06188704921151293,
+                "im": 0.0
+              },
+              {
+                "index": 26034,
+                "re": 0.06188704921151166,
+                "im": 0.0
+              },
+              {
+                "index": 25778,
+                "re": 0.06188704921151148,
+                "im": 0.0
+              },
+              {
+                "index": 11446,
+                "re": 0.061887049211511024,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 5,
+          "n": 15,
+          "gamma": 0.6,
+          "E0": -18.583706663908384,
+          "E1": -18.45768123779842,
+          "Emax": 18.583706663908547,
+          "gap": 0.12602542610996537,
+          "gap_uncertain": false,
+          "residual": 1.2394838178788087e-13,
+          "emax_plus_e0": 1.6342482922482304e-13,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 32768,
+          "S_bits": 3.72059857936276,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "F_product_optimized": 0.06885320833941945,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.0688532083394194,
+          "F_best_bit": 0.0037761877130601017,
+          "F_classical_subspace": 0.8936723896414109,
+          "F_equal_positive_cat": 0.8838458814887805,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 360,
+          "m_z": -1.6213882088796557e-16,
+          "clause_up": 0.5038641396949847,
+          "clause_down": -0.5038641396949846,
+          "gs_hash": {
+            "sha256_f64_reim": "5bdcae86b7125585d40aeb03ef46c71de9301c14f42511267158b1a1a346be07",
+            "sha256_round8_reim": "31c96cca993410e03d5696981befbc6730d2143fae709ba126e0381c253e558f",
+            "norm": 1.0000000000000007,
+            "largest": [
+              {
+                "index": 13001,
+                "re": 0.06145069334889641,
+                "im": 0.0
+              },
+              {
+                "index": 13003,
+                "re": 0.061450693348896024,
+                "im": 0.0
+              },
+              {
+                "index": 4811,
+                "re": 0.06145069334889602,
+                "im": 0.0
+              },
+              {
+                "index": 12889,
+                "re": 0.0614506933488955,
+                "im": 0.0
+              },
+              {
+                "index": 13017,
+                "re": 0.061450693348895115,
+                "im": 0.0
+              },
+              {
+                "index": 13913,
+                "re": 0.06145069334889495,
+                "im": 0.0
+              },
+              {
+                "index": 5835,
+                "re": 0.061450693348894594,
+                "im": 0.0
+              },
+              {
+                "index": 5707,
+                "re": 0.06145069334889372,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 5,
+          "n": 15,
+          "gamma": 0.7,
+          "E0": -19.190957494232237,
+          "E1": -19.021370221856678,
+          "Emax": 19.190957494232414,
+          "gap": 0.16958727237555848,
+          "gap_uncertain": false,
+          "residual": 1.0902153577340937e-13,
+          "emax_plus_e0": 1.7763568394002505e-13,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 32768,
+          "S_bits": 3.577321655127849,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "F_product_optimized": 0.0936833880819613,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.0936833880819612,
+          "F_best_bit": 0.0035845480946033377,
+          "F_classical_subspace": 0.8495629322934016,
+          "F_equal_positive_cat": 0.840242304327783,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 360,
+          "m_z": -2.1394922870380622e-17,
+          "clause_up": 0.4909706227503355,
+          "clause_down": -0.4909706227503356,
+          "gs_hash": {
+            "sha256_f64_reim": "09b4a31e18912ecff8ab838943c96f438d1a9a765b54f1b09f4f9bde59c832e3",
+            "sha256_round8_reim": "29f66a345fdfcd76f5790f3730055a29b53faba55174dffa1a89f0319a3a58f8",
+            "norm": 1.0000000000000009,
+            "largest": [
+              {
+                "index": 11442,
+                "re": 0.05987109565227062,
+                "im": 0.0
+              },
+              {
+                "index": 11446,
+                "re": 0.059871095652269266,
+                "im": 0.0
+              },
+              {
+                "index": 11414,
+                "re": 0.05987109565226873,
+                "im": 0.0
+              },
+              {
+                "index": 5707,
+                "re": 0.05987109565226806,
+                "im": 0.0
+              },
+              {
+                "index": 27826,
+                "re": 0.059871095652267996,
+                "im": 0.0
+              },
+              {
+                "index": 11670,
+                "re": 0.05987109565226773,
+                "im": 0.0
+              },
+              {
+                "index": 5835,
+                "re": 0.05987109565226759,
+                "im": 0.0
+              },
+              {
+                "index": 5723,
+                "re": 0.05987109565226696,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 5,
+          "n": 15,
+          "gamma": 0.8,
+          "E0": -19.86028869115473,
+          "E1": -19.632808471339764,
+          "Emax": 19.86028869115475,
+          "gap": 0.22748021981496436,
+          "gap_uncertain": false,
+          "residual": 1.6319697355350714e-14,
+          "emax_plus_e0": 2.1316282072803006e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 32768,
+          "S_bits": 3.408734680684662,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "F_product_optimized": 0.126531888507786,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.12653188850778593,
+          "F_best_bit": 0.0033035327738206006,
+          "F_classical_subspace": 0.7960146906734016,
+          "F_equal_positive_cat": 0.7879664866449706,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 360,
+          "m_z": -2.312964634635743e-17,
+          "clause_up": 0.47477305403695974,
+          "clause_down": -0.47477305403695974,
+          "gs_hash": {
+            "sha256_f64_reim": "688a7d65bbcbc359a3303fc5ab5b5f0640fe51d61c0db504da5983b9d58c7e62",
+            "sha256_round8_reim": "de72548a98948821e2b7f6e0705a803a2e67c41c00c14fcbe054a37a6aaedaed",
+            "norm": 0.9999999999999978,
+            "largest": [
+              {
+                "index": 22828,
+                "re": 0.057476367089618674,
+                "im": 0.0
+              },
+              {
+                "index": 22892,
+                "re": 0.05747636708961858,
+                "im": 0.0
+              },
+              {
+                "index": 19244,
+                "re": 0.05747636708961842,
+                "im": 0.0
+              },
+              {
+                "index": 18789,
+                "re": 0.05747636708961839,
+                "im": 0.0
+              },
+              {
+                "index": 23340,
+                "re": 0.057476367089618355,
+                "im": 0.0
+              },
+              {
+                "index": 22885,
+                "re": 0.05747636708961833,
+                "im": 0.0
+              },
+              {
+                "index": 22884,
+                "re": 0.05747636708961828,
+                "im": 0.0
+              },
+              {
+                "index": 19301,
+                "re": 0.057476367089617834,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 5,
+          "n": 15,
+          "gamma": 1.0,
+          "E0": -21.40511786264386,
+          "E1": -21.002879088014847,
+          "Emax": 21.40511786264375,
+          "gap": 0.40223877462901214,
+          "gap_uncertain": false,
+          "residual": 1.0278629598035966e-13,
+          "emax_plus_e0": -1.1013412404281553e-13,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 32768,
+          "S_bits": 2.9892458889976297,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "F_product_optimized": 0.21997676390865314,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.2199767639086532,
+          "F_best_bit": 0.0025835027282732222,
+          "F_classical_subspace": 0.66307910766295,
+          "F_equal_positive_cat": 0.6583575515650248,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 360,
+          "m_z": 3.249715311663219e-17,
+          "clause_up": 0.4318199404738336,
+          "clause_down": -0.4318199404738334,
+          "gs_hash": {
+            "sha256_f64_reim": "1b6f8e821eb55707c17701f09581b7fd21dc6defd7d6fe0d316a1847948c8051",
+            "sha256_round8_reim": "9316c30c0b51104eee97975737e0de1146c1d39c510e20f6414a962d6d09e3a0",
+            "norm": 1.0000000000000004,
+            "largest": [
+              {
+                "index": 5707,
+                "re": 0.05082816864961025,
+                "im": 0.0
+              },
+              {
+                "index": 5721,
+                "re": 0.050828168649610234,
+                "im": 0.0
+              },
+              {
+                "index": 5723,
+                "re": 0.050828168649610185,
+                "im": 0.0
+              },
+              {
+                "index": 5835,
+                "re": 0.050828168649610046,
+                "im": 0.0
+              },
+              {
+                "index": 13913,
+                "re": 0.05082816864960997,
+                "im": 0.0
+              },
+              {
+                "index": 11446,
+                "re": 0.0508281686496099,
+                "im": 0.0
+              },
+              {
+                "index": 11442,
+                "re": 0.05082816864960987,
+                "im": 0.0
+              },
+              {
+                "index": 19244,
+                "re": 0.050828168649609845,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 5,
+          "n": 15,
+          "gamma": 1.2,
+          "E0": -23.243123716311146,
+          "E1": -22.569185830670804,
+          "Emax": 23.243123716311143,
+          "gap": 0.673937885640342,
+          "gap_uncertain": false,
+          "residual": 3.473054281556419e-14,
+          "emax_plus_e0": -3.552713678800501e-15,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 32768,
+          "S_bits": 2.490436630228181,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "F_product_optimized": 0.3439098228007931,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.3439098228007931,
+          "F_best_bit": 0.001853886567919368,
+          "F_classical_subspace": 0.5136743334834122,
+          "F_equal_positive_cat": 0.5114878459513095,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 360,
+          "m_z": -1.052398908759263e-17,
+          "clause_up": 0.37814659286668867,
+          "clause_down": -0.3781465928666888,
+          "gs_hash": {
+            "sha256_f64_reim": "b8e76f81937202be8ac363dcdeda26eea0d3b31b154c8659dc996ed215cf2cb9",
+            "sha256_round8_reim": "166bef2ab9725edb0f84c1645df37c9fa7e4957b0fb8ceb4f7791c94d41fc8e5",
+            "norm": 0.9999999999999987,
+            "largest": [
+              {
+                "index": 19301,
+                "re": 0.04305678306514977,
+                "im": 0.0
+              },
+              {
+                "index": 18789,
+                "re": 0.04305678306514966,
+                "im": 0.0
+              },
+              {
+                "index": 19245,
+                "re": 0.04305678306514959,
+                "im": 0.0
+              },
+              {
+                "index": 12889,
+                "re": 0.04305678306514957,
+                "im": 0.0
+              },
+              {
+                "index": 19237,
+                "re": 0.04305678306514957,
+                "im": 0.0
+              },
+              {
+                "index": 13017,
+                "re": 0.04305678306514957,
+                "im": 0.0
+              },
+              {
+                "index": 22885,
+                "re": 0.043056783065149346,
+                "im": 0.0
+              },
+              {
+                "index": 22892,
+                "re": 0.04305678306514931,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 5,
+          "n": 15,
+          "gamma": 1.4,
+          "E0": -25.358135524694394,
+          "E1": -24.319231907270012,
+          "Emax": 25.358135524694397,
+          "gap": 1.0389036174243813,
+          "gap_uncertain": false,
+          "residual": 1.3602329710460766e-14,
+          "emax_plus_e0": 3.552713678800501e-15,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 32768,
+          "S_bits": 1.998355969851187,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "F_product_optimized": 0.4736865606933238,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.4736865606933238,
+          "F_best_bit": 0.00127966277726005,
+          "F_classical_subspace": 0.37915301098987664,
+          "F_equal_positive_cat": 0.37824673982080037,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 360,
+          "m_z": -7.962380754733544e-17,
+          "clause_up": 0.32319980759127775,
+          "clause_down": -0.32319980759127775,
+          "gs_hash": {
+            "sha256_f64_reim": "e4dcc02816a14d24727425232b2d55ade0beef05585c92934d563fd6a2b0d834",
+            "sha256_round8_reim": "783382b9632d945a8156bc53a32ae04b5438583840322f593473ce74979d6a5d",
+            "norm": 0.9999999999999998,
+            "largest": [
+              {
+                "index": 11446,
+                "re": 0.03577237449848766,
+                "im": 0.0
+              },
+              {
+                "index": 11414,
+                "re": 0.03577237449848764,
+                "im": 0.0
+              },
+              {
+                "index": 11670,
+                "re": 0.03577237449848757,
+                "im": 0.0
+              },
+              {
+                "index": 25778,
+                "re": 0.035772374498487566,
+                "im": 0.0
+              },
+              {
+                "index": 11442,
+                "re": 0.035772374498487566,
+                "im": 0.0
+              },
+              {
+                "index": 27826,
+                "re": 0.035772374498487566,
+                "im": 0.0
+              },
+              {
+                "index": 26034,
+                "re": 0.03577237449848756,
+                "im": 0.0
+              },
+              {
+                "index": 26006,
+                "re": 0.035772374498487546,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 5,
+          "n": 15,
+          "gamma": 1.6,
+          "E0": -27.69712901359256,
+          "E1": -26.228028618182307,
+          "Emax": 27.697129013592583,
+          "gap": 1.4691003954102513,
+          "gap_uncertain": false,
+          "residual": 2.6842489994547238e-14,
+          "emax_plus_e0": 2.4868995751603507e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 32768,
+          "S_bits": 1.5852045380635054,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "F_product_optimized": 0.586197241107396,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.5861972411073961,
+          "F_best_bit": 0.0008908849729161484,
+          "F_classical_subspace": 0.27753284852654525,
+          "F_equal_positive_cat": 0.2771564827559023,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 360,
+          "m_z": -4.163336342344337e-17,
+          "clause_up": 0.2751960553308284,
+          "clause_down": -0.27519605533082847,
+          "gs_hash": {
+            "sha256_f64_reim": "14587456d16cb1957ea670ca9f696f724adc5588d8cc055ca9336459042ff60a",
+            "sha256_round8_reim": "2375b841914ef7732fa7dc5ecf5f614ed48bf620820d84e691ad04954b6600cf",
+            "norm": 1.0000000000000007,
+            "largest": [
+              {
+                "index": 23340,
+                "re": 0.029847696274857602,
+                "im": 0.0
+              },
+              {
+                "index": 19244,
+                "re": 0.029847696274857595,
+                "im": 0.0
+              },
+              {
+                "index": 22828,
+                "re": 0.02984769627485755,
+                "im": 0.0
+              },
+              {
+                "index": 19245,
+                "re": 0.029847696274857522,
+                "im": 0.0
+              },
+              {
+                "index": 22892,
+                "re": 0.029847696274857498,
+                "im": 0.0
+              },
+              {
+                "index": 22884,
+                "re": 0.029847696274857484,
+                "im": 0.0
+              },
+              {
+                "index": 18789,
+                "re": 0.029847696274857467,
+                "im": 0.0
+              },
+              {
+                "index": 22885,
+                "re": 0.02984769627485745,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 5,
+          "n": 15,
+          "gamma": 1.8,
+          "E0": -30.199722977100407,
+          "E1": -28.265486725582598,
+          "Emax": 30.19972297710042,
+          "gap": 1.9342362515178095,
+          "gap_uncertain": false,
+          "residual": 3.112438520818081e-14,
+          "emax_plus_e0": 1.4210854715202004e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 32768,
+          "S_bits": 1.2676207774932235,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "F_product_optimized": 0.6740285288305258,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.6740285288305258,
+          "F_best_bit": 0.0006426588118389554,
+          "F_classical_subspace": 0.20739621716070183,
+          "F_equal_positive_cat": 0.20722954033135865,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 360,
+          "m_z": 1.994931997373328e-18,
+          "clause_up": 0.2365737542654937,
+          "clause_down": -0.23657375426549362,
+          "gs_hash": {
+            "sha256_f64_reim": "5e93aba88310368704107b536b306132688ee9288eea07c5e85f553855368bb1",
+            "sha256_round8_reim": "2aefdfd2b9926db5ca7e14d53698c5a885ef0b31c4951552bef47fa325b7b058",
+            "norm": 1.0000000000000002,
+            "largest": [
+              {
+                "index": 11670,
+                "re": 0.02535071619972413,
+                "im": 0.0
+              },
+              {
+                "index": 11414,
+                "re": 0.0253507161997241,
+                "im": 0.0
+              },
+              {
+                "index": 9622,
+                "re": 0.025350716199724066,
+                "im": 0.0
+              },
+              {
+                "index": 11446,
+                "re": 0.025350716199724,
+                "im": 0.0
+              },
+              {
+                "index": 26006,
+                "re": 0.025350716199723972,
+                "im": 0.0
+              },
+              {
+                "index": 11442,
+                "re": 0.025350716199723847,
+                "im": 0.0
+              },
+              {
+                "index": 26002,
+                "re": 0.025350716199723844,
+                "im": 0.0
+              },
+              {
+                "index": 25778,
+                "re": 0.025350716199723795,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 5,
+          "n": 15,
+          "gamma": 2.0,
+          "E0": -32.81746759143297,
+          "E1": -30.403546344377418,
+          "Emax": 32.81746759143301,
+          "gap": 2.413921247055555,
+          "gap_uncertain": false,
+          "residual": 7.894409723745249e-14,
+          "emax_plus_e0": 3.552713678800501e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 32768,
+          "S_bits": 1.0303053684791676,
+          "cut_kind": "lowest N//2 indices (both periods odd; not a spatial half)",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "F_product_optimized": 0.7399158010238144,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.7399158010238142,
+          "F_best_bit": 0.00048398472193856163,
+          "F_classical_subspace": 0.16008917916695659,
+          "F_equal_positive_cat": 0.16000894451334827,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 360,
+          "m_z": 9.717342671263414e-17,
+          "clause_up": 0.2062578836211498,
+          "clause_down": -0.20625788362114975,
+          "gs_hash": {
+            "sha256_f64_reim": "64576434175dee4ade57293e8832e479899c9f473583300c7eea03d2a8356acd",
+            "sha256_round8_reim": "0411ac4a67386be28ccf9327c98da43b3c28413a2a467c90c2426d0275659cb7",
+            "norm": 1.0000000000000002,
+            "largest": [
+              {
+                "index": 4811,
+                "re": 0.021999652768590727,
+                "im": 0.0
+              },
+              {
+                "index": 13003,
+                "re": 0.021999652768590717,
+                "im": 0.0
+              },
+              {
+                "index": 5835,
+                "re": 0.021999652768590647,
+                "im": 0.0
+              },
+              {
+                "index": 13001,
+                "re": 0.021999652768590637,
+                "im": 0.0
+              },
+              {
+                "index": 12889,
+                "re": 0.02199965276859061,
+                "im": 0.0
+              },
+              {
+                "index": 13017,
+                "re": 0.02199965276859059,
+                "im": 0.0
+              },
+              {
+                "index": 5707,
+                "re": 0.02199965276859059,
+                "im": 0.0
+              },
+              {
+                "index": 5723,
+                "re": 0.02199965276859057,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        }
+      ]
+    },
+    {
+      "payload": {
+        "H": "-sum_up ZZZ + sum_down ZZZ - Gamma * sum X",
+        "bit": "index x+Lx*y is bit q, LSB = qubit 0",
+        "down": [
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            1,
+            4,
+            5
+          ],
+          [
+            2,
+            3,
+            5
+          ],
+          [
+            3,
+            6,
+            7
+          ],
+          [
+            4,
+            7,
+            8
+          ],
+          [
+            5,
+            6,
+            8
+          ],
+          [
+            6,
+            9,
+            10
+          ],
+          [
+            7,
+            10,
+            11
+          ],
+          [
+            8,
+            9,
+            11
+          ],
+          [
+            9,
+            12,
+            13
+          ],
+          [
+            10,
+            13,
+            14
+          ],
+          [
+            11,
+            12,
+            14
+          ],
+          [
+            12,
+            15,
+            16
+          ],
+          [
+            13,
+            16,
+            17
+          ],
+          [
+            14,
+            15,
+            17
+          ],
+          [
+            0,
+            1,
+            15
+          ],
+          [
+            1,
+            2,
+            16
+          ],
+          [
+            0,
+            2,
+            17
+          ]
+        ],
+        "down_corners": "(x,y),(x,y+1),(x+1,y+1) mod periods",
+        "lambda": 1.0,
+        "lx": 3,
+        "ly": 6,
+        "n": 18,
+        "normalization": "triangle coefficients exactly -1 (up) and +1 (down); not divided by N",
+        "up": [
+          [
+            0,
+            1,
+            4
+          ],
+          [
+            1,
+            2,
+            5
+          ],
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            3,
+            4,
+            7
+          ],
+          [
+            4,
+            5,
+            8
+          ],
+          [
+            3,
+            5,
+            6
+          ],
+          [
+            6,
+            7,
+            10
+          ],
+          [
+            7,
+            8,
+            11
+          ],
+          [
+            6,
+            8,
+            9
+          ],
+          [
+            9,
+            10,
+            13
+          ],
+          [
+            10,
+            11,
+            14
+          ],
+          [
+            9,
+            11,
+            12
+          ],
+          [
+            12,
+            13,
+            16
+          ],
+          [
+            13,
+            14,
+            17
+          ],
+          [
+            12,
+            14,
+            15
+          ],
+          [
+            1,
+            15,
+            16
+          ],
+          [
+            2,
+            16,
+            17
+          ],
+          [
+            0,
+            15,
+            17
+          ]
+        ],
+        "up_corners": "(x,y),(x+1,y),(x+1,y+1) mod periods"
+      },
+      "sha256": "72597a804a743f44797ebd217af83bb3afc8de72be62ae971cd3ef6fa2d63be2",
+      "period": {
+        "delta": 8.0,
+        "gamma_period": 0.7853981633974483,
+        "scaled_gcd": 16,
+        "all_even_integers": true,
+        "gamma_shift_overlap": 0.999999999999992,
+        "gamma_half_shift_overlap": 0.0331981757238871,
+        "gamma_period_verified": true,
+        "beta_period_pi_overlap": 1.0000000000000289,
+        "beta_half_overlap": 0.0,
+        "beta_period_verified": true
+      },
+      "classical": {
+        "Emin": -24.0,
+        "Emax_diag": 24.0,
+        "degeneracy": 48,
+        "gs_indices_head": [
+          30297,
+          30322,
+          31513,
+          31532,
+          31916,
+          31922,
+          36555,
+          36707,
+          45627,
+          45771,
+          58427,
+          58723,
+          69326,
+          69526,
+          88126,
+          88270
+        ],
+        "n_listed": 16
+      },
+      "gs": [
+        {
+          "lx": 3,
+          "ly": 6,
+          "n": 18,
+          "gamma": 0.4,
+          "E0": -24.36602362681831,
+          "E1": -24.365743687765832,
+          "Emax": 24.366023626818393,
+          "gap": 0.00027993905247925,
+          "gap_uncertain": true,
+          "residual": 1.9059567418098443e-11,
+          "emax_plus_e0": 8.171241461241152e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 262144,
+          "S_bits": 4.250358030542621,
+          "cut_kind": "y < 3",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "F_product_optimized": 0.020833455326496025,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.001250858451935441,
+          "F_best_bit": 0.019864664321025682,
+          "F_classical_subspace": 0.9535038732072678,
+          "F_equal_positive_cat": 0.9535038732072678,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 48,
+          "m_z": -4.959818363306501e-16,
+          "clause_up": 0.6561450849267314,
+          "clause_down": -0.6561450849267311,
+          "gs_hash": {
+            "sha256_f64_reim": "545ade571b66b112a89b0fcd3b29b71721da4c0dc2a6d53789ca363508fd6a32",
+            "sha256_round8_reim": "5aafa21f200f1e12a671d427aae4983b3d3fa225b8d98598a6b3fdd0dd39eb2f",
+            "norm": 0.9999999999999941,
+            "largest": [
+              {
+                "index": 105644,
+                "re": 0.14094206015602895,
+                "im": 0.0
+              },
+              {
+                "index": 102892,
+                "re": 0.14094206008940632,
+                "im": 0.0
+              },
+              {
+                "index": 31916,
+                "re": 0.1409420600850198,
+                "im": 0.0
+              },
+              {
+                "index": 180716,
+                "re": 0.14094205997595532,
+                "im": 0.0
+              },
+              {
+                "index": 144277,
+                "re": 0.14094205987515768,
+                "im": 0.0
+              },
+              {
+                "index": 183084,
+                "re": 0.14094205979025518,
+                "im": 0.0
+              },
+              {
+                "index": 45771,
+                "re": 0.14094205977903837,
+                "im": 0.0
+              },
+              {
+                "index": 135061,
+                "re": 0.1409420597701945,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": {
+            "E0_repeat": -24.36602362681808,
+            "gap_repeat": 0.0002799390523442469,
+            "abs_E0_diff": 2.3092638912203256e-13,
+            "gs_overlap": 1.0
+          },
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 6,
+          "n": 18,
+          "gamma": 0.6,
+          "E0": -24.84301021851205,
+          "E1": -24.839335217344072,
+          "Emax": 24.8430102185121,
+          "gap": 0.0036750011679771433,
+          "gap_uncertain": false,
+          "residual": 1.0132100743431381e-13,
+          "emax_plus_e0": 4.973799150320701e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 262144,
+          "S_bits": 4.242204243667256,
+          "cut_kind": "y < 3",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "F_product_optimized": 0.003740519307780348,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.003740519307780349,
+          "F_best_bit": 0.018544241721616988,
+          "F_classical_subspace": 0.8901236026203604,
+          "F_equal_positive_cat": 0.8901236026203607,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 48,
+          "m_z": -2.5149575227151947e-16,
+          "clause_up": 0.6411330110323693,
+          "clause_down": -0.6411330110323696,
+          "gs_hash": {
+            "sha256_f64_reim": "04796973b349fb29de0480044888464e8e842d0d1d48589a94b032a881d86217",
+            "sha256_round8_reim": "1d2bd568f1a4e510b3f46520cd9117567260542cf1b3d2fd53d0447a2ea95f14",
+            "norm": 0.9999999999999962,
+            "largest": [
+              {
+                "index": 45771,
+                "re": 0.13617724377302173,
+                "im": 0.0
+              },
+              {
+                "index": 242376,
+                "re": 0.13617724377281748,
+                "im": 0.0
+              },
+              {
+                "index": 31922,
+                "re": 0.13617724377261328,
+                "im": 0.0
+              },
+              {
+                "index": 153661,
+                "re": 0.13617724377257986,
+                "im": 0.0
+              },
+              {
+                "index": 45627,
+                "re": 0.13617724377249196,
+                "im": 0.0
+              },
+              {
+                "index": 30322,
+                "re": 0.1361772437724666,
+                "im": 0.0
+              },
+              {
+                "index": 36555,
+                "re": 0.13617724377243895,
+                "im": 0.0
+              },
+              {
+                "index": 183047,
+                "re": 0.13617724377234722,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": {
+            "E0_repeat": -24.84301021851208,
+            "gap_repeat": 0.0036750011683714945,
+            "abs_E0_diff": 3.197442310920451e-14,
+            "gs_overlap": 0.9999999999999996
+          },
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 6,
+          "n": 18,
+          "gamma": 0.7,
+          "E0": -25.167349693039533,
+          "E1": -25.157125693012567,
+          "Emax": 25.167349693039448,
+          "gap": 0.010224000026965996,
+          "gap_uncertain": false,
+          "residual": 6.461083196136577e-14,
+          "emax_plus_e0": -8.526512829121202e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 262144,
+          "S_bits": 4.229565802015376,
+          "cut_kind": "y < 3",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "F_product_optimized": 0.006798382341890045,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.006798382341890025,
+          "F_best_bit": 0.01759561483037367,
+          "F_classical_subspace": 0.8445895118526243,
+          "F_equal_positive_cat": 0.8445895118526245,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 48,
+          "m_z": 1.3860922440686903e-16,
+          "clause_up": 0.6297995592998102,
+          "clause_down": -0.6297995592998101,
+          "gs_hash": {
+            "sha256_f64_reim": "494173fa28050b28fd18a95134a3b9803b94f24d8a5ed89f80ce283269b1a9e1",
+            "sha256_round8_reim": "36915aab155dfa995f72dd3892d8c8d38eeebd26660cf87de995791a97543d91",
+            "norm": 0.9999999999999977,
+            "largest": [
+              {
+                "index": 205298,
+                "re": 0.1326484633547395,
+                "im": 0.0
+              },
+              {
+                "index": 205273,
+                "re": 0.1326484633547189,
+                "im": 0.0
+              },
+              {
+                "index": 180722,
+                "re": 0.13264846335466274,
+                "im": 0.0
+              },
+              {
+                "index": 102873,
+                "re": 0.1326484633546555,
+                "im": 0.0
+              },
+              {
+                "index": 255328,
+                "re": 0.132648463354559,
+                "im": 0.0
+              },
+              {
+                "index": 102892,
+                "re": 0.13264846335453115,
+                "im": 0.0
+              },
+              {
+                "index": 104025,
+                "re": 0.1326484633545286,
+                "im": 0.0
+              },
+              {
+                "index": 208050,
+                "re": 0.13264846335452812,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": {
+            "E0_repeat": -25.167349693039622,
+            "gap_repeat": 0.010224000027029945,
+            "abs_E0_diff": 8.881784197001252e-14,
+            "gs_overlap": 1.0
+          },
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 6,
+          "n": 18,
+          "gamma": 0.8,
+          "E0": -25.559302228060673,
+          "E1": -25.53365828212224,
+          "Emax": 25.55930222806063,
+          "gap": 0.025643945938433887,
+          "gap_uncertain": false,
+          "residual": 4.168382501191077e-14,
+          "emax_plus_e0": -4.263256414560601e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 262144,
+          "S_bits": 4.20176435354702,
+          "cut_kind": "y < 3",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "F_product_optimized": 0.012854966053563238,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.012854966053563241,
+          "F_best_bit": 0.016377102938888104,
+          "F_classical_subspace": 0.786100941066042,
+          "F_equal_positive_cat": 0.786100941066042,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 48,
+          "m_z": -1.88368080778551e-16,
+          "clause_up": 0.6144687411251969,
+          "clause_down": -0.6144687411251966,
+          "gs_hash": {
+            "sha256_f64_reim": "da63e3e6f49fcfc53611276f48ea7a66b0b78dcfe774d7a835812bee8dd9e9ab",
+            "sha256_round8_reim": "8f6b0fba217e15d5ff88af770c232587f9301b70617ef432dc35d19a7c98d080",
+            "norm": 0.9999999999999936,
+            "largest": [
+              {
+                "index": 242376,
+                "re": 0.1279730555190744,
+                "im": 0.0
+              },
+              {
+                "index": 104025,
+                "re": 0.12797305551906601,
+                "im": 0.0
+              },
+              {
+                "index": 58723,
+                "re": 0.1279730555190647,
+                "im": 0.0
+              },
+              {
+                "index": 105607,
+                "re": 0.12797305551906438,
+                "im": 0.0
+              },
+              {
+                "index": 58427,
+                "re": 0.12797305551906188,
+                "im": 0.0
+              },
+              {
+                "index": 207641,
+                "re": 0.1279730555190506,
+                "im": 0.0
+              },
+              {
+                "index": 255376,
+                "re": 0.12797305551905058,
+                "im": 0.0
+              },
+              {
+                "index": 105644,
+                "re": 0.1279730555190496,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": {
+            "E0_repeat": -25.559302228060595,
+            "gap_repeat": 0.02564394593830599,
+            "abs_E0_diff": 7.815970093361102e-14,
+            "gs_overlap": 1.0000000000000009
+          },
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 6,
+          "n": 18,
+          "gamma": 1.0,
+          "E0": -26.610754183892602,
+          "E1": -26.510166087589074,
+          "Emax": 26.61075418389269,
+          "gap": 0.10058809630352883,
+          "gap_uncertain": false,
+          "residual": 1.1143353638040046e-13,
+          "emax_plus_e0": 8.881784197001252e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 262144,
+          "S_bits": 4.001792043309818,
+          "cut_kind": "y < 3",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "F_product_optimized": 0.05109686794268995,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.05109686794268975,
+          "F_best_bit": 0.012646223866235571,
+          "F_classical_subspace": 0.6070187455790235,
+          "F_equal_positive_cat": 0.6070187455790237,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 48,
+          "m_z": -4.3531921894373545e-16,
+          "clause_up": 0.561237825338351,
+          "clause_down": -0.5612378253383504,
+          "gs_hash": {
+            "sha256_f64_reim": "fe952758247479a5540bc3a1f770e23339fcd697febaff9b1d974251760f7c1f",
+            "sha256_round8_reim": "9038aaac62737eb69cc43d49da4bebc450f54d85b5a9ceb345ba52f981e9bcc2",
+            "norm": 0.9999999999999982,
+            "largest": [
+              {
+                "index": 242576,
+                "re": 0.1124554305768982,
+                "im": 0.0
+              },
+              {
+                "index": 144277,
+                "re": 0.11245543057689761,
+                "im": 0.0
+              },
+              {
+                "index": 205298,
+                "re": 0.11245543057689737,
+                "im": 0.0
+              },
+              {
+                "index": 205273,
+                "re": 0.11245543057689499,
+                "im": 0.0
+              },
+              {
+                "index": 135013,
+                "re": 0.11245543057689293,
+                "im": 0.0
+              },
+              {
+                "index": 135061,
+                "re": 0.11245543057689196,
+                "im": 0.0
+              },
+              {
+                "index": 153957,
+                "re": 0.11245543057689081,
+                "im": 0.0
+              },
+              {
+                "index": 252256,
+                "re": 0.11245543057688843,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 6,
+          "n": 18,
+          "gamma": 1.2,
+          "E0": -28.215455192432458,
+          "E1": -27.861935007050672,
+          "Emax": 28.215455192432355,
+          "gap": 0.353520185381786,
+          "gap_uncertain": false,
+          "residual": 7.346499546093537e-14,
+          "emax_plus_e0": -1.0302869668521453e-13,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 262144,
+          "S_bits": 3.2530741892569357,
+          "cut_kind": "y < 3",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "F_product_optimized": 0.18139014668808648,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.1813901466880862,
+          "F_best_bit": 0.00688175782537552,
+          "F_classical_subspace": 0.3303243756179795,
+          "F_equal_positive_cat": 0.3303243756179795,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 48,
+          "m_z": 3.6870101878990386e-16,
+          "clause_up": 0.4567971143134249,
+          "clause_down": -0.4567971143134245,
+          "gs_hash": {
+            "sha256_f64_reim": "9acda56be10a27c0fe7f6624dd98aea62c3b904b8d14a450cc51af75538ef98d",
+            "sha256_round8_reim": "bc641fa097b9535f110267831b3fa3e1e9256f8c4f9ef39e7f799b5415246aad",
+            "norm": 1.0000000000000053,
+            "largest": [
+              {
+                "index": 102892,
+                "re": 0.08295636096994323,
+                "im": 0.0
+              },
+              {
+                "index": 180716,
+                "re": 0.08295636096994302,
+                "im": 0.0
+              },
+              {
+                "index": 153661,
+                "re": 0.08295636096994136,
+                "im": 0.0
+              },
+              {
+                "index": 181831,
+                "re": 0.08295636096994131,
+                "im": 0.0
+              },
+              {
+                "index": 58723,
+                "re": 0.08295636096994068,
+                "im": 0.0
+              },
+              {
+                "index": 242376,
+                "re": 0.08295636096994055,
+                "im": 0.0
+              },
+              {
+                "index": 252256,
+                "re": 0.08295636096994051,
+                "im": 0.0
+              },
+              {
+                "index": 36555,
+                "re": 0.08295636096994019,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 6,
+          "n": 18,
+          "gamma": 1.4,
+          "E0": -30.50390613227301,
+          "E1": -29.670996674955852,
+          "Emax": 30.503906132272927,
+          "gap": 0.8329094573171574,
+          "gap_uncertain": false,
+          "residual": 6.243496741001349e-14,
+          "emax_plus_e0": -8.171241461241152e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 262144,
+          "S_bits": 2.2298235749957214,
+          "cut_kind": "y < 3",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "F_product_optimized": 0.37100289631518607,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.3710028963151858,
+          "F_best_bit": 0.0026748950778109027,
+          "F_classical_subspace": 0.128394963734918,
+          "F_equal_positive_cat": 0.128394963734918,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 48,
+          "m_z": 1.286586578016132e-17,
+          "clause_up": 0.34887350017881147,
+          "clause_down": -0.3488735001788112,
+          "gs_hash": {
+            "sha256_f64_reim": "83dbef8532b59a2d0830224262cfe96606b577dd8337d24a96cb4a1f2692f20e",
+            "sha256_round8_reim": "5568acd2373c38b58f6f89c0948752f01602e35021f27729528af7f331f78092",
+            "norm": 0.9999999999999941,
+            "largest": [
+              {
+                "index": 36707,
+                "re": 0.051719387832909455,
+                "im": 0.0
+              },
+              {
+                "index": 36555,
+                "re": 0.051719387832909254,
+                "im": 0.0
+              },
+              {
+                "index": 143933,
+                "re": 0.051719387832909074,
+                "im": 0.0
+              },
+              {
+                "index": 30297,
+                "re": 0.05171938783290894,
+                "im": 0.0
+              },
+              {
+                "index": 181831,
+                "re": 0.05171938783290892,
+                "im": 0.0
+              },
+              {
+                "index": 30322,
+                "re": 0.05171938783290888,
+                "im": 0.0
+              },
+              {
+                "index": 181874,
+                "re": 0.05171938783290887,
+                "im": 0.0
+              },
+              {
+                "index": 58427,
+                "re": 0.051719387832908865,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 6,
+          "n": 18,
+          "gamma": 1.6,
+          "E0": -33.24726791495523,
+          "E1": -31.88044579808919,
+          "Emax": 33.247267914955145,
+          "gap": 1.3668221168660395,
+          "gap_uncertain": false,
+          "residual": 2.7207687457091254e-14,
+          "emax_plus_e0": -8.526512829121202e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 262144,
+          "S_bits": 1.5885496059427664,
+          "cut_kind": "y < 3",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "F_product_optimized": 0.5177315245572853,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.5177315245572854,
+          "F_best_bit": 0.001119113043567324,
+          "F_classical_subspace": 0.053717426091228815,
+          "F_equal_positive_cat": 0.05371742609122882,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 48,
+          "m_z": -2.395845867376857e-16,
+          "clause_up": 0.2814529625336406,
+          "clause_down": -0.2814529625336403,
+          "gs_hash": {
+            "sha256_f64_reim": "45a2b7aad4223e857ef91c1fb5f13f5d2a10893a93ae9f4e5c15eff254cb3037",
+            "sha256_round8_reim": "e40ce61be28238bd303effa5144adc712380fae38aa4e85b507bb719bb6102cc",
+            "norm": 0.9999999999999929,
+            "largest": [
+              {
+                "index": 31532,
+                "re": 0.03345314699048991,
+                "im": 0.0
+              },
+              {
+                "index": 183084,
+                "re": 0.03345314699048972,
+                "im": 0.0
+              },
+              {
+                "index": 58723,
+                "re": 0.03345314699048965,
+                "im": 0.0
+              },
+              {
+                "index": 153957,
+                "re": 0.0334531469904895,
+                "im": 0.0
+              },
+              {
+                "index": 135013,
+                "re": 0.0334531469904895,
+                "im": 0.0
+              },
+              {
+                "index": 255328,
+                "re": 0.0334531469904895,
+                "im": 0.0
+              },
+              {
+                "index": 183047,
+                "re": 0.03345314699048948,
+                "im": 0.0
+              },
+              {
+                "index": 45771,
+                "re": 0.03345314699048948,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 6,
+          "n": 18,
+          "gamma": 1.8,
+          "E0": -36.23730458610454,
+          "E1": -34.35212778394358,
+          "Emax": 36.237304586104564,
+          "gap": 1.885176802160963,
+          "gap_uncertain": false,
+          "residual": 3.7235577070864747e-14,
+          "emax_plus_e0": 2.1316282072803006e-14,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 262144,
+          "S_bits": 1.2117011281913983,
+          "cut_kind": "y < 3",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "F_product_optimized": 0.6216596058713432,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.6216596058713428,
+          "F_best_bit": 0.0005616615589363759,
+          "F_classical_subspace": 0.026959754828945443,
+          "F_equal_positive_cat": 0.026959754828945443,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 48,
+          "m_z": -1.6390727509819749e-16,
+          "clause_up": 0.2376752446395377,
+          "clause_down": -0.23767524463953763,
+          "gs_hash": {
+            "sha256_f64_reim": "4ab5cfacd24601c09ec5f006646a9c0cacfd15575ca365ed84b4df19997d8ec7",
+            "sha256_round8_reim": "fd0ab1498e5369cedbf528803763bf77c38ed8d8311837eb1a2518f02c145e59",
+            "norm": 0.9999999999999962,
+            "largest": [
+              {
+                "index": 205298,
+                "re": 0.023699399969964976,
+                "im": 0.0
+              },
+              {
+                "index": 183084,
+                "re": 0.023699399969964965,
+                "im": 0.0
+              },
+              {
+                "index": 180722,
+                "re": 0.02369939996996491,
+                "im": 0.0
+              },
+              {
+                "index": 105607,
+                "re": 0.023699399969964893,
+                "im": 0.0
+              },
+              {
+                "index": 104025,
+                "re": 0.023699399969964858,
+                "im": 0.0
+              },
+              {
+                "index": 183047,
+                "re": 0.023699399969964854,
+                "im": 0.0
+              },
+              {
+                "index": 181874,
+                "re": 0.023699399969964847,
+                "im": 0.0
+              },
+              {
+                "index": 135061,
+                "re": 0.023699399969964844,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        },
+        {
+          "lx": 3,
+          "ly": 6,
+          "n": 18,
+          "gamma": 2.0,
+          "E0": -39.3769258752721,
+          "E1": -36.98746912036418,
+          "Emax": 39.37692587527209,
+          "gap": 2.3894567549079184,
+          "gap_uncertain": false,
+          "residual": 2.3132793303744344e-14,
+          "emax_plus_e0": -7.105427357601002e-15,
+          "n_negative": 0,
+          "degenerate": false,
+          "dim": 262144,
+          "S_bits": 0.9649013431467887,
+          "cut_kind": "y < 3",
+          "cut_keep": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "F_product_optimized": 0.6971935581618006,
+          "F_product_note": "L-BFGS lower bound on the best real-product overlap, not a certified upper bound",
+          "F_plus": 0.6971935581618008,
+          "F_best_bit": 0.00032576352492316957,
+          "F_classical_subspace": 0.015636649196311962,
+          "F_equal_positive_cat": 0.015636649196311962,
+          "cat_note": "equal positive cat of the classical ground bitstrings; overlap is not an upper bound on every cat",
+          "classical_degeneracy": 48,
+          "m_z": 3.505587024369798e-18,
+          "clause_up": 0.206119386475058,
+          "clause_down": -0.20611938647505793,
+          "gs_hash": {
+            "sha256_f64_reim": "c751e09a543bddb76705b6e69de70e2dc33d771592b9502a01bfd1b04ac510a3",
+            "sha256_round8_reim": "1cb2558b2d7ee6a206892bf2f37163cee0b193b0e7d75b630a2f7a5e7b21a070",
+            "norm": 1.0000000000000002,
+            "largest": [
+              {
+                "index": 36707,
+                "re": 0.01804892032569177,
+                "im": 0.0
+              },
+              {
+                "index": 104025,
+                "re": 0.01804892032569177,
+                "im": 0.0
+              },
+              {
+                "index": 105607,
+                "re": 0.018048920325691765,
+                "im": 0.0
+              },
+              {
+                "index": 153957,
+                "re": 0.01804892032569175,
+                "im": 0.0
+              },
+              {
+                "index": 30322,
+                "re": 0.01804892032569175,
+                "im": 0.0
+              },
+              {
+                "index": 181874,
+                "re": 0.01804892032569174,
+                "im": 0.0
+              },
+              {
+                "index": 31513,
+                "re": 0.01804892032569174,
+                "im": 0.0
+              },
+              {
+                "index": 36555,
+                "re": 0.018048920325691734,
+                "im": 0.0
+              }
+            ]
+          },
+          "repeat": null,
+          "dense": null
+        }
+      ]
+    }
+  ],
+  "gamma_star": [
+    {
+      "lx": 3,
+      "ly": 3,
+      "n": 9,
+      "gamma_star": 0.4,
+      "gap_star": 0.18804261097158914,
+      "gap_uncertain": false,
+      "definition": "argmin gap on Gamma in {0.4,0.6,...,2.0}; not a rescaling of H"
+    },
+    {
+      "lx": 3,
+      "ly": 4,
+      "n": 12,
+      "gamma_star": 0.4,
+      "gap_star": 0.0016285861581906147,
+      "gap_uncertain": false,
+      "definition": "argmin gap on Gamma in {0.4,0.6,...,2.0}; not a rescaling of H"
+    },
+    {
+      "lx": 3,
+      "ly": 5,
+      "n": 15,
+      "gamma_star": 0.4,
+      "gap_star": 0.06680463476726572,
+      "gap_uncertain": false,
+      "definition": "argmin gap on Gamma in {0.4,0.6,...,2.0}; not a rescaling of H"
+    },
+    {
+      "lx": 3,
+      "ly": 6,
+      "n": 18,
+      "gamma_star": 0.4,
+      "gap_star": 0.00027993905247925,
+      "gap_uncertain": true,
+      "definition": "argmin gap on Gamma in {0.4,0.6,...,2.0}; not a rescaling of H"
+    }
+  ]
+}
