@@ -1,0 +1,102 @@
+{
+  "validate_3x4": {
+    "ok": true,
+    "problems": [],
+    "M": 24,
+    "n_edges": 36
+  },
+  "validate_4x3": {
+    "ok": true,
+    "problems": [],
+    "M": 24,
+    "n_edges": 36
+  },
+  "coloring_3x4": {
+    "formula_proper": false,
+    "n_monochrome_edges": 3,
+    "face_coloring_exists": false,
+    "conflict_face": [
+      6,
+      7,
+      10
+    ],
+    "both_periods_divisible_by_3": false,
+    "sublattice_magnetization_defined": false
+  },
+  "coloring_4x3": {
+    "formula_proper": false,
+    "n_monochrome_edges": 3,
+    "face_coloring_exists": false,
+    "conflict_face": [
+      0,
+      8,
+      11
+    ],
+    "both_periods_divisible_by_3": false,
+    "sublattice_magnetization_defined": false
+  },
+  "isomorphism_search": {
+    "n_maps_tested_until_stop": 29,
+    "equivalent_same_orientation": {
+      "origin": [
+        0,
+        0
+      ],
+      "v1": [
+        0,
+        -1
+      ],
+      "v2": [
+        -1,
+        0
+      ]
+    },
+    "equivalent_up_down_swapped": {
+      "origin": [
+        0,
+        0
+      ],
+      "v1": [
+        0,
+        1
+      ],
+      "v2": [
+        1,
+        0
+      ]
+    }
+  },
+  "cost_spectrum_max_abs_diff": 0.0,
+  "full_H_Gamma1_spectrum_max_abs_diff": 4.263256414560601e-14,
+  "E0_3x4": -17.84214679650083,
+  "E0_4x3": -17.84214679650086,
+  "explicit_vs_bit_diag_4x3": 0.0,
+  "same_physics": true,
+  "note": "4x3 is an orientation/implementation test of the 3x4 torus, not an independent size, when the full spectra agree.",
+  "validate_4x4": {
+    "ok": true,
+    "problems": [],
+    "M": 32,
+    "n_edges": 48
+  },
+  "coloring_4x4": {
+    "formula_proper": false,
+    "n_monochrome_edges": 9,
+    "face_coloring_exists": false,
+    "conflict_face": [
+      2,
+      13,
+      14
+    ],
+    "both_periods_divisible_by_3": false,
+    "sublattice_magnetization_defined": false
+  },
+  "K_4x3": {
+    "K_on_momentum_grid": false,
+    "reason": "K=(b1+b2)/3 lies on the finite-torus grid iff both periods are multiples of 3. Otherwise a structure factor at K is not a lattice observable of this torus."
+  },
+  "K_4x4": {
+    "K_on_momentum_grid": false,
+    "reason": "K=(b1+b2)/3 lies on the finite-torus grid iff both periods are multiples of 3. Otherwise a structure factor at K is not a lattice observable of this torus."
+  }
+}
