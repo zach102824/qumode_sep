@@ -1,0 +1,40 @@
+{
+  "gamma": 0.8,
+  "normalization": "unscaled staggered Baxter-Wu",
+  "no_new_optimization": true,
+  "branch_A": {
+    "name": "cursor/sparse-p3-qaoa-round1-13b4",
+    "commit": "ce5b838a8efc471beb9c47c7f1950fa9b48d9cc9",
+    "pr": "https://github.com/zach102824/qumode_sep/pull/71",
+    "n18_files": [
+      "pspin_nov6/baxter_wu_p3/runs/round4/angles_best_energy.json",
+      "pspin_nov6/baxter_wu_p3/runs/round4/schema_n18_g08_final.json"
+    ]
+  },
+  "branch_B": {
+    "name": "cursor/collective-p3-family-a-f461",
+    "commit": "fe3d45a515b39aefa8cf397fd37d51c520a5fdcb",
+    "pr": "https://github.com/zach102824/qumode_sep/pull/69",
+    "replay": "pspin_nov6/bw_independent_audit/results_round4/n18_g08_round4_replay.json",
+    "verdict": "PASS",
+    "delta_E": "<=3e-13",
+    "delta_F": "<=2e-14",
+    "geometry_sha256": "72597a804a743f44797ebd217af83bb3afc8de72be62ae971cd3ef6fa2d63be2",
+    "state_hashes_match": true
+  },
+  "n18_energy_selected": {
+    "L5": {"E": -23.91728827275738, "F": 0.610420656879744},
+    "L6": {"E": -24.702062791530587, "F": 0.835805168290513},
+    "meaning": "Achieved fidelities of the located energy-selected states. Circuit energies are variational upper bounds on E0, not lower bounds. Not certified optima."
+  },
+  "n18_historical_L5_not_the_curve": {
+    "blind": {"F": 0.4197711914716309, "E": -23.412114364224152},
+    "transfer": {"F": 0.5235870342914763, "E": -23.4848692895061},
+    "polish": {"F": 0.4709952444238817, "E": -23.59610480520359}
+  },
+  "l1_n18": {
+    "refined_best_found": 0.09522872210943426,
+    "certified": false
+  },
+  "observable_replay": "This compilation reapplied the stored L=5 and L=6 angles. F matched the published values to about 1e-14. Triangle expectations match the schema. Fig3 uses those errors."
+}

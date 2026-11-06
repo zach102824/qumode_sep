@@ -1,0 +1,39 @@
+# distinct quadruples for N=7, count=35, C(N,4)=35
+# indices are qubit labels 0..N-1, qubit 0 = MSB in the statevector
+# H_C = s * J * a_N * sum of Z_i Z_j Z_k Z_l over these tuples, J=1.0, a_N=0.2
+# max |enum-closed| = 3.553e-15
+0 1 2 3
+0 1 2 4
+0 1 2 5
+0 1 2 6
+0 1 3 4
+0 1 3 5
+0 1 3 6
+0 1 4 5
+0 1 4 6
+0 1 5 6
+0 2 3 4
+0 2 3 5
+0 2 3 6
+0 2 4 5
+0 2 4 6
+0 2 5 6
+0 3 4 5
+0 3 4 6
+0 3 5 6
+0 4 5 6
+1 2 3 4
+1 2 3 5
+1 2 3 6
+1 2 4 5
+1 2 4 6
+1 2 5 6
+1 3 4 5
+1 3 4 6
+1 3 5 6
+1 4 5 6
+2 3 4 5
+2 3 4 6
+2 3 5 6
+2 4 5 6
+3 4 5 6

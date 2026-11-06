@@ -1,0 +1,272 @@
+{
+  "J": 1.0,
+  "normalization": "a_N = N/C(N,4), J=1, H = H_C - Gamma sum X",
+  "identity": "enumerated ZZZZ diagonal matches closed e4(M) for N=4..8, both signs",
+  "term_lists": [
+    "/agent/repos/qumode_sep/pspin_nov6/pure_p4/results/validation/terms_N6.txt",
+    "/agent/repos/qumode_sep/pspin_nov6/pure_p4/results/validation/terms_N7.txt"
+  ],
+  "dicke_X_max_err": 9.724130468802038e-16,
+  "qaoa_state_max_err": 2.088318885149118e-15,
+  "sector_vs_full_E0_abs": {
+    "max": 9.769962616701378e-15,
+    "note": "nonzero is allowed when the global GS leaves the symmetric irrep; the test only forbids the sector energy from falling below the full GS"
+  },
+  "n6_sector_eigenvalues_in_full_spectrum": 28,
+  "periods": [
+    {
+      "g_e4": 4,
+      "a_N": 1.0,
+      "a_N_num": 1,
+      "a_N_den": 1,
+      "energy_unit_num": 4,
+      "energy_unit_den": 1,
+      "T_gamma": 1.5707963267948966,
+      "beta_state_period": 3.141592653589793,
+      "beta_note": "exp(-i(\u03b2+\u03c0) sum_i X_i) = (-1)^N exp(-i \u03b2 sum_i X_i). Projective period of every \u03b2 is \u03c0. Period \u03c0/2 is not a symmetry: eigenvalues of sum X differ by 2, and (-i)^{\u03bb+2} = -(-i)^\u03bb.",
+      "N": 5,
+      "T_gamma_analytical": 1.5707963267948966,
+      "T_gamma_minimal_empirical": 1.5707963267948966,
+      "reduced": false,
+      "beta_pi_err": 2.9005915963832007e-15,
+      "beta_half_pi_not_global_phase": 1.0000000000000002
+    },
+    {
+      "g_e4": 4,
+      "a_N": 0.4,
+      "a_N_num": 2,
+      "a_N_den": 5,
+      "energy_unit_num": 8,
+      "energy_unit_den": 5,
+      "T_gamma": 3.9269908169872414,
+      "beta_state_period": 3.141592653589793,
+      "beta_note": "exp(-i(\u03b2+\u03c0) sum_i X_i) = (-1)^N exp(-i \u03b2 sum_i X_i). Projective period of every \u03b2 is \u03c0. Period \u03c0/2 is not a symmetry: eigenvalues of sum X differ by 2, and (-i)^{\u03bb+2} = -(-i)^\u03bb.",
+      "N": 6,
+      "T_gamma_analytical": 3.9269908169872414,
+      "T_gamma_minimal_empirical": 3.9269908169872414,
+      "reduced": false,
+      "beta_pi_err": 3.0225194750469263e-15,
+      "beta_half_pi_not_global_phase": 1.0
+    },
+    {
+      "g_e4": 8,
+      "a_N": 0.2,
+      "a_N_num": 1,
+      "a_N_den": 5,
+      "energy_unit_num": 8,
+      "energy_unit_den": 5,
+      "T_gamma": 3.9269908169872414,
+      "beta_state_period": 3.141592653589793,
+      "beta_note": "exp(-i(\u03b2+\u03c0) sum_i X_i) = (-1)^N exp(-i \u03b2 sum_i X_i). Projective period of every \u03b2 is \u03c0. Period \u03c0/2 is not a symmetry: eigenvalues of sum X differ by 2, and (-i)^{\u03bb+2} = -(-i)^\u03bb.",
+      "N": 7,
+      "T_gamma_analytical": 3.9269908169872414,
+      "T_gamma_minimal_empirical": 3.9269908169872414,
+      "reduced": false,
+      "beta_pi_err": 4.413138932328736e-15,
+      "beta_half_pi_not_global_phase": 1.0000000000000009
+    },
+    {
+      "g_e4": 2,
+      "a_N": 0.11428571428571428,
+      "a_N_num": 4,
+      "a_N_den": 35,
+      "energy_unit_num": 8,
+      "energy_unit_den": 35,
+      "T_gamma": 27.48893571891069,
+      "beta_state_period": 3.141592653589793,
+      "beta_note": "exp(-i(\u03b2+\u03c0) sum_i X_i) = (-1)^N exp(-i \u03b2 sum_i X_i). Projective period of every \u03b2 is \u03c0. Period \u03c0/2 is not a symmetry: eigenvalues of sum X differ by 2, and (-i)^{\u03bb+2} = -(-i)^\u03bb.",
+      "N": 8,
+      "T_gamma_analytical": 27.48893571891069,
+      "T_gamma_minimal_empirical": 27.48893571891069,
+      "reduced": false,
+      "beta_pi_err": 4.280600787957517e-15,
+      "beta_half_pi_not_global_phase": 1.0000000000000009
+    },
+    {
+      "g_e4": 8,
+      "a_N": 0.047619047619047616,
+      "a_N_num": 1,
+      "a_N_den": 21,
+      "energy_unit_num": 8,
+      "energy_unit_den": 21,
+      "T_gamma": 16.493361431346415,
+      "beta_state_period": 3.141592653589793,
+      "beta_note": "exp(-i(\u03b2+\u03c0) sum_i X_i) = (-1)^N exp(-i \u03b2 sum_i X_i). Projective period of every \u03b2 is \u03c0. Period \u03c0/2 is not a symmetry: eigenvalues of sum X differ by 2, and (-i)^{\u03bb+2} = -(-i)^\u03bb.",
+      "N": 10,
+      "T_gamma_analytical": 16.493361431346415,
+      "T_gamma_minimal_empirical": 16.493361431346415,
+      "reduced": false,
+      "beta_pi_err": 2.6615400217033726e-15,
+      "beta_half_pi_not_global_phase": 1.0000000000000002
+    },
+    {
+      "g_e4": 2,
+      "a_N": 0.024242424242424242,
+      "a_N_num": 4,
+      "a_N_den": 165,
+      "energy_unit_num": 8,
+      "energy_unit_den": 165,
+      "T_gamma": 129.59069696057895,
+      "beta_state_period": 3.141592653589793,
+      "beta_note": "exp(-i(\u03b2+\u03c0) sum_i X_i) = (-1)^N exp(-i \u03b2 sum_i X_i). Projective period of every \u03b2 is \u03c0. Period \u03c0/2 is not a symmetry: eigenvalues of sum X differ by 2, and (-i)^{\u03bb+2} = -(-i)^\u03bb.",
+      "N": 12,
+      "T_gamma_analytical": 129.59069696057895,
+      "T_gamma_minimal_empirical": 129.59069696057895,
+      "reduced": false,
+      "beta_pi_err": 4.217087369273996e-15,
+      "beta_half_pi_not_global_phase": 1.0000000000000002
+    }
+  ],
+  "classical_anchors": [
+    {
+      "N": 6,
+      "pure_ferro": {
+        "E_classical": -6.0,
+        "M_list": [
+          -6,
+          6
+        ],
+        "e4_list": [
+          15,
+          15
+        ],
+        "degeneracy": 2
+      },
+      "pure_af": {
+        "E_classical": -2.0,
+        "M_list": [
+          -4,
+          4
+        ],
+        "e4_list": [
+          -5,
+          -5
+        ],
+        "degeneracy": 12
+      },
+      "collective_af": {
+        "E_classical": 0.0,
+        "M_list": [
+          0
+        ],
+        "e4_list": [
+          null
+        ],
+        "degeneracy": 20
+      },
+      "delta_by_M": {
+        "-6": 0.0,
+        "-4": -3.185185185185185,
+        "-2": -0.4740740740740741,
+        "0": 1.2000000000000002,
+        "2": -0.4740740740740741,
+        "4": -3.185185185185185,
+        "6": 0.0
+      }
+    },
+    {
+      "N": 8,
+      "pure_ferro": {
+        "E_classical": -8.0,
+        "M_list": [
+          -8,
+          8
+        ],
+        "e4_list": [
+          70,
+          70
+        ],
+        "degeneracy": 2
+      },
+      "pure_af": {
+        "E_classical": -1.1428571428571428,
+        "M_list": [
+          -4,
+          4
+        ],
+        "e4_list": [
+          -10,
+          -10
+        ],
+        "degeneracy": 56
+      },
+      "collective_af": {
+        "E_classical": 0.0,
+        "M_list": [
+          0
+        ],
+        "e4_list": [
+          null
+        ],
+        "degeneracy": 70
+      },
+      "delta_by_M": {
+        "-8": 0.0,
+        "-6": -2.53125,
+        "-4": -1.6428571428571428,
+        "-2": -0.03125,
+        "0": 0.6857142857142857,
+        "2": -0.03125,
+        "4": -1.6428571428571428,
+        "6": -2.53125,
+        "8": 0.0
+      }
+    },
+    {
+      "N": 10,
+      "pure_ferro": {
+        "E_classical": -10.0,
+        "M_list": [
+          -10,
+          10
+        ],
+        "e4_list": [
+          210,
+          210
+        ],
+        "degeneracy": 2
+      },
+      "pure_af": {
+        "E_classical": -0.6666666666666666,
+        "M_list": [
+          -6,
+          -4,
+          4,
+          6
+        ],
+        "e4_list": [
+          -14,
+          -14,
+          -14,
+          -14
+        ],
+        "degeneracy": 330
+      },
+      "collective_af": {
+        "E_classical": 0.0,
+        "M_list": [
+          0
+        ],
+        "e4_list": [
+          null
+        ],
+        "degeneracy": 252
+      },
+      "delta_by_M": {
+        "-10": 0.0,
+        "-8": -2.096,
+        "-6": -1.9626666666666668,
+        "-4": -0.9226666666666666,
+        "-2": 0.07923809523809523,
+        "0": 0.47619047619047616,
+        "2": 0.07923809523809523,
+        "4": -0.9226666666666666,
+        "6": -1.9626666666666668,
+        "8": -2.096,
+        "10": 0.0
+      }
+    }
+  ],
+  "n_failures": 0,
+  "failures": []
+}

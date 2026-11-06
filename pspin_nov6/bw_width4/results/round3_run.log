@@ -1,0 +1,45 @@
+orientation 4x3 vs 3x4
+{
+  "same_physics": true,
+  "cost_spectrum_max_abs_diff": 0.0,
+  "full_H_Gamma1_spectrum_max_abs_diff": 4.263256414560601e-14,
+  "E0_3x4": -17.84214679650083,
+  "E0_4x3": -17.84214679650086,
+  "explicit_vs_bit_diag_4x3": 0.0
+}
+iso {'n_maps_tested_until_stop': 29, 'equivalent_same_orientation': {'origin': [0, 0], 'v1': [0, -1], 'v2': [-1, 0]}, 'equivalent_up_down_swapped': {'origin': [0, 0], 'v1': [0, 1], 'v2': [1, 0]}}
+=== 4x3 L<=6
+  GS 4x3 Gamma=0.6
+    E0=-16.5755 gap=0.0101 Emax+E0=0.00e+00 resid=1.4e-14 Fman=0.920 S=3.38 prod=0.032
+  QAOA L<=6
+    ladder 14.2s
+  GS 4x3 Gamma=0.8
+    E0=-17.0841 gap=0.0422 Emax+E0=0.00e+00 resid=2.7e-14 Fman=0.837 S=3.32 prod=0.070
+  QAOA L<=6
+    ladder 15.3s
+  GS 4x3 Gamma=1.0
+    E0=-17.8421 gap=0.1397 Emax+E0=-1.42e-14 resid=2.9e-14 Fman=0.694 S=3.12 prod=0.155
+  QAOA L<=6
+    ladder 13.4s
+  GS 4x3 Gamma=1.2
+    E0=-18.9465 gap=0.3722 Emax+E0=7.11e-15 resid=4.1e-14 Fman=0.493 S=2.66 prod=0.309
+  QAOA L<=6
+    ladder 13.8s
+=== 4x4 L<=5
+  GS 4x4 Gamma=0.6
+    E0=-19.1974 gap=0.1338 Emax+E0=-8.17e-14 resid=5.2e-14 Fman=0.896 S=4.17 prod=0.062
+  QAOA L<=5
+    ladder 223.5s
+  GS 4x4 Gamma=0.8
+    E0=-20.6670 gap=0.2401 Emax+E0=-3.20e-14 resid=2.8e-14 Fman=0.803 S=3.85 prod=0.115
+  QAOA L<=5
+    ladder 215.4s
+  GS 4x4 Gamma=1.0
+    E0=-22.3942 gap=0.4219 Emax+E0=-2.84e-14 resid=3.0e-14 Fman=0.672 S=3.42 prod=0.208
+  QAOA L<=5
+    ladder 221.2s
+  GS 4x4 Gamma=1.2
+    E0=-24.4169 gap=0.7101 Emax+E0=3.55e-14 resid=6.6e-14 Fman=0.516 S=2.86 prod=0.340
+  QAOA L<=5
+    ladder 205.2s
+done in 951.2s

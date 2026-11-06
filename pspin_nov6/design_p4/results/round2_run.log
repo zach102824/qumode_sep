@@ -1,0 +1,141 @@
+design N=8 OK b=14 r=7
+design N=10 OK b=30 r=12
+design N=14 OK b=91 r=26
+design N=16 OK b=140 r=35
+catalog N=8
+  diag check uniform err=0.0e+00 target_rule=block_8
+  diag check block_8 err=0.0e+00 target_rule=block_8
+catalog N=10
+  diag check uniform err=0.0e+00 target_rule=block_24
+  diag check block_24 err=0.0e+00 target_rule=block_24
+short catalog N=14
+  N=14 uniform u=0 deg=2 diag err=0.0e+00
+short catalog N=16
+  N=16 uniform u=0 deg=32 diag err=0.0e+00
+screen N=8 uniform G=0.02
+  F0=0.074 Fcat=0.125 Fman=0.999 F1E=0.555 F1max=0.556 gap=0.0000 P+=1.000
+screen N=8 uniform G=0.05
+  F0=0.095 Fcat=0.124 Fman=0.995 F1E=0.573 F1max=0.575 gap=0.0016 P+=1.000
+screen N=8 uniform G=0.1
+  F0=0.151 Fcat=0.122 Fman=0.974 F1E=0.576 F1max=0.625 gap=0.0273 P+=1.000
+screen N=8 uniform G=0.15
+  F0=0.250 Fcat=0.115 Fman=0.920 F1E=0.684 F1max=0.699 gap=0.1466 P+=1.000
+screen N=8 uniform G=0.25
+  F0=0.598 Fcat=0.080 Fman=0.642 F1E=0.920 F1max=0.934 gap=1.1508 P+=1.000
+screen N=8 uniform G=0.4
+  F0=0.901 Fcat=0.036 Fman=0.288 F1E=0.998 F1max=0.999 gap=4.2393 P+=1.000
+screen N=8 uniform G=0.8
+  F0=0.987 Fcat=0.016 Fman=0.126 F1E=1.000 F1max=1.000 gap=10.8666 P+=1.000
+screen N=8 uniform G=1.5
+  F0=0.997 Fcat=0.011 Fman=0.089 F1E=1.000 F1max=1.000 gap=20.8777 P+=1.000
+screen N=8 block_0 G=0.02
+  F0=0.076 Fcat=0.125 Fman=0.999 F1E=0.409 F1max=0.414 gap=0.0001 P+=1.000
+screen N=8 block_0 G=0.05
+  F0=0.104 Fcat=0.124 Fman=0.992 F1E=0.449 F1max=0.458 gap=0.0027 P+=1.000
+screen N=8 block_0 G=0.1
+  F0=0.184 Fcat=0.120 Fman=0.957 F1E=0.541 F1max=0.560 gap=0.0459 P+=1.000
+screen N=8 block_0 G=0.15
+  F0=0.334 Fcat=0.108 Fman=0.860 F1E=0.678 F1max=0.704 gap=0.2485 P+=1.000
+screen N=8 block_0 G=0.25
+  F0=0.739 Fcat=0.061 Fman=0.485 F1E=0.930 F1max=0.940 gap=1.6737 P+=1.000
+screen N=8 block_0 G=0.4
+  F0=0.937 Fcat=0.028 Fman=0.221 F1E=0.994 F1max=0.994 gap=4.6903 P+=1.000
+screen N=8 block_0 G=0.8
+  F0=0.990 Fcat=0.014 Fman=0.112 F1E=1.000 F1max=1.000 gap=10.9346 P+=1.000
+screen N=8 block_0 G=1.5
+  F0=0.998 Fcat=0.011 Fman=0.084 F1E=1.000 F1max=1.000 gap=20.8908 P+=1.000
+screen N=8 pair_0_1 G=0.02
+  F0=0.097 Fcat=0.124 Fman=0.989 F1E=0.321 F1max=0.352 gap=0.0005 P+=1.000
+screen N=8 pair_0_1 G=0.05
+  F0=0.183 Fcat=0.116 Fman=0.924 F1E=0.458 F1max=0.481 gap=0.0182 P+=1.000
+screen N=8 pair_0_1 G=0.1
+  F0=0.436 Fcat=0.084 Fman=0.676 F1E=0.727 F1max=0.755 gap=0.2543 P+=1.000
+screen N=8 pair_0_1 G=0.15
+  F0=0.689 Fcat=0.052 Fman=0.420 F1E=0.900 F1max=0.914 gap=0.9038 P+=1.000
+screen N=8 pair_0_1 G=0.25
+  F0=0.897 Fcat=0.026 Fman=0.210 F1E=0.985 F1max=0.986 gap=2.6786 P+=1.000
+screen N=8 pair_0_1 G=0.4
+  F0=0.965 Fcat=0.017 Fman=0.132 F1E=0.998 F1max=0.998 gap=5.1450 P+=1.000
+screen N=8 pair_0_1 G=0.8
+  F0=0.992 Fcat=0.011 Fman=0.090 F1E=1.000 F1max=1.000 gap=11.0115 P+=1.000
+screen N=8 pair_0_1 G=1.5
+  F0=0.998 Fcat=0.009 Fman=0.076 F1E=1.000 F1max=1.000 gap=20.9084 P+=1.000
+screen N=8 affine_off_origin G=0.02
+  F0=0.790 Fcat=0.015 Fman=0.844 F1E=0.973 F1max=0.977 gap=0.1737 P+=1.000
+screen N=8 affine_off_origin G=0.05
+  F0=0.910 Fcat=0.012 Fman=0.673 F1E=0.985 F1max=0.987 gap=0.5963 P+=1.000
+screen N=8 affine_off_origin G=0.1
+  F0=0.951 Fcat=0.010 Fman=0.583 F1E=0.998 F1max=0.998 gap=1.2928 P+=1.000
+screen N=8 affine_off_origin G=0.15
+  F0=0.966 Fcat=0.010 Fman=0.547 F1E=0.999 F1max=0.999 gap=1.9871 P+=1.000
+screen N=8 affine_off_origin G=0.25
+  F0=0.979 Fcat=0.009 Fman=0.514 F1E=1.000 F1max=1.000 gap=3.3836 P+=1.000
+screen N=8 affine_off_origin G=0.4
+  F0=0.988 Fcat=0.009 Fman=0.492 F1E=1.000 F1max=1.000 gap=5.4891 P+=1.000
+screen N=8 affine_off_origin G=0.8
+  F0=0.996 Fcat=0.008 Fman=0.469 F1E=1.000 F1max=1.000 gap=11.1130 P+=1.000
+screen N=8 affine_off_origin G=1.5
+  F0=0.998 Fcat=0.008 Fman=0.456 F1E=1.000 F1max=1.000 gap=20.9402 P+=1.000
+screen N=10 uniform G=0.02
+  F0=0.001 Fcat=0.499 Fman=0.499 F1E=0.247 F1max=0.247 gap=0.0000 P+=0.500
+screen N=10 uniform G=0.05
+  F0=0.003 Fcat=0.994 Fman=0.994 F1E=0.481 F1max=0.481 gap=0.0000 P+=1.000
+screen N=10 uniform G=0.1
+  F0=0.006 Fcat=0.975 Fman=0.975 F1E=0.038 F1max=0.454 gap=0.0000 P+=1.000
+screen N=10 uniform G=0.15
+  F0=0.012 Fcat=0.941 Fman=0.941 F1E=0.043 F1max=0.413 gap=0.0003 P+=1.000
+screen N=10 uniform G=0.25
+  F0=0.148 Fcat=0.752 Fman=0.752 F1E=0.202 F1max=0.325 gap=0.1275 P+=1.000
+screen N=10 uniform G=0.4
+  F0=0.964 Fcat=0.021 Fman=0.021 F1E=0.995 F1max=0.995 gap=6.9242 P+=1.000
+screen N=10 uniform G=0.8
+  F0=0.994 Fcat=0.005 Fman=0.005 F1E=1.000 F1max=1.000 gap=18.7613 P+=1.000
+screen N=10 uniform G=1.5
+  F0=0.998 Fcat=0.003 Fman=0.003 F1E=1.000 F1max=1.000 gap=35.8560 P+=1.000
+screen N=10 block_0 G=0.02
+  F0=0.002 Fcat=0.999 Fman=0.999 F1E=0.247 F1max=0.256 gap=0.0000 P+=1.000
+screen N=10 block_0 G=0.05
+  F0=0.003 Fcat=0.993 Fman=0.993 F1E=0.030 F1max=0.250 gap=0.0000 P+=1.000
+screen N=10 block_0 G=0.1
+  F0=0.006 Fcat=0.970 Fman=0.970 F1E=0.035 F1max=0.235 gap=0.0000 P+=1.000
+screen N=10 block_0 G=0.15
+  F0=0.014 Fcat=0.930 Fman=0.930 F1E=0.043 F1max=0.211 gap=0.0006 P+=1.000
+screen N=10 block_0 G=0.25
+  F0=0.359 Fcat=0.563 Fman=0.563 F1E=0.432 F1max=0.446 gap=0.3721 P+=1.000
+screen N=10 block_0 G=0.4
+  F0=0.969 Fcat=0.016 Fman=0.016 F1E=0.997 F1max=0.997 gap=7.5845 P+=1.000
+screen N=10 block_0 G=0.8
+  F0=0.994 Fcat=0.005 Fman=0.005 F1E=1.000 F1max=1.000 gap=18.8284 P+=1.000
+screen N=10 block_0 G=1.5
+  F0=0.998 Fcat=0.003 Fman=0.003 F1E=1.000 F1max=1.000 gap=35.8691 P+=1.000
+screen N=10 pair_0_1 G=0.02
+  F0=0.003 Fcat=0.997 Fman=0.997 F1E=0.020 F1max=0.052 gap=0.0000 P+=1.000
+screen N=10 pair_0_1 G=0.05
+  F0=0.004 Fcat=0.982 Fman=0.982 F1E=0.025 F1max=0.054 gap=0.0000 P+=1.000
+screen N=10 pair_0_1 G=0.1
+  F0=0.011 Fcat=0.927 Fman=0.927 F1E=0.034 F1max=0.058 gap=0.0001 P+=1.000
+screen N=10 pair_0_1 G=0.15
+  F0=0.042 Fcat=0.829 Fman=0.829 F1E=0.074 F1max=0.087 gap=0.0104 P+=1.000
+screen N=10 pair_0_1 G=0.25
+  F0=0.906 Fcat=0.045 Fman=0.045 F1E=0.975 F1max=0.976 gap=2.9614 P+=1.000
+screen N=10 pair_0_1 G=0.4
+  F0=0.975 Fcat=0.008 Fman=0.008 F1E=0.999 F1max=0.999 gap=8.6582 P+=1.000
+screen N=10 pair_0_1 G=0.8
+  F0=0.994 Fcat=0.004 Fman=0.004 F1E=1.000 F1max=1.000 gap=18.9459 P+=1.000
+screen N=10 pair_0_1 G=1.5
+  F0=0.998 Fcat=0.003 Fman=0.003 F1E=1.000 F1max=1.000 gap=35.8937 P+=1.000
+deep N=8 uniform G=0.05
+  L0=0.095 L1=0.573 L2=1.000 L3=1.000 L4=1.000 L5=1.000 L6=1.000
+deep N=8 block_0 G=0.05
+  L0=0.104 L1=0.449 L2=0.835 L3=0.996 L4=1.000 L5=1.000 L6=1.000
+deep N=8 pair_0_1 G=0.02
+  L0=0.097 L1=0.321 L2=0.555 L3=0.822 L4=1.000 L5=1.000 L6=1.000
+deep N=8 pair_0_1 G=0.05
+  L0=0.183 L1=0.458 L2=0.686 L3=0.900 L4=1.000 L5=1.000 L6=1.000
+deep N=10 uniform G=0.1
+  L0=0.006 L1=0.038 L2=0.038 L3=0.071 L4=0.071 L5=0.904 L6=0.982
+deep N=10 block_0 G=0.1
+  L0=0.006 L1=0.035 L2=0.040 L3=0.042 L4=0.048 L5=0.073 L6=0.095
+deep N=10 pair_0_1 G=0.1
+  L0=0.011 L1=0.034 L2=0.046 L3=0.055 L4=0.065 L5=0.065 L6=0.065
+done in 130.5s -> /agent/repos/qumode_sep/pspin_nov6/design_p4/results/round2
