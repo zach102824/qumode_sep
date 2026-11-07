@@ -1,0 +1,178 @@
+{
+  "method": "sameG",
+  "kind": "sameg",
+  "n": 12,
+  "L": 2,
+  "status": "complete",
+  "objective": "energy",
+  "fidelity_used_for_selection": false,
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "hc_sha256_le": "d650ce798d622a3fe37ef3e7f86f2619f36eadf7acf0422aab821a539e216353",
+  "legal_shared_gamma": false,
+  "is_f_of_Hc": false,
+  "E": -7.549984702240337,
+  "E0": -8.6132024589353,
+  "Emax": 23.799999349755723,
+  "full_space_gap": 0.0016132338724013096,
+  "accessible_PR_plus_gap": 0.4337981341960315,
+  "energy_error": 1.0632177566949625,
+  "F": 0.14886874923523596,
+  "variance_H": 1.5211380766031652,
+  "E_median": -7.549984702240312,
+  "E_iqr": 1.9539925233402755e-14,
+  "E_std": 0.07495604966968404,
+  "n_starts": 8,
+  "n_finished": 8,
+  "nfev_sum": 319,
+  "best_tag": "from_F",
+  "seconds": 0.675540837999506,
+  "x_raw": [
+    -0.19895575154824488,
+    -0.38669989516195474,
+    -0.07651241167646929,
+    -1.1125123449967886,
+    -1.3470050796303452
+  ],
+  "n_params": 5,
+  "starts": [
+    {
+      "tag": "from_F",
+      "E": -7.549984702240337,
+      "nfev": 70,
+      "success": false,
+      "error": null,
+      "x": [
+        -0.19895575154824488,
+        -0.38669989516195474,
+        -0.07651241167646929,
+        -1.1125123449967886,
+        -1.3470050796303452
+      ],
+      "index": 0,
+      "message": "ABNORMAL: "
+    },
+    {
+      "tag": "from_qaoa",
+      "E": -7.549984702240334,
+      "nfev": 38,
+      "success": true,
+      "error": null,
+      "x": [
+        -0.19895575151774675,
+        -0.3866998952551624,
+        -0.07651241180218618,
+        0.4582839785284974,
+        0.2237912438894368
+      ],
+      "index": 1,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+    },
+    {
+      "tag": "restart_0",
+      "E": -7.549984702240313,
+      "nfev": 29,
+      "success": true,
+      "error": null,
+      "x": [
+        -0.19895575171630217,
+        -0.3866998949643393,
+        -0.0765124117850754,
+        0.4582839798908544,
+        0.22379124635579487
+      ],
+      "index": 2,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+    },
+    {
+      "tag": "restart_1",
+      "E": -7.549984702240311,
+      "nfev": 35,
+      "success": true,
+      "error": null,
+      "x": [
+        -0.19895575053045478,
+        -0.38669989456208026,
+        -0.07651241080233474,
+        -1.1125123458696682,
+        -1.3470050812065018
+      ],
+      "index": 3,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+    },
+    {
+      "tag": "restart_2",
+      "E": -7.549984702240307,
+      "nfev": 40,
+      "success": true,
+      "error": null,
+      "x": [
+        0.19895575071409916,
+        0.38669989613187505,
+        -0.07651241208393353,
+        -0.45828398175217316,
+        -0.22379124586235688
+      ],
+      "index": 4,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+    },
+    {
+      "tag": "restart_3",
+      "E": -7.323338911742274,
+      "nfev": 40,
+      "success": true,
+      "error": null,
+      "x": [
+        0.11461887575884085,
+        0.26349280317431756,
+        -0.241307246295069,
+        -0.3923449057535035,
+        -0.22364718162714609
+      ],
+      "index": 5,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+    },
+    {
+      "tag": "restart_4",
+      "E": -7.549984702240324,
+      "nfev": 20,
+      "success": true,
+      "error": null,
+      "x": [
+        0.19895575161227824,
+        0.3866998957201144,
+        -0.07651241160748601,
+        -0.4582839807504339,
+        -0.22379124641268483
+      ],
+      "index": 6,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+    },
+    {
+      "tag": "restart_5",
+      "E": -7.549984702240307,
+      "nfev": 39,
+      "success": true,
+      "error": null,
+      "x": [
+        -0.1989557621133835,
+        -0.3866999139775491,
+        -0.07651241666079908,
+        0.45828398731935405,
+        0.22379125541922237
+      ],
+      "index": 7,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+    }
+  ],
+  "state_sha256": "4f2114db2399673ca6e912eab10c7d1a02a5de6e9513333548f14e4457e4a1b8",
+  "supports": {
+    "two_body": 66,
+    "four_body": 0,
+    "shell_controls_per_layer": 3,
+    "cavities": 4,
+    "shared_gamma": false,
+    "hardware_note": "495 four-body supports are charged. f(Hc) is not a free compile."
+  },
+  "legal_nov3": false,
+  "note": "independent gamma, shared theta, linear mixer; diagnostic only"
+}
