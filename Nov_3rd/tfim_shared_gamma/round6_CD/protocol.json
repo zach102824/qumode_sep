@@ -1,0 +1,21 @@
+{
+  "schema": "round6-CD-preregistration",
+  "frozen_before_training": true,
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "packing_sha256": "0f4330f4a9d4e84db3582beb8b607a2e1092918f7a28b68bb3cff4a1a514c979",
+  "generator": "Hc + thetaK Khat + thetaM Mhat on stride4",
+  "P": "3L+3",
+  "published_records": "published_L5_L6.json sha256 computed at publication, before this training",
+  "L5_reference": {"energy_error": 0.22804662019287747, "F": 0.8898142677626181, "variance": 0.9729342105760708, "state_hash": "d31ed7766b29e130be4651460973221ff2b40b4c2c29d934fda38e22cca81974"},
+  "L6_reference": {"energy_error": 0.16751995717513601, "F": 0.9023701795284904, "variance": 0.6571004848726716, "state_hash": "88c32377f3f2aa5dff7b0548825a2232f8a9cc1b37c928c83cb8c9b92781cbee"},
+  "tau": 1e-9,
+  "tau_rule": "max(1e-9, 10 times the largest absolute round-5 replay residual). Those residuals were about 1e-14.",
+  "qaoa_p12_frozen_from_commit_5ebca82a": {"energy_error": 0.28779490915225203, "F": 0.5147185356364429, "nfev_sum": 89272, "summary_sha256": "fa15338c7bef7f1cc1d70ae619915fd58a10cb19a0c9ea8e04bb9f2ce9979d6b"},
+  "seeds": {"sequence": [20261107, 6, "arm", "L", "k"], "arm_fresh": 0, "arm_descend": 1, "types": "integers only"},
+  "fresh": "48 chains. L=1 is N(0,0.35). Each later depth resamples that same chain's energy-selected shells onto layer centers, copies gamma and theta, and reoptimizes every legal parameter.",
+  "descend": "24 starts at L3, L4 and L5 centered on the published L6 schedule resampled downward. L6 is a round trip of this arm's own L5 energy-selected schedule, then 12 starts at sigma 0.02 and 12 at sigma 0.1. Not a fresh discovery.",
+  "optimizer": {"method": "L-BFGS-B", "maxiter": 1500, "maxfun": 280, "ftol": 1e-14, "gtol": 1e-8},
+  "caps": {"evaluations": 150000, "wall_minutes": 75},
+  "source_cost": "Descending inclusive adds 53927 once, the round-5 arm-2 family inclusive that already contains the L6 cell (marginal 11244) and its upstream ladders. The fresh arm adds no stored-seed cost. 1556 is not added; it paid for the older control, not this vector.",
+  "order": "publish records, then fresh L1 through L6, then descending L5, L4, L3, then the L6 round trip"
+}
