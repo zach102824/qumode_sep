@@ -1,0 +1,1019 @@
+{
+  "protocol": "powerlaw_tfim_breadth_v1",
+  "config": {
+    "alpha": 1.5,
+    "lambdas": [
+      0.5,
+      1.0
+    ],
+    "mus": [
+      0.0,
+      -0.5
+    ],
+    "depths": [
+      2,
+      4
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "train_b": 64,
+    "hold_b": 32,
+    "freeze_b": 64,
+    "rounds": 40,
+    "batch": 32,
+    "lbfgs_iter": 8,
+    "lbfgs_lr": 0.25,
+    "seed_formula": "1500003017 + n * 100003 + index"
+  },
+  "cross_weight": {
+    "6": 0.35791807732581665,
+    "9": 0.4555594941923556,
+    "12": 0.5032195282281252
+  },
+  "decision": {
+    "verdict": "needs_edit",
+    "reason": "no cell clears its bar, and the L=4 train sweep is not a KILL",
+    "driver_passes": [],
+    "pure_passes": [],
+    "kill": false,
+    "seal_warranted": {
+      "warranted": false,
+      "why": "No quantum cell is within 0.03 of its n12 bar with the lead still holding at larger n. A 5-seed seal would not change the smoke call."
+    }
+  },
+  "cells": [
+    {
+      "lam": 0.5,
+      "mu": -0.5,
+      "L": 2,
+      "quantum_pass": true,
+      "quantum12": {
+        "B": 64,
+        "peak_med": 0.028143959606570772,
+        "peak_max": 0.18259936095310067,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.10360669044212911,
+        "gap_min": 0.055720356132469465,
+        "frac_gap_ok": 1.0,
+        "pass": true
+      },
+      "quantum6": {
+        "B": 32,
+        "peak_med": 0.1457140910553554,
+        "peak_max": 0.2885824357076251,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.1249852127745173,
+        "gap_min": 0.07267754851768939,
+        "frac_gap_ok": 1.0,
+        "pass": true
+      },
+      "quantum9": {
+        "B": 32,
+        "peak_med": 0.07153982192015164,
+        "peak_max": 0.2432427590606038,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.10053955066548148,
+        "gap_min": 0.05661902060103749,
+        "frac_gap_ok": 1.0,
+        "pass": true
+      },
+      "ratios": {
+        "fourier": {
+          "6": 0.9468106435612845,
+          "9": 0.9658520846751882,
+          "12": 0.9754116315682554
+        },
+        "hva": {
+          "6": 0.9999186786358463,
+          "9": 1.014810274899283,
+          "12": 1.0257871363075068
+        }
+      },
+      "per_seed": {
+        "fourier": [
+          0.9846373767637809,
+          0.9710879600302526,
+          0.9754116315682554
+        ],
+        "hva": [
+          1.026163863002999,
+          1.0257909247647032,
+          1.0257871363075068
+        ]
+      },
+      "med_eps": {
+        "fourier": {
+          "6": 0.15671189402578856,
+          "9": 0.36025560603001683,
+          "12": 0.8099862381182428
+        },
+        "hva": {
+          "6": 0.1483885563960956,
+          "9": 0.34287554699280953,
+          "12": 0.7702085258299673
+        },
+        "snap": {
+          "6": 0.14837648923626467,
+          "9": 0.34795362810001507,
+          "12": 0.7900699980707486
+        }
+      },
+      "seeds": {
+        "fourier": [
+          0,
+          1,
+          2
+        ],
+        "hva": [
+          0,
+          1,
+          2
+        ],
+        "snap": [
+          0,
+          1,
+          2
+        ]
+      },
+      "diagnostics": {
+        "fourier": [
+          {},
+          {},
+          {}
+        ],
+        "hva": [
+          {
+            "mean_abs_beta_xx": 0.13091463980715506
+          },
+          {
+            "mean_abs_beta_xx": 0.14798522488250387
+          },
+          {
+            "mean_abs_beta_xx": 0.1503616244508877
+          }
+        ],
+        "snap": [
+          {
+            "shell_rms": 0.28893888153017105,
+            "mean_abs_gamma2": 1.525600530090974
+          },
+          {
+            "shell_rms": 0.29973838250471585,
+            "mean_abs_gamma2": 1.5033622591983438
+          },
+          {
+            "shell_rms": 0.2948872543336861,
+            "mean_abs_gamma2": 1.490259783494155
+          }
+        ]
+      },
+      "call": {
+        "pass": false,
+        "kind": "driver",
+        "passed_by": [],
+        "reason": "no baseline has n12 R\u22640.90 with train R\u22640.98 and transfer held"
+      }
+    },
+    {
+      "lam": 0.5,
+      "mu": -0.5,
+      "L": 4,
+      "quantum_pass": true,
+      "quantum12": {
+        "B": 64,
+        "peak_med": 0.028143959606570772,
+        "peak_max": 0.18259936095310067,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.10360669044212911,
+        "gap_min": 0.055720356132469465,
+        "frac_gap_ok": 1.0,
+        "pass": true
+      },
+      "quantum6": {
+        "B": 32,
+        "peak_med": 0.1457140910553554,
+        "peak_max": 0.2885824357076251,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.1249852127745173,
+        "gap_min": 0.07267754851768939,
+        "frac_gap_ok": 1.0,
+        "pass": true
+      },
+      "quantum9": {
+        "B": 32,
+        "peak_med": 0.07153982192015164,
+        "peak_max": 0.2432427590606038,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.10053955066548148,
+        "gap_min": 0.05661902060103749,
+        "frac_gap_ok": 1.0,
+        "pass": true
+      },
+      "ratios": {
+        "fourier": {
+          "6": 0.6391333415351941,
+          "9": 0.7762379521909101,
+          "12": 0.9371963323414052
+        },
+        "hva": {
+          "6": 1.1413701950309776,
+          "9": 0.9751061224347249,
+          "12": 0.9852434220007374
+        }
+      },
+      "per_seed": {
+        "fourier": [
+          0.9109292275254327,
+          0.9381404607105785,
+          0.9511715988983799
+        ],
+        "hva": [
+          0.9795883177000798,
+          0.9762232287142595,
+          1.0061589096509445
+        ]
+      },
+      "med_eps": {
+        "fourier": {
+          "6": 0.12348825524429197,
+          "9": 0.2689072227221301,
+          "12": 0.7197534231432456
+        },
+        "hva": {
+          "6": 0.06914974787167383,
+          "9": 0.21406489723803812,
+          "12": 0.6846534098042589
+        },
+        "snap": {
+          "6": 0.07892546121463528,
+          "9": 0.20873599189517122,
+          "12": 0.6745502683600213
+        }
+      },
+      "seeds": {
+        "fourier": [
+          0,
+          1,
+          2
+        ],
+        "hva": [
+          0,
+          1,
+          2
+        ],
+        "snap": [
+          0,
+          1,
+          2
+        ]
+      },
+      "diagnostics": {
+        "fourier": [
+          {},
+          {},
+          {}
+        ],
+        "hva": [
+          {
+            "mean_abs_beta_xx": 0.18359293328628773
+          },
+          {
+            "mean_abs_beta_xx": 0.19009033010548354
+          },
+          {
+            "mean_abs_beta_xx": 0.17683294475147263
+          }
+        ],
+        "snap": [
+          {
+            "shell_rms": 0.27782614777472564,
+            "mean_abs_gamma2": 1.339538540074597
+          },
+          {
+            "shell_rms": 0.2795128663869651,
+            "mean_abs_gamma2": 1.3457482641633265
+          },
+          {
+            "shell_rms": 0.3063877430659635,
+            "mean_abs_gamma2": 1.5096151560632558
+          }
+        ]
+      },
+      "call": {
+        "pass": false,
+        "kind": "driver",
+        "passed_by": [],
+        "reason": "no baseline has n12 R\u22640.90 with train R\u22640.98 and transfer held"
+      }
+    },
+    {
+      "lam": 0.5,
+      "mu": 0.0,
+      "L": 2,
+      "quantum_pass": false,
+      "quantum12": {
+        "B": 64,
+        "peak_med": 0.2510754003508406,
+        "peak_max": 0.41855216460280736,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.006149435381677237,
+        "gap_min": 0.00048816349185542776,
+        "frac_gap_ok": 0.03125,
+        "pass": false
+      },
+      "quantum6": {
+        "B": 32,
+        "peak_med": 0.3829267432316665,
+        "peak_max": 0.4501235280334567,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.005802106197925629,
+        "gap_min": 0.0006925927785271364,
+        "frac_gap_ok": 0.125,
+        "pass": false
+      },
+      "quantum9": {
+        "B": 32,
+        "peak_med": 0.31297813882033465,
+        "peak_max": 0.43437435215130754,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.004300609227932935,
+        "gap_min": 0.0005939252209774412,
+        "frac_gap_ok": 0.03125,
+        "pass": false
+      },
+      "ratios": {
+        "fourier": {
+          "6": 0.8934197315388144,
+          "9": 0.9171047783991564,
+          "12": 0.9615411904952343
+        }
+      },
+      "per_seed": {
+        "fourier": [
+          0.9708671186919319,
+          0.9654091793749208,
+          0.9615411904952343
+        ]
+      },
+      "med_eps": {
+        "fourier": {
+          "6": 0.6369099157986655,
+          "9": 1.3080060723857798,
+          "12": 2.402997960208573
+        },
+        "snap": {
+          "6": 0.5690278859872526,
+          "9": 1.1995786191601114,
+          "12": 2.310581519416571
+        }
+      },
+      "seeds": {
+        "fourier": [
+          0,
+          1,
+          2
+        ],
+        "snap": [
+          0,
+          1,
+          2
+        ]
+      },
+      "diagnostics": {
+        "fourier": [
+          {},
+          {},
+          {}
+        ],
+        "snap": [
+          {
+            "shell_rms": 0.05881238702321898,
+            "mean_abs_gamma2": 2.431555406100917
+          },
+          {
+            "shell_rms": 0.06097002497192637,
+            "mean_abs_gamma2": 2.433136083080129
+          },
+          {
+            "shell_rms": 0.07284256733285839,
+            "mean_abs_gamma2": 2.429235413032573
+          }
+        ]
+      },
+      "call": {
+        "pass": false,
+        "kind": "pure",
+        "passed_by": [],
+        "reason": "quantumness fails (median peak or product gap)"
+      }
+    },
+    {
+      "lam": 0.5,
+      "mu": 0.0,
+      "L": 4,
+      "quantum_pass": false,
+      "quantum12": {
+        "B": 64,
+        "peak_med": 0.2510754003508406,
+        "peak_max": 0.41855216460280736,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.006149435381677237,
+        "gap_min": 0.00048816349185542776,
+        "frac_gap_ok": 0.03125,
+        "pass": false
+      },
+      "quantum6": {
+        "B": 32,
+        "peak_med": 0.3829267432316665,
+        "peak_max": 0.4501235280334567,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.005802106197925629,
+        "gap_min": 0.0006925927785271364,
+        "frac_gap_ok": 0.125,
+        "pass": false
+      },
+      "quantum9": {
+        "B": 32,
+        "peak_med": 0.31297813882033465,
+        "peak_max": 0.43437435215130754,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.004300609227932935,
+        "gap_min": 0.0005939252209774412,
+        "frac_gap_ok": 0.03125,
+        "pass": false
+      },
+      "ratios": {
+        "fourier": {
+          "6": 0.7729210877986432,
+          "9": 0.8350251667899685,
+          "12": 1.0152637085377387
+        }
+      },
+      "per_seed": {
+        "fourier": [
+          1.0366423264947182,
+          1.0152637085377387,
+          1.0081169980510292
+        ]
+      },
+      "med_eps": {
+        "fourier": {
+          "6": 0.29936507148043257,
+          "9": 0.6518160928098893,
+          "12": 1.6355136995185404
+        },
+        "snap": {
+          "6": 0.23138557669757454,
+          "9": 0.5442828416149634,
+          "12": 1.6604777039374703
+        }
+      },
+      "seeds": {
+        "fourier": [
+          0,
+          1,
+          2
+        ],
+        "snap": [
+          0,
+          1,
+          2
+        ]
+      },
+      "diagnostics": {
+        "fourier": [
+          {},
+          {},
+          {}
+        ],
+        "snap": [
+          {
+            "shell_rms": 0.0995553792339394,
+            "mean_abs_gamma2": 2.509143725657652
+          },
+          {
+            "shell_rms": 0.11556635755967312,
+            "mean_abs_gamma2": 2.501813503827011
+          },
+          {
+            "shell_rms": 0.10229321892930075,
+            "mean_abs_gamma2": 2.4863762344079605
+          }
+        ]
+      },
+      "call": {
+        "pass": false,
+        "kind": "pure",
+        "passed_by": [],
+        "reason": "quantumness fails (median peak or product gap)"
+      }
+    },
+    {
+      "lam": 1.0,
+      "mu": -0.5,
+      "L": 2,
+      "quantum_pass": true,
+      "quantum12": {
+        "B": 64,
+        "peak_med": 0.00697258553611309,
+        "peak_max": 0.028246523856250053,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.09379380464119866,
+        "gap_min": 0.07830136197765539,
+        "frac_gap_ok": 1.0,
+        "pass": true
+      },
+      "quantum6": {
+        "B": 32,
+        "peak_med": 0.0777081890595946,
+        "peak_max": 0.13887367132965023,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.09293957775622816,
+        "gap_min": 0.07393469638050823,
+        "frac_gap_ok": 1.0,
+        "pass": true
+      },
+      "quantum9": {
+        "B": 32,
+        "peak_med": 0.02554372322285528,
+        "peak_max": 0.06988132929630658,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.09276971235951872,
+        "gap_min": 0.08019637946245346,
+        "frac_gap_ok": 1.0,
+        "pass": true
+      },
+      "ratios": {
+        "fourier": {
+          "6": 0.9780310417079845,
+          "9": 0.9814627284504326,
+          "12": 1.013141246967444
+        },
+        "hva": {
+          "6": 1.076529790823281,
+          "9": 1.0324948640628404,
+          "12": 1.0182749066989252
+        }
+      },
+      "per_seed": {
+        "fourier": [
+          1.0173592946392007,
+          1.09316420049628,
+          1.0091678094366752
+        ],
+        "hva": [
+          1.0287859509499542,
+          1.0039500805652388,
+          1.0154936736015947
+        ]
+      },
+      "med_eps": {
+        "fourier": {
+          "6": 0.05965612851131663,
+          "9": 0.13733927684497438,
+          "12": 0.4248561333243277
+        },
+        "hva": {
+          "6": 0.05419779927090396,
+          "9": 0.13055113983353817,
+          "12": 0.422714209950815
+        },
+        "snap": {
+          "6": 0.0583455455121884,
+          "9": 0.13479338137567787,
+          "12": 0.430439272697976
+        }
+      },
+      "seeds": {
+        "fourier": [
+          0,
+          1,
+          2
+        ],
+        "hva": [
+          0,
+          1,
+          2
+        ],
+        "snap": [
+          0,
+          1,
+          2
+        ]
+      },
+      "diagnostics": {
+        "fourier": [
+          {},
+          {},
+          {}
+        ],
+        "hva": [
+          {
+            "mean_abs_beta_xx": 0.08722460123211219
+          },
+          {
+            "mean_abs_beta_xx": 0.1085112436186284
+          },
+          {
+            "mean_abs_beta_xx": 0.09295882290797267
+          }
+        ],
+        "snap": [
+          {
+            "shell_rms": 0.3233323446435969,
+            "mean_abs_gamma2": 1.1712720647072452
+          },
+          {
+            "shell_rms": 0.3176709431991534,
+            "mean_abs_gamma2": 1.1639232203651415
+          },
+          {
+            "shell_rms": 0.33019062139443406,
+            "mean_abs_gamma2": 1.1434205770525265
+          }
+        ]
+      },
+      "call": {
+        "pass": false,
+        "kind": "driver",
+        "passed_by": [],
+        "reason": "no baseline has n12 R\u22640.90 with train R\u22640.98 and transfer held"
+      }
+    },
+    {
+      "lam": 1.0,
+      "mu": -0.5,
+      "L": 4,
+      "quantum_pass": true,
+      "quantum12": {
+        "B": 64,
+        "peak_med": 0.00697258553611309,
+        "peak_max": 0.028246523856250053,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.09379380464119866,
+        "gap_min": 0.07830136197765539,
+        "frac_gap_ok": 1.0,
+        "pass": true
+      },
+      "quantum6": {
+        "B": 32,
+        "peak_med": 0.0777081890595946,
+        "peak_max": 0.13887367132965023,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.09293957775622816,
+        "gap_min": 0.07393469638050823,
+        "frac_gap_ok": 1.0,
+        "pass": true
+      },
+      "quantum9": {
+        "B": 32,
+        "peak_med": 0.02554372322285528,
+        "peak_max": 0.06988132929630658,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.09276971235951872,
+        "gap_min": 0.08019637946245346,
+        "frac_gap_ok": 1.0,
+        "pass": true
+      },
+      "ratios": {
+        "fourier": {
+          "6": 0.7191477756787817,
+          "9": 0.8289106775980568,
+          "12": 0.9648403622784812
+        },
+        "hva": {
+          "6": 0.950371517495332,
+          "9": 0.9919638334299322,
+          "12": 1.0018879058425996
+        }
+      },
+      "per_seed": {
+        "fourier": [
+          0.9720782734892925,
+          0.9602227267769423,
+          1.0277505475433484
+        ],
+        "hva": [
+          1.0060916936423343,
+          1.0018879058425996,
+          0.9973202488857518
+        ]
+      },
+      "med_eps": {
+        "fourier": {
+          "6": 0.05414075713595423,
+          "9": 0.12660721026127852,
+          "12": 0.4118354866548728
+        },
+        "hva": {
+          "6": 0.04096840483024877,
+          "9": 0.10579626485332838,
+          "12": 0.3966067439540968
+        },
+        "snap": {
+          "6": 0.038935205067886614,
+          "9": 0.10494606844647603,
+          "12": 0.3973555001432221
+        }
+      },
+      "seeds": {
+        "fourier": [
+          0,
+          1,
+          2
+        ],
+        "hva": [
+          0,
+          1,
+          2
+        ],
+        "snap": [
+          0,
+          1,
+          2
+        ]
+      },
+      "diagnostics": {
+        "fourier": [
+          {},
+          {},
+          {}
+        ],
+        "hva": [
+          {
+            "mean_abs_beta_xx": 0.10219128449944144
+          },
+          {
+            "mean_abs_beta_xx": 0.13659076520249314
+          },
+          {
+            "mean_abs_beta_xx": 0.12050373537934489
+          }
+        ],
+        "snap": [
+          {
+            "shell_rms": 0.2211625852101819,
+            "mean_abs_gamma2": 0.8789100625579975
+          },
+          {
+            "shell_rms": 0.2180608956947203,
+            "mean_abs_gamma2": 0.9108495695464542
+          },
+          {
+            "shell_rms": 0.21602957449043214,
+            "mean_abs_gamma2": 0.8954550172417577
+          }
+        ]
+      },
+      "call": {
+        "pass": false,
+        "kind": "driver",
+        "passed_by": [],
+        "reason": "no baseline has n12 R\u22640.90 with train R\u22640.98 and transfer held"
+      }
+    },
+    {
+      "lam": 1.0,
+      "mu": 0.0,
+      "L": 2,
+      "quantum_pass": true,
+      "quantum12": {
+        "B": 64,
+        "peak_med": 0.042452088440702265,
+        "peak_max": 0.22024724423030903,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.036979770746072546,
+        "gap_min": 0.007487936266818348,
+        "frac_gap_ok": 0.703125,
+        "pass": true
+      },
+      "quantum6": {
+        "B": 32,
+        "peak_med": 0.16456590775753027,
+        "peak_max": 0.3086058025259176,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.04737419807123598,
+        "gap_min": 0.013865958313325617,
+        "frac_gap_ok": 0.78125,
+        "pass": true
+      },
+      "quantum9": {
+        "B": 32,
+        "peak_med": 0.09169306843304864,
+        "peak_max": 0.2640723548124723,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.036229311401873285,
+        "gap_min": 0.00836755113648672,
+        "frac_gap_ok": 0.65625,
+        "pass": true
+      },
+      "ratios": {
+        "fourier": {
+          "6": 0.9999357904420838,
+          "9": 0.9699363688342735,
+          "12": 0.9909966144581217
+        }
+      },
+      "per_seed": {
+        "fourier": [
+          1.0073817814005752,
+          0.9782554968476633,
+          1.088085424400857
+        ]
+      },
+      "med_eps": {
+        "fourier": {
+          "6": 0.1641702838110728,
+          "9": 0.4359556691246613,
+          "12": 0.9492316590734191
+        },
+        "snap": {
+          "6": 0.16415974250972631,
+          "9": 0.42284925868349,
+          "12": 0.9406853604782244
+        }
+      },
+      "seeds": {
+        "fourier": [
+          0,
+          1,
+          2
+        ],
+        "snap": [
+          0,
+          1,
+          2
+        ]
+      },
+      "diagnostics": {
+        "fourier": [
+          {},
+          {},
+          {}
+        ],
+        "snap": [
+          {
+            "shell_rms": 0.027078512104497722,
+            "mean_abs_gamma2": 1.7992114234694347
+          },
+          {
+            "shell_rms": 0.06266659013474682,
+            "mean_abs_gamma2": 1.7638797303874165
+          },
+          {
+            "shell_rms": 0.0740019802872236,
+            "mean_abs_gamma2": 1.753677892617826
+          }
+        ]
+      },
+      "call": {
+        "pass": false,
+        "kind": "pure",
+        "passed_by": [],
+        "reason": "pure family misses n12 R\u22640.98 with train R\u22640.98 and transfer held"
+      }
+    },
+    {
+      "lam": 1.0,
+      "mu": 0.0,
+      "L": 4,
+      "quantum_pass": true,
+      "quantum12": {
+        "B": 64,
+        "peak_med": 0.042452088440702265,
+        "peak_max": 0.22024724423030903,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.036979770746072546,
+        "gap_min": 0.007487936266818348,
+        "frac_gap_ok": 0.703125,
+        "pass": true
+      },
+      "quantum6": {
+        "B": 32,
+        "peak_med": 0.16456590775753027,
+        "peak_max": 0.3086058025259176,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.04737419807123598,
+        "gap_min": 0.013865958313325617,
+        "frac_gap_ok": 0.78125,
+        "pass": true
+      },
+      "quantum9": {
+        "B": 32,
+        "peak_med": 0.09169306843304864,
+        "peak_max": 0.2640723548124723,
+        "frac_peak_below": 1.0,
+        "gap_med": 0.036229311401873285,
+        "gap_min": 0.00836755113648672,
+        "frac_gap_ok": 0.65625,
+        "pass": true
+      },
+      "ratios": {
+        "fourier": {
+          "6": 0.9782844867390338,
+          "9": 1.0461294321423917,
+          "12": 1.0295742312562541
+        }
+      },
+      "per_seed": {
+        "fourier": [
+          1.036180098391718,
+          1.0277575502205718,
+          1.0138166993715152
+        ]
+      },
+      "med_eps": {
+        "fourier": {
+          "6": 0.09200612804605024,
+          "9": 0.25506389672928,
+          "12": 0.7843574940473044
+        },
+        "snap": {
+          "6": 0.09000816775237608,
+          "9": 0.2668298494454273,
+          "12": 0.8075542639638353
+        }
+      },
+      "seeds": {
+        "fourier": [
+          0,
+          1,
+          2
+        ],
+        "snap": [
+          0,
+          1,
+          2
+        ]
+      },
+      "diagnostics": {
+        "fourier": [
+          {},
+          {},
+          {}
+        ],
+        "snap": [
+          {
+            "shell_rms": 0.14884138317990342,
+            "mean_abs_gamma2": 1.6098487431256685
+          },
+          {
+            "shell_rms": 0.143259432833012,
+            "mean_abs_gamma2": 1.6195689815499885
+          },
+          {
+            "shell_rms": 0.14616352712930467,
+            "mean_abs_gamma2": 1.6764577675987011
+          }
+        ]
+      },
+      "call": {
+        "pass": false,
+        "kind": "pure",
+        "passed_by": [],
+        "reason": "pure family misses n12 R\u22640.98 with train R\u22640.98 and transfer held"
+      }
+    }
+  ],
+  "wall_s": 0.0733644962310791,
+  "l16": {
+    "note": "Light probe at the best driver cell of the smoke (\u03bb=0.50, \u03bc=-0.50, reference L=4). Seed 0 only, 20 L-BFGS rounds, same pools. Not in the verdict.",
+    "lam": 0.5,
+    "mu": -0.5,
+    "rounds": 20,
+    "med_eps": {
+      "fourier": {
+        "6": 0.1195109740761362,
+        "9": 0.2509168235473229,
+        "12": 0.6907631113497681
+      },
+      "hva": {
+        "6": 0.054326703781694796,
+        "9": 0.203789558774087,
+        "12": 0.6677958141574871
+      },
+      "snap": {
+        "6": 0.0516299664611064,
+        "9": 0.17956156117777766,
+        "12": 0.63761924236527
+      }
+    },
+    "ratios": {
+      "fourier": {
+        "6": 0.43201025562903356,
+        "9": 0.715621848863045,
+        "12": 0.9230649869523958
+      },
+      "hva": {
+        "6": 0.9503607409824659,
+        "9": 0.8811126647407509,
+        "12": 0.9548116787310372
+      }
+    },
+    "reference_L": 4
+  },
+  "reading": "No cell clears its bar, and the L=4 train sweep is not a KILL. Best frozen n12 Fourier ratio is 0.9372 at \u03bb=0.50 \u03bc=-0.50 L=4 (SNAP Med\u03b5 0.6746, Fourier 0.7198). The same cell is 0.6391 at n6 and 0.7762 at n9. Best n12 HVA ratio is 0.9852 at \u03bb=0.50 \u03bc=-0.50 L=4 (HVA Med\u03b5 0.6847). Quantum n12 ground states (peak < 0.5 and product gap \u2265 0.03): \u03bb=0.50 \u03bc=-0.50, \u03bb=1.00 \u03bc=-0.50, \u03bb=1.00 \u03bc=0.00. Product-gap failures, so those cells cannot PASS: \u03bb=0.50 \u03bc=0.00. A spread-out bitstring peak is not enough when a product state already reaches the ground energy. H_ZZ is pure Walsh degree 2, so the SNAP cost has one live \u03b3 per layer. Any lead over Fourier has to come from the Hamming shell. On the \u03bc=\u22120.5 cells the shell does leave the X mixer (median shell RMS off \u03c6_k=a+bk is 0.2919; median mean |\u03b2^XX| is 0.1338), and SNAP still does not clear 0.90 against Fourier or against HVA. Ratio without quantumness: \u03bb=0.50 \u03bc=0 L=2 would be a pure-family ratio (0.9615) and fails the product gap. Every seed at that best Fourier cell is above 0.90 (min 0.911). Two more seeds do not reopen a 0.90 driver PASS."
+}
