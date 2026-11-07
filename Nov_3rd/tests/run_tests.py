@@ -284,12 +284,25 @@ def t13_warm_fallback_gate(s: Suite):
     )
 
 
+def t14_fc_ws(s: Suite):
+    """δ=0 recovers scalar/Walsh; Krawtchouk and footprint classes."""
+    import runpy
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[1] / "tests" / "test_fc_ws.py"
+    try:
+        runpy.run_path(str(path), run_name="__main__")
+        s.check("T14_fc_ws", True)
+    except SystemExit as e:
+        s.check("T14_fc_ws", int(e.code or 0) == 0, f"exit {e.code}")
+
+
 def main():
     s = Suite()
     tests = [
         t1_locks, t2_data, t3_packing, t4_shell_warm, t5_motif_overlap,
         t6_warm_vs_qaoa, t7_blockmix_fidelity, t8_optimizer, t9_train_count,
         t10_eval_ns, t11_killed_form, t12_L_list, t13_warm_fallback_gate,
+        t14_fc_ws,
     ]
     for fn in tests:
         try:

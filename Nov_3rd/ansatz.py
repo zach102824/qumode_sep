@@ -6,6 +6,10 @@ so Nov/ explorers cannot silently change the circuit.
 Supports graded-H_c Walsh-degree γ: gamma shape (L,) or (L, 4) with
 U_c^X = W exp(-i Σ_{w=1..4} γ_{ℓ,w} E_w) W, E_w = degree-w Walsh piece of cost_Cn.
 Equal γ_w recovers scalar γ·E (up to global phase from w=0).
+
+Optional fcws= dict turns on footprint-class grading (Nov_3rd.fc_ws): class
+boosts (1+δ_C) on U_c^X and a commutator-matched rescaling of shell orders.
+fcws is None on every existing champ / power_p / Walsh path.
 """
 from __future__ import annotations
 
@@ -17,6 +21,13 @@ from explore_OCT29.scripts.binH_vs_grayH import build_W_BinH
 from explore_OCT29.scripts.gadget_Uc_explore import GadgetAnsatz
 
 from Nov_3rd import settings as S
+from Nov_3rd.fc_ws import (
+    CLASS_DEG_INDEX,
+    effective_delta,
+    footprint_class_ids,
+    o_tilde,
+    rescale_shell_phi,
+)
 
 
 def fwht_unnormalized(x: torch.Tensor) -> torch.Tensor:
@@ -58,6 +69,11 @@ class Nov3rdAnsatz(GadgetAnsatz):
         # degree masks w=1..4 as bool (N,)
         masks = torch.stack([(pc == w) for w in range(1, 5)], dim=0)  # (4, N)
         self.register_buffer("_walsh_degree_masks", masks)
+        fp_ids = footprint_class_ids(n, device=self.lam.device)
+        self.register_buffer("_fp_class", fp_ids)
+        fp_masks = torch.stack([(fp_ids == c) for c in range(6)], dim=0)
+        self.register_buffer("_fp_masks", fp_masks)
+        self.register_buffer("_fp_rest", fp_ids == -2)
 
     def cost_bitstring(self, E: torch.Tensor) -> torch.Tensor:
         """Normalized relative cost in bitstring order (length 2^n), same as cost_Cn."""
@@ -96,13 +112,58 @@ class Nov3rdAnsatz(GadgetAnsatz):
             out.append(fw[self.grid_to_x])
         return out
 
+    @torch.no_grad()
+    def footprint_parts(self, E: torch.Tensor) -> dict:
+        """Walsh pieces of H_c on the product grid, plus class masses w_C.
+
+        comps[c] = Σ_{S∈C} ŵ_S (-1)^{S·x} gathered onto the Fock grid.
+        rest = degree≥4 piece (no footprint δ). Degree 0 is omitted.
+        w[c] = Σ_{S∈C} |ŵ_S|. Detached: H_c is data, not a parameter.
+        """
+        f = self.cost_bitstring(E)
+        N = int(f.numel())
+        F = fwht_unnormalized(f)
+        Fw = torch.where(self._fp_masks, F.unsqueeze(0), torch.zeros_like(F))
+        w = Fw.abs().sum(dim=-1) / float(N)
+        spatial = fwht_unnormalized(Fw) / float(N)
+        Fr = torch.where(self._fp_rest, F, torch.zeros_like(F))
+        rest = fwht_unnormalized(Fr) / float(N)
+        g = self.grid_to_x
+        return {"comps": spatial[:, g], "rest": rest[g], "w": w}
+
+    def _fcws_layer_diag(self, parts: dict, gamma_ell: torch.Tensor, delta_eff: torch.Tensor) -> torch.Tensor:
+        """Spatial diagonal of Σ_C γ_{ℓ,deg(C)} (1+δ_C) E_C + γ_rest E_rest."""
+        comps = parts["comps"]
+        rest = parts["rest"]
+        dlt = delta_eff.to(dtype=self.rdtype, device=comps.device).reshape(6)
+        if gamma_ell.ndim == 0 or int(gamma_ell.numel()) == 1:
+            g = gamma_ell.to(dtype=self.rdtype, device=comps.device).reshape(())
+            acc = rest * g
+            weights = g * (1.0 + dlt)
+        else:
+            gw = gamma_ell.to(dtype=self.rdtype, device=comps.device).reshape(4)
+            acc = rest * gw[3]
+            deg_idx = torch.tensor(CLASS_DEG_INDEX, device=comps.device)
+            weights = gw[deg_idx] * (1.0 + dlt)
+        view = weights.reshape(-1, *([1] * (comps.ndim - 1)))
+        return acc + (view * comps).sum(dim=0)
+
     def forward_nov3rd(
         self,
         E: torch.Tensor,
         gamma: torch.Tensor,
         phi: torch.Tensor,
+        *,
+        fcws: dict | None = None,
     ) -> dict:
-        """phi: (L, b+1) shell phases; gamma: (L,) or (L, 4) Walsh-degree graded."""
+        """phi: (L, b+1) shell phases; gamma: (L,) or (L, 4) Walsh-degree graded.
+
+        fcws, when set, is graded H_c footprint-class FC-WS:
+          delta: (6,) or pooled (5,) class boosts
+          kappa: scalar shell-order coupling
+          pool_111: tie δ_(1,1,1)=δ_(1,1)
+          parts: optional precomputed footprint_parts(E)
+        """
         L = self.L
         gamma = gamma.to(dtype=self.rdtype, device=self.lam.device)
         if gamma.ndim == 1:
@@ -120,10 +181,25 @@ class Nov3rdAnsatz(GadgetAnsatz):
             raise ValueError(f"phi shape {tuple(phi.shape)} != {(L, S.B_BITS + 1)}")
 
         phi = phi.to(dtype=self.rdtype, device=self.lam.device)
+        use_fc = fcws is not None
+        if use_fc:
+            parts = fcws.get("parts")
+            if parts is None:
+                parts = self.footprint_parts(E)
+            delta_eff = effective_delta(fcws["delta"], bool(fcws.get("pool_111", False)))
+            delta_eff = delta_eff.to(device=self.lam.device)
+            kappa = fcws["kappa"]
+            if not torch.is_tensor(kappa):
+                kappa = torch.tensor(float(kappa), device=self.lam.device)
+            ot = o_tilde(parts["w"], delta_eff)
+            phi = rescale_shell_phi(phi, ot, kappa).to(dtype=self.rdtype)
+            graded = False  # diag comes from _fcws_layer_diag, not scalar Cn
         psi = self.vacuum()  # |0⟩ — no prep W
         sl = tuple(slice(0, NU) for _ in range(self.C))
 
-        if not graded:
+        if use_fc:
+            Cn = None
+        elif not graded:
             Cn = self.cost_Cn(E)
         else:
             Cn = None  # per-layer graded diag
@@ -131,15 +207,14 @@ class Nov3rdAnsatz(GadgetAnsatz):
         for ell in range(L):
             # Uc^X = W D W
             psi = self._apply_all(psi, self.Wmat)
-            if graded:
+            if use_fc:
+                diag = self._fcws_layer_diag(parts, gamma[ell], delta_eff)
+            elif graded:
                 diag = self.graded_cost_diag(E, gamma[ell])
             else:
                 diag = Cn * gamma[ell]
-            # for graded, diag already includes γ_w; for scalar, Cn*γ
-            if graded:
-                phase = torch.exp(-1j * diag.to(self.cdtype))
-            else:
-                phase = torch.exp(-1j * diag.to(self.cdtype))
+            # for graded / fcws, diag already includes γ; for scalar, Cn*γ
+            phase = torch.exp(-1j * diag.to(self.cdtype))
             psi_new = psi.clone()
             psi_new[sl] = psi[sl] * phase
             psi = psi_new
@@ -165,7 +240,8 @@ class Nov3rdAnsatz(GadgetAnsatz):
             "norm": probs.sum(),
             "arm": "Nov_3rd",
             "probs": probs,
-            "graded_Hc": graded,
+            "graded_Hc": bool(graded or use_fc),
+            "fc_ws": bool(use_fc),
         }
 
 
