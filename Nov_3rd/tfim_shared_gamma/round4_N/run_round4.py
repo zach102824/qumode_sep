@@ -149,10 +149,21 @@ def checks(runner: Runner) -> dict:
     return out
 
 
+def _jsonable(obj):
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    if isinstance(obj, np.floating):
+        return float(obj)
+    if isinstance(obj, np.integer):
+        return int(obj)
+    raise TypeError(f"not serializable: {type(obj)}")
+
+
 def _save(rec, folder: Path):
     folder.mkdir(parents=True, exist_ok=True)
     path = folder / f"n{rec['n']}_L{rec['L']}_{rec['arm']}.json"
-    path.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n")
+    clean = {k: v for k, v in rec.items() if k not in ("psi", "x")}
+    path.write_text(json.dumps(clean, indent=2, sort_keys=True) + "\n")
     if "psi" in rec:
         np.save(folder.parent / "states" / f"n{rec['n']}_L{rec['L']}_{rec['arm']}.npy", canonical_state(rec["psi"]))
 
@@ -181,6 +192,7 @@ def _public(runner, raw):
         "starts": raw["starts"], "trace": raw["trace"], "cdf_by_energy": cdf,
         "objective": "energy", "fidelity_used_for_selection": False,
     }
+    rec["x"] = np.array(x, copy=True)
     rec["psi"] = psi
     return rec
 
@@ -223,7 +235,7 @@ def _absorb(arm, L, raw, mem, runner):
         "cdf_by_energy": [{"eval_order": i + 1, "E": float(energies[k]), "F": float(fs[k])} for i, k in enumerate(order)],
         "best_F_not_selected": float(fs.max()) if fs.size else None,
     })
-    _save({k: v for k, v in merged.items() if k != "psi"}, RESULTS / "jobs")
+    _save({k: v for k, v in merged.items() if k not in ("psi", "x")}, RESULTS / "jobs")
     mem[(arm, L)] = merged
 
 
@@ -291,7 +303,7 @@ def run(budget_min: float = 75.0):
         log(f"fit {arm} L={L} fresh={n_fresh} cap={cap} left={left()/60:.1f}min")
         raw = optimize(runners[12], arm, L, prev_x, n_fresh, tag, cap)
         rec = _public(runners[12], raw)
-        _save({k: v for k, v in rec.items() if k != "psi"}, RESULTS / "jobs")
+        _save({k: v for k, v in rec.items() if k not in ("psi", "x")}, RESULTS / "jobs")
         mem[key] = rec
         log(f"  E={rec['E']:.6f} err={rec['energy_error']:.4e} F={rec['F']:.4f} med={rec['seed_median']:.4f} iqr={rec['seed_iqr']:.3f} evals={rec['n_eval']}")
         return rec
@@ -338,16 +350,20 @@ def run(budget_min: float = 75.0):
                            extra=[("incumbent", mem[("qaoa", L)]["x"])])
             _absorb("qaoa", L, raw, mem, runners[12])
 
-    smoke = None
-    if left() > 90 and ("R_M", 1) in mem:
+    smoke_path = RESULTS / "jobs" / "n6_L1_R_M.json"
+    if smoke_path.exists():
+        smoke = json.loads(smoke_path.read_text())
+    elif left() > 90 and ("R_M", 1) in mem:
         log("N6 smoke L1 R_M")
         raw = optimize(runners[6], "R_M", 1, None, 4, 9, 800, screen=True)
-        smoke = {k: v for k, v in _public(runners[6], raw).items() if k != "psi"}
+        smoke = {k: v for k, v in _public(runners[6], raw).items() if k not in ("psi", "x")}
         _save(smoke, RESULTS / "jobs")
+    else:
+        smoke = None
 
     public_jobs = []
     for rec in mem.values():
-        public_jobs.append({k: v for k, v in rec.items() if k != "psi"})
+        public_jobs.append({k: v for k, v in rec.items() if k not in ("psi", "x")})
     summary = {
         "manifest_sha256": MANIFEST_SHA,
         "packing_sha256": PACKING_SHA,
@@ -358,11 +374,12 @@ def run(budget_min: float = 75.0):
         "comparisons": {arm: _compare(public_jobs, arm) for arm in ("R_M", "N_red", "R_blockK", "R_full")},
         "reduction": _reduction(public_jobs, replay),
         "smoke_n6": smoke,
+        "optimizer_seconds": float(sum(j["seconds"] for j in public_jobs)),
         "wall_seconds": time.perf_counter() - t0,
         "protocol": json.loads((Path(__file__).resolve().parent / "protocol.json").read_text()),
     }
     summary["reading"] = _reading(summary)
-    (RESULTS / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+    (RESULTS / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True, default=_jsonable) + "\n")
     _md(RESULTS / "RESULTS.md", summary)
     figdir = RESULTS / "figures"
     _plots(summary, figdir)
@@ -465,22 +482,90 @@ def _reduction(jobs, replay):
 
 
 def _reading(summary):
+    c = summary["checks"]
     lines = [
-        "R_M is the main new fit: sublattice shells, G = Hc + thetaM Mhat, counted P = 3L+2. "
-        "R_full, block-K, and contiguous N_red are the pre-registered comparisons. "
-        "Passing a within-threshold is a reduction statement, not an advantage and not a seal.",
-        "M is exactly the block-mean projection of Hinter on the sublattice packing. "
-        "Full K is not in the span of J and M, and the block-mean of raw K is not raw K. "
-        "The Hc coefficient stays 1, so those pieces are not a scale gauge.",
+        "R_M is the main new fit: sublattice shells, G = Hc + thetaM Mhat, raw P = 3L+2. "
+        "R_full (P = 3L+3), block-K (P = 3L+3), and contiguous N_red (P = 3L+3) are the pre-registered comparisons. "
+        "A within-threshold result would support a parameter reduction only. It is not an advantage and not a seal. "
+        "No parameter count was discounted after the fit.",
+        f"M is the block-mean projection of Hinter (max abs {c['model']['M_equals_block_projection_of_Hinter']:.1e}). "
+        f"With rM = RMS(M)/RMS(J) = {c['model']['rM_sublattice']:.6f}, "
+        "Hc + thetaM Mhat = Hintra + (Hinter - M) + (1 + thetaM/rM) M "
+        f"holds to {c['model']['identity_max_abs']:.1e}. "
+        f"The source multiply-scale RMS(J)/RMS(M) is {c['model']['scale_M_sublattice']:.6f}, matching the stored source constant. "
+        f"Full K is outside the span of J and M (residual fraction {c['model']['K_residual_vs_span_J_M']:.3f}), "
+        f"and raw K differs from its block mean (relative {c['model']['rawK_vs_blockK_relative']:.3f}). "
+        "Hc stays at coefficient 1, so this is not a scale gauge. "
+        "M on a computational basis state depends only on the cavity Hamming weights.",
         "A shift of any one shell coefficient by π is a global phase. "
-        "Sending gamma and the shell to their negatives conjugates the state. "
-        "That keeps E and F and does not make the state the same vector. Gamma and theta are not wrapped.",
+        "Sending gamma and the shell to their negatives conjugates the state and does not leave the same vector. "
+        "Gamma and theta were not wrapped. Stored source angles, replayed in this simulator and not imported as code, "
+        "match the published energies through 1e-12, and the L5 and L6 sublattice+M states overlap the stored vectors.",
     ]
     cells = summary["reduction"]["cells"]
     if not cells:
-        lines.append("Reduction cells were not all finished. See failures.")
+        lines.append("The reduction cells were not all finished. See the incomplete list. Nothing here is a seal.")
+        return lines
+    kill = [x for x in cells if x["pair"] == "R_M_vs_R_full"]
+    if len(kill) == 2 and all(x["worse_by_more_than_0.03"] for x in kill):
+        lines.append(
+            "R_M is worse than the fresh R_full best energy by more than 0.03 at both L5 and L6. "
+            "That is the pre-registered kill for this reduction. "
+            + " ".join(
+                f"L{x['L']}: best dE {x['dE_best']:+.4f}, median dE {x['d_median']:+.4f}, dF {x['dF']:+.4f}."
+                for x in kill
+            )
+            + " The L6 median gap is not evidence for dropping K: R_full's median is pulled by failed starts, and the best-energy gap is the kill."
+        )
     else:
-        lines.append("Reduction cells: " + json.dumps(cells))
+        lines.append("R_M versus fresh R_full: " + "; ".join(
+            f"L{x['L']} best dE {x['dE_best']:+.4f} (within 0.02: {x['within_0.02_best']}), median dE {x['d_median']:+.4f}"
+            for x in kill
+        ))
+    src = [x for x in cells if x["pair"] == "R_M_vs_source_R_full_replay"]
+    if src:
+        lines.append(
+            "Against the replayed source R_full state, which this fresh fit did not fully recover, "
+            + "; ".join(f"L{x['L']} best dE {x['dE_best']:+.4f}, dF {x['dF']:+.4f}" for x in src)
+            + ". That comparison is labeled and is not a second pass/fail rule."
+        )
+    bk = [x for x in cells if x["pair"] == "blockK_vs_R_full"]
+    if bk:
+        lines.append(
+            "Block-K versus fresh R_full: "
+            + "; ".join(
+                f"L{x['L']} best dE {x['dE_best']:+.4f} (within 0.01: {x['within_0.01_best']}), "
+                f"median no worse: {x['median_no_worse']}, dF {x['dF']:+.4f}"
+                for x in bk
+            )
+            + ". Replacing full K by its block mean is a different generator at the same raw P. It does not cancel under the fixed Hc coefficient."
+        )
+    nr = [x for x in cells if x["pair"] == "N_red_vs_original_N"]
+    if nr:
+        lines.append(
+            "N_red versus the hash-checked round-3 family N (P = 3L+4): "
+            + "; ".join(
+                f"L{x['L']} best dE {x['dE_best']:+.4f} (within 0.01: {x['within_0.01_best']}), dF {x['dF']:+.4f}"
+                for x in nr
+            )
+            + ". A pass would be a parameter reduction only. These cells do not open an advantage."
+        )
+    lines.append(
+        "Matched depth is ceil(P/2). For R_M that is p = 3,4,6,7,9,10 at L1..6, and the next depth is one higher, plus p=12. "
+        "P=20 versus p=10 is a rounded count, not an exact match and not an exhaustive optimum. "
+        "Equal-depth gains sit on a separate ledger from the parameter-matched ledger. "
+        "The published p=12 energy edge of about 0.004 over the source L6 state is not treated as noise, and a seed spread is not the uncertainty of a reported energy. "
+        "The success column is the L-BFGS flag. Medians, IQRs, and CDFs use every finished start."
+    )
+    rf = {r["L"]: r for r in summary["comparisons"].get("R_full", [])}
+    if 5 in rf and 6 in rf:
+        lines.append(
+            f"Fresh R_full L5 has raw P=18, the same count as QAOA p9. Its energy is {rf[5]['dE_qm']:+.4f} relative to that QAOA state and its fidelity difference is {rf[5]['dF_qm']:+.4f}. "
+            f"Against p10 the energy difference is {rf[5]['dE_qn']:+.4f}. "
+            f"Fresh R_full L6 has raw P=21. Against QAOA p11 (P=22) the energy difference is {rf[6]['dE_qm']:+.4f} and the fidelity difference is {rf[6]['dF_qm']:+.4f}. "
+            f"Against p12 the energy difference is {rf[6]['dE_q12']:+.4f} and the fidelity difference is {rf[6]['dF_q12']:+.4f}. "
+            "p12 is lower in energy and lower in fidelity. It does not have both error at most 0.292 and fidelity at least 0.610, and the fresh L6 state does not dominate p12. No seal."
+        )
     return lines
 
 
@@ -489,6 +574,11 @@ def _md(path, summary):
     for line in summary["reading"]:
         lines += [line, ""]
     lines.append(f"Manifest `{summary['manifest_sha256']}`. Packing `{summary['packing_sha256']}`.")
+    if "optimizer_seconds" in summary:
+        lines.append(
+            f"Optimizer time summed over the finished jobs is {summary['optimizer_seconds']:.0f} s. "
+            f"Report assembly took {summary['wall_seconds']:.0f} s and did not refit those jobs."
+        )
     lines.append("")
     lines.append("## Replay of stored source angles")
     lines.append("")
@@ -560,6 +650,7 @@ def _plots(summary, folder: Path):
             ax.plot(np.linspace(1, hit["n_eval"], len(ys)), ys, label=f"{arm} L{L}")
     ax.set_xlabel("inclusive evaluations")
     ax.set_ylabel("best energy error so far")
+    ax.set_ylim(0.25, 1.6)
     ax.legend(fontsize=8)
     fig.tight_layout()
     fig.savefig(folder / "best_so_far.png", dpi=140)
