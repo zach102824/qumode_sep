@@ -1,0 +1,357 @@
+{
+  "B": "-0.3444",
+  "E": -7.481833979884778,
+  "E0": -8.6132024589353,
+  "Emax": 23.79999934975571,
+  "F": 0.150123600435299,
+  "L": 1,
+  "compile": {
+    "applications_per_layer": {
+      "level_resolved_cavity_diagonals": 4,
+      "shared_gamma_global_diagonal": 1,
+      "shared_hamming_shell": 1
+    },
+    "k_body_max": 2,
+    "level_resolved_intra": "N and the intra part of Hc are not constant on Hamming weight. They need an 8-level diagonal on each cavity, not the 4-phase shell. M and K and Hc_inter are two-body and can share one compiled inter profile once the shared thetas are fixed. This is not claimed to cost the same as native Hc.",
+    "n_cavities": 4,
+    "n_cavity_pairs": 6,
+    "n_pair_slots": 66,
+    "packing": "contiguous triples (0,1,2),(3,4,5),...",
+    "shared_scalars": [
+      "gamma",
+      "thetaK",
+      "thetaM",
+      "thetaN"
+    ],
+    "shell": "3 relative Hamming phases per layer, shared across cavities"
+  },
+  "energy_error": 1.131368479050522,
+  "eta": 0.9650954421063344,
+  "fidelity_used_for_selection": false,
+  "gamma": [
+    -0.3585156722333781
+  ],
+  "gap_accessible_PR_plus": 0.4337981341960315,
+  "gap_full": 0.0016132338724048623,
+  "hc_diag_sha256": "eef806253f93036b128bc3aa2a7c06d35bbe60e7b9bcaf01cf920974b1da6a00",
+  "init_label": "screen",
+  "layers": [
+    {
+      "E": -7.481833979884778,
+      "F": 0.150123600435299,
+      "energy_error": 1.131368479050522,
+      "layer": 1
+    }
+  ],
+  "low_state_weights": [
+    {
+      "E": -8.6132024589353,
+      "index": 0,
+      "weight": 0.15012360043529901
+    },
+    {
+      "E": -8.611589225062895,
+      "index": 1,
+      "weight": 7.204934014608032e-33
+    },
+    {
+      "E": -8.179769975592409,
+      "index": 2,
+      "weight": 8.666778659801931e-25
+    },
+    {
+      "E": -8.179404324739268,
+      "index": 3,
+      "weight": 0.29392568866871255
+    },
+    {
+      "E": -8.057565017656191,
+      "index": 4,
+      "weight": 7.877053472543795e-32
+    },
+    {
+      "E": -8.05406034231088,
+      "index": 5,
+      "weight": 3.022946411557666e-30
+    },
+    {
+      "E": -7.907793564017227,
+      "index": 6,
+      "weight": 2.802980385467954e-31
+    },
+    {
+      "E": -7.907074107910703,
+      "index": 7,
+      "weight": 0.005637207550830149
+    }
+  ],
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "method": "full_intra",
+  "n": 12,
+  "n_eval": 1043,
+  "n_starts": 14,
+  "neel_occupation": {
+    "cavities": [
+      {
+        "p_fock": [
+          0.016418029175101462,
+          0.13335017602339497,
+          0.25130341231172604,
+          0.09892838248977745,
+          0.09892838248977746,
+          0.25130341231172604,
+          0.13335017602339497,
+          0.016418029175101462
+        ],
+        "p_neel_2_or_5": 0.5026068246234521
+      },
+      {
+        "p_fock": [
+          0.03142139535427556,
+          0.11422231767870274,
+          0.24004523461027916,
+          0.11431105235674247,
+          0.11431105235674247,
+          0.24004523461027916,
+          0.11422231767870274,
+          0.031421395354275565
+        ],
+        "p_neel_2_or_5": 0.4800904692205583
+      },
+      {
+        "p_fock": [
+          0.03142139535427556,
+          0.11431105235674247,
+          0.24004523461027916,
+          0.11422231767870272,
+          0.11422231767870274,
+          0.24004523461027916,
+          0.11431105235674245,
+          0.03142139535427556
+        ],
+        "p_neel_2_or_5": 0.4800904692205583
+      },
+      {
+        "p_fock": [
+          0.01641802917510146,
+          0.09892838248977742,
+          0.25130341231172604,
+          0.133350176023395,
+          0.133350176023395,
+          0.25130341231172604,
+          0.09892838248977742,
+          0.01641802917510146
+        ],
+        "p_neel_2_or_5": 0.5026068246234521
+      }
+    ],
+    "mean_p_neel": 0.4913486469220052
+  },
+  "objective": "energy",
+  "param_count": 7,
+  "role": "full_intra",
+  "seconds": 1.1367754450002394,
+  "seed_best": -7.481833979884778,
+  "seed_iqr": 5.218512061816941,
+  "seed_median": -7.4758432007383036,
+  "seed_q25": -7.481833979884772,
+  "seed_q75": -2.2633219180678315,
+  "seed_std": 2.9653909927245246,
+  "shell": [
+    [
+      0.37766976950722053,
+      -0.029234774384138552,
+      0.04007685229486575
+    ]
+  ],
+  "starts": [
+    {
+      "E": -7.481833979884771,
+      "F": 0.15012360078151898,
+      "label": "screen",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 30,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.481833979884773,
+      "F": 0.15012360349222487,
+      "label": "screen",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 32,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.481833979884778,
+      "F": 0.150123600435299,
+      "label": "screen",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 35,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.481833979884772,
+      "F": 0.15012359945386858,
+      "label": "screen",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 26,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.481833979884596,
+      "F": 0.15012361711237562,
+      "label": "screen",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 30,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.481833979884774,
+      "F": 0.1501236042840861,
+      "label": "screen",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 36,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -2.18490333799784,
+      "F": 0.0010906724780295836,
+      "label": "small",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 40,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -0.4950734477362634,
+      "F": 0.001335902958928048,
+      "label": "feature_seed",
+      "message": "ABNORMAL: ",
+      "nit": 50,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -0.6989142486069877,
+      "F": 0.0014790967618508219,
+      "label": "fresh_0",
+      "message": "ABNORMAL: ",
+      "nit": 69,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -7.48183397988477,
+      "F": 0.15012359815533383,
+      "label": "fresh_1",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 56,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.4698524215920115,
+      "F": 0.1506674018554071,
+      "label": "fresh_2",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 73,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -5.03271007517754,
+      "F": 0.003607048111144105,
+      "label": "fresh_3",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 27,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -0.4159120628386279,
+      "F": 0.0018423832288587134,
+      "label": "fresh_4",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 67,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -2.498577658277805,
+      "F": 0.008890105334049627,
+      "label": "fresh_5",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 42,
+      "skipped": false,
+      "success": true
+    }
+  ],
+  "state_sha256_f64": "583f062a41fb9141db7b3fc7975367304232a0f9a2a8792534e27b573ed34936",
+  "state_sha256_round10": "98e856f423dd82c5dc793bd782a1321752d42b5979cdf5db95627b3f2f99eb1d",
+  "theta": {
+    "K": -0.7757036375413797,
+    "M": 0.24108788119120977,
+    "N": 0.12369076618365515
+  },
+  "trace_best_start": [
+    -6.686416740055657,
+    0.06752393440810443,
+    -0.3007449585883703,
+    -0.48473324703329385,
+    -6.45936664140674,
+    -7.160317824713984,
+    -7.173343214237599,
+    -7.175603608824992,
+    -7.182292158671019,
+    -7.193711002063827,
+    -7.208479115873562,
+    -7.229149117489754,
+    -7.257341826102265,
+    -7.279712572531303,
+    -7.312284975224024,
+    -7.354901778350189,
+    -7.368879083060802,
+    -7.421415505596029,
+    -7.441059866734808,
+    -7.456521182109843,
+    -7.435186497376212,
+    -7.470055600823558,
+    -7.4751252532102495,
+    -7.477220913416849,
+    -7.477605837395132,
+    -7.477785982807985,
+    -7.478121739590237,
+    -7.47901144093755,
+    -7.480314393042861,
+    -7.470775036706803,
+    -7.480599624660332,
+    -7.481467417773836,
+    -7.481790689820888,
+    -7.481813894680016,
+    -7.481833953657797,
+    -7.481833978669661,
+    -7.481833979649078,
+    -7.481833979846041,
+    -7.481833979883118,
+    -7.481833979884675,
+    -7.481833979884771,
+    -7.481833979884778
+  ],
+  "variance_H": 1.6791306450013934,
+  "variational_ok": true,
+  "x_exact": [
+    "-0.3585156722333781",
+    "-0.77570363754137972",
+    "0.24108788119120977",
+    "0.12369076618365515",
+    "0.37766976950722053",
+    "-0.029234774384138552",
+    "0.040076852294865753"
+  ]
+}
