@@ -778,6 +778,8 @@ def make_figures(plain, templates):
             continue
         ax.scatter([row["energy_error"]], [row["F"]], marker="s", label=f"QAOA p{p}")
     for L, row in BASE["stored_rfull_replay"].items():
+        if not str(L).isdigit():
+            continue
         ax.scatter([row["energy_error"]], [row["F"]], marker="D", label=f"stored Rfull L{L}")
     for store, name in ((plain, "plain"), (templates, "template")):
         for L, rec in store.items():
