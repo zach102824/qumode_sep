@@ -1,5 +1,7 @@
 # Round 1 direction A — shared-gamma F_K versus QAOA
 
+Correction, round 2: the N=12 gap in the table below is not a certified full-space gap. That eigensolve was started from the symmetric product state, so it stayed in P=R=+1. On the frozen manifest (B=-0.3444, not this run's B=-0.3449) a dense full-space diagonalization gives a full gap of 1.613e-3 to a P=R=-1 partner, and an accessible P=R=+1 gap of 0.434. Fidelity is against the full-space ground state, which is in P=R=+1. See `round2_S/results/RESULTS.md`.
+
 Generator `G = Hc + thetaK * sK * F_K` with `F_K = sum_{j<k} K_jk Z_j Z_k`, `K = offdiag(J^2)`, `sK` the upper-triangle RMS match to `J`, and the coefficient of `Hc` fixed at 1. `gamma` and `thetaK` are one scalar each at every depth. Each layer has shell controls `(c1, c2, c3)`.
 
 ## Targets

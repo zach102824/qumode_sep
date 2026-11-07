@@ -1,0 +1,402 @@
+{
+  "B": "-0.3444",
+  "E": -8.157989810317767,
+  "E0": -8.6132024589353,
+  "Emax": 23.79999934975571,
+  "F": 0.3841301186034255,
+  "L": 6,
+  "energy_error": 0.4552126486175325,
+  "eta": 0.9859559493287863,
+  "eval_cap": 5800,
+  "fidelity_used_for_selection": false,
+  "gamma": [
+    0.18930284692916008,
+    -0.600239603218748,
+    0.05224972355567092,
+    0.972698873215233,
+    0.16420568217177936,
+    -0.37392953347645236
+  ],
+  "gap_accessible_PR_plus": 0.4337981341960315,
+  "gap_full": 0.0016132338724048623,
+  "hc_diag_sha256": "eef806253f93036b128bc3aa2a7c06d35bbe60e7b9bcaf01cf920974b1da6a00",
+  "in_process_replay": true,
+  "init_label": "fresh_2",
+  "layers": [
+    {
+      "E": -4.45390507632898,
+      "F": 0.03180421737938089,
+      "energy_error": 4.1592973826063195,
+      "layer": 1
+    },
+    {
+      "E": -0.0262585934697748,
+      "F": 0.018256974918058614,
+      "energy_error": 8.586943865465525,
+      "layer": 2
+    },
+    {
+      "E": -2.9616745282520602,
+      "F": 0.03278810521357726,
+      "energy_error": 5.6515279306832396,
+      "layer": 3
+    },
+    {
+      "E": 3.964344043456683,
+      "F": 4.457977473811602e-06,
+      "energy_error": 12.577546502391982,
+      "layer": 4
+    },
+    {
+      "E": 3.8638145500936565,
+      "F": 7.068462935113895e-06,
+      "energy_error": 12.477017009028955,
+      "layer": 5
+    },
+    {
+      "E": -8.157989810317767,
+      "F": 0.3841301186034255,
+      "energy_error": 0.4552126486175325,
+      "layer": 6
+    }
+  ],
+  "ledger_hardware": {
+    "applications_per_layer": {
+      "fk_inter_shares_that_inter_diagonal": true,
+      "inter_two_body_diagonal_profiles": 1,
+      "intra_level_resolved_diagonals": 4,
+      "note": "Intra phases depend on the Fock index, not only the Hamming weight, and they differ by cavity because the local distances do. They are not the shared 4-phase shell. Shell SNAP remains the mixer only.",
+      "shared_hamming_shell_snap": 1
+    },
+    "intra_level_resolved_not_shell_snap": {
+      "n_distinct_fock_phases_cavity0": 3,
+      "not_a_hamming_shell": true,
+      "popcount_spreads_cavity0": {
+        "0": 0.0,
+        "1": 1.0669670084631928,
+        "2": 1.0669670084631928,
+        "3": 0.0
+      }
+    },
+    "k_body_max": 2,
+    "n_cavities": 4,
+    "n_cavity_pairs": 6,
+    "n_fk_inter_nonzero": 54,
+    "n_inter_bonds": 54,
+    "n_intra_bonds": 12,
+    "no_free_compile_claim": true,
+    "trained_controls": {
+      "shared_gamma": 1,
+      "shared_thetaIn": 1,
+      "shared_thetaK": 1,
+      "shell_per_layer": 3
+    }
+  },
+  "ledger_params": {
+    "P": 14,
+    "n_eval": 1548,
+    "n_starts": 15,
+    "seed_best": -8.157989810317767,
+    "seed_median": -6.776584481368046
+  },
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "method": "same_G_qaoa",
+  "n": 12,
+  "n_eval": 1548,
+  "n_starts": 15,
+  "objective": "energy",
+  "param_count": 14,
+  "rescue": false,
+  "role": "same_G_diagnostic_not_standard_qaoa",
+  "seconds": 9.54105744799972,
+  "seed_best": -8.157989810317767,
+  "seed_median": -6.776584481368046,
+  "seed_median_best_half": -8.062814554794372,
+  "seed_spread_median_minus_best": 1.3814053289497217,
+  "seed_std": 3.5485067059080317,
+  "shell": [
+    [
+      -0.07120283878699722,
+      0.0,
+      0.0
+    ],
+    [
+      -1.0025584001848062,
+      0.0,
+      0.0
+    ],
+    [
+      -0.4237273915707715,
+      0.0,
+      0.0
+    ],
+    [
+      -1.0231196963249998,
+      0.0,
+      0.0
+    ],
+    [
+      1.3321428745406494,
+      0.0,
+      0.0
+    ],
+    [
+      0.8953237196219608,
+      0.0,
+      0.0
+    ]
+  ],
+  "starts": [
+    {
+      "E": -8.157271521859952,
+      "F": 0.39651125040834556,
+      "label": "interp_cubic",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -8.049161166816655,
+      "F": 0.3096592509121146,
+      "label": "fourier1",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -8.067351139552285,
+      "F": 0.3330555529359795,
+      "label": "fourier2",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -0.7785310319822489,
+      "F": 0.00047562129216984156,
+      "label": "fresh_0",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -0.6854997374626605,
+      "F": 0.0024071010978115397,
+      "label": "fresh_1",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -8.157989810317767,
+      "F": 0.3841301186034255,
+      "label": "fresh_2",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -0.6721769774382029,
+      "F": 0.0015375628952092424,
+      "label": "fresh_3",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -0.5682544906350272,
+      "F": 0.0006600378609549387,
+      "label": "fresh_4",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -7.092183298315527,
+      "F": 0.10018471383854231,
+      "label": "fresh_5",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -7.867519220482727,
+      "F": 0.2436140979228797,
+      "label": "fresh_6",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -0.644634548191759,
+      "F": 0.0009402941016465781,
+      "label": "fresh_7",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -8.062814554794372,
+      "F": 0.3440121927508859,
+      "label": "fresh_8",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -6.776584481368046,
+      "F": 0.0885728219963396,
+      "label": "fresh_9",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -0.7984110488743592,
+      "F": 0.002212160874954324,
+      "label": "fresh_10",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -0.7858829814771923,
+      "F": 0.0022852878929161724,
+      "label": "fresh_11",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    }
+  ],
+  "state_sha256_f64": "8979ee02f2f78e7052ec14cba05e8a6fd8e72e498c3f8d3c628d3c7fc94a17fb",
+  "state_sha256_round10": "26264f29d45dbb63ba8c33dc9a8710731a585bfa2a2c019ac3295452e4926b61",
+  "thetaIn": 1.577168196016867,
+  "thetaK": -0.4161603906908068,
+  "topped_up": false,
+  "trace_best_start": [
+    -0.24570633692389018,
+    0.48137014604071093,
+    -0.28616722674186307,
+    -2.6191315299488465,
+    -2.917773452894774,
+    -5.378393583106558,
+    -6.18778556778005,
+    -7.08329337782488,
+    -7.311110931583195,
+    -7.388476237040457,
+    -7.502850925750126,
+    -7.561467438991939,
+    -7.596208782439146,
+    -7.651483701835204,
+    -7.684654749970186,
+    -7.719803568925959,
+    -7.741325913858135,
+    -7.779872730762325,
+    -7.808477827661649,
+    -7.823534636710879,
+    -7.849825266944269,
+    -7.859207962106813,
+    -7.866853926196743,
+    -7.871014355599871,
+    -7.8809509904399135,
+    -7.907942350161269,
+    -7.928215400603881,
+    -7.945732027128798,
+    -7.948343331229738,
+    -7.952035750341304,
+    -7.954887434989829,
+    -7.962245021445731,
+    -7.967337454137027,
+    -7.971960323300903,
+    -7.974352339552658,
+    -7.977409484453843,
+    -7.984493264848415,
+    -7.992017632198722,
+    -7.99592282543654,
+    -7.997719283268939,
+    -7.999994672927537,
+    -8.00118079387165,
+    -8.00191170770304,
+    -8.002613779014109,
+    -8.003908748419901,
+    -8.005098109878809,
+    -8.0068584865249,
+    -8.009265327857094,
+    -8.001110062363937,
+    -8.010603452507894,
+    -8.011610940457253,
+    -8.01340405080921,
+    -8.01502090481381,
+    -8.016649651995406,
+    -8.017661744808878,
+    -8.019230030035029,
+    -8.020562320419918,
+    -8.02159653592683,
+    -8.022386053219266,
+    -8.023399354092836,
+    -8.02386419713545,
+    -8.024472677446902,
+    -8.025330293826883,
+    -8.02855334831413,
+    -8.033801245825403,
+    -8.054963904209076,
+    -8.05826134954008,
+    -8.038923394836244,
+    -8.062402564075283,
+    -7.929137482012395,
+    -8.065921930876161,
+    -8.0719270386902,
+    -8.07982549854945,
+    -8.091399027102414,
+    -8.086976969065635,
+    -8.096656313529545,
+    -8.10299415538092,
+    -8.104844624799346,
+    -8.107758805824085,
+    -7.692270806122897,
+    -8.114912667431481,
+    -8.117261472111869,
+    -8.122545824600302,
+    -8.129071818171695,
+    -8.137647376613158,
+    -8.140580700042351,
+    -8.143010597493744,
+    -8.14506143235786,
+    -8.14807580678786,
+    -8.15583661109578,
+    -8.157003474757527,
+    -8.157989810317767
+  ],
+  "variational_ok": true,
+  "x_exact": [
+    "0.18930284692916008",
+    "-0.60023960321874803",
+    "0.052249723555670917",
+    "0.97269887321523296",
+    "0.16420568217177936",
+    "-0.37392953347645236",
+    "-0.071202838786997222",
+    "-1.0025584001848062",
+    "-0.42372739157077149",
+    "-1.0231196963249998",
+    "1.3321428745406494",
+    "0.89532371962196078",
+    "1.5771681960168671",
+    "-0.41616039069080679"
+  ]
+}
