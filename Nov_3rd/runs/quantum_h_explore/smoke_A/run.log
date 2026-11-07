@@ -1,0 +1,138 @@
+14:50:24 [qhA] load n=6 count=224
+14:50:24 [qhA]   source=sat_gen.instances base=54000000000 (scale1000 SCB prefix) m=60 Emin_med=0.0
+14:50:24 [qhA] load n=9 count=224
+14:50:24 [qhA]   source=sat_gen.instances base=54000000000 (scale1000 SCB prefix) m=89 Emin_med=0.0
+14:50:24 [qhA] ED n=6 B=32 λ-grid [0.25, 0.5, 0.75, 1.0, 1.25, 1.5]
+14:50:24 [qhA]   n=6 λ=0.25 peak=0.795 Sh=0.029 S1=0.015 Fsat=0.882 Xn=0.291 chi=None
+14:50:24 [qhA]   n=6 λ=0.50 peak=0.428 Sh=0.191 S1=0.134 Fsat=0.567 Xn=0.564 chi=2.5181747756933532
+14:50:24 [qhA]   n=6 λ=0.75 peak=0.227 Sh=0.244 S1=0.147 Fsat=0.282 Xn=0.766 chi=1.6962587709968835
+14:50:24 [qhA]   n=6 λ=1.00 peak=0.132 Sh=0.228 S1=0.120 Fsat=0.174 Xn=0.860 chi=0.5912168258050734
+14:50:24 [qhA]   n=6 λ=1.25 peak=0.087 Sh=0.176 S1=0.090 Fsat=0.116 Xn=0.912 chi=0.21635062073674138
+14:50:24 [qhA]   n=6 λ=1.50 peak=0.066 Sh=0.136 S1=0.072 Fsat=0.087 Xn=0.938 chi=0.09414857952968703
+14:50:24 [qhA] ED n=9 B=32 λ-grid [0.25, 0.5, 0.75, 1.0, 1.25, 1.5]
+14:50:49 [qhA]   n=9 λ=0.25 peak=0.761 Sh=0.054 S1=0.021 Fsat=0.826 Xn=0.289 chi=None
+14:50:49 [qhA]   n=9 λ=0.50 peak=0.252 Sh=0.348 S1=0.137 Fsat=0.372 Xn=0.589 chi=4.360519128455691
+14:50:49 [qhA]   n=9 λ=0.75 peak=0.085 Sh=0.395 S1=0.145 Fsat=0.123 Xn=0.779 chi=2.298737868826538
+14:50:49 [qhA]   n=9 λ=1.00 peak=0.040 Sh=0.320 S1=0.120 Fsat=0.052 Xn=0.868 chi=0.7873430857927577
+14:50:49 [qhA]   n=9 λ=1.25 peak=0.022 Sh=0.242 S1=0.093 Fsat=0.031 Xn=0.911 chi=0.2868972918566639
+14:50:49 [qhA]   n=9 λ=1.50 peak=0.016 Sh=0.187 S1=0.073 Fsat=0.022 Xn=0.936 chi=0.1269556563155847
+14:50:49 [qhA] ED chose λ=0.75 quantum=True
+14:50:49 [qhA] eigh E0 n=6 B=64 λ=0.75
+14:50:49 [qhA]   E0 done 0.0s  median E0=-1.9380
+14:50:49 [qhA] eigh E0 n=6 B=128 λ=0.75
+14:50:49 [qhA]   E0 done 0.1s  median E0=-1.8921
+14:50:49 [qhA] eigh E0 n=9 B=64 λ=0.75
+14:50:57 [qhA]   E0 done 8.2s  median E0=-2.8588
+14:50:57 [qhA] eigh E0 n=9 B=128 λ=0.75
+14:51:14 [qhA]   E0 done 16.3s  median E0=-2.8934
+14:51:14 [qhA] train L=2 qaoa λ=0.75 Btr=64
+14:51:15 [qhA] L=2 qaoa init med6=0.1903 med9=0.1895 score=0.1899 best=0.1899
+14:51:15 [qhA] L=2 qaoa adam0 med6=0.1897 med9=0.1889 score=0.1893 best=0.1893
+14:51:15 [qhA] L=2 qaoa adam10 med6=0.1607 med9=0.1599 score=0.1603 best=0.1603
+14:51:15 [qhA] L=2 qaoa adam20 med6=0.1269 med9=0.1249 score=0.1259 best=0.1259
+14:51:15 [qhA] L=2 qaoa adam30 med6=0.1056 med9=0.1040 score=0.1048 best=0.1048
+14:51:15 [qhA] L=2 qaoa adam39 med6=0.0951 med9=0.0939 score=0.0945 best=0.0945
+14:51:15 [qhA] L=2 qaoa lbfgs0 med6=0.0812 med9=0.0790 score=0.0801 best=0.0801
+14:51:15 [qhA] L=2 qaoa lbfgs1 med6=0.0750 med9=0.0745 score=0.0748 best=0.0748
+14:51:15 [qhA] L=2 qaoa lbfgs2 med6=0.0667 med9=0.0659 score=0.0663 best=0.0663
+14:51:16 [qhA] L=2 qaoa lbfgs3 med6=0.0594 med9=0.0586 score=0.0590 best=0.0590
+14:51:16 [qhA] L=2 qaoa lbfgs4 med6=0.0556 med9=0.0557 score=0.0557 best=0.0557
+14:51:16 [qhA] L=2 qaoa lbfgs5 med6=0.0551 med9=0.0548 score=0.0549 best=0.0549
+14:51:16 [qhA] L=2 qaoa lbfgs6 med6=0.0548 med9=0.0546 score=0.0547 best=0.0547
+14:51:16 [qhA] L=2 qaoa lbfgs7 med6=0.0549 med9=0.0545 score=0.0547 best=0.0547
+14:51:16 [qhA] L=2 qaoa lbfgs8 med6=0.0547 med9=0.0545 score=0.0546 best=0.0546
+14:51:16 [qhA] L=2 qaoa lbfgs9 med6=0.0548 med9=0.0546 score=0.0547 best=0.0546
+14:51:16 [qhA] EVAL L=2 qaoa n=6 Med=0.0547 QAOA=0.0547 R=1.0000 TIE
+14:51:16 [qhA] EVAL L=2 qaoa n=9 Med=0.0545 QAOA=0.0545 R=1.0000 TIE
+14:51:16 [qhA] train L=2 power_p λ=0.75 Btr=64
+14:51:16 [qhA] L=2 power_p: warm-started from trained Fourier QAOA
+14:51:16 [qhA] L=2 power_p init med6=0.0547 med9=0.0545 score=1.0000 best=1.0000
+14:51:16 [qhA] L=2 power_p adam0 med6=0.0541 med9=0.0557 score=1.0224 best=1.0000
+14:51:16 [qhA] L=2 power_p adam10 med6=0.0493 med9=0.0539 score=0.9880 best=0.9880
+14:51:16 [qhA] L=2 power_p adam20 med6=0.0486 med9=0.0543 score=0.9957 best=0.9880
+14:51:17 [qhA] L=2 power_p adam30 med6=0.0487 med9=0.0541 score=0.9920 best=0.9880
+14:51:17 [qhA] L=2 power_p adam39 med6=0.0490 med9=0.0538 score=0.9857 best=0.9857
+14:51:17 [qhA] L=2 power_p lbfgs0 med6=0.0490 med9=0.0538 score=0.9858 best=0.9857
+14:51:17 [qhA] L=2 power_p lbfgs1 med6=0.0488 med9=0.0538 score=0.9867 best=0.9857
+14:51:17 [qhA] L=2 power_p lbfgs2 med6=0.0488 med9=0.0538 score=0.9867 best=0.9857
+14:51:17 [qhA] L=2 power_p lbfgs3 med6=0.0487 med9=0.0538 score=0.9863 best=0.9857
+14:51:17 [qhA] L=2 power_p lbfgs4 med6=0.0483 med9=0.0537 score=0.9846 best=0.9846
+14:51:17 [qhA] L=2 power_p lbfgs5 med6=0.0484 med9=0.0536 score=0.9824 best=0.9824
+14:51:17 [qhA] L=2 power_p lbfgs6 med6=0.0484 med9=0.0536 score=0.9830 best=0.9824
+14:51:17 [qhA] L=2 power_p lbfgs7 med6=0.0484 med9=0.0536 score=0.9826 best=0.9824
+14:51:17 [qhA] L=2 power_p lbfgs8 med6=0.0484 med9=0.0535 score=0.9811 best=0.9811
+14:51:17 [qhA] L=2 power_p lbfgs9 med6=0.0484 med9=0.0536 score=0.9821 best=0.9811
+14:51:17 [qhA] EVAL L=2 power_p n=6 Med=0.0484 QAOA=0.0547 R=0.8838 BEAT
+14:51:17 [qhA] EVAL L=2 power_p n=9 Med=0.0535 QAOA=0.0545 R=0.9811 TIE
+14:51:17 [qhA] train L=2 walsh λ=0.75 Btr=64
+14:51:17 [qhA] L=2 walsh: warm-started from trained Fourier QAOA
+14:51:17 [qhA] L=2 walsh init med6=0.0547 med9=0.0545 score=1.0000 best=1.0000
+14:51:17 [qhA] L=2 walsh adam0 med6=0.0537 med9=0.0552 score=1.0130 best=1.0000
+14:51:18 [qhA] L=2 walsh adam10 med6=0.0452 med9=0.0488 score=0.8949 best=0.8949
+14:51:18 [qhA] L=2 walsh adam20 med6=0.0424 med9=0.0451 score=0.8268 best=0.8268
+14:51:18 [qhA] L=2 walsh adam30 med6=0.0396 med9=0.0423 score=0.7764 best=0.7764
+14:51:18 [qhA] L=2 walsh adam39 med6=0.0380 med9=0.0404 score=0.7412 best=0.7412
+14:51:18 [qhA] L=2 walsh lbfgs0 med6=0.0382 med9=0.0393 score=0.7203 best=0.7203
+14:51:18 [qhA] L=2 walsh lbfgs1 med6=0.0378 med9=0.0396 score=0.7258 best=0.7203
+14:51:18 [qhA] L=2 walsh lbfgs2 med6=0.0378 med9=0.0391 score=0.7180 best=0.7180
+14:51:18 [qhA] L=2 walsh lbfgs3 med6=0.0374 med9=0.0390 score=0.7156 best=0.7156
+14:51:19 [qhA] L=2 walsh lbfgs4 med6=0.0370 med9=0.0386 score=0.7074 best=0.7074
+14:51:19 [qhA] L=2 walsh lbfgs5 med6=0.0365 med9=0.0381 score=0.6983 best=0.6983
+14:51:19 [qhA] L=2 walsh lbfgs6 med6=0.0364 med9=0.0377 score=0.6917 best=0.6917
+14:51:19 [qhA] L=2 walsh lbfgs7 med6=0.0341 med9=0.0356 score=0.6524 best=0.6524
+14:51:19 [qhA] L=2 walsh lbfgs8 med6=0.0340 med9=0.0346 score=0.6351 best=0.6351
+14:51:19 [qhA] L=2 walsh lbfgs9 med6=0.0338 med9=0.0346 score=0.6341 best=0.6341
+14:51:19 [qhA] EVAL L=2 walsh n=6 Med=0.0338 QAOA=0.0547 R=0.6170 BEAT
+14:51:19 [qhA] EVAL L=2 walsh n=9 Med=0.0346 QAOA=0.0545 R=0.6341 BEAT
+14:51:19 [qhA] train L=16 qaoa λ=0.75 Btr=64
+14:51:19 [qhA] L=16 qaoa init med6=0.1871 med9=0.1867 score=0.1869 best=0.1869
+14:51:19 [qhA] L=16 qaoa adam0 med6=0.1374 med9=0.1357 score=0.1365 best=0.1365
+14:51:20 [qhA] L=16 qaoa adam10 med6=0.0896 med9=0.0885 score=0.0890 best=0.0890
+14:51:21 [qhA] L=16 qaoa adam20 med6=0.0820 med9=0.0799 score=0.0809 best=0.0809
+14:51:21 [qhA] L=16 qaoa adam29 med6=0.0684 med9=0.0662 score=0.0673 best=0.0673
+14:51:22 [qhA] L=16 qaoa lbfgs0 med6=0.0492 med9=0.0499 score=0.0496 best=0.0496
+14:51:23 [qhA] L=16 qaoa lbfgs1 med6=0.0387 med9=0.0395 score=0.0391 best=0.0391
+14:51:24 [qhA] L=16 qaoa lbfgs2 med6=0.0309 med9=0.0305 score=0.0307 best=0.0307
+14:51:25 [qhA] L=16 qaoa lbfgs3 med6=0.0256 med9=0.0243 score=0.0249 best=0.0249
+14:51:25 [qhA] L=16 qaoa lbfgs4 med6=0.0170 med9=0.0155 score=0.0163 best=0.0163
+14:51:26 [qhA] L=16 qaoa lbfgs5 med6=0.0150 med9=0.0132 score=0.0141 best=0.0141
+14:51:27 [qhA] L=16 qaoa lbfgs6 med6=0.0134 med9=0.0118 score=0.0126 best=0.0126
+14:51:28 [qhA] L=16 qaoa lbfgs7 med6=0.0113 med9=0.0107 score=0.0110 best=0.0110
+14:51:28 [qhA] EVAL L=16 qaoa n=6 Med=0.0113 QAOA=0.0113 R=1.0000 TIE
+14:51:28 [qhA] EVAL L=16 qaoa n=9 Med=0.0107 QAOA=0.0107 R=1.0000 TIE
+14:51:28 [qhA] train L=16 power_p λ=0.75 Btr=64
+14:51:28 [qhA] L=16 power_p: warm-started from trained Fourier QAOA
+14:51:28 [qhA] L=16 power_p init med6=0.0113 med9=0.0107 score=1.0002 best=1.0002
+14:51:28 [qhA] L=16 power_p adam0 med6=0.0759 med9=0.0596 score=6.7007 best=1.0002
+14:51:28 [qhA] L=16 power_p adam10 med6=0.0348 med9=0.0312 score=3.0753 best=1.0002
+14:51:28 [qhA] L=16 power_p adam20 med6=0.0179 med9=0.0174 score=1.6362 best=1.0002
+14:51:29 [qhA] L=16 power_p adam29 med6=0.0153 med9=0.0134 score=1.3476 best=1.0002
+14:51:29 [qhA] L=16 power_p lbfgs0 med6=0.0114 med9=0.0104 score=1.0089 best=1.0002
+14:51:30 [qhA] L=16 power_p lbfgs1 med6=0.0105 med9=0.0101 score=0.9510 best=0.9510
+14:51:30 [qhA] L=16 power_p lbfgs2 med6=0.0108 med9=0.0099 score=0.9528 best=0.9510
+14:51:30 [qhA] L=16 power_p lbfgs3 med6=0.0106 med9=0.0098 score=0.9323 best=0.9323
+14:51:31 [qhA] L=16 power_p lbfgs4 med6=0.0105 med9=0.0098 score=0.9284 best=0.9284
+14:51:31 [qhA] L=16 power_p lbfgs5 med6=0.0104 med9=0.0096 score=0.9163 best=0.9163
+14:51:31 [qhA] L=16 power_p lbfgs6 med6=0.0104 med9=0.0096 score=0.9150 best=0.9150
+14:51:32 [qhA] L=16 power_p lbfgs7 med6=0.0099 med9=0.0096 score=0.9016 best=0.9016
+14:51:32 [qhA] EVAL L=16 power_p n=6 Med=0.0099 QAOA=0.0113 R=0.8771 BEAT
+14:51:32 [qhA] EVAL L=16 power_p n=9 Med=0.0096 QAOA=0.0107 R=0.9016 BEAT
+14:51:32 [qhA] train L=16 walsh λ=0.75 Btr=64
+14:51:32 [qhA] L=16 walsh: warm-started from trained Fourier QAOA
+14:51:32 [qhA] L=16 walsh init med6=0.0113 med9=0.0107 score=1.0002 best=1.0002
+14:51:32 [qhA] L=16 walsh adam0 med6=0.0732 med9=0.0578 score=6.4645 best=1.0002
+14:51:33 [qhA] L=16 walsh adam10 med6=0.0337 med9=0.0291 score=2.9719 best=1.0002
+14:51:33 [qhA] L=16 walsh adam20 med6=0.0184 med9=0.0164 score=1.6253 best=1.0002
+14:51:34 [qhA] L=16 walsh adam29 med6=0.0122 med9=0.0106 score=1.0763 best=1.0002
+14:51:35 [qhA] L=16 walsh lbfgs0 med6=0.0108 med9=0.0092 score=0.9547 best=0.9547
+14:51:35 [qhA] L=16 walsh lbfgs1 med6=0.0099 med9=0.0088 score=0.8724 best=0.8724
+14:51:36 [qhA] L=16 walsh lbfgs2 med6=0.0098 med9=0.0086 score=0.8634 best=0.8634
+14:51:37 [qhA] L=16 walsh lbfgs3 med6=0.0096 med9=0.0084 score=0.8497 best=0.8497
+14:51:38 [qhA] L=16 walsh lbfgs4 med6=0.0095 med9=0.0083 score=0.8366 best=0.8366
+14:51:38 [qhA] L=16 walsh lbfgs5 med6=0.0095 med9=0.0082 score=0.8420 best=0.8366
+14:51:39 [qhA] L=16 walsh lbfgs6 med6=0.0093 med9=0.0082 score=0.8243 best=0.8243
+14:51:40 [qhA] L=16 walsh lbfgs7 med6=0.0095 med9=0.0082 score=0.8354 best=0.8243
+14:51:40 [qhA] EVAL L=16 walsh n=6 Med=0.0093 QAOA=0.0113 R=0.8243 BEAT
+14:51:40 [qhA] EVAL L=16 walsh n=9 Med=0.0082 QAOA=0.0107 R=0.7686 BEAT
+14:51:40 [qhA] VERDICT needs_edit
+14:51:40 [qhA] A SNAP head beats Fourier QAOA on both n at some but not all smoked depths, or only the Walsh-degree head does. power_p both-n BEAT by L: {'2': False, '16': True}; walsh: {'2': True, '16': True}.
