@@ -1,0 +1,82 @@
+{
+  "schema": "round6-CD-audit1-provenance",
+  "audit_head_at_start": "7e2183b7cb3b0a4d92058bbab96828e83552e0fe",
+  "optimizer_evaluations": 0,
+  "diagnostic_forwards": 48,
+  "tau": 1e-9,
+  "pins": {
+    "C_round6": {
+      "commit": "7e2183b7cb3b0a4d92058bbab96828e83552e0fe",
+      "files": {
+        "Nov_3rd/tfim_shared_gamma/round6_CD/results/cells/fresh_L5.json": "b76dd694658ff2c162825e4b5e2f8a6e4d8ded7c2be5cb10d84dc966c0c37846",
+        "Nov_3rd/tfim_shared_gamma/round6_CD/results/cells/fresh_L6.json": "078799be71694e98164f673a5d7f40a5a905e45846e359a4a26dc96bb801bccf",
+        "Nov_3rd/tfim_shared_gamma/round6_CD/results/run_meta.json": "ebbe46f185fb5268409abae479b9c0f239334624447a2ed5b59eef3bf819c09b",
+        "Nov_3rd/tfim_shared_gamma/round6_CD/published_L5_L6.json": "f1c1b68bba8d7f883a3b690e7d83af335c86f67e27e8753442cba2f03e6b7381"
+      }
+    },
+    "C_round5": {
+      "commit": "d9af7f2ab7e6482cfa1307c6b347e03676e46146",
+      "files": {
+        "Nov_3rd/tfim_shared_gamma/round5_S4/results/run_meta.json": "5f549723824f7ec3998727e24b0b94463fc5f54150d5cf044822721a82a950f8",
+        "Nov_3rd/tfim_shared_gamma/round5_S4/results/cells/arm2_L6.json": "07d148c4301e7e596c77aa6c811a1be29f29eaf64c0f1186c4d7cc685ef52f1b",
+        "Nov_3rd/tfim_shared_gamma/round5_S4/protocol.json": "524905ef82492f37f2668564e4408197abdf7700f05d232cc3128304f92d1faa"
+      }
+    },
+    "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+    "stride4_sha256": "0f4330f4a9d4e84db3582beb8b607a2e1092918f7a28b68bb3cff4a1a514c979",
+    "D_baseline_v1": {
+      "commit": "71bb0351",
+      "path": "Nov_3rd/tfim_shared_gamma/round6_RP/results/baseline_v1.json",
+      "sha256": "382ea444375bcc7c91f61fddaf5d3dfdf33c1c2c5243973c46b5194d299ffe45"
+    },
+    "D_replay": {
+      "commit": "71bb0351",
+      "path": "Nov_3rd/tfim_shared_gamma/round6_RP/results/replay.json",
+      "sha256": "27dd878c0db5f813c54a976d09c9f631f4acc2027155f32f88e0ec0089f06285"
+    },
+    "A_slice2": {
+      "commit": "5096c2a4",
+      "path": "Nov_3rd/tfim_shared_gamma/round6_QR/slice2/rescue_results.json",
+      "sha256": "df5f5baae5b8fbe453f27df4caa9b6dccfa126a364438d3245274594f7365f06"
+    },
+    "A_initial_QR": {
+      "commit": "561605ff470ca3847201f9f16ed4c703b6db844a",
+      "path": "Nov_3rd/tfim_shared_gamma/round6_QR/results/summary.json",
+      "sha256": "65dce4779897c863e44cb22e9e3041546cc766980b1cc54038f30c45824d71e3"
+    }
+  },
+  "completed_qaoa": {
+    "p12": {
+      "E": -8.3254075497832,
+      "F": 0.5147185522341006,
+      "shortfall": 0,
+      "record": "slice2 rescue_results.json",
+      "init_or_tag": "completed budget, energy not improved"
+    },
+    "p11": {
+      "E": -8.298215584895333,
+      "F": 0.4848510087447086,
+      "shortfall": 0,
+      "record": "slice2 rescue_results.json"
+    }
+  },
+  "incomplete_qaoa": {
+    "p9": {"E": -8.222874170728861, "F": 0.41200661658598803, "shortfall": 133076, "record": "initial summary.json"},
+    "p10": {"E": -8.263750172422338, "F": 0.4523066994703289, "shortfall": 138662, "record": "initial summary.json"}
+  },
+  "fidelity_ids": {
+    "arm0_L6_F": 0.9023701468564437,
+    "arm0_chain_k": 23,
+    "arm0_role": "random",
+    "family_best_arm2_L6_F": 0.9023701795284904,
+    "arm2_chain_k": 13,
+    "arm2_role": "perturb",
+    "cross_record_gap": 3.267205e-8,
+    "not_a_replay_error": true,
+    "tau": 1e-9
+  },
+  "D_L5_vector": "D committed energies and a different state hash for arm0 L5, not the wavefunction. Overlaps in l5_states.json are against C published_states.npz L5, the vector D's baseline identifies.",
+  "E0": -8.6132024589353,
+  "gs_plus_sector": true,
+  "later_artifacts_do_not_replace_these_pins": true
+}
