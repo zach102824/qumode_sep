@@ -1,0 +1,140 @@
+manifest 14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9 code 0d4e7860059c
+spectrum N=6
+  B=-0.1708 E0=-3.843349 full_gap=5.054e-04 sector_gap=7.048e-01 S=0.6938 in_sector=True
+spectrum N=12
+  B=-0.3444 E0=-8.613202 full_gap=1.613e-03 sector_gap=4.338e-01 S=0.7026 in_sector=True
+optimize N=6 L=1 qaoa
+  E-E0=1.25077 F=0.2022 med=-2.59258 grad=5.06e-09 t=0.1s start=random8
+optimize N=6 L=1 A
+  E-E0=0.78624 F=0.3377 med=-3.05711 grad=2.47e-07 t=0.1s start=random7
+optimize N=6 L=1 P
+  E-E0=0.78624 F=0.3377 med=-3.05711 grad=5.35e-09 t=0.1s start=random6
+optimize N=6 L=1 Sblock
+  E-E0=0.60183 F=0.4206 med=-3.24152 grad=2.85e-07 t=0.1s start=gc1
+optimize N=6 L=1 Pshuffle
+  E-E0=0.78624 F=0.3377 med=-3.05711 grad=2.44e-07 t=0.1s start=random8
+optimize N=6 L=1 P_thetaK0
+  E-E0=1.22297 F=0.2038 med=-2.62038 grad=1.19e-07 t=0.1s start=random9
+optimize N=6 L=1 qaoa_sameG
+  E-E0=0.80549 F=0.3318 med=-3.03786 grad=4.68e-08 t=0.1s start=random10
+optimize N=12 L=1 qaoa
+  E-E0=1.79433 F=0.0809 med=-6.81888 grad=1.20e-08 t=0.4s start=random11
+optimize N=12 L=1 A
+  E-E0=1.16186 F=0.1377 med=-7.45134 grad=6.90e-08 t=0.4s start=random5
+optimize N=12 L=1 P
+  E-E0=1.16183 F=0.1377 med=-7.45137 grad=1.08e-06 t=0.6s start=gc0
+optimize N=12 L=1 Sblock
+  E-E0=1.14151 F=0.1461 med=-7.47169 grad=4.88e-08 t=0.5s start=random8
+optimize N=12 L=1 Pshuffle
+  E-E0=1.16183 F=0.1377 med=-7.45137 grad=5.73e-07 t=0.6s start=random10
+optimize N=12 L=1 P_thetaK0
+  E-E0=1.77208 F=0.0813 med=-6.84112 grad=9.54e-09 t=0.5s start=random9
+optimize N=12 L=1 qaoa_sameG
+  E-E0=1.17579 F=0.1370 med=-7.43741 grad=4.12e-07 t=0.5s start=nested_P_to_linear_mixer
+optimize N=12 L=2 qaoa
+  E-E0=1.18155 F=0.1333 med=-7.43165 grad=5.85e-09 t=0.4s start=bootstrap:qaoa L2 shift beta2=beta1-0.2*
+optimize N=12 L=2 A
+  E-E0=1.05600 F=0.1629 med=-7.55720 grad=7.00e-07 t=0.7s start=perturb0.05
+optimize N=12 L=2 P
+  E-E0=1.04803 F=0.1626 med=-7.56517 grad=2.89e-07 t=0.8s start=perturb0.05
+optimize N=12 L=2 Sblock
+  E-E0=1.01469 F=0.1829 med=-7.59804 grad=9.45e-07 t=0.9s start=nested_A_thetaS0
+optimize N=12 L=2 Pshuffle
+  E-E0=1.04808 F=0.1626 med=-7.56512 grad=2.08e-06 t=0.9s start=perturb0.25
+optimize N=12 L=2 P_thetaK0
+  E-E0=1.57447 F=0.0948 med=-7.03873 grad=4.82e-07 t=0.8s start=bootstrap_shift0
+optimize N=12 L=2 qaoa_sameG
+  E-E0=0.76353 F=0.2308 med=-6.54543 grad=1.42e-06 t=0.7s start=random5
+optimize N=12 L=3 qaoa
+  E-E0=0.92807 F=0.1705 med=-7.68513 grad=1.62e-07 t=0.8s start=perturb0.05
+optimize N=12 L=3 A
+  E-E0=0.69238 F=0.2625 med=-7.85056 grad=8.52e-07 t=1.3s start=perturb0.25
+optimize N=12 L=3 P
+  E-E0=0.69238 F=0.2625 med=-7.92073 grad=7.35e-06 t=1.4s start=nested_A_thetaP0
+optimize N=12 L=3 Sblock
+  E-E0=0.66265 F=0.2853 med=-7.90210 grad=3.27e-06 t=1.5s start=nested_A_thetaS0
+optimize N=12 L=3 Pshuffle
+  E-E0=0.69238 F=0.2625 med=-7.83669 grad=5.70e-06 t=1.3s start=nested_P_angles_on_shuffled_G
+optimize N=12 L=3 P_thetaK0
+  E-E0=1.09345 F=0.1470 med=-7.51975 grad=6.01e-06 t=1.4s start=bootstrap:shell linear; gamma and theta 
+optimize N=12 L=3 qaoa_sameG
+  E-E0=0.55432 F=0.3115 med=-8.05888 grad=3.13e-07 t=1.3s start=bootstrap:sameG linear, thetas copied
+optimize N=12 L=4 qaoa
+  E-E0=0.76003 F=0.2153 med=-4.31667 grad=8.17e-07 t=1.1s start=perturb0.12
+optimize N=12 L=4 A
+  E-E0=0.59970 F=0.3006 med=-8.01124 grad=1.63e-05 t=1.8s start=bootstrap:shell cubic; gamma and theta c
+optimize N=12 L=4 P
+  E-E0=0.59750 F=0.3013 med=-7.96334 grad=4.26e-05 t=1.9s start=nested_A_thetaP0
+optimize N=12 L=4 Sblock
+  E-E0=0.57538 F=0.3285 med=-8.03782 grad=9.09e-06 t=1.9s start=bootstrap_shift0
+optimize N=12 L=4 Pshuffle
+  E-E0=0.59743 F=0.3014 med=-7.93921 grad=5.31e-06 t=2.1s start=nested_P_angles_on_shuffled_G
+optimize N=12 L=4 P_thetaK0
+  E-E0=0.97887 F=0.1658 med=-7.63433 grad=1.82e-05 t=2.1s start=grad_polish
+optimize N=12 L=4 qaoa_sameG
+  E-E0=0.44931 F=0.3805 med=-8.16388 grad=5.65e-06 t=2.2s start=bootstrap_shift0
+optimize N=12 L=5 qaoa
+  E-E0=0.63629 F=0.2584 med=-7.90758 grad=6.89e-07 t=1.5s start=perturb0.12
+optimize N=12 L=5 A
+  E-E0=0.50266 F=0.3861 med=-8.11051 grad=4.13e-06 t=2.4s start=grad_polish
+optimize N=12 L=5 P
+  E-E0=0.50264 F=0.3861 med=-8.10417 grad=1.82e-04 t=2.3s start=nested_A_thetaP0
+optimize N=12 L=5 Sblock
+  E-E0=0.47210 F=0.4335 med=-8.14109 grad=6.21e-06 t=2.5s start=grad_polish
+optimize N=12 L=5 Pshuffle
+  E-E0=0.50263 F=0.3861 med=-8.10513 grad=1.51e-04 t=2.3s start=nested_P_angles_on_shuffled_G
+optimize N=12 L=5 P_thetaK0
+  E-E0=0.86090 F=0.2010 med=-7.75203 grad=3.38e-06 t=2.5s start=grad_polish
+optimize N=12 L=5 qaoa_sameG
+  E-E0=0.35723 F=0.4545 med=-8.25597 grad=3.74e-05 t=2.8s start=bootstrap_shift0
+optimize N=12 L=6 qaoa
+  E-E0=0.55630 F=0.2947 med=-8.04032 grad=1.03e-06 t=2.5s start=perturb0.12
+optimize N=12 L=6 A
+  E-E0=0.43644 F=0.4426 med=-8.17676 grad=2.80e-06 t=3.0s start=grad_polish
+optimize N=12 L=6 P
+  E-E0=0.43507 F=0.4449 med=-8.17750 grad=8.10e-04 t=2.8s start=nested_A_thetaP0
+optimize N=12 L=6 Sblock
+  E-E0=0.40231 F=0.5061 med=-8.21089 grad=1.93e-06 t=3.2s start=grad_polish
+optimize N=12 L=6 Pshuffle
+  E-E0=0.43491 F=0.4455 med=-8.17814 grad=1.67e-04 t=2.8s start=nested_P_angles_on_shuffled_G
+optimize N=12 L=6 P_thetaK0
+  E-E0=0.76233 F=0.2241 med=-7.84935 grad=2.91e-06 t=3.6s start=grad_polish
+optimize N=12 L=6 qaoa_sameG
+  E-E0=0.30291 F=0.5104 med=-8.30491 grad=2.09e-05 t=3.6s start=grad_polish
+optimize N=12 L=7 qaoa
+  E-E0=0.48892 F=0.3333 med=-8.06524 grad=7.71e-07 t=2.9s start=bootstrap:qaoa cubic
+optimize N=12 L=8 qaoa
+  E-E0=0.43567 F=0.3728 med=-7.99751 grad=7.25e-07 t=3.4s start=bootstrap:qaoa cubic
+optimize N=12 L=9 qaoa
+  E-E0=0.39033 F=0.4120 med=-8.10166 grad=2.03e-06 t=4.3s start=perturb0.05
+optimize N=12 L=10 qaoa
+  E-E0=0.34945 F=0.4523 med=-8.24689 grad=2.66e-06 t=4.6s start=bootstrap_shift0
+optimize N=12 L=11 qaoa
+  E-E0=0.31499 F=0.4849 med=-4.63379 grad=3.11e-06 t=5.1s start=bootstrap:qaoa cubic
+rescue QAOA N=12 p=1 with 48 starts
+  rescue did not improve QAOA
+rescue QAOA N=12 p=2 with 32 starts
+  rescue did not improve QAOA
+rescue QAOA N=12 p=3 with 32 starts
+  rescue did not improve QAOA
+rescue QAOA N=12 p=4 with 32 starts
+  rescue did not improve QAOA
+rescue QAOA N=12 p=5 with 32 starts
+  rescue did not improve QAOA
+rescue QAOA N=12 p=6 with 32 starts
+  rescue did not improve QAOA
+rescue QAOA N=12 p=7 with 32 starts
+  rescue did not improve QAOA
+optimize N=12 L=1 P_indgamma
+  E-E0=1.16183 F=0.1377 med=-3.40959 grad=1.08e-06 t=0.6s start=nested_shared_gamma_as_constant_schedule
+optimize N=12 L=2 P_indgamma
+  E-E0=0.71614 F=0.2403 med=-7.89706 grad=3.02e-06 t=1.1s start=nested_shared_gamma_as_constant_schedule
+optimize N=12 L=3 P_indgamma
+  E-E0=0.50097 F=0.3577 med=-8.11223 grad=1.55e-05 t=1.7s start=grad_polish
+optimize N=12 L=4 P_indgamma
+  E-E0=0.37718 F=0.4637 med=-8.21658 grad=5.11e-06 t=2.4s start=grad_polish
+optimize N=12 L=5 P_indgamma
+  E-E0=0.28018 F=0.5811 med=-8.33108 grad=1.29e-05 t=3.8s start=grad_polish
+optimize N=12 L=6 P_indgamma
+  E-E0=0.20883 F=0.6940 med=-8.39895 grad=1.33e-05 t=4.2s start=grad_polish
+done in 153.1s cells=60 failures=0
