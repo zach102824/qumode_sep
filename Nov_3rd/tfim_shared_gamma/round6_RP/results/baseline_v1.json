@@ -1,0 +1,211 @@
+{
+  "schema": "round6-RP-baseline-v1",
+  "source_commit": "d9af7f2ab7e6482cfa1307c6b347e03676e46146",
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "stride4_packing_sha256": "0f4330f4a9d4e84db3582beb8b607a2e1092918f7a28b68bb3cff4a1a514c979",
+  "tau": 1e-09,
+  "E0": -8.6132024589353,
+  "stride4_rfull_energy_selected": {
+    "arm0_L5": {
+      "E": -8.385155838742358,
+      "F": 0.8898142677626111,
+      "var_H": 0.9729342105765539,
+      "energy_error": 0.22804662019294142,
+      "state_hash": "24218902e43eaa295322aa7ed8bfef03eb6797e44d0bdb0429b87b75be43c14b",
+      "claimed_hash": "d31ed7766b29e130be4651460973221ff2b40b4c2c29d934fda38e22cca81974",
+      "k": 114,
+      "role": "equalize",
+      "dE_vs_producer": 6.394884621840902e-14,
+      "dF_vs_producer": -6.994405055138486e-15
+    },
+    "arm0_L6": {
+      "E": -8.44568250175761,
+      "F": 0.9023701468564451,
+      "var_H": 0.6571011793932797,
+      "energy_error": 0.16751995717769042,
+      "state_hash": "14d6e89e57892437b9405a74071d7f3d5ad44887a6492d4a01eb861fcc1653a1",
+      "claimed_hash": "e344ea410737af80485ad53eeff821f6782624fd17c51f068dcc9b0eceb386a1",
+      "k": 23,
+      "role": "random",
+      "dE_vs_producer": -1.5987211554602254e-14,
+      "dF_vs_producer": 1.4432899320127035e-15
+    },
+    "arm1_L5": {
+      "E": -8.3851558387423,
+      "F": 0.8898143059771859,
+      "var_H": 0.9729345727935197,
+      "energy_error": 0.22804662019300004,
+      "state_hash": "a49afb4203bf09233fbc764e9b16be3bf8c8463b16e2b56f56cc5be3db109b71",
+      "claimed_hash": "1099e24f95eda991355995e80f0774b8818799ac2f2e7b163e2645d65230b10d",
+      "k": 11,
+      "role": "perturb",
+      "dE_vs_producer": 1.1368683772161603e-13,
+      "dF_vs_producer": -1.27675647831893e-14
+    },
+    "arm1_L6": {
+      "E": -8.445682501759563,
+      "F": 0.9023701350165997,
+      "var_H": 0.6571003429813942,
+      "energy_error": 0.16751995717573642,
+      "state_hash": "75983a7574e2b680a3c9dd83d9b0443798cb740bf253fe7b0115cd53191fa80b",
+      "claimed_hash": "a12a14cb6b6def9818730eb2e864048c686d51ab06dc7748da479ade49ba7354",
+      "k": 107,
+      "role": "equalize",
+      "dE_vs_producer": -1.3322676295501878e-13,
+      "dF_vs_producer": 1.2101430968414206e-14
+    },
+    "arm2_L5": {
+      "E": -8.385155838742117,
+      "F": 0.8898143411355197,
+      "var_H": 0.9729342428932455,
+      "energy_error": 0.228046620193183,
+      "state_hash": "d7abcd5700895f5600b3f551f84db77142ce191ad96d42ae616ec0d799f511d4",
+      "claimed_hash": "4dbe6e1d68cde560c9236e46666e650a1b8122b2eca955156342ae21fc4bef0f",
+      "k": 16,
+      "role": "perturb",
+      "dE_vs_producer": 2.2382096176443156e-13,
+      "dF_vs_producer": -2.4424906541753444e-14
+    },
+    "arm2_L6": {
+      "E": -8.445682501760135,
+      "F": 0.9023701795284864,
+      "var_H": 0.6571004848729416,
+      "energy_error": 0.16751995717516444,
+      "state_hash": "28b9507d29365d428394f43601f368675429ba25b6f18887a094dbb3e1c1e8f2",
+      "claimed_hash": "88c32377f3f2aa5dff7b0548825a2232f8a9cc1b37c928c83cb8c9b92781cbee",
+      "k": 13,
+      "role": "perturb",
+      "dE_vs_producer": 2.842170943040401e-14,
+      "dF_vs_producer": -3.9968028886505635e-15
+    }
+  },
+  "qaoa_same_manifest": {
+    "5": {
+      "E": -7.9769077650599645,
+      "F": 0.2583777721849259,
+      "energy_error": 0.6362946938753353,
+      "nfev_sum": 21198,
+      "n_starts": 223,
+      "provenance": "round2_H/results/opt/n12_L5_qaoa.json commit d73268ae"
+    },
+    "6": {
+      "E": -8.05689980772151,
+      "F": 0.294676629496847,
+      "energy_error": 0.5563026512137892,
+      "nfev_sum": 35949,
+      "n_starts": 296,
+      "provenance": "round2_H/results/opt/n12_L6_qaoa.json commit d73268ae"
+    },
+    "7": {
+      "E": -8.124282825366793,
+      "F": 0.33328579320771107,
+      "energy_error": 0.4889196335685071,
+      "nfev_sum": 24879,
+      "n_starts": 217,
+      "provenance": "round2_H/results/opt/n12_L7_qaoa.json commit d73268ae"
+    },
+    "8": {
+      "E": -8.177533423046642,
+      "F": 0.37276026573397125,
+      "energy_error": 0.43566903588865813,
+      "nfev_sum": 1407,
+      "n_starts": 12,
+      "provenance": "round2_H/results/opt/n12_L8_qaoa.json commit d73268ae"
+    },
+    "9": {
+      "E": -8.222874170728904,
+      "F": 0.4120066178830655,
+      "energy_error": 0.39032828820639587,
+      "var_H": 0.5340362717672349,
+      "nfev_sum": 76799,
+      "n_starts": 256,
+      "state_hash": "4352d0b6b4439cefd349ecb414d2ac96e8adb3df9623cc3823acb2f798ed374c",
+      "provenance": "round4_V/results/summary.json qaoa_fresh commit 5ebca82a"
+    },
+    "10": {
+      "E": -8.263750172422224,
+      "F": 0.4523066682004341,
+      "energy_error": 0.3494522865130758,
+      "var_H": 0.5303482356830926,
+      "nfev_sum": 79751,
+      "n_starts": 256,
+      "state_hash": "ea9eaec8ec6c1866c72c1b478fd561bfff27660b72300a959868315df8c791f8",
+      "provenance": "round4_V/results/summary.json qaoa_fresh commit 5ebca82a"
+    },
+    "11": {
+      "E": -8.298215584895452,
+      "F": 0.48485097463588717,
+      "energy_error": 0.3149868740398478,
+      "var_H": 0.4552376080262661,
+      "nfev_sum": 84980,
+      "n_starts": 256,
+      "state_hash": "bf1026381cb894fdd872fe538c4fd850932554cace8293401db6c8306baec46a",
+      "provenance": "round4_V/results/summary.json qaoa_fresh commit 5ebca82a"
+    },
+    "12": {
+      "E": -8.325407549783048,
+      "F": 0.5147185356364429,
+      "energy_error": 0.28779490915225203,
+      "var_H": 0.42114542258653387,
+      "nfev_sum": 89272,
+      "n_starts": 256,
+      "state_hash": "c6ea1be0a21e8eff3acfcad93bd5f711a934915aeba20b54dab517f09559a6bc",
+      "provenance": "round4_V/results/summary.json qaoa_fresh commit 5ebca82a"
+    }
+  },
+  "sublattice_rfull_replay_round4_V": {
+    "provenance": "round4_V results/summary.json replay of source_data states, commit 5ebca82a",
+    "5": {
+      "E": -8.294861395582119,
+      "F": 0.6013730609585504,
+      "energy_error": 0.3183410633531807,
+      "var_H": 0.45244248925473585,
+      "state_hash": "b679b59862893daaff1c561c7db38293b6abe0f3562ca1335519d2d6318dee8b",
+      "state_file": "Nov_3rd/tfim_shared_gamma/round4_V/source_data/N12_L5_A_sub_M.npz"
+    },
+    "6": {
+      "E": -8.321482847047694,
+      "F": 0.6098414550958999,
+      "energy_error": 0.291719611887606,
+      "var_H": 0.390530913094679,
+      "state_hash": "4a45dd2304d43d9beb7f87b37674f814dc035e4691981fbbc5840177e8140249",
+      "state_file": "Nov_3rd/tfim_shared_gamma/round4_V/source_data/N12_L6_A_sub_M.npz"
+    }
+  },
+  "stride4_control_round4_V": {
+    "provenance": "round4_V summary control_stride4, commit 5ebca82a",
+    "E": -8.320803328228697,
+    "F": 0.8579519623570816,
+    "energy_error": 0.2923991307066025,
+    "var_H": 1.24736172045138,
+    "nfev_sum": 1556,
+    "n_starts": 6,
+    "note": "var_H is the value stored on that summary row"
+  },
+  "KS_L6_fresh": {
+    "provenance": "PR72 commit a312228e418167bf6853049a6ccc2a32a71e078b file round5_KS/results/jobs/n12_L6_KS_fresh.json sha256 9931e0c89a294e4a6d15bc8e151dcd5971c450471c7f54f8dfa5f67d7a0921d9",
+    "E": -8.329523674952284,
+    "F": 0.6039159761597348,
+    "energy_error": 0.2836787839830155,
+    "var_H": 0.3487055072077965,
+    "state_sha256": "9204b345e792998a1cf8f815aae4f342b19397b6f052ae2f10e2c2799006c018",
+    "n_eval": 5075,
+    "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+    "packing_sha256": "4418b3c33126dd3fd29a6fc74a20314c2e1606764b942301ac4ad01d13de4717",
+    "replayed_here": false
+  },
+  "family_best": {
+    "5": {
+      "arm": 0,
+      "E": -8.385155838742358,
+      "F": 0.8898142677626111,
+      "var": 0.9729342105765539
+    },
+    "6": {
+      "arm": 2,
+      "E": -8.445682501760135,
+      "F": 0.9023701795284864,
+      "var": 0.6571004848729416
+    }
+  }
+}
