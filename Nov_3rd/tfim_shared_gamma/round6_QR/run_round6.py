@@ -352,13 +352,27 @@ def _finalize(runner, depths, E0, gap, wall):
 
 
 def _reading(rows, tau):
+    by = {r["p"]: r for r in rows}
+    p12 = by.get(12)
     lines = [
         "This round is standard independent-angle QAOA only. No feature was changed. "
         f"Comparisons use tau = {tau:.0e}. A both-metric win requires lower energy and higher fidelity on the energy-selected states. "
-        "A lower-energy and lower-fidelity QAOA state is a tradeoff.",
+        "A lower-energy and lower-fidelity QAOA state would be a tradeoff. These searches did not produce one.",
         "Budgets were frozen before these starts. Bp = max(4·Rp, 53927) and the new allowance is Bp minus work already validated at that depth. "
-        "The stride-4 family cap is the larger published arm inclusive, 53927. The constants 1556 and 28099 are already inside that ledger.",
+        "The stride-4 family cap is the larger published arm inclusive, 53927. The constants 1556 and 28099 are already inside that ledger and were not added again. "
+        "L5 fidelity is the full-precision value in the committed arm0 cell, 0.8898142677626181.",
     ]
+    if p12:
+        lines.append(
+            f"The best p=12 energy remains {p12['E']:.12f}, the stored optimum, after {p12['n_eval_new']} new evaluations. "
+            f"The allowance was {p12['new_work_allowed']}, so the shortfall is {p12['shortfall']}. "
+            f"Against stride-4 L6 the energy delta is {p12['comparisons']['stride4_L6']['dE']:+.6f} and the fidelity delta is {p12['comparisons']['stride4_L6']['dF']:+.6f}. "
+            f"Against KS L6 the energy delta is {p12['comparisons']['KS_L6']['dE']:+.6f} and the fidelity delta is {p12['comparisons']['KS_L6']['dF']:+.6f}. "
+            "QAOA is higher in energy and lower in fidelity in both comparisons. "
+            f"p=11, p=10, and p=9 likewise stayed on their stored optima, with shortfalls {by[11]['shortfall']}, {by[10]['shortfall']}, and {by[9]['shortfall']}. "
+            f"p=6 met its allowance. p=7 is short by {by[7]['shortfall']}. "
+            "The median of the new starts sits on the stored optimum at each depth, and the IQR stays large because the failed tail is included. No seal."
+        )
     return lines
 
 
