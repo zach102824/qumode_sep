@@ -1,0 +1,233 @@
+11:01:34 algebra checks
+PASS s2 matches pairs n=0 state=0
+PASS ZZZ = (-1)^n state=0
+PASS s2 matches pairs n=1 state=1
+PASS ZZZ = (-1)^n state=1
+PASS s2 matches pairs n=1 state=2
+PASS ZZZ = (-1)^n state=2
+PASS s2 matches pairs n=2 state=3
+PASS ZZZ = (-1)^n state=3
+PASS s2 matches pairs n=1 state=4
+PASS ZZZ = (-1)^n state=4
+PASS s2 matches pairs n=2 state=5
+PASS ZZZ = (-1)^n state=5
+PASS s2 matches pairs n=2 state=6
+PASS ZZZ = (-1)^n state=6
+PASS s2 matches pairs n=3 state=7
+PASS ZZZ = (-1)^n state=7
+PASS M = W S W trial 0
+PASS commuting exp factorization trial 0
+PASS M = W S W trial 1
+PASS commuting exp factorization trial 1
+PASS M = W S W trial 2
+PASS commuting exp factorization trial 2
+PASS M = W S W trial 3
+PASS commuting exp factorization trial 3
+PASS M = W S W trial 4
+PASS commuting exp factorization trial 4
+PASS M = W S W trial 5
+PASS commuting exp factorization trial 5
+PASS G1,G2,G3 commute
+PASS c2 pi/2 shift is global phase
+PASS NN coupling is J0
+PASS open chain, not periodic
+PASS stoquastic off-diagonals <= 0
+PASS energy of |+> is B*N
+PASS apply_H matches dense
+PASS local energy matches dense quadratic form
+PASS c2=c3=0 is shared-gamma QAOA
+PASS zero shell L=2 is not L=1 at the same gamma
+PASS zero shell L=2 merges to a single cost of angle 2 gamma
+PASS weighted gamma is not pi-periodic
+PASS beta + pi/2 preserves the QAOA ray
+PASS c1 + pi/2 on one layer preserves the ray
+PASS c2 + pi/2 on one layer preserves the ray
+PASS c3 + pi/2 on one layer preserves the ray
+PASS time reversal conjugates QAOA state
+PASS time reversal conjugates shell state
+PASS physical vs logical full basis L=1
+PASS physical vs logical full basis L=2
+PASS physical vs logical full basis L=3
+PASS vacuum physical readout equals logical |+> circuit
+PASS analytic grad vs FD qaoa
+PASS state energy matches grad energy qaoa
+PASS analytic grad vs FD shared_beta
+PASS state energy matches grad energy shared_beta
+PASS analytic grad vs FD nov3_D
+PASS state energy matches grad energy nov3_D
+PASS analytic grad vs FD drop_c2
+PASS state energy matches grad energy drop_c2
+PASS analytic grad vs FD drop_c3
+PASS state energy matches grad energy drop_c3
+PASS physical FD grad matches logical analytic grad
+PASS shell circuit preserves norm
+PASS plus entropy is 0
+ALL ALGEBRA CHECKS PASSED
+11:01:34 algebra ok; physical/logical grad max abs 1.8238421217731116e-08
+11:01:34 coarse entropy scan n=6 points=141 alpha=1.1
+11:01:34   scan n=6 1/141 B=-0.8000 S=0.307125 gap=6.235137e-01 res=4.33e-15
+11:01:34   scan n=6 21/141 B=-0.7000 S=0.375996 gap=4.538860e-01 res=3.08e-15
+11:01:34   scan n=6 41/141 B=-0.6000 S=0.482617 gap=2.955013e-01 res=3.27e-15
+11:01:34   scan n=6 61/141 B=-0.5000 S=0.648007 gap=1.584440e-01 res=3.51e-15
+11:01:34   scan n=6 81/141 B=-0.4000 S=0.851208 gap=6.034819e-02 res=2.74e-15
+11:01:34   scan n=6 101/141 B=-0.3000 S=0.975853 gap=1.334396e-02 res=2.85e-15
+11:01:34   scan n=6 121/141 B=-0.2000 S=1.000500 gap=1.285227e-03 res=3.86e-15
+11:01:34   scan n=6 141/141 B=-0.1000 S=1.000251 gap=2.074672e-05 res=2.29e-15
+11:01:34   refine local max coarse B=-0.1700 on [-0.1750,-0.1650] (101 pts)
+11:01:34   scan n=6 1/101 B=-0.1750 S=1.000895 gap=5.836921e-04 res=2.64e-15
+11:01:34   scan n=6 21/101 B=-0.1730 S=1.000897 gap=5.452397e-04 res=2.66e-15
+11:01:34   scan n=6 41/101 B=-0.1710 S=1.000897 gap=5.089030e-04 res=3.56e-15
+11:01:34   scan n=6 61/101 B=-0.1690 S=1.000895 gap=4.745899e-04 res=1.81e-15
+11:01:34   scan n=6 81/101 B=-0.1670 S=1.000889 gap=4.422110e-04 res=2.51e-15
+11:01:34   scan n=6 101/101 B=-0.1650 S=1.000882 gap=4.116798e-04 res=3.07e-15
+11:01:34   dense freeze B=-0.170800
+11:01:34 froze N=6 B=-0.170800 S=1.000897 E0=-3.843349 gap=5.054e-04 P+=1.000000 R+=1.000000 endpoint=False
+11:01:34 coarse entropy scan n=12 points=141 alpha=1.1
+11:01:34   scan n=12 1/141 B=-0.8000 S=0.294276 gap=1.223964e+00 res=1.30e-14
+11:01:34   scan n=12 21/141 B=-0.7000 S=0.360274 gap=8.905806e-01 res=3.51e-14
+11:01:35   scan n=12 41/141 B=-0.6000 S=0.483355 gap=5.926628e-01 res=1.34e-14
+11:01:35   scan n=12 61/141 B=-0.5000 S=0.750300 gap=3.851772e-01 res=8.98e-15
+11:01:35   scan n=12 81/141 B=-0.4000 S=0.995717 gap=3.696388e-01 res=1.53e-14
+11:01:36   scan n=12 101/141 B=-0.3000 S=1.010457 gap=5.004452e-01 res=1.69e-15
+11:01:36   scan n=12 121/141 B=-0.2000 S=1.002428 gap=6.638473e-01 res=1.57e-15
+11:01:37   scan n=12 141/141 B=-0.1000 S=1.000183 gap=7.951382e-01 res=8.17e-15
+11:01:37   refine local max coarse B=-0.3450 on [-0.3500,-0.3400] (101 pts)
+11:01:37   scan n=12 1/101 B=-0.3500 S=1.013587 gap=4.260877e-01 res=2.22e-14
+11:01:37   scan n=12 21/101 B=-0.3480 S=1.013645 gap=4.288179e-01 res=1.86e-14
+11:01:37   scan n=12 41/101 B=-0.3460 S=1.013677 gap=4.315745e-01 res=3.80e-15
+11:01:38   scan n=12 61/101 B=-0.3440 S=1.013685 gap=4.343565e-01 res=9.18e-15
+11:01:38   scan n=12 81/101 B=-0.3420 S=1.013669 gap=4.371632e-01 res=7.59e-15
+11:01:38   scan n=12 101/101 B=-0.3400 S=1.013633 gap=4.399935e-01 res=3.23e-15
+11:01:38   dense freeze B=-0.344400
+11:01:48 froze N=12 B=-0.344400 S=1.013685 E0=-8.613202 gap=1.613e-03 P+=1.000000 R+=1.000000 endpoint=False
+11:01:48 optimization budget 80.0 min
+11:01:48 start N=6 L=1 qaoa
+11:01:48   done qaoa E=-2.5925798115197773 F=0.20215113638360427 err=1.250769527260014 tag=grid_21059 (0.5s)
+11:01:48 start N=6 L=1 shared_beta
+11:01:48   done shared_beta E=-2.5925798115197773 F=0.2021511363836033 err=1.250769527260014 tag=screen_3457 (0.1s)
+11:01:48 start N=6 L=1 nov3_D
+11:01:49   done nov3_D E=-2.6199480703596847 F=0.2037046516898532 err=1.2234012684201065 tag=screen_798 (0.1s)
+11:01:49 start N=6 L=1 drop_c2
+11:01:49   done drop_c2 E=-2.5980922803129096 F=0.20212292073844534 err=1.2452570584668816 tag=qaoa_c3_grid (0.1s)
+11:01:49 start N=6 L=1 drop_c3
+11:01:49   done drop_c3 E=-2.619781658708992 F=0.20359067609944403 err=1.2235676800707993 tag=qaoa_c2_grid (0.1s)
+11:01:49 start N=6 L=2 qaoa
+11:01:49   done qaoa E=-2.9544946084489676 F=0.2955634482672184 err=0.8888547303308236 tag=shift_0.3 (0.1s)
+11:01:49 start N=6 L=2 shared_beta
+11:01:49   done shared_beta E=-2.7133913522857496 F=0.23034146594027669 err=1.1299579864940417 tag=perturb_0.15_0 (0.0s)
+11:01:49 start N=6 L=2 nov3_D
+11:01:50   done nov3_D E=-3.221970232947854 F=0.5770174182519331 err=0.6213791058319371 tag=random_5 (0.1s)
+11:01:50 start N=6 L=2 drop_c2
+11:01:50   done drop_c2 E=-3.1753903252106688 F=0.5032608613863019 err=0.6679590135691225 tag=random_2 (0.1s)
+11:01:50 start N=6 L=2 drop_c3
+11:01:50   done drop_c3 E=-3.185389134580267 F=0.548752941857484 err=0.6579602041995241 tag=random_6 (0.1s)
+11:01:50 start N=6 L=3 qaoa
+11:01:50   done qaoa E=-3.163171253502152 F=0.3812649526395291 err=0.6801780852776393 tag=perturb_0.1_1 (0.1s)
+11:01:50 start N=6 L=3 shared_beta
+11:01:50   done shared_beta E=-2.945950111370405 F=0.3028701596037869 err=0.897399227409386 tag=gamma_shift_-0.1 (0.0s)
+11:01:50 start N=6 L=3 nov3_D
+11:01:50   done nov3_D E=-3.7561082520747155 F=0.9566769389812754 err=0.08724108670507569 tag=perturb_0.15_0 (0.1s)
+11:01:50 start N=6 L=3 drop_c2
+11:01:51   done drop_c2 E=-3.719181423343138 F=0.9353550183502459 err=0.12416791543665306 tag=random_3 (0.1s)
+11:01:51 start N=6 L=3 drop_c3
+11:01:51   done drop_c3 E=-3.102768703635633 F=0.5284830310991753 err=0.7405806351441582 tag=random_3 (0.1s)
+11:01:51 start N=6 L=4 qaoa
+11:01:51   done qaoa E=-3.3153792891766294 F=0.4831929174662037 err=0.5279700496031619 tag=perturb_0.2_1 (0.2s)
+11:01:51 start N=6 L=4 shared_beta
+11:01:51   done shared_beta E=-3.0569272967405476 F=0.3503308420877514 err=0.7864220420392436 tag=random_7 (0.1s)
+11:01:51 start N=6 L=4 nov3_D
+11:01:51   done nov3_D E=-3.7882619588784174 F=0.9810612643919477 err=0.0550873799013738 tag=perturb_0.08_1 (0.2s)
+11:01:51 start N=6 L=4 drop_c2
+11:01:52   done drop_c2 E=-3.738110205697289 F=0.9492323882561441 err=0.10523913308250243 tag=perturb_0.08_1 (0.1s)
+11:01:52 start N=6 L=4 drop_c3
+11:01:52   done drop_c3 E=-3.2730733009141675 F=0.592340428667723 err=0.5702760378656238 tag=perturb_0.3_1 (0.1s)
+11:01:52 start N=12 L=1 qaoa
+11:01:56   done qaoa E=-6.818876314486206 F=0.08092758615628237 err=1.7943261444490934 tag=grid_11708 (3.2s)
+11:01:56 start N=12 L=1 shared_beta
+11:01:56   done shared_beta E=-6.818876314486206 F=0.08092758615628237 err=1.7943261444490934 tag=qaoa_copy (0.7s)
+11:01:56 start N=12 L=1 nov3_D
+11:01:57   done nov3_D E=-6.841067875711734 F=0.08127603414770071 err=1.7721345832235658 tag=qaoa_shell_grid (0.8s)
+11:01:57 start N=12 L=1 drop_c2
+11:01:58   done drop_c2 E=-6.829375871912056 F=0.08097788303915693 err=1.7838265870232437 tag=qaoa_c3_grid (0.5s)
+11:01:58 start N=12 L=1 drop_c3
+11:01:58   done drop_c3 E=-6.840298609651064 F=0.08124823145223897 err=1.7729038492842362 tag=screen_602 (0.6s)
+11:01:59 start N=12 L=2 qaoa
+11:02:00   done qaoa E=-7.4316514808071314 F=0.13334859329123083 err=1.1815509781281683 tag=perturb_0.05_1 (0.7s)
+11:02:00 start N=12 L=2 shared_beta
+11:02:00   done shared_beta E=-7.0136456753855345 F=0.09478448652663102 err=1.5995567835497653 tag=random_3 (0.4s)
+11:02:00 start N=12 L=2 nov3_D
+11:02:01   done nov3_D E=-7.038225350568709 F=0.09478391293172854 err=1.5749771083665909 tag=perturb_0.03_1 (0.6s)
+11:02:01 start N=12 L=2 drop_c2
+11:02:01   done drop_c2 E=-7.037378435766575 F=0.0949250374109257 err=1.5758240231687246 tag=perturb_0.08_0 (0.4s)
+11:02:01 start N=12 L=2 drop_c3
+11:02:02   done drop_c3 E=-7.02457935291782 F=0.09402565391100624 err=1.5886231060174794 tag=duplicate_4 (0.5s)
+11:02:03 start N=12 L=3 qaoa
+11:02:04   done qaoa E=-7.685127667299641 F=0.17053640763035333 err=0.9280747916356589 tag=perturb_0.05_2 (1.4s)
+11:02:04 start N=12 L=3 shared_beta
+11:02:05   done shared_beta E=-7.427527720201243 F=0.13816609681027703 err=1.1856747387340567 tag=random_6 (0.7s)
+11:02:05 start N=12 L=3 nov3_D
+11:02:06   done nov3_D E=-7.518661704481996 F=0.14683970215624229 err=1.0945407544533037 tag=qaoa_ratio_c1 (0.8s)
+11:02:06 start N=12 L=3 drop_c2
+11:02:06   done drop_c2 E=-7.44527473278622 F=0.13891575795381178 err=1.1679277261490801 tag=projected_D (0.6s)
+11:02:06 start N=12 L=3 drop_c3
+11:02:07   done drop_c3 E=-7.517494818758397 F=0.14638305549128705 err=1.0957076401769026 tag=perturb_0.08_0 (0.8s)
+11:02:08 start N=12 L=4 qaoa
+11:02:11   done qaoa E=-7.853169593302045 F=0.21527917216730003 err=0.7600328656332547 tag=perturb_0.1_1 (2.8s)
+11:02:11 start N=12 L=4 shared_beta
+11:02:12   done shared_beta E=-7.569141480951128 F=0.15635250773421952 err=1.0440609779841719 tag=perturb_0.08_0 (1.0s)
+11:02:12 start N=12 L=4 nov3_D
+11:02:13   done nov3_D E=-7.631782361921974 F=0.1651725405596057 err=0.9814200970133262 tag=perturb_0.08_0 (1.7s)
+11:02:13 start N=12 L=4 drop_c2
+11:02:14   done drop_c2 E=-7.584512123923819 F=0.15951462363770377 err=1.0286903350114809 tag=gamma_shift_0.1 (1.0s)
+11:02:14 start N=12 L=4 drop_c3
+11:02:15   done drop_c3 E=-7.625316350716853 F=0.16297458035523799 err=0.9878861082184471 tag=qaoa_c1_only (1.1s)
+11:02:16 start N=6 L=5 qaoa
+11:02:16   done qaoa E=-3.4373180622229675 F=0.5523029206277289 err=0.4060312765568237 tag=random_2 (0.2s)
+11:02:16 start N=6 L=5 shared_beta
+11:02:17   done shared_beta E=-3.158388837200023 F=0.3977579645381501 err=0.6849605015797682 tag=perturb_0.15_1 (0.1s)
+11:02:17 start N=6 L=5 nov3_D
+11:02:17   done nov3_D E=-3.8315765972493168 F=0.9952718360258165 err=0.011772741530474473 tag=perturb_0.03_0 (0.3s)
+11:02:17 start N=6 L=5 drop_c2
+11:02:17   done drop_c2 E=-3.8286169252780216 F=0.99107086521553 err=0.014732413501769681 tag=perturb_0.03_1 (0.2s)
+11:02:17 start N=6 L=5 drop_c3
+11:02:17   done drop_c3 E=-3.38208883656781 F=0.7244872220257119 err=0.4612605022119811 tag=projected_D (0.1s)
+11:02:18 start N=6 L=6 qaoa
+11:02:18   done qaoa E=-3.515431303037379 F=0.6755298170728836 err=0.3279180357424121 tag=fourier_6 (0.4s)
+11:02:18 start N=6 L=6 shared_beta
+11:02:19   done shared_beta E=-3.223533644995085 F=0.4215430154004961 err=0.6198156937847061 tag=perturb_0.15_1 (0.1s)
+11:02:19 start N=6 L=6 nov3_D
+11:02:19   done nov3_D E=-3.840415164206453 F=0.9986028918324799 err=0.002934174573338222 tag=interp_cubic (0.5s)
+11:02:19 start N=6 L=6 drop_c2
+11:02:19   done drop_c2 E=-3.8326918958002927 F=0.9921325232331301 err=0.010657442979498555 tag=gamma_shift_0.1 (0.2s)
+11:02:19 start N=6 L=6 drop_c3
+11:02:19   done drop_c3 E=-3.6104175766508653 F=0.8692574122892405 err=0.23293176212892597 tag=perturb_0.15_0 (0.2s)
+11:02:20 start N=12 L=5 qaoa
+11:02:25   done qaoa E=-7.976907765059963 F=0.25837777370285336 err=0.6362946938753371 tag=perturb_0.05_1 (4.5s)
+11:02:25 start N=12 L=5 shared_beta
+11:02:26   done shared_beta E=-7.671922035898679 F=0.17160668255032727 err=0.9412804230366207 tag=qaoa_ratio_rescale (1.2s)
+11:02:26 start N=12 L=5 nov3_D
+11:02:29   done nov3_D E=-7.750589033313906 F=0.2013894698667293 err=0.8626134256213938 tag=random_5 (3.0s)
+11:02:29 start N=12 L=5 drop_c2
+11:02:31   done drop_c2 E=-7.6943101051002385 F=0.17998583605300006 err=0.9188923538350613 tag=interp_linear_alt (1.9s)
+11:02:31 start N=12 L=5 drop_c3
+11:02:33   done drop_c3 E=-7.7423555978641705 F=0.20263178205327304 err=0.8708468610711293 tag=interp_cubic (1.7s)
+11:02:34 start N=12 L=6 qaoa
+11:02:40   done qaoa E=-8.056899807721518 F=0.2946766371181414 err=0.5563026512137821 tag=fourier_5 (6.5s)
+11:02:40 start N=12 L=6 shared_beta
+11:02:43   done shared_beta E=-7.735113852147133 F=0.18784249821233895 err=0.8780886067881664 tag=gamma_shift_-0.1 (2.5s)
+11:02:43 start N=12 L=6 nov3_D
+11:02:46   done nov3_D E=-7.850222116662643 F=0.22392338255803973 err=0.7629803422726571 tag=perturb_0.3_1 (3.6s)
+11:02:46 start N=12 L=6 drop_c2
+11:02:48   done drop_c2 E=-7.7691331163186295 F=0.1979515914427259 err=0.8440693426166703 tag=perturb_0.08_0 (1.9s)
+11:02:48 start N=12 L=6 drop_c3
+11:02:51   done drop_c3 E=-7.847012796854239 F=0.2215616260083112 err=0.7661896620810609 tag=perturb_0.3_0 (2.4s)
+11:02:51 start N=6 L=7 qaoa
+11:02:52   done qaoa E=-3.5785542334076856 F=0.7523020506829583 err=0.2647951053721056 tag=interp_cubic (0.5s)
+11:02:53 start N=6 L=8 qaoa
+11:02:54   done qaoa E=-3.636658000821283 F=0.8172444702277772 err=0.20669133795850803 tag=perturb_0.05_1 (0.7s)
+11:02:54 start N=12 L=7 qaoa
+11:03:05   done qaoa E=-8.124282825366754 F=0.33328580524783624 err=0.4889196335685462 tag=perturb_0.1_1 (10.6s)
+11:03:06 start N=12 L=8 qaoa
+11:03:22   done qaoa E=-8.177533423046633 F=0.37276027270604656 err=0.435669035888667 tag=perturb_0.02_1 (16.5s)
+11:03:24 verdict program_success=False in 1.8 min
+11:03:24 No robust win. Equal-depth differences, where present, did not clear every gate on both sizes.

@@ -1,0 +1,114 @@
+{
+  "method": "shuffle4",
+  "kind": "legal",
+  "n": 12,
+  "L": 6,
+  "status": "complete",
+  "objective": "energy",
+  "fidelity_used_for_selection": false,
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "hc_sha256_le": "d650ce798d622a3fe37ef3e7f86f2619f36eadf7acf0422aab821a539e216353",
+  "legal_shared_gamma": true,
+  "is_f_of_Hc": false,
+  "E": -7.866537267047017,
+  "E0": -8.6132024589353,
+  "Emax": 23.799999349755723,
+  "full_space_gap": 0.0016132338724013096,
+  "accessible_PR_plus_gap": 0.4337981341960315,
+  "energy_error": 0.7466651918882832,
+  "F": 0.23314287734468253,
+  "variance_H": 1.0565497818688172,
+  "E_median": -0.6851941760061194,
+  "E_iqr": 2.9750976902638957,
+  "E_std": 2.768473860316524,
+  "n_starts": 7,
+  "n_finished": 7,
+  "nfev_sum": 3146,
+  "best_tag": "from_F",
+  "seconds": 3.74355453499993,
+  "x_raw": [
+    -0.19645419597772398,
+    -0.031028280025378906,
+    0.6002222080953691,
+    -0.10303767251701254,
+    0.02522558758609511,
+    -0.31100825477046745,
+    0.23406264531989623,
+    -0.04381791647765329,
+    0.4177812923233315,
+    -0.07898371622810187,
+    0.002133847128548358,
+    0.06903343744204167,
+    0.014231518755219313,
+    -0.023090956005384636,
+    0.01386786115500434,
+    0.06407527328481659,
+    0.009985204239554964,
+    0.1463444016776299,
+    -0.010657137496595605,
+    0.008686022503694185
+  ],
+  "n_params": 20,
+  "starts": [
+    {
+      "tag": "restart_0",
+      "E": -5.736716714608127,
+      "nfev": 1501,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "restart_1",
+      "E": -0.6096952264765164,
+      "nfev": 230,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "restart_2",
+      "E": -1.5663164092836164,
+      "nfev": 505,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "restart_3",
+      "E": -0.6729415397957197,
+      "nfev": 184,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "restart_4",
+      "E": -0.6851941760061194,
+      "nfev": 190,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "restart_5",
+      "E": -0.6798962035682318,
+      "nfev": 141,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "from_F",
+      "E": -7.866537267047017,
+      "nfev": 395,
+      "success": true,
+      "error": null
+    }
+  ],
+  "state_sha256": "442ff4d531973f3d6d70649eeff6c0c9c123fa1ea9ad55a2a7deff0e41513b3f",
+  "supports": {
+    "two_body": 66,
+    "four_body": 495,
+    "shell_controls_per_layer": 3,
+    "cavities": 4,
+    "shared_gamma": true,
+    "hardware_note": "495 four-body supports are charged. f(Hc) is not a free compile."
+  },
+  "control": "shuffle4",
+  "shuffle_seed": 31108
+}

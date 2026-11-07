@@ -1,0 +1,154 @@
+{
+  "method": "H_homotopy",
+  "kind": "homotopy",
+  "n": 12,
+  "L": 2,
+  "legal_shared_gamma": true,
+  "status": "complete",
+  "objective": "energy",
+  "fidelity_used_for_selection": false,
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "hc_sha256_le": "d650ce798d622a3fe37ef3e7f86f2619f36eadf7acf0422aab821a539e216353",
+  "E": -7.557203368826517,
+  "E0": -8.6132024589353,
+  "Emax": 23.799999349755723,
+  "full_space_gap": 0.0016132338724013096,
+  "accessible_PR_plus_gap": 0.4337981341960315,
+  "energy_error": 1.0559990901087826,
+  "F": 0.16287076370259354,
+  "eta": 0.9674207103530996,
+  "E_median": -7.5572033688264915,
+  "E_std": 1.8494596197371564e-14,
+  "n_starts": 5,
+  "n_finished": 5,
+  "nfev_sum": 1884,
+  "best_tag": "from_theta0",
+  "grad_norm": 3.0462643976376553e-07,
+  "seconds": 0.8159773530001075,
+  "x_raw": [
+    0.28193198793912166,
+    -0.5737367530890976,
+    -0.29307199559956104,
+    1.550777828222605,
+    0.003765084869708101,
+    -0.19004691277199923,
+    1.5997458422547997,
+    -0.06102451571296953
+  ],
+  "starts": [
+    {
+      "tag": "from_plain",
+      "E": -7.5572033688264675,
+      "nfev": 390,
+      "success": true,
+      "error": null,
+      "relaxed_E_after_lambda0": -7.897047189188073,
+      "gamma_spread_before_projection": 0.0007234449365975115
+    },
+    {
+      "tag": "split_plain",
+      "E": -7.557203368826469,
+      "nfev": 322,
+      "success": true,
+      "error": null,
+      "relaxed_E_after_lambda0": -7.897047189188131,
+      "gamma_spread_before_projection": 0.0007234449098897089
+    },
+    {
+      "tag": "from_theta0",
+      "E": -7.557203368826517,
+      "nfev": 308,
+      "success": true,
+      "error": null,
+      "relaxed_E_after_lambda0": -7.897047189188106,
+      "gamma_spread_before_projection": 0.0007234448111547997
+    },
+    {
+      "tag": "random_0",
+      "E": -7.5572033688264915,
+      "nfev": 433,
+      "success": true,
+      "error": null,
+      "relaxed_E_after_lambda0": -7.897047189188124,
+      "gamma_spread_before_projection": 0.0007234449100716467
+    },
+    {
+      "tag": "random_1",
+      "E": -7.557203368826496,
+      "nfev": 431,
+      "success": true,
+      "error": null,
+      "relaxed_E_after_lambda0": -7.87228477741386,
+      "gamma_spread_before_projection": 0.002101901278775721
+    }
+  ],
+  "state_sha256": "2d606111e77be108b0bbff124386d32289f2e369b898247f790b946dbfec07ac",
+  "not_a_certified_ceiling": true,
+  "optimizer": "lambda_homotopy_then_exact_shared_gamma_polish",
+  "relaxed_best_E": -7.897047189188131,
+  "relaxed_is_certified_ceiling": false,
+  "best_stages": [
+    {
+      "lambda": 0.0,
+      "E": -7.897047189188106,
+      "gamma_std": 0.16007484887007534,
+      "gamma_mean": 0.4875998404678022,
+      "nfev": 50,
+      "success": true,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+    },
+    {
+      "lambda": 0.03,
+      "E": -7.89704554089635,
+      "gamma_std": 0.1599030350107472,
+      "gamma_mean": 0.4875466857267048,
+      "nfev": 37,
+      "success": true,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+    },
+    {
+      "lambda": 0.3,
+      "E": -7.896886158781853,
+      "gamma_std": 0.15837836081982049,
+      "gamma_mean": 0.48707359291894714,
+      "nfev": 27,
+      "success": true,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+    },
+    {
+      "lambda": 3.0,
+      "E": -7.883982297005645,
+      "gamma_std": 0.1449202752163174,
+      "gamma_mean": 0.48283015412829094,
+      "nfev": 52,
+      "success": true,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+    },
+    {
+      "lambda": 30.0,
+      "E": -7.564597485009211,
+      "gamma_std": 0.008096351987893075,
+      "gamma_mean": 0.2925176646701263,
+      "nfev": 61,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF F,G EVALUATIONS EXCEEDS LIMIT"
+    },
+    {
+      "lambda": 300.0,
+      "E": -7.557828120424505,
+      "gamma_std": 0.0007234448111547997,
+      "gamma_mean": 0.28281821189303913,
+      "nfev": 40,
+      "success": true,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH"
+    }
+  ],
+  "lambdas": [
+    0.0,
+    0.03,
+    0.3,
+    3.0,
+    30.0,
+    300.0
+  ]
+}
