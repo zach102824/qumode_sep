@@ -184,6 +184,137 @@ class FactorGNN(nn.Module):
         return self.forward_graph(cls_v, cls_s)
 
 
+class SizeGeneralGNN(nn.Module):
+    """Same message passing as FactorGNN, with a cavity MLP shared across C.
+
+    C = n/3 is read from the formula at forward time. One module evaluates
+    n=6, n=9, and n=12. Per-cavity α0, displacement, and SNAP come from the
+    mean of that cavity's three variable states. q and gamma stay global.
+    """
+
+    def __init__(self, arch: GNNArch, L: int, seed: int = 0):
+        super().__init__()
+        self.arch = arch
+        self.L = int(L)
+        H = arch.H
+        in_dim = 4 if arch.degree_features else 2
+        g = torch.Generator()
+        g.manual_seed(int(seed))
+
+        def _lin(din, dout, scale=1.0):
+            layer = nn.Linear(din, dout, bias=False)
+            with torch.no_grad():
+                layer.weight.normal_(0.0, scale / max(din, 1) ** 0.5, generator=g)
+            return layer
+
+        self.W_in = _lin(in_dim, H)
+        self.W_vc = nn.ModuleList([_lin(H, H) for _ in range(arch.rounds)])
+        self.W_cv = nn.ModuleList([_lin(H, H) for _ in range(arch.rounds)])
+        self.ln_c = nn.ModuleList(
+            [nn.LayerNorm(H) if arch.layernorm else nn.Identity() for _ in range(arch.rounds)]
+        )
+        self.ln_v = nn.ModuleList(
+            [nn.LayerNorm(H) if arch.layernorm else nn.Identity() for _ in range(arch.rounds)]
+        )
+        self.drop = nn.Dropout(arch.dropout) if arch.dropout > 0 else nn.Identity()
+
+        self.cav_hidden = nn.Linear(H, H)
+        # alpha0 (2) + per-layer displacement (L*2) + per-layer SNAP (L*NU)
+        self.cav_out = nn.Linear(H, 2 + L * 2 + L * NU)
+        self.head_q = nn.Linear(H, L)
+        self.head_g = nn.Linear(H, 1)
+        with torch.no_grad():
+            self.cav_hidden.weight.normal_(0.0, 1.0 / max(H, 1) ** 0.5, generator=g)
+            self.cav_hidden.bias.zero_()
+            self.cav_out.weight.normal_(0.0, 0.1 / max(H, 1) ** 0.5, generator=g)
+            self.cav_out.bias.zero_()
+            self.head_q.weight.normal_(0.0, 0.1 / max(H, 1) ** 0.5, generator=g)
+            self.head_q.bias.zero_()
+            self.head_g.weight.normal_(0.0, 0.1 / max(H, 1) ** 0.5, generator=g)
+            self.head_g.bias.zero_()
+
+    def enable_n9_snap(self) -> None:
+        """Zero residual SNAP used only at n=9. Other n are unchanged."""
+        if hasattr(self, "snap_n9"):
+            return
+        layer = nn.Linear(self.arch.H, self.L * NU)
+        nn.init.zeros_(layer.weight)
+        nn.init.zeros_(layer.bias)
+        self.snap_n9 = layer
+
+    def _agg(self, msgs: torch.Tensor, dim: int) -> torch.Tensor:
+        if self.arch.agg == "sum":
+            return msgs.sum(dim=dim)
+        if self.arch.agg == "max":
+            return msgs.max(dim=dim).values
+        return msgs.mean(dim=dim)
+
+    def forward_graph(self, cls_v: torch.Tensor, cls_s: torch.Tensor, n: int) -> dict:
+        """cls_v, cls_s: (m, 4). n must be a multiple of 3. Same weights for every n."""
+        n = int(n)
+        C = n_cavities(n)
+        m = int(cls_v.shape[0])
+        H, L = self.arch.H, self.L
+        device = cls_v.device
+        dtype = next(self.parameters()).dtype
+        cls_v = cls_v.long().to(device)
+        cls_s = cls_s.to(device=device, dtype=dtype)
+
+        pos = torch.zeros(n, device=device, dtype=dtype)
+        neg = torch.zeros(n, device=device, dtype=dtype)
+        flat_v = cls_v.reshape(-1)
+        flat_s = cls_s.reshape(-1)
+        pos.index_add_(0, flat_v, (flat_s > 0).to(dtype))
+        neg.index_add_(0, flat_v, (flat_s <= 0).to(dtype))
+        deg = torch.clamp(pos + neg, min=1.0)
+        scale = 2.0 * m / max(n, 1)
+        if self.arch.degree_features:
+            fv = torch.stack(
+                [torch.ones(n, device=device, dtype=dtype), pos / scale, neg / scale, deg / scale],
+                dim=-1,
+            )
+        else:
+            fv = torch.stack(
+                [torch.ones(n, device=device, dtype=dtype), deg / scale],
+                dim=-1,
+            )
+        hv = F.relu(self.W_in(fv))
+        hc = torch.zeros(m, H, device=device, dtype=dtype)
+        for r in range(self.arch.rounds):
+            pooled = self._agg(hv[cls_v], dim=1)
+            new = self.drop(self.ln_c[r](F.relu(self.W_vc[r](pooled))))
+            hc = hc + new if self.arch.residual and r > 0 else new
+            acc = torch.zeros(n, H, device=device, dtype=dtype)
+            idx = cls_v.reshape(-1)
+            acc.index_add_(0, idx, hc.unsqueeze(1).expand(-1, 4, -1).reshape(-1, H))
+            cnt = torch.zeros(n, device=device, dtype=dtype)
+            cnt.index_add_(0, idx, torch.ones_like(idx, dtype=dtype))
+            new_v = self.drop(self.ln_v[r](F.relu(self.W_cv[r](acc / cnt.clamp(min=1.0).unsqueeze(-1)))))
+            hv = hv + new_v if self.arch.residual else new_v
+
+        cav = F.relu(self.cav_hidden(hv.view(C, 3, H).mean(dim=1)))
+        raw = self.cav_out(cav)
+        alpha0 = raw[:, :2]
+        A = raw[:, 2:2 + 2 * L].reshape(C, L, 2)
+        TH = raw[:, 2 + 2 * L:].reshape(C, L, NU)
+        if n == 9 and hasattr(self, "snap_n9"):
+            TH = TH + self.snap_n9(cav).reshape(C, L, NU)
+        g = hv.mean(dim=0)
+        q_logits = self.head_q(g)
+        gamma = self.head_g(g).reshape(())
+        scale_d = (64.0 / float(2 ** n)) ** 0.5
+        return {
+            "alpha0": alpha0 * scale_d,
+            "A": A * scale_d,
+            "TH": TH,
+            "q_logits": q_logits,
+            "gamma": gamma,
+        }
+
+    def forward(self, cls_v, cls_s, n: int):
+        return self.forward_graph(cls_v, cls_s, n)
+
+
 BASELINE_ARCH = GNNArch(H=128, rounds=4, agg="mean", degree_features=True)
 
 SEARCH_SPACE = {
