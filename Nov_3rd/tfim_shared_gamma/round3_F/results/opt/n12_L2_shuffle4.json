@@ -1,0 +1,102 @@
+{
+  "method": "shuffle4",
+  "kind": "legal",
+  "n": 12,
+  "L": 2,
+  "status": "complete",
+  "objective": "energy",
+  "fidelity_used_for_selection": false,
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "hc_sha256_le": "d650ce798d622a3fe37ef3e7f86f2619f36eadf7acf0422aab821a539e216353",
+  "legal_shared_gamma": true,
+  "is_f_of_Hc": false,
+  "E": -7.155002090929097,
+  "E0": -8.6132024589353,
+  "Emax": 23.799999349755723,
+  "full_space_gap": 0.0016132338724013096,
+  "accessible_PR_plus_gap": 0.4337981341960315,
+  "energy_error": 1.458200368006203,
+  "F": 0.10657676311787201,
+  "variance_H": 2.6913494752244134,
+  "E_median": -7.155002090929057,
+  "E_iqr": 3.4547780612642027,
+  "E_std": 3.07438130809051,
+  "n_starts": 7,
+  "n_finished": 7,
+  "nfev_sum": 452,
+  "best_tag": "from_F",
+  "seconds": 0.1714546410003095,
+  "x_raw": [
+    -0.1760762916678799,
+    -0.15852491289851764,
+    -1.3570570753682798,
+    1.603502185155522,
+    0.11269748543930566,
+    -1.3777066673945524,
+    1.55216644840617,
+    -0.08006621949376198
+  ],
+  "n_params": 8,
+  "starts": [
+    {
+      "tag": "restart_0",
+      "E": -7.060915928580895,
+      "nfev": 83,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "restart_1",
+      "E": -0.32271431472668993,
+      "nfev": 53,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "restart_2",
+      "E": -7.155002090929057,
+      "nfev": 56,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "restart_3",
+      "E": -7.155002090929065,
+      "nfev": 71,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "restart_4",
+      "E": -7.155002090929059,
+      "nfev": 63,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "restart_5",
+      "E": -0.33953213074882227,
+      "nfev": 46,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "from_F",
+      "E": -7.155002090929097,
+      "nfev": 80,
+      "success": true,
+      "error": null
+    }
+  ],
+  "state_sha256": "10e92b8f12c4b38fef2d2a96d57827a0e9a35bbedb9e0c8fbd70f76db4f262a4",
+  "supports": {
+    "two_body": 66,
+    "four_body": 495,
+    "shell_controls_per_layer": 3,
+    "cavities": 4,
+    "shared_gamma": true,
+    "hardware_note": "495 four-body supports are charged. f(Hc) is not a free compile."
+  },
+  "control": "shuffle4",
+  "shuffle_seed": 31108
+}
