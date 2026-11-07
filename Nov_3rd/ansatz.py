@@ -17,6 +17,7 @@ from explore_OCT29.scripts.binH_vs_grayH import build_W_BinH
 from explore_OCT29.scripts.gadget_Uc_explore import GadgetAnsatz
 
 from Nov_3rd import settings as S
+from Nov_3rd.cavity_grade import split_E_torch
 
 
 def fwht_unnormalized(x: torch.Tensor) -> torch.Tensor:
@@ -166,6 +167,74 @@ class Nov3rdAnsatz(GadgetAnsatz):
             "arm": "Nov_3rd",
             "probs": probs,
             "graded_Hc": graded,
+        }
+
+    def forward_nov3rd_cavity(
+        self,
+        E: torch.Tensor,
+        gamma_in: torch.Tensor,
+        gamma_x: torch.Tensor,
+        phi: torch.Tensor,
+        E_in: torch.Tensor | None = None,
+        E_x: torch.Tensor | None = None,
+    ) -> dict:
+        """Graded-H_c U_c^X: W exp(-i[γ_in E_in + γ_x E_x]) W, then Hamming-shell SNAP.
+
+        E_in = intra-cavity Walsh strings (incl. DC); E_x = strings touching ≥2 cavities.
+        Warm γ_in = γ_x = γ recovers forward_nov3rd exactly (global phase via amax).
+        """
+        L = self.L
+        if L != int(gamma_in.numel()) or L != int(gamma_x.numel()):
+            raise ValueError(
+                f"gamma_in/x lens {gamma_in.numel()}/{gamma_x.numel()} != L={L}"
+            )
+        if tuple(phi.shape) != (L, S.B_BITS + 1):
+            raise ValueError(f"phi shape {tuple(phi.shape)} != {(L, S.B_BITS + 1)}")
+
+        gamma_in = gamma_in.to(dtype=self.rdtype, device=self.lam.device).reshape(L)
+        gamma_x = gamma_x.to(dtype=self.rdtype, device=self.lam.device).reshape(L)
+        phi = phi.to(dtype=self.rdtype, device=self.lam.device)
+        n = self.cfg.n
+        m = int(round(9.93 * n))
+        scale = float(n) / float(m)
+        E = E.to(device=self.lam.device)
+        if E_in is None or E_x is None:
+            E_in, E_x = split_E_torch(E.reshape(-1).to(dtype=torch.float32), n)
+        E_in = E_in.to(device=self.lam.device, dtype=self.rdtype).reshape(-1)
+        E_x = E_x.to(device=self.lam.device, dtype=self.rdtype).reshape(-1)
+
+        Cn_in = E_in[self.grid_to_x] * scale
+        Cn_x = E_x[self.grid_to_x] * scale
+
+        psi = self.vacuum()
+        sl = tuple(slice(0, NU) for _ in range(self.C))
+        for ell in range(L):
+            psi = self._apply_all(psi, self.Wmat)
+            arg = gamma_in[ell] * Cn_in + gamma_x[ell] * Cn_x
+            arg = arg - arg.amax()
+            phase = torch.exp(-1j * arg.to(self.cdtype))
+            psi_new = psi.clone()
+            psi_new[sl] = psi[sl] * phase
+            psi = psi_new
+            psi = self._apply_all(psi, self.Wmat)
+            th = phi[ell][self.popcount]
+            psi = self._apply_all(psi, self._snap_theta(th))
+
+        psi = self._apply_all(psi, self.Wmat)
+        probs = psi.real.square() + psi.imag.square()
+        p_comp = probs[sl]
+        p_leak = (1.0 - p_comp.sum()).clamp(min=0.0)
+        E_grid = E.to(device=self.lam.device)[self.grid_to_x]
+        succ = p_comp[E_grid == 0].sum()
+        p_succ = succ.clamp(min=0.0)
+        inv_p = 1.0 / p_succ.clamp(min=1e-12)
+        return {
+            "p_succ": p_succ,
+            "p_leak": p_leak,
+            "inv_p": inv_p,
+            "norm": probs.sum(),
+            "arm": "Nov_3rd_cavity_graded_Hc",
+            "probs": probs,
         }
 
 
