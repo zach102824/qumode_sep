@@ -1,0 +1,201 @@
+14:54:36 [smokeA] self-check
+14:54:36 [smokeA] self-check {"pack_n6_m": [6, 6], "circuit_max_abs_pZ": 2.06935301533262e-08, "circuit_max_abs_pX": 4.596927047906263e-07, "qaoa_point_max_abs_p": 4.4421986575282624e-10, "plus_x": 1.0, "x_hist_vs_pauli": 4.9960036108132044e-15, "ok": true}
+14:54:36 [smokeA] load n=6 train=32 hold=48
+14:54:36 [smokeA]   m min/med/max=6/6/6 degree min/max=3/3 frac J+=0.071
+14:54:36 [smokeA] load n=9 train=32 hold=48
+14:54:36 [smokeA]   m min/med/max=8/9/9 degree min/max=2/3 frac J+=-0.032
+14:54:38 [smokeA] ED n=6 λ=0.25 peak=0.156 prodΔ=0.021 S=1.910 χ=1.447 E0/n=-0.702 pass=True (1.9s)
+14:54:39 [smokeA] ED n=6 λ=0.50 peak=0.109 prodΔ=0.073 S=1.711 χ=1.110 E0/n=-0.807 pass=True (1.2s)
+14:54:40 [smokeA] ED n=6 λ=0.75 peak=0.074 prodΔ=0.126 S=1.328 χ=0.510 E0/n=-0.968 pass=True (1.2s)
+14:54:41 [smokeA] ED n=6 λ=1.00 peak=0.054 prodΔ=0.143 S=0.942 χ=0.197 E0/n=-1.166 pass=True (0.7s)
+14:54:42 [smokeA] ED n=6 λ=1.25 peak=0.043 prodΔ=0.096 S=0.722 χ=0.082 E0/n=-1.383 pass=True (1.4s)
+14:54:43 [smokeA] ED n=6 λ=1.50 peak=0.037 prodΔ=0.069 S=0.545 χ=0.039 E0/n=-1.611 pass=True (1.1s)
+14:54:45 [smokeA] ED n=9 λ=0.25 peak=0.115 prodΔ=0.009 S=2.509 χ=1.360 E0/n=-0.803 pass=False (1.5s)
+14:54:47 [smokeA] ED n=9 λ=0.50 peak=0.087 prodΔ=0.036 S=2.228 χ=1.559 E0/n=-0.878 pass=True (1.7s)
+14:54:49 [smokeA] ED n=9 λ=0.75 peak=0.052 prodΔ=0.078 S=1.776 χ=1.490 E0/n=-1.007 pass=True (2.3s)
+14:54:51 [smokeA] ED n=9 λ=1.00 peak=0.027 prodΔ=0.116 S=1.265 χ=0.741 E0/n=-1.184 pass=True (2.3s)
+14:54:53 [smokeA] ED n=9 λ=1.25 peak=0.016 prodΔ=0.101 S=0.903 χ=0.255 E0/n=-1.392 pass=True (1.6s)
+14:54:55 [smokeA] ED n=9 λ=1.50 peak=0.011 prodΔ=0.072 S=0.659 χ=0.098 E0/n=-1.616 pass=True (1.7s)
+14:54:55 [smokeA] choice {"lambda": 0.5, "score": 1.7999999999999998, "passes_at_choice": {"6": true, "9": true}, "lambda_c_entropy": {"6": 0.25, "9": 0.25}, "lambda_c_chi": {"6": 0.25, "9": 0.5}}
+14:54:55 [smokeA] full ED n=6 λ=0.5
+14:54:55 [smokeA]   ED n=6 λ=0.5 8/32
+14:54:56 [smokeA]   ED n=6 λ=0.5 16/32
+14:54:58 [smokeA]   ED n=6 λ=0.5 24/32
+14:54:58 [smokeA]   ED n=6 λ=0.5 32/32
+14:54:59 [smokeA]   ED n=6 λ=0.5 8/48
+14:55:01 [smokeA]   ED n=6 λ=0.5 16/48
+14:55:01 [smokeA]   ED n=6 λ=0.5 24/48
+14:55:02 [smokeA]   ED n=6 λ=0.5 32/48
+14:55:03 [smokeA]   ED n=6 λ=0.5 40/48
+14:55:04 [smokeA]   ED n=6 λ=0.5 48/48
+14:55:04 [smokeA]   full n=6 peak=0.109 prodΔ=0.073 pass=True
+14:55:04 [smokeA] full ED n=9 λ=0.5
+14:55:06 [smokeA]   ED n=9 λ=0.5 8/32
+14:55:08 [smokeA]   ED n=9 λ=0.5 16/32
+14:55:09 [smokeA]   ED n=9 λ=0.5 24/32
+14:55:10 [smokeA]   ED n=9 λ=0.5 32/32
+14:55:12 [smokeA]   ED n=9 λ=0.5 8/48
+14:55:14 [smokeA]   ED n=9 λ=0.5 16/48
+14:55:15 [smokeA]   ED n=9 λ=0.5 24/48
+14:55:16 [smokeA]   ED n=9 λ=0.5 32/48
+14:55:18 [smokeA]   ED n=9 λ=0.5 40/48
+14:55:19 [smokeA]   ED n=9 λ=0.5 48/48
+14:55:19 [smokeA]   full n=9 peak=0.087 prodΔ=0.035 pass=True
+14:55:19 [smokeA] train fourier_qaoa n=6 L=2 seed=0 λ=0.5
+14:55:20 [smokeA]   fourier_qaoa n=6 L=2 s=0 r=0 train ε=0.0852 hold ε=0.0852 f=0.722 best@0
+14:55:20 [smokeA]   fourier_qaoa n=6 L=2 s=0 r=5 train ε=0.0440 hold ε=0.0440 f=0.857 best@4
+14:55:20 [smokeA]   fourier_qaoa n=6 L=2 s=0 r=10 train ε=0.0440 hold ε=0.0440 f=0.857 best@4
+14:55:20 [smokeA]   early stop fourier_qaoa n=6 L=2 seed=0 at r=12
+14:55:20 [smokeA]   done hold ε=0.0439 f=0.857 wall=0.9s
+14:55:20 [smokeA] train fourier_qaoa n=6 L=2 seed=1 λ=0.5
+14:55:20 [smokeA]   fourier_qaoa n=6 L=2 s=1 r=0 train ε=0.0909 hold ε=0.0909 f=0.703 best@0
+14:55:20 [smokeA]   fourier_qaoa n=6 L=2 s=1 r=5 train ε=0.0440 hold ε=0.0440 f=0.857 best@5
+14:55:20 [smokeA]   fourier_qaoa n=6 L=2 s=1 r=10 train ε=0.0440 hold ε=0.0440 f=0.857 best@6
+14:55:20 [smokeA]   early stop fourier_qaoa n=6 L=2 seed=1 at r=14
+14:55:20 [smokeA]   done hold ε=0.0440 f=0.857 wall=0.2s
+14:55:20 [smokeA] train fourier_qaoa n=6 L=2 seed=2 λ=0.5
+14:55:20 [smokeA]   fourier_qaoa n=6 L=2 s=2 r=0 train ε=0.1765 hold ε=0.1765 f=0.424 best@0
+14:55:20 [smokeA]   fourier_qaoa n=6 L=2 s=2 r=5 train ε=0.0440 hold ε=0.0440 f=0.857 best@5
+14:55:20 [smokeA]   fourier_qaoa n=6 L=2 s=2 r=10 train ε=0.0440 hold ε=0.0440 f=0.857 best@7
+14:55:20 [smokeA]   fourier_qaoa n=6 L=2 s=2 r=15 train ε=0.0440 hold ε=0.0440 f=0.857 best@7
+14:55:20 [smokeA]   early stop fourier_qaoa n=6 L=2 seed=2 at r=15
+14:55:20 [smokeA]   done hold ε=0.0440 f=0.857 wall=0.2s
+14:55:20 [smokeA] train power_p n=6 L=2 seed=0 λ=0.5 warm=fourier dual
+14:55:20 [smokeA]   power_p n=6 L=2 s=0 r=0 train ε=0.0441 hold ε=0.0441 f=0.856 best@-1
+14:55:20 [smokeA]   power_p n=6 L=2 s=0 r=5 train ε=0.0444 hold ε=0.0444 f=0.855 best@-1
+14:55:20 [smokeA]   early stop power_p n=6 L=2 seed=0 at r=7
+14:55:20 [smokeA]   done hold ε=0.0439 f=0.857 wall=0.1s best_round=-1
+14:55:20 [smokeA] train power_p n=6 L=2 seed=1 λ=0.5 warm=fourier dual
+14:55:20 [smokeA]   power_p n=6 L=2 s=1 r=0 train ε=0.0441 hold ε=0.0441 f=0.856 best@-1
+14:55:20 [smokeA]   power_p n=6 L=2 s=1 r=5 train ε=0.0443 hold ε=0.0443 f=0.855 best@-1
+14:55:20 [smokeA]   early stop power_p n=6 L=2 seed=1 at r=7
+14:55:20 [smokeA]   done hold ε=0.0440 f=0.857 wall=0.1s best_round=-1
+14:55:20 [smokeA] train power_p n=6 L=2 seed=2 λ=0.5 warm=fourier dual
+14:55:20 [smokeA]   power_p n=6 L=2 s=2 r=0 train ε=0.0441 hold ε=0.0441 f=0.856 best@-1
+14:55:20 [smokeA]   power_p n=6 L=2 s=2 r=5 train ε=0.0443 hold ε=0.0443 f=0.855 best@-1
+14:55:21 [smokeA]   early stop power_p n=6 L=2 seed=2 at r=7
+14:55:21 [smokeA]   done hold ε=0.0440 f=0.857 wall=0.1s best_round=-1
+14:55:21 [smokeA] train fourier_qaoa n=6 L=16 seed=0 λ=0.5
+14:55:21 [smokeA]   fourier_qaoa n=6 L=16 s=0 r=0 train ε=0.0876 hold ε=0.0876 f=0.714 best@0
+14:55:21 [smokeA]   fourier_qaoa n=6 L=16 s=0 r=5 train ε=0.0156 hold ε=0.0156 f=0.949 best@5
+14:55:21 [smokeA]   fourier_qaoa n=6 L=16 s=0 r=10 train ε=0.0159 hold ε=0.0159 f=0.948 best@7
+14:55:22 [smokeA]   fourier_qaoa n=6 L=16 s=0 r=15 train ε=0.0223 hold ε=0.0223 f=0.927 best@7
+14:55:22 [smokeA]   early stop fourier_qaoa n=6 L=16 seed=0 at r=15
+14:55:22 [smokeA]   done hold ε=0.0096 f=0.969 wall=1.1s
+14:55:22 [smokeA] train fourier_qaoa n=6 L=16 seed=1 λ=0.5
+14:55:22 [smokeA]   fourier_qaoa n=6 L=16 s=1 r=0 train ε=0.0941 hold ε=0.0941 f=0.693 best@0
+14:55:22 [smokeA]   fourier_qaoa n=6 L=16 s=1 r=5 train ε=0.0144 hold ε=0.0144 f=0.953 best@5
+14:55:22 [smokeA]   fourier_qaoa n=6 L=16 s=1 r=10 train ε=0.0236 hold ε=0.0236 f=0.923 best@7
+14:55:23 [smokeA]   fourier_qaoa n=6 L=16 s=1 r=15 train ε=0.0155 hold ε=0.0155 f=0.950 best@7
+14:55:23 [smokeA]   early stop fourier_qaoa n=6 L=16 seed=1 at r=15
+14:55:23 [smokeA]   done hold ε=0.0084 f=0.973 wall=1.1s
+14:55:23 [smokeA] train fourier_qaoa n=6 L=16 seed=2 λ=0.5
+14:55:23 [smokeA]   fourier_qaoa n=6 L=16 s=2 r=0 train ε=0.0898 hold ε=0.0898 f=0.707 best@0
+14:55:23 [smokeA]   fourier_qaoa n=6 L=16 s=2 r=5 train ε=0.0162 hold ε=0.0162 f=0.947 best@5
+14:55:24 [smokeA]   fourier_qaoa n=6 L=16 s=2 r=10 train ε=0.0195 hold ε=0.0195 f=0.936 best@7
+14:55:24 [smokeA]   fourier_qaoa n=6 L=16 s=2 r=15 train ε=0.0162 hold ε=0.0162 f=0.947 best@7
+14:55:24 [smokeA]   early stop fourier_qaoa n=6 L=16 seed=2 at r=15
+14:55:24 [smokeA]   done hold ε=0.0102 f=0.967 wall=1.1s
+14:55:24 [smokeA] train power_p n=6 L=16 seed=0 λ=0.5 warm=fourier dual
+14:55:24 [smokeA]   power_p n=6 L=16 s=0 r=0 train ε=0.0105 hold ε=0.0105 f=0.966 best@-1
+14:55:24 [smokeA]   power_p n=6 L=16 s=0 r=5 train ε=0.0125 hold ε=0.0097 f=0.969 best@1
+14:55:25 [smokeA]   early stop power_p n=6 L=16 seed=0 at r=9
+14:55:25 [smokeA]   done hold ε=0.0086 f=0.972 wall=0.6s best_round=1
+14:55:25 [smokeA] train power_p n=6 L=16 seed=1 λ=0.5 warm=fourier dual
+14:55:25 [smokeA]   power_p n=6 L=16 s=1 r=0 train ε=0.0104 hold ε=0.0101 f=0.967 best@-1
+14:55:25 [smokeA]   power_p n=6 L=16 s=1 r=5 train ε=0.0163 hold ε=0.0131 f=0.957 best@-1
+14:55:25 [smokeA]   early stop power_p n=6 L=16 seed=1 at r=7
+14:55:25 [smokeA]   done hold ε=0.0084 f=0.973 wall=0.5s best_round=-1
+14:55:25 [smokeA] train power_p n=6 L=16 seed=2 λ=0.5 warm=fourier dual
+14:55:25 [smokeA]   power_p n=6 L=16 s=2 r=0 train ε=0.0095 hold ε=0.0095 f=0.969 best@0
+14:55:25 [smokeA]   power_p n=6 L=16 s=2 r=5 train ε=0.0144 hold ε=0.0115 f=0.963 best@0
+14:55:26 [smokeA]   early stop power_p n=6 L=16 seed=2 at r=8
+14:55:26 [smokeA]   done hold ε=0.0095 f=0.969 wall=0.6s best_round=0
+14:55:26 [smokeA] train fourier_qaoa n=9 L=2 seed=0 λ=0.5
+14:55:26 [smokeA]   fourier_qaoa n=9 L=2 s=0 r=0 train ε=0.2458 hold ε=0.2454 f=0.347 best@0
+14:55:26 [smokeA]   fourier_qaoa n=9 L=2 s=0 r=5 train ε=0.0970 hold ε=0.0970 f=0.734 best@3
+14:55:26 [smokeA]   fourier_qaoa n=9 L=2 s=0 r=10 train ε=0.0970 hold ε=0.0970 f=0.734 best@3
+14:55:26 [smokeA]   early stop fourier_qaoa n=9 L=2 seed=0 at r=11
+14:55:26 [smokeA]   done hold ε=0.0969 f=0.734 wall=0.7s
+14:55:26 [smokeA] train fourier_qaoa n=9 L=2 seed=1 λ=0.5
+14:55:26 [smokeA]   fourier_qaoa n=9 L=2 s=1 r=0 train ε=0.1523 hold ε=0.1523 f=0.589 best@0
+14:55:27 [smokeA]   fourier_qaoa n=9 L=2 s=1 r=5 train ε=0.0970 hold ε=0.0970 f=0.734 best@5
+14:55:27 [smokeA]   fourier_qaoa n=9 L=2 s=1 r=10 train ε=0.0970 hold ε=0.0970 f=0.734 best@6
+14:55:27 [smokeA]   early stop fourier_qaoa n=9 L=2 seed=1 at r=14
+14:55:27 [smokeA]   done hold ε=0.0970 f=0.734 wall=0.8s
+14:55:27 [smokeA] train fourier_qaoa n=9 L=2 seed=2 λ=0.5
+14:55:27 [smokeA]   fourier_qaoa n=9 L=2 s=2 r=0 train ε=0.2193 hold ε=0.2188 f=0.411 best@0
+14:55:28 [smokeA]   fourier_qaoa n=9 L=2 s=2 r=5 train ε=0.0970 hold ε=0.0970 f=0.734 best@5
+14:55:28 [smokeA]   fourier_qaoa n=9 L=2 s=2 r=10 train ε=0.0970 hold ε=0.0970 f=0.734 best@7
+14:55:28 [smokeA]   fourier_qaoa n=9 L=2 s=2 r=15 train ε=0.0970 hold ε=0.0970 f=0.734 best@7
+14:55:28 [smokeA]   early stop fourier_qaoa n=9 L=2 seed=2 at r=15
+14:55:28 [smokeA]   done hold ε=0.0970 f=0.734 wall=0.8s
+14:55:28 [smokeA] train power_p n=9 L=2 seed=0 λ=0.5 warm=fourier dual
+14:55:28 [smokeA]   power_p n=9 L=2 s=0 r=0 train ε=0.0967 hold ε=0.0969 f=0.734 best@0
+14:55:28 [smokeA]   power_p n=9 L=2 s=0 r=5 train ε=0.0967 hold ε=0.0969 f=0.735 best@2
+14:55:29 [smokeA]   power_p n=9 L=2 s=0 r=10 train ε=0.0967 hold ε=0.0969 f=0.734 best@2
+14:55:29 [smokeA]   early stop power_p n=9 L=2 seed=0 at r=10
+14:55:29 [smokeA]   done hold ε=0.0969 f=0.734 wall=0.9s best_round=2
+14:55:29 [smokeA] train power_p n=9 L=2 seed=1 λ=0.5 warm=fourier dual
+14:55:29 [smokeA]   power_p n=9 L=2 s=1 r=0 train ε=0.0967 hold ε=0.0969 f=0.734 best@0
+14:55:29 [smokeA]   power_p n=9 L=2 s=1 r=5 train ε=0.0967 hold ε=0.0969 f=0.735 best@4
+14:55:30 [smokeA]   power_p n=9 L=2 s=1 r=10 train ε=0.0967 hold ε=0.0969 f=0.734 best@4
+14:55:30 [smokeA]   early stop power_p n=9 L=2 seed=1 at r=12
+14:55:30 [smokeA]   done hold ε=0.0969 f=0.734 wall=1.1s best_round=4
+14:55:30 [smokeA] train power_p n=9 L=2 seed=2 λ=0.5 warm=fourier dual
+14:55:30 [smokeA]   power_p n=9 L=2 s=2 r=0 train ε=0.0967 hold ε=0.0969 f=0.734 best@0
+14:55:30 [smokeA]   power_p n=9 L=2 s=2 r=5 train ε=0.0967 hold ε=0.0969 f=0.735 best@4
+14:55:31 [smokeA]   power_p n=9 L=2 s=2 r=10 train ε=0.0967 hold ε=0.0969 f=0.735 best@4
+14:55:31 [smokeA]   early stop power_p n=9 L=2 seed=2 at r=12
+14:55:31 [smokeA]   done hold ε=0.0969 f=0.734 wall=1.1s best_round=4
+14:55:31 [smokeA] train fourier_qaoa n=9 L=16 seed=0 λ=0.5
+14:55:31 [smokeA]   fourier_qaoa n=9 L=16 s=0 r=0 train ε=0.1499 hold ε=0.1499 f=0.596 best@0
+14:55:33 [smokeA]   fourier_qaoa n=9 L=16 s=0 r=5 train ε=0.0436 hold ε=0.0442 f=0.883 best@5
+14:55:35 [smokeA]   fourier_qaoa n=9 L=16 s=0 r=10 train ε=0.0170 hold ε=0.0185 f=0.942 best@10
+14:55:37 [smokeA]   fourier_qaoa n=9 L=16 s=0 r=15 train ε=0.0118 hold ε=0.0118 f=0.967 best@15
+14:55:39 [smokeA]   fourier_qaoa n=9 L=16 s=0 r=20 train ε=0.0128 hold ε=0.0126 f=0.964 best@15
+14:55:40 [smokeA]   fourier_qaoa n=9 L=16 s=0 r=23 train ε=0.0106 hold ε=0.0096 f=0.972 best@23
+14:55:40 [smokeA]   done hold ε=0.0096 f=0.972 wall=8.7s
+14:55:40 [smokeA] train fourier_qaoa n=9 L=16 seed=1 λ=0.5
+14:55:40 [smokeA]   fourier_qaoa n=9 L=16 s=1 r=0 train ε=0.1501 hold ε=0.1501 f=0.595 best@0
+14:55:42 [smokeA]   fourier_qaoa n=9 L=16 s=1 r=5 train ε=0.0563 hold ε=0.0529 f=0.850 best@5
+14:55:44 [smokeA]   fourier_qaoa n=9 L=16 s=1 r=10 train ε=0.0312 hold ε=0.0309 f=0.917 best@10
+14:55:45 [smokeA]   fourier_qaoa n=9 L=16 s=1 r=15 train ε=0.0167 hold ε=0.0193 f=0.942 best@14
+14:55:47 [smokeA]   fourier_qaoa n=9 L=16 s=1 r=20 train ε=0.0140 hold ε=0.0140 f=0.960 best@20
+14:55:48 [smokeA]   fourier_qaoa n=9 L=16 s=1 r=23 train ε=0.0146 hold ε=0.0146 f=0.960 best@20
+14:55:48 [smokeA]   done hold ε=0.0140 f=0.960 wall=8.6s
+14:55:48 [smokeA] train fourier_qaoa n=9 L=16 seed=2 λ=0.5
+14:55:49 [smokeA]   fourier_qaoa n=9 L=16 s=2 r=0 train ε=0.1486 hold ε=0.1486 f=0.601 best@0
+14:55:50 [smokeA]   fourier_qaoa n=9 L=16 s=2 r=5 train ε=0.0525 hold ε=0.0497 f=0.861 best@5
+14:55:52 [smokeA]   fourier_qaoa n=9 L=16 s=2 r=10 train ε=0.0231 hold ε=0.0253 f=0.930 best@9
+14:55:54 [smokeA]   fourier_qaoa n=9 L=16 s=2 r=15 train ε=0.0148 hold ε=0.0175 f=0.961 best@15
+14:55:56 [smokeA]   fourier_qaoa n=9 L=16 s=2 r=20 train ε=0.0129 hold ε=0.0129 f=0.964 best@20
+14:55:57 [smokeA]   fourier_qaoa n=9 L=16 s=2 r=23 train ε=0.0137 hold ε=0.0134 f=0.961 best@22
+14:55:57 [smokeA]   done hold ε=0.0127 f=0.965 wall=8.7s
+14:55:57 [smokeA] train power_p n=9 L=16 seed=0 λ=0.5 warm=fourier dual
+14:55:57 [smokeA]   power_p n=9 L=16 s=0 r=0 train ε=0.0117 hold ε=0.0103 f=0.969 best@-1
+14:55:59 [smokeA]   power_p n=9 L=16 s=0 r=5 train ε=0.0095 hold ε=0.0089 f=0.974 best@5
+14:56:01 [smokeA]   power_p n=9 L=16 s=0 r=10 train ε=0.0096 hold ε=0.0089 f=0.974 best@9
+14:56:03 [smokeA]   power_p n=9 L=16 s=0 r=15 train ε=0.0091 hold ε=0.0085 f=0.976 best@15
+14:56:04 [smokeA]   power_p n=9 L=16 s=0 r=20 train ε=0.0083 hold ε=0.0081 f=0.978 best@18
+14:56:05 [smokeA]   power_p n=9 L=16 s=0 r=23 train ε=0.0083 hold ε=0.0081 f=0.979 best@18
+14:56:05 [smokeA]   done hold ε=0.0079 f=0.979 wall=8.4s best_round=18
+14:56:05 [smokeA] train power_p n=9 L=16 seed=1 λ=0.5 warm=fourier dual
+14:56:06 [smokeA]   power_p n=9 L=16 s=1 r=0 train ε=0.0163 hold ε=0.0166 f=0.954 best@-1
+14:56:08 [smokeA]   power_p n=9 L=16 s=1 r=5 train ε=0.0121 hold ε=0.0123 f=0.965 best@5
+14:56:09 [smokeA]   power_p n=9 L=16 s=1 r=10 train ε=0.0131 hold ε=0.0136 f=0.961 best@5
+14:56:11 [smokeA]   power_p n=9 L=16 s=1 r=15 train ε=0.0113 hold ε=0.0116 f=0.967 best@13
+14:56:13 [smokeA]   power_p n=9 L=16 s=1 r=20 train ε=0.0111 hold ε=0.0119 f=0.967 best@19
+14:56:14 [smokeA]   power_p n=9 L=16 s=1 r=23 train ε=0.0104 hold ε=0.0106 f=0.970 best@21
+14:56:14 [smokeA]   done hold ε=0.0099 f=0.971 wall=8.5s best_round=21
+14:56:14 [smokeA] train power_p n=9 L=16 seed=2 λ=0.5 warm=fourier dual
+14:56:14 [smokeA]   power_p n=9 L=16 s=2 r=0 train ε=0.0148 hold ε=0.0147 f=0.959 best@-1
+14:56:16 [smokeA]   power_p n=9 L=16 s=2 r=5 train ε=0.0113 hold ε=0.0111 f=0.968 best@5
+14:56:18 [smokeA]   power_p n=9 L=16 s=2 r=10 train ε=0.0113 hold ε=0.0114 f=0.967 best@9
+14:56:20 [smokeA]   power_p n=9 L=16 s=2 r=15 train ε=0.0106 hold ε=0.0105 f=0.970 best@13
+14:56:22 [smokeA]   power_p n=9 L=16 s=2 r=20 train ε=0.0107 hold ε=0.0103 f=0.970 best@19
+14:56:23 [smokeA]   power_p n=9 L=16 s=2 r=23 train ε=0.0102 hold ε=0.0098 f=0.972 best@23
+14:56:23 [smokeA]   done hold ε=0.0098 f=0.972 wall=8.9s best_round=23
+14:56:23 [smokeA] verdict PASS wall 107.2s
+14:56:23 [smokeA] wrote Nov_3rd/runs/quantum_h_explore/smoke_A
+EXIT:0
