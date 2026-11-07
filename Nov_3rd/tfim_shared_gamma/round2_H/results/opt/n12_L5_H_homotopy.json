@@ -1,0 +1,163 @@
+{
+  "method": "H_homotopy",
+  "kind": "homotopy",
+  "n": 12,
+  "L": 5,
+  "legal_shared_gamma": true,
+  "status": "complete",
+  "objective": "energy",
+  "fidelity_used_for_selection": false,
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "hc_sha256_le": "d650ce798d622a3fe37ef3e7f86f2619f36eadf7acf0422aab821a539e216353",
+  "E": -8.110539613940562,
+  "E0": -8.6132024589353,
+  "Emax": 23.799999349755723,
+  "full_space_gap": 0.0016132338724013096,
+  "accessible_PR_plus_gap": 0.4337981341960315,
+  "energy_error": 0.5026628449947381,
+  "F": 0.38614700467371754,
+  "eta": 0.9844920335867604,
+  "E_median": -8.11053961394055,
+  "E_std": 2.2574190342735623,
+  "n_starts": 5,
+  "n_finished": 5,
+  "nfev_sum": 2864,
+  "best_tag": "from_theta0",
+  "grad_norm": 1.3054530441966605e-06,
+  "seconds": 2.5444346149997727,
+  "x_raw": [
+    0.3415851022699018,
+    -0.5702514225731942,
+    -0.5481272135092793,
+    1.5837295521390218,
+    -0.04489416625112477,
+    -0.12744273169063464,
+    1.621906843898534,
+    -0.14538817679720845,
+    -0.430103265372777,
+    1.6092804982178925,
+    -0.04595775984303066,
+    -0.008780510814537833,
+    1.5665904562562376,
+    -0.029697725165134765,
+    -0.19946567240683882,
+    1.5740069238854657,
+    -0.0714547284648886
+  ],
+  "starts": [
+    {
+      "tag": "from_plain",
+      "E": -8.110539613940414,
+      "nfev": 532,
+      "success": true,
+      "error": null,
+      "relaxed_E_after_lambda0": -8.332838609130535,
+      "gamma_spread_before_projection": 0.000724177077903387
+    },
+    {
+      "tag": "split_plain",
+      "E": -8.11053961394055,
+      "nfev": 571,
+      "success": true,
+      "error": null,
+      "relaxed_E_after_lambda0": -8.332838609130118,
+      "gamma_spread_before_projection": 0.0007354738523112155
+    },
+    {
+      "tag": "from_theta0",
+      "E": -8.110539613940562,
+      "nfev": 571,
+      "success": true,
+      "error": null,
+      "relaxed_E_after_lambda0": -8.332838609121307,
+      "gamma_spread_before_projection": 0.0007217983465814386
+    },
+    {
+      "tag": "random_0",
+      "E": -8.110539613940556,
+      "nfev": 578,
+      "success": true,
+      "error": null,
+      "relaxed_E_after_lambda0": -8.284026969570377,
+      "gamma_spread_before_projection": 0.0007016374014856559
+    },
+    {
+      "tag": "random_1",
+      "E": -2.4669920282566142,
+      "nfev": 612,
+      "success": true,
+      "error": null,
+      "relaxed_E_after_lambda0": -0.9559056653349257,
+      "gamma_spread_before_projection": 0.00128685925923296
+    }
+  ],
+  "state_sha256": "545745456138423ce156314482d7211396cccebbe3a804bbb4b2f04722da10f1",
+  "not_a_certified_ceiling": true,
+  "optimizer": "lambda_homotopy_then_exact_shared_gamma_polish",
+  "relaxed_best_E": -8.332838609130535,
+  "relaxed_is_certified_ceiling": false,
+  "best_stages": [
+    {
+      "lambda": 0.0,
+      "E": -8.332838609121307,
+      "gamma_std": 0.1652164116606777,
+      "gamma_mean": 0.5676086828018567,
+      "nfev": 181,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF F,G EVALUATIONS EXCEEDS LIMIT"
+    },
+    {
+      "lambda": 0.03,
+      "E": -8.332750543266794,
+      "gamma_std": 0.16160366308785384,
+      "gamma_mean": 0.5645139108652009,
+      "nfev": 61,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF F,G EVALUATIONS EXCEEDS LIMIT"
+    },
+    {
+      "lambda": 0.3,
+      "E": -8.327625216750954,
+      "gamma_std": 0.13445246451178827,
+      "gamma_mean": 0.5329358421051231,
+      "nfev": 61,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF F,G EVALUATIONS EXCEEDS LIMIT"
+    },
+    {
+      "lambda": 3.0,
+      "E": -8.247260573344953,
+      "gamma_std": 0.07334109771367356,
+      "gamma_mean": 0.43789628874491154,
+      "nfev": 61,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF F,G EVALUATIONS EXCEEDS LIMIT"
+    },
+    {
+      "lambda": 30.0,
+      "E": -8.124258748079342,
+      "gamma_std": 0.006594808511157796,
+      "gamma_mean": 0.3456951603280316,
+      "nfev": 61,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF F,G EVALUATIONS EXCEEDS LIMIT"
+    },
+    {
+      "lambda": 300.0,
+      "E": -8.112096349086693,
+      "gamma_std": 0.0007217983465814386,
+      "gamma_mean": 0.3419051321003413,
+      "nfev": 51,
+      "success": false,
+      "message": "STOP: TOTAL NO. OF F,G EVALUATIONS EXCEEDS LIMIT"
+    }
+  ],
+  "lambdas": [
+    0.0,
+    0.03,
+    0.3,
+    3.0,
+    30.0,
+    300.0
+  ]
+}

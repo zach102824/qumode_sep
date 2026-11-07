@@ -1,0 +1,135 @@
+{
+  "method": "qaoa",
+  "kind": "qaoa",
+  "n": 12,
+  "L": 8,
+  "legal_shared_gamma": false,
+  "status": "complete",
+  "objective": "energy",
+  "fidelity_used_for_selection": false,
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "hc_sha256_le": "d650ce798d622a3fe37ef3e7f86f2619f36eadf7acf0422aab821a539e216353",
+  "E": -8.177533423046642,
+  "E0": -8.6132024589353,
+  "Emax": 23.799999349755723,
+  "full_space_gap": 0.0016132338724013096,
+  "accessible_PR_plus_gap": 0.4337981341960315,
+  "energy_error": 0.43566903588865813,
+  "F": 0.37276026573397125,
+  "eta": 0.9865589015716478,
+  "E_median": -8.161295497274882,
+  "E_std": 3.14334642217967,
+  "n_starts": 12,
+  "n_finished": 12,
+  "nfev_sum": 1407,
+  "best_tag": "interp_linear",
+  "grad_norm": 4.2841850273675337e-07,
+  "seconds": 2.744533254000089,
+  "x_raw": [
+    -0.11680678655006252,
+    -0.25976235801573905,
+    -0.30239485203007654,
+    -0.3456863396623833,
+    -0.3675176361032975,
+    -0.38730902015709945,
+    -0.4085583569817517,
+    -0.4044183064692693,
+    0.4955999378941975,
+    0.3447348084122694,
+    0.27420688112260105,
+    0.2482658160891981,
+    0.23234989429097008,
+    0.21683066006084734,
+    0.2083412209698127,
+    0.11249063793265221
+  ],
+  "starts": [
+    {
+      "tag": "interp_cubic",
+      "E": -8.177533423046494,
+      "nfev": 44,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "interp_linear",
+      "E": -8.177533423046642,
+      "nfev": 89,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "perturb_0.03",
+      "E": -8.177533423046576,
+      "nfev": 47,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "perturb_0.08",
+      "E": -8.17753342304663,
+      "nfev": 136,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "perturb_0.2",
+      "E": -8.177533423046583,
+      "nfev": 82,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "adiab_0.4",
+      "E": -8.082959229403606,
+      "nfev": 161,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "adiab_1.0",
+      "E": -0.8837274572031634,
+      "nfev": 123,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "adiab_2.0",
+      "E": -0.8771530512559833,
+      "nfev": 147,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fourier_0",
+      "E": -1.4596731531011262,
+      "nfev": 115,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fourier_1",
+      "E": -3.144637618601317,
+      "nfev": 141,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fourier_2",
+      "E": -8.175473570029705,
+      "nfev": 161,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "fourier_3",
+      "E": -8.147117424520058,
+      "nfev": 161,
+      "success": false,
+      "error": null
+    }
+  ],
+  "state_sha256": "ff9233c870cc22e937a4dd04488f60193fdb0d456b2900734603c108eda0e15a",
+  "not_a_certified_ceiling": true,
+  "grid_points": null
+}

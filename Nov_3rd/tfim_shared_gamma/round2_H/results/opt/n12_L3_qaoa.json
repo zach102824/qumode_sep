@@ -1,0 +1,1804 @@
+{
+  "method": "qaoa",
+  "kind": "qaoa",
+  "n": 12,
+  "L": 3,
+  "legal_shared_gamma": false,
+  "status": "complete",
+  "objective": "energy",
+  "fidelity_used_for_selection": false,
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "hc_sha256_le": "d650ce798d622a3fe37ef3e7f86f2619f36eadf7acf0422aab821a539e216353",
+  "E": -7.685127667299632,
+  "E0": -8.6132024589353,
+  "Emax": 23.799999349755723,
+  "full_space_gap": 0.0016132338724013096,
+  "accessible_PR_plus_gap": 0.4337981341960315,
+  "energy_error": 0.9280747916356678,
+  "F": 0.17053640821153215,
+  "eta": 0.971367383046163,
+  "E_median": -7.685127667299602,
+  "E_std": 2.305154728360335,
+  "n_starts": 252,
+  "n_finished": 252,
+  "nfev_sum": 13270,
+  "best_tag": "perturb_0.08",
+  "grad_norm": 8.71307532023433e-08,
+  "seconds": 0.7419068619997233,
+  "x_raw": [
+    -0.14625811133423955,
+    -0.32397352171266564,
+    -0.3714947486744466,
+    0.4486980112513354,
+    0.3040709300649427,
+    0.15832269544736532
+  ],
+  "starts": [
+    {
+      "tag": "interp_linear",
+      "E": -7.685127667299621,
+      "nfev": 28,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "perturb_0.03",
+      "E": -7.6851276672996125,
+      "nfev": 42,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "perturb_0.08",
+      "E": -7.685127667299632,
+      "nfev": 29,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "perturb_0.2",
+      "E": -7.6851276672996285,
+      "nfev": 35,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "adiab_0.4",
+      "E": -1.2051572482200559,
+      "nfev": 44,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "adiab_1.0",
+      "E": -1.1017564024804003,
+      "nfev": 110,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "adiab_2.0",
+      "E": -3.7654612268526884,
+      "nfev": 45,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fourier_0",
+      "E": -7.685127667299609,
+      "nfev": 43,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fourier_1",
+      "E": -7.685127667299618,
+      "nfev": 58,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fourier_2",
+      "E": -7.6195269685434965,
+      "nfev": 79,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fourier_3",
+      "E": -7.685127667299621,
+      "nfev": 50,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "random_0",
+      "E": -7.619526968543484,
+      "nfev": 54,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "random_1",
+      "E": -7.398434917316944,
+      "nfev": 104,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "random_2",
+      "E": -7.605878367168245,
+      "nfev": 60,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "random_3",
+      "E": -0.2076338610511169,
+      "nfev": 90,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fair_near_0",
+      "E": -7.685127667299627,
+      "nfev": 32,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fair_near_1",
+      "E": -7.685127667299608,
+      "nfev": 20,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fair_near_2",
+      "E": -7.398434917316921,
+      "nfev": 103,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fair_near_3",
+      "E": -7.685127667299614,
+      "nfev": 21,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fair_near_4",
+      "E": -7.685127667299599,
+      "nfev": 29,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fair_fourier_0",
+      "E": -7.656961229575134,
+      "nfev": 94,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "fair_fourier_1",
+      "E": -0.4890768207040844,
+      "nfev": 56,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fair_wide_0",
+      "E": -5.069162967459839,
+      "nfev": 95,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fair_wide_1",
+      "E": -7.398434917316932,
+      "nfev": 161,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "fair_near_0",
+      "E": -7.685127667299634,
+      "nfev": 55,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fair_near_1",
+      "E": -7.685127667299621,
+      "nfev": 30,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fair_fourier_0",
+      "E": -7.5946132777865465,
+      "nfev": 65,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fair_fourier_1",
+      "E": -7.685127667299632,
+      "nfev": 39,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fair_wide_0",
+      "E": -0.6745969521518463,
+      "nfev": 36,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "fair_wide_1",
+      "E": -7.605878367168252,
+      "nfev": 83,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_0",
+      "E": -7.685127667299627,
+      "nfev": 32,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_1",
+      "E": -7.685127667299608,
+      "nfev": 20,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_2",
+      "E": -7.398434917316921,
+      "nfev": 103,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_3",
+      "E": -7.685127667299614,
+      "nfev": 21,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_4",
+      "E": -7.685127667299599,
+      "nfev": 29,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_5",
+      "E": -7.685127667299636,
+      "nfev": 69,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_6",
+      "E": -7.685127667299636,
+      "nfev": 38,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_7",
+      "E": -7.685127667299627,
+      "nfev": 34,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_0",
+      "E": -7.68512766729962,
+      "nfev": 48,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_1",
+      "E": -7.619526968543488,
+      "nfev": 49,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_2",
+      "E": -7.605878367168253,
+      "nfev": 106,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_3",
+      "E": -7.619526968543498,
+      "nfev": 65,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_0",
+      "E": -0.7448067911906153,
+      "nfev": 38,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_1",
+      "E": -1.2421803517810952,
+      "nfev": 54,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_2",
+      "E": -7.5677205730297725,
+      "nfev": 83,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_3",
+      "E": -7.68512766729963,
+      "nfev": 31,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_0",
+      "E": -7.685127667299634,
+      "nfev": 55,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_1",
+      "E": -7.685127667299621,
+      "nfev": 30,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_2",
+      "E": -7.605878367168236,
+      "nfev": 73,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_3",
+      "E": -7.619526968543496,
+      "nfev": 42,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_0",
+      "E": -7.656961229575112,
+      "nfev": 63,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_1",
+      "E": -7.619526968543502,
+      "nfev": 44,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_0",
+      "E": -1.1143992323454681,
+      "nfev": 78,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_1",
+      "E": -7.656961229575119,
+      "nfev": 61,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_0",
+      "E": -7.619526968543488,
+      "nfev": 54,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_1",
+      "E": -7.685127667299635,
+      "nfev": 66,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_0",
+      "E": -7.619526968543491,
+      "nfev": 29,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_1",
+      "E": -1.1558046883804969,
+      "nfev": 26,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_0",
+      "E": -7.459640073555725,
+      "nfev": 58,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_1",
+      "E": -7.605878367168254,
+      "nfev": 127,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_0",
+      "E": -7.685127667299627,
+      "nfev": 32,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_1",
+      "E": -7.685127667299608,
+      "nfev": 20,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_2",
+      "E": -7.398434917316921,
+      "nfev": 103,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_3",
+      "E": -7.685127667299614,
+      "nfev": 21,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_4",
+      "E": -7.685127667299599,
+      "nfev": 29,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_5",
+      "E": -7.685127667299636,
+      "nfev": 69,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_6",
+      "E": -7.685127667299636,
+      "nfev": 38,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_7",
+      "E": -7.685127667299627,
+      "nfev": 34,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_0",
+      "E": -7.68512766729962,
+      "nfev": 48,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_1",
+      "E": -7.619526968543488,
+      "nfev": 49,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_2",
+      "E": -7.605878367168253,
+      "nfev": 106,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_3",
+      "E": -7.619526968543498,
+      "nfev": 65,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_0",
+      "E": -0.7448067911906153,
+      "nfev": 38,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_1",
+      "E": -1.2421803517810952,
+      "nfev": 54,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_2",
+      "E": -7.5677205730297725,
+      "nfev": 83,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_3",
+      "E": -7.68512766729963,
+      "nfev": 31,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_0",
+      "E": -7.685127667299634,
+      "nfev": 55,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_1",
+      "E": -7.685127667299621,
+      "nfev": 30,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_2",
+      "E": -7.605878367168236,
+      "nfev": 73,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_3",
+      "E": -7.619526968543496,
+      "nfev": 42,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_4",
+      "E": -7.68512766729962,
+      "nfev": 33,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_5",
+      "E": -7.685127667299621,
+      "nfev": 33,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_6",
+      "E": -7.685127667299609,
+      "nfev": 23,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_7",
+      "E": -7.685127667299634,
+      "nfev": 51,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_0",
+      "E": -7.605878367168236,
+      "nfev": 66,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_1",
+      "E": -7.274802018268785,
+      "nfev": 80,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_2",
+      "E": -7.567720573029765,
+      "nfev": 97,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_3",
+      "E": -7.398434917316936,
+      "nfev": 128,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_0",
+      "E": -7.162336063777748,
+      "nfev": 67,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_1",
+      "E": -1.682973394582457,
+      "nfev": 59,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_2",
+      "E": -7.6569612295751215,
+      "nfev": 43,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_3",
+      "E": -7.594613277786536,
+      "nfev": 60,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_0",
+      "E": -7.619526968543488,
+      "nfev": 54,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_1",
+      "E": -7.685127667299635,
+      "nfev": 66,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_2",
+      "E": -7.685127667299623,
+      "nfev": 23,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_3",
+      "E": -7.685127667299625,
+      "nfev": 26,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_4",
+      "E": -7.685127667299631,
+      "nfev": 31,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_5",
+      "E": -7.685127667299636,
+      "nfev": 44,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_6",
+      "E": -7.685127667299621,
+      "nfev": 22,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_7",
+      "E": -7.685127667299625,
+      "nfev": 28,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_0",
+      "E": -7.594613277786554,
+      "nfev": 66,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_1",
+      "E": -7.59461327778655,
+      "nfev": 45,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_2",
+      "E": -1.1294076158119544,
+      "nfev": 40,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_3",
+      "E": -7.6058783671682555,
+      "nfev": 95,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_0",
+      "E": -1.1409000708793893,
+      "nfev": 94,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_1",
+      "E": -7.398434917316941,
+      "nfev": 68,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_2",
+      "E": -0.7866574168908144,
+      "nfev": 34,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_3",
+      "E": -7.685127667299625,
+      "nfev": 51,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_0",
+      "E": -7.685127667299632,
+      "nfev": 76,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_1",
+      "E": -7.68512766729962,
+      "nfev": 27,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_2",
+      "E": -7.685127667299625,
+      "nfev": 43,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_3",
+      "E": -7.685127667299618,
+      "nfev": 30,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_4",
+      "E": -7.685127667299634,
+      "nfev": 40,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_5",
+      "E": -7.685127667299627,
+      "nfev": 37,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_6",
+      "E": -7.685127667299631,
+      "nfev": 68,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_7",
+      "E": -7.685127667299625,
+      "nfev": 29,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_0",
+      "E": -7.656961229575133,
+      "nfev": 77,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_1",
+      "E": -1.2506564278331371,
+      "nfev": 36,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_2",
+      "E": -7.5677205730297725,
+      "nfev": 102,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_3",
+      "E": -1.1143992323454632,
+      "nfev": 35,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_0",
+      "E": -7.6058783671682235,
+      "nfev": 50,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_1",
+      "E": -7.685127667299625,
+      "nfev": 38,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_2",
+      "E": -0.786657416890814,
+      "nfev": 38,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_3",
+      "E": -7.567720573029764,
+      "nfev": 62,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_0",
+      "E": -7.685127667299625,
+      "nfev": 34,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_1",
+      "E": -7.685127667299623,
+      "nfev": 23,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_2",
+      "E": -7.685127667299628,
+      "nfev": 63,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_3",
+      "E": -7.685127667299621,
+      "nfev": 30,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_4",
+      "E": -7.68512766729962,
+      "nfev": 22,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_5",
+      "E": -7.685127667299637,
+      "nfev": 58,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_6",
+      "E": -7.685127667299604,
+      "nfev": 20,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_7",
+      "E": -7.685127667299616,
+      "nfev": 23,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_0",
+      "E": -7.685127667299616,
+      "nfev": 61,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_1",
+      "E": -7.656961229575119,
+      "nfev": 49,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_2",
+      "E": -7.656961229575125,
+      "nfev": 69,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_3",
+      "E": -7.685127667299623,
+      "nfev": 67,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_0",
+      "E": -7.656961229575101,
+      "nfev": 55,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_1",
+      "E": -7.3984349173169335,
+      "nfev": 53,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_2",
+      "E": -7.68512766729962,
+      "nfev": 48,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_3",
+      "E": -7.605878367168232,
+      "nfev": 182,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_0",
+      "E": -7.685127667299627,
+      "nfev": 20,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_1",
+      "E": -7.685127667299618,
+      "nfev": 36,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_2",
+      "E": -7.685127667299609,
+      "nfev": 20,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_3",
+      "E": -7.685127667299632,
+      "nfev": 60,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_4",
+      "E": -7.685127667299616,
+      "nfev": 25,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_5",
+      "E": -7.685127667299631,
+      "nfev": 38,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_6",
+      "E": -7.685127667299626,
+      "nfev": 35,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_near_7",
+      "E": -7.68512766729962,
+      "nfev": 22,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_0",
+      "E": -1.1737595807152017,
+      "nfev": 28,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_1",
+      "E": -7.6851276672996445,
+      "nfev": 64,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_2",
+      "E": -0.9239762373766529,
+      "nfev": 78,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_fourier_3",
+      "E": -7.4596400735557395,
+      "nfev": 94,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_0",
+      "E": -7.656961229575128,
+      "nfev": 66,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_1",
+      "E": -0.7236209491383159,
+      "nfev": 41,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_2",
+      "E": -7.605878367168227,
+      "nfev": 68,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue_wide_3",
+      "E": -0.9388318019351902,
+      "nfev": 40,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_0",
+      "E": -7.685127667299627,
+      "nfev": 32,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_1",
+      "E": -7.685127667299608,
+      "nfev": 20,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_2",
+      "E": -7.398434917316921,
+      "nfev": 103,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_3",
+      "E": -7.685127667299614,
+      "nfev": 21,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_4",
+      "E": -7.685127667299599,
+      "nfev": 29,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_5",
+      "E": -7.685127667299636,
+      "nfev": 69,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_6",
+      "E": -7.685127667299636,
+      "nfev": 38,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_7",
+      "E": -7.685127667299627,
+      "nfev": 34,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_0",
+      "E": -7.68512766729962,
+      "nfev": 48,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_1",
+      "E": -7.619526968543488,
+      "nfev": 49,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_2",
+      "E": -7.605878367168253,
+      "nfev": 106,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_3",
+      "E": -7.619526968543498,
+      "nfev": 65,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_0",
+      "E": -0.7448067911906153,
+      "nfev": 38,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_1",
+      "E": -1.2421803517810952,
+      "nfev": 54,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_2",
+      "E": -7.5677205730297725,
+      "nfev": 83,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_3",
+      "E": -7.68512766729963,
+      "nfev": 31,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_0",
+      "E": -7.685127667299634,
+      "nfev": 55,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_1",
+      "E": -7.685127667299621,
+      "nfev": 30,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_2",
+      "E": -7.605878367168236,
+      "nfev": 73,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_3",
+      "E": -7.619526968543496,
+      "nfev": 42,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_4",
+      "E": -7.68512766729962,
+      "nfev": 33,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_5",
+      "E": -7.685127667299621,
+      "nfev": 33,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_6",
+      "E": -7.685127667299609,
+      "nfev": 23,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_7",
+      "E": -7.685127667299634,
+      "nfev": 51,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_0",
+      "E": -7.605878367168236,
+      "nfev": 66,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_1",
+      "E": -7.274802018268785,
+      "nfev": 80,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_2",
+      "E": -7.567720573029765,
+      "nfev": 97,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_3",
+      "E": -7.398434917316936,
+      "nfev": 128,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_0",
+      "E": -7.162336063777748,
+      "nfev": 67,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_1",
+      "E": -1.682973394582457,
+      "nfev": 59,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_2",
+      "E": -7.6569612295751215,
+      "nfev": 43,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_3",
+      "E": -7.594613277786536,
+      "nfev": 60,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_0",
+      "E": -7.619526968543488,
+      "nfev": 54,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_1",
+      "E": -7.685127667299635,
+      "nfev": 66,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_2",
+      "E": -7.685127667299623,
+      "nfev": 23,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_3",
+      "E": -7.685127667299625,
+      "nfev": 26,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_4",
+      "E": -7.685127667299631,
+      "nfev": 31,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_5",
+      "E": -7.685127667299636,
+      "nfev": 44,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_6",
+      "E": -7.685127667299621,
+      "nfev": 22,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_7",
+      "E": -7.685127667299625,
+      "nfev": 28,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_0",
+      "E": -7.594613277786554,
+      "nfev": 66,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_1",
+      "E": -7.59461327778655,
+      "nfev": 45,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_2",
+      "E": -1.1294076158119544,
+      "nfev": 40,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_3",
+      "E": -7.6058783671682555,
+      "nfev": 95,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_0",
+      "E": -1.1409000708793893,
+      "nfev": 94,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_1",
+      "E": -7.398434917316941,
+      "nfev": 68,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_2",
+      "E": -0.7866574168908144,
+      "nfev": 34,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_3",
+      "E": -7.685127667299625,
+      "nfev": 51,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_0",
+      "E": -7.685127667299632,
+      "nfev": 76,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_1",
+      "E": -7.68512766729962,
+      "nfev": 27,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_2",
+      "E": -7.685127667299625,
+      "nfev": 43,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_3",
+      "E": -7.685127667299618,
+      "nfev": 30,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_4",
+      "E": -7.685127667299634,
+      "nfev": 40,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_5",
+      "E": -7.685127667299627,
+      "nfev": 37,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_6",
+      "E": -7.685127667299631,
+      "nfev": 68,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_7",
+      "E": -7.685127667299625,
+      "nfev": 29,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_0",
+      "E": -7.656961229575133,
+      "nfev": 77,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_1",
+      "E": -1.2506564278331371,
+      "nfev": 36,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_2",
+      "E": -7.5677205730297725,
+      "nfev": 102,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_3",
+      "E": -1.1143992323454632,
+      "nfev": 35,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_0",
+      "E": -7.6058783671682235,
+      "nfev": 50,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_1",
+      "E": -7.685127667299625,
+      "nfev": 38,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_2",
+      "E": -0.786657416890814,
+      "nfev": 38,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_3",
+      "E": -7.567720573029764,
+      "nfev": 62,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_0",
+      "E": -7.685127667299625,
+      "nfev": 34,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_1",
+      "E": -7.685127667299623,
+      "nfev": 23,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_2",
+      "E": -7.685127667299628,
+      "nfev": 63,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_3",
+      "E": -7.685127667299621,
+      "nfev": 30,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_4",
+      "E": -7.68512766729962,
+      "nfev": 22,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_5",
+      "E": -7.685127667299637,
+      "nfev": 58,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_6",
+      "E": -7.685127667299604,
+      "nfev": 20,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_7",
+      "E": -7.685127667299616,
+      "nfev": 23,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_0",
+      "E": -7.685127667299616,
+      "nfev": 61,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_1",
+      "E": -7.656961229575119,
+      "nfev": 49,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_2",
+      "E": -7.656961229575125,
+      "nfev": 69,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_3",
+      "E": -7.685127667299623,
+      "nfev": 67,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_0",
+      "E": -7.656961229575101,
+      "nfev": 55,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_1",
+      "E": -7.3984349173169335,
+      "nfev": 53,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_2",
+      "E": -7.68512766729962,
+      "nfev": 48,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_3",
+      "E": -7.605878367168232,
+      "nfev": 182,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_0",
+      "E": -7.685127667299627,
+      "nfev": 20,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_1",
+      "E": -7.685127667299618,
+      "nfev": 36,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_2",
+      "E": -7.685127667299609,
+      "nfev": 20,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_3",
+      "E": -7.685127667299632,
+      "nfev": 60,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_4",
+      "E": -7.685127667299616,
+      "nfev": 25,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_5",
+      "E": -7.685127667299631,
+      "nfev": 38,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_6",
+      "E": -7.685127667299626,
+      "nfev": 35,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_near_7",
+      "E": -7.68512766729962,
+      "nfev": 22,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_0",
+      "E": -1.1737595807152017,
+      "nfev": 28,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_1",
+      "E": -7.6851276672996445,
+      "nfev": 64,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_2",
+      "E": -0.9239762373766529,
+      "nfev": 78,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_fourier_3",
+      "E": -7.4596400735557395,
+      "nfev": 94,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_0",
+      "E": -7.656961229575128,
+      "nfev": 66,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_1",
+      "E": -0.7236209491383159,
+      "nfev": 41,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_2",
+      "E": -7.605878367168227,
+      "nfev": 68,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "rescue4x_wide_3",
+      "E": -0.9388318019351902,
+      "nfev": 40,
+      "success": true,
+      "error": null
+    }
+  ],
+  "state_sha256": "946ff48452f87a174d9ddbd4b68ffe76957286256dbc860599e43ff31cd5c3c4",
+  "not_a_certified_ceiling": true
+}

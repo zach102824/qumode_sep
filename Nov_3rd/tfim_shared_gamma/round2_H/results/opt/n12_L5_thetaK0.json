@@ -1,0 +1,106 @@
+{
+  "method": "thetaK0",
+  "kind": "theta0",
+  "n": 12,
+  "L": 5,
+  "legal_shared_gamma": true,
+  "status": "complete",
+  "objective": "energy",
+  "fidelity_used_for_selection": false,
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "hc_sha256_le": "d650ce798d622a3fe37ef3e7f86f2619f36eadf7acf0422aab821a539e216353",
+  "E": -7.75058903331383,
+  "E0": -8.6132024589353,
+  "Emax": 23.799999349755723,
+  "full_space_gap": 0.0016132338724013096,
+  "accessible_PR_plus_gap": 0.4337981341960315,
+  "energy_error": 0.8626134256214701,
+  "F": 0.2013894766361007,
+  "eta": 0.973386972668952,
+  "E_median": -7.750522325243958,
+  "E_std": 2.626815757966581,
+  "n_starts": 8,
+  "n_finished": 8,
+  "nfev_sum": 1185,
+  "best_tag": "perturb_0.12",
+  "grad_norm": 2.5677172629662297e-06,
+  "seconds": 0.6819748860002619,
+  "x_raw": [
+    0.2088653739544451,
+    -0.5828462335565221,
+    1.662298676721169,
+    0.0332987358464677,
+    0.2126834836504917,
+    1.4098317920423489,
+    0.00018989689452515433,
+    -0.45605210548859815,
+    1.629861542116889,
+    0.05885959654516499,
+    0.1514990322472534,
+    1.484962025009215,
+    -0.043761822735274486,
+    -0.19207785800127833,
+    1.5629167662640624,
+    0.05207814100580539
+  ],
+  "starts": [
+    {
+      "tag": "interp_cubic",
+      "E": -7.750589033313773,
+      "nfev": 179,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "perturb_0.04",
+      "E": -7.750589033313805,
+      "nfev": 197,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "perturb_0.12",
+      "E": -7.75058903331383,
+      "nfev": 180,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "qaoa_c1",
+      "E": -7.75058903330514,
+      "nfev": 181,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "random_0",
+      "E": -2.5015676585756843,
+      "nfev": 110,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "random_1",
+      "E": -7.7504556171827765,
+      "nfev": 181,
+      "success": false,
+      "error": null
+    },
+    {
+      "tag": "random_2",
+      "E": -0.9240604165045423,
+      "nfev": 82,
+      "success": true,
+      "error": null
+    },
+    {
+      "tag": "random_3",
+      "E": -4.5599626673542,
+      "nfev": 75,
+      "success": true,
+      "error": null
+    }
+  ],
+  "state_sha256": "7ccc0442cdf4e559da4e1af7569e3f79201d3f8955a3b8dc72b640355b5fc908",
+  "not_a_certified_ceiling": true
+}
