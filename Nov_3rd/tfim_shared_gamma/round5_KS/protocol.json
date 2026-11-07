@@ -1,0 +1,62 @@
+{
+  "frozen_before_training": true,
+  "budget_min": 75,
+  "seed_entropy": 20261112,
+  "seed_sequence": "[entropy, arm_id, L, k, tag] with arm_id KS_fresh=1, Rfull_fresh=2, KS_nested=3, KS_transfer=4, qaoa=5. tag 3 is a fresh draw, tag 1 is sigma 0.02, tag 2 is sigma 0.1.",
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "packing_sha256": "4418b3c33126dd3fd29a6fc74a20314c2e1606764b942301ac4ad01d13de4717",
+  "hc_diag_sha256": "eef806253f93036b128bc3aa2a7c06d35bbe60e7b9bcaf01cf920974b1da6a00",
+  "baseline_sha256": "ed2ac534f1e8b6c765e1824031711307fab8f879856c6a1af30e9c84c36d69cd",
+  "normalization": "rX = RMS(X)/RMS(J) over every i<j slot including zeros. Xhat = X/rX. A zero RMS raises. Hc coefficient is 1.",
+  "scales_from_manifest_before_fits": {
+    "rK": 2.7121073848962034,
+    "rIn": 1.4833224218283605,
+    "rOut": 2.2705244020071156,
+    "rM": 0.8036186698790976,
+    "rms_J": 0.4740131192123143
+  },
+  "generator": "G = Hc + thetaIn * Kin/rIn + thetaOut * Kout/rOut + thetaM * Mhat",
+  "P": "3L+4",
+  "nesting": "thetaIn = thetaK * rIn / rK and thetaOut = thetaK * rOut / rK, same gamma, thetaM, and shell.",
+  "coefficient_distance": {
+    "definition": "normalized_distance = |thetaIn/rIn - thetaOut/rOut| * rIn * rOut / rK. This is the RMS of the K-coefficient residual from the span of FK, divided by RMS(J). Kin and Kout are disjoint, so the identity is exact. Do not divide by thetaOut or form thetaIn/thetaOut.",
+    "small_threshold": 0.001
+  },
+  "tolerances": {
+    "replay_E": 1e-10,
+    "replay_F": 1e-10,
+    "replay_overlap_deficit": 1e-12,
+    "dominance_E": 1e-8,
+    "dominance_F": 1e-8
+  },
+  "branch_screen": {
+    "negligible_energy_improvement_versus_stored_rfull": 0.005,
+    "both_depths": [5, 6],
+    "and_normalized_distance_at_most": 0.001,
+    "meaning": "If both depths improve stored Rfull energy by less than 0.005 and the coefficient distance is at most 0.001, the split has not left the nested family. That retires a new-candidate claim. It is not a seal and not an impossibility proof."
+  },
+  "robust_screen": {
+    "fresh_median_worse_than_fresh_Rfull_by": 0.03,
+    "both_depths": [5, 6],
+    "meaning": "A fresh-median gap above 0.03 at both L5 and L6 flags the fresh arm. Medians use every finished start. This is not a proof that full K is necessary."
+  },
+  "arms": {
+    "KS_fresh": {"depths": [1, 2, 3, 4, 5, 6], "fresh_starts": 12, "eval_cap": 5500, "role": "ascending plain"},
+    "Rfull_fresh": {"depths": [1, 2, 3, 4, 5, 6], "fresh_starts": 12, "eval_cap": 5500, "role": "equal-budget control, same caps and start count, no stored angle"},
+    "KS_nested": {"depths": [6, 5, 4], "sigmas": [0.02, 0.1], "starts_per_sigma": 12, "plus_unperturbed": true, "eval_cap": 11000, "role": "stored Rfull embedded at the same depth"},
+    "KS_transfer": {"depths": [6, 5, 4], "sigmas": [0.02, 0.1], "starts_per_sigma_per_neighbor": 6, "plus_unperturbed": true, "eval_cap": 9000, "neighbor_order": ["stored_Rfull_Lm1", "stored_Rfull_Lp1", "fresh_KS_Lp1", "fresh_KS_Lm1"], "role": "neighbor-depth resample"}
+  },
+  "optimizer": {"method": "L-BFGS-B", "maxiter": 1500, "maxfun_per_start": 400, "ftol": 1e-14, "gtol": 1e-8, "objective": "energy"},
+  "bounds": {"scalar": [-12.0, 12.0], "shell": [-6.283185307179586, 6.283185307179586]},
+  "knots": "x_l=(l+0.5)/L. Linear below 3 source layers, natural cubic otherwise, constant clamp outside the source knots.",
+  "qaoa": {
+    "floor": "round4_N same-hash jobs, replayed before use. Strong published p9-p12 floats are the round4_V 256-start rows in baseline.json.",
+    "top_up_until_marginal_plus_floor_covers_candidate_inclusive": true,
+    "priority_p": [11, 12, 10, 9, 8, 7, 6, 5, 4],
+    "rescue_if_both_metric_win": "up to 4 times the winning cell marginal start count, at the matched p, the next p, and p12, and only while time remains"
+  },
+  "amortization": "The campaign total is the sum of marginal nfev in this run plus the external source nfev of files actually consumed. Inclusive for a cell is its marginal nfev plus the marginal nfev of the cells that produced its seeds. A shared ladder is listed on each consumer and added once in the campaign total. Round4 QAOA nfev is a same-hash floor, not a second copy of this run.",
+  "matched_raw_P": {"4": {"P": 16, "matched_p": 8, "next_p": 9}, "5": {"P": 19, "matched_p": 10, "next_p": 11}, "6": {"P": 22, "matched_p": 11, "next_p": 12}},
+  "priority": ["checks_and_nested_replay", "KS_fresh", "Rfull_fresh", "KS_nested", "KS_transfer", "qaoa_equalize"],
+  "objective": "energy only. Fidelity is reported for the energy-selected state and is not used to select."
+}
