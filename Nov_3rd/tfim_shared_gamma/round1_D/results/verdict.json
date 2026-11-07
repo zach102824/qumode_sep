@@ -1,0 +1,335 @@
+{
+  "gates": {
+    "absolute_energy": 0.001,
+    "residual_fraction": 0.05,
+    "fidelity_absolute": 0.01,
+    "ablation_energy": 0.0001,
+    "qaoa_rescue_energy": 0.001,
+    "repro_absolute": 0.001,
+    "repro_fraction_of_gain": 0.25,
+    "min_depths_per_n": 2,
+    "requires_both_n": [
+      6,
+      12
+    ],
+    "requires_qaoa_Lplus1": true,
+    "requires_matched_parameter_qaoa": true,
+    "requires_drop_c2_and_drop_c3_and_shared_beta": true,
+    "objective": "best energy over starts; fidelity is a separate gate, never the training objective"
+  },
+  "cells": [
+    {
+      "n": 6,
+      "L": 1,
+      "robust": false,
+      "reasons": [
+        "energy improvement 0.0273683 does not exceed 0.0625385",
+        "fidelity improvement 0.00155352 < 0.01",
+        "D does not beat QAOA L+1 (-2.9544946) by 0.001",
+        "D does not beat matched QAOA L=2 (-2.9544946) by 0.001"
+      ],
+      "E_D": -2.6199480703596847,
+      "E_Q": -2.5925798115197773,
+      "F_D": 0.2037046516898532,
+      "F_Q": 0.20215113638360427,
+      "energy_improvement": 0.027368258839907345,
+      "fidelity_improvement": 0.0015535153062489204,
+      "required_energy_improvement": 0.0625384763630007,
+      "qaoa_residual": 1.250769527260014,
+      "matched_qaoa_L": 2,
+      "matched_qaoa_E": -2.9544946084489676,
+      "second_start_gap": 0.0,
+      "repro_tolerance": 0.006842064709976836,
+      "equal_depth_ahead": true
+    },
+    {
+      "n": 6,
+      "L": 2,
+      "robust": false,
+      "reasons": [
+        "D does not beat matched QAOA L=4 (-3.3153793) by 0.001"
+      ],
+      "E_D": -3.230100383513148,
+      "E_Q": -2.9544946084489676,
+      "F_D": 0.5516119659241376,
+      "F_Q": 0.2955634482672184,
+      "energy_improvement": 0.2756057750641805,
+      "fidelity_improvement": 0.2560485176569192,
+      "required_energy_improvement": 0.04444273651654118,
+      "qaoa_residual": 0.8888547303308236,
+      "matched_qaoa_L": 4,
+      "matched_qaoa_E": -3.3153792891766294,
+      "second_start_gap": 3.552713678800501e-15,
+      "repro_tolerance": 0.06890144376604512,
+      "equal_depth_ahead": true
+    },
+    {
+      "n": 6,
+      "L": 3,
+      "robust": true,
+      "reasons": [
+        "passed every gate"
+      ],
+      "E_D": -3.7561082520747155,
+      "E_Q": -3.163171253502152,
+      "F_D": 0.9566769389812754,
+      "F_Q": 0.3812649526395291,
+      "energy_improvement": 0.5929369985725637,
+      "fidelity_improvement": 0.5754119863417463,
+      "required_energy_improvement": 0.03400890426388197,
+      "qaoa_residual": 0.6801780852776393,
+      "matched_qaoa_L": 5,
+      "matched_qaoa_E": -3.4373180622229675,
+      "second_start_gap": 1.3322676295501878e-15,
+      "repro_tolerance": 0.14823424964314091,
+      "equal_depth_ahead": true
+    },
+    {
+      "n": 6,
+      "L": 4,
+      "robust": true,
+      "reasons": [
+        "passed every gate"
+      ],
+      "E_D": -3.7936800040733516,
+      "E_Q": -3.3153792891766294,
+      "F_D": 0.9823292768109502,
+      "F_Q": 0.4831929174662037,
+      "energy_improvement": 0.4783007148967222,
+      "fidelity_improvement": 0.4991363593447465,
+      "required_energy_improvement": 0.026398502480158095,
+      "qaoa_residual": 0.5279700496031619,
+      "matched_qaoa_L": 7,
+      "matched_qaoa_E": -3.5840473153536654,
+      "second_start_gap": 0.005418045194925725,
+      "repro_tolerance": 0.11957517872418055,
+      "equal_depth_ahead": true
+    },
+    {
+      "n": 6,
+      "L": 5,
+      "robust": true,
+      "reasons": [
+        "passed every gate"
+      ],
+      "E_D": -3.8315765972493168,
+      "E_Q": -3.4373180622229675,
+      "F_D": 0.9952718360258165,
+      "F_Q": 0.5523029206277289,
+      "energy_improvement": 0.3942585350263492,
+      "fidelity_improvement": 0.4429689153980876,
+      "required_energy_improvement": 0.020301563827841186,
+      "qaoa_residual": 0.4060312765568237,
+      "matched_qaoa_L": 8,
+      "matched_qaoa_E": -3.636658000821283,
+      "second_start_gap": 0.0003227575081559131,
+      "repro_tolerance": 0.0985646337565873,
+      "equal_depth_ahead": true
+    },
+    {
+      "n": 6,
+      "L": 6,
+      "robust": false,
+      "reasons": [
+        "missing matched-parameter QAOA at L=10"
+      ],
+      "E_D": -3.841899177192954,
+      "E_Q": -3.53592533804748,
+      "F_D": 0.9991472862977767,
+      "F_Q": 0.647668303426701,
+      "energy_improvement": 0.3059738391454738,
+      "fidelity_improvement": 0.3514789828710757,
+      "required_energy_improvement": 0.015371200036615563,
+      "qaoa_residual": 0.30742400073231124,
+      "matched_qaoa_L": 10,
+      "second_start_gap": 2.851496816447252e-12,
+      "repro_tolerance": 0.07649345978636846,
+      "equal_depth_ahead": true
+    },
+    {
+      "n": 6,
+      "L": 7,
+      "robust": false,
+      "reasons": [
+        "missing D or QAOA"
+      ]
+    },
+    {
+      "n": 6,
+      "L": 8,
+      "robust": false,
+      "reasons": [
+        "missing D or QAOA"
+      ]
+    },
+    {
+      "n": 12,
+      "L": 1,
+      "robust": false,
+      "reasons": [
+        "energy improvement 0.0221916 does not exceed 0.0897163",
+        "fidelity improvement 0.000348448 < 0.01",
+        "D does not beat QAOA L+1 (-7.4316515) by 0.001",
+        "D does not beat matched QAOA L=2 (-7.4316515) by 0.001"
+      ],
+      "E_D": -6.841067875711734,
+      "E_Q": -6.818876314486206,
+      "F_D": 0.08127603414770071,
+      "F_Q": 0.08092758615628237,
+      "energy_improvement": 0.02219156122552768,
+      "fidelity_improvement": 0.00034844799141833804,
+      "required_energy_improvement": 0.08971630722245467,
+      "qaoa_residual": 1.7943261444490934,
+      "matched_qaoa_L": 2,
+      "matched_qaoa_E": -7.4316514808071314,
+      "second_start_gap": 2.6645352591003757e-15,
+      "repro_tolerance": 0.00554789030638192,
+      "equal_depth_ahead": true
+    },
+    {
+      "n": 12,
+      "L": 2,
+      "robust": false,
+      "reasons": [
+        "energy improvement -0.393426 does not exceed 0.0590775",
+        "fidelity improvement -0.0385647 < 0.01",
+        "D does not beat QAOA L+1 (-7.6851277) by 0.001",
+        "D does not beat matched QAOA L=4 (-7.8531696) by 0.001"
+      ],
+      "E_D": -7.038225350568709,
+      "E_Q": -7.4316514808071314,
+      "F_D": 0.09478391293172854,
+      "F_Q": 0.13334859329123083,
+      "energy_improvement": -0.39342613023842254,
+      "fidelity_improvement": -0.03856468035950229,
+      "required_energy_improvement": 0.05907754890640842,
+      "qaoa_residual": 1.1815509781281683,
+      "matched_qaoa_L": 4,
+      "matched_qaoa_E": -7.853169593302045,
+      "second_start_gap": 3.552713678800501e-15,
+      "repro_tolerance": 0.001,
+      "equal_depth_ahead": false
+    },
+    {
+      "n": 12,
+      "L": 3,
+      "robust": false,
+      "reasons": [
+        "energy improvement -0.166466 does not exceed 0.0464037",
+        "fidelity improvement -0.0236967 < 0.01",
+        "D does not beat QAOA L+1 (-7.8531696) by 0.001",
+        "D does not beat matched QAOA L=5 (-7.9769078) by 0.001"
+      ],
+      "E_D": -7.518661704481996,
+      "E_Q": -7.685127667299641,
+      "F_D": 0.14683970215624229,
+      "F_Q": 0.17053640763035333,
+      "energy_improvement": -0.1664659628176448,
+      "fidelity_improvement": -0.02369670547411104,
+      "required_energy_improvement": 0.04640373958178295,
+      "qaoa_residual": 0.9280747916356589,
+      "matched_qaoa_L": 5,
+      "matched_qaoa_E": -7.976907765059963,
+      "second_start_gap": 1.687538997430238e-14,
+      "repro_tolerance": 0.001,
+      "equal_depth_ahead": false
+    },
+    {
+      "n": 12,
+      "L": 4,
+      "robust": false,
+      "reasons": [
+        "energy improvement -0.221387 does not exceed 0.0380016",
+        "fidelity improvement -0.0501066 < 0.01",
+        "D does not beat QAOA L+1 (-7.9769078) by 0.001",
+        "D does not beat matched QAOA L=7 (-8.1242828) by 0.001"
+      ],
+      "E_D": -7.631782361921974,
+      "E_Q": -7.853169593302045,
+      "F_D": 0.1651725405596057,
+      "F_Q": 0.21527917216730003,
+      "energy_improvement": -0.22138723138007155,
+      "fidelity_improvement": -0.050106631607694324,
+      "required_energy_improvement": 0.038001643281662736,
+      "qaoa_residual": 0.7600328656332547,
+      "matched_qaoa_L": 7,
+      "matched_qaoa_E": -8.124282825366754,
+      "second_start_gap": 1.0658141036401503e-14,
+      "repro_tolerance": 0.001,
+      "equal_depth_ahead": false
+    },
+    {
+      "n": 12,
+      "L": 5,
+      "robust": false,
+      "reasons": [
+        "energy improvement -0.226319 does not exceed 0.0318147",
+        "fidelity improvement -0.0569883 < 0.01",
+        "D does not beat QAOA L+1 (-8.0568998) by 0.001",
+        "D does not beat matched QAOA L=8 (-8.1775334) by 0.001"
+      ],
+      "E_D": -7.750589033313906,
+      "E_Q": -7.976907765059963,
+      "F_D": 0.2013894698667293,
+      "F_Q": 0.25837777370285336,
+      "energy_improvement": -0.22631873174605666,
+      "fidelity_improvement": -0.05698830383612408,
+      "required_energy_improvement": 0.031814734693766854,
+      "qaoa_residual": 0.6362946938753371,
+      "matched_qaoa_L": 8,
+      "matched_qaoa_E": -8.177533423046633,
+      "second_start_gap": 5.329070518200751e-15,
+      "repro_tolerance": 0.001,
+      "equal_depth_ahead": false
+    },
+    {
+      "n": 12,
+      "L": 6,
+      "robust": false,
+      "reasons": [
+        "energy improvement -0.206678 does not exceed 0.0278151",
+        "fidelity improvement -0.0707533 < 0.01",
+        "D does not beat QAOA L+1 (-8.1242828) by 0.001",
+        "missing matched-parameter QAOA at L=10"
+      ],
+      "E_D": -7.850222116662643,
+      "E_Q": -8.056899807721518,
+      "F_D": 0.22392338255803973,
+      "F_Q": 0.2946766371181414,
+      "energy_improvement": -0.206677691058875,
+      "fidelity_improvement": -0.07075325456010167,
+      "required_energy_improvement": 0.027815132560689106,
+      "qaoa_residual": 0.5563026512137821,
+      "matched_qaoa_L": 10,
+      "second_start_gap": 6.217248937900877e-14,
+      "repro_tolerance": 0.001,
+      "equal_depth_ahead": false
+    },
+    {
+      "n": 12,
+      "L": 7,
+      "robust": false,
+      "reasons": [
+        "missing D or QAOA"
+      ]
+    },
+    {
+      "n": 12,
+      "L": 8,
+      "robust": false,
+      "reasons": [
+        "missing D or QAOA"
+      ]
+    }
+  ],
+  "robust_depths_by_n": {
+    "6": [
+      3,
+      4,
+      5
+    ],
+    "12": []
+  },
+  "program_success": false,
+  "headline": "No robust win. Equal-depth differences, where present, did not clear every gate on both sizes."
+}
