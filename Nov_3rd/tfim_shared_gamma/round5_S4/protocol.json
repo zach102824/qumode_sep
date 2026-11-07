@@ -1,0 +1,40 @@
+{
+  "schema": "round5-S4-preregistration",
+  "frozen_before_training": true,
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "stride4_cavities": [[0, 4, 8], [1, 5, 9], [2, 6, 10], [3, 7, 11]],
+  "bit_order": "first listed site is the cavity low bit; within-cavity reversal is a symmetry of this shell and is not a direction test",
+  "generator": "Hc + thetaK Khat + thetaM Mhat recomputed on stride4",
+  "P": "3L+3",
+  "arms": {
+    "0": "fresh plain stride4 ascending L1..6",
+    "1": "stored stride4 L6 downsampled to L4 and L5; L6 is the round trip of this arm's L5 energy-selected schedule",
+    "2": "sublattice energy-selected neighbor schedules resampled onto stride4"
+  },
+  "starts": {"ladder_L1_to_L3": 12, "cells_L4_to_L6": 24, "sigma_split": [0.02, 0.1], "per_sigma": 12},
+  "seeds": "numpy SeedSequence([20261107, arm, L, k])",
+  "optimizer": {"method": "L-BFGS-B", "maxiter": 1500, "maxfun": 600, "ftol": 1e-14, "gtol": 1e-8},
+  "bounds": "gamma and shells in [-2pi, 2pi], thetas in [-5, 5]; clipping is a box, not a wrap",
+  "interpolation": "knots x_l=(l-0.5)/L, linear below 3 source layers else natural cubic, constant endpoint clamp, shell unwrap period pi",
+  "replay_tolerances": {"energy": 1e-10, "fidelity": 1e-10, "overlap": 1e-12},
+  "comparison_tolerance": {"energy": 1e-8, "fidelity": 1e-8},
+  "screen": "Retire stride4 as a candidate, and keep it as a control, if arm1 median error exceeds the round-4 sublattice transfer median by more than 0.01 at both L5 and L6, and no energy-selected stride4 state beats the stored sublattice best energy by the comparison tolerance at either depth. A high-fidelity tradeoff stays on the record.",
+  "source_cost_convention": "Charge each producing run once. Arm 1 charges D control_stride4 nfev_sum 1556, including all six starts. Arm 2 charges the round-4 plain ladder L1..L4 (the run that produced the L3 and L4 vectors) plus the round-3 A_sub_M ladder L1..L6 (the run that produced the L5 and L6 vectors). Shared ancestors inside a ladder are not added twice. Per-depth inclusive curves split that one charge evenly across L4, L5 and L6.",
+  "source_costs": {"arm1_stride4_control": 1556, "arm2_sublattice": 28099},
+  "sublattice_vectors": {
+    "L3": "round4_R/results/cells/L3_plain.json best, error 0.4847578076488297",
+    "L4": "round4_R/results/cells/L4_plain.json best, error 0.3762629422016168",
+    "L5": "round3_R/results/cells/N12_L5_A_sub_M.json, error 0.31834106335331214",
+    "L6": "round3_R/results/cells/N12_L6_A_sub_M.json, error 0.2917196118876131"
+  },
+  "sublattice_transfer_medians": {"5": 0.31834106336277745, "6": 0.2917196118959371},
+  "qaoa_floor_commit": "5ebca82a",
+  "qaoa_floor": {
+    "9": {"energy_error": 0.39032828820639587, "F": 0.4120066178830655, "nfev_sum": 76799},
+    "10": {"energy_error": 0.3494522865130758, "F": 0.4523066682004341, "nfev_sum": 79751},
+    "11": {"energy_error": 0.3149868740398478, "F": 0.48485097463588717, "nfev_sum": 84980},
+    "12": {"energy_error": 0.28779490915225203, "F": 0.5147185356364429, "nfev_sum": 89272}
+  },
+  "equalization": "After the planned cells, add starts to the arm with the smaller inclusive total, cycling L6, L5, L4, at most 24 extra starts per cell, until the inclusive totals differ by less than one maxfun or the time limit is reached.",
+  "historical_screens_not_a_seal": {"5": 0.390, "6": 0.315}
+}
