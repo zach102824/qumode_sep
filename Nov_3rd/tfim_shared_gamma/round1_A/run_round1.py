@@ -38,7 +38,7 @@ from .hamiltonian import (
     selection_public,
 )
 from .optimize import optimize_method
-from .report import comparisons, dump_summary, gamma_ramp_section, write_markdown
+from .report import build_reading, comparisons, dump_summary, gamma_ramp_section, write_markdown
 from .validate import domain_wall_report, gradient_errors, run_validation
 
 
@@ -365,6 +365,8 @@ def run(budget_min: float, depths: list[int], ns: list[int], force: bool) -> dic
         if current is None or remaining() < 60:
             skipped.append(f"rescue QAOA N={n} L={L}")
             return
+        if current.get("rescue_attempted") or current.get("rescue"):
+            return
         log(f"rescue QAOA N={n} L={L}")
         prev = mem.get((n, L - 1, "qaoa"))
         rec = _optimize_and_record(
@@ -396,6 +398,12 @@ def run(budget_min: float, depths: list[int], ns: list[int], force: bool) -> dic
             log(f"  rescue did not improve E (best {rec['E']:.6f} vs {current['E']:.6f})")
             mem[(n, L, "qaoa")]["rescue_attempted"] = True
             mem[(n, L, "qaoa")]["rescue_E"] = rec["E"]
+            from .common import json_dump
+
+            json_dump(
+                _job_path(n, L, "qaoa"),
+                {k: v for k, v in mem[(n, L, "qaoa")].items() if k != "x"},
+            )
 
     # Apparent energy wins get a stronger QAOA search and an L+1 check.
     for L in [d for d in depths if d <= 4]:
@@ -429,7 +437,7 @@ def run(budget_min: float, depths: list[int], ns: list[int], force: bool) -> dic
     # Matched-parameter QAOA where an equal-depth energy-and-fidelity win still
     # stands and the matched depth was not already run. One depth, not a new family.
     for n in ns:
-        for L in (1, 2, 3, 4):
+        for L in sorted({ell for (nn, ell, method) in mem if nn == n and method == "family_A"}):
             A = mem.get((n, L, "family_A"))
             Q = mem.get((n, L, "qaoa"))
             if A is None or Q is None:
@@ -441,13 +449,13 @@ def run(budget_min: float, depths: list[int], ns: list[int], force: bool) -> dic
             Lm = matched_qaoa_depth(L)
             if (n, Lm, "qaoa") in mem:
                 continue
-            if remaining() < 180:
+            if remaining() < 120:
                 skipped.append(f"matched-param QAOA N={n} L={Lm} for A L={L}")
                 continue
             log(f"matched-parameter QAOA check N={n} L={Lm} against family A L={L}")
             # Fill intermediate QAOA depths if the bootstrap chain has a hole.
             for ell in range(1, Lm + 1):
-                if (n, ell, "qaoa") not in mem and remaining() > 60:
+                if (n, ell, "qaoa") not in mem and remaining() > 45:
                     run_job(n, ell, "qaoa")
 
     for L in depths:
@@ -497,6 +505,7 @@ def run(budget_min: float, depths: list[int], ns: list[int], force: bool) -> dic
         "gamma_ramp_heuristic": gamma_ramp_section(jobs, target_public),
         "failures": failures,
         "skipped": skipped,
+        "reading": [],
         "provenance": {
             "git": _git_hash(),
             "python": sys.version.split()[0],
@@ -509,6 +518,7 @@ def run(budget_min: float, depths: list[int], ns: list[int], force: bool) -> dic
             "ns": ns,
         },
     }
+    summary["reading"] = build_reading(summary)
     dump_summary(RESULTS / "summary.json", summary)
     write_markdown(RESULTS / "RESULTS.md", summary)
     log(f"wrote {RESULTS / 'summary.json'} in {summary['provenance']['wall_seconds']:.1f}s")

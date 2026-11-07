@@ -131,6 +131,96 @@ def gamma_ramp_section(jobs: list[dict], targets: dict) -> dict:
     }
 
 
+def build_reading(summary: dict) -> list[str]:
+    """Qualified statements that follow the tables. Not a program-level seal."""
+    rows = summary["comparisons"]
+    lines = []
+    both = [r for r in rows if r["both_better_than_qaoa"]]
+    lines.append(
+        f"Equal depth: family A is better on both energy and fidelity in {len(both)} of {len(rows)} computed cells. "
+        "That comparison gives A more parameters (2+3L versus 2L)."
+    )
+    survived = [
+        r for r in rows
+        if r["both_better_than_qaoa"] and r.get("both_better_than_qaoa_Lplus1")
+    ]
+    failed_l1 = [
+        f"N={r['n']} L={r['L']}" for r in rows
+        if r["both_better_than_qaoa"] and r.get("both_better_than_qaoa_Lplus1") is False
+    ]
+    lines.append(
+        f"QAOA at L+1: the equal-depth both-metric edge also beats QAOA at L+1 in {len(survived)} cells. "
+        + ("It does not at " + ", ".join(failed_l1) + "." if failed_l1 else "No equal-depth both-metric cell lost to QAOA at L+1.")
+    )
+    matched_both = [
+        f"N={r['n']} L={r['L']} (QAOA L={r['matched_qaoa_depth']})"
+        for r in rows
+        if r.get("energy_better_than_matched_qaoa") and r.get("fidelity_better_than_matched_qaoa")
+    ]
+    matched_loss = [
+        f"N={r['n']} L={r['L']} (QAOA L={r['matched_qaoa_depth']})"
+        for r in rows
+        if r.get("matched_qaoa_E") is not None and not (
+            r.get("energy_better_than_matched_qaoa") and r.get("fidelity_better_than_matched_qaoa")
+        )
+    ]
+    missing = [
+        f"N={r['n']} L={r['L']} (QAOA L={r['matched_qaoa_depth']})"
+        for r in rows
+        if r.get("matched_qaoa_E") is None
+    ]
+    lines.append(
+        "Matched parameter count, QAOA depth ceil((2+3L)/2): both-metric edge survives at "
+        + (", ".join(matched_both) if matched_both else "no computed cell")
+        + ". It does not survive at "
+        + (", ".join(matched_loss) if matched_loss else "no computed cell")
+        + (
+            ". Not run: " + ", ".join(missing) + "."
+            if missing
+            else ". Every listed cell has its matched QAOA depth."
+        )
+    )
+    lines.append(
+        "The N=6 matched-parameter wins are already present in native D, which fixes thetaK=0 and "
+        "uses fewer parameters than family A. They are evidence for the nonlinear shell under a shared "
+        "gamma, not for the physical K matrix. At N=12 native D loses to equal-depth QAOA, and family A "
+        "loses to parameter-matched QAOA at every depth that was checked."
+    )
+    lines.append(
+        "Controls: at N=12 the physical K feature is ahead of native D (thetaK=0), equal-RMS random K, "
+        "and equal-RMS reflection-symmetric K on energy at every computed depth, with optimized thetaK negative. "
+        "At N=6 that gap is large at L=1 and is gone by L=4, where a reflection-symmetric random K matches or "
+        "beats physical K. Native D alone already beats equal-depth QAOA at N=6 for L>=2 and does not beat "
+        "equal-depth QAOA at N=12. The N=12 equal-depth edge is the K feature, not the nonlinear shell by itself."
+    )
+    lines.append(
+        "The negative thetaK at N=12 is consistent with the effective-gamma-ramp heuristic and, at that size, "
+        "the physical matrix beats both equal-RMS controls. The heuristic is not a derivation: thetaK changes "
+        "sign across N=6 depths, and a reflection-symmetric random matrix can do as well once the shell is expressive."
+    )
+    lines.append(
+        "Restart standard deviations are large because they include failed starts. They are not an error bar "
+        "on the reported best energy. QAOA rescues with extra fresh starts did not lower the QAOA best energies. "
+        "Family A used more evaluations than QAOA because it has more parameters and more starts; QAOA was not cut off by the shared cap."
+    )
+    lines.append(
+        "N=6 to N=12 transfer with frozen angles is a different result from retraining. "
+        "The predeclared kappa rescaling carries L=1 family A to an energy close to the retrained L=1 result. "
+        "For L>=2 every disclosed gamma scale (raw, kappa, rms) leaves the nonlinear shell far from the ground state, "
+        "while transferred QAOA with the same kappa rule stays near its retrained energy. "
+        "A shared shell schedule fit at N=6 does not transfer."
+    )
+    lines.append(
+        "Fidelity along the optimized family-A schedules is not monotone at every depth. "
+        "Best-fidelity starts were recorded and were not allowed to replace best-energy angles."
+    )
+    lines.append(
+        "This is not a sealed win. Equal-depth gains that die under parameter matching, or that a random "
+        "reflection-symmetric K can copy, are not a demonstrated advantage of this feature."
+    )
+    return lines
+
+
 def write_markdown(path: Path, summary: dict) -> None:
     lines = []
     lines.append("# Round 1 direction A — shared-gamma F_K versus QAOA")
@@ -243,12 +333,19 @@ def write_markdown(path: Path, summary: dict) -> None:
         for item in summary["skipped"]:
             lines.append(f"- skipped: {item}")
     lines.append("")
+    lines.append("## Reading")
+    lines.append("")
+    for line in summary.get("reading") or []:
+        lines.append(line)
+    lines.append("")
     lines.append("## Provenance")
     lines.append("")
     prov = summary["provenance"]
     lines.append(f"- git: `{prov.get('git')}`")
     lines.append(f"- python {prov.get('python')} numpy {prov.get('numpy')} scipy {prov.get('scipy')}")
-    lines.append(f"- wall seconds: {prov.get('wall_seconds')}")
+    lines.append(f"- wall seconds, last process: {prov.get('wall_seconds')}")
+    if prov.get("timing_note"):
+        lines.append(f"- timing: {prov.get('timing_note')}")
     lines.append(f"- validation passed: {summary['validation']['passed']}")
     lines.append("")
     path.write_text("\n".join(lines) + "\n")
