@@ -1,0 +1,327 @@
+{
+  "primary": {
+    "n": 6,
+    "max_cavities": 2,
+    "hs_Hc": 2.502369787988353,
+    "hs_K_raw": 4.731832754037551,
+    "hs_star_raw": 2.660355286101692,
+    "hs_star_full_raw": 2.660355286101692,
+    "scale_K": 0.5288373275351174,
+    "scale_star": 0.9406148874405266,
+    "dropped_J2_identity_constant": 12.523709111673751,
+    "n_star_masks": 15,
+    "n_star_masks_full": 15,
+    "fraction_hs_norm_retained": 1.0,
+    "max_centers_per_mask": 4,
+    "center_count_histogram": {
+      "4": 15
+    },
+    "cavity_touch_histogram_full": {
+      "1": 0,
+      "2": 15,
+      "3": 0,
+      "4": 0
+    },
+    "n_odd_masks": 0,
+    "n_non_weight4_masks": 0,
+    "hc_cavity_pairs": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "K_cavity_pairs": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "star_cavity_pairs": [
+      [
+        0,
+        1
+      ]
+    ],
+    "n_star_intra_cavity_masks": 0,
+    "raw_star_coeffs": {
+      "15": 1.2116859255627863,
+      "23": 0.6481446939005353,
+      "39": 0.4474640259687285,
+      "27": 0.40864912434336276,
+      "43": 0.2346682307265974,
+      "51": 0.20410963522807862,
+      "29": 0.6481446939005354,
+      "45": 0.3260986074787522,
+      "53": 0.23466823072659737,
+      "57": 0.44746402596872853,
+      "30": 1.2116859255627863,
+      "46": 0.6481446939005353,
+      "54": 0.40864912434336276,
+      "58": 0.6481446939005354,
+      "60": 1.2116859255627863
+    },
+    "intra_hc_hs_fraction": 0.7083005908391469
+  },
+  "orthogonality_full_space": {
+    "inner_fs_ones": -3.552713678800501e-15,
+    "inner_fs_hc": 0.0,
+    "inner_fs_fk": 0.0,
+    "inner_fk_hc": 322.7151763212135,
+    "inner_fk_ones": 3.552713678800501e-15,
+    "full_two_body_regression_R2": 1.1102230246251565e-16,
+    "full_two_body_residual_rel": 1.0,
+    "two_body_design_rank": 16,
+    "n_two_body_columns_including_identity": 16,
+    "fs_l2": 20.018958303906825,
+    "note": "R2 near 0 and a unit residual fraction mean F_star is orthogonal to every constant plus two-body Z string on the full computational basis. That is an operator identity, not a statement about subsets."
+  },
+  "relevant_states": {
+    "neel": {
+      "vs_constant_plus_Hc": {
+        "R2": null,
+        "residual_rms_ratio": null,
+        "n": 2,
+        "rank": 1,
+        "design_singular_values": [
+          5.508967310802767,
+          1.1653637695267246e-17
+        ],
+        "fs_std": 0.0,
+        "pred_std": 0.0
+      },
+      "vs_constant_plus_Hc_plus_FK": {
+        "R2": null,
+        "residual_rms_ratio": null,
+        "n": 2,
+        "rank": 1,
+        "design_singular_values": [
+          5.578553861185371,
+          3.487381536062879e-16
+        ],
+        "fs_std": 0.0,
+        "pred_std": 0.0
+      },
+      "hc_std": 0.0,
+      "fk_std": 0.0,
+      "fs_std": 0.0,
+      "n": 2,
+      "fs_values_if_small": [
+        2.6483737209723426,
+        2.6483737209723426
+      ],
+      "hc_values_if_small": [
+        -3.7648851796232425,
+        -3.7648851796232425
+      ]
+    },
+    "single_flips": {
+      "vs_constant_plus_Hc": {
+        "R2": 0.26837758903954656,
+        "residual_rms_ratio": 0.8553492917869595,
+        "n": 12,
+        "rank": 2,
+        "design_singular_values": [
+          5.89016448089816,
+          1.416557983809303
+        ],
+        "fs_std": 1.0657453971330546,
+        "pred_std": 0.5521112406386057
+      },
+      "vs_constant_plus_Hc_plus_FK": {
+        "R2": 1.0,
+        "residual_rms_ratio": 7.725274058162e-13,
+        "n": 12,
+        "rank": 3,
+        "design_singular_values": [
+          5.949499917687927,
+          1.4311972443997918,
+          0.010069831789747968
+        ],
+        "fs_std": 1.0657453971330546,
+        "pred_std": 1.0657453971326514
+      },
+      "hc_std": 0.6953132934471893,
+      "fk_std": 0.13842582966715736,
+      "fs_std": 1.0657453971330546,
+      "n": 12,
+      "fs_values_if_small": null,
+      "hc_values_if_small": null
+    },
+    "excitations_single_pair_block": {
+      "vs_constant_plus_Hc": {
+        "R2": 0.38424135924004843,
+        "residual_rms_ratio": 0.7847028996760187,
+        "n": 44,
+        "rank": 2,
+        "design_singular_values": [
+          14.452298562999152,
+          6.564080295197649
+        ],
+        "fs_std": 2.1557234163407157,
+        "pred_std": 1.3362726948309118
+      },
+      "vs_constant_plus_Hc_plus_FK": {
+        "R2": 0.5071345057110381,
+        "residual_rms_ratio": 0.7020437979848281,
+        "n": 44,
+        "rank": 3,
+        "design_singular_values": [
+          19.144481522474024,
+          7.096400431968026,
+          5.960594946958384
+        ],
+        "fs_std": 2.1557234163407157,
+        "pred_std": 1.5351634425519323
+      },
+      "hc_std": 2.156046550402183,
+      "fk_std": 2.1340287387519483,
+      "fs_std": 2.1557234163407157,
+      "n": 44,
+      "fs_values_if_small": null,
+      "hc_values_if_small": null
+    },
+    "contiguous_domain_walls": {
+      "vs_constant_plus_Hc": {
+        "R2": 0.4740012161193107,
+        "residual_rms_ratio": 0.725257736174313,
+        "n": 32,
+        "rank": 2,
+        "design_singular_values": [
+          12.617910953108579,
+          2.2661273053621156
+        ],
+        "fs_std": 1.753538013538605,
+        "pred_std": 1.2072714016385404
+      },
+      "vs_constant_plus_Hc_plus_FK": {
+        "R2": 0.8136590665546779,
+        "residual_rms_ratio": 0.4316722523458302,
+        "n": 32,
+        "rank": 3,
+        "design_singular_values": [
+          13.686534970917474,
+          3.7361567257699257,
+          2.2474294449337777
+        ],
+        "fs_std": 1.753538013538605,
+        "pred_std": 1.5817448135239536
+      },
+      "hc_std": 0.8935560171083461,
+      "fk_std": 0.7558057567013022,
+      "fs_std": 1.753538013538605,
+      "n": 32,
+      "fs_values_if_small": null,
+      "hc_values_if_small": null
+    },
+    "lowest_64_classical": {
+      "vs_constant_plus_Hc": {
+        "R2": 1.1102230246251565e-16,
+        "residual_rms_ratio": 1.0,
+        "n": 64,
+        "rank": 2,
+        "design_singular_values": [
+          20.018958303906825,
+          8.000000000000002
+        ],
+        "fs_std": 2.502369787988353,
+        "pred_std": 1.1877514809610599e-16
+      },
+      "vs_constant_plus_Hc_plus_FK": {
+        "R2": 0.0,
+        "residual_rms_ratio": 1.0,
+        "n": 64,
+        "rank": 3,
+        "design_singular_values": [
+          26.897469544452935,
+          8.834224088868615,
+          8.000000000000002
+        ],
+        "fs_std": 2.502369787988353,
+        "pred_std": 8.088540487048702e-17
+      },
+      "hc_std": 2.502369787988353,
+      "fk_std": 2.502369787988353,
+      "fs_std": 2.502369787988353,
+      "n": 64,
+      "fs_values_if_small": null,
+      "hc_values_if_small": null
+    },
+    "full_space_column_normalized_singular_values": [
+      1.343599858500316,
+      1.0000000000000002,
+      1.0,
+      0.44129289620152523
+    ],
+    "full_space_min_over_max_sv": 0.32844071351278836,
+    "gs_probability_weighted": {
+      "vs_constant_plus_Hc": {
+        "R2": 0.9221753191617339,
+        "residual_rms_ratio": 0.2789707526574534,
+        "n": 64,
+        "rank": 2,
+        "fs_std": 0.6250989232270291,
+        "pred_std": 0.6002822450896349
+      },
+      "vs_constant_plus_Hc_plus_FK": {
+        "R2": 0.9320181259250835,
+        "residual_rms_ratio": 0.26073333901692847,
+        "n": 64,
+        "rank": 3,
+        "fs_std": 0.6250989232270291,
+        "pred_std": 0.603477288189759
+      },
+      "disclosed": "This regression uses the exact ground state as a diagnostic weight. It is not used to choose features, thetas, or the training objective."
+    },
+    "gs_support_prob_gt_1e-4": {
+      "vs_constant_plus_Hc": {
+        "R2": 0.6088325126268928,
+        "residual_rms_ratio": 0.6254338393252377,
+        "n": 22,
+        "rank": 2,
+        "design_singular_values": [
+          10.953893767107122,
+          2.068021436467483
+        ],
+        "fs_std": 1.780815885683399,
+        "pred_std": 1.3895300373181325
+      },
+      "vs_constant_plus_Hc_plus_FK": {
+        "R2": 0.8298397429211617,
+        "residual_rms_ratio": 0.4125048570366636,
+        "n": 22,
+        "rank": 3,
+        "design_singular_values": [
+          11.68559026033225,
+          2.829557448868079,
+          2.067424785108856
+        ],
+        "fs_std": 1.780815885683399,
+        "pred_std": 1.6222438495529876
+      },
+      "n": 22,
+      "prob_mass": 0.9991025996284597
+    }
+  },
+  "unrestricted": null,
+  "unrestricted_orthogonality": null,
+  "star_pairs_not_already_in_Hc": [],
+  "hypothesis": "The four-body star is the cubic monomial suggested by a formal Schrieffer-Wolff expansion of a transverse field around a uniform classical bound built from J alone. That motivation is a hypothesis. This run does not solve a Schrieffer-Wolff effective Hamiltonian, does not claim the series is controlled at the entropy peak, and does not fix theta_C to a perturbative value. Theta is a free shared energy-fit coefficient in front of an explicitly normalized J-polynomial feature.",
+  "normalization": "F_K and F_star are divided by ||raw||_HS/||Hc||_HS so each has the same Pauli HS norm as Hc. Theta is dimensionless. The (J^2)_ii constant from Z^2=I is excluded from F_K and reported as dropped_J2_identity_constant.",
+  "truncation_rule": "Primary: keep a weight-4 mask iff its qubits lie in at most 2 cavities (any pair, adjacent or not). N=6 has 2 cavities so nothing is dropped. N=12 drops 3- and 4-cavity masks. Unrestricted stars are diagnostic only. Pair-gate cost equivalence of an arbitrary two-cavity diagonal with the ZZ block is an assumption, not a measured hardware result."
+}
