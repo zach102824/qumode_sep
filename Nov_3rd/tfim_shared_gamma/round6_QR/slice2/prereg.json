@@ -1,0 +1,29 @@
+{
+  "frozen_before_slice2_evaluations": true,
+  "parent_round6_commit": "561605ff470ca3847201f9f16ed4c703b6db844a",
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "stride4_packing_sha256": "0f4330f4a9d4e84db3582beb8b607a2e1092918f7a28b68bb3cff4a1a514c979",
+  "tau_v1": 1e-9,
+  "tau_not_inflated": true,
+  "sensitivity_window_not_a_tau": 1e-7,
+  "budget_formula_unchanged": "Bp = max(4*Rp, 53927). D's 52927 does not replace 53927.",
+  "ledger_check": {
+    "source": "round6_QR/results/jobs/p{p}.json n_eval_new versus round6_QR/baseline.json new_work_allowed",
+    "matches_stated_remainder": true,
+    "remaining_max_new_evaluations": {"7": 415, "12": 108516, "11": 95146},
+    "out_of_scope": [9, 10, 13]
+  },
+  "priority": [7, 12, 11],
+  "seed_entropy": 20261113,
+  "seed_sequence": "[20261113, arm, p, k, batch], integers only. arm 1=INTERP, 2=FOURIER, 3=random, 4=perturb 0.02, 5=perturb 0.1.",
+  "continuation_batch_start": {"7": 24, "12": 35, "11": 41},
+  "abandoned_partial_batches_not_reused": {
+    "7": {"batch": 23, "starts_recorded": 23, "note": "sigma 0.1 k=4..7 were not run and are not reused"},
+    "12": {"batch": 34, "starts_recorded": 21, "note": "sigma 0.02 k=2..7 and all sigma 0.1 were not run and are not reused"},
+    "11": {"batch": 40, "starts_recorded": 20, "note": "sigma 0.02 k=1..7 and all sigma 0.1 were not run and are not reused"}
+  },
+  "optimizer": {"method": "L-BFGS-B", "maxiter": 1500, "maxfun_per_start": 500, "ftol": 1e-14, "gtol": 1e-8, "objective": "energy"},
+  "cap_rule": "Every training energy_grad decrements the remaining allowance first. A start stopped by the cap is partial, not a completed independent start. No training evaluation is issued once the counter is zero.",
+  "v1": "round6_QR/baseline.json stride4_L6_arm0 and KS_L6, commit 561605ff",
+  "v2": "PR74 commit 71bb0351 baseline_v1.json family_best L6 arm 2, sha256 382ea444375bcc7c91f61fddaf5d3dfdf33c1c2c5243973c46b5194d299ffe45"
+}

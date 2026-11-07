@@ -1,0 +1,58 @@
+{
+  "round6_completion_commit": "561605ff470ca3847201f9f16ed4c703b6db844a",
+  "round6_summary_sha256": "65dce4779897c863e44cb22e9e3041546cc766980b1cc54038f30c45824d71e3",
+  "round6_baseline_sha256": "a3bb2576ea6183a9282674f7821362a47857fb590e7906ac17adca09decfe30f",
+  "round6_protocol_sha256": "0dd5b4d1d79db3555a17875fd2f8e0cda5355deeafb8e8152884b1f5a97f901c",
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "frozen_F_source": {
+    "value": 0.9023701468564437,
+    "where": "C PR73 commit d9af7f2a file Nov_3rd/tfim_shared_gamma/round5_S4/results/cells/arm0_L6.json best.F",
+    "file_sha256": "92553606b0c58ac602c4b7eb29df4215a3ab97912b05bedfb5eb3408a759f837",
+    "E": -8.445682501757593,
+    "state_hash_claimed_by_producer": "e344ea410737af80485ad53eeff821f6782624fd17c51f068dcc9b0eceb386a1",
+    "copied_into": "round6_QR/baseline.json stride4_L6_arm0 by commit 77c7cece. This agent did not recompute that fidelity."
+  },
+  "independent_replay": {
+    "commit": "71bb0351",
+    "path": "Nov_3rd/tfim_shared_gamma/round6_RP/results/baseline_v1.json",
+    "sha256": "382ea444375bcc7c91f61fddaf5d3dfdf33c1c2c5243973c46b5194d299ffe45",
+    "source_commit_recorded_by_D": "d9af7f2ab7e6482cfa1307c6b347e03676e46146",
+    "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+    "stride4_packing_sha256": "0f4330f4a9d4e84db3582beb8b607a2e1092918f7a28b68bb3cff4a1a514c979",
+    "E0": -8.6132024589353,
+    "tau_recorded": 1e-9,
+    "arm0_L6_replay_F": 0.9023701468564451,
+    "arm0_L6_dF_vs_producer": 1.4432899320127035e-15,
+    "arm0_L6_dE_vs_producer": -1.5987211554602254e-14,
+    "family_best_L6": {"arm": 2, "E": -8.445682501760135, "F": 0.9023701795284864, "var": 0.6571004848729416},
+    "arm2_L6_dF_vs_producer": -3.9968028886505635e-15,
+    "arm2_producer_file_sha256": "07d148c4301e7e596c77aa6c811a1be29f29eaf64c0f1186c4d7cc685ef52f1b"
+  },
+  "cross_record_gap": {
+    "F_arm2_minus_F_arm0": 3.267204673473856e-08,
+    "E_arm2_minus_E_arm0": -2.5703883466121624e-12,
+    "angle_l2": 7.695300380751346,
+    "coordinates_differing_by_more_than_1e-6": 18,
+    "exceeds_tau_1e-9": true,
+    "same_record_replay_exceeds_tau": false
+  },
+  "verdict": "RESOLVED_AS_CROSS_RECORD",
+  "verdict_detail": "The 3.27e-8 fidelity gap is arm2 minus arm0 at the same source commit. D's replay of arm0, the record this branch froze, matches the producer fidelity to 1.4e-15. D's family_best is arm2, a different 21-parameter vector, and that replay matches the arm2 producer fidelity to 4e-15. Target and packing hashes agree. This is not evidence of opposite-parity leakage and not a failed replay of one state. tau stays 1e-9. v1 and v2 are not declared the same state.",
+  "eigensolve_this_audit": "not run; same-record residuals already separate the two questions",
+  "simulators_imported": [],
+  "pending_cost_discrepancies_not_used_to_change_Bp": {
+    "C_source_inclusive_upper": 53927,
+    "D_reconciled_source_reported_by_parent": 52927,
+    "difference": 1000,
+    "C_total_reported_by_parent": 124788,
+    "component_sum_reported_by_parent": 124404,
+    "component_gap": 384,
+    "note": "Left unresolved. Bp is unchanged."
+  },
+  "ledger_recomputed_from_slice1_jobs": {
+    "7": {"n_eval_new": 46511, "allowed": 46926, "remaining": 415},
+    "12": {"n_eval_new": 118558, "allowed": 227074, "remaining": 108516},
+    "11": {"n_eval_new": 127525, "allowed": 222671, "remaining": 95146},
+    "6": {"n_eval_new": 46841, "allowed": 46841, "remaining": 0}
+  }
+}
