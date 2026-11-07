@@ -1,0 +1,40 @@
+{
+  "verdict": "PASS",
+  "reason": "Walsh beats Fourier QAOA at L=2 and L=16 on n=6, n=9, and frozen n=12 (n=12 L=16 R=0.940). n=15 stays under 1.1 (L=16 R=0.914). 2/3 seeds beat at n=12 L=16 (median seed R=0.888). Transfer winner: unsat (unsat via walsh: 4/4 transfer BEATs, n=12 L=16 R=0.940).",
+  "winner": {
+    "winner": "unsat",
+    "head": "walsh",
+    "reason": "unsat via walsh: 4/4 transfer BEATs, n=12 L=16 R=0.940",
+    "heads": [
+      {
+        "hc": "unsat",
+        "head": "walsh",
+        "source": "this seal",
+        "eligible": true,
+        "transfer_beats": 4,
+        "R12": 0.9400289075465741,
+        "mark12": "BEAT"
+      },
+      {
+        "hc": "unsat",
+        "head": "power_p",
+        "source": "this seal",
+        "eligible": false,
+        "transfer_beats": 0,
+        "R12": 0.9897466404673999,
+        "mark12": "TIE"
+      },
+      {
+        "hc": "zzz",
+        "head": "power_p",
+        "source": "PR #15 published, B_train=32",
+        "eligible": true,
+        "transfer_beats": 2,
+        "R12": 0.924,
+        "mark12": "BEAT"
+      }
+    ]
+  },
+  "seed_median_R12": 0.8881713509306182,
+  "n_seed_beat": 2
+}
