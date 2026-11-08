@@ -1,0 +1,53 @@
+{
+  "schema": "size-confirmation-N15-r1",
+  "frozen_before_optimizer": true,
+  "formula": "H = sum_{i<j} |i-j|^{-1.1} ZiZj - 0.3444 sum_i Xi",
+  "not_paper_entropy_peak": true,
+  "not_ion_matrix": true,
+  "manifest_sha256": "de5f47b1bd1b4e3cfced8694c892d41f8cab9eb43f41ed285c3fccff6c9b0892",
+  "packing_sha256": "dcd102b8bc45bec941dc9f3e474781ba9cf19c12dd893d068e83d50e09d41074",
+  "harness_sha256": "7331bfc27ca152f949b0e315c3756be22e42c9c794a78771c4aa4db651924215",
+  "reference_sha256": "c5d8331539962440a53e990db0834de605cc031c07de4f9190ceba30753a851c",
+  "packing": [[0, 5, 10], [1, 6, 11], [2, 7, 12], [3, 8, 13], [4, 9, 14]],
+  "generator": "Hc + thetaK Khat + thetaM Mhat",
+  "feature_rank_J_K_M": 3,
+  "features_not_dropped": true,
+  "P": "3L+3",
+  "ground_state": {
+    "method": "scipy.sparse.linalg.eigsh on a matrix-free real matvec, which=SA, tol=1e-12, k=6",
+    "dense_matrix": false,
+    "E0": -10.857659100961786,
+    "full_gap": 0.00043523124187672124,
+    "first_excited_parity": -1,
+    "same_parity_gap": 0.3921820833153884,
+    "gs_residual": 4.976076053687336e-14,
+    "degeneracy_assumed": false
+  },
+  "why_maxfun_is_40": "One L=6 gradient is about 48 ms and one p=12 gradient is about 66 ms. A 250-evaluation cap on 48 chains would consume the wall before a four-times QAOA floor. The per-start cap is 40 so both arms can finish inside 75 minutes.",
+  "candidate": {
+    "chains": 48,
+    "depths": [1, 2, 3, 4, 5, 6],
+    "seed": [3115, 15, 0, "L", "k"],
+    "L1": "normal(0, 0.35), no N6, N9, or N12 vector",
+    "continuation": "layer centers (l-0.5)/L, linear below 3 source layers else natural cubic, constant endpoint clamp",
+    "maxfun": 40,
+    "maxiter": 1500,
+    "optimizer_eval_ceiling": 100000
+  },
+  "qaoa": {
+    "circuit": "plus, then exp(-i gamma_l Hc) and exp(-i beta_l sum X)",
+    "chains": 16,
+    "p1": "three draws uniform(-0.8, 0.8); 0.01 is not used",
+    "p2": "gamma [g, g+0.2], beta [b, b+0.06888]",
+    "p_ge_3": "endpoint grid, linear into p=3, natural cubic thereafter",
+    "priority_extra": "after the ladder, Fourier, perturbation, and random, cycling p12, p11, p9",
+    "maxfun": 40,
+    "floor_formula": "4 times the completed candidate optimizer-evaluation count, capped so candidate plus QAOA stays within 800000",
+    "floor_number_set_after_candidate_before_qaoa": true
+  },
+  "total_optimizer_ceiling": 800000,
+  "wall_inside_script_minutes": 68,
+  "selection": "energy only",
+  "tau": 1e-9,
+  "no_N18": true
+}
