@@ -1,0 +1,38 @@
+{
+  "procedure_audit": {
+    "groups": 48,
+    "l1_starts_per_group": 6,
+    "unique_seeds": 288,
+    "duplicate_seeds": 0,
+    "censored_raw": 0,
+    "censored_procedure": 0,
+    "selection_rule": "lowest energy, then smaller start index",
+    "selection_mismatches": 0,
+    "selected_s_mismatch_at_L2_through_L6": 0,
+    "pre_optimization_interpolant_not_stored": true,
+    "replay_L6": {
+      "6": {"n": 48, "hash_match": 48, "max_abs_dE": 0.0, "max_abs_dF": 0.0, "error_min": 0.0054583614512848655, "error_max": 0.05972300403808184, "F_min": 0.9798812185410878, "F_max": 0.9972343480979914},
+      "9": {"n": 48, "hash_match": 48, "max_abs_dE": 0.0, "max_abs_dF": 0.0, "error_min": 0.3222599386567291, "error_max": 0.3222599388709808, "F_min": 0.6239285797231288, "F_max": 0.623931093773549},
+      "12": {"n": 48, "hash_match": 48, "max_abs_dE": 0.0, "max_abs_dF": 0.0, "error_min": 0.16752009795178857, "error_max": 0.1675225802762288, "F_min": 0.9022550254017706, "F_max": 0.9023922386239579}
+    }
+  },
+  "N9_L6_wording": {
+    "quantity": "energy error and fidelity of the stored procedure states",
+    "not_a_median_of_a_spread": true,
+    "worst_error": 0.3222599388709808,
+    "worst_F": 0.6239285797231288,
+    "best_error": 0.3222599386567291,
+    "best_F": 0.623931093773549,
+    "stored_p6_error": 0.3366824656771943,
+    "stored_p6_F": 0.5138888064597292,
+    "worst_energy_margin": 0.014422526806213476,
+    "worst_fidelity_margin": 0.11003977326339953
+  },
+  "l1_predicts_deeper": {
+    "heldout_selected_L1_was_BOTH_for_all_48_at_each_size": true,
+    "heldout_did_not_continue_discarded_L1": true,
+    "N9_original_single_start": "The 27 L1 wins stay wins through L6. The seven double losses stay losses. The L6 states below error 0.25 all come from the L1 energy 1.54014, not from the L1 energy 0.75515.",
+    "N6_original_single_start": "45 L1 wins stay wins. Two L1 misses stay misses. One L1 miss is a win at L6. There is no second basin that is worse at L1 and better at L6 in a block of 14 chains.",
+    "N12": "Only the energy-selected L1 was continued in the held-out. That does not test whether a discarded L1 would have won later."
+  }
+}

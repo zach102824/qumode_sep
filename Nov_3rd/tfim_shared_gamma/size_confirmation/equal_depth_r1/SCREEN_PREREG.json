@@ -1,0 +1,26 @@
+{
+  "schema": "shared-gamma-l1-stopping",
+  "frozen_before_fresh_runs": true,
+  "family": "one shared gamma, shared thetaK and thetaM, three shell controls per layer, P=3L+3",
+  "not_layer_gamma": true,
+  "posthoc_only": "K=1,2,3,6 prefix rates on the existing six-start records are correlated calibration, not fresh tests.",
+  "rule": "Draw L1 starts in seed order. A start improves the best only if its energy is lower by more than 1e-4. Stop after two consecutive non-improvements, or after 6 starts. Continue the lowest energy among the starts that were drawn, ties to the smaller index.",
+  "why": "On the stored orders this uses about 3.5 starts and misses the six-start L1 basin by more than 0.05 on 1, 1, and 2 of 48 chains at N=6, 9, and 12. The threshold 1e-4 and the patience 2 use only L1 energies. They do not use fidelity or the ground-state energy.",
+  "control": "fixed six starts on the same seed stream, then its own lowest-energy continuation",
+  "init": "normal(0, 0.35)",
+  "L1_maxfun": 80,
+  "continuation_maxfun": 250,
+  "per_procedure_ceiling": 2000,
+  "ceiling_reason": "Six L1 calls at maxfun 80 plus five continuations at maxfun 250 is 1730, plus finish forwards. 2000 is that worst case rounded up. It is not the earlier mean of 946.",
+  "chains": 48,
+  "seeds": {"6": [7806, 6, 0, "k", "s"], "9": [7809, 9, 0, "k", "s"], "12": [7812, 12, 0, "k", "s"]},
+  "tau": 1e-9,
+  "bars": {
+    "6": {"1": [-3.40561191619738, 0.4527124998172263], "2": [-3.658235160506159, 0.5586676924572168], "3": [-3.790757377851306, 0.6297712196773796], "4": [-3.856239037154049, 0.6803342000950539], "5": [-3.921550292574913, 0.7392694575815768], "6": [-3.979501270782221, 0.8124435609387982]},
+    "9": {"1": [-5.115600772858937, 0.2116063669477717], "2": [-5.545624493146295, 0.3000380568610118], "3": [-5.738484427479781, 0.3566106288365332], "4": [-5.8567500618929, 0.4170797689603573], "5": [-5.950621086423667, 0.4767252016283162], "6": [-6.000405967808998, 0.5138888064597292]},
+    "12": {"1": [-6.818876314486204, 0.08092758536953838], "2": [-7.431651480807123, 0.1333485937821191], "3": [-7.685127667299636, 0.1705364087127303], "4": [-7.853169593302038, 0.2152791707786703], "5": [-7.976907765059793, 0.2583777744420888], "6": [-8.056899807721482, 0.29467663754724976]}
+  },
+  "primary_denominator": 48,
+  "censored_counts_as_failure": true,
+  "adopt_rule_only_if": "at every size the stopping rule's unconditional L6 BOTH count is at least the fixed-6 count and its median cost is lower"
+}

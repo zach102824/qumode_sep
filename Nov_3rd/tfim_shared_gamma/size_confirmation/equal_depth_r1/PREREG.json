@@ -1,0 +1,47 @@
+{
+  "schema": "equal-depth-remedy-r1",
+  "frozen_before_heldout": true,
+  "selection": "energy only",
+  "tau": 1e-9,
+  "recipe": "Six independent L=1 starts from normal(0, 0.35). Keep the lowest energy. Continue that vector L=2..6 by layer-center interpolation, linear below three source layers and natural cubic otherwise, endpoint values clamped. One continuation, not a second screen.",
+  "not_a_change_of_G": true,
+  "L1_starts": 6,
+  "L1_maxfun": 80,
+  "continuation_maxfun": 250,
+  "chains": 48,
+  "depths": [1, 2, 3, 4, 5, 6],
+  "heldout_seeds": {
+    "6": [4206, 6, 0, "k", "s"],
+    "9": [4209, 9, 0, "k", "s"],
+    "12": [4212, 12, 0, "k", "s"]
+  },
+  "burned_exploratory_seeds": [9109, 9, 1, "failed k", "s"],
+  "no_reuse_of_trained_winners": true,
+  "no_cross_size_transfer_in_this_slice": true,
+  "qaoa_bars_N6_E_F": [
+    [-3.40561191619738, 0.4527124998172263],
+    [-3.658235160506159, 0.5586676924572168],
+    [-3.790757377851305, 0.629771222086697],
+    [-3.856239037154049, 0.6803342000950539],
+    [-3.920158085512154, 0.7329688875439261],
+    [-3.966122810950504, 0.7818590048293759]
+  ],
+  "qaoa_bars_N9_E_F": [
+    [-5.115600772858937, 0.2116063669477717],
+    [-5.545624493146295, 0.3000380568610118],
+    [-5.738484427479781, 0.3566106288365332],
+    [-5.8567500618929, 0.4170797689603573],
+    [-5.950621086423667, 0.4767252016283162],
+    [-6.000405967808998, 0.5138888064597292]
+  ],
+  "qaoa_bars_N12_historical_round3_E_F": [
+    [-6.818876314486204, 0.0809275861769811],
+    [-7.431651480807123, 0.13334859273828656],
+    [-7.685127667299622, 0.17053640828787742],
+    [-7.8531695933020185, 0.2152791867310289],
+    [-7.976907765059945, 0.25837777107794724],
+    [-8.056899807721482, 0.29467663754724976]
+  ],
+  "N12_qaoa_rule": "After the N=12 candidate ledger closes, run equal-depth QAOA p=1..6 with 16 chains and 3 starts, maxfun 80, seeds [4212, 12, 1, p, k, s]. Floor equals the completed candidate optimizer-evaluation count. The comparator at each depth is the lower energy of that search and the historical round-3 cell, using the fidelity of the same state.",
+  "order": ["9", "6", "12"]
+}

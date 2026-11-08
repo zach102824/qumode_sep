@@ -1,0 +1,602 @@
+{
+  "schema": "round6-CD-cost-ledger-v2",
+  "optimizer_evaluations_this_audit": 0,
+  "diagnostic_forwards_this_audit": 48,
+  "v1_frozen_source_constant": 53927,
+  "v1_not_replaced": true,
+  "round6_fresh_marginal_includes_finish_forward": 48488,
+  "round6_descend_marginal_includes_finish_forward": 22373,
+  "round6_finished_starts": 384,
+  "round6_trace_lengths_sum": 70477,
+  "evals_new_field_in_run_meta": 70477,
+  "gap_384": {
+    "reported_family_inclusive": 124788,
+    "source_plus_evals_new": 124404,
+    "difference": 384,
+    "finished_starts": 384,
+    "verdict": "RECONCILED",
+    "evidence": "Each finished start stores nfev = LBFGS trace length + 1. run_meta evals_new counts only trace calls. Sum of stored nfev minus finished-start count equals 70477. The 384 is those 384 finish forwards."
+  },
+  "gap_1000": {
+    "producer_source_constant": 28099,
+    "raw_sum_round4_plain_L1_to_L4": 13076,
+    "raw_sum_round3_A_sub_M_L1_to_L6": 14023,
+    "raw_sum": 27099,
+    "difference": 1000,
+    "family_if_constant_28099_plus_arm2_marginal_25828": 53927,
+    "family_if_raw_sum_27099_plus_arm2_marginal_25828": 52927,
+    "verdict": "RECONCILED",
+    "evidence": "No event with nfev 1000 exists. The six round-3 nfev_sum values add to 14023, not 15023. 13076+14023=27099. The hardcoded 28099 is that sum plus 1000."
+  },
+  "fresh_by_depth": {
+    "1": {
+      "sum_nfev": 2365,
+      "marginal_field": 2365,
+      "n": 48
+    },
+    "2": {
+      "sum_nfev": 4078,
+      "marginal_field": 4078,
+      "n": 48
+    },
+    "3": {
+      "sum_nfev": 6502,
+      "marginal_field": 6502,
+      "n": 48
+    },
+    "4": {
+      "sum_nfev": 9862,
+      "marginal_field": 9862,
+      "n": 48
+    },
+    "5": {
+      "sum_nfev": 12237,
+      "marginal_field": 12237,
+      "n": 48
+    },
+    "6": {
+      "sum_nfev": 13444,
+      "marginal_field": 13444,
+      "n": 48
+    }
+  },
+  "descend_by_depth": {
+    "3": 2972,
+    "4": 6063,
+    "5": 6569,
+    "6": 6769
+  },
+  "per_chain_fresh": [
+    {
+      "chain_id": 0,
+      "through_L5": 822,
+      "through_L6": 1105,
+      "L1": 58,
+      "L2": 74,
+      "L3": 122,
+      "L4": 286,
+      "L5": 282,
+      "L6": 283
+    },
+    {
+      "chain_id": 1,
+      "through_L5": 915,
+      "through_L6": 1197,
+      "L1": 52,
+      "L2": 139,
+      "L3": 160,
+      "L4": 282,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 2,
+      "through_L5": 1016,
+      "through_L6": 1299,
+      "L1": 61,
+      "L2": 112,
+      "L3": 282,
+      "L4": 279,
+      "L5": 282,
+      "L6": 283
+    },
+    {
+      "chain_id": 3,
+      "through_L5": 700,
+      "through_L6": 982,
+      "L1": 52,
+      "L2": 72,
+      "L3": 106,
+      "L4": 194,
+      "L5": 276,
+      "L6": 282
+    },
+    {
+      "chain_id": 4,
+      "through_L5": 698,
+      "through_L6": 980,
+      "L1": 51,
+      "L2": 73,
+      "L3": 101,
+      "L4": 191,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 5,
+      "through_L5": 695,
+      "through_L6": 977,
+      "L1": 9,
+      "L2": 78,
+      "L3": 150,
+      "L4": 176,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 6,
+      "through_L5": 915,
+      "through_L6": 1197,
+      "L1": 48,
+      "L2": 102,
+      "L3": 201,
+      "L4": 282,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 7,
+      "through_L5": 657,
+      "through_L6": 939,
+      "L1": 71,
+      "L2": 71,
+      "L3": 102,
+      "L4": 182,
+      "L5": 231,
+      "L6": 282
+    },
+    {
+      "chain_id": 8,
+      "through_L5": 650,
+      "through_L6": 932,
+      "L1": 45,
+      "L2": 75,
+      "L3": 97,
+      "L4": 169,
+      "L5": 264,
+      "L6": 282
+    },
+    {
+      "chain_id": 9,
+      "through_L5": 938,
+      "through_L6": 1220,
+      "L1": 67,
+      "L2": 128,
+      "L3": 179,
+      "L4": 282,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 10,
+      "through_L5": 586,
+      "through_L6": 868,
+      "L1": 36,
+      "L2": 69,
+      "L3": 106,
+      "L4": 171,
+      "L5": 204,
+      "L6": 282
+    },
+    {
+      "chain_id": 11,
+      "through_L5": 563,
+      "through_L6": 845,
+      "L1": 34,
+      "L2": 61,
+      "L3": 112,
+      "L4": 144,
+      "L5": 212,
+      "L6": 282
+    },
+    {
+      "chain_id": 12,
+      "through_L5": 661,
+      "through_L6": 943,
+      "L1": 72,
+      "L2": 69,
+      "L3": 108,
+      "L4": 193,
+      "L5": 219,
+      "L6": 282
+    },
+    {
+      "chain_id": 13,
+      "through_L5": 627,
+      "through_L6": 909,
+      "L1": 56,
+      "L2": 54,
+      "L3": 114,
+      "L4": 171,
+      "L5": 232,
+      "L6": 282
+    },
+    {
+      "chain_id": 14,
+      "through_L5": 877,
+      "through_L6": 1159,
+      "L1": 55,
+      "L2": 120,
+      "L3": 153,
+      "L4": 267,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 15,
+      "through_L5": 672,
+      "through_L6": 954,
+      "L1": 39,
+      "L2": 69,
+      "L3": 107,
+      "L4": 175,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 16,
+      "through_L5": 648,
+      "through_L6": 930,
+      "L1": 43,
+      "L2": 76,
+      "L3": 129,
+      "L4": 159,
+      "L5": 241,
+      "L6": 282
+    },
+    {
+      "chain_id": 17,
+      "through_L5": 885,
+      "through_L6": 1167,
+      "L1": 53,
+      "L2": 107,
+      "L3": 161,
+      "L4": 282,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 18,
+      "through_L5": 675,
+      "through_L6": 957,
+      "L1": 49,
+      "L2": 69,
+      "L3": 97,
+      "L4": 203,
+      "L5": 257,
+      "L6": 282
+    },
+    {
+      "chain_id": 19,
+      "through_L5": 606,
+      "through_L6": 888,
+      "L1": 35,
+      "L2": 62,
+      "L3": 102,
+      "L4": 159,
+      "L5": 248,
+      "L6": 282
+    },
+    {
+      "chain_id": 20,
+      "through_L5": 619,
+      "through_L6": 901,
+      "L1": 37,
+      "L2": 68,
+      "L3": 104,
+      "L4": 188,
+      "L5": 222,
+      "L6": 282
+    },
+    {
+      "chain_id": 21,
+      "through_L5": 645,
+      "through_L6": 927,
+      "L1": 54,
+      "L2": 78,
+      "L3": 124,
+      "L4": 155,
+      "L5": 234,
+      "L6": 282
+    },
+    {
+      "chain_id": 22,
+      "through_L5": 920,
+      "through_L6": 1202,
+      "L1": 50,
+      "L2": 119,
+      "L3": 187,
+      "L4": 282,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 23,
+      "through_L5": 613,
+      "through_L6": 895,
+      "L1": 49,
+      "L2": 60,
+      "L3": 101,
+      "L4": 184,
+      "L5": 219,
+      "L6": 282
+    },
+    {
+      "chain_id": 24,
+      "through_L5": 910,
+      "through_L6": 1192,
+      "L1": 78,
+      "L2": 108,
+      "L3": 179,
+      "L4": 263,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 25,
+      "through_L5": 696,
+      "through_L6": 978,
+      "L1": 56,
+      "L2": 73,
+      "L3": 117,
+      "L4": 168,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 26,
+      "through_L5": 713,
+      "through_L6": 995,
+      "L1": 43,
+      "L2": 78,
+      "L3": 133,
+      "L4": 177,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 27,
+      "through_L5": 914,
+      "through_L6": 1196,
+      "L1": 39,
+      "L2": 116,
+      "L3": 195,
+      "L4": 282,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 28,
+      "through_L5": 985,
+      "through_L6": 1268,
+      "L1": 79,
+      "L2": 102,
+      "L3": 282,
+      "L4": 240,
+      "L5": 282,
+      "L6": 283
+    },
+    {
+      "chain_id": 29,
+      "through_L5": 625,
+      "through_L6": 907,
+      "L1": 36,
+      "L2": 83,
+      "L3": 100,
+      "L4": 178,
+      "L5": 228,
+      "L6": 282
+    },
+    {
+      "chain_id": 30,
+      "through_L5": 919,
+      "through_L6": 1201,
+      "L1": 58,
+      "L2": 120,
+      "L3": 177,
+      "L4": 282,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 31,
+      "through_L5": 711,
+      "through_L6": 993,
+      "L1": 14,
+      "L2": 56,
+      "L3": 176,
+      "L4": 183,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 32,
+      "through_L5": 678,
+      "through_L6": 960,
+      "L1": 42,
+      "L2": 67,
+      "L3": 101,
+      "L4": 191,
+      "L5": 277,
+      "L6": 282
+    },
+    {
+      "chain_id": 33,
+      "through_L5": 921,
+      "through_L6": 1203,
+      "L1": 71,
+      "L2": 153,
+      "L3": 133,
+      "L4": 282,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 34,
+      "through_L5": 533,
+      "through_L6": 803,
+      "L1": 36,
+      "L2": 79,
+      "L3": 120,
+      "L4": 183,
+      "L5": 115,
+      "L6": 270
+    },
+    {
+      "chain_id": 35,
+      "through_L5": 518,
+      "through_L6": 760,
+      "L1": 48,
+      "L2": 73,
+      "L3": 64,
+      "L4": 63,
+      "L5": 270,
+      "L6": 242
+    },
+    {
+      "chain_id": 36,
+      "through_L5": 599,
+      "through_L6": 881,
+      "L1": 39,
+      "L2": 69,
+      "L3": 100,
+      "L4": 174,
+      "L5": 217,
+      "L6": 282
+    },
+    {
+      "chain_id": 37,
+      "through_L5": 691,
+      "through_L6": 973,
+      "L1": 68,
+      "L2": 61,
+      "L3": 112,
+      "L4": 169,
+      "L5": 281,
+      "L6": 282
+    },
+    {
+      "chain_id": 38,
+      "through_L5": 596,
+      "through_L6": 878,
+      "L1": 42,
+      "L2": 68,
+      "L3": 106,
+      "L4": 165,
+      "L5": 215,
+      "L6": 282
+    },
+    {
+      "chain_id": 39,
+      "through_L5": 645,
+      "through_L6": 927,
+      "L1": 51,
+      "L2": 56,
+      "L3": 117,
+      "L4": 177,
+      "L5": 244,
+      "L6": 282
+    },
+    {
+      "chain_id": 40,
+      "through_L5": 624,
+      "through_L6": 906,
+      "L1": 36,
+      "L2": 61,
+      "L3": 120,
+      "L4": 168,
+      "L5": 239,
+      "L6": 282
+    },
+    {
+      "chain_id": 41,
+      "through_L5": 664,
+      "through_L6": 946,
+      "L1": 44,
+      "L2": 71,
+      "L3": 98,
+      "L4": 186,
+      "L5": 265,
+      "L6": 282
+    },
+    {
+      "chain_id": 42,
+      "through_L5": 637,
+      "through_L6": 919,
+      "L1": 44,
+      "L2": 69,
+      "L3": 96,
+      "L4": 194,
+      "L5": 234,
+      "L6": 282
+    },
+    {
+      "chain_id": 43,
+      "through_L5": 622,
+      "through_L6": 904,
+      "L1": 40,
+      "L2": 97,
+      "L3": 93,
+      "L4": 165,
+      "L5": 227,
+      "L6": 282
+    },
+    {
+      "chain_id": 44,
+      "through_L5": 796,
+      "through_L6": 1035,
+      "L1": 74,
+      "L2": 106,
+      "L3": 225,
+      "L4": 168,
+      "L5": 223,
+      "L6": 239
+    },
+    {
+      "chain_id": 45,
+      "through_L5": 646,
+      "through_L6": 928,
+      "L1": 60,
+      "L2": 68,
+      "L3": 113,
+      "L4": 184,
+      "L5": 221,
+      "L6": 282
+    },
+    {
+      "chain_id": 46,
+      "through_L5": 889,
+      "through_L6": 1171,
+      "L1": 47,
+      "L2": 107,
+      "L3": 171,
+      "L4": 282,
+      "L5": 282,
+      "L6": 282
+    },
+    {
+      "chain_id": 47,
+      "through_L5": 909,
+      "through_L6": 1191,
+      "L1": 44,
+      "L2": 132,
+      "L3": 169,
+      "L4": 282,
+      "L5": 282,
+      "L6": 282
+    }
+  ],
+  "family_inclusive_v2_using_raw_source": 97960,
+  "family_inclusive_v1_arithmetic_as_published": 124788,
+  "Bp_impact": "None. Issued rescue allowances stay on the frozen 53927. This audit does not replace that constant."
+}

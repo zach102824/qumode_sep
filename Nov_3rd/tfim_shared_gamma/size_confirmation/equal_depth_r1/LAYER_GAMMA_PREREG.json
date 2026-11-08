@@ -1,0 +1,40 @@
+{
+  "schema": "layer-gamma-L6-heldout",
+  "frozen_before_runs": true,
+  "family_label": "per-layer gamma, not the retained one-gamma six-start recipe",
+  "ansatz": "Each layer has its own gamma. thetaK and thetaM are shared across layers. Three shell controls per layer. G is still Hc + thetaK Khat + thetaM Mhat.",
+  "parameter_count": "P = L + 2 + 3L = 4L+2. The shared-gamma count is 3L+3. Replacing its one gamma by L gammas adds L-1, which is 4L+2, not 3L+3+L.",
+  "L6_parameters": 26,
+  "target": "same open-chain N=9 family as N9_r1, B=-0.3444, interleaved packing [[0,3,6],[1,4,7],[2,5,8]]",
+  "init": "One normal(0, 0.35) draw at L=1. Not a six-start screen. Later depths copy the previous gamma, carry the two thetas, and interpolate shells on layer centers.",
+  "optimizer": "L-BFGS-B, jac true, maxfun 120, maxiter 120, ftol 1e-12, energy only",
+  "chains": 48,
+  "depths": [1, 2, 3, 4, 5, 6],
+  "seed": [7709, 9, 1, "k"],
+  "seeds_not_reused": ["pilot SeedSequence([7510, k])", "16-chain confirm SeedSequence([7610, k])"],
+  "tau": 1e-9,
+  "both_rule": "E < bar_E - 1e-9 and F > bar_F + 1e-9 on the same state",
+  "bars_N9": {
+    "p6": [-6.000405967808998, 0.5138888064597292],
+    "p11": [-6.1667551941069, 0.7066961151573382],
+    "p12": [-6.185029984362808, 0.7306179954295513]
+  },
+  "ceiling_per_chain": 726,
+  "transfer_if": "at least 24 of 48 N9 L6 states beat p11 on both, and wall time remains",
+  "transfer": {
+    "chains": 8,
+    "maxfun": 80,
+    "seeds": {"6": [7706, 6, 1, "k"], "12": [7712, 12, 1, "k"]},
+    "bars_N6": {
+      "p6": [-3.979501270782221, 0.8124435609387982],
+      "p11": [-4.098292819424462, 0.9840863850539112],
+      "p12": [-4.10788240652286, 0.9945575281028541]
+    },
+    "bars_N12": {
+      "p6": [-8.056899807721482, 0.29467663754724976],
+      "p11": [-8.298215584895361, 0.48485100581283874],
+      "p12": [-8.325407549783158, 0.514718554056666]
+    }
+  },
+  "L5_not_rerun": "The 22-parameter L=5 pilot already lost to p11 at error 0.1766 and fidelity 0.6943. It is not repeated."
+}

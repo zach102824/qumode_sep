@@ -1,0 +1,48 @@
+{
+  "schema": "size-confirmation-N9-r1",
+  "frozen_before_optimizer": true,
+  "formula": "H = sum_{i<j} |i-j|^{-1.1} ZiZj - 0.3444 sum_i Xi",
+  "not_paper_entropy_peak": true,
+  "not_ion_matrix": true,
+  "historical_N6_B_not_used": "-0.1708",
+  "manifest_sha256": "220d4b40e897df0c8fa8ca0185dff7495c6e8ba62625134a05cbaf76876f3828",
+  "packing_sha256": "5ae567c9d89189c2fd495161a676056bd7aa09b4f043fdbe25ad5b82470dcfdc",
+  "harness_sha256": "7331bfc27ca152f949b0e315c3756be22e42c9c794a78771c4aa4db651924215",
+  "packing": [[0, 3, 6], [1, 4, 7], [2, 5, 8]],
+  "generator": "Hc + thetaK Khat + thetaM Mhat",
+  "feature_rank_J_K_M": 3,
+  "features_not_dropped": true,
+  "P": "3L+3",
+  "spectrum_before_training": {
+    "E0": -6.337088433486192,
+    "full_gap": 0.007807622071338116,
+    "first_excited_parity": -1,
+    "same_parity_gap": 0.453363422195749,
+    "degeneracy_assumed": false
+  },
+  "candidate": {
+    "chains": 48,
+    "depths": [1, 2, 3, 4, 5, 6],
+    "seed": [3109, 9, 0, "L", "k"],
+    "L1": "normal(0, 0.35), no N6 or N12 vector",
+    "continuation": "layer centers (l-0.5)/L, linear below 3 source layers else natural cubic, constant endpoint clamp",
+    "maxfun": 250,
+    "maxiter": 1500,
+    "optimizer_eval_ceiling": 100000
+  },
+  "qaoa": {
+    "circuit": "plus, then exp(-i gamma_l Hc) and exp(-i beta_l sum X)",
+    "chains": 16,
+    "p1": "three draws uniform(-0.8, 0.8); 0.01 is not used",
+    "p2": "gamma [g, g+0.2], beta [b, b+0.06888]",
+    "p_ge_3": "endpoint grid, linear into p=3, natural cubic thereafter",
+    "priority_extra": "after the ladder, Fourier, perturbation, and random, cycling p12, p11, p9",
+    "maxfun": 200,
+    "floor_formula": "4 times the completed candidate optimizer-evaluation count, capped so candidate plus QAOA stays within 800000",
+    "floor_number_set_after_candidate_before_qaoa": true
+  },
+  "total_optimizer_ceiling": 800000,
+  "selection": "energy only",
+  "tau": 1e-9,
+  "no_N15_N18": true
+}

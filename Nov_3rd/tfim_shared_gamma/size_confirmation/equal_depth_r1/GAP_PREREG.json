@@ -1,0 +1,33 @@
+{
+  "schema": "n9-stationary-gap",
+  "frozen_before_pilot": true,
+  "does_not_change_six_start_status": true,
+  "target": "N=9 open chain, J=|i-j|^{-1.1}, B=-0.3444, interleaved packing [[0,3,6],[1,4,7],[2,5,8]]",
+  "tau": 1e-9,
+  "families": {
+    "shared_gamma": "P=3+3L. One gamma, one thetaK, one thetaM, three shell controls per layer. L=6 has 21 parameters.",
+    "qaoa": "P=2p. p=10 has 20, p=11 has 22, p=12 has 24. No integer p has 21.",
+    "layer_gamma": "Different family. A gamma per layer, shared thetaK and thetaM, three shells per layer. P=4L+2. L=5 has 22, equal to p=11. L=6 has 26.",
+    "layer_theta": "Different family. One gamma, thetaK and thetaM per layer, three shells per layer. P=5L+1. L=4 has 21. L=6 has 31.",
+    "drop_K": "Different family. thetaK fixed at 0. P=2+3L. L=6 has 20, equal to p=10.",
+    "drop_M": "Different family. thetaM fixed at 0. P=2+3L. L=6 has 20.",
+    "contiguous": "Different packing, same shared-gamma generator. Sites [[0,1,2],[3,4,5],[6,7,8]]. L=6 has 21."
+  },
+  "p11_reference": "lowest energy p=11 row in N9_r1/results/records.jsonl",
+  "stationary_states": ["pressure/rescue.json resumed k=40", "equal_depth_r1/results/N9_records.jsonl procedure L=6 lowest index"],
+  "pilot": {
+    "chains": 4,
+    "init": "normal(0, 0.35) at L=1, then layer-center continuation",
+    "maxfun": 80,
+    "energy_only": true,
+    "seed": [7509, "family", "k"],
+    "per_family_ceiling": 5000
+  },
+  "confirm_only_if_pilot_best_beats_p11_on_both": {
+    "chains": 16,
+    "seed": [7609, "family", "k"],
+    "maxfun": 120,
+    "ceiling": 12000
+  },
+  "replace_six_start_only_if": "the held-out family beats equal-depth p=6 and matched p=11 on both metrics for the majority of its chains"
+}

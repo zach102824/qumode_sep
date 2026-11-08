@@ -1,0 +1,74 @@
+{
+  "code_hash": "54b06879f9481c04511a4e0160dd6b466b9e4069d4474f509a306627c06ed176",
+  "wall_time_s": 119.39040104700007,
+  "python": "3.12.3",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "platform": "Linux-6.12.113+-x86_64-with-glibc2.39",
+  "hypothesis": "The four-body star is the cubic monomial suggested by a formal Schrieffer-Wolff expansion of a transverse field around a uniform classical bound built from J alone. That motivation is a hypothesis. This run does not solve a Schrieffer-Wolff effective Hamiltonian, does not claim the series is controlled at the entropy peak, and does not fix theta_C to a perturbative value. Theta is a free shared energy-fit coefficient in front of an explicitly normalized J-polynomial feature.",
+  "gauge_audit": {
+    "max_abs_energy_change": {
+      "c1": 5.995204332975845e-15,
+      "c2": 5.329070518200751e-15,
+      "c3": 8.881784197001252e-15,
+      "beta": 7.105427357601002e-15
+    },
+    "algebraic_c2_global_phase_deviation": 2.4492935982947064e-16,
+    "periods_used_for_interpolation": {
+      "c1": 1.5707963267948966,
+      "c2": 1.5707963267948966,
+      "c3": 1.5707963267948966,
+      "beta": 3.141592653589793
+    },
+    "note": "Unwrap is applied only to controls whose pi/2 (shell) or pi (beta) shift left the energy unchanged on random D/QAOA states. Gamma is not given a period."
+  },
+  "gradient_audit": {
+    "N6": {
+      "qaoa": {
+        "max_abs": 8.681739771532193e-10,
+        "L": 2
+      },
+      "D": {
+        "max_abs": 1.6811703140717782e-09,
+        "L": 2
+      },
+      "A": {
+        "max_abs": 1.4330452380306724e-09,
+        "L": 1
+      },
+      "C": {
+        "max_abs": 1.2860454923213638e-09,
+        "L": 1
+      }
+    },
+    "N12_C_L1_selected_coords_maxabs": 4.349411497628353e-09
+  },
+  "zero_shell": {
+    "E_two_zero_shells": -0.15865951762928807,
+    "E_one_layer_same_gamma": -0.6979162079177261,
+    "E_one_layer_double_gamma": -0.15865951762928815,
+    "matches_double_gamma": true,
+    "differs_from_single_gamma": true
+  },
+  "optimizer": {
+    "solver": "L-BFGS-B",
+    "maxiter": 80,
+    "maxfun": 700,
+    "ftol": 1e-14,
+    "gtol": 1e-08,
+    "n_starts_L1": 18,
+    "n_starts_ge2": 12,
+    "objective": "energy <H>",
+    "fidelity": "post-hoc only; best-E state is kept, not best-F",
+    "rescue_extra_starts": 12,
+    "nested_inits": "Richer models replace up to two of their random starts with the same-depth simpler model (new coefficients set to 0). The start count does not increase. QAOA rescue includes a projection of the winning shell's c1 onto beta."
+  },
+  "kappa": {
+    "6": 2.7891892363555315,
+    "12": 3.9356757778027593
+  },
+  "deadline_s": 4800.0,
+  "polish": "Cells with gradient norm above 1e-3 were continued with L-BFGS-B maxiter 400, maxfun 4000. nfev_sum includes that continuation.",
+  "code_hash_at_report": "153a6fc5ae3d15627be7eb1a765d705df3d5e1048f5e117aacfa7884ce73f11b",
+  "polish_script": "polish_high_grad.py"
+}
