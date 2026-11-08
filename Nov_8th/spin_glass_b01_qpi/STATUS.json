@@ -4,7 +4,7 @@
   "deadline_shanghai": "2026-11-15T19:00:00+08:00",
   "user_stop": false,
   "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
-  "phase": "b01_qpi_running",
+  "phase": "b01_qpi_partial",
   "benchmark": "historical B=0.1, not B_cri",
   "rule": "four quarter-pi shell restarts on KM_pack and KM_fid, then the energy-only union, the same rule at every N",
   "prior_rounds": "b01_pack_partial, b01_fid_partial, and b01_union_partial stay as recorded",
@@ -16,8 +16,10 @@
   "B_cri": null,
   "protocol_commit": "dc1c95b0",
   "prereg_sha256": "8d537cbed32496f6a412ffbdfdeb19e2f3fe625f6b4100350524f3b229a9f7cc",
-  "verdict": null,
+  "verdict": "partial",
+  "pass": {"6": true, "9": false, "12": false},
   "k_confirm": [80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91],
-  "next_action": "Optimizer is running on k=80..91. Do not edit PREREG.json. Do not start a second fit. Do not run the pi/2 protocol. Do not assign a packing by N. B_cri stays null. Do not touch AF jobs.",
-  "updated_utc": "2026-11-08T18:20:00Z"
+  "wall_s": 2422.3,
+  "next_action": "Do not rerun this round and do not edit PREREG.json. Do not run the pi/2 protocol. Do not assign a packing by N. The quarter-pi hop did not clear N=9 or N=12. N9 k88 shows energy still keeping the lower-fidelity packing, and N9 k90 is itself a quarter-pi state with F_sub 0.004. Do not invent a field rule. B_cri stays null. A later slice, only after its own protocol commit, may test one new global rule inside the same shared-gamma circuit at historical B=0.1, on fresh k starting at 92. Do not touch AF jobs. Do not start new clouds. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
+  "updated_utc": "2026-11-08T19:00:00Z"
 }
