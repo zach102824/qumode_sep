@@ -102,3 +102,6 @@ Seeds `SeedSequence([20261170, N, k])`, `k = 0..63`, `N ∈ {6, 9, 12}`. Same
 `J` law as the circuit instances, disjoint indices from `SeedSequence([20261115, N, k])`.
 The ground state is used only to evaluate this field. It is not a feature,
 a start, a packing rule, or a training target.
+
+The numerical outcome of this frozen rule is in `RESULTS.md`. The rule
+itself is the hashed `PREREG_SCAN.json` and was not edited after the scan.

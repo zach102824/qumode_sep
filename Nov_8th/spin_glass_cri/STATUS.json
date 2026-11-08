@@ -4,11 +4,14 @@
   "deadline_shanghai": "2026-11-15T19:00:00+08:00",
   "user_stop": false,
   "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
-  "phase": "bcri_scan_preregistered",
+  "phase": "bcri_source_gate",
   "architecture": "Nov3 shared gamma, thetaK, thetaM; three shell angles per layer; same UcX every layer; packing may change only as a layer-independent cavity assignment",
   "out_of_scope": "KM_gl and any per-layer gamma remain out of scope. See Nov_8th/spin_glass_r5/SCOPE.md.",
   "historical_B": 0.1,
   "B_cri": null,
-  "next_action": "Run python3 Nov_8th/spin_glass_cri/layout_gate.py, then python3 Nov_8th/spin_glass_cri/scan_binder.py. Do not start a circuit fit unless this file's phase is bcri_frozen and B_cri is a number for each of N=6,9,12. If the scan adoption rule fails, leave phase at bcri_source_gate and do not guess a field. Do not touch AF jobs. Do not start new clouds.",
-  "updated_utc": "2026-11-08T14:20:00Z"
+  "Gamma_crossings_not_adopted": {"6_9": 0.7612355021964373, "9_12": 0.9375568199910912},
+  "prereg_scan_sha256": "0226715302ca7d0e30c4bee8182f05c367a93432c5d06fff99d376b3fb988629",
+  "protocol_commit": "2c3a0aae0a0a51e524fe1d5dd544db0d8063d7a8",
+  "next_action": "Do not start a circuit fit at a guessed B_cri. The frozen adoption rule failed because the Binder crossings differ by 0.176. Read Nov_8th/spin_glass_cri/RESULTS.md. Historical circuit benchmark remains B=0.1. A later round may test layer-independent packing at that historical B only after a new prereg is committed, and that round must be labeled historical-B rather than critical-field. Keep the shared-gamma layout gate. Do not revive KM_gl. Do not touch AF jobs. Do not start new clouds. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
+  "updated_utc": "2026-11-08T14:40:00Z"
 }
