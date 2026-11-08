@@ -1,0 +1,31 @@
+{
+  "schema": "n9-same-budget-diversity",
+  "frozen_before_heldout": true,
+  "discovery": "On the stored N=9 single-start chains, the L1 energy 1.54014 is worse than 0.75515 at L1, L2, L3, and L4, in all 14 chains. At L5, 9 of 14 are below the low-basin median. At L6, 7 of 14 are. A direct interpolation from the stored L1 angle to L5, 160 evaluations, stays near error 0.80 and does not reach that crossover. The discovery probe used 648 evaluations and is not a held-out trial.",
+  "per_procedure_ceiling": 946,
+  "ceiling_source": "mean inclusive evaluations of the 48 six-start procedures, 45388/48",
+  "tau": 1e-9,
+  "rare_state_label": "L6 energy error below 0.28; label only, not used for selection",
+  "L1": {"starts": 6, "maxfun": 50, "init": "normal(0, 0.35)", "keep": "lowest energy, then smaller s", "second": "lowest energy among starts at least 0.3 above the best"},
+  "control": "continue only the best L1 through L2..L6, maxfun 250, stop at the ceiling",
+  "treatment_maxfun": {
+    "greedy_L2": 40, "greedy_L3": 70, "greedy_L4": 90, "greedy_L5": 80,
+    "second_L2": 30, "second_L3": 50, "second_L4": 70, "second_L5": 150,
+    "winner_L6": "remaining evaluations under the ceiling, maxfun at most 250"
+  },
+  "treatment_rule": "If the second branch has a completed L5 state and its energy is lower, continue that branch. Otherwise continue the greedy branch. L1 through L4 of the procedure is the greedy branch.",
+  "seeds": [7209, 9, 0, "k", "s"],
+  "chains": 48,
+  "qaoa_E_F": [
+    [-5.115600772858937, 0.2116063669477717],
+    [-5.545624493146295, 0.3000380568610118],
+    [-5.738484427479781, 0.3566106288365332],
+    [-5.8567500618929, 0.4170797689603573],
+    [-5.950621086423667, 0.4767252016283162],
+    [-6.000405967808998, 0.5138888064597292]
+  ],
+  "L1_counted_in_each_procedure": true,
+  "L1_executed_once": true,
+  "replace_six_start_only_if_median_L6_error_improves_and_BOTH_does_not_fall": true,
+  "N12_condition": "Run 8 chains with the same caps only if the N9 treatment selects the second branch at least once and wall time remains. Seeds [7212, 12, 0, k, s]. This is a generalization check, not a replacement test."
+}
