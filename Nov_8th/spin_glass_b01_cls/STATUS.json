@@ -1,0 +1,23 @@
+{
+  "agent": "spin-glass-shared-gamma",
+  "model": "grok-4.7",
+  "deadline_shanghai": "2026-11-15T19:00:00+08:00",
+  "user_stop": false,
+  "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
+  "phase": "b01_cls_protocol_frozen",
+  "benchmark": "historical B=0.1, not B_cri",
+  "rule": "classical popcount shells on interleaved shared-gamma KM, the same rule at every N",
+  "prior_rounds": "b01_pack_partial, b01_fid_partial, b01_union_partial, and b01_qpi_partial stay as recorded",
+  "bcri_record": "Nov_8th/spin_glass_cri/STATUS.json remains phase bcri_source_gate",
+  "architecture": "Nov3 shared gamma, thetaK, thetaM; three shell angles per layer; same UcX every layer; interleaved packing",
+  "out_of_scope": "KM_gl, per-layer gamma, packing union, and pi/2 or pi/4 shell hops",
+  "historical_B": 0.1,
+  "B_cri": null,
+  "protocol_commit": null,
+  "prereg_sha256": "45957ee313312515005432d069a670a11ad30ee1bc5e075fe01ebcdb53822d2c",
+  "verdict": null,
+  "k_confirm": [92, 93, 94, 95, 96, 97, 98, 99, 102, 103, 104, 105],
+  "k_held_out_unused": [100, 101],
+  "next_action": "Protocol is frozen. Do not edit PREREG.json. Fit only after this protocol commit. Do not assign a packing by N. Do not run a pi/2 shift. B_cri stays null. Do not touch AF jobs.",
+  "updated_utc": "2026-11-08T19:15:00Z"
+}
