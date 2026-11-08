@@ -1,0 +1,36 @@
+{
+  "schema": "six-start-pressure",
+  "frozen_before_new_search": true,
+  "six_start": {
+    "definition": "Six L1 draws from normal(0, 0.35), maxfun 80 in the stored run. Keep the lowest energy, then the smaller start index. Continue that vector L2..L6 by layer-center interpolation.",
+    "reference": "procedure rows in equal_depth_r1/results/N{6,9,12}_records.jsonl",
+    "do_not_count_retrained_copies_as_new_procedures": true,
+    "inclusive_ledger": {"6": 65103, "9": 45388, "12": 50489},
+    "N9_mean_per_procedure": 946
+  },
+  "tau": 1e-9,
+  "qaoa_equal_depth": {
+    "N9_new_ceiling": 0,
+    "N9_reason": "The previous rescue spent 45388 evaluations and did not beat the historical p=6 state.",
+    "N12_new_ceiling": 50489,
+    "N12_depths_for_extras": [6, 5, 4],
+    "N12_design": "16 chains. p=1 has six uniform(-0.8,0.8) starts, maxfun 40, keep lowest energy. p=2 uses gamma+0.2 and beta+0.06888. Later depths use endpoint interpolation plus one perturbation and one Fourier, maxfun 60. Extras then cycle p=6,5,4.",
+    "N12_seed": [7412, 12, 5],
+    "N6_extra_if_wall_remains": {"ceiling": 12000, "depth": 6, "seed": [7406, 6, 5]}
+  },
+  "bar_files": {
+    "6": ["N6_r1/results/records.jsonl", "equal_depth_r1/rescue/N6_qaoa.jsonl"],
+    "9": ["N9_r1/results/records.jsonl", "equal_depth_r1/rescue/N9_qaoa.jsonl"],
+    "12_equal": ["equal_depth_r1/results/N12_records.jsonl", "equal_depth_r1/rescue/N12_qaoa.jsonl"],
+    "12_matched_cells": ["round3_R/results/cells/N12_L7_qaoa.json", "round3_R/results/cells/N12_L8_qaoa.json", "round3_R/results/cells/N12_L9_qaoa.json", "round3_R/results/cells/N12_L10_qaoa.json", "round3_R/results/cells/N12_L11_qaoa.json", "round3_R/results/cells/N12_L12_qaoa.json"]
+  },
+  "candidate_rescue": {
+    "family": "same shared-gamma generator, no new features",
+    "not_a_new_procedure_sample": true,
+    "ceiling": 18000,
+    "stored_rare_continuation": "Resume N9_r1 candidate k=40 at L6 for up to 600 evaluations.",
+    "fresh_second_branch": "6 chains, seeds [7409, 9, 1, k, s], 8 L1 starts maxfun 50, continue the start at least 0.3 above the best, L6 maxfun 600.",
+    "local_restarts": "All 48 stored six-start L6 vectors, one N(0,0.2) restart, maxfun 40, seeds [7409, 9, 2, k]."
+  },
+  "heldout_if_time": {"chains": 16, "seed": [7409, 9, 3], "ceiling_each": 946}
+}
