@@ -4,7 +4,7 @@
   "deadline_shanghai": "2026-11-15T19:00:00+08:00",
   "user_stop": false,
   "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
-  "phase": "b01_union_running",
+  "phase": "b01_union_partial",
   "benchmark": "historical B=0.1, not B_cri",
   "rule": "energy-only minimum of KM_pack and KM_fid, the same rule at every N",
   "prior_rounds": "b01_pack_partial and b01_fid_partial stay as recorded",
@@ -15,7 +15,10 @@
   "B_cri": null,
   "protocol_commit": "d0570819",
   "prereg_sha256": "7959adc7afb94a190ff1e3e03c3c2ed0fada3aefb4c6987441b0e1f737934f98",
+  "verdict": "partial",
+  "pass": {"6": true, "9": false, "12": false},
   "k_confirm": [68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79],
-  "next_action": "Optimizer is running: python3 Nov_8th/spin_glass_b01_union/run_union.py. After it exits, run evaluate.py, replay_independent.py, and summarize.py. Do not edit PREREG.json. Do not assign a packing by N. Do not invent a field rule. Do not touch AF jobs.",
-  "updated_utc": "2026-11-08T17:05:00Z"
+  "wall_s": 2077.2,
+  "next_action": "Do not rerun this round and do not edit PREREG.json. Do not move the claim onto the |J|-max component because its N=9 interval was positive on this sample. Do not assign a packing by N. Do not invent a field rule or import an antiferromagnetic B_c. B_cri stays null. A later slice, only after its own protocol commit, may test one new global initialization or optimizer rule inside the same shared-gamma circuit at historical B=0.1, on fresh k starting at 80. Do not touch AF jobs. Do not start new clouds. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
+  "updated_utc": "2026-11-08T17:45:00Z"
 }
