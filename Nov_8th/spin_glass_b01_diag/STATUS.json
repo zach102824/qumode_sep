@@ -4,7 +4,7 @@
   "deadline_shanghai": "2026-11-15T19:00:00+08:00",
   "user_stop": false,
   "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
-  "phase": "b01_diag_running",
+  "phase": "b01_diag_partial",
   "benchmark": "historical B=0.1, not B_cri",
   "rule": "standard interleaved shared-gamma KM; historical QAOA plus sixteen L=6 starts",
   "prior_rounds": "b01_pack_partial, b01_fid_partial, b01_union_partial, b01_qpi_partial, b01_cls_partial, and b01_esc_partial stay as recorded",
@@ -17,7 +17,13 @@
   "prereg_sha256": "1150031e970524aa0eee55a4acb6376bfefeaa78f4b10c3a851ac44b660d4ca6",
   "k_confirm": [118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129],
   "k_held_out_unused": [100, 101],
-  "verdict": null,
-  "next_action": "The fit is running. Do not edit PREREG.json. Do not start a second sweep. Do not rerun a recorded B=0.1 round. B_cri stays null. Do not touch AF jobs.",
-  "updated_utc": "2026-11-08T20:00:00Z"
+  "verdict": "partial",
+  "base_overall": "partial",
+  "deep_overall": "partial",
+  "pass_base": {"6": true, "9": false, "12": false},
+  "pass_deep": {"6": true, "9": false, "12": false},
+  "underoptimized": {"6": false, "9": false, "12": false},
+  "wall_s": 1159.0,
+  "next_action": "Do not rerun this round and do not edit PREREG.json. Do not assign a packing by N. The extra L=6 QAOA starts lowered no energy, so N=9 and N=12 are not under-optimized by the frozen 0.01 rule. Both columns are partial: N=6 passes and N=9 and N=12 do not. Equal-parameter count is not a pass. B_cri stays null. A later slice, only after its own protocol commit, may test one new global rule inside the same shared-gamma circuit at historical B=0.1, on fresh k starting at 130. k=100 and k=101 stay unused. Do not touch AF jobs. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
+  "updated_utc": "2026-11-08T20:13:31Z"
 }
