@@ -1,0 +1,23 @@
+{
+  "agent": "spin-glass-shared-gamma",
+  "model": "grok-4.7",
+  "deadline_shanghai": "2026-11-15T19:00:00+08:00",
+  "user_stop": false,
+  "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
+  "phase": "b01_rad_protocol",
+  "benchmark": "historical B=0.1, not B_cri",
+  "rule": "interleaved shared-gamma KM; continuation vector plus twelve scale-normalized L=6 directions of radius 1; energy-only selection",
+  "prior_rounds": "b01_pack_partial, b01_fid_partial, b01_union_partial, b01_qpi_partial, b01_cls_partial, b01_esc_partial, b01_diag_partial, b01_sel_partial, and b01_box_not_confirmed stay as recorded",
+  "bcri_record": "Nov_8th/spin_glass_cri/STATUS.json remains phase bcri_source_gate",
+  "architecture": "Nov3 shared gamma, thetaK, thetaM; three shell angles per layer; same UcX every layer; interleaved packing",
+  "out_of_scope": "KM_gl, per-layer gamma, a per-N packing, packing union, pi/2 or pi/4 shell hops, classical popcount shells, the repulsion escape, extra QAOA depth starts, fidelity post-selection, and a uniform draw from the full parameter box",
+  "historical_B": 0.1,
+  "B_cri": null,
+  "protocol_commit": "",
+  "prereg_sha256": "01a6658ef6f48bf62d17edcdce4a9e850a76471fe7410c57ef1db044b30c713f",
+  "k_confirm": [154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165],
+  "k_held_out_unused": [100, 101],
+  "verdict": null,
+  "next_action": "Protocol is hashed. Do not start the confirmation fit before this protocol commit is recorded. Do not edit PREREG.json after that commit. k=154..165 are the confirmation window. k=100 and k=101 stay unused. Do not touch AF jobs. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
+  "updated_utc": "2026-11-08T21:45:00Z"
+}
