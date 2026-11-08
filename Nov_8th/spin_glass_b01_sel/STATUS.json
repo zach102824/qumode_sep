@@ -1,0 +1,23 @@
+{
+  "agent": "spin-glass-shared-gamma",
+  "model": "grok-4.7",
+  "deadline_shanghai": "2026-11-15T19:00:00+08:00",
+  "user_stop": false,
+  "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
+  "phase": "b01_sel_protocol",
+  "benchmark": "historical B=0.1, not B_cri",
+  "rule": "energy-only interleaved shared-gamma KM; diagnostic column is the highest F_sub among L=6 starts with energy at most the QAOA energy plus 1e-6",
+  "prior_rounds": "b01_pack_partial, b01_fid_partial, b01_union_partial, b01_qpi_partial, b01_cls_partial, b01_esc_partial, and b01_diag_partial stay as recorded",
+  "bcri_record": "Nov_8th/spin_glass_cri/STATUS.json remains phase bcri_source_gate",
+  "architecture": "Nov3 shared gamma, thetaK, thetaM; three shell angles per layer; same UcX every layer; interleaved packing",
+  "out_of_scope": "KM_gl, per-layer gamma, packing union, pi/2 or pi/4 shell hops, classical popcount shells, the repulsion escape, and extra QAOA depth starts",
+  "historical_B": 0.1,
+  "B_cri": null,
+  "protocol_commit": null,
+  "prereg_sha256": null,
+  "k_confirm": [130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141],
+  "k_held_out_unused": [100, 101],
+  "verdict": null,
+  "next_action": "Protocol is frozen. No confirmation instance has been fit. Do not edit PREREG.json after the hash. Do not assign a packing by N. B_cri stays null. k=100 and k=101 stay unused. Do not touch AF jobs. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
+  "updated_utc": "2026-11-08T20:45:00Z"
+}
