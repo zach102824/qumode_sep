@@ -4,15 +4,19 @@
   "deadline_shanghai": "2026-11-15T19:00:00+08:00",
   "user_stop": false,
   "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
-  "phase": "b01_running",
+  "phase": "b01_pack_partial",
   "benchmark": "historical B=0.1, not B_cri",
   "bcri_record": "Nov_8th/spin_glass_cri/STATUS.json remains phase bcri_source_gate",
-  "architecture": "Nov3 shared gamma, thetaK, thetaM; three shell angles per layer; same UcX every layer; this round changes only the layer-independent cavity partition",
+  "architecture": "Nov3 shared gamma, thetaK, thetaM; three shell angles per layer; same UcX every layer; this round changed only the layer-independent cavity partition",
   "out_of_scope": "KM_gl and any per-layer gamma",
   "historical_B": 0.1,
   "B_cri": null,
   "protocol_commit": "dd4beeb88da0e9b0ee8eca928a6a3b54b333c9b4",
   "prereg_sha256": "d147eb571151c819cff450bb0788db20c438570f98f45821414252d3c4b0b5a1",
-  "next_action": "Optimizer is running: python3 Nov_8th/spin_glass_b01/run_b01.py. After it exits, run evaluate.py, replay_independent.py, and summarize.py in that order. Do not edit PREREG.json. Do not invent a field rule. Do not touch AF jobs. Do not start new clouds.",
-  "updated_utc": "2026-11-08T14:32:00Z"
+  "verdict": "partial",
+  "pass": {"6": true, "9": false, "12": true},
+  "k_confirm": [44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55],
+  "wall_s": 1805.2,
+  "next_action": "Do not rerun this confirmation and do not edit PREREG.json. Do not move the claim onto interleaved KM after seeing the reference column. Do not invent a field rule or import an antiferromagnetic B_c. B_cri stays null. A later round, only after its own protocol commit, may test an energy-only choice between the interleaved packing and the |J|-max packing on fresh k starting at 56, with QAOA given the same number of optimizer starts, labeled historical B=0.1. Do not touch AF jobs. Do not start new clouds. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
+  "updated_utc": "2026-11-08T15:05:00Z"
 }
