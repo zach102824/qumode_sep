@@ -4,7 +4,7 @@
   "deadline_shanghai": "2026-11-15T19:00:00+08:00",
   "user_stop": false,
   "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
-  "phase": "b01_div_running",
+  "phase": "b01_div_partial",
   "benchmark": "historical B=0.1, not B_cri",
   "rule": "interleaved shared-gamma KM; up to three L=1 states outside the energy beam, separation 0.5 in half-width units, continued through L=6; energy-only selection",
   "prior_rounds": "b01_pack_partial, b01_fid_partial, b01_union_partial, b01_qpi_partial, b01_cls_partial, b01_esc_partial, b01_diag_partial, b01_sel_partial, b01_box_not_confirmed, and b01_rad_partial stay as recorded",
@@ -17,7 +17,15 @@
   "prereg_sha256": "82ac2ac410aea9512bc5e5e865f0e25f49432d142616bdf85bf012faab80cbe6",
   "k_confirm": [166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177],
   "k_held_out_unused": [100, 101],
-  "verdict": null,
-  "next_action": "The confirmation fit on k=166..177 is running. Do not edit PREREG.json. Do not start a second fit. k=100 and k=101 stay unused. Do not touch AF jobs. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
-  "updated_utc": "2026-11-08T22:30:00Z"
+  "verdict": "partial",
+  "base_overall": "partial",
+  "div_overall": "partial",
+  "pass_base": {"6": true, "9": false, "12": false},
+  "pass_div": {"6": true, "9": false, "12": false},
+  "deeper": {"6": false, "9": false, "12": false},
+  "n_div_selected": 0,
+  "n_lineages": 212,
+  "wall_s": 1308.3,
+  "next_action": "Do not rerun this round and do not edit PREREG.json. Do not assign a packing by N. Zero of 848 L=6 lineage states beat the continuation energy, so deeper is false at N=6, 9, and 12. The verdict is partial: N=6 passes on the continuation search and the diverse column matches it. N=9 and N=12 do not. Equal-parameter count is not a pass. B_cri stays null. A later slice, only after its own protocol commit, may test one new global rule inside the same shared-gamma circuit at historical B=0.1, on fresh k starting at 178. k=100 and k=101 stay unused. Do not touch AF jobs. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
+  "updated_utc": "2026-11-08T22:46:00Z"
 }
