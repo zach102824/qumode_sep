@@ -4,7 +4,7 @@
   "deadline_shanghai": "2026-11-15T19:00:00+08:00",
   "user_stop": false,
   "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
-  "phase": "b01_diag_protocol_frozen",
+  "phase": "b01_diag_running",
   "benchmark": "historical B=0.1, not B_cri",
   "rule": "standard interleaved shared-gamma KM; historical QAOA plus sixteen L=6 starts",
   "prior_rounds": "b01_pack_partial, b01_fid_partial, b01_union_partial, b01_qpi_partial, b01_cls_partial, and b01_esc_partial stay as recorded",
@@ -13,10 +13,11 @@
   "out_of_scope": "KM_gl, per-layer gamma, packing union, pi/2 or pi/4 shell hops, classical popcount shells, and the repulsion escape",
   "historical_B": 0.1,
   "B_cri": null,
-  "protocol_commit": null,
+  "protocol_commit": "bbaa6e06",
   "prereg_sha256": "1150031e970524aa0eee55a4acb6376bfefeaa78f4b10c3a851ac44b660d4ca6",
   "k_confirm": [118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129],
   "k_held_out_unused": [100, 101],
-  "next_action": "Fit only after this protocol commit. Do not start another idea in the same wrap-up. Do not rerun a recorded B=0.1 round. Do not touch AF jobs.",
-  "updated_utc": "2026-11-08T19:50:00Z"
+  "verdict": null,
+  "next_action": "The fit is running. Do not edit PREREG.json. Do not start a second sweep. Do not rerun a recorded B=0.1 round. B_cri stays null. Do not touch AF jobs.",
+  "updated_utc": "2026-11-08T20:00:00Z"
 }
