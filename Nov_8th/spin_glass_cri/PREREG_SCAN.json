@@ -1,0 +1,51 @@
+{
+  "schema": "spin-glass-bcri-scan-v1",
+  "purpose": "Finite-N pseudocritical transverse field of the published spin-glass Hamiltonian. This file is not a circuit fit and does not authorize one.",
+  "model": "grok-4.7",
+  "hamiltonian": "H = sum_{i<j} J_ij Z_i Z_j + B sum_i X_i",
+  "z_convention": "Z|0> = +1, site q is bit q, least significant bit is site 0",
+  "J_law": "i.i.d. Normal(0,1) on i<j, symmetric, zero diagonal, no Kac factor, no rescaling",
+  "ensemble_seed": [20261170, "N", "k"],
+  "k_inclusive": [0, 63],
+  "N": [6, 9, 12],
+  "Gamma_milli": {"start": 200, "stop": 2800, "step": 50},
+  "field_map": "B = Gamma * sqrt(N), Gamma = Gamma_milli/1000. Gamma is the transverse field of the normalized SK Hamiltonian. B is the coefficient in the author Hamiltonian.",
+  "extra_author_B": 0.1,
+  "binder": {
+    "source": "Mukherjee, Rajak, Chakrabarti, Phys. Rev. E 92, 042107 (2015), arXiv:1412.2973, equation (5) and the T=0 Binder formula",
+    "Qk": "N^{-k} sum_{i1...ik} <Z_{i1}...Z_{ik}>^2 on the lowest eigenvector",
+    "g": "0.5 * (3 - mean over instances of (Q4 / Q2^2))",
+    "note_Q1": "Q1 uses <Z_i>, which vanishes in a spin-reflection eigenstate. It is recorded as a residual, not as the order parameter."
+  },
+  "normalization_source": "The printed SK density at J=1 is (N/(2*pi))^{1/2} exp(-N J_ij^2 / 2), i.e. Normal(0, variance 1/N). The prose line 'variance is J/sqrt(N)' disagrees with that density; the density is followed. Author variance is 1, so a shared eigenstate sits at B = Gamma * sqrt(N).",
+  "thermodynamic_anchor": {"Gamma_c": 1.62, "Gamma_c_uncertainty": 0.05, "role": "infinite-N extrapolation quoted by that paper. Not the finite-N adoption value."},
+  "adoption": {
+    "window": [0.40, 2.40],
+    "require": "exactly one crossing of g_N - g_N' inside the window for both pairs (6,9) and (9,12)",
+    "max_abs_pair_difference": 0.15,
+    "Gamma_pseudo": "mean of the two in-window crossings when the pair rule passes",
+    "B_cri": "Gamma_pseudo * sqrt(N), one value per N, the same Gamma for every instance",
+    "bootstrap": {"resamples": 400, "seed": 20261171, "fail_if_primary_missing_fraction_above": 0.20},
+    "degeneracy": {
+      "ordinary_gap_flag": 1e-6,
+      "Q2_spread_flag": 1e-3,
+      "check_window": [0.80, 2.00],
+      "withhold_if_flagged_fraction_above": 0.10
+    }
+  },
+  "not_an_input": [
+    "QAOA energy or fidelity",
+    "KM energy or fidelity",
+    "any circuit parameter",
+    "antiferromagnetic critical field",
+    "location of the minimum same-symmetry gap",
+    "ordinary gap E1-E0"
+  ],
+  "diagnostics_cannot_change_adoption": [
+    "per-instance Gamma of the largest drop of that instance's Q2",
+    "argmin over this grid of the same-parity gap, full spectrum at N=6 and N=9 for k=0..7, truncated Lanczos at N=12",
+    "Q2 at the historical author field B=0.1"
+  ],
+  "historical_B": {"value": 0.1, "role": "author final ramp B_f and the previous circuit benchmark. Kept separate. Not B_cri."},
+  "mixer_versus_field": "B_cri multiplies sum X inside the target Hamiltonian whose energy is scored. A QAOA mixer angle beta is not B_cri."
+}
