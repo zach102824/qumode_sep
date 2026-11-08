@@ -1,0 +1,483 @@
+{
+  "schema": "endpoint-rescue-r1-prereg",
+  "parent_audit_commit": "95a6b3590adf561e0ef6433f548b2ed23f8bc55a",
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "B_manifest_string": "-0.3444",
+  "J0": 1.0,
+  "gamma_scale": 1.0,
+  "beta_scale_B_over_J0": -0.3444,
+  "p2_paper_delta_beta": -0.2,
+  "p2_paper_delta_gamma": 0.2,
+  "p2_ours_delta_beta": 0.06888,
+  "p2_ours_delta_gamma": 0.2,
+  "code": {
+    "circuit": "Nov_3rd/tfim_shared_gamma/round5_KS/model.py",
+    "circuit_sha256": "6c5a0ef51e760c6ba7266b82e4ccece673358a223a8082251004fe279816dbd7",
+    "center_knots": "Nov_3rd/tfim_shared_gamma/round5_KS/optimize.py",
+    "center_knots_sha256": "5789667c87c3896c4c2c709907918243b18598eaafdd1ae378c55326f85677df",
+    "center_rescue_resample": "Nov_3rd/tfim_shared_gamma/round6_QR/slice3/run_slice3.py",
+    "center_rescue_sha256": "06699d61c658b0feb753c94098ba4523be533f38af1cbe97cb2d225d1d86b2fc",
+    "replay_angles": "Nov_3rd/tfim_shared_gamma/round4_N/results/jobs/n12_L12_qaoa.json",
+    "replay_angles_sha256": "f581c44896270ee97deca315fc095c110fde0dca347f908d488c9e9a1453c244",
+    "audit_validation_sha256": "5a490edc9a42a72d3cbf0253822bc49c300039eebcabca12b2abb3247c99b560"
+  },
+  "replay_must_match": {
+    "E": -8.325407549783135,
+    "F": 0.5147185362888936,
+    "var_H": 0.42114525455677665,
+    "eta": 0.9911210589175745,
+    "abs_tol": 1e-10
+  },
+  "optimizer": {
+    "method": "L-BFGS-B",
+    "maxiter": 1500,
+    "maxfun_per_start": 600,
+    "ftol": 1e-14,
+    "gtol": 1e-08,
+    "gamma_bounds": [
+      -12.0,
+      12.0
+    ],
+    "beta_bounds": [
+      -6.283185307179586,
+      6.283185307179586
+    ],
+    "selection": "lowest energy, including the best iterate of a partial start",
+    "training": "energy only"
+  },
+  "caps": {
+    "pairs": 8,
+    "starts_per_depth": 3,
+    "evals_per_start": 600,
+    "global_optimizer_evaluations": 300000,
+    "arithmetic_if_both_arms_at_every_depth": 345600,
+    "arithmetic_if_p1_p2_charged_once_per_pair": 316800,
+    "arithmetic_note": "8*2*12*3*600=345600 counts p1 and p2 twice. Charging those prefixes once still leaves 316800, above 300000, so 8 complete pairs are not allocated. p=3 seeds coincide and are also charged once when they match.",
+    "optimizer_wall_seconds": 3000,
+    "diagnostics_not_in_the_300000": [
+      "p12 replay forward",
+      "spectrum",
+      "observable passes on stored states"
+    ]
+  },
+  "order": "Pairs run 0,1,2,... A pair finishes p1 and p2, then each depth 3..12 runs both arms, alternating starts, before the next depth. pair even: endpoint start then center start. pair odd: center then endpoint. Stop at the global cap or the wall. A cut start is partial. Later depths of that pair are not started. No second family.",
+  "seeds": {
+    "entropy": 20261114,
+    "p1": "[20261114, pair, 1, 0, k]",
+    "matched_noise": "[20261114, pair, depth, 9, k] for k=1,2; k=0 is the unperturbed rule. The arm id is not in the noise seed.",
+    "noise_sigma": 0.05,
+    "noise_label": "ours, not a paper rule"
+  },
+  "p1_starts": [
+    {
+      "pair": 0,
+      "arm_first": "endpoint",
+      "starts": [
+        {
+          "k": 0,
+          "seed": [
+            20261114,
+            0,
+            1,
+            0,
+            0
+          ],
+          "gamma": -0.6700688863456327,
+          "beta": 0.4814552624011179
+        },
+        {
+          "k": 1,
+          "seed": [
+            20261114,
+            0,
+            1,
+            0,
+            1
+          ],
+          "gamma": -0.2813115505728362,
+          "beta": 0.18436645588991118
+        },
+        {
+          "k": 2,
+          "seed": [
+            20261114,
+            0,
+            1,
+            0,
+            2
+          ],
+          "gamma": -0.7412394197252508,
+          "beta": -0.01967751829556197
+        }
+      ]
+    },
+    {
+      "pair": 1,
+      "arm_first": "center",
+      "starts": [
+        {
+          "k": 0,
+          "seed": [
+            20261114,
+            1,
+            1,
+            0,
+            0
+          ],
+          "gamma": 0.37174622622228104,
+          "beta": -0.2661033069016554
+        },
+        {
+          "k": 1,
+          "seed": [
+            20261114,
+            1,
+            1,
+            0,
+            1
+          ],
+          "gamma": -0.3294681689087579,
+          "beta": -0.6589681307538555
+        },
+        {
+          "k": 2,
+          "seed": [
+            20261114,
+            1,
+            1,
+            0,
+            2
+          ],
+          "gamma": 0.3369259701331446,
+          "beta": 0.6624806855338012
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "arm_first": "endpoint",
+      "starts": [
+        {
+          "k": 0,
+          "seed": [
+            20261114,
+            2,
+            1,
+            0,
+            0
+          ],
+          "gamma": -0.6204818735159162,
+          "beta": 0.015466977100166424
+        },
+        {
+          "k": 1,
+          "seed": [
+            20261114,
+            2,
+            1,
+            0,
+            1
+          ],
+          "gamma": 0.5959558192331911,
+          "beta": -0.5195937125554325
+        },
+        {
+          "k": 2,
+          "seed": [
+            20261114,
+            2,
+            1,
+            0,
+            2
+          ],
+          "gamma": 0.7210888742458035,
+          "beta": 0.2569553868246599
+        }
+      ]
+    },
+    {
+      "pair": 3,
+      "arm_first": "center",
+      "starts": [
+        {
+          "k": 0,
+          "seed": [
+            20261114,
+            3,
+            1,
+            0,
+            0
+          ],
+          "gamma": 0.3352533160127722,
+          "beta": 0.6190035960054328
+        },
+        {
+          "k": 1,
+          "seed": [
+            20261114,
+            3,
+            1,
+            0,
+            1
+          ],
+          "gamma": -0.5382775808719809,
+          "beta": 0.7193069992410777
+        },
+        {
+          "k": 2,
+          "seed": [
+            20261114,
+            3,
+            1,
+            0,
+            2
+          ],
+          "gamma": -0.5860948233561797,
+          "beta": 0.7390331418277396
+        }
+      ]
+    },
+    {
+      "pair": 4,
+      "arm_first": "endpoint",
+      "starts": [
+        {
+          "k": 0,
+          "seed": [
+            20261114,
+            4,
+            1,
+            0,
+            0
+          ],
+          "gamma": -0.2205723058573016,
+          "beta": 0.09798830050849894
+        },
+        {
+          "k": 1,
+          "seed": [
+            20261114,
+            4,
+            1,
+            0,
+            1
+          ],
+          "gamma": 0.6114950861899111,
+          "beta": -0.7511719049178481
+        },
+        {
+          "k": 2,
+          "seed": [
+            20261114,
+            4,
+            1,
+            0,
+            2
+          ],
+          "gamma": -0.2061148303026077,
+          "beta": -0.4817761426635082
+        }
+      ]
+    },
+    {
+      "pair": 5,
+      "arm_first": "center",
+      "starts": [
+        {
+          "k": 0,
+          "seed": [
+            20261114,
+            5,
+            1,
+            0,
+            0
+          ],
+          "gamma": 0.5629408829275995,
+          "beta": -0.6418627483040356
+        },
+        {
+          "k": 1,
+          "seed": [
+            20261114,
+            5,
+            1,
+            0,
+            1
+          ],
+          "gamma": -0.020621031164864356,
+          "beta": -0.04685524962465892
+        },
+        {
+          "k": 2,
+          "seed": [
+            20261114,
+            5,
+            1,
+            0,
+            2
+          ],
+          "gamma": 0.7169119547830562,
+          "beta": 0.5311460213630206
+        }
+      ]
+    },
+    {
+      "pair": 6,
+      "arm_first": "endpoint",
+      "starts": [
+        {
+          "k": 0,
+          "seed": [
+            20261114,
+            6,
+            1,
+            0,
+            0
+          ],
+          "gamma": 0.7576443168488565,
+          "beta": 0.6065991649900242
+        },
+        {
+          "k": 1,
+          "seed": [
+            20261114,
+            6,
+            1,
+            0,
+            1
+          ],
+          "gamma": -0.10453146595088092,
+          "beta": 0.5953415757381753
+        },
+        {
+          "k": 2,
+          "seed": [
+            20261114,
+            6,
+            1,
+            0,
+            2
+          ],
+          "gamma": 0.12223587768120736,
+          "beta": 0.2576974069005493
+        }
+      ]
+    },
+    {
+      "pair": 7,
+      "arm_first": "center",
+      "starts": [
+        {
+          "k": 0,
+          "seed": [
+            20261114,
+            7,
+            1,
+            0,
+            0
+          ],
+          "gamma": -0.7334500223363141,
+          "beta": 0.7793138277272142
+        },
+        {
+          "k": 1,
+          "seed": [
+            20261114,
+            7,
+            1,
+            0,
+            1
+          ],
+          "gamma": 0.08175172076200854,
+          "beta": 0.22357356077616686
+        },
+        {
+          "k": 2,
+          "seed": [
+            20261114,
+            7,
+            1,
+            0,
+            2
+          ],
+          "gamma": -0.5058527685539862,
+          "beta": -0.6673005041841318
+        }
+      ]
+    }
+  ],
+  "interpolation": {
+    "order": "linear when the source has 2 angles (step into p=3); natural cubic when the source has 3 or more",
+    "center_abscissa": "(l+0.5)/L",
+    "endpoint_abscissa_source": "(i-1)/(q-2)",
+    "endpoint_sample_spacing": "1/(q-1)",
+    "review_said_linear_at_all_depths": false
+  },
+  "historical_qaoa_recorded_best": {
+    "9": {
+      "E": -8.222874170728861,
+      "F": 0.41200661658598803,
+      "source": "round6_QR/slice3/rescue_results.json",
+      "commit": "91c96c20"
+    },
+    "10": {
+      "E": -8.263750172422327,
+      "F": 0.45230669422745884,
+      "source": "round6_QR/slice3/rescue_results.json",
+      "commit": "91c96c20"
+    },
+    "11": {
+      "E": -8.298215584895333,
+      "F": 0.4848510087447086,
+      "source": "round6_QR/slice2/rescue_results.json",
+      "commit": "5096c2a4"
+    },
+    "12": {
+      "E": -8.3254075497832,
+      "F": 0.5147185522341006,
+      "source": "round6_QR/slice2/rescue_results.json",
+      "commit": "5096c2a4"
+    }
+  },
+  "improvement_rule": "A depth improves if the new energy-selected E is below that depth's recorded E by more than 1e-9. Failure is a finite-budget negative, not a global-optimum proof. This family does not reopen the finished 4*Rp allowances.",
+  "candidates": {
+    "L5_producer_arm0": {
+      "E": -8.385155838742422,
+      "F": 0.8898142677626181,
+      "path": "round6_QR/baseline.json stride4_L5_arm0",
+      "commit": "d9af7f2a",
+      "state_hash": "d31ed7766b29e130be4651460973221ff2b40b4c2c29d934fda38e22cca81974"
+    },
+    "L5_D_replay_arm0": {
+      "E": -8.385155838742358,
+      "F": 0.8898142677626111,
+      "path": "round6_QR/slice3/fresh_distribution.json",
+      "commit": "71bb0351"
+    },
+    "L6_v1_arm0": {
+      "E": -8.445682501757593,
+      "F": 0.9023701468564437,
+      "path": "round6_QR/baseline.json stride4_L6_arm0",
+      "commit": "d9af7f2a",
+      "state_hash": "e344ea410737af80485ad53eeff821f6782624fd17c51f068dcc9b0eceb386a1"
+    },
+    "L6_v2_arm2": {
+      "E": -8.445682501760135,
+      "F": 0.9023701795284864,
+      "path": "round6_QR/slice3/fresh_distribution.json",
+      "commit": "71bb0351"
+    },
+    "KS_L6_nested": {
+      "E": -8.32952367495257,
+      "F": 0.603916079222382,
+      "path": "round6_QR/baseline.json KS_L6",
+      "commit": "a312228e",
+      "state_sha256": "ed1250c8334145b714db45882ac307091016f6b0870b548e8b97d4a5a523c8d1"
+    }
+  },
+  "tau": 1e-09,
+  "both_lead_rule": "candidate retains both if its E is lower and its F is higher by more than tau. QAOA overturns if its E is lower and its F is higher by more than tau. Every other case is a tradeoff, not a retained lead. Primary matched depths are p9 versus L5 and p11 versus L6. KS L6 is compared at p11 and p12.",
+  "accessible_gap_not_an_explanation": 0.4337981341960315,
+  "no_neighborhood": true,
+  "no_new_target": true
+}
