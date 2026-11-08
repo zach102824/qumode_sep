@@ -6,6 +6,8 @@ import multiprocessing as mp
 import sys
 from pathlib import Path
 
+import numpy as np
+
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "spin_glass_r4"))
 import run_sg_r4 as m4  # noqa: E402
