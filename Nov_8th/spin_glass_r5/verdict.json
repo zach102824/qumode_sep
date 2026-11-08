@@ -1,0 +1,18 @@
+{
+  "scope": "OUT_OF_SCOPE",
+  "applies_to": "KM_gl only",
+  "reason": "KM_gl uses a separate coefficient on Hc at each layer. The Nov 8 21:09 Asia/Shanghai constraint forbids per-layer gamma and any change to the shared-gamma gate sequence. These booleans are the rule as frozen in PREREG.json before that correction. They are not a result for the original shared-gamma method, and they are not a win.",
+  "stopped": "No KM_gl process was still running when the correction arrived. The fit had exited 0 at 13:06 UTC. Nothing further will be optimized for KM_gl or for the |J|-max packing variant.",
+  "per_N": {
+    "6": true,
+    "9": true,
+    "12": true
+  },
+  "overall": "void",
+  "historical_overall_before_constraint": "confirmed",
+  "replay_gate": {
+    "6": true,
+    "9": true,
+    "12": true
+  }
+}

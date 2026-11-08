@@ -2,6 +2,8 @@
 
 Protocol frozen at `baa35c55` before any fit. This set (k=4..15, two repeats, all 12 instances at each of N=6, 9, 12) was used to decide what to confirm. It is not the confirmation.
 
+**Scope correction, Nov 8 21:09 Asia/Shanghai.** KM_gl is out of scope: it gives each layer its own coefficient on Hc. KM_pack keeps shared gamma but replaces the fixed interleaved grouping of the shells and of FMhat. Under the correction, an uncertain grouping change is not used. Neither variant is a solution. The KM column is the original shared-gamma circuit and remains the reference. The advancement rule below picked KM_gl; that choice is void.
+
 ## What advanced
 
 Both variants beat the retained KM reference under the frozen rule, on joint wins as well as fidelity. The rule picks **KM_gl** for confirmation, because the sum of its median-fidelity gains over KM is larger. KM_pack also advanced and is not discarded; it is the fallback if KM_gl does not confirm.
