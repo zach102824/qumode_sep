@@ -4,7 +4,7 @@
   "deadline_shanghai": "2026-11-15T19:00:00+08:00",
   "user_stop": false,
   "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
-  "phase": "b01_cls_running",
+  "phase": "b01_cls_partial",
   "benchmark": "historical B=0.1, not B_cri",
   "rule": "classical popcount shells on interleaved shared-gamma KM, the same rule at every N",
   "prior_rounds": "b01_pack_partial, b01_fid_partial, b01_union_partial, and b01_qpi_partial stay as recorded",
@@ -15,9 +15,11 @@
   "B_cri": null,
   "protocol_commit": "c0dddb7e",
   "prereg_sha256": "45957ee313312515005432d069a670a11ad30ee1bc5e075fe01ebcdb53822d2c",
-  "verdict": null,
+  "verdict": "partial",
+  "pass": {"6": true, "9": false, "12": false},
+  "wall_s": 447.4,
   "k_confirm": [92, 93, 94, 95, 96, 97, 98, 99, 102, 103, 104, 105],
   "k_held_out_unused": [100, 101],
-  "next_action": "The fit is running. Do not edit PREREG.json. Do not start a second sweep. Do not assign a packing by N. Do not run a pi/2 shift. B_cri stays null. Do not touch AF jobs.",
-  "updated_utc": "2026-11-08T19:25:00Z"
+  "next_action": "Do not rerun this round and do not edit PREREG.json. Do not assign a packing by N. Do not run a pi/2 shift. N=6 passes. N=9 and N=12 do not: N9 k94, k95, and k99 are joint losses with higher energy, and N12 k96 has F_sub 0.000 with energy 0.314 lower. Equal-parameter count is not a pass. B_cri stays null. A later slice, only after its own protocol commit, may test one new global rule inside the same shared-gamma circuit at historical B=0.1, on fresh k starting at 106. k=100 and k=101 stay unused. Do not touch AF jobs. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
+  "updated_utc": "2026-11-08T19:45:00Z"
 }
