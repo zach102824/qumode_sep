@@ -4,7 +4,7 @@
   "deadline_shanghai": "2026-11-15T19:00:00+08:00",
   "user_stop": false,
   "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
-  "phase": "b01_rad_running",
+  "phase": "b01_rad_partial",
   "benchmark": "historical B=0.1, not B_cri",
   "rule": "interleaved shared-gamma KM; continuation vector plus twelve scale-normalized L=6 directions of radius 1; energy-only selection",
   "prior_rounds": "b01_pack_partial, b01_fid_partial, b01_union_partial, b01_qpi_partial, b01_cls_partial, b01_esc_partial, b01_diag_partial, b01_sel_partial, and b01_box_not_confirmed stay as recorded",
@@ -17,7 +17,14 @@
   "prereg_sha256": "01a6658ef6f48bf62d17edcdce4a9e850a76471fe7410c57ef1db044b30c713f",
   "k_confirm": [154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165],
   "k_held_out_unused": [100, 101],
-  "verdict": null,
-  "next_action": "The confirmation fit on k=154..165 is running. Do not edit PREREG.json. Do not start a second fit. k=100 and k=101 stay unused. Do not touch AF jobs. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
-  "updated_utc": "2026-11-08T21:55:00Z"
+  "verdict": "partial",
+  "base_overall": "partial",
+  "rad_overall": "partial",
+  "pass_base": {"6": true, "9": false, "12": false},
+  "pass_rad": {"6": true, "9": false, "12": false},
+  "deeper": {"6": false, "9": false, "12": false},
+  "n_rad_selected": 0,
+  "wall_s": 1131.8,
+  "next_action": "Do not rerun this round and do not edit PREREG.json. Do not assign a packing by N. Zero of 432 scale-normalized L=6 directions beat the continuation energy, so deeper is false at N=6, 9, and 12. The verdict is partial: N=6 passes on the continuation search and the radius column matches it. N=9 and N=12 do not. Equal-parameter count is not a pass. B_cri stays null. A later slice, only after its own protocol commit, may test one new global rule inside the same shared-gamma circuit at historical B=0.1, on fresh k starting at 166. k=100 and k=101 stay unused. Do not touch AF jobs. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
+  "updated_utc": "2026-11-08T22:10:00Z"
 }
