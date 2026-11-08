@@ -1,0 +1,42 @@
+{
+  "schema": "equal-depth-qaoa-rescue-and-beam",
+  "frozen_before_new_optimization": true,
+  "tau": 1e-9,
+  "comparator": "lowest energy at that depth among the historical rows and this slice; fidelity is taken from that same row",
+  "do_not_retrain_the_48_procedures": true,
+  "do_not_seed_from_historical_qaoa_angles": true,
+  "qaoa": {
+    "p1": "six draws uniform(-0.8, 0.8), maxfun 80, keep lowest energy",
+    "p_ge_2": "endpoint continuation of the kept schedule, plus one N(0,0.05) perturbation and one Fourier of gamma and of beta, maxfun 80",
+    "p2_shift": "gamma + 0.2 and beta + 0.06888 on the way from p=1 to p=2",
+    "extras": "after the ladder, Fourier, perturbation, and random, on this slice's own energy-best",
+    "chains": 16,
+    "N6": {"new_ceiling": 65103, "depths": [1, 2, 3, 4, 5, 6], "extra_cycle": [6, 5, 4, 3, 2, 1], "seed": [5306, 6, 3]},
+    "N9": {"new_ceiling": 45388, "depths": [1, 2, 3, 4, 5, 6], "extra_cycle": [6, 5, 4, 3, 2, 1], "seed": [5309, 9, 3]},
+    "N12": {"new_ceiling": 16000, "depths": [1, 2, 3], "extra_cycle": [3, 2, 1], "seed": [5312, 12, 3], "no_new_p6": true,
+            "why": "p4-p6 already have 12898, 15142, and 19223 evaluations. p1-p3 have 655, 1119, and 1487."}
+  },
+  "historical_equal_depth_nfev": {
+    "6": {"1": 836, "2": 1579, "3": 1520, "4": 1575, "5": 1851, "6": 2182},
+    "9": {"1": 876, "2": 1363, "3": 1561, "4": 1655, "5": 1646, "6": 2418},
+    "12": {"1": 655, "2": 1119, "3": 1487, "4": 12898, "5": 15142, "6": 19223}
+  },
+  "historical_best_E_F": {
+    "6": [[-3.40561191619738, 0.4527124998172263], [-3.658235160506159, 0.5586676924572168], [-3.790757377851305, 0.629771222086697], [-3.856239037154049, 0.6803342000950539], [-3.920158085512154, 0.7329688875439261], [-3.966122810950504, 0.7818590048293759]],
+    "9": [[-5.115600772858937, 0.2116063669477717], [-5.545624493146295, 0.3000380568610118], [-5.738484427479781, 0.3566106288365332], [-5.8567500618929, 0.4170797689603573], [-5.950621086423667, 0.4767252016283162], [-6.000405967808998, 0.5138888064597292]],
+    "12": [[-6.818876314486204, 0.0809275861769811], [-7.431651480807123, 0.13334859273828656], [-7.685127667299622, 0.17053640828787742], [-7.853169593302038, 0.21527917077867031], [-7.976907765059945, 0.25837777107794724], [-8.056899807721482, 0.29467663754724976]]
+  },
+  "beam": {
+    "runs_after_qaoa_rescue": true,
+    "n": 9,
+    "chains": 24,
+    "seed": [6209, 9, 0, "k", "s"],
+    "L1_starts": 6,
+    "L1_maxfun": 80,
+    "continuation_maxfun": 250,
+    "second_basin": "lowest energy among starts whose energy exceeds the best by at least 0.3",
+    "final_selection": "lower energy at L6; the single-basin continuation is also stored",
+    "eval_ceiling": 50000,
+    "replaces_original_recipe_only_if_the_margin_improves": true
+  }
+}
