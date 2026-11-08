@@ -4,7 +4,7 @@
   "deadline_shanghai": "2026-11-15T19:00:00+08:00",
   "user_stop": false,
   "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
-  "phase": "b01_qpi_protocol_frozen",
+  "phase": "b01_qpi_running",
   "benchmark": "historical B=0.1, not B_cri",
   "rule": "four quarter-pi shell restarts on KM_pack and KM_fid, then the energy-only union, the same rule at every N",
   "prior_rounds": "b01_pack_partial, b01_fid_partial, and b01_union_partial stay as recorded",
@@ -14,10 +14,10 @@
   "out_of_scope": "KM_gl and any per-layer gamma",
   "historical_B": 0.1,
   "B_cri": null,
-  "protocol_commit": null,
+  "protocol_commit": "dc1c95b0",
   "prereg_sha256": "8d537cbed32496f6a412ffbdfdeb19e2f3fe625f6b4100350524f3b229a9f7cc",
   "verdict": null,
   "k_confirm": [80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91],
-  "next_action": "Protocol is frozen. Do not edit PREREG.json. Fit only after this protocol commit. Do not assign a packing by N. Do not run the pi/2 protocol. B_cri stays null. Do not touch AF jobs.",
+  "next_action": "Optimizer is running on k=80..91. Do not edit PREREG.json. Do not start a second fit. Do not run the pi/2 protocol. Do not assign a packing by N. B_cri stays null. Do not touch AF jobs.",
   "updated_utc": "2026-11-08T18:20:00Z"
 }
