@@ -4,7 +4,7 @@
   "deadline_shanghai": "2026-11-15T19:00:00+08:00",
   "user_stop": false,
   "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
-  "phase": "b01_fe_protocol",
+  "phase": "b01_fe_running",
   "benchmark": "historical B=0.1, not B_cri",
   "rule": "one global ferromagnetic triple partition, sum of -J inside each triple, lexicographic tie break, same triples at every layer and every N; shared-gamma KM versus equal-depth QAOA",
   "prior_rounds": "b01_pack_partial, b01_fid_partial, b01_union_partial, b01_qpi_partial, b01_cls_partial, b01_esc_partial, b01_diag_partial, b01_sel_partial, b01_box_not_confirmed, b01_rad_partial, and b01_div_partial stay as recorded",
@@ -13,10 +13,10 @@
   "out_of_scope": "KM_gl, per-layer gamma, a per-N packing, a union with |J|-max or Fiedler, another random initialization, and any fit at a field other than 0.1",
   "historical_B": 0.1,
   "B_cri": null,
-  "protocol_commit": null,
+  "protocol_commit": "5175d7f8",
   "prereg_sha256": "7a1799c20c9b5267854fdd356ea4519c5a05510a6dab04f04345cd9015e68e5e",
   "k_confirm": [178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189],
   "k_held_out_unused": [100, 101],
-  "next_action": "Protocol is frozen. Do not edit PREREG.json. Fit k=178..189 only, then evaluate and replay. Do not rerun earlier rounds. B_cri stays null. Do not touch AF jobs. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
+  "next_action": "The fit on k=178..189 is running. Do not edit PREREG.json and do not start a second fit. B_cri stays null. Do not touch AF jobs. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
   "updated_utc": "2026-11-08T23:10:00Z"
 }
