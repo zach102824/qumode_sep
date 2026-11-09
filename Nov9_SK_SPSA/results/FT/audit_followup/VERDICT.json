@@ -1,0 +1,48 @@
+{
+  "experiment": "N9-FT",
+  "claim_level": "approved-simulation-definition",
+  "D2_D5_approved_simulation_definitions": true,
+  "approval": {
+    "who": "Zach",
+    "when_local": "2026-11-09 18:41 Asia/Shanghai",
+    "scope": "simulation definitions D2-D5, not hardware feasibility",
+    "snap_f_ge_8": "phase 0",
+    "UcZ": "terms touching a leaked cavity are off; all other terms act",
+    "energy": "per-term |J_ij| on a leaked pair and +b per leaked qubit",
+    "readout": "ideal logical readout"
+  },
+  "hardware_feasibility_claim": false,
+  "freeze_validation_final_shot_mode": false,
+  "fidelity": "unconditioned, no leakage renormalization, no postselection",
+  "extensions": {
+    "snap_f_ge_8": "phase 0",
+    "UcZ_primary": "Uz: a term touching a leaked cavity is off; every other term acts",
+    "UcZ_sensitivity": "U0 whole component unphased if any cavity is leaked",
+    "energy": "per-term Hext: leaked pair contributes |J|, leaked qubit contributes +b",
+    "readout": "ideal logical readout; compiled W_L cost is not modelled"
+  },
+  "optimizer": "SPSA only",
+  "objective": "energy",
+  "fidelity_not_used_for_stopping_or_selection": true,
+  "ground_state_not_used_as_an_oracle_or_init": true,
+  "original_pilot_retained": true,
+  "original_cells_modified": false,
+  "renormalized_states": false,
+  "threshold_changed": false,
+  "validation_final_touched": false,
+  "classification": {
+    "n_captured": 166,
+    "physical_projection_loss": 85,
+    "numerical_matrix_error": 37,
+    "other": 44,
+    "threshold": "The 1e-9 gate is applied to the norm of a knowingly contractive restriction. A physical tail between 1e-9 and the 1e-8 cutoff budget aborts Nov9 only. QAOA, Nov3rd, and unitary D8 never see that contraction."
+  },
+  "ledger_mismatch_count": 0,
+  "asymmetry": {
+    "nov9_restricted_D_failed_starts": 166,
+    "qaoa_failed_starts": 0,
+    "nov3_failed_starts": 0,
+    "nov9b_unitary_D8_failed_starts": 0,
+    "note": "QAOA and Nov3rd are exactly unitary on the logical space. Nov9th-B exponentiates the projected 8-level generator, which is unitary on that space. Only restricted true-D can lose norm."
+  }
+}

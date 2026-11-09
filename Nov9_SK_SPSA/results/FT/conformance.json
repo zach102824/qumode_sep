@@ -1,0 +1,176 @@
+{
+  "passed": 15,
+  "failed": 0,
+  "rows": [
+    {
+      "name": "T1_J_sha256",
+      "ok": true,
+      "detail": {
+        "sha": "ec1b5a68c1aea5a1cc152cfd182f46a74ada02d3fa862564ec52ca4c64974dd6",
+        "shared_across_b": true
+      }
+    },
+    {
+      "name": "T2_gs_residual",
+      "ok": true,
+      "detail": {
+        "residual_b1": 6.300699068965698e-15,
+        "residual_b1.5": 1.3058224038673074e-14,
+        "gs_min": 0.07071858376211768
+      }
+    },
+    {
+      "name": "T3_nov3_rewrite",
+      "ok": true,
+      "detail": {
+        "overlap": 0.9999999999999976,
+        "max_abs": 3.379462171739212e-16
+      }
+    },
+    {
+      "name": "T4_displacement",
+      "ok": true,
+      "detail": {
+        "coherent": 6.47431327299719e-16,
+        "expm": 5.384581669432009e-15,
+        "laguerre": 1.0115462273688723e-15
+      }
+    },
+    {
+      "name": "T5_displacement_inverse",
+      "ok": true,
+      "detail": {
+        "max_abs": 5.422166698042288e-16
+      }
+    },
+    {
+      "name": "T6_shell_map",
+      "ok": true,
+      "detail": {
+        "relative_phase_err": 5.551115123125783e-17,
+        "level_err": 0.0
+      }
+    },
+    {
+      "name": "T7_ucz_snap_commute",
+      "ok": true,
+      "detail": {
+        "commute_max_abs": 4.577566798522237e-16,
+        "Uz_vs_U0_max_abs_phase": 0.1517673531193324
+      }
+    },
+    {
+      "name": "T8_Hext_bound",
+      "ok": true,
+      "detail": {
+        "min_Hext": -6.343390622381605,
+        "E0": -6.343390622381606,
+        "min_minus_E0": 8.881784197001252e-16,
+        "embedded_GS": -6.343390622381607
+      }
+    },
+    {
+      "name": "T9_generator_edges",
+      "ok": true,
+      "detail": {
+        "weight_err": 0.0,
+        "unexpected_edges": 0
+      }
+    },
+    {
+      "name": "T10_alpha0",
+      "ok": true,
+      "detail": {
+        "E_zz": -2.42861286636753e-16,
+        "p_leak": 4.440892098500626e-16,
+        "E": -3.8242573666943893
+      }
+    },
+    {
+      "name": "T11_gamma_even_L1",
+      "ok": true,
+      "detail": {
+        "abs_diff": 1.3877787807814457e-17
+      }
+    },
+    {
+      "name": "T12_H0_lower",
+      "ok": true,
+      "detail": {
+        "Hext": 6.069076014418691,
+        "H0": 0.0
+      }
+    },
+    {
+      "name": "T13_query_counter",
+      "ok": true,
+      "detail": {
+        "queries": 1024,
+        "calls": 1024
+      }
+    },
+    {
+      "name": "T14_qaoa_dense",
+      "ok": true,
+      "detail": {
+        "max_abs": 1.1857187100668868e-16,
+        "E": -5.690417141628734
+      }
+    },
+    {
+      "name": "feature_rms_rank_K_identity",
+      "ok": true,
+      "detail": {
+        "rms": {
+          "K": {
+            "rms": 0.29177813137999004,
+            "scale": 2.038030693306998
+          },
+          "M": {
+            "rms": 0.2917781313799899,
+            "scale": 5.262951043472155
+          },
+          "R1": {
+            "rms": 0.29177813137999004,
+            "scale": 1.7863388915833498
+          }
+        },
+        "R1_err": 0.0,
+        "K_identity": 8.881784197001252e-16,
+        "R1_residual_vs_JKM": 0.20648990785299723,
+        "singular_values": [
+          1.4976348354194446,
+          1.070660369581116,
+          0.7659812765887242,
+          0.15507726029985455
+        ]
+      }
+    }
+  ],
+  "experiment": "N9-FT",
+  "claim_level": "approved-simulation-definition",
+  "D2_D5_approved_simulation_definitions": true,
+  "approval": {
+    "who": "Zach",
+    "when_local": "2026-11-09 18:41 Asia/Shanghai",
+    "scope": "simulation definitions D2-D5, not hardware feasibility",
+    "snap_f_ge_8": "phase 0",
+    "UcZ": "terms touching a leaked cavity are off; all other terms act",
+    "energy": "per-term |J_ij| on a leaked pair and +b per leaked qubit",
+    "readout": "ideal logical readout"
+  },
+  "hardware_feasibility_claim": false,
+  "freeze_validation_final_shot_mode": false,
+  "fidelity": "unconditioned, no leakage renormalization, no postselection",
+  "extensions": {
+    "snap_f_ge_8": "phase 0",
+    "UcZ_primary": "Uz: a term touching a leaked cavity is off; every other term acts",
+    "UcZ_sensitivity": "U0 whole component unphased if any cavity is leaked",
+    "energy": "per-term Hext: leaked pair contributes |J|, leaked qubit contributes +b",
+    "readout": "ideal logical readout; compiled W_L cost is not modelled"
+  },
+  "optimizer": "SPSA only",
+  "objective": "energy",
+  "fidelity_not_used_for_stopping_or_selection": true,
+  "ground_state_not_used_as_an_oracle_or_init": true
+}

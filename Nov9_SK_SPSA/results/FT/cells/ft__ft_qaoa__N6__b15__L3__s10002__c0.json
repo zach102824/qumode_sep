@@ -1,0 +1,126 @@
+{
+  "experiment": "N9-FT",
+  "claim_level": "approved-simulation-definition",
+  "D2_D5_approved_simulation_definitions": true,
+  "approval": {
+    "who": "Zach",
+    "when_local": "2026-11-09 18:41 Asia/Shanghai",
+    "scope": "simulation definitions D2-D5, not hardware feasibility",
+    "snap_f_ge_8": "phase 0",
+    "UcZ": "terms touching a leaked cavity are off; all other terms act",
+    "energy": "per-term |J_ij| on a leaked pair and +b per leaked qubit",
+    "readout": "ideal logical readout"
+  },
+  "hardware_feasibility_claim": false,
+  "freeze_validation_final_shot_mode": false,
+  "fidelity": "unconditioned, no leakage renormalization, no postselection",
+  "extensions": {
+    "snap_f_ge_8": "phase 0",
+    "UcZ_primary": "Uz: a term touching a leaked cavity is off; every other term acts",
+    "UcZ_sensitivity": "U0 whole component unphased if any cavity is leaked",
+    "energy": "per-term Hext: leaked pair contributes |J|, leaked qubit contributes +b",
+    "readout": "ideal logical readout; compiled W_L cost is not modelled"
+  },
+  "optimizer": "SPSA only",
+  "objective": "energy",
+  "fidelity_not_used_for_stopping_or_selection": true,
+  "ground_state_not_used_as_an_oracle_or_init": true,
+  "complete": true,
+  "kind": "zeroshot",
+  "method": "ft_qaoa",
+  "method_id": 42,
+  "N": 6,
+  "seed": 10002,
+  "b": 1.5,
+  "L": 3,
+  "cap": 0,
+  "nf": 8,
+  "alpha_sigma_scale": 0.5,
+  "train_method": "train_qaoa",
+  "x_star": [
+    0.11431813887694242,
+    0.04116248435501432,
+    -0.1201325028877764,
+    0.5481166589915416,
+    -0.04605570109269129,
+    0.5517196303072172
+  ],
+  "queries_counted": 1,
+  "queries_report_only_initial": 0,
+  "ledger": {
+    "zeroshot": 1,
+    "total_counted": 1,
+    "shots": 0,
+    "mode": "exact_energy",
+    "fresh_shot_check": "not_run_exact_mode"
+  },
+  "E": -9.15641022215748,
+  "F": 0.9990289601990143,
+  "F_init": 0.9990289601990143,
+  "E_init": -9.15641022215748,
+  "p_leak": 0.0,
+  "parity_code_conditional": 1.0,
+  "norm": 1.0,
+  "instance": {
+    "J_sha256": "76b09ea8dab9d1746d2db7e6df197ea1ae830bdd745716d8cdb45e897f2fe24b",
+    "E0": -9.1618170015769,
+    "E1": -7.0711202147329155,
+    "E0_odd": -7.0711202147329155,
+    "Delta_odd": 2.090696786843984,
+    "lam_max": 9.164886811714476,
+    "F_plus": 0.9726862147675208,
+    "residual": 1.3209321385808301e-14,
+    "theta_K_prior": 0.6615281894330625,
+    "rms_J": 0.2540701723963003,
+    "scale_K": 1.7006078017085535,
+    "scale_M": 5.813763929533289,
+    "scale_R1": 1.7472506452525578,
+    "lam_min_J": -0.9625785190002223,
+    "feature_rank": {
+      "pearson_upper": {
+        "J_J": 1.0,
+        "J_K": 0.06675963645324745,
+        "J_M": 0.18678775563724465,
+        "J_R1": 0.8415256419295075,
+        "K_J": 0.06675963645324746,
+        "K_K": 0.9999999999999998,
+        "K_M": 0.10110388193082924,
+        "K_R1": -0.47330411864503447,
+        "M_J": 0.18678775563724465,
+        "M_K": 0.10110388193082923,
+        "M_M": 1.0,
+        "M_R1": 0.08935767085076265,
+        "R1_J": 0.8415256419295075,
+        "R1_K": -0.4733041186450345,
+        "R1_M": 0.08935767085076265,
+        "R1_R1": 1.0
+      },
+      "R1_residual_vs_span_JKM": 0.09999451589874209,
+      "feature_singular_values": [
+        1.4283509896830835,
+        1.0228141292558606,
+        0.9532919543279686,
+        0.06999397888028713
+      ]
+    },
+    "classical_feature_seconds": 0.0013784570001007523,
+    "gs_used_only_for_reporting": true
+  },
+  "failed_starts": 0,
+  "selected_parameters": {
+    "gammas": [
+      0.11431813887694242,
+      0.04116248435501432,
+      -0.1201325028877764
+    ],
+    "betas": [
+      0.5481166589915416,
+      -0.04605570109269129,
+      0.5517196303072172
+    ],
+    "theta": {}
+  },
+  "runtime_seconds": 0.00019910299988623592,
+  "eta": 0.964448728262277,
+  "energy_gap_closed": 0.0
+}

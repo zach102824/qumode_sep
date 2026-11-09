@@ -1,0 +1,167 @@
+{
+  "experiment": "N9-FT",
+  "claim_level": "approved-simulation-definition",
+  "D2_D5_approved_simulation_definitions": true,
+  "approval": {
+    "who": "Zach",
+    "when_local": "2026-11-09 18:41 Asia/Shanghai",
+    "scope": "simulation definitions D2-D5, not hardware feasibility",
+    "snap_f_ge_8": "phase 0",
+    "UcZ": "terms touching a leaked cavity are off; all other terms act",
+    "energy": "per-term |J_ij| on a leaked pair and +b per leaked qubit",
+    "readout": "ideal logical readout"
+  },
+  "hardware_feasibility_claim": false,
+  "freeze_validation_final_shot_mode": false,
+  "fidelity": "unconditioned, no leakage renormalization, no postselection",
+  "extensions": {
+    "snap_f_ge_8": "phase 0",
+    "UcZ_primary": "Uz: a term touching a leaked cavity is off; every other term acts",
+    "UcZ_sensitivity": "U0 whole component unphased if any cavity is leaked",
+    "energy": "per-term Hext: leaked pair contributes |J|, leaked qubit contributes +b",
+    "readout": "ideal logical readout; compiled W_L cost is not modelled"
+  },
+  "optimizer": "SPSA only",
+  "objective": "energy",
+  "fidelity_not_used_for_stopping_or_selection": true,
+  "ground_state_not_used_as_an_oracle_or_init": true,
+  "complete": true,
+  "prereg_sha256": "6a814c6fdf66b91f57545b4d82403f8bdfe02a0e459f10d7138a5ab1f5b412cc",
+  "kind": "basin_r2",
+  "method": "basin_qaoa",
+  "N": 9,
+  "seed": 10006,
+  "b": 0.49826159500278994,
+  "L": 1,
+  "cap": 128,
+  "nf": 8,
+  "alpha_sigma_scale": 1.0,
+  "queries_counted": 128,
+  "failed_starts": 0,
+  "selected_start": 3,
+  "selected_label": "qaoa_box",
+  "E": -5.698833740474203,
+  "F": 0.5694189076626489,
+  "F_init": 0.3627771758173202,
+  "E_init": -4.8275885438581465,
+  "p_leak": 0.0,
+  "E_plus": -4.4843543550251095,
+  "E0": -6.298892312309852,
+  "F_plus": 0.3078390376545568,
+  "eta": 0.3779176871254161,
+  "energy_gap_closed": 0.5921586114965862,
+  "escape_below_Eplus": true,
+  "E_minus_Eplus": -1.2144793854490938,
+  "S_A_nats": 0.8046727501084753,
+  "gap_E1_E0": 0.05759961206787256,
+  "delta_even": 0.8117563318412921,
+  "starts": [
+    {
+      "start_id": 0,
+      "label": "angles_0.25",
+      "failed": false,
+      "failure_stage": null,
+      "queries": 31,
+      "init_queries": 1,
+      "spsa_queries": 30,
+      "E": -5.6304282834005255,
+      "F": 0.5364099496952662,
+      "p_leak": 0.0,
+      "norm": 0.9999999999999994,
+      "E_init": -2.549403038613719,
+      "F_init": 0.10124384365248751,
+      "escape_below_Eplus": true,
+      "E_minus_Eplus": -1.146073928375416,
+      "x": [
+        -0.24738279399477575,
+        0.33189700502317765
+      ],
+      "physical": [
+        -0.24738279399477575,
+        0.33189700502317765
+      ],
+      "which": "last"
+    },
+    {
+      "start_id": 1,
+      "label": "qaoa_box",
+      "failed": false,
+      "failure_stage": null,
+      "queries": 31,
+      "init_queries": 1,
+      "spsa_queries": 30,
+      "E": -4.981733729229279,
+      "F": 0.38902783445194145,
+      "p_leak": 0.0,
+      "norm": 0.9999999999999992,
+      "E_init": -2.5847139789276827,
+      "F_init": 0.10580643070936957,
+      "escape_below_Eplus": true,
+      "E_minus_Eplus": -0.49737937420416944,
+      "x": [
+        0.074533132336283,
+        -0.33720918837178665
+      ],
+      "physical": [
+        0.074533132336283,
+        -0.33720918837178665
+      ],
+      "which": "last"
+    },
+    {
+      "start_id": 2,
+      "label": "qaoa_box",
+      "failed": false,
+      "failure_stage": null,
+      "queries": 33,
+      "init_queries": 1,
+      "spsa_queries": 32,
+      "E": -5.668456013141457,
+      "F": 0.5631634757630708,
+      "p_leak": 0.0,
+      "norm": 1.0000000000000002,
+      "E_init": -4.756244257343119,
+      "F_init": 0.3503449653186278,
+      "escape_below_Eplus": true,
+      "E_minus_Eplus": -1.1841016581163473,
+      "x": [
+        0.2623960569104594,
+        -0.41030635198372073
+      ],
+      "physical": [
+        0.2623960569104594,
+        -0.41030635198372073
+      ],
+      "which": "last"
+    },
+    {
+      "start_id": 3,
+      "label": "qaoa_box",
+      "failed": false,
+      "failure_stage": null,
+      "queries": 33,
+      "init_queries": 1,
+      "spsa_queries": 32,
+      "E": -5.698833740474203,
+      "F": 0.5694189076626489,
+      "p_leak": 0.0,
+      "norm": 1.0000000000000007,
+      "E_init": -4.8275885438581465,
+      "F_init": 0.3627771758173202,
+      "escape_below_Eplus": true,
+      "E_minus_Eplus": -1.2144793854490938,
+      "x": [
+        -0.2808326801913827,
+        0.37998618585378185
+      ],
+      "physical": [
+        -0.2808326801913827,
+        0.37998618585378185
+      ],
+      "which": "last"
+    }
+  ],
+  "runtime_seconds": 0.016222682999796234,
+  "diagnostic_not_a_performance_claim": true,
+  "not_an_expressivity_proof": true
+}

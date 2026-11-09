@@ -1,0 +1,87 @@
+{
+  "kind": "harness_self_check_not_a_campaign",
+  "reference_b_1_and_1_5_retained": true,
+  "optimization_run": false,
+  "bell_entropy_bits": 1.0,
+  "product_entropy_bits": 0.0,
+  "one_dev_instance": {
+    "N": 6,
+    "seed": 10000,
+    "Bstar": 0.2909290107584057,
+    "entropy_bits": 1.0331655263053678,
+    "checks": {
+      "E0": -2.942003061236254,
+      "E1": -2.9177115559711857,
+      "gap": 0.02429150526506829,
+      "nondegenerate": true,
+      "parity": 0.9999999999999999,
+      "even": true,
+      "gs_min": 0.011469812035685489,
+      "positive": true,
+      "eligible": true,
+      "b": 0.2909290107584057,
+      "n_a": 3,
+      "n_b": 3,
+      "entropy_bits": 1.0331655263053678,
+      "cut": "sites 0..2 versus the rest"
+    },
+    "plateau_b": [
+      0.2909290107584057
+    ],
+    "n_evaluated": 42,
+    "b_lo": 0.05,
+    "b_hi": 4.0
+  },
+  "accepted_template": {
+    "N": 6,
+    "seed": 10000,
+    "role": "pilot",
+    "b": 0.2909290107584057,
+    "field_source": "per_instance_Bstar",
+    "fixed_field_sweep": false,
+    "nf": 32,
+    "displacement": "true_oscillator_restricted_from_nf_plus_32",
+    "renormalize_leakage": false,
+    "optimizer": "SPSA_only_when_authorized",
+    "optimization_authorized": false,
+    "shared_ucz": true,
+    "qaoa": "p_equals_L",
+    "circuit": "[UcZ -> D(alpha_l) -> shell SNAP]^L",
+    "checks": {
+      "E0": -2.942003061236254,
+      "E1": -2.9177115559711857,
+      "gap": 0.02429150526506829,
+      "nondegenerate": true,
+      "parity": 0.9999999999999999,
+      "even": true,
+      "gs_min": 0.011469812035685489,
+      "positive": true,
+      "eligible": true,
+      "b": 0.2909290107584057,
+      "n_a": 3,
+      "n_b": 3,
+      "entropy_bits": 1.0331655263053678,
+      "cut": "sites 0..2 versus the rest"
+    }
+  },
+  "validation_seed_rejected": true,
+  "pilot_seeds_not_scanned": [
+    10001,
+    10002,
+    10003,
+    10004,
+    10005,
+    10006,
+    10007
+  ],
+  "train_seeds_not_scanned": [
+    10008,
+    10009,
+    10010,
+    10011,
+    10012,
+    10013,
+    10014,
+    10015
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "experiment": "N9-FT",
+  "claim_level": "approved-simulation-definition",
+  "D2_D5_approved_simulation_definitions": true,
+  "approval": {
+    "who": "Zach",
+    "when_local": "2026-11-09 18:41 Asia/Shanghai",
+    "scope": "simulation definitions D2-D5, not hardware feasibility",
+    "snap_f_ge_8": "phase 0",
+    "UcZ": "terms touching a leaked cavity are off; all other terms act",
+    "energy": "per-term |J_ij| on a leaked pair and +b per leaked qubit",
+    "readout": "ideal logical readout"
+  },
+  "hardware_feasibility_claim": false,
+  "freeze_validation_final_shot_mode": false,
+  "fidelity": "unconditioned, no leakage renormalization, no postselection",
+  "extensions": {
+    "snap_f_ge_8": "phase 0",
+    "UcZ_primary": "Uz: a term touching a leaked cavity is off; every other term acts",
+    "UcZ_sensitivity": "U0 whole component unphased if any cavity is leaked",
+    "energy": "per-term Hext: leaked pair contributes |J|, leaked qubit contributes +b",
+    "readout": "ideal logical readout; compiled W_L cost is not modelled"
+  },
+  "optimizer": "SPSA only",
+  "objective": "energy",
+  "fidelity_not_used_for_stopping_or_selection": true,
+  "ground_state_not_used_as_an_oracle_or_init": true,
+  "complete": true,
+  "kind": "zeroshot",
+  "method": "ft_nov9_km",
+  "method_id": 40,
+  "N": 9,
+  "seed": 10004,
+  "b": 1.5,
+  "L": 3,
+  "cap": 0,
+  "nf": 16,
+  "alpha_sigma_scale": 0.5,
+  "train_method": "train_nov9_km",
+  "x_star": [
+    0.0009867791431744952,
+    -0.16579872475329932,
+    -0.07152856372007119,
+    -0.3866300769905572,
+    0.3950527346494067,
+    0.03756244900040745,
+    0.2932796779352066,
+    -0.3090303424448622,
+    -0.01986031962486251,
+    -0.1818681192936638,
+    0.43037391763409566,
+    0.2283624100280887,
+    -0.14005862542664188,
+    -0.1463253264999071,
+    -0.1384927089561897
+  ],
+  "queries_counted": 1,
+  "queries_report_only_initial": 0,
+  "ledger": {
+    "zeroshot": 1,
+    "total_counted": 1,
+    "shots": 0,
+    "mode": "exact_energy",
+    "fresh_shot_check": "not_run_exact_mode"
+  },
+  "E": -13.46994782231554,
+  "F": 0.8461999557058912,
+  "F_init": 0.8461999557058912,
+  "E_init": -13.46994782231554,
+  "p_leak": 0.00044206650293798777,
+  "parity_code_conditional": 0.9960802222398192,
+  "norm": 0.9999999999999998,
+  "instance": {
+    "J_sha256": "c61b325c460f3ac509df3d32e4e0602f0d53434e1fac5ef2b640bb522dbd519c",
+    "E0": -14.402705912655536,
+    "E1": -13.065851299266665,
+    "E0_odd": -13.065851299266665,
+    "Delta_odd": 1.336854613388871,
+    "lam_max": 14.398117356590625,
+    "F_plus": 0.8501488285241426,
+    "residual": 2.3668216192105116e-14,
+    "theta_K_prior": 0.9529544675103948,
+    "rms_J": 0.3852319402306502,
+    "scale_K": 1.1805390901194641,
+    "scale_M": 4.231546794349275,
+    "scale_R1": 2.1029898923094597,
+    "lam_min_J": -1.7475053584421758,
+    "feature_rank": {
+      "pearson_upper": {
+        "J_J": 1.0,
+        "J_K": -0.04801186952907964,
+        "J_M": 0.04077432086759198,
+        "J_R1": 0.5976704768325508,
+        "K_J": -0.04801186952907965,
+        "K_K": 0.9999999999999998,
+        "K_M": 0.45641368297325213,
+        "K_R1": -0.6817487417849564,
+        "M_J": 0.04077432086759198,
+        "M_K": 0.45641368297325213,
+        "M_M": 1.0,
+        "M_R1": -0.14322294925440288,
+        "R1_J": 0.5976704768325508,
+        "R1_K": -0.6817487417849564,
+        "R1_M": -0.1432229492544029,
+        "R1_R1": 0.9999999999999999
+      },
+      "R1_residual_vs_span_JKM": 0.4404275395071304,
+      "feature_singular_values": [
+        1.3805293628811792,
+        1.2105743847595298,
+        0.7289242478161505,
+        0.31195797494635435
+      ]
+    },
+    "classical_feature_seconds": 0.024809066999978313,
+    "gs_used_only_for_reporting": true
+  },
+  "failed_starts": 0,
+  "selected_parameters": {
+    "gamma": 0.0009867791431744952,
+    "theta": {
+      "K": -0.16579872475329932,
+      "M": -0.07152856372007119
+    },
+    "alphas": [
+      -0.11053542491530165,
+      0.11271238586269919,
+      0.011263437862435055
+    ],
+    "shells": [
+      [
+        0.2932796779352066,
+        -0.3090303424448622,
+        -0.01986031962486251
+      ],
+      [
+        -0.1818681192936638,
+        0.43037391763409566,
+        0.2283624100280887
+      ],
+      [
+        -0.14005862542664188,
+        -0.1463253264999071,
+        -0.1384927089561897
+      ]
+    ]
+  },
+  "runtime_seconds": 0.0006672320000689069,
+  "eta": -0.0263519649486865,
+  "energy_gap_closed": 0.0
+}
