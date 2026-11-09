@@ -1,0 +1,116 @@
+{
+  "ok": true,
+  "prereg_sha256": "9645a203f700b3dd618f146e889c8b144ec6ed01cfa2fdd24303e6c5233867a8",
+  "historical_sk_queries": 2883584,
+  "expected_new_energy_queries": 32768,
+  "expected_total_if_complete": 2916352,
+  "seeds": {
+    "band": [
+      10568,
+      10569,
+      10570,
+      10571,
+      10572,
+      10573,
+      10574,
+      10575,
+      10576,
+      10577,
+      10578,
+      10579,
+      10580,
+      10581,
+      10582,
+      10583
+    ],
+    "n15": [
+      10568,
+      10569,
+      10570,
+      10571,
+      10572,
+      10573,
+      10574,
+      10575
+    ],
+    "n18": [
+      10576,
+      10577,
+      10578,
+      10579,
+      10580,
+      10581,
+      10582,
+      10583
+    ],
+    "n": 16,
+    "overlaps": {
+      "le_10432_10439": [],
+      "gauge_and_buffer_10552_10567": [],
+      "local_r31_10536_10551": [],
+      "local_r30_10504_10519": [],
+      "ft_10520_10535": [],
+      "ft_vm_10480_10487": [],
+      "ft_anneal_10456_10463": [],
+      "ft_spread8_10376_10383": [],
+      "shellgain_10368_10375": [],
+      "holdout_10144_10151": [],
+      "validation_11000_11031": [],
+      "gr_final_20000_20999": []
+    },
+    "ok": true
+  },
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "recipe": {
+    "nov3_start0": [
+      0.25,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0
+    ],
+    "qaoa_start0": [
+      0.25,
+      0.25
+    ],
+    "ok": true
+  },
+  "ledger_quadratic": {
+    "ok": true,
+    "ledger": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 80,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 128
+    }
+  },
+  "n18_gate": {
+    "seed_not_fitted": 10018,
+    "N": 18,
+    "dim": 262144,
+    "dense_matrix": false,
+    "eigsh_seconds": 4.499132033000933,
+    "nov3_L1_seconds": 0.07160754800133873,
+    "nov3_L1_energy": -4.1896580572233395,
+    "rss_kib_start": 74828,
+    "rss_kib_peak": 771068,
+    "peak_rss_gib": 0.7353477478027344,
+    "n18_allowed": true,
+    "no_spsa": true
+  },
+  "not_l2_sampling": true,
+  "not_l3_schedule_tweak": true,
+  "compiler_stream_closed": true,
+  "no_gr_patch": true,
+  "no_adoption_gate": true,
+  "holdout_l2_fail_stands": true,
+  "statistical_unit": "8 instances per N; do not pool 16 across N",
+  "no_spsa_on_panel_hamiltonian_in_this_module": true
+}

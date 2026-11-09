@@ -174,4 +174,13 @@ python3 -m Nov3_INIT.run_gauge --phase run
 python3 -m Nov3_INIT.run_gauge --phase summary
 ```
 
+Unread-seed L=1 width (`PREREG_WIDTH.md`) asks whether the shallow Nov3−QAOA edge appears on exclusive instances at **both** N=15 (`10568..10575`) and N=18 (`10576..10583`). Frozen v4 center-4, Q=1024, L=1 only. Not L=2 sampling. Not pooled across N. No GR.
+
+```bash
+python3 -m Nov3_INIT.conformance_width
+python3 -m Nov3_INIT.run_width --phase bstar
+python3 -m Nov3_INIT.run_width --phase run
+python3 -m Nov3_INIT.run_width --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
