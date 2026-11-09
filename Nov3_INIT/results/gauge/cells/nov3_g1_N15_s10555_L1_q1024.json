@@ -1,0 +1,100 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_gauge",
+  "method_tag": "nov3",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "gid": 1,
+  "g": [
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1
+  ],
+  "n_flips": 9,
+  "n_params": 6,
+  "N": 15,
+  "seed": 10555,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "procedural_cap": 1024,
+  "same_query_budget_across_arms": true,
+  "rng_omits_gauge": true,
+  "Bstar": 0.7738683241099723,
+  "E0": -14.51789172497415,
+  "E_plus": -11.608024861649584,
+  "F_plus": 0.25368546847807316,
+  "E": -14.03518254578347,
+  "E_error_over_N": 0.03218061194604533,
+  "F": 0.7238024420347532,
+  "eta": 0.629918022094506,
+  "which": "last",
+  "start_id": 3,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -7.545977603443461,
+      "E": -14.012351590663256,
+      "which": "last",
+      "a_gain": 0.05937439358893539
+    },
+    {
+      "start_id": 1,
+      "e_init": -7.744448379451227,
+      "E": -14.03501897905593,
+      "which": "last",
+      "a_gain": 0.2795003958863932
+    },
+    {
+      "start_id": 2,
+      "e_init": -11.263831453793562,
+      "E": -12.325364537889426,
+      "which": "mid_iterate",
+      "a_gain": 0.48533180496243816
+    },
+    {
+      "start_id": 3,
+      "e_init": -11.201682798920245,
+      "E": -14.03518254578347,
+      "which": "last",
+      "a_gain": 0.07125668791873631
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024
+  },
+  "x": [
+    -0.26433247291698725,
+    -0.38599332115792023,
+    -0.027566823711831293,
+    -0.8971057694875824,
+    0.037780917507753156,
+    -0.09339354645328797
+  ],
+  "seconds": 4.6560119280002255,
+  "cpu_seconds": 4.637538583000001,
+  "peak_rss_kib": 116048,
+  "prereg_sha256": "05429bdddd039a055ddf3c1fea144742e405e20d867dccabd581661ac8a9ae92",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true
+}

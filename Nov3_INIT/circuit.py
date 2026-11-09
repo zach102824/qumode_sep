@@ -47,12 +47,17 @@ def pops_of(n: int, groups: list[list[int]]) -> list[np.ndarray]:
 
 
 class Logical:
-    def __init__(self, n: int, seed: int, b: float, gs: np.ndarray):
+    def __init__(self, n: int, seed: int, b: float, gs: np.ndarray, J: np.ndarray | None = None):
         self.n = int(n)
         self.seed = int(seed)
         self.b = float(b)
         self.gs = np.asarray(gs, dtype=np.float64)
-        J = make_J(self.seed, self.n)
+        if J is None:
+            J = make_J(self.seed, self.n)
+        else:
+            J = np.asarray(J, dtype=np.float64)
+            if J.shape != (self.n, self.n):
+                raise ValueError(f"J shape {J.shape} != ({self.n}, {self.n})")
         self.groups = packing(self.n)
         z = z_table(self.n)
         self.j_upper = upper(J)

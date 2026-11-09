@@ -1,0 +1,100 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_gauge",
+  "method_tag": "nov3",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "gid": 3,
+  "g": [
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    1,
+    1,
+    -1,
+    1
+  ],
+  "n_flips": 9,
+  "n_params": 6,
+  "N": 15,
+  "seed": 10552,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "procedural_cap": 1024,
+  "same_query_budget_across_arms": true,
+  "rng_omits_gauge": true,
+  "Bstar": 0.27968114880215433,
+  "E0": -10.630792920916264,
+  "E_plus": -4.195217232032315,
+  "F_plus": 0.006947025585779647,
+  "E": -7.94496646760097,
+  "E_error_over_N": 0.17905509688768623,
+  "F": 0.18257308784067927,
+  "eta": 0.17685467621553372,
+  "which": "last",
+  "start_id": 1,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -1.1943112685838786,
+      "E": -7.939633503738387,
+      "which": "last",
+      "a_gain": 0.10229051311520589
+    },
+    {
+      "start_id": 1,
+      "e_init": -4.602513876490692,
+      "E": -7.94496646760097,
+      "which": "last",
+      "a_gain": 0.13138290317336276
+    },
+    {
+      "start_id": 2,
+      "e_init": -4.18461548765903,
+      "E": -7.841544676298538,
+      "which": "polyak64",
+      "a_gain": 0.29339413811428133
+    },
+    {
+      "start_id": 3,
+      "e_init": -4.769803144600916,
+      "E": -7.920077169871352,
+      "which": "last",
+      "a_gain": 0.10836336588889198
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024
+  },
+  "x": [
+    -0.37632621064077354,
+    -0.5070559835074652,
+    -0.019504308644511484,
+    -0.9708761978316088,
+    0.17295073609728204,
+    -0.40177559569626015
+  ],
+  "seconds": 4.628712597997946,
+  "cpu_seconds": 4.623771307,
+  "peak_rss_kib": 115528,
+  "prereg_sha256": "05429bdddd039a055ddf3c1fea144742e405e20d867dccabd581661ac8a9ae92",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true
+}

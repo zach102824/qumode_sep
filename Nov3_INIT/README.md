@@ -164,4 +164,14 @@ python3 -m Nov3_INIT.conformance_wcompile_ws
 python3 -m Nov3_INIT.run_wcompile_ws --phase fit
 ```
 
+SK spin-flip gauge (`PREREG_GAUGE.md`) is a bounded labeling-robustness panel of the original Nov3 L=1 edge, not a compiler or ansatz retune. N=15 L=1 Q=1024, seeds `10552..10559`, identity + three frozen random gauges. Statistical unit is the 8 instances. Exploratory; no adoption; no GR. Compiler stream closed.
+
+```bash
+python3 -m Nov3_INIT.conformance_gauge
+python3 -m Nov3_INIT.run_gauge --phase bstar
+python3 -m Nov3_INIT.run_gauge --phase check
+python3 -m Nov3_INIT.run_gauge --phase run
+python3 -m Nov3_INIT.run_gauge --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
