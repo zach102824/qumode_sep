@@ -85,4 +85,13 @@ python3 -m Nov3_INIT.run_v10 --phase run
 python3 -m Nov3_INIT.run_v10 --phase summary
 ```
 
+Pair-shell (`PREREG_PAIR.md`) unshares the existing 3-shell SNAP per cavity. Paper `V(M)` is not implemented. N=15, L=2 and L=3, seeds `10328..10335`, same `Q=1024·L` on shared Nov3, pair-cavity, and QAOA. No GR patch.
+
+```bash
+python3 -m Nov3_INIT.conformance_pair
+python3 -m Nov3_INIT.run_pair --phase bstar
+python3 -m Nov3_INIT.run_pair --phase run
+python3 -m Nov3_INIT.run_pair --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.

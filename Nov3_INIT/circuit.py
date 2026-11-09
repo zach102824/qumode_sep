@@ -24,6 +24,17 @@ def shell_phase_from_pops(pops: list[np.ndarray], s1: float, s2: float, s3: floa
     return ph
 
 
+def shell_phase_percavity(pops: list[np.ndarray], shells: np.ndarray) -> np.ndarray:
+    """Independent (s1, s2, s3) per cavity. Same polynomial as the shared shell."""
+    shells = np.asarray(shells, dtype=np.float64)
+    if shells.shape != (len(pops), 3):
+        raise ValueError(f"shells shape {shells.shape} != ({len(pops)}, 3)")
+    ph = np.zeros(pops[0].shape[0], dtype=np.float64)
+    for pop, (s1, s2, s3) in zip(pops, shells):
+        ph += float(s1) * pop + float(s2) * (pop * (pop - 1.0) / 2.0) + np.where(pop == 3.0, float(s3), 0.0)
+    return ph
+
+
 def pops_of(n: int, groups: list[list[int]]) -> list[np.ndarray]:
     idx = np.arange(1 << n)
     pops = []
@@ -78,6 +89,21 @@ class Logical:
             psi = fwht(psi)
         return psi
 
+    def nov3_pair(self, x: np.ndarray, L: int) -> np.ndarray:
+        """Shared Uc (γ, θK, θM) + per-cavity SNAP shells. Layout (L, C, 3)."""
+        C = len(self.groups)
+        gamma, th_k, th_m = float(x[0]), float(x[1]), float(x[2])
+        shells = np.asarray(x[3:], dtype=np.float64).reshape(L, C, 3)
+        gdiag = self.hc + th_k * self.d_k + th_m * self.d_m
+        eph = np.exp(-1j * gamma * gdiag)
+        psi = self.plus.copy()
+        for ell in range(L):
+            psi *= eph
+            psi = fwht(psi)
+            psi *= np.exp(-1j * shell_phase_percavity(self.pops, shells[ell]))
+            psi = fwht(psi)
+        return psi
+
     def qaoa(self, x: np.ndarray, L: int) -> np.ndarray:
         psi = self.plus.copy()
         for ell in range(L):
@@ -88,6 +114,8 @@ class Logical:
     def propagate(self, method: str, L: int, x: np.ndarray) -> tuple[float, np.ndarray]:
         if method == "Nov3rd":
             psi = self.nov3(x, L)
+        elif method == "Nov3pair":
+            psi = self.nov3_pair(x, L)
         elif method == "QAOA":
             psi = self.qaoa(x, L)
         else:
