@@ -1,0 +1,75 @@
+{
+  "experiment": "FTREP: independent LE replicate of FT PR79 frozen v4 center-4 at L=2 Q=2048",
+  "written_before_fits": true,
+  "not_a_new_spsa_schedule": true,
+  "not_a_warm_start_retry": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "does_not_touch_ft_holdout_10144_10151": true,
+  "n18_forbidden": true,
+  "ft_source": {
+    "pr": 79,
+    "branch": "cursor/n3-init-restart-3851",
+    "head_commit": "347ac23369db1251c902638994b4fdc65a019710",
+    "alloc_last_change_commit": "5ae1a1250d8c9f30c98e4f4a662dbc69c668893c",
+    "alloc_py_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+    "recipe": "v4 center4 four equal SPSA blocks, frozen gains. v7/v8 used this exact recipe at L=2 Q=2048."
+  },
+  "hypothesis": {
+    "id": "ft_l2_center4_replicates_on_le",
+    "one_sentence": "If FT's N15/N18 L2 Nov3 energy edge is recipe-real, the same frozen v4 center-4 equal-block SPSA on LE seeds 10152-10159 yields Nov3−QAOA mean ΔE CIs entirely below 0 at both N=15 and N=12.",
+    "not": "Not a new schedule. Not S1JOINT. Not warm-start. Not FT holdout 10144-10151. Not a GR patch."
+  },
+  "frozen_recipe": {
+    "Q": "Q=qL with q=1024, L=2 => Q=2048. Four equal blocks. T=Q/8-6=250.",
+    "per_start": "1 init + 8 calibration + 2T iteration + 3 candidates = 512. Four starts = 2048.",
+    "gains": "c=0.1, A=25, exponents 0.602/0.101, a0=0.5/median(|g|/σ) or 0 if median<1e-15, clip 2σ, Rademacher ±1. Frozen, not live LE C0.",
+    "sigma": "Nov3 γ 0.10, θ 0.25, shells 0.15; QAOA angles 0.10",
+    "starts": {
+      "Nov3_0": "γ=0.25, θK=θM=0, every layer (s1,s2,s3)=(-0.5,0,0)",
+      "QAOA_0": "every layer (γ,β)=(0.25,0.25), interleaved then mapped to LE stacked at energy time",
+      "starts_1_3": "Nov3 γ,θ ~ U(-0.5,0.5), shells ~ U(-0.3,0.3); QAOA angles ~ U(-0.5,0.5). Method ids 1 Nov3 / 0 QAOA. Init stream 2, SPSA stream 0. B* enters SeedSequence as round(10*B*)."
+    },
+    "selection": "Lowest energy among init, last, Polyak min(64,T), midpoint. Energy tie keeps init. Across starts lower start_id wins. F post hoc.",
+    "qaoa_layout": "FT stores interleaved [γ0,β0,...]. LE energy uses stacked [γ...,β...]. Conversion only at the energy call. SPSA stays in FT coordinates."
+  },
+  "seeds": {
+    "ids": [10152, 10153, 10154, 10155, 10156, 10157, 10158, 10159],
+    "role": "exclusive_unread_dev",
+    "collision_check": "no instance/run filenames; local≤10143 unused; LE≤10135; FT holdout 10144-10151 untouched; FT train 10018-25 unused; DEPTH S1W 10128-35; STARTS ≤10111; validation 11000-11031; final 20000-20999",
+    "forbidden": ["10010-10151", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [12, 15],
+    "L": [2],
+    "q": 1024,
+    "Q": 2048,
+    "arms": ["nov3_center4", "qaoa_center4"]
+  },
+  "selection": "FT energy selection as above. F post hoc, never selects.",
+  "gate": {
+    "R1": "N15 L2 Q=2048, mean(E_Nov3 - E_QAOA) bootstrap 95% CI entirely below 0",
+    "R2": "N12 L2 Q=2048, same",
+    "bootstrap": "4000 resamples, default_rng(3334), seeds resampled. Matches FT v7.",
+    "pass": "label FT-L2 REPLICATED on LE only if BOTH R1 and R2 pass",
+    "otherwise": "FAIL. Do not retune. Do not patch GR. Do not touch FT holdout.",
+    "gr": "Do not patch GR even if both pass."
+  },
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "depth_c1": 327680,
+    "starts_s8": 98304,
+    "starts_s1": 98304,
+    "starts_s1c": 196608,
+    "starts_s1l6": 196608,
+    "starts_s1q": 344064,
+    "starts_s1sh": 49152,
+    "starts_s1alt": 65536,
+    "starts_s1alt23": 163840,
+    "starts_s1alt13": 98304,
+    "depth_s1w": 245760,
+    "this_stream": "FTREP, counted separately",
+    "new_charge": "32 fits × 2048 = 65536 if all succeed"
+  }
+}
