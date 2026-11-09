@@ -1,0 +1,73 @@
+{
+  "experiment": "STARTS S1Q: frozen S1-only Nov3 vs QAOA at N15 L3 across Q={3072,6144,12288}",
+  "written_before_fits": true,
+  "not_a_s1_retune": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "s4_s8_closed": true,
+  "continuation_closed": true,
+  "throughput_axis_closed": true,
+  "conditioning_closed": ["C1", "B3", "B4"],
+  "n18_forbidden": "FT owns",
+  "hypothesis": {
+    "id": "remaining_nov3_qaoa_gap_is_budget",
+    "one_sentence": "Under frozen TQA-only S1 at N15 L=3, extra inclusive budget shrinks or closes the Nov3−QAOA energy gap.",
+    "not": "No S1/S4/S8 retune. No continuation. Not a GR patch. Closing the gap is a development note only if some Q has Nov3−QAOA mean energy CI entirely below 0."
+  },
+  "frozen_from_PR83_84_85": {
+    "no_fit_changes": true,
+    "split": "same C0 split_cap(Q, nstarts=1); K is not a naive multiple of Q=3072 K because calibration and candidates are fixed per start",
+    "S1": {
+      "nstarts": 1,
+      "start0": "TQA at L=3",
+      "Q_and_K": {"3072": 1531, "6144": 3067, "12288": 6139}
+    },
+    "optimizer": "ordinary IID Rademacher SPSA C0, ncal=4, A=25, live per-start gain, last+Polyak, energy min",
+    "engine": "m2",
+    "file_sha256": {
+      "starts.py": "6e4b0cd784782084d2f1320ccb9113ef99d320fd09ce984ab5161f68e0716645",
+      "N3COND/spsa.py": "cca4c884bc3020c9c9559e89cb248d9a4b2c8a8bca36624ba6b380dab1832357",
+      "N3COND/nov3.py": "e74f66b2dfc973afe9acd69e5c398b210a59563f8edc04290c5e88fb16a39808"
+    }
+  },
+  "seeds": {
+    "ids": [10072, 10073, 10074, 10075, 10076, 10077, 10078, 10079],
+    "role": "exclusive_unread_dev",
+    "collision_check": "no instance/run filenames; 10064-71 S1L6; 10056-63 S1C; 10048-55 S8/S1; 10036-43 DEPTH; 10032-47 LEXACT; 10018-25 FT; 10026-31 local; 10010-17 N3COND; 11000-11031 validation; 20000-20999 final",
+    "forbidden": ["10010-10071", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [15],
+    "L": [3],
+    "circuits": ["Nov3", "QAOA"],
+    "arms": ["S1"],
+    "Q": [3072, 6144, 12288]
+  },
+  "allocation": {
+    "S1": "One start = TQA at L=3. Full Q per cell. K from split_cap(Q, 1).",
+    "QAOA": "p=L=3, same S1 split, same Q.",
+    "inclusive": "All init, calibration, perturbations, candidates, failures inside Q."
+  },
+  "selection": "Lowest counted candidate energy. F post hoc, never selects.",
+  "questions": {
+    "primary": "For each Q, paired mean Δ(E−E0)/N of Nov3−QAOA with bootstrap 95% CI, wins, tails. F reported, not selected.",
+    "secondary": "Within-method improvement of Q=6144 and Q=12288 vs own Q=3072, paired on seeds.",
+    "soft_note": "If at some Q the Nov3−QAOA energy CI lies entirely below 0, mark that Q as a development energy-win candidate. Not a GR adoption. Otherwise report the gap vs budget honestly."
+  },
+  "resource_gate": {
+    "order": "Finish Q=3072 and Q=6144 first, checkpoint, then Q=12288.",
+    "blocker": "If estimated Q=12288 wall exceeds 30 min from the 6144 measurement, stop and report the blocker. Do not retune."
+  },
+  "gr": "Do not patch GR even if some Q is an energy-win candidate.",
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "depth_c1": 327680,
+    "starts_s8": 98304,
+    "starts_s1": 98304,
+    "starts_s1c": 196608,
+    "starts_s1l6": 196608,
+    "this_stream": "STARTS_S1Q, counted separately",
+    "new_charge": "48 fits × mean Q: 16×3072 + 16×6144 + 16×12288 = 344064 if all succeed"
+  }
+}
