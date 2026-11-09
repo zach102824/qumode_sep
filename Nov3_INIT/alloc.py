@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import numpy as np
 
-METHOD_ID = {"equal4": {"QAOA": 0, "Nov3rd": 1}, "halve8to2": {"QAOA": 71, "Nov3rd": 70}}
+METHOD_ID = {"equal4": {"QAOA": 0, "Nov3rd": 1, "Nov3pair": 2}, "halve8to2": {"QAOA": 71, "Nov3rd": 70}}
 C_PERT = 0.1
 A_SPALL = 25.0
 ALPHA_EXP = 0.602
@@ -37,9 +37,37 @@ def iterations_halve(Q: int) -> int:
     return int(t)
 
 
-def sigmas_of(method: str, L: int) -> np.ndarray:
+def n_cavities(n: int) -> int:
+    if int(n) % 3 != 0:
+        raise ValueError(f"N={n} is not divisible by 3")
+    return int(n) // 3
+
+
+def n_params(method: str, L: int, n: int | None = None) -> int:
+    L = int(L)
+    if method == "QAOA":
+        return 2 * L
+    if method == "Nov3rd":
+        return 3 + 3 * L
+    if method == "Nov3pair":
+        if n is None:
+            raise ValueError("Nov3pair param count needs N")
+        return 3 + 3 * n_cavities(n) * L
+    raise ValueError(method)
+
+
+def sigmas_of(method: str, L: int, C: int | None = None) -> np.ndarray:
     if method == "Nov3rd":
         sig = np.empty(3 + 3 * L, dtype=np.float64)
+        sig[0] = 0.10
+        sig[1] = 0.25
+        sig[2] = 0.25
+        sig[3:] = 0.15
+        return sig
+    if method == "Nov3pair":
+        if C is None:
+            raise ValueError("Nov3pair sigmas need C")
+        sig = np.empty(3 + 3 * int(C) * L, dtype=np.float64)
         sig[0] = 0.10
         sig[1] = 0.25
         sig[2] = 0.25
@@ -240,9 +268,26 @@ def x0_center4(method: str, L: int, start_id: int, rng) -> np.ndarray:
     return x
 
 
-def run_equal4(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa, x0_fn=None) -> dict:
+def x0_pair_center4(C: int, L: int, start_id: int, rng) -> np.ndarray:
+    """Per-cavity shells. Start 0 tiles the shared coherent center onto every cavity."""
+    C = int(C)
+    L = int(L)
+    x = np.zeros(3 + 3 * C * L, dtype=np.float64)
+    if start_id == 0:
+        x[0] = 0.25
+        shells = x[3:].reshape(L, C, 3)
+        shells[:, :, 0] = -0.5
+        return x
+    x[0] = float(rng.uniform(-0.5, 0.5))
+    x[1] = float(rng.uniform(-0.5, 0.5))
+    x[2] = float(rng.uniform(-0.5, 0.5))
+    x[3:] = rng.uniform(-0.3, 0.3, size=3 * C * L)
+    return x
+
+
+def run_equal4(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa, x0_fn=None, C=None) -> dict:
     t_iter = iterations_equal4(Q)
-    sig = sigmas_of(method, L)
+    sig = sigmas_of(method, L, C=C)
     ledger = Ledger()
     best = None
     tails = []

@@ -1,0 +1,164 @@
+{
+  "ok": true,
+  "prereg_sha256": "e83555f837b66d72e1848b26f7fb8c6750bba8dfc22c8d518e75e9dca153c118",
+  "historical_queries_preserved": 2179072,
+  "paper_V_M_not_implemented": true,
+  "in_family": "per-cavity 3-shell SNAP; shared Uc",
+  "seeds": {
+    "band": [
+      10328,
+      10329,
+      10330,
+      10331,
+      10332,
+      10333,
+      10334,
+      10335
+    ],
+    "n": 8,
+    "overlaps": {
+      "le_10320_10327": [],
+      "local_r23_10304_10319": [],
+      "ft_and_prior_le_10247": [],
+      "holdout_10144_10151": [],
+      "validation_11000_11031": [],
+      "gr_final_20000_20999": []
+    },
+    "ok": true
+  },
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "params": {
+    "N": 15,
+    "C": 5,
+    "counts": {
+      "2": {
+        "QAOA": 4,
+        "Nov3rd": 9,
+        "Nov3pair": 33,
+        "Q": 2048,
+        "T": 250
+      },
+      "3": {
+        "QAOA": 6,
+        "Nov3rd": 12,
+        "Nov3pair": 48,
+        "Q": 3072,
+        "T": 378
+      }
+    },
+    "ok": true
+  },
+  "centers": {
+    "shared": [
+      0.25,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0
+    ],
+    "pair": [
+      0.25,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0
+    ],
+    "qaoa": [
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "pair_tiles_shared_center": true,
+    "shared_center": true,
+    "qaoa_center": true,
+    "method_ids": {
+      "QAOA": 0,
+      "Nov3rd": 1,
+      "Nov3pair": 2
+    },
+    "sigmas_pair_L3": 48
+  },
+  "reduction": {
+    "C": 2,
+    "shared_equals_tiled_pair": true,
+    "fidelity": 1.0,
+    "dE": 0.0,
+    "pair_center_equals_qaoa": true,
+    "fidelity_qaoa": 0.9999999999999991,
+    "dE_qaoa": 6.661338147750939e-16
+  },
+  "ledger_quadratic": {
+    "Q": 128,
+    "calls": 128,
+    "ledger": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 80,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 128
+    },
+    "ok": true
+  },
+  "label_rule": "PAIR_SHELL_L3_EDGE iff L=3 pair-QAOA CI entirely <0 AND pair mean E <= shared mean E AND L=2 pair mean E <= shared AND L=2 pair-QAOA CI is not entirely >0; else REJECT_PAIR_SHELL",
+  "no_gr_patch": true,
+  "no_candidacy_file": true,
+  "no_spsa_on_hamiltonian_in_this_module": true
+}
