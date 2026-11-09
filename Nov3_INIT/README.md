@@ -33,4 +33,13 @@ python3 -m Nov3_INIT.run_v4 --phase run
 python3 -m Nov3_INIT.run_v4 --phase summary
 ```
 
+v5 (`PREREG_V5.md`) keeps those exact four-start recipes and asks whether the N=15 L1 energy edge persists at N=18. Resource gate first. Seeds `10018..10025` only.
+
+```bash
+python3 -m Nov3_INIT.conformance_v5
+python3 -m Nov3_INIT.run_v5 --phase bstar
+python3 -m Nov3_INIT.run_v5 --phase run
+python3 -m Nov3_INIT.run_v5 --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
