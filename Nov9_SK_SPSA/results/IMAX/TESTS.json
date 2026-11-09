@@ -1,0 +1,114 @@
+{
+ "all_pass": true,
+ "tests": [
+  {
+   "test": "T17_coherent_state_analytic_real",
+   "value": 5.551115123125783e-16,
+   "tol": 1e-12,
+   "pass": true
+  },
+  {
+   "test": "T17_coherent_state_analytic_imag",
+   "value": 5.628182661636629e-16,
+   "tol": 1e-12,
+   "pass": true
+  },
+  {
+   "test": "T18_dagger_imag_D(ia)^H=D(-ia)",
+   "value": 1.1615948481440104e-16,
+   "tol": 1e-13,
+   "pass": true
+  },
+  {
+   "test": "T18_dagger_real_D(a)^T=D(-a)",
+   "value": 1.1102230246251565e-16,
+   "tol": 1e-13,
+   "pass": true
+  },
+  {
+   "test": "T19_axis_relation_D(ia)=R D(a) R^H",
+   "value": 2.0071383518956115e-15,
+   "tol": 1e-12,
+   "pass": true
+  },
+  {
+   "test": "T20_composition_imag_low_block",
+   "value": 1.1282886701026624e-15,
+   "tol": 1e-12,
+   "pass": true
+  },
+  {
+   "test": "T21_trace_preservation_code_inputs_nf16",
+   "value": 4.994005209368879e-12,
+   "tol": 1e-06,
+   "pass": true
+  },
+  {
+   "test": "T21_trace_preservation_code_inputs_nf24",
+   "value": 8.881784197001252e-16,
+   "tol": 1e-10,
+   "pass": true
+  },
+  {
+   "test": "T21_trace_preservation_code_inputs_nf32",
+   "value": 6.661338147750939e-16,
+   "tol": 1e-10,
+   "pass": true
+  },
+  {
+   "test": "T22_strict_D8_axis_relation",
+   "value": 4.260971469349825e-16,
+   "tol": 1e-12,
+   "pass": true
+  },
+  {
+   "test": "T22_strict_D8_unitary",
+   "value": 1.1102230246251565e-15,
+   "tol": 1e-12,
+   "pass": true
+  },
+  {
+   "test": "T23_imag_circuit_vs_independent_conjugated_path_E",
+   "value": 2.220446049250313e-16,
+   "tol": 1e-11,
+   "pass": true
+  },
+  {
+   "test": "T23_imag_circuit_vs_independent_conjugated_path_F",
+   "value": 1.1102230246251565e-16,
+   "tol": 1e-11,
+   "pass": true
+  },
+  {
+   "test": "T24_real_axis_E(g)=E(-g)_at_s0",
+   "value": 0.0,
+   "tol": 1e-12,
+   "pass": true
+  },
+  {
+   "test": "T24_imag_axis_breaks_symmetry_at_s0 (info)",
+   "value": 0.6816734822931108,
+   "tol": null,
+   "pass": true
+  },
+  {
+   "test": "T25_imag_Hext_energy_ge_E0 (neg margin)",
+   "value": 0.0,
+   "tol": 1e-10,
+   "pass": true
+  },
+  {
+   "test": "T25_qaoa_energy_ge_E0 (neg margin)",
+   "value": 0.0,
+   "tol": 1e-10,
+   "pass": true
+  },
+  {
+   "test": "T26_Bstar_instance_valid_N6_s10000",
+   "value": 0.0,
+   "tol": 0.0,
+   "pass": true
+  }
+ ],
+ "seconds": 0.10242938995361328
+}
