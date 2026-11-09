@@ -43,3 +43,16 @@ One uncharged diagnostic state rebuild per fit is not in the 428160. Ground-stat
 ## B3 addendum (separate, after this audit)
 
 B3 spent 147456 energy queries. All of them are inside its own Q=qL, including 6656 axial calibration queries. Outside-cap queries for B3: 0. These 147456 are not part of the 425984 and do not revise it. Stream total incurred energy queries: 428160 + 147456 = 575616.
+
+## B4 addendum (separate, after B3)
+
+B4 spent 196608 energy queries, 64 new fits at Q=3072. All of them are inside that Q. Outside-cap queries: 0. The 32 historical C0 runs used as the reference were audited (queries 3072, calibration 32, K=379, gain not frozen) and were not re-queried. Their 98304 queries stay inside the original 425984 and are not added again.
+
+| category | queries | inside B4 Q |
+|---|---|---|
+| calibration (axial plus 8 simultaneous) | 6656 | yes |
+| perturbations | 189440 | yes |
+| candidates | 512 | yes |
+| total newly charged | 196608 | yes |
+
+Prior ledger preserved at 575616, including the unused 512. Stream total after B4: 575616 + 196608 = 772224.
