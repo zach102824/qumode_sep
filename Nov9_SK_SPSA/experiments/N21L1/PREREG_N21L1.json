@@ -1,0 +1,60 @@
+{
+  "experiment": "N21L1: N=21 L=1 Q=1024 frozen v4 center-4 Nov3 vs QAOA p=1, memory-safe ≤2 workers",
+  "written_before_fits": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "no_candidacy_revival": true,
+  "no_final": true,
+  "no_validation": true,
+  "no_l2_or_deeper": true,
+  "no_nov9_syk": true,
+  "l3_startcount_freeze_shell_closed": "PR99/101/102 exhausted those levers; this stream is N=21 L=1 shallow scaling only",
+  "ft_source": {
+    "pr": 79,
+    "head_commit": "347ac23369db1251c902638994b4fdc65a019710",
+    "alloc_py_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+    "recipe": "unmodified v4 center-4 run_equal4"
+  },
+  "hypothesis": {
+    "id": "n21_l1_shallow_scaling",
+    "one_sentence": "At N=21 L=1 Q=1024, frozen v4 center-4 Nov3−QAOA mean ΔE CI is entirely <0 (same L=1 sign as local R25 N18 / R16), with ≤2 workers so the cell is not OOM-skipped.",
+    "not": "Not L2+. Not a GR patch. Not an adoption. Not a start-count or freeze-order variant."
+  },
+  "frozen_recipe": "Exact v4 center-4: four equal SPSA blocks, T=Q/8-6=122, Q=qL=1024, frozen gains c=0.1 A=25 clip 2σ, center-4 starts, energy among init/last/Polyak/mid. alloc.py unmodified.",
+  "parallelism": {
+    "max_workers": 2,
+    "blas_threads": 1,
+    "fallback": "If OOM or worker death at 2 workers, retry remaining work serial (1 worker). Do not skip N=21 without trying ≤2."
+  },
+  "seeds": {
+    "ids": [10432, 10433, 10434, 10435, 10436, 10437, 10438, 10439],
+    "role": "exclusive_unread_dev",
+    "collision_check": "not local R26 10416-31; not LE ≤10407; not FT ≤10415 / 10368-75; not holdout 10144-51; not validation 11000-11031; not GR/final 20000-20999",
+    "forbidden": ["≤10415", "10416-10431", "10144-10151", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [21],
+    "L": [1],
+    "q": 1024,
+    "Q": 1024,
+    "T": 122,
+    "p_QAOA": 1,
+    "arms": ["nov3_center4", "qaoa_center4"]
+  },
+  "selection": "FT energy selection. F post hoc, never selects.",
+  "report": {
+    "written_before_fits": true,
+    "primary_label": "N21-L1 ESTIMATE_NEGATIVE_CI iff mean ΔE = E_Nov3-E_QAOA bootstrap 95% CI (4000, rng 3334) entirely <0 on n=8; else UNSTABLE",
+    "dE_over_N": "Report mean ΔE/N vs local R25 N18 (−0.0229) and R16 (−0.0184)",
+    "gr": "Do not patch GR. No final. No L2+. No adoption."
+  },
+  "local_reference": {
+    "R25_N18_dE_over_N": -0.0229,
+    "R16_dE_over_N": -0.0184
+  },
+  "ledger": {
+    "prior_combined": 3437184,
+    "this_stream": "N21L1, counted separately",
+    "new_charge": "16 fits × 1024 = 16384 if all succeed"
+  }
+}
