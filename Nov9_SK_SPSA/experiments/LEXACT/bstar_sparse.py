@@ -77,10 +77,11 @@ def build(N, seed):
     r = minimize_scalar(negS, bounds=(lo, hi), method="bounded", options={"xatol": XATOL})
     bs = float(r.x)
     hard["refined_interior"] = bool(lo + 10 * XATOL < bs < hi - 10 * XATOL)
-    w, V, g = gs_one(d, bs, N, v0=v0, k=2)
+    w, V, g = gs_one(d, bs, N, v0=v0, k=6)
     dim = 1 << N
     mask = dim - 1
     idx = np.arange(dim)
+    par = np.array([float(V[:, i] @ V[idx ^ mask, i]) for i in range(V.shape[1])])
     par0 = float(g @ g[idx ^ mask])
     hard["unique"] = bool(w[1] - w[0] > 1e-10)
     hard["perron_positive"] = bool(np.min(g) > 0)
@@ -88,21 +89,26 @@ def build(N, seed):
     Hv = matvec_factory(d, bs, N).matvec(g)
     resid = float(np.linalg.norm(Hv - w[0] * g))
     hard["resid_small"] = bool(resid < 1e-9)
+    even = [i for i, p in enumerate(par) if p > 0]
+    odd = [i for i, p in enumerate(par) if p < 0]
     shift = 20.0 * N
+    H = matvec_factory(d, bs, N)
 
     def mvo(v):
         v = np.asarray(v, dtype=np.float64).reshape(-1)
-        return matvec_factory(d, bs, N).matvec(v) + shift * 0.5 * (v + v[idx ^ mask])
+        return H.matvec(v) + shift * 0.5 * (v + v[idx ^ mask])
 
     wo, _ = eigsh(LinearOperator((dim, dim), matvec=mvo, dtype=np.float64), k=1, which="SA", tol=1e-10)
     E0_odd = float(wo[0])
+    e1_par = "odd" if par[1] < 0 else "even"
     meta = {
         "N": N, "seed": seed, "Bstar": bs, "S_A": entropy(g, N), "bipartition_A": list(range(N // 2)),
         "grid": [B_LO, B_HI, NGRID], "grid_argmax": float(grid[k]), "grid_local_maxima": nloc,
         "S_grid_max": float(S[k]), "J_sha256": C.J_sha(J),
         "E0": float(w[0]), "E1": float(w[1]), "gap_E1_E0": float(w[1] - w[0]),
-        "gap_even": None, "gap_odd": float(E0_odd - w[0]),
-        "E1_parity": "odd" if abs(E0_odd - w[1]) < 1e-6 else "even_or_unresolved",
+        "gap_even": float(w[even[1]] - w[0]) if len(even) > 1 else None,
+        "gap_odd": float(E0_odd - w[0]),
+        "E1_parity": e1_par,
         "F_plus": C.plus_fidelity(g), "E_plus": float(-bs * N), "gs_resid": resid,
         "hard_checks": hard, "valid": bool(all(hard.values())),
         "gs_prep": "classical sparse Lanczos, not charged to Q",
