@@ -1,0 +1,95 @@
+{
+  "ok": true,
+  "failure": null,
+  "blocker": null,
+  "version": "N3INIT_cutoff",
+  "arm": "qaoa_D2",
+  "method": "QAOA",
+  "method_id": 0,
+  "nf": 10,
+  "D0": 8,
+  "n_params": 4,
+  "N": 15,
+  "seed": 10524,
+  "L": 2,
+  "q": 1024,
+  "Q": 2048,
+  "procedural_cap": 2048,
+  "same_query_budget_across_arms": true,
+  "Bstar": 0.5716981650430625,
+  "E0": -11.808596598633763,
+  "E_plus": -8.575472475645936,
+  "F_plus": 0.17785981075578702,
+  "E": -11.126146998807446,
+  "E_error_over_N": 0.045496639988421114,
+  "F": 0.6342311716526163,
+  "eta": 0.5551016321393654,
+  "escaped": true,
+  "which": "last",
+  "start_id": 1,
+  "n_iter": 250,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -1.2068994617453033,
+      "E": -10.930701946124787,
+      "which": "last",
+      "a_gain": 0.06467149642181462
+    },
+    {
+      "start_id": 1,
+      "e_init": -8.943117499754957,
+      "E": -11.126146998807446,
+      "which": "last",
+      "a_gain": 0.04044747742232989
+    },
+    {
+      "start_id": 2,
+      "e_init": -10.740477336222959,
+      "E": -11.024413789808943,
+      "which": "last",
+      "a_gain": 0.17273223553154887
+    },
+    {
+      "start_id": 3,
+      "e_init": -9.135196245861225,
+      "E": -10.817081292691537,
+      "which": "last",
+      "a_gain": 0.018527914408577446
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 2000,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 2048
+  },
+  "x": [
+    -0.4900743672191597,
+    -0.2020826354361279,
+    0.24711596403938021,
+    -0.9062614357930678
+  ],
+  "leakage": {
+    "p_leak": 0.0,
+    "p_code": 1.0,
+    "mean_n_per_cavity": 1.5000000000000002,
+    "mean_n_total": 7.500000000000001,
+    "p_highest_any_cavity": 0.0,
+    "norm": 1.0000000000000018,
+    "norm_deficit": 1.7763568394002505e-15,
+    "nf": 10,
+    "formula": "qubit QAOA: p_leak=0 by construction; mean_n is mean Hamming weight per 3-qubit cavity"
+  },
+  "seconds": 9.599364212997898,
+  "cpu_seconds": 9.589437199999992,
+  "peak_rss_kib": 117996,
+  "prereg_sha256": "f678e806b12d17f12578199238677cdfbd82147aac2b833b128cf64dc130c397",
+  "fidelity_posthoc": true,
+  "ideal_W_L_only": true,
+  "compiled_W_L_not_modelled": true,
+  "rng_omits_nf": true
+}
