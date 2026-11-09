@@ -1,0 +1,50 @@
+{
+  "experiment": "FTREP D: single-band center-4 depth curve N=15 L∈{2,3,4}",
+  "written_before_fits": true,
+  "characterization_not_adoption": true,
+  "not_a_schedule_tweak": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "no_candidacy_revival": true,
+  "no_final": true,
+  "no_validation": true,
+  "ft_source": {
+    "pr": 79,
+    "head_commit": "347ac23369db1251c902638994b4fdc65a019710",
+    "alloc_py_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+    "same_as_ftrep_l2": true
+  },
+  "hypothesis": {
+    "id": "center4_depth_curve_n15",
+    "one_sentence": "On one exclusive unread band, map at which L∈{2,3,4} the frozen v4 center-4 Nov3−QAOA energy edge is present (CI entirely <0) versus absent/inconclusive.",
+    "not": "No schedule tweak. Not an adoption gate. Not a GR patch. Not candidacy revival. L=2 present on this band does not authorize a GR write."
+  },
+  "frozen_recipe": "Exact FTREP copy of FT v4: four equal SPSA blocks, T=Q/8-6, Q=qL with q=1024, frozen gains c=0.1 A=25 clip 2σ, center-4 starts, energy among init/last/Polyak/mid. alloc.py unmodified.",
+  "seeds": {
+    "ids": [10264, 10265, 10266, 10267, 10268, 10269, 10270, 10271],
+    "role": "exclusive_unread_dev",
+    "collision_check": "no instance/run filenames; ≤10263 unused here; FT N18×16 10232-47 unused; FT holdout 10144-51 unused as this band; local R19 10184-91; FTREP ≤10199; validation 11000-11031; final 20000-20999",
+    "forbidden": ["10010-10263", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [15],
+    "L": [2, 3, 4],
+    "q": 1024,
+    "Q_of_L": {"2": 2048, "3": 3072, "4": 4096},
+    "T_of_L": {"2": 250, "3": 378, "4": 506},
+    "arms": ["nov3_center4", "qaoa_center4"]
+  },
+  "selection": "FT energy selection. F post hoc, never selects.",
+  "report": {
+    "per_L": "mean ΔE (Nov3−QAOA), bootstrap 95% CI (4000, rng 3334), wins/8, mean F both arms",
+    "present": "that L’s mean ΔE CI entirely <0",
+    "else": "absent/inconclusive",
+    "no_adoption_gate": true,
+    "gr": "Do not patch GR regardless of the L=2 outcome on this band."
+  },
+  "ledger": {
+    "prior_combined": 2921088,
+    "this_stream": "FTREP_D, counted separately",
+    "new_charge": "48 fits: 16×2048 + 16×3072 + 16×4096 = 147456 if all succeed"
+  }
+}
