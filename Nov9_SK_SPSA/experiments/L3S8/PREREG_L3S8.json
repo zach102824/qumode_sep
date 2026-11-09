@@ -1,0 +1,85 @@
+{
+  "experiment": "L3S8: N=15 L=3 eight equal starts vs frozen v4 center-4 vs QAOA p=3, same total Q=3072",
+  "written_before_fits": true,
+  "not_a_two_stage_freeze_order": true,
+  "not_a_center4_l2_copy": true,
+  "not_pair_phase": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "no_candidacy_revival": true,
+  "no_final": true,
+  "no_validation": true,
+  "no_nov9_syk": true,
+  "two_stage_freeze_order_closed": "L3TS PR99 and L3SF PR101 both FAIL; no more freeze-order variants",
+  "ft_source": {
+    "pr": 79,
+    "head_commit": "347ac23369db1251c902638994b4fdc65a019710",
+    "alloc_py_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+    "c4_is_unmodified_v4_run_equal4": true,
+    "s8_is_unmodified_v4_run_spread8": true
+  },
+  "hypothesis": {
+    "id": "l3_eight_starts_recover_edge",
+    "one_sentence": "At N15 L=3 Q=3072, eight equal v4 SPSA starts recover a Nov3 energy edge vs matched 8-start QAOA p=3, and are not worse than frozen center-4.",
+    "not": "Not a two-stage freeze-order. Not a gain retune. Not pair-phase. Not a GR patch. Not another L2 center-4 copy."
+  },
+  "split_documented_before_fits": {
+    "Q_total": 3072,
+    "C4": {
+      "nstarts": 4,
+      "T": 378,
+      "per_start": 768,
+      "formula": "T=Q/8-6, four equal spsa_block, center-4 x0, method_id 1",
+      "ledger": {"init": 4, "calibration": 32, "perturb": 3024, "candidate": 12, "total": 3072}
+    },
+    "S8": {
+      "nstarts": 8,
+      "T": 186,
+      "per_start": 384,
+      "formula": "T=Q/16-6, eight equal spsa_block, start 0 coherent center, starts 1-7 equal4 box, method_id 90",
+      "ledger": {"init": 8, "calibration": 64, "perturb": 2976, "candidate": 24, "total": 3072}
+    },
+    "QAOA": {
+      "nstarts": 8,
+      "T": 186,
+      "per_start": 384,
+      "fair_start_policy": "QAOA already uses multi-start in v4, so the primary arm matches S8: run_spread8, 8 equal blocks, start 0 QAOA center, starts 1-7 equal4 box, method_id 91. Not a 4-start QAOA vs 8-start Nov3 mismatch.",
+      "ledger": {"init": 8, "calibration": 64, "perturb": 2976, "candidate": 24, "total": 3072}
+    },
+    "gains": "same frozen v4 family: c=0.1, A=25, exponents 0.602/0.101, a0=0.5/median(|g|/σ) or 0, clip 2σ, energy among init/last/Polyak/mid. alloc.py unmodified."
+  },
+  "arms": {
+    "C4": "Nov3 frozen v4 center-4 run_equal4 Q=3072",
+    "S8": "Nov3 frozen v4 run_spread8 Q=3072",
+    "QAOA": "QAOA p=L=3 run_spread8 Q=3072, matched 8-start policy"
+  },
+  "seeds": {
+    "ids": [10400, 10401, 10402, 10403, 10404, 10405, 10406, 10407],
+    "role": "exclusive_unread_dev",
+    "collision_check": "not ≤10391 (FT gain-ratio and all prior LE/FT/local including 10368-75); not local R25 10344-59; not holdout 10144-51; not validation 11000-11031; not GR/final 20000-20999",
+    "forbidden": ["≤10391", "10344-10359", "10144-10151", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [15],
+    "L": [3],
+    "q": 1024,
+    "Q": 3072,
+    "p_QAOA": 3,
+    "circuits": ["Nov3", "QAOA"],
+    "arms": ["C4", "S8", "QAOA"]
+  },
+  "selection": "FT energy selection. F post hoc, never selects.",
+  "gate": {
+    "written_before_fits": true,
+    "primary": "S8 vs QAOA: mean ΔE = E_S8 - E_QAOA, bootstrap 95% CI (4000, rng 3334) entirely <0",
+    "secondary": "S8 mean E ≤ C4 mean E (point means; not worse than center-4)",
+    "pass": "both primary and secondary",
+    "otherwise": "FAIL / reject. Do not retune. Do not patch GR.",
+    "gr": "Do not patch GR regardless of gate outcome."
+  },
+  "ledger": {
+    "prior_combined": 3363456,
+    "this_stream": "L3S8, counted separately",
+    "new_charge": "24 fits × 3072 = 73728 if all succeed"
+  }
+}
