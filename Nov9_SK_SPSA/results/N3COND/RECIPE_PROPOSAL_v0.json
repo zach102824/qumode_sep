@@ -3,7 +3,7 @@
   "for": "GR benchmark maintainers",
   "mutates_benchmark": false,
   "action": "do not replace scalar SPSA with the N3COND C1 diagonal freeze",
-  "evidence": "N9 holdout 10014-10017, L3, q=1024, original Nov3, Q=3072. Median dF(C1-C0)=-0.012, median dE=+0.023, mean dE CI entirely positive. See INTERPRETATION_N9.md.",
-  "status": "N9 only. N12 is still required by the prereg and is not in this proposal yet.",
+  "why": "The preregistered primary cell failed. N9 holdout L3 q=1024, Nov3 C1-C0: median dF -0.012, median dE +0.023, mean dE CI entirely positive. N12 holdout L3 q=1024 has median dF +0.044 and median dE -0.046, but both mean CIs include 0, and the marginal energy medians disagree with the paired energy median. N15/N18 were not run because the gate requires both medians >= 0.02.",
+  "stable_observation_not_a_recipe_change": "On this seed band, scalar Nov3 beats scalar QAOA at L1, q=1024, holdout 4/4 on F and on energy, at both N9 and N12. At N12 L3 the same scalar comparison favors QAOA on energy, 4/4. Do not merge these medians with GR or with the local continuation recipe.",
   "leaves_unchanged": ["GR frozen recipe", "GR final panel", "seeds 10000-10007", "validation 11000-11031", "final 20000-20999"]
 }
