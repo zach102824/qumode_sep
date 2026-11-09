@@ -1,0 +1,92 @@
+{
+  "experiment": "L3TIE: N=15 L=3 layer-tied SNAP (dim 6) vs untied JOINT (dim 12) vs QAOA p=3, Q=3072 v4 center-4",
+  "written_before_fits": true,
+  "not_a_start_count_variant": true,
+  "not_a_two_stage_freeze_order": true,
+  "not_a_shell_unshare": true,
+  "not_pair_phase": true,
+  "not_per_cavity_snap": true,
+  "not_paper_vm": true,
+  "not_a_center4_l2_copy": true,
+  "not_a_depth_curve": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "no_candidacy_revival": true,
+  "no_final": true,
+  "no_validation": true,
+  "no_nov9_syk": true,
+  "closed_l3_levers": "PR99/101/102 start-count / freeze-order / shell-unshare / two-stage exhausted; this stream is SNAP layer-tying (opposite of unshare)",
+  "ft_source": {
+    "pr": 79,
+    "head_commit": "347ac23369db1251c902638994b4fdc65a019710",
+    "alloc_py_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+    "joint_and_qaoa_unmodified_v4_run_equal4": true,
+    "tie_uses_run_equal4_L1_geometry_on_L3_circuit": true
+  },
+  "hypothesis": {
+    "id": "l3_tied_snap_recovers_edge",
+    "one_sentence": "At N=15 L=3 Q=3072, tying SNAP across layers (dim 6, matched to QAOA p=3) recovers a Nov3 energy edge vs QAOA, and is not worse than untied JOINT (dim 12).",
+    "not": "Not start-count. Not freeze-order. Not per-cavity shell-unshare. Not two-stage. Not a GR patch. Not L2/depth-curve."
+  },
+  "split_documented_before_fits": {
+    "Q_total": 3072,
+    "JOINT": {
+      "nstarts": 4,
+      "T": 378,
+      "dim": 12,
+      "formula": "unmodified v4 run_equal4 Nov3rd L=3, T=Q/8-6, method_id 1",
+      "ledger": {"init": 4, "calibration": 32, "perturb": 3024, "candidate": 12, "total": 3072}
+    },
+    "TIE": {
+      "nstarts": 4,
+      "T": 378,
+      "dim_spsa": 6,
+      "dim_circuit": 12,
+      "formula": "v4 run_equal4 Nov3rd L=1 geometry (T=Q/8-6=378 at Q=3072), expand SNAP triple to L=3, method_id 94, original shared-Uc Nov3",
+      "ledger": {"init": 4, "calibration": 32, "perturb": 3024, "candidate": 12, "total": 3072}
+    },
+    "QAOA": {
+      "nstarts": 4,
+      "T": 378,
+      "dim": 6,
+      "formula": "unmodified v4 run_equal4 QAOA L=3, matched 4-start center-4 (not 8-start)",
+      "ledger": {"init": 4, "calibration": 32, "perturb": 3024, "candidate": 12, "total": 3072}
+    },
+    "gains": "same frozen v4 family: c=0.1, A=25, exponents 0.602/0.101, a0=0.5/median(|g|/σ) or 0, clip 2σ, energy among init/last/Polyak/mid. alloc.py unmodified."
+  },
+  "arms": {
+    "JOINT": "Nov3 frozen v4 center-4 run_equal4 Q=3072, per-layer SNAP, dim 12",
+    "TIE": "Nov3 frozen v4 center-4, one SNAP triple repeated L=3 times, dim 6",
+    "QAOA": "QAOA p=L=3 run_equal4 Q=3072, 4-start center-4, dim 6"
+  },
+  "seeds": {
+    "ids": [10552, 10553, 10554, 10555, 10556, 10557, 10558, 10559],
+    "held_unused_same_band": [10560, 10561, 10562, 10563, 10564, 10565, 10566, 10567],
+    "role": "exclusive_unread_dev",
+    "collision_check": "not local R31 10536-51; not R30 10504-19; not FT 10520-35 / 10568+; not LE 10432-39; not L3S8 10400-07; not holdout 10144-51; not validation 11000-11031; not GR/final 20000-20999",
+    "forbidden": ["10536-10551", "10504-10519", "10520-10535", "≥10568", "10432-10439", "10400-10407", "10144-10151", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [15],
+    "L": [3],
+    "q": 1024,
+    "Q": 3072,
+    "p_QAOA": 3,
+    "circuits": ["Nov3", "QAOA"],
+    "arms": ["JOINT", "TIE", "QAOA"]
+  },
+  "selection": "FT energy selection. F post hoc, never selects.",
+  "gate": {
+    "written_before_fits": true,
+    "primary": "TIE vs QAOA: mean ΔE = E_TIE - E_QAOA, bootstrap 95% CI (4000, rng 3334) entirely <0 on n=8",
+    "secondary": "TIE mean E ≤ JOINT mean E (point means; not worse than untied)",
+    "pass": "both primary and secondary",
+    "otherwise": "FAIL / reject. Do not retune. Do not patch GR.",
+    "gr": "Do not patch GR regardless of gate outcome."
+  },
+  "ledger": {
+    "prior_combined": 3453568,
+    "this_stream": "L3TIE, counted separately",
+    "new_charge": "24 fits × 3072 = 73728 if all succeed"
+  }
+}
