@@ -1,0 +1,103 @@
+{
+  "ok": true,
+  "prereg_sha256": "450bd8776452ae5aa4a1bcd2a7d9e00e4ddea16d877647e2f390e779c7c8d5b1",
+  "historical_queries_preserved": 2498560,
+  "v4_already_spall_anneal": true,
+  "anneal_is_alpha1_gamma_one_sixth": true,
+  "not_shell_gain": true,
+  "not_freeze_order": true,
+  "seeds": {
+    "band": [
+      10456,
+      10457,
+      10458,
+      10459,
+      10460,
+      10461,
+      10462,
+      10463
+    ],
+    "overlaps": {
+      "le_10432_10439": [],
+      "local_r27_10440_10455": [],
+      "local_r26_10416_10431": [],
+      "prior_le_10415": [],
+      "holdout_10144_10151": [],
+      "validation_11000_11031": [],
+      "gr_final_20000_20999": []
+    },
+    "ok": true
+  },
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "schedule": {
+    "T": 378,
+    "v4_alpha": 0.602,
+    "v4_gamma": 0.101,
+    "anneal_alpha": 1.0,
+    "anneal_gamma": 0.16666666666666666,
+    "A": 25.0,
+    "a0_equals_ak0_v4": true,
+    "a0_equals_ak0_anneal": true,
+    "late_ratio_v4": 0.19205265602900795,
+    "late_ratio_anneal": 0.06451612903225806,
+    "anneal_late_smaller": true,
+    "c0_equal": true,
+    "method_id_anneal": 7,
+    "ok": true
+  },
+  "ledger_quadratic": {
+    "v4": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 80,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 128
+    },
+    "anneal": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 80,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 128
+    },
+    "v4_alpha": 0.602,
+    "anneal_alpha": 1.0,
+    "ok": true,
+    "centers": {
+      "nov3": [
+        0.25,
+        0.0,
+        0.0,
+        -0.5,
+        0.0,
+        0.0,
+        -0.5,
+        0.0,
+        0.0,
+        -0.5,
+        0.0,
+        0.0
+      ],
+      "qaoa": [
+        0.25,
+        0.25,
+        0.25,
+        0.25,
+        0.25,
+        0.25
+      ]
+    }
+  },
+  "label_rule": "ANNEAL_L3_EDGE iff ANNEAL vs QAOA mean dE CI entirely <0 AND ANNEAL mean E <= V4; else REJECT_ANNEAL_L3",
+  "no_gr_patch": true,
+  "no_candidacy_file": true,
+  "no_spsa_on_hamiltonian_in_this_module": true,
+  "no_refit_10368_10375": true
+}
