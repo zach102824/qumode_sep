@@ -1,0 +1,80 @@
+{
+  "ok": true,
+  "failure": null,
+  "blocker": null,
+  "version": "N3INIT_pair",
+  "arm": "qaoa_center4",
+  "method": "QAOA",
+  "method_id": 0,
+  "n_params": 4,
+  "N": 15,
+  "C": 5,
+  "seed": 10329,
+  "L": 2,
+  "q": 1024,
+  "Q": 2048,
+  "procedural_cap": 2048,
+  "same_query_budget_across_arms": true,
+  "Bstar": 0.8281401536007669,
+  "E0": -14.646249764383247,
+  "E_plus": -12.422102304011503,
+  "F_plus": 0.32034251107008077,
+  "E": -14.08620385169935,
+  "E_error_over_N": 0.037336394178926466,
+  "F": 0.6465452464217245,
+  "eta": 0.47995165309696036,
+  "escaped": true,
+  "which": "last",
+  "start_id": 0,
+  "n_iter": 250,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -4.839250185007677,
+      "E": -14.08620385169935,
+      "which": "last",
+      "a_gain": 0.04394946022076671
+    },
+    {
+      "start_id": 1,
+      "e_init": -8.799773021505185,
+      "E": -13.899460564812433,
+      "which": "last",
+      "a_gain": 0.02306290071960653
+    },
+    {
+      "start_id": 2,
+      "e_init": -10.97830628495514,
+      "E": -14.048355696166144,
+      "which": "last",
+      "a_gain": 0.04715573222715133
+    },
+    {
+      "start_id": 3,
+      "e_init": -11.217403639352305,
+      "E": -14.036397909515296,
+      "which": "last",
+      "a_gain": 0.025512104814198903
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 2000,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 2048
+  },
+  "x": [
+    -0.1374440232388342,
+    0.4026720800697434,
+    -0.23036886013372532,
+    0.2542277088904909
+  ],
+  "seconds": 9.513308784000401,
+  "cpu_seconds": 9.506859423,
+  "peak_rss_kib": 63052,
+  "prereg_sha256": "e83555f837b66d72e1848b26f7fb8c6750bba8dfc22c8d518e75e9dca153c118",
+  "fidelity_posthoc": true
+}
