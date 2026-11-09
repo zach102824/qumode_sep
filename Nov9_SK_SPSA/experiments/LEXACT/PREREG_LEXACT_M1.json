@@ -1,0 +1,46 @@
+{
+  "experiment": "LEXACT M1: exact float64/complex128 kernel for original Nov3 and QAOA p=L",
+  "written_before_spsa_traces": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "conditioning_closed": ["C1", "B3", "B4"],
+  "physics_frozen": {
+    "ansatz": "original Nov3 shared gamma/theta, full s1/s2/s3, interleaved packing, binary Fock",
+    "qaoa": "p=L, independent 2L angles, same H",
+    "types": "float64 field, complex128 state",
+    "forbidden": ["truncation", "approx", "changed packing", "postselection", "per-layer gamma", "independent Uc", "BFGS", "natural gradient", "Nov9", "SYK", "AF", "N21"]
+  },
+  "candidate": {
+    "id": "inplace_numba_fwht_mixer_energy",
+    "one_sentence": "Same unitaries, in-place FWHT, in-place X mixers, and an energy pass that does not fancy-index-copy the state.",
+    "reference": "N3COND/nov3.py and LE/core.py QAOA"
+  },
+  "seeds": {
+    "reuse_read_dev": [10010],
+    "reuse_band_allowed": [10010, 10011, 10012, 10013, 10014, 10015, 10016, 10017],
+    "new_exclusive_dev": [10032],
+    "exclusive_band": [10032, 10047],
+    "provenance": "Parent t3338u 21:08 allocated 10032-10047 for this scaling stream. Collision check: unused in Nov9_SK_SPSA instances/runs.",
+    "not": ["10018-10025 FT", "10026-10031 local R8", "11000-11031 validation", "20000-20999 final"]
+  },
+  "batch": {
+    "conformance_N": [6, 9, 12],
+    "conformance_L": [1, 2, 3, 4, 5, 6],
+    "conformance_points_per_L": 4,
+    "timing_N_L": [["6", "1"], ["6", "6"], ["9", "1"], ["9", "6"], ["12", "1"], ["12", "6"], ["15", "1"], ["15", "3"], ["18", "1"]],
+    "spsa_short": [
+      {"N": 9, "L": 3, "seed": 10010, "Q": 128, "circuits": ["Nov3", "QAOA"]},
+      {"N": 12, "L": 1, "seed": 10010, "Q": 128, "circuits": ["Nov3", "QAOA"]},
+      {"N": 15, "L": 1, "seed": 10032, "Q": 128, "circuits": ["Nov3", "QAOA"], "gated": true}
+    ],
+    "n18_spsa": false,
+    "why_bounded": "Throughput milestone, not a 1000-seed panel. N18 L>1 and N15 L>3 stay off this batch."
+  },
+  "selection": "If a short SPSA runs, lowest counted candidate energy. F post hoc. GS/F never select.",
+  "ledger": {
+    "prior_n3cond_preserved": 772224,
+    "new_stream": "LEXACT_M1, counted separately",
+    "field_prep_not_Q": true
+  },
+  "success": "A demonstrated wall-clock speedup on steady energy eval at N12 L6 and N15 L1, with state/E/F inside documented tols. If none, report that. Not a GR recipe change."
+}
