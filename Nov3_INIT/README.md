@@ -50,4 +50,12 @@ python3 -m Nov3_INIT.run_v6 --phase run
 python3 -m Nov3_INIT.run_v6 --phase summary
 ```
 
+v7 (`PREREG_V7.md`) keeps those exact recipes at N=15, L=2 and L=3. It reuses the v4 B* files. Not LE S1 and not local R10.
+
+```bash
+python3 -m Nov3_INIT.conformance_v7
+python3 -m Nov3_INIT.run_v7 --phase run
+python3 -m Nov3_INIT.run_v7 --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
