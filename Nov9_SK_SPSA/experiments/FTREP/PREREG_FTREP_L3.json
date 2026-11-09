@@ -1,0 +1,64 @@
+{
+  "experiment": "FTREP L3: same FT PR79 v4 center-4 recipe at N∈{12,15} L=3 Q=3072",
+  "written_before_fits": true,
+  "not_a_schedule_tweak": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "does_not_touch_ft_holdout_10144_10151": true,
+  "does_not_touch_local_r19_10184_10191": true,
+  "no_n18_l3": true,
+  "no_final": true,
+  "ft_source": {
+    "pr": 79,
+    "head_commit": "347ac23369db1251c902638994b4fdc65a019710",
+    "alloc_py_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+    "same_as_ftrep_l2": true
+  },
+  "hypothesis": {
+    "id": "center4_l3_energy_edge",
+    "one_sentence": "The frozen v4 center-4 recipe that won at L=2 recovers a Nov3−QAOA mean ΔE CI entirely below 0 at L=3 Q=3072 on a fresh band.",
+    "not": "No schedule tweak. Not N18 L3. Not FT holdout. Not local R19. Not a GR patch. FT’s own L=3 on 10018–25 was inconclusive; this is a fresh-band probe of that same recipe."
+  },
+  "frozen_recipe": "Exact FTREP copy of FT v4: four equal SPSA blocks, T=Q/8-6=378, Q=qL=3072, frozen gains c=0.1 A=25 clip 2σ, center-4 starts, energy among init/last/Polyak/mid. alloc.py unmodified.",
+  "seeds": {
+    "ids": [10192, 10193, 10194, 10195, 10196, 10197, 10198, 10199],
+    "role": "exclusive_unread_dev",
+    "collision_check": "no instance/run filenames; ≤10191 unused here; FTREP L2 10152-59; FTREP N18 10168-75; FT holdout 10144-51; local R19 10184-91; LE≤10175; FT train 10018-25; validation 11000-11031; final 20000-20999",
+    "forbidden": ["10010-10191", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [12, 15],
+    "L": [3],
+    "q": 1024,
+    "Q": 3072,
+    "arms": ["nov3_center4", "qaoa_center4"]
+  },
+  "selection": "FT energy selection. F post hoc, never selects.",
+  "gate": {
+    "L3-15": "N=15 L=3 Q=3072, mean(E_Nov3 - E_QAOA) bootstrap 95% CI entirely below 0",
+    "L3-12": "N=12 L=3 Q=3072, mean(E_Nov3 - E_QAOA) bootstrap 95% CI entirely below 0",
+    "bootstrap": "4000 resamples, default_rng(3334), seeds resampled. Matches FT v7.",
+    "pass": "label center4-L3 EDGE only if BOTH L3-15 and L3-12 pass",
+    "otherwise": "FAIL / inconclusive. Do not retune. Do not open N18 L3. Do not patch GR.",
+    "gr": "Do not patch GR even if both pass."
+  },
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "depth_c1": 327680,
+    "starts_s8": 98304,
+    "starts_s1": 98304,
+    "starts_s1c": 196608,
+    "starts_s1l6": 196608,
+    "starts_s1q": 344064,
+    "starts_s1sh": 49152,
+    "starts_s1alt": 65536,
+    "starts_s1alt23": 163840,
+    "starts_s1alt13": 98304,
+    "depth_s1w": 245760,
+    "ftrep_n12n15": 65536,
+    "ftrep_n18": 32768,
+    "this_stream": "FTREP_L3, counted separately",
+    "new_charge": "32 fits × 3072 = 98304 if all succeed"
+  }
+}
