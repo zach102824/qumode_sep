@@ -58,4 +58,13 @@ python3 -m Nov3_INIT.run_v7 --phase run
 python3 -m Nov3_INIT.run_v7 --phase summary
 ```
 
+v8 (`PREREG_V8.md`) is a fresh L=2 holdout on unread seeds `10144..10151` at N=15 and N=18. Same v4 recipe. Gates H1/H2 at Q=2048. Does not patch GR.
+
+```bash
+python3 -m Nov3_INIT.conformance_v8
+python3 -m Nov3_INIT.run_v8 --phase bstar
+python3 -m Nov3_INIT.run_v8 --phase run
+python3 -m Nov3_INIT.run_v8 --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
