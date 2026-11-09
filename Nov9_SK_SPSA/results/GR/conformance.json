@@ -1,0 +1,196 @@
+{
+  "all_pass": true,
+  "tests": [
+    {
+      "name": "T1_J_sha",
+      "pass": true,
+      "detail": "ec1b5a68c1aea5a1"
+    },
+    {
+      "name": "T1_same_J_both_fields",
+      "pass": true,
+      "detail": "shared J"
+    },
+    {
+      "name": "T2_residual",
+      "pass": true,
+      "detail": "6.24e-15"
+    },
+    {
+      "name": "T2_positive_even",
+      "pass": true,
+      "detail": "min 7.072e-02 P 1.000000"
+    },
+    {
+      "name": "P_plus_energy",
+      "pass": true,
+      "detail": "-6.000000"
+    },
+    {
+      "name": "P_basis_energy",
+      "pass": true,
+      "detail": "Z basis"
+    },
+    {
+      "name": "P_K_identity",
+      "pass": true,
+      "detail": "span 1.33e-15"
+    },
+    {
+      "name": "P_M_blocks",
+      "pass": true,
+      "detail": "scale 5.262951"
+    },
+    {
+      "name": "P_feature_rms",
+      "pass": true,
+      "detail": "rmsJ 2.917781e-01"
+    },
+    {
+      "name": "P_pearson_finite",
+      "pass": true,
+      "detail": "0.190007"
+    },
+    {
+      "name": "P_no_gs_in_assignment",
+      "pass": true,
+      "detail": "signature is J only; gs_reads=0"
+    },
+    {
+      "name": "P_antiR_is_reversal",
+      "pass": true,
+      "detail": "[[4, 0, 3], [2, 5, 1]]"
+    },
+    {
+      "name": "P_random_deterministic",
+      "pass": true,
+      "detail": "[[0, 4, 5], [2, 1, 3]]"
+    },
+    {
+      "name": "T3_nov3_rewrite",
+      "pass": true,
+      "detail": "fock 5.95e-16 logical 3.90e-15"
+    },
+    {
+      "name": "T3_zero_is_plus",
+      "pass": true,
+      "detail": "F 0.908736"
+    },
+    {
+      "name": "T4_displacement",
+      "pass": true,
+      "detail": "coh 1.11e-16 lag 3.33e-16"
+    },
+    {
+      "name": "T5_inverse_and_not_crop",
+      "pass": true,
+      "detail": "crop gap 4.921e-01"
+    },
+    {
+      "name": "T6_shell_map",
+      "pass": true,
+      "detail": "err 5.55e-17 det 0.0156"
+    },
+    {
+      "name": "T7_commute",
+      "pass": true,
+      "detail": "9.96e-17"
+    },
+    {
+      "name": "T8_Hext_bound",
+      "pass": true,
+      "detail": "min -6.343391 E0 -6.343391 block 0.00e+00 patterns -6.3434"
+    },
+    {
+      "name": "P_perm_G_R_binary",
+      "pass": true,
+      "detail": "block 0.00e+00 F 1.000000000000"
+    },
+    {
+      "name": "P_perm_G_R_gray",
+      "pass": true,
+      "detail": "block 0.00e+00 F 1.000000000000"
+    },
+    {
+      "name": "P_perm_inter_id_gray",
+      "pass": true,
+      "detail": "block 0.00e+00 F 1.000000000000"
+    },
+    {
+      "name": "P_swapped_bits_not_gs",
+      "pass": true,
+      "detail": "F_swapped 0.8767"
+    },
+    {
+      "name": "T9_edges",
+      "pass": true,
+      "detail": "gray counts [4, 2, 1]"
+    },
+    {
+      "name": "T10_alpha0",
+      "pass": true,
+      "detail": "diag -3.47e-17 pleak 0.00e+00"
+    },
+    {
+      "name": "T11_gamma_even",
+      "pass": true,
+      "detail": "diff 2.78e-17"
+    },
+    {
+      "name": "P_echo_signs",
+      "pass": true,
+      "detail": "[ 0.06 -0.06  0.06]"
+    },
+    {
+      "name": "T12_H0_lower",
+      "pass": true,
+      "detail": "H0 0.0000 Hext 5.0187"
+    },
+    {
+      "name": "P_U0_vs_Uz",
+      "pass": true,
+      "detail": "code 0.00e+00 partial 7.701e-01"
+    },
+    {
+      "name": "T14_qaoa",
+      "pass": true,
+      "detail": "state 3.39e-16"
+    },
+    {
+      "name": "T14_zero",
+      "pass": true,
+      "detail": "-6.000000"
+    },
+    {
+      "name": "P_W_lsb",
+      "pass": true,
+      "detail": "BinH"
+    },
+    {
+      "name": "T13_queries",
+      "pass": true,
+      "detail": "E 1.031e-18 queries {'total': 1024, 'calibration': 32, 'iteration': 984, 'candidate': 8, 'failure_score': 0, 'monitoring': 0, 'continuation': 0} nit 123"
+    },
+    {
+      "name": "P_failure_scores_x0",
+      "pass": true,
+      "detail": "norm drift 2.0"
+    },
+    {
+      "name": "P_blind_seeds_blocked",
+      "pass": true,
+      "detail": "validation and final"
+    },
+    {
+      "name": "P_prereg_loaded",
+      "pass": true,
+      "detail": "fd884c3e2a87b935"
+    },
+    {
+      "name": "P_strict_noleak",
+      "pass": true,
+      "detail": "D8_strict_logical_not_a_displacement"
+    }
+  ],
+  "prereg_sha256": "fd884c3e2a87b935bcf4228653543339389835ef29a73cf1f38e5b118b122f97"
+}
