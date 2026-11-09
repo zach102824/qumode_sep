@@ -210,6 +210,36 @@ def main():
             badk += 1
     check("T16_K_table", float(badk), 0.0)
 
+    _, K3, nax, nsim = S.split_cap_c0gain(3072, 12)
+    _, Kq, _, _ = S.split_cap_c0gain(3072, 6)
+    check("T17_K_nov3", abs(K3 - 367), 0.0)
+    check("T17_K_qaoa", abs(Kq - 373), 0.0)
+    check("T17_axial_and_sim", abs(nax - 24) + abs(nsim - 8), 0.0)
+
+    def quad3(x):
+        return float(x[0] ** 2 + 4.0 * x[1] ** 2 + 9.0 * x[2] ** 2)
+
+    x0 = np.array([0.2, -0.1, 0.3])
+    sig = np.ones(3)
+    b_ref = S.Budget(quad3, 1000)
+    _, m_ref = S.spsa_start(b_ref, x0, sig, np.random.default_rng(1), K=2)
+    b_sham = S.Budget(quad3, 1000)
+    _, m_sham = S.spsa_start_c0gain(b_sham, x0, sig, np.random.default_rng(1), K=2, shrink=False)
+    check("T18_sham_gain_matches_C0", abs(m_sham["a_used"] - m_ref["a_used"]), 0.0)
+    check("T18_axial_not_in_gain", 0.0 if m_sham["a_source"] == "simultaneous_c0" and not m_sham["axial_used_for_gain"] else 1.0, 0.0)
+    pred = 0.5 * (26.0) ** 0.602 / m_sham["median_absg_simultaneous"]
+    check("T18_a_is_simultaneous_formula", abs(m_sham["a_used"] - pred), 1e-9)
+    starts = [x0, np.zeros(3), np.ones(3) * 0.05, np.full(3, -0.05)]
+    rec = S.spsa_run_c0gain(quad3, starts, sig, lambda s: np.random.default_rng(3 + s), 96, True)
+    check("T19_inclusive_96", abs(rec["queries"] - 96), 0.0)
+    check("T19_outside_zero", abs(rec["outside_cap_queries"]), 0.0)
+    check("T19_K", abs(rec["K_per_start"] - 4), 0.0)
+    lmin = min(m["lambda_min"] for m in rec["start_meta"])
+    lmax = max(m["lambda_max"] for m in rec["start_meta"])
+    check("T19_shrink_bounds", 0.0 if lmin >= 0.5 - 1e-15 and lmax <= 1.0 + 1e-15 else 1.0, 0.0)
+    b4 = json.loads((HERE / "PREREG_N3COND_B4.json").read_text())
+    check("T20_read_dev", 0.0 if b4["seeds"]["role"] == "read_dev" and b4["allocation"]["Q"] == 3072 else 1.0, 0.0)
+
     allpass = all(r["pass"] for r in R)
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "TESTS.json").write_text(json.dumps({"all_pass": allpass, "n": len(R), "tests": R}, indent=1))

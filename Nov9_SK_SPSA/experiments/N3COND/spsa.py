@@ -234,3 +234,95 @@ def spsa_run_axial(f, starts, sig0, rng_for_start, cap, shrink):
         "K_per_start": K, "per_start": per, "calibration_queries_per_start": ncal_q,
         "outside_cap_queries": 0, "start_meta": meta, "all_cand_E": [t[0] for t in allc],
     }
+
+
+# ---------------------------------------------------------------- B4
+# Shrink uses C0's simultaneous gain. Axial slopes set lambda only.
+# Historical spsa_start / spsa_run and the B3 axial-gain path are unchanged.
+
+def split_cap_c0gain(cap, nparam, nstarts=4, n_sim=4):
+    """Axial pass + 8 simultaneous probes + 2 candidates, remainder perturbations. All inside cap."""
+    if cap % nstarts != 0:
+        raise ValueError(f"cap {cap} not divisible by {nstarts} starts")
+    per = cap // nstarts
+    n_axial = 2 * int(nparam)
+    n_sim_q = 2 * int(n_sim)
+    K = (per - n_axial - n_sim_q - 2) // 2
+    if n_axial + n_sim_q + 2 * K + 2 != per or K < 1:
+        raise ValueError(f"cap {cap} nparam {nparam} has no positive K (per={per}, K={K})")
+    return per, K, n_axial, n_sim_q
+
+
+def spsa_start_c0gain(B, x0, sig0, rng, K, shrink, n_sim=4, floor=SHRINK_FLOOR, A=25.0, c=1.0, target=0.5, clip=2.0, avg_tail=64):
+    """Axial probes set lambda. The gain a is the C0 simultaneous-probe gain on the sigma that is stepped."""
+    x0 = np.asarray(x0, float)
+    sig0 = np.asarray(sig0, float)
+    d = x0.size
+    g_ax = np.empty(d)
+    for j in range(d):
+        step = np.zeros(d)
+        step[j] = sig0[j] * c
+        ep = B(x0 + step, "calibration")
+        em = B(x0 - step, "calibration")
+        g_ax[j] = abs((ep - em) / (2.0 * c))
+    if shrink:
+        lam, g_ref = shrink_lambda(g_ax, floor)
+    else:
+        lam = np.ones(d)
+        g_ref = float(np.median(np.maximum(g_ax, 1e-12)))
+    sig = sig0 * lam
+    gabs = np.zeros(d)
+    for _ in range(n_sim):
+        De = rng.choice([-1.0, 1.0], size=d)
+        ep = B(x0 + sig * c * De, "calibration")
+        em = B(x0 - sig * c * De, "calibration")
+        gabs += np.abs((ep - em) / (2.0 * c) * De)
+    gabs /= n_sim
+    med = float(np.median(gabs))
+    a = target * (A + 1.0) ** 0.602 / max(med, 1e-12)
+    y = np.zeros(d)
+    hist = []
+    for k in range(K):
+        ak = a / (k + 1.0 + A) ** 0.602
+        ck = c / (k + 1.0) ** 0.101
+        De = rng.choice([-1.0, 1.0], size=d)
+        ep = B(x0 + sig * (y + ck * De), "perturb")
+        em = B(x0 + sig * (y - ck * De), "perturb")
+        g = (ep - em) / (2.0 * ck) * De
+        y = y - np.clip(ak * g, -clip, clip)
+        hist.append(y.copy())
+    tail = hist[-min(avg_tail, len(hist)):] if hist else [y.copy()]
+    cands = [("last", y.copy()), ("polyak", np.mean(tail, axis=0))]
+    out = []
+    for name, yy in cands:
+        out.append((B(x0 + sig * yy, "candidate"), name, x0 + sig * yy))
+    meta = {
+        "a_used": float(a), "a_source": "simultaneous_c0", "axial_used_for_gain": False,
+        "median_absg_simultaneous": med, "gain_frozen": False, "shrink": bool(shrink),
+        "lambda": lam.tolist(), "lambda_min": float(np.min(lam)), "lambda_max": float(np.max(lam)),
+        "n_at_floor": int(np.sum(lam <= floor + 1e-15)),
+        "n_unchanged": int(np.sum(lam >= 1.0 - 1e-15)),
+        "axial_g_ref": float(g_ref),
+    }
+    return out, meta
+
+
+def spsa_run_c0gain(f, starts, sig0, rng_for_start, cap, shrink):
+    nparam = int(np.asarray(starts[0]).size)
+    per, K, n_axial, n_sim_q = split_cap_c0gain(cap, nparam, len(starts))
+    B = Budget(f, cap)
+    allc, meta = [], []
+    for si, x0 in enumerate(starts):
+        cands, m = spsa_start_c0gain(B, x0, sig0, rng_for_start(si), K, shrink)
+        for e, name, xx in cands:
+            allc.append((e, si, name, xx))
+        meta.append(m)
+    e, si, name, xx = min(allc, key=lambda t: t[0])
+    if B.n != cap:
+        raise RuntimeError(f"inclusive run used {B.n} queries, cap {cap}")
+    return {
+        "E_sel": e, "start": si, "cand": name, "x": xx, "queries": B.n, "query_cat": dict(B.cat),
+        "K_per_start": K, "per_start": per,
+        "axial_queries_per_start": n_axial, "simultaneous_queries_per_start": n_sim_q,
+        "outside_cap_queries": 0, "start_meta": meta, "all_cand_E": [t[0] for t in allc],
+    }
