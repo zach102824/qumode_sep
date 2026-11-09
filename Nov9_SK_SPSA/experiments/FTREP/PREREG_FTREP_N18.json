@@ -1,0 +1,61 @@
+{
+  "experiment": "FTREP N18: same FT PR79 v4 center-4 recipe at N=18 L=2 Q=2048",
+  "written_before_fits": true,
+  "not_a_schedule_tweak": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "does_not_touch_ft_holdout_10144_10151": true,
+  "no_l3": true,
+  "no_final": true,
+  "ft_source": {
+    "pr": 79,
+    "head_commit": "347ac23369db1251c902638994b4fdc65a019710",
+    "alloc_py_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+    "same_as_ftrep_n12n15": true
+  },
+  "hypothesis": {
+    "id": "center4_l2_scales_to_n18",
+    "one_sentence": "The frozen v4 center-4 equal-block recipe that replicated at N12/N15 L2 still yields Nov3−QAOA mean ΔE CI entirely below 0 at N=18 L=2 Q=2048.",
+    "not": "No schedule tweak. No L3. Not FT holdout. Not a GR patch."
+  },
+  "frozen_recipe": "Exact FTREP copy of FT v4: four equal SPSA blocks, T=Q/8-6=250, Q=qL=2048, frozen gains c=0.1 A=25 clip 2σ, center-4 starts, energy among init/last/Polyak/mid. alloc.py unmodified.",
+  "seeds": {
+    "ids": [10168, 10169, 10170, 10171, 10172, 10173, 10174, 10175],
+    "role": "exclusive_unread_dev",
+    "collision_check": "no instance/run filenames; ≤10167 unused here; FTREP 10152-59; FT holdout 10144-51; LE≤10135; FT train 10018-25; validation 11000-11031; final 20000-20999",
+    "forbidden": ["10010-10167", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [18],
+    "L": [2],
+    "q": 1024,
+    "Q": 2048,
+    "arms": ["nov3_center4", "qaoa_center4"]
+  },
+  "selection": "FT energy selection. F post hoc, never selects.",
+  "gate": {
+    "N18": "N=18 L=2 Q=2048, mean(E_Nov3 - E_QAOA) bootstrap 95% CI entirely below 0",
+    "bootstrap": "4000 resamples, default_rng(3334), seeds resampled. Matches FT v7.",
+    "pass": "label N18-L2 SCALED only if the CI lies entirely below 0",
+    "otherwise": "FAIL. Do not retune. Do not open L3. Do not patch GR.",
+    "gr": "Do not patch GR even if the gate passes."
+  },
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "depth_c1": 327680,
+    "starts_s8": 98304,
+    "starts_s1": 98304,
+    "starts_s1c": 196608,
+    "starts_s1l6": 196608,
+    "starts_s1q": 344064,
+    "starts_s1sh": 49152,
+    "starts_s1alt": 65536,
+    "starts_s1alt23": 163840,
+    "starts_s1alt13": 98304,
+    "depth_s1w": 245760,
+    "ftrep_n12n15": 65536,
+    "this_stream": "FTREP_N18, counted separately",
+    "new_charge": "16 fits × 2048 = 32768 if all succeed"
+  }
+}
