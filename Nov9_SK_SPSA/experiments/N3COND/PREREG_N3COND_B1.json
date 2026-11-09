@@ -1,0 +1,67 @@
+{
+  "experiment": "N3COND B1: development-only SPSA coordinate conditioning of original Nov3rd vs scalar SPSA, at B*, with QAOA p=L on the same conditioner",
+  "authorization": "Zach direct 20:34 Shanghai t3334u. Development only. SYK withdrawn and not resumed. Nov9 displacements stopped. This stream does not touch GR PR77's 1000-seed benchmark, its frozen recipe, or its final panel. FT owns initialization and restart allocation. Local owns perturbation and schedules. No depth transfer.",
+  "written": "before any N3COND energy query, including the dev scale block",
+  "model": "H = sum_{i<j} J_ij Z_i Z_j - B* sum_i X_i. J_ij iid N(0, 1/N) on i<j, diagonal 0, row-major fill, numpy Generator(seed). Z|0>=+|0>, site i = bit i, LSB = site 0. No longitudinal field. This is not eq. (1) of arXiv:2204.02923, which uses a -1/2 double-counted sum, variance J/N, and an optional h_n.",
+  "Bstar": "Per-instance refined argmax of S_A of the exact GS. A = sites 0..floor(N/2)-1. Grid [0.02, 3.0] x 75, bounded refinement xatol 1e-6. Accept only if interior grid argmax, interior refinement, unique Perron-positive GS, GS flip-even, residual < 1e-9, E1 in the odd sector, and gap_even > 0. A rejected instance is reported and not replaced. GS preparation is classical and is not charged to Q. No data oracle.",
+  "circuit_Nov3": "|0> -> [U_c^X -> bare shell SNAP]^L -> W. U_c^X = W exp(-i gamma [J + theta_K Khat + theta_M Mhat]·ZZ) W. W = H^{tensor N}. One gamma and one (theta_K, theta_M) shared by every layer. SNAP per layer, shared across cavities: phase(p) = s1*p + s2*p*(p-1)/2 + s3*[p==3]. K = sym(offdiag(J@J)), M = inter-cavity block means of J with intra-cavity 0, both RMS-matched to J. No per-layer gamma, no dropped family, no displacement, no GCS ansatz.",
+  "circuit_QAOA": "|+> -> [exp(-i gamma_l H_ZZ) exp(-i beta_l sum X)]^{p=L}, 2L independent angles. Same H, same SPSA rule, same Q.",
+  "identity": "theta=0 and s2=s3=0 is QAOA with gamma_l=gamma and beta_l=-s1_l/2, up to the global phase exp(-i s1_l N/2) per layer from s1*popcount = s1*sum(1-Z)/2. The phase does not change energy or fidelity. The |+> rewrite |+>->[U_cZ -> WSW]^L matches the |0> circuit exactly.",
+  "paper": "arXiv:2204.02923 (Schindler, Guaita, Shi, Demler, Cirac), PRL 129, 220401. Their M_nm is the GCS entangler, not the cavity-block feature M. Their optimizer is natural gradient, which is not used. Their weighted-graph-state picture is not adopted. No new ansatz is introduced.",
+  "not_this_stream": ["Nov9 real, imaginary, or complex displacement", "SYK", "AF", "N21", "charged L1 to L_target depth transfer (local R4 energy wins 1/16, 0/8 at 4096)", "GR ablation of s2/s3/K/M", "BFGS", "natural gradient", "fidelity or oracle selection", "validation seeds 11000..11031", "final seeds 20000..20999", "seeds 10000..10009"],
+  "seeds": {
+    "dev_scale": [10010, 10011, 10012, 10013],
+    "holdout": [10014, 10015, 10016, 10017],
+    "split_rule": "Fixed before any energy query. Scale and gain are functions of dev_scale cold-start probes only. Holdout energies are never an input to lambda or a0. Dev paired deltas are descriptive and biased toward C1. The predictive check is the holdout."
+  },
+  "batch_B1": {"N": [9], "L": [1, 3], "q": [128, 512, 1024]},
+  "batch_B2_precommitted": {"N": [12], "L": [1, 3], "q": [128, 512, 1024], "when": "After B1 files exist and conformance still passes. New scale freeze at N=12 on dev_scale only, committed before N=12 fits. The 0.02 rule is not refit on B1."},
+  "batch_later_gate": "N=15 or 18 only if both N=9 and N=12 holdout median Delta F (Nov3 C1-C0) at L=3, q=1024 are >= 0.02, and a single N=12 L=3 q=1024 Nov3 energy-call wall time, times the N=15 task count, is under 6 hours on 4 workers. Otherwise do not start them.",
+  "budget": {
+    "Q": "q*L, fully inclusive of calibration, perturbations, and candidates",
+    "starts": 4,
+    "per_start": "8 calibration queries (4 two-sided) + 2K perturbations + 2 candidates (last, Polyak tail min(64,K))",
+    "K_formula": "(Q/4 - 10)/2",
+    "schedule": {"A": 25, "alpha_exp": 0.602, "gamma_exp": 0.101, "target_step_sigma": 0.5, "clip_sigma": 2.0, "c": 1.0},
+    "sigma0": {"Nov3_gamma": 0.10, "Nov3_theta": 0.25, "Nov3_s": 0.15, "QAOA_angle": 0.10},
+    "hyperparameter_configs_tried": 1,
+    "monitoring": 0,
+    "diag_recompute": "One uncharged state rebuild after selection, labeled diag_recompute_not_charged, used only for F, parity, and norm. Selection uses counted candidate energies only."
+  },
+  "init": {
+    "Nov3_start0": "gamma=0.375, theta=0, s1_l=-2*beta_TQA_l, s2=s3=0, with beta_TQA_l=-(1-t_l)*0.75 and t_l=(l+0.5)/L. This is the shared-gamma embedding of the protocol TQA ramp, not a searched init.",
+    "QAOA_start0": "gamma_l=t_l*0.75, beta_l=-(1-t_l)*0.75",
+    "random_starts": "3 starts, each coordinate iid U(-0.6, 0.6), SeedSequence([seed,N,0,L,circuit_id,start,2])",
+    "paired_starts": "C0 and C1 use the same starts and the same SPSA Rademacher stream (circuit_id, stream 0). The conditioner is the only difference."
+  },
+  "conditioners": {
+    "C0": "Existing scalar SPSA. sigma = sigma0. Each start sets its own gain a from the 8 calibration queries so the median initial step is 0.5 sigma. Those queries count inside Q.",
+    "C1": "Diagonal coordinate scale. sigma_j = sigma0_j * lambda_j, gain a = a0, both frozen. The 8 calibration queries still run and count inside Q, and the gain they would have set is recorded and discarded."
+  },
+  "corrections": [
+    {
+      "id": "C-probe",
+      "before_any_fit": true,
+      "fact": "A simultaneous Rademacher probe has |Delta_j|=1, so |(E+-E-)/(2c)*Delta_j| is the same number on every coordinate. lambda_j is identically 1 for every Hamiltonian. This is not an empirical outcome.",
+      "evidence_file": "results/N3COND/SCALE_N9_v0_simultaneous.json",
+      "used_for_fits": false
+    }
+  ],
+  "scale_block": {
+    "where": "dev_scale seeds only, at the 4 cold starts, before any fit",
+    "probes": "One two-sided axial probe per coordinate at each cold start: E(x+sigma_j e_j) and E(x-sigma_j e_j), c=1. Exact energy, so repeating the same point adds nothing. Queries = 2 * nparam * 4 starts * 4 dev seeds per (N,L,circuit). Not taken out of Q. Reported as scale_block_queries. The v0 simultaneous file is not an input.",
+    "lambda": "g_j = median over dev seeds and cold starts of |(E+-E-)/(2c)|. lambda_j = clip(median(g)/g_j, 0.25, 4). a0 = 0.5*(26)**0.602 / median(lambda*g).",
+    "freeze": "One lambda and a0 per (N, L, circuit), pooled over the 4 dev seeds. Holdout does not add probes. QAOA is scaled on its own coordinates the same way."
+  },
+  "rng": "SeedSequence([seed, N, 0, L, circuit_id, start, stream]). circuit_id QAOA=0, Nov3=40. method_id is circuit_id for C0 and circuit_id+1 for C1, recorded only. stream 0 SPSA Delta, 2 init, 7 scale probes. The b slot is 0 because the field is B*.",
+  "selection": "Lowest counted candidate energy. Fidelity is computed after selection and is not a target, a stop, or a hyperparameter.",
+  "primary_endpoint": {
+    "cell": "N=9, L=3, q=1024, holdout seeds 10014..10017",
+    "contrasts": ["Nov3 C1-C0 paired F and E", "QAOA C1-C0 paired F and E", "Nov3-QAOA paired F and E inside C0 and inside C1"],
+    "reading": "Conditioning helps Nov3 on this cell only if the holdout median Delta F (C1-C0) is >= 0.02 and the holdout median Delta E (C1-C0) is < 0. Otherwise do not adopt it. No second look, no seed swap, no threshold edit. With 4 holdout points the bootstrap CI of the mean is descriptive.",
+    "also_report": "dev band separately, L=1, q=128 and q=512, min F, 25th percentile, fraction F>=0.5, win counts, query totals, wall time"
+  },
+  "failures": "A non-finite energy or an exception is logged, status=failure, and scored at start-0 energy. The run file is kept.",
+  "threads": "OMP, OPENBLAS, MKL, NUMEXPR threads = 1. Up to 4 worker processes.",
+  "outputs": "results/N3COND/ only. Do not write results/IMAX, results/LE, or any final-seed archive."
+}

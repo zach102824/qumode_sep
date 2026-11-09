@@ -1,0 +1,61 @@
+{
+  "experiment": "N3COND B4: one fixed shrink with C0's simultaneous gain, against a sham and against the already-run C0",
+  "written_before_fits": true,
+  "does_not_overwrite": ["C0", "C1", "M0", "M2", "SCALE files", "RESULTS.md", "summary_B1.json", "summary_B3.json"],
+  "seeds": {
+    "ids": [10010, 10011, 10012, 10013, 10014, 10015, 10016, 10017],
+    "role": "read_dev",
+    "not": "Already used for C0, C1, and B3. Not a fresh holdout. No cell may be called unbiased."
+  },
+  "forbidden": ["N15", "N18", "seeds 10018-10025", "seeds 10026-10031", "validation 11000-11031", "final 20000-20999", "orthogonal frames", "another floor", "another gain formula", "GR benchmark edits"],
+  "hypothesis": {
+    "id": "B4_shrink_floor_0.5_c0_gain",
+    "one_sentence": "Keep the scalar gain that C0 fits to simultaneous probes, and only shrink steep coordinates by at most 2x.",
+    "why_this_one": "B3 beat its own sham and lost to C0 because the axial median set a gain about 10-50x larger than C0's simultaneous gain. This batch removes that confound. The floor stays 0.5. It is not re-tuned.",
+    "not_included": "No L1 cell. The confound to remove is the L3 gain explosion. Adding L1 would be a second surface."
+  },
+  "arms": {
+    "S0": "Sham. One axial pass per start is charged and discarded, so lambda=1. The gain is then C0's simultaneous-probe gain on sigma0.",
+    "S2": "Shrink. The same axial pass sets lambda_j = clip(median(g)/g_j, 0.5, 1). The gain is C0's simultaneous-probe gain on the shrunk sigma, not on the axial median.",
+    "C0": "Audited reuse of the existing ordinary runs. Not re-queried. 8 simultaneous calibration queries per start, no axial pass, K=379, Q=3072, gain_frozen false."
+  },
+  "c0_reuse_audit": {
+    "files": "results/N3COND/runs/N{9,12}/s{10010-10017}_L3_{Nov3,QAOA}_C0_q1024.json",
+    "require": {"queries": 3072, "Q": 3072, "calibration": 32, "K_per_start": 379, "status": "ok", "gain_frozen": false},
+    "newly_charged": false,
+    "already_inside_prior_ledger": true
+  },
+  "allocation": {
+    "Q": 3072,
+    "q": 1024,
+    "L": 3,
+    "starts": 4,
+    "per_start_S0_S2": "2*nparam axial + 8 simultaneous + 2K perturbations + 2 candidates",
+    "K_Nov3": 367,
+    "K_QAOA": 373,
+    "why_K_differs": "Nov3 has 12 coordinates and QAOA has 6, so the axial pass costs 24 versus 12. The S2-versus-S0 contrast matches K inside a circuit. C0 has K=379 because it has no axial pass.",
+    "gain": "a = 0.5*(26)**0.602 / median(|simultaneous component|), probes taken at the sigma that is stepped. Axial numbers do not enter a.",
+    "schedule": {"A": 25, "alpha_exp": 0.602, "gamma_exp": 0.101, "target_step_sigma": 0.5, "clip_sigma": 2.0, "c": 1.0, "n_simultaneous": 4},
+    "perturbation": "independent Rademacher, not orthogonal",
+    "outside_cap_queries": 0,
+    "init": "same four starts as C0, keyed by circuit id"
+  },
+  "batch": {"N": [9, 12], "L": [3], "q": [1024], "circuits": ["Nov3", "QAOA"], "new_arms": ["S0", "S2"]},
+  "selection": "Lowest counted candidate energy. Fidelity is post hoc and is not in the gate.",
+  "gate": {
+    "cells": ["N9 L3 Q3072 Nov3", "N12 L3 Q3072 Nov3"],
+    "dE_C0": "E(S2)-E(C0). Negative means S2 is lower than the ordinary C0.",
+    "dE_S0": "E(S2)-E(S0). Negative means S2 is lower than the sham.",
+    "pass_one_N": "median dE_C0 < 0 AND the bootstrap 95% CI of the mean dE_C0 is entirely below 0 AND median dE_S0 < 0",
+    "branch_survives": "pass_one_N at both N9 and N12",
+    "on_fail": "Close scale/gain conditioning. Do not scan another floor. Do not start N15.",
+    "on_pass": "Read-dev only. Not an adoption. Not a fresh-holdout result. GR benchmark unchanged. N15 still off.",
+    "qaoa": "Same allocation, reported, not a substitute for the Nov3 gate."
+  },
+  "ledger": {
+    "prior_preserved": 575616,
+    "includes_unused_512": true,
+    "new_charge": "64 fits times 3072 = 196608, all inside their own Q",
+    "c0_not_added_again": 49152
+  }
+}
