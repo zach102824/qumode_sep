@@ -1,0 +1,87 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n9xfer",
+  "arm": "nov3_center4",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "n_params": 6,
+  "N": 9,
+  "seed": 10701,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.6516232648048759,
+  "E0": -7.494734225437247,
+  "E_plus": -5.864609383243883,
+  "F_plus": 0.3447753682255827,
+  "E": -7.125783297851751,
+  "E_error_over_N": 0.04099454750949959,
+  "F": 0.7745952256004867,
+  "eta": 0.6559885519121993,
+  "which": "last",
+  "start_id": 3,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -4.18670759245367,
+      "E": -7.099810264585499,
+      "which": "last",
+      "a_gain": 0.09824528329805696
+    },
+    {
+      "start_id": 1,
+      "e_init": -5.5468392472600545,
+      "E": -7.0599726687073865,
+      "which": "last",
+      "a_gain": 0.1900559071790109
+    },
+    {
+      "start_id": 2,
+      "e_init": -5.450267225293041,
+      "E": -7.124647134130916,
+      "which": "last",
+      "a_gain": 0.3702192746787316
+    },
+    {
+      "start_id": 3,
+      "e_init": -6.022779843714413,
+      "E": -7.125783297851751,
+      "which": "last",
+      "a_gain": 0.3174038969953812
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    -0.315033188641345,
+    -0.5374723219308978,
+    0.03332690077272826,
+    -0.9464279157551231,
+    0.025807821854304216,
+    0.3022884440374434
+  ],
+  "seconds": 0.16518519300007029,
+  "cpu_seconds": 0.15912459,
+  "peak_rss_kib": 54004,
+  "prereg_sha256": "980de507df9e939047f0e6c876cd92e4a095c46133510ce3f6f9da87f13bef85",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_aggregator": "mean",
+  "do_not_switch_primary_to_median": true
+}

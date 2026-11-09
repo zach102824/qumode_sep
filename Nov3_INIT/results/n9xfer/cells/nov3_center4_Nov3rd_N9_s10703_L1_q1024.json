@@ -1,0 +1,87 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n9xfer",
+  "arm": "nov3_center4",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "n_params": 6,
+  "N": 9,
+  "seed": 10703,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.3636620175785695,
+  "E0": -6.017769687290113,
+  "E_plus": -3.272958158207125,
+  "F_plus": 0.13045113220934576,
+  "E": -5.400460665660677,
+  "E_error_over_N": 0.06858989129215962,
+  "F": 0.5142311336457708,
+  "eta": 0.4413553000322241,
+  "which": "last",
+  "start_id": 2,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -1.1549504351672877,
+      "E": -5.398310575543542,
+      "which": "last",
+      "a_gain": 0.09333192379415282
+    },
+    {
+      "start_id": 1,
+      "e_init": -3.26764434027024,
+      "E": -5.356703645840164,
+      "which": "last",
+      "a_gain": 0.20423701138356937
+    },
+    {
+      "start_id": 2,
+      "e_init": -2.3960248341593244,
+      "E": -5.400460665660677,
+      "which": "last",
+      "a_gain": 0.23095944937956064
+    },
+    {
+      "start_id": 3,
+      "e_init": -1.3112911807194447,
+      "E": -5.389271856205534,
+      "which": "last",
+      "a_gain": 0.2886290370692607
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    0.39444345576537987,
+    -0.41053214115234105,
+    0.010151721016141448,
+    0.8578353141994772,
+    0.10864403483597017,
+    -0.29908173419413003
+  ],
+  "seconds": 0.16684592599995085,
+  "cpu_seconds": 0.166779784,
+  "peak_rss_kib": 54244,
+  "prereg_sha256": "980de507df9e939047f0e6c876cd92e4a095c46133510ce3f6f9da87f13bef85",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_aggregator": "mean",
+  "do_not_switch_primary_to_median": true
+}
