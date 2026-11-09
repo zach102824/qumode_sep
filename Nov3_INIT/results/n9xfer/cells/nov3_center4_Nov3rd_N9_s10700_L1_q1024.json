@@ -1,0 +1,87 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n9xfer",
+  "arm": "nov3_center4",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "n_params": 6,
+  "N": 9,
+  "seed": 10700,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.5337474010914685,
+  "E0": -7.016026145991308,
+  "E_plus": -4.803726609823216,
+  "F_plus": 0.29718007631395654,
+  "E": -6.650365665314839,
+  "E_error_over_N": 0.040628942297385486,
+  "F": 0.8005683426034196,
+  "eta": 0.7162407457793293,
+  "which": "last",
+  "start_id": 2,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -2.6250888005644497,
+      "E": -6.572832159952358,
+      "which": "last",
+      "a_gain": 0.07204064123539626
+    },
+    {
+      "start_id": 1,
+      "e_init": -2.5339952246214907,
+      "E": -6.575484904792962,
+      "which": "last",
+      "a_gain": 0.15312169998436306
+    },
+    {
+      "start_id": 2,
+      "e_init": -4.5309841312464965,
+      "E": -6.650365665314839,
+      "which": "last",
+      "a_gain": 0.19353544868045355
+    },
+    {
+      "start_id": 3,
+      "e_init": -3.8902658016517373,
+      "E": -6.28681124679076,
+      "which": "last",
+      "a_gain": 0.06318909979176239
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    0.3374640978979868,
+    -0.4753981628634716,
+    0.0531578454525289,
+    0.9121523947186042,
+    -0.006143762287883017,
+    -0.08625049397535432
+  ],
+  "seconds": 0.16037382700233138,
+  "cpu_seconds": 0.160000215,
+  "peak_rss_kib": 54136,
+  "prereg_sha256": "980de507df9e939047f0e6c876cd92e4a095c46133510ce3f6f9da87f13bef85",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_aggregator": "mean",
+  "do_not_switch_primary_to_median": true
+}

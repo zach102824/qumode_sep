@@ -1,0 +1,87 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n9xfer",
+  "arm": "nov3_center4",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "n_params": 6,
+  "N": 9,
+  "seed": 10698,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.6150482248566449,
+  "E0": -7.305161565461071,
+  "E_plus": -5.535434023709804,
+  "F_plus": 0.3738923757241233,
+  "E": -6.987461086245263,
+  "E_error_over_N": 0.03530005324620086,
+  "F": 0.7626808865511272,
+  "eta": 0.6209611506913948,
+  "which": "last",
+  "start_id": 2,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -3.1919406836155435,
+      "E": -6.981023503960335,
+      "which": "last",
+      "a_gain": 0.12284300257359108
+    },
+    {
+      "start_id": 1,
+      "e_init": -3.876004623140055,
+      "E": -6.758358370573325,
+      "which": "last",
+      "a_gain": 0.08178211551288246
+    },
+    {
+      "start_id": 2,
+      "e_init": -5.724903456840923,
+      "E": -6.987461086245263,
+      "which": "last",
+      "a_gain": 0.27756102090270146
+    },
+    {
+      "start_id": 3,
+      "e_init": -4.271495135350522,
+      "E": -6.973172444483971,
+      "which": "last",
+      "a_gain": 0.14425729187657646
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    0.32575033492915817,
+    -0.4056164706537447,
+    -0.05814846585939767,
+    0.8584216198711391,
+    0.026724170248153784,
+    -0.2573796844573024
+  ],
+  "seconds": 0.1678716450005595,
+  "cpu_seconds": 0.15948866300000003,
+  "peak_rss_kib": 54004,
+  "prereg_sha256": "980de507df9e939047f0e6c876cd92e4a095c46133510ce3f6f9da87f13bef85",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_aggregator": "mean",
+  "do_not_switch_primary_to_median": true
+}

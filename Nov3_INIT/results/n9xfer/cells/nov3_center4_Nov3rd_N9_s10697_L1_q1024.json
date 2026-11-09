@@ -1,0 +1,87 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n9xfer",
+  "arm": "nov3_center4",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "n_params": 6,
+  "N": 9,
+  "seed": 10697,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.54867319205479,
+  "E0": -6.785931101636012,
+  "E_plus": -4.93805872849311,
+  "F_plus": 0.2955939124501939,
+  "E": -6.376364381347438,
+  "E_error_over_N": 0.04550741336539716,
+  "F": 0.710178766908683,
+  "eta": 0.5885594428926272,
+  "which": "last",
+  "start_id": 0,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -3.1571843918279754,
+      "E": -6.376364381347438,
+      "which": "last",
+      "a_gain": 0.13708933842073062
+    },
+    {
+      "start_id": 1,
+      "e_init": -4.090174972787778,
+      "E": -6.367388694226463,
+      "which": "last",
+      "a_gain": 0.12646664486785592
+    },
+    {
+      "start_id": 2,
+      "e_init": -4.660069616232514,
+      "E": -6.371852042641921,
+      "which": "last",
+      "a_gain": 0.14538536009511294
+    },
+    {
+      "start_id": 3,
+      "e_init": -2.82905118082944,
+      "E": -6.311726153522176,
+      "which": "last",
+      "a_gain": 0.7529261610066934
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    -0.34585164140401276,
+    -0.40894641819055305,
+    0.01567415371676144,
+    -0.8766894917823621,
+    -0.0074840170102728415,
+    -0.0010018051915929196
+  ],
+  "seconds": 0.16717865000100574,
+  "cpu_seconds": 0.16714016,
+  "peak_rss_kib": 53868,
+  "prereg_sha256": "980de507df9e939047f0e6c876cd92e4a095c46133510ce3f6f9da87f13bef85",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_aggregator": "mean",
+  "do_not_switch_primary_to_median": true
+}
