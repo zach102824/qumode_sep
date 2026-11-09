@@ -1,6 +1,6 @@
 # N3INIT shell-emphasized SPSA N=15 L=3
 
-Shared-Uc Nov3 only. Not LE two-stage. Not paper V(M). Seeds 10368–10375. Q=3072 each. No GR patch. Holdout FAIL stands.
+Shared-Uc Nov3 only. Not paper V(M). Seeds 10368–10375, **shared-with-LE-PR101** (SHELL_FIRST); not exclusive. Q=3072 each. No GR patch. Holdout FAIL stands. Results kept; no re-fit on 10408–10415.
 
 **REJECT_SHELL_GAIN.**
 
