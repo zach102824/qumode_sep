@@ -1,0 +1,186 @@
+{
+  "ok": true,
+  "prereg_sha256": "10396c41b2caab2ef1576f4bff5a177397e79bf2df66b4b169ad52c45ee18375",
+  "historical_queries_preserved": 2301952,
+  "not_le_two_stage": true,
+  "not_paper_V_M": true,
+  "not_percavity": true,
+  "exclusive_unread": false,
+  "shared_with_le_pr101": true,
+  "replacement_band_10408_10415_not_used": true,
+  "seeds": {
+    "band": [
+      10368,
+      10369,
+      10370,
+      10371,
+      10372,
+      10373,
+      10374,
+      10375
+    ],
+    "n": 8,
+    "overlaps": {
+      "le_two_stage_10360_10367": [],
+      "local_r25_10344_10359": [],
+      "ft_and_prior_le_10335": [],
+      "holdout_10144_10151": [],
+      "pair_10328_10335": [],
+      "validation_11000_11031": [],
+      "gr_final_20000_20999": []
+    },
+    "ok": true
+  },
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "gains": {
+    "JOINT": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "SHELL2": [
+      1.0,
+      1.0,
+      1.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0
+    ],
+    "SHELL4": [
+      1.0,
+      1.0,
+      1.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0
+    ],
+    "QAOA": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "sigma_nov3_L3": [
+      0.1,
+      0.25,
+      0.25,
+      0.15,
+      0.15,
+      0.15,
+      0.15,
+      0.15,
+      0.15,
+      0.15,
+      0.15,
+      0.15
+    ],
+    "T_Q3072": 378,
+    "ok": true
+  },
+  "centers": {
+    "nov3": [
+      0.25,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0
+    ],
+    "qaoa": [
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "ok": true
+  },
+  "ledger_quadratic": {
+    "joint_Q128": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 80,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 128
+    },
+    "shell4_Q128": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 80,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 128
+    },
+    "ledger_ok": true,
+    "shell_motion_shell4_ge_joint": true,
+    "uc_motion_equal": true,
+    "a_mult_joint": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "a_mult_shell4": [
+      1.0,
+      1.0,
+      1.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0,
+      4.0
+    ]
+  },
+  "label_rule": "SHELL_GAIN_L3_EDGE iff best(SHELL2,SHELL4) vs QAOA mean dE CI entirely <0 AND that winner mean E <= JOINT; else REJECT_SHELL_GAIN",
+  "no_gr_patch": true,
+  "no_candidacy_file": true,
+  "no_spsa_on_hamiltonian_in_this_module": true
+}

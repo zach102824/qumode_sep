@@ -94,4 +94,13 @@ python3 -m Nov3_INIT.run_pair --phase run
 python3 -m Nov3_INIT.run_pair --phase summary
 ```
 
+Shell-gain (`PREREG_SHELLGAIN.md`) keeps shared-Uc Nov3 and scales only shell `a_k` ×2 or ×4 vs Uc. N=15 L=3, seeds `10368..10375` (**shared-with-LE-PR101**, not exclusive), `Q=3072`. See `ADDENDUM_SHELLGAIN.md`. No GR patch.
+
+```bash
+python3 -m Nov3_INIT.conformance_shellgain
+python3 -m Nov3_INIT.run_shellgain --phase bstar
+python3 -m Nov3_INIT.run_shellgain --phase run
+python3 -m Nov3_INIT.run_shellgain --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
