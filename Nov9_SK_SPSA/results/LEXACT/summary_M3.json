@@ -1,0 +1,254 @@
+{
+ "pid": 11304,
+ "prereg_sha256": "bc6a84e3169dd5d2630c2c1722e3934292dd1e6f279c8bcc167c08ae6f42d64e",
+ "compile_s": 0.12210373800007801,
+ "K": 4,
+ "kernel_threads": 1,
+ "blas": 1,
+ "queue": "spawn Pool imap_unordered",
+ "seeds": [
+  10032,
+  10033,
+  10034,
+  10035
+ ],
+ "seed_notes": [
+  {
+   "seed": 10032,
+   "accepted": true,
+   "Bstar": 0.702186847850942,
+   "prep_s": 49.06262671799959,
+   "source": "/agent/repos/qumode_sep/Nov9_SK_SPSA/results/LEXACT/instances/N18_s10032_Bstar.json"
+  },
+  {
+   "seed": 10033,
+   "accepted": true,
+   "Bstar": 0.9871925949107457,
+   "prep_s": 42.31504717700045,
+   "source": "/agent/repos/qumode_sep/Nov9_SK_SPSA/results/LEXACT/instances/N18_s10033_Bstar.json"
+  },
+  {
+   "seed": 10034,
+   "accepted": true,
+   "Bstar": 0.8841637084883923,
+   "prep_s": 42.12250394699913,
+   "source": "/agent/repos/qumode_sep/Nov9_SK_SPSA/results/LEXACT/instances/N18_s10034_Bstar.json"
+  },
+  {
+   "seed": 10035,
+   "accepted": true,
+   "Bstar": 0.8893851860811487,
+   "prep_s": 48.423320223999326,
+   "source": "/agent/repos/qumode_sep/Nov9_SK_SPSA/results/LEXACT/instances/N18_s10035_Bstar.json"
+  }
+ ],
+ "field_prep_wall_s": 0.04521659199963324,
+ "rss_mb_parent": 222.71484375,
+ "energy": {
+  "n": 4,
+  "serial_wall_s": 2.5432452779987216,
+  "pool_wall_s": 0.8528054029993655,
+  "speedup": 2.9822105594711084,
+  "gates": [
+   {
+    "seed": 10032,
+    "dE": 0.0,
+    "dF": 0.0,
+    "dE_ref": 3.552713678800501e-15,
+    "dF_ref": 4.551914400963142e-15,
+    "dstate0": 0.0,
+    "worker_pid": 11307,
+    "worker_rss_mb": 202.75,
+    "worker_threads": {
+     "numba_threads": 1,
+     "frozen_T": 4,
+     "omp_num_threads": "1"
+    }
+   },
+   {
+    "seed": 10033,
+    "dE": 0.0,
+    "dF": 0.0,
+    "dE_ref": 2.842170943040401e-14,
+    "dF_ref": 3.1363800445660672e-15,
+    "dstate0": 0.0,
+    "worker_pid": 11308,
+    "worker_rss_mb": 202.6171875,
+    "worker_threads": {
+     "numba_threads": 1,
+     "frozen_T": 4,
+     "omp_num_threads": "1"
+    }
+   },
+   {
+    "seed": 10034,
+    "dE": 0.0,
+    "dF": 0.0,
+    "dE_ref": 4.973799150320701e-14,
+    "dF_ref": 1.9012569296705806e-15,
+    "dstate0": 0.0,
+    "worker_pid": 11309,
+    "worker_rss_mb": 202.59765625,
+    "worker_threads": {
+     "numba_threads": 1,
+     "frozen_T": 4,
+     "omp_num_threads": "1"
+    }
+   },
+   {
+    "seed": 10035,
+    "dE": 0.0,
+    "dF": 0.0,
+    "dE_ref": 2.4868995751603507e-14,
+    "dF_ref": 7.41073868937292e-15,
+    "dstate0": 0.0,
+    "worker_pid": 11306,
+    "worker_rss_mb": 202.6171875,
+    "worker_threads": {
+     "numba_threads": 1,
+     "frozen_T": 4,
+     "omp_num_threads": "1"
+    }
+   }
+  ],
+  "evals_per_hour_serial": 5662.057106552991,
+  "evals_per_hour_pool": 16885.446491490762
+ },
+ "spsa": {
+  "n_instances": 4,
+  "n_fits": 8,
+  "Q": 128,
+  "serial_wall_s": 17.66769684599967,
+  "pool_wall_s": 5.967859202999534,
+  "speedup": 2.960474810987435,
+  "instances_per_hour_serial": 815.0468125821649,
+  "instances_per_hour_pool": 2412.925558425096,
+  "fits_per_hour_serial": 1630.0936251643298,
+  "fits_per_hour_pool": 4825.851116850192,
+  "queries_new": 1024,
+  "outside_cap": 0,
+  "gates": [
+   {
+    "seed": 10032,
+    "circuit": "Nov3",
+    "queries": 128,
+    "same_start": true,
+    "same_cand": true,
+    "max_abs_dE_trace": 0.0,
+    "E_sel_serial": -15.478424193752346,
+    "E_sel_pool": -15.478424193752346,
+    "F_serial": 0.491977438298487,
+    "F_pool": 0.491977438298487,
+    "worker_pid": 11315,
+    "worker_rss_mb": 201.81640625
+   },
+   {
+    "seed": 10032,
+    "circuit": "QAOA",
+    "queries": 128,
+    "same_start": true,
+    "same_cand": true,
+    "max_abs_dE_trace": 0.0,
+    "E_sel_serial": -15.175480302965115,
+    "E_sel_pool": -15.175480302965115,
+    "F_serial": 0.4066952663188264,
+    "F_pool": 0.4066952663188264,
+    "worker_pid": 11313,
+    "worker_rss_mb": 183.5234375
+   },
+   {
+    "seed": 10033,
+    "circuit": "Nov3",
+    "queries": 128,
+    "same_start": true,
+    "same_cand": true,
+    "max_abs_dE_trace": 0.0,
+    "E_sel_serial": -19.64083797481507,
+    "E_sel_pool": -19.64083797481507,
+    "F_serial": 0.5675770879042373,
+    "F_pool": 0.5675770879042373,
+    "worker_pid": 11316,
+    "worker_rss_mb": 202.28125
+   },
+   {
+    "seed": 10033,
+    "circuit": "QAOA",
+    "queries": 128,
+    "same_start": true,
+    "same_cand": true,
+    "max_abs_dE_trace": 0.0,
+    "E_sel_serial": -19.892557130285155,
+    "E_sel_pool": -19.892557130285155,
+    "F_serial": 0.6188264882137515,
+    "F_pool": 0.6188264882137515,
+    "worker_pid": 11314,
+    "worker_rss_mb": 184.20703125
+   },
+   {
+    "seed": 10034,
+    "circuit": "Nov3",
+    "queries": 128,
+    "same_start": true,
+    "same_cand": true,
+    "max_abs_dE_trace": 0.0,
+    "E_sel_serial": -17.794551800064923,
+    "E_sel_pool": -17.794551800064923,
+    "F_serial": 0.5891697434813281,
+    "F_pool": 0.5891697434813281,
+    "worker_pid": 11313,
+    "worker_rss_mb": 205.6875
+   },
+   {
+    "seed": 10034,
+    "circuit": "QAOA",
+    "queries": 128,
+    "same_start": true,
+    "same_cand": true,
+    "max_abs_dE_trace": 0.0,
+    "E_sel_serial": -17.73387526467984,
+    "E_sel_pool": -17.73387526467984,
+    "F_serial": 0.5785938838437652,
+    "F_pool": 0.5785938838437652,
+    "worker_pid": 11314,
+    "worker_rss_mb": 184.234375
+   },
+   {
+    "seed": 10035,
+    "circuit": "Nov3",
+    "queries": 128,
+    "same_start": true,
+    "same_cand": true,
+    "max_abs_dE_trace": 0.0,
+    "E_sel_serial": -18.20386820364952,
+    "E_sel_pool": -18.20386820364952,
+    "F_serial": 0.5173006167347812,
+    "F_pool": 0.5173006167347812,
+    "worker_pid": 11316,
+    "worker_rss_mb": 206.30859375
+   },
+   {
+    "seed": 10035,
+    "circuit": "QAOA",
+    "queries": 128,
+    "same_start": true,
+    "same_cand": true,
+    "max_abs_dE_trace": 0.0,
+    "E_sel_serial": -18.175435268531416,
+    "E_sel_pool": -18.175435268531416,
+    "F_serial": 0.5124945525968788,
+    "F_pool": 0.5124945525968788,
+    "worker_pid": 11315,
+    "worker_rss_mb": 183.96484375
+   }
+  ]
+ },
+ "conformance": {
+  "energy_all_pass": true,
+  "spsa_all_pass": true
+ },
+ "prior_n3cond": 772224,
+ "lexact_m1_m2_spsa": 1536,
+ "gr_note": "GR frozen recipe unchanged.",
+ "wall_s": 27.792595624923706,
+ "finished": 1794231599.6659505
+}

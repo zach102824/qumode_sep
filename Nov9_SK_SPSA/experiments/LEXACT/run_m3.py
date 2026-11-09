@@ -115,7 +115,7 @@ def main():
         energy_tasks.append({"N": 18, "seed": seed, "L": 1, "circuit": "Nov3", "x": x})
 
     t0 = time.perf_counter()
-    serial_e = [serial_energy(**{k: t[k] for k in ("N", "seed", "L", "circuit")}, x=t["x"]) for t in energy_tasks]
+    serial_e = [serial_energy(t["N"], t["seed"], t["L"], t["circuit"], t["x"]) for t in energy_tasks]
     serial_e_wall = time.perf_counter() - t0
     ctx = get_context("spawn")
     t0 = time.perf_counter()
