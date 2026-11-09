@@ -1,0 +1,78 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_v4",
+  "candidate_not_benchmark_adoption": true,
+  "arm": "nov3_center4",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "N": 15,
+  "seed": 10022,
+  "L": 1,
+  "q": 512,
+  "Q": 512,
+  "procedural_cap": 512,
+  "Bstar": 0.7596727537077262,
+  "E0": -13.939152455010438,
+  "E_plus": -11.395091305615894,
+  "F_plus": 0.2845586441234724,
+  "E": -13.202104160584964,
+  "F": 0.5651501203728804,
+  "eta": 0.3921935375201221,
+  "escaped": true,
+  "which": "last",
+  "start_id": 0,
+  "n_iter": 58,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -7.215912623946019,
+      "E": -13.202104160584964,
+      "which": "last",
+      "a_gain": 0.03888053859511367
+    },
+    {
+      "start_id": 1,
+      "e_init": -6.950723435211011,
+      "E": -12.580440061361006,
+      "which": "last",
+      "a_gain": 0.057152389920951424
+    },
+    {
+      "start_id": 2,
+      "e_init": -9.679468422294642,
+      "E": -13.039621175064543,
+      "which": "polyak64",
+      "a_gain": 0.4033783211319577
+    },
+    {
+      "start_id": 3,
+      "e_init": -7.072776946651007,
+      "E": -11.419264169314939,
+      "which": "last",
+      "a_gain": 0.05346239633274815
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 464,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 512
+  },
+  "x": [
+    -0.22886555562142144,
+    -0.03283530527911966,
+    0.10235109471671046,
+    -0.6997118796641149,
+    0.12186126196348282,
+    -0.020529026977864007
+  ],
+  "seconds": 2.252001124000344,
+  "prereg_sha256": "4b5838050f872873bf31c5427bc992ba19ffadca670362800c617649bdef25d0",
+  "development_not_fresh_holdout": true,
+  "qaoa_center_is_derived": false,
+  "fidelity_posthoc": true
+}

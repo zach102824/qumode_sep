@@ -1,0 +1,74 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_v4",
+  "candidate_not_benchmark_adoption": true,
+  "arm": "qaoa_center4",
+  "method": "QAOA",
+  "method_id": 0,
+  "N": 15,
+  "seed": 10022,
+  "L": 1,
+  "q": 512,
+  "Q": 512,
+  "procedural_cap": 512,
+  "Bstar": 0.7596727537077262,
+  "E0": -13.939152455010438,
+  "E_plus": -11.395091305615894,
+  "F_plus": 0.2845586441234724,
+  "E": -13.205380092517945,
+  "F": 0.564598136805461,
+  "eta": 0.39142200878071465,
+  "escaped": true,
+  "which": "mid_iterate",
+  "start_id": 3,
+  "n_iter": 58,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -7.215912623946008,
+      "E": -13.15738513457218,
+      "which": "last",
+      "a_gain": 0.013334613061630394
+    },
+    {
+      "start_id": 1,
+      "e_init": -7.468502330993358,
+      "E": -13.201426298430556,
+      "which": "last",
+      "a_gain": 0.01918686066379903
+    },
+    {
+      "start_id": 2,
+      "e_init": -11.983501626103576,
+      "E": -13.205380049965555,
+      "which": "last",
+      "a_gain": 0.05133612102801486
+    },
+    {
+      "start_id": 3,
+      "e_init": -13.153768809854451,
+      "E": -13.205380092517945,
+      "which": "mid_iterate",
+      "a_gain": 0.12108755278884015
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 464,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 512
+  },
+  "x": [
+    -0.23396954918160298,
+    0.3807320219945734
+  ],
+  "seconds": 1.384826463000536,
+  "prereg_sha256": "4b5838050f872873bf31c5427bc992ba19ffadca670362800c617649bdef25d0",
+  "development_not_fresh_holdout": true,
+  "qaoa_center_is_derived": true,
+  "fidelity_posthoc": true
+}

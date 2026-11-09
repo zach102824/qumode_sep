@@ -24,4 +24,13 @@ python3 -m Nov3_INIT.run_v2 --phase test
 python3 -m Nov3_INIT.run_v2 --phase summary
 ```
 
+v4 (`PREREG_V4.md`) is a later development fit, not a fresh holdout. It keeps `center4` as a candidate and gives QAOA the derived center `(γ, β) = (0.25, 0.25)` on every layer. The grid is `N = 9,12` at `L = 4,6` and, after the sparse probe, `N = 15` at `L = 1`, seeds `10018..10025`, `q = 512,1024`.
+
+```bash
+python3 -m Nov3_INIT.conformance_v4
+python3 -m Nov3_INIT.run_v4 --phase n15
+python3 -m Nov3_INIT.run_v4 --phase run
+python3 -m Nov3_INIT.run_v4 --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.

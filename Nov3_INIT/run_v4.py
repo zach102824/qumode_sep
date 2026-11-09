@@ -255,6 +255,23 @@ def _boot(values: np.ndarray, rng: np.random.Generator) -> dict:
     }
 
 
+def _boot_stratified(parts: list[np.ndarray], rng: np.random.Generator) -> dict:
+    values = np.concatenate(parts)
+    means = np.empty(N_BOOT, dtype=np.float64)
+    for i in range(N_BOOT):
+        draw = [part[rng.integers(0, part.shape[0], size=part.shape[0])] for part in parts]
+        means[i] = np.concatenate(draw).mean()
+    return {
+        "n": int(values.shape[0]),
+        "mean": float(values.mean()),
+        "median": float(np.median(values)),
+        "min": float(values.min()),
+        "max": float(values.max()),
+        "ci95": [float(np.percentile(means, 2.5)), float(np.percentile(means, 97.5))],
+        "bootstrap": "seeds_resampled_inside_each_N",
+    }
+
+
 def _flag(stat: dict) -> str:
     lo, hi = stat["ci95"]
     if stat["mean"] < 0.0 and hi < 0.0:
@@ -311,6 +328,35 @@ def summarize() -> None:
             "qaoa_start0_selected": int(sum(r["start_id"] == 0 for r in qa)),
             "queries": int(sum(r["queries"]["total"] for r in cen + eq + qa)),
             "seconds": float(sum(r["seconds"] for r in cen + eq + qa)),
+            "energy_ties_vs_equal": int(np.sum(np.abs(e_c - e_e) <= 1e-8)),
+            "energy_ties_vs_qaoa": int(np.sum(np.abs(e_c - e_q) <= 1e-8)),
+        })
+    pooled = []
+    depth_lq = sorted({(g["L"], g["q"]) for g in groups if g["N"] in (9, 12)})
+    for L, q in depth_lq:
+        parts_self, parts_pair = [], []
+        for n in (9, 12):
+            hit = [g for g in groups if g["N"] == n and g["L"] == L and g["q"] == q]
+            if len(hit) != 1:
+                continue
+            def vec(arm, n=n, L=L, q=q):
+                rows_n = [r for r in ok if r["N"] == n and r["L"] == L and r["q"] == q and r["arm"] == arm]
+                rows_n.sort(key=lambda r: r["seed"])
+                return np.array([r["E"] for r in rows_n], dtype=np.float64)
+            parts_self.append(vec("nov3_center4") - vec("nov3_equal4"))
+            parts_pair.append(vec("nov3_center4") - vec("qaoa_center4"))
+        if len(parts_self) != 2:
+            continue
+        d_self = _boot_stratified(parts_self, rng)
+        d_pair = _boot_stratified(parts_pair, rng)
+        pooled.append({
+            "N": "9+12",
+            "L": L,
+            "q": q,
+            "d_self": d_self,
+            "d_pair": d_pair,
+            "center_helps": _flag(d_self),
+            "beats_fair_qaoa": _flag(d_pair),
         })
     new_q = int(sum(r["queries"]["total"] for r in ok))
     hist = _historical()
@@ -324,6 +370,7 @@ def summarize() -> None:
         "historical_queries_spent_once": hist,
         "total_research_queries": hist + new_q,
         "groups": groups,
+        "pooled_n9_n12": pooled,
     }
     _dump(RES / "summary.json", payload)
     lines = [
@@ -347,11 +394,35 @@ def summarize() -> None:
             f"{g['energy_wins_vs_equal']}/{g['d_self']['n']} | {g['energy_wins_vs_qaoa']}/{g['d_pair']['n']} | "
             f"{g['F_center']['mean']:.3f} | {g['F_qaoa']['mean']:.3f} | {g['center_start0_selected']}/{g['d_self']['n']} | {g['qaoa_start0_selected']}/{g['d_pair']['n']} |"
         )
+    lines += ["", "Paired median, min, and max are the seedwise energy differences. A win is a strict energy improvement. Ties use absolute difference at most 1e-8.", ""]
+    lines.append("| N | L | q | median Δ self | min Δ self | max Δ self | ties vs equal | median Δ pair | min Δ pair | max Δ pair | ties vs QAOA |")
+    lines.append("|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+    for g in groups:
+        lines.append(
+            f"| {g['N']} | {g['L']} | {g['q']} | {g['d_self']['median']:+.4f} | {g['d_self']['min']:+.4f} | {g['d_self']['max']:+.4f} | {g['energy_ties_vs_equal']} | "
+            f"{g['d_pair']['median']:+.4f} | {g['d_pair']['min']:+.4f} | {g['d_pair']['max']:+.4f} | {g['energy_ties_vs_qaoa']} |"
+        )
+    lines += ["", "## Pooled N=9 and N=12", "", "Seeds are resampled inside each N. N is held. This is the preregistered depth pool, computed after every single-N interval.", ""]
+    lines.append("| L | q | n | mean Δ self | median | CI | mean Δ pair | median | CI | center_helps | beats_fair_qaoa |")
+    lines.append("|---:|---:|---:|---:|---:|---|---:|---:|---|---|---|")
+    for g in pooled:
+        lines.append(
+            f"| {g['L']} | {g['q']} | {g['d_self']['n']} | {g['d_self']['mean']:+.4f} | {g['d_self']['median']:+.4f} | "
+            f"[{g['d_self']['ci95'][0]:+.3f}, {g['d_self']['ci95'][1]:+.3f}] | {g['d_pair']['mean']:+.4f} | {g['d_pair']['median']:+.4f} | "
+            f"[{g['d_pair']['ci95'][0]:+.3f}, {g['d_pair']['ci95'][1]:+.3f}] | `{g['center_helps']}` | `{g['beats_fair_qaoa']}` |"
+        )
     lines += ["", "## Read flags", ""]
     for g in groups:
         lines.append(f"- N={g['N']} L={g['L']} q={g['q']}: center_helps `{g['center_helps']}`; beats_fair_qaoa `{g['beats_fair_qaoa']}`.")
-    lines.append("")
-    lines.append(f"Cell time {sum(r['seconds'] for r in ok):.1f}s on the recorded cells. Workers 4.")
+    lines += [
+        "",
+        "No depth cell, and no N=9/12 pool, has a confirmed center-versus-equal4 energy edge. The median paired self-difference is 0 in every depth row: most seeds tie because a later start is selected.",
+        "Pooled over N=9 and N=12, mean d_pair is positive at L=4 and L=6 for both budgets, and each of those four intervals excludes 0. On this development band the derived QAOA center has lower energy than nov3_center4. That comparison is energy only. It does not adopt either arm into the benchmark.",
+        "At N=15 L1, mean d_pair is negative and the interval excludes 0 at both budgets, with 7/8 and 8/8 strict energy wins for Nov3. Start 0 is selected once at q=512 and never at q=1024, and every nonzero self-difference is nonnegative, so the coherent center is not what produces that shallow edge.",
+        "The N=15 QAOA selected energies at q=512 and q=1024 agree to about 1e-5 or closer on every seed, so the printed means match. The parameter vectors are not copies.",
+        "",
+        f"Cell time {sum(r['seconds'] for r in ok):.1f}s on the recorded cells. Workers 4. Procedural cap of each cell equals its own Q.",
+    ]
     (RES / "RESULTS.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines), flush=True)
 
