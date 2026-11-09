@@ -1,0 +1,94 @@
+{
+  "ok": true,
+  "failure": null,
+  "blocker": null,
+  "version": "N3INIT_wl",
+  "arm": "qaoa_wl",
+  "method": "QAOA",
+  "method_id": 0,
+  "eps": 0.1,
+  "order": "hardware",
+  "nf": 10,
+  "n_params": 2,
+  "N": 15,
+  "seed": 10529,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "procedural_cap": 1024,
+  "same_query_budget_across_arms": true,
+  "Bstar": 0.7423561580262956,
+  "E0": -13.80542710116444,
+  "E_plus": -11.135342370394435,
+  "F_plus": 0.23668254094238575,
+  "E": -12.676167616884864,
+  "E_error_over_N": 0.07528396561863838,
+  "F": 0.5599628539887244,
+  "eta": 0.4235201346572866,
+  "escaped": true,
+  "which": "last",
+  "start_id": 2,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -7.6844295960954785,
+      "E": -12.676162629344077,
+      "which": "last",
+      "a_gain": 0.018081067954935377
+    },
+    {
+      "start_id": 1,
+      "e_init": -5.078904699508727,
+      "E": -12.676143026734742,
+      "which": "last",
+      "a_gain": 0.025538770374839308
+    },
+    {
+      "start_id": 2,
+      "e_init": -10.020290529784663,
+      "E": -12.676167616884864,
+      "which": "last",
+      "a_gain": 0.11752773690509358
+    },
+    {
+      "start_id": 3,
+      "e_init": -5.1657360645332915,
+      "E": -12.676167604849281,
+      "which": "last",
+      "a_gain": 0.027511335786042774
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024
+  },
+  "x": [
+    -0.28860908392885337,
+    0.4091076082940186
+  ],
+  "leakage": {
+    "p_leak": 0.02229274220860833,
+    "p_code": 0.9777072577913917,
+    "mean_n_per_cavity": 3.50684708811848,
+    "mean_n_total": 17.5342354405924,
+    "p_highest_any_cavity": 7.105427357601002e-15,
+    "norm": 0.9999999999999939,
+    "norm_deficit": 6.106226635438361e-15,
+    "nf": 10,
+    "formula": "p_leak=1-P(all cavities in 0..7); mean_n=E[n_c]; p_highest=1-P(all n_c < nf-1); H^ext energy"
+  },
+  "seconds": 14.314660973999707,
+  "cpu_seconds": 14.300427344,
+  "peak_rss_kib": 118048,
+  "prereg_sha256": "49e5f4d38e67d3335d3ba5cb2542db8bbbb7cf182097ced90096c6eb15ed0c5d",
+  "fidelity_posthoc": true,
+  "channel": "real Givens 7-8 after ideal W_BinH; SNAP phase 0 on f>=8",
+  "compiled_snap_d_still_unmodelled": true,
+  "rng_omits_eps": true
+}

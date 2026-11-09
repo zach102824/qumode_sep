@@ -374,7 +374,7 @@ def summarize() -> None:
     lines = [
         "# N3INIT non-ideal W_L leakage probe N=15 L=1",
         "",
-        f"Frozen v4 center-4. NF=10. \(W_\\varepsilon=G_{{7,8}}(\\varepsilon=0.10)\\,W_{{\\rm BinH}}\). SNAP phase 0 on f≥8. Seeds 10528–10535. No GR patch. Not a hardware claim.",
+        "Frozen v4 center-4. NF=10. W_ε = G_{7,8}(ε=0.10) W_BinH. SNAP phase 0 on f≥8. Seeds 10528–10535. No GR patch. Not a hardware claim.",
         "",
         f"**{label}.**",
         "",
@@ -387,7 +387,7 @@ def summarize() -> None:
     else:
         d = primary["dE"]
         lines += [
-            "## Primary: non-ideal Nov3 vs QAOA (same \(W_\\varepsilon\))",
+            "## Primary: non-ideal Nov3 vs QAOA (same W_ε)",
             "",
             f"Nov3−QAOA mean ΔE {d['mean']:+.4f} CI [{d['ci95'][0]:+.3f}, {d['ci95'][1]:+.3f}] wins {primary['left_vs_right_wins']}/{primary['n']}. CI<0 {primary['ci_entirely_lt0']}.",
             f"mean E Nov3 {primary['E_left']['mean']:.4f} QAOA {primary['E_right']['mean']:.4f}. mean F Nov3 {primary['F_left']['mean']:.3f} QAOA {primary['F_right']['mean']:.3f}.",
