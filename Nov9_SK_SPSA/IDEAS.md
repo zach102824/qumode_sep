@@ -48,7 +48,7 @@ The paper has no cavities, no displacement, no SPSA, and nothing about higher Z 
   - **(b) Level-7 phase:** in binary encoding \(s_3\) acts only on level 7 = |111⟩, the sole source of first-order leakage. SPSA can therefore tune the relative phase between new and returning leak amplitudes. This is specific to binary encoding and absent in Gray.
 - At L = 1 neither lever exists. Leakage is ≈ \(C\alpha_1^2\) and must simply be traded off by the energy.
 
-**Initialization (2 starts).**
+**Initialization (4 starts: E plus 3 independent R draws, matching the local 4-start protocol).**
 
 - Start E: γ = 0.25, θ = 0, \(\alpha_\ell=(-1)^{\ell+1}\cdot0.06\), s = 0.
 - Start R: random box with γ ∈ U(−0.5, 0.5), θ ∈ U(−0.5, 0.5), α ∈ U(−0.08, 0.08), s ∈ U(−0.3, 0.3). Stream 2 RNG.

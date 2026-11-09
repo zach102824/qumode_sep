@@ -128,7 +128,8 @@ Per run (one method × instance × b × L), the cap is **1024 energy queries, in
 
 | item | queries |
 |---|---|
-| 2 independent starts × [16 calibration (8 two-sided estimates) + 247 iterations × 2 + 2 final candidates] | 2 × 512 = 1024 |
+| 4 independent starts × [8 calibration (4 two-sided estimates) + 123 iterations × 2 + 2 final candidates] | 4 × 256 = 1024 |
+| (allowed alternative, if preregistered identically for every method: 2 starts × [16 + 247 × 2 + 2]) | 2 × 512 = 1024 |
 | monitoring | 0 counted. Off-budget diagnostics are allowed in simulation and must be labeled "oracle diagnostic, not selectable". |
 
 The local audit spent 340 of 1024 queries on monitoring. Recommend ≤ 64 if any in-budget monitoring is used.

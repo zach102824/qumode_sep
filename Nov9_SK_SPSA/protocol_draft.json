@@ -12,7 +12,7 @@
   "offcode_default": {"snap_f_ge_8": "phase 0", "UcZ": "Uz (zero-extended Z); U0 sensitivity arm", "energy": "per-term H_ext", "readout": "ideal number-resolved + ideal W_L = BinH"},
   "alpha": {"real": true, "shared_cavities": true, "param": "0.30*tanh(u)"},
   "cutoff": {"ladder": [16, 20, 24, 32, 48], "tol": 1e-8, "build_D": "expm in NF>=NF_sim+32 then restrict, or proven-converged"},
-  "spsa": {"cap_queries_inclusive": 1024, "starts": 2, "per_start": {"calibration": 16, "iterations": 247, "candidates": 2},
+  "spsa": {"cap_queries_inclusive": 1024, "starts": 4, "per_start": {"calibration": 8, "iterations": 123, "candidates": 2}, "starts_note": "4-start default matches local Nov3/QAOA pilots; 2x(16+494+2) allowed only if identical for all methods",
            "alpha_exp": 0.602, "gamma_exp": 0.101, "A": 25,
            "sigma": {"gamma": 0.10, "theta": 0.25, "alpha": 0.02, "s": 0.15, "qaoa_angle": 0.10},
            "shot_mode_selection": "8-iterate shortlist re-ranked with fresh noisy energies, counted",
