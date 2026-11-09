@@ -1,0 +1,56 @@
+{
+  "ok": true,
+  "prereg_sha256": "25af7ab82a397f5efeab21f97e3de96c02d5fed9c3f5cae7dc0c7965369bf5dc",
+  "historical_queries_preserved": 1679360,
+  "forbidden_unread": true,
+  "dev_seeds": [
+    10018,
+    10019,
+    10020,
+    10021,
+    10022,
+    10023,
+    10024,
+    10025
+  ],
+  "recipe": {
+    "nov3_center": [
+      0.25,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0
+    ],
+    "qaoa_center": [
+      0.25,
+      0.25
+    ],
+    "qaoa_center_is_historical_equal4_start0": true,
+    "exact_v4_recipe": true
+  },
+  "probe": {
+    "seed": 10018,
+    "N": 18,
+    "dim": 262144,
+    "dense_matrix": false,
+    "eigsh_seconds": 4.407941892999588,
+    "nov3_L1_seconds": 0.07823980700050015,
+    "nov3_L1_energy": -4.1896580572233395,
+    "rss_kib_start": 73768,
+    "rss_kib_after_diag": 117908,
+    "rss_kib_after_eigsh": 137144,
+    "rss_kib_after_energy": 143816,
+    "peak_rss_gib": 0.13715362548828125,
+    "cpu_seconds": 4.804757685999999,
+    "n18_allowed": true,
+    "gate": {
+      "eigsh_lt_30s": true,
+      "energy_lt_0.5s": true,
+      "rss_lt_4GiB": true
+    },
+    "wall_seconds": 4.806867096999667
+  },
+  "fidelity_is_posthoc": true,
+  "no_spsa_in_this_module": true
+}

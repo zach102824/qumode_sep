@@ -1,0 +1,51 @@
+{
+  "ok": true,
+  "prereg_sha256": "a5c89c0480f0199ca1dfc5714bbfd91ca08f3c9a87111e876347a4d6cf00f0f0",
+  "historical_queries_preserved": 1949696,
+  "holdout_seeds": [
+    10144,
+    10145,
+    10146,
+    10147,
+    10148,
+    10149,
+    10150,
+    10151
+  ],
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "recipe": {
+    "nov3_center_L2": [
+      0.25,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0
+    ],
+    "qaoa_center_L2": [
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "qaoa_center_is_historical_equal4_start0": true,
+    "exact_v4_recipe": true
+  },
+  "gates": {
+    "H1": "N=15 L=2 Q=2048 mean d_pair CI entirely < 0",
+    "H2": "N=18 L=2 Q=2048 mean d_pair CI entirely < 0",
+    "confirmed_only_if_both": true
+  },
+  "both_q_run": [
+    512,
+    1024
+  ],
+  "no_spsa_in_this_module": true,
+  "will_not_patch_pr77": true
+}

@@ -1,0 +1,54 @@
+{
+  "ok": true,
+  "prereg_sha256": "29c3c4e5d4bb06a23b79b0b684a891c1ec972cb5fbf6e4c74fad1134feaf2451",
+  "historical_queries_preserved": 2113536,
+  "estimate_seeds": [
+    10232,
+    10233,
+    10234,
+    10235,
+    10236,
+    10237,
+    10238,
+    10239,
+    10240,
+    10241,
+    10242,
+    10243,
+    10244,
+    10245,
+    10246,
+    10247
+  ],
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "recipe": {
+    "nov3_center_L2": [
+      0.25,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0
+    ],
+    "qaoa_center_L2": [
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "T_Q2048": 250,
+    "qaoa_center_is_historical_equal4_start0": true,
+    "exact_v4_recipe": true
+  },
+  "label_rule": "ESTIMATE_NEGATIVE_CI iff n=16 mean d_pair CI entirely < 0 else UNSTABLE / CI_CROSSES_0",
+  "no_gr_patch": true,
+  "no_candidacy_file": true,
+  "no_spsa_in_this_module": true,
+  "no_L3": true
+}

@@ -1,0 +1,135 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "name": "Bstar_N9_seed10000",
+      "ok": true,
+      "detail": {
+        "N": 9,
+        "seed": 10000,
+        "Bstar": 0.5672817157523025,
+        "abs_err": 4.4103609653234344e-11,
+        "S_A": 0.8573942244152913
+      }
+    },
+    {
+      "name": "iteration_counts",
+      "ok": true,
+      "detail": {
+        "128": [
+          10,
+          24
+        ],
+        "512": [
+          58,
+          120
+        ],
+        "1024": [
+          122,
+          248
+        ],
+        "384": [
+          42,
+          88
+        ],
+        "1536": [
+          186,
+          376
+        ],
+        "3072": [
+          378,
+          760
+        ]
+      }
+    },
+    {
+      "name": "equal4_ledger_128",
+      "ok": true,
+      "detail": {
+        "screen": 0,
+        "init": 4,
+        "calibration": 32,
+        "iteration": 80,
+        "candidate": 12,
+        "monitoring": 0,
+        "total": 128
+      }
+    },
+    {
+      "name": "halve_ledger_128",
+      "ok": true,
+      "detail": {
+        "screen": 8,
+        "init": 2,
+        "calibration": 16,
+        "iteration": 96,
+        "candidate": 6,
+        "monitoring": 0,
+        "total": 128
+      }
+    },
+    {
+      "name": "screen_keeps_lowest_energy",
+      "ok": true,
+      "detail": {
+        "kept": [
+          2,
+          6
+        ],
+        "order": [
+          2,
+          6
+        ]
+      }
+    },
+    {
+      "name": "seed_predicate",
+      "ok": true,
+      "detail": {}
+    },
+    {
+      "name": "vacuum_matches_plus",
+      "ok": true,
+      "detail": {
+        "max_abs_vac": 3.8584243507050043e-16,
+        "ft_E": -0.7586434789082834,
+        "E": -0.7586434789082834
+      }
+    },
+    {
+      "name": "nov3_reduces_to_qaoa",
+      "ok": true,
+      "detail": {
+        "fidelity": 1.0000000000000004,
+        "dE": 0.0
+      }
+    },
+    {
+      "name": "fwht_is_all_qubit_hadamard",
+      "ok": true,
+      "detail": {
+        "max_abs": 0.0
+      }
+    },
+    {
+      "name": "product_energy",
+      "ok": true,
+      "detail": {
+        "E": -3.600000000000001,
+        "E_plus": -3.6
+      }
+    },
+    {
+      "name": "centers",
+      "ok": true,
+      "detail": {}
+    },
+    {
+      "name": "layer_residual_bound",
+      "ok": true,
+      "detail": {
+        "max_layer_gap": 0.24004304417321198
+      }
+    }
+  ]
+}

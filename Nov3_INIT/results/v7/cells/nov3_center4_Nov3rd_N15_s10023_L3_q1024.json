@@ -1,0 +1,91 @@
+{
+  "ok": true,
+  "failure": null,
+  "blocker": null,
+  "version": "N3INIT_v7",
+  "candidate_not_benchmark_adoption": true,
+  "arm": "nov3_center4",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "N": 15,
+  "seed": 10023,
+  "L": 3,
+  "q": 1024,
+  "Q": 3072,
+  "procedural_cap": 3072,
+  "Bstar": 0.5138993118579156,
+  "Bstar_reused_from_v4": true,
+  "E0": -10.817823155592315,
+  "E_plus": -7.708489677868734,
+  "F_plus": 0.15675564140416082,
+  "E": -10.303300906900393,
+  "E_error_over_N": 0.03430148324612811,
+  "F": 0.6645934136810605,
+  "eta": 0.6022427154123453,
+  "escaped": true,
+  "which": "last",
+  "start_id": 0,
+  "n_iter": 378,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": 1.0121512015427,
+      "E": -10.303300906900393,
+      "which": "last",
+      "a_gain": 0.10486892641501074
+    },
+    {
+      "start_id": 1,
+      "e_init": -6.14669674435988,
+      "E": -10.295502392599555,
+      "which": "last",
+      "a_gain": 0.03999967248759516
+    },
+    {
+      "start_id": 2,
+      "e_init": -8.004758942192,
+      "E": -8.242259081663368,
+      "which": "polyak64",
+      "a_gain": 0.15045607437884057
+    },
+    {
+      "start_id": 3,
+      "e_init": 1.6247882378080865,
+      "E": -10.231955479398335,
+      "which": "last",
+      "a_gain": 0.053869676668962675
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 3024,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 3072
+  },
+  "x": [
+    -0.1976249829574563,
+    -0.3462584312322106,
+    -0.015644721128837687,
+    -0.9288287792241746,
+    -0.2067331290327066,
+    -0.44417901147519756,
+    -0.1846604324872342,
+    0.16512709598378458,
+    0.3616119003242143,
+    -0.487470226220056,
+    -0.056686343030517214,
+    -0.24367598882803965
+  ],
+  "seconds": 33.754177128001174,
+  "cpu_seconds": 33.723271536,
+  "peak_rss_kib": 63856,
+  "prereg_sha256": "7408aebb0492828f2b73b70196824988686dcb4dfb153ea4eaec67aca18575e1",
+  "development_not_population": true,
+  "qaoa_center_is_derived": false,
+  "fidelity_posthoc": true,
+  "exact_v4_recipe": true,
+  "not_le_s1_or_local_r10": true
+}

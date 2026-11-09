@@ -1,0 +1,123 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_v1",
+  "arm": "halve8to2",
+  "method": "Nov3rd",
+  "method_id": 70,
+  "split": "test",
+  "N": 9,
+  "seed": 10025,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "Bstar": 0.5770441728741725,
+  "E0": -7.198917975399328,
+  "E_plus": -5.193397555867553,
+  "F_plus": 0.2696757713151577,
+  "E": -6.696766800035088,
+  "F": 0.6872689455814983,
+  "eta": 0.5717914836514962,
+  "escaped": true,
+  "x": [
+    -0.31808453963077066,
+    -0.48075276461081307,
+    -0.020837252938926652,
+    -0.9196782998656979,
+    0.00023558862512604068,
+    0.6740185916835765
+  ],
+  "which": "last",
+  "start_id": 5,
+  "n_iter": 248,
+  "kept_start_ids": [
+    5,
+    6
+  ],
+  "screen_energies": [
+    -3.2222654837452263,
+    -1.9268238927800458,
+    -4.331522445060424,
+    -2.6525798574258315,
+    -1.9401182548736309,
+    -5.235253835186599,
+    -5.194508305241612,
+    -4.505355787651322
+  ],
+  "tails": {
+    "screen": [
+      {
+        "start_id": 5,
+        "e_screen": -5.235253835186599,
+        "kept": true
+      },
+      {
+        "start_id": 6,
+        "e_screen": -5.194508305241612,
+        "kept": true
+      },
+      {
+        "start_id": 7,
+        "e_screen": -4.505355787651322,
+        "kept": false
+      },
+      {
+        "start_id": 2,
+        "e_screen": -4.331522445060424,
+        "kept": false
+      },
+      {
+        "start_id": 0,
+        "e_screen": -3.2222654837452263,
+        "kept": false
+      },
+      {
+        "start_id": 3,
+        "e_screen": -2.6525798574258315,
+        "kept": false
+      },
+      {
+        "start_id": 4,
+        "e_screen": -1.9401182548736309,
+        "kept": false
+      },
+      {
+        "start_id": 1,
+        "e_screen": -1.9268238927800458,
+        "kept": false
+      }
+    ],
+    "finalists": [
+      {
+        "start_id": 5,
+        "e_init": -5.235253835186599,
+        "E": -6.696766800035088,
+        "which": "last",
+        "a_gain": 0.4206191359746906
+      },
+      {
+        "start_id": 6,
+        "e_init": -5.194508305241612,
+        "E": -5.194508305241612,
+        "which": "init",
+        "a_gain": 3.4506148687930756
+      }
+    ]
+  },
+  "queries": {
+    "screen": 8,
+    "init": 2,
+    "calibration": 16,
+    "iteration": 992,
+    "candidate": 6,
+    "monitoring": 0,
+    "total": 1024
+  },
+  "a_gain_selected": 0.4206191359746906,
+  "seconds": 0.16121223400023155,
+  "prereg_sha256": "bf136841297bb0d7a07a373889cc05fdcfbc9abb70aa56286e04d376f6a27388",
+  "energy_selection_only": true,
+  "fidelity_posthoc": true,
+  "not_the_frozen_1000_benchmark": true,
+  "not_an_L1_to_L3_transfer": true
+}

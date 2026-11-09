@@ -1,0 +1,91 @@
+{
+  "ok": true,
+  "failure": null,
+  "blocker": null,
+  "version": "N3INIT_v7",
+  "candidate_not_benchmark_adoption": true,
+  "arm": "nov3_center4",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "N": 15,
+  "seed": 10024,
+  "L": 3,
+  "q": 512,
+  "Q": 1536,
+  "procedural_cap": 1536,
+  "Bstar": 0.6389271520403695,
+  "Bstar_reused_from_v4": true,
+  "E0": -13.11633913255576,
+  "E_plus": -9.583907280605542,
+  "F_plus": 0.17686596992559928,
+  "E": -12.624697098611142,
+  "E_error_over_N": 0.03277613559630789,
+  "F": 0.7728067139606466,
+  "eta": 0.7239899241939759,
+  "escaped": true,
+  "which": "last",
+  "start_id": 1,
+  "n_iter": 186,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -0.7368464654354678,
+      "E": -12.578076942565538,
+      "which": "last",
+      "a_gain": 0.031219503036043112
+    },
+    {
+      "start_id": 1,
+      "e_init": 1.5859174776697196,
+      "E": -12.624697098611142,
+      "which": "last",
+      "a_gain": 0.06945470029003728
+    },
+    {
+      "start_id": 2,
+      "e_init": 0.9061142504497166,
+      "E": -9.707642635533956,
+      "which": "mid_iterate",
+      "a_gain": 0.16573989444322998
+    },
+    {
+      "start_id": 3,
+      "e_init": -2.6190788412195887,
+      "E": -12.478461590325093,
+      "which": "last",
+      "a_gain": 0.03504587717703355
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 1488,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1536
+  },
+  "x": [
+    -0.2542847129989035,
+    -0.1925813504047922,
+    0.009466255967158594,
+    -1.143686569036076,
+    -0.32502510267281903,
+    0.3814462912301301,
+    -0.40730585583737833,
+    -0.4862241539963878,
+    -0.35281778626183513,
+    -0.41551284410281397,
+    -0.27801833801442355,
+    -0.03330482402398384
+  ],
+  "seconds": 16.760125676000825,
+  "cpu_seconds": 16.724951636,
+  "peak_rss_kib": 63828,
+  "prereg_sha256": "7408aebb0492828f2b73b70196824988686dcb4dfb153ea4eaec67aca18575e1",
+  "development_not_population": true,
+  "qaoa_center_is_derived": false,
+  "fidelity_posthoc": true,
+  "exact_v4_recipe": true,
+  "not_le_s1_or_local_r10": true
+}
