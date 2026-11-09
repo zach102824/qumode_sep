@@ -1,0 +1,78 @@
+{
+ "pid": 25574,
+ "stage": "L3S8",
+ "started": 1794241890.3286862,
+ "bstar_wall_s": 10.65723967552185,
+ "n_tasks": 24,
+ "n_skipped_rejected_Bstar": 0,
+ "prereg_sha256": "c53286111615a87160d5ee622ff556e4b183ede0bcd02ca7849fe92e380cc3c8",
+ "nproc": 4,
+ "N": 15,
+ "L": 3,
+ "Q": 3072,
+ "seeds": [
+  10400,
+  10401,
+  10402,
+  10403,
+  10404,
+  10405,
+  10406,
+  10407
+ ],
+ "band": "exclusive_unread_dev",
+ "ft_alloc_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+ "split": {
+  "Q_total": 3072,
+  "C4": {
+   "nstarts": 4,
+   "T": 378,
+   "per_start": 768,
+   "formula": "T=Q/8-6, four equal spsa_block, center-4 x0, method_id 1",
+   "ledger": {
+    "init": 4,
+    "calibration": 32,
+    "perturb": 3024,
+    "candidate": 12,
+    "total": 3072
+   }
+  },
+  "S8": {
+   "nstarts": 8,
+   "T": 186,
+   "per_start": 384,
+   "formula": "T=Q/16-6, eight equal spsa_block, start 0 coherent center, starts 1-7 equal4 box, method_id 90",
+   "ledger": {
+    "init": 8,
+    "calibration": 64,
+    "perturb": 2976,
+    "candidate": 24,
+    "total": 3072
+   }
+  },
+  "QAOA": {
+   "nstarts": 8,
+   "T": 186,
+   "per_start": 384,
+   "fair_start_policy": "QAOA already uses multi-start in v4, so the primary arm matches S8: run_spread8, 8 equal blocks, start 0 QAOA center, starts 1-7 equal4 box, method_id 91. Not a 4-start QAOA vs 8-start Nov3 mismatch.",
+   "ledger": {
+    "init": 8,
+    "calibration": 64,
+    "perturb": 2976,
+    "candidate": 24,
+    "total": 3072
+   }
+  },
+  "gains": "same frozen v4 family: c=0.1, A=25, exponents 0.602/0.101, a0=0.5/median(|g|/\u03c3) or 0, clip 2\u03c3, energy among init/last/Polyak/mid. alloc.py unmodified."
+ },
+ "arms": [
+  "C4",
+  "S8",
+  "QAOA"
+ ],
+ "qaoa_fair_start_policy": "matched 8-start run_spread8",
+ "no_pair_phase": true,
+ "finished": 1794241977.0446584,
+ "fit_wall_s": 86.71579790115356,
+ "wall_s": 86.71597218513489
+}
