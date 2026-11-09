@@ -183,4 +183,13 @@ python3 -m Nov3_INIT.run_width --phase run
 python3 -m Nov3_INIT.run_width --phase summary
 ```
 
+L=3 doubled budget (`PREREG_L3_2X.md`) asks whether L=3 is budget-starved at `q=1024`. N=15 L=3 `q=2048` `Q=6144` both methods, seeds `10616..10623`. Not spread8/anneal/pair-shell. If FAIL, stop (no `q=4096`). No GR.
+
+```bash
+python3 -m Nov3_INIT.conformance_l3_2x
+python3 -m Nov3_INIT.run_l3_2x --phase bstar
+python3 -m Nov3_INIT.run_l3_2x --phase run
+python3 -m Nov3_INIT.run_l3_2x --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
