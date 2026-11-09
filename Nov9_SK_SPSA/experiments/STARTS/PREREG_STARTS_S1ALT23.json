@@ -1,0 +1,73 @@
+{
+  "experiment": "STARTS S1ALT23: stacked frozen S1 + PR88 ALT at N15 L=2 and L=3, Q=qL",
+  "written_before_fits": true,
+  "not_a_s1_retune": true,
+  "not_an_alt_retune": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "s4_s8_closed": true,
+  "continuation_closed": true,
+  "throughput_axis_closed": true,
+  "conditioning_closed": ["C1", "B3", "B4"],
+  "s1q_closed": true,
+  "n18_forbidden": "FT owns",
+  "hypothesis": {
+    "id": "s1_plus_alt_at_onset_and_one_deeper",
+    "one_sentence": "Frozen S1 + exact PR88 block-ALT still beats S1JOINT on Nov3 energy at L=2 and at L=3 with Q=1024*L.",
+    "not": "No S1/ALT retune. No extra budget. No S4/S8. No continuation. Not a GR patch."
+  },
+  "frozen_from_PR83_88": {
+    "no_fit_changes": true,
+    "S1JOINT": "exact S1 joint IID C0: nstarts=1 TQA, split_cap(Q,1), ncal=4, A=25, live gain, last+Polyak, energy min, engine m2",
+    "S1ALT": "exact PR88 alt_spsa.py: same TQA start, same C0 4 full-vector calibration probes (charged), same live gain, same last+Polyak. Odd k shared Uc/γ; even k SNAP shells/β. joint_prefix_K=0.",
+    "Q_and_K": {"2": {"Q": 2048, "K": 1019, "A_steps": 510, "B_steps": 509}, "3": {"Q": 3072, "K": 1531, "A_steps": 766, "B_steps": 765}},
+    "file_sha256": {
+      "starts.py": "6e4b0cd784782084d2f1320ccb9113ef99d320fd09ce984ab5161f68e0716645",
+      "N3COND/spsa.py": "cca4c884bc3020c9c9559e89cb248d9a4b2c8a8bca36624ba6b380dab1832357",
+      "N3COND/nov3.py": "e74f66b2dfc973afe9acd69e5c398b210a59563f8edc04290c5e88fb16a39808",
+      "alt_spsa.py": "1f843e74c0ad16c17a89b1d07c4a785e53c85d48f4fbacba0b78e45e874d52a4"
+    }
+  },
+  "seeds": {
+    "ids": [10096, 10097, 10098, 10099, 10100, 10101, 10102, 10103],
+    "role": "exclusive_unread_dev",
+    "collision_check": "no instance/run filenames; 10088-95 S1ALT; 10080-87 S1SH; 10072-79 S1Q; 10064-71 S1L6; 10056-63 S1C; 10048-55 S8/S1; 10036-43 DEPTH; 10032-47 LEXACT; 10018-25 FT; 10026-31 local; 10010-17 N3COND; 11000-11031 validation; 20000-20999 final",
+    "forbidden": ["10010-10095", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [15],
+    "L": [2, 3],
+    "q": 1024,
+    "Q": {"2": 2048, "3": 3072},
+    "circuits": ["Nov3", "QAOA"],
+    "arms": ["S1JOINT", "S1ALT"]
+  },
+  "allocation": {
+    "S1": "One TQA start at that L. Full Q=1024*L per arm.",
+    "inclusive": "All init, calibration, perturbations, candidates, failures inside Q. No free JOINT prefix.",
+    "QAOA": "p=L, same split, same Q.",
+    "cold": "Each L fitted independently from TQA."
+  },
+  "selection": "Lowest counted candidate energy. F post hoc, never selects.",
+  "gate": {
+    "cells": ["N15 L2 Nov3", "N15 L3 Nov3"],
+    "pass": "at each L, bootstrap 95% CI of mean(E_S1ALT - E_S1JOINT) lies entirely below 0",
+    "otherwise": "reject stacked S1+ALT at that L. Do not retune.",
+    "nov3_vs_qaoa_s1alt": "Reported separately per L. Mark a development energy-win candidate only if Nov3−QAOA mean Δ(E-E0)/N CI under S1ALT lies entirely below 0.",
+    "gr": "Do not patch GR even if gates pass."
+  },
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "depth_c1": 327680,
+    "starts_s8": 98304,
+    "starts_s1": 98304,
+    "starts_s1c": 196608,
+    "starts_s1l6": 196608,
+    "starts_s1q": 344064,
+    "starts_s1sh": 49152,
+    "starts_s1alt": 65536,
+    "this_stream": "STARTS_S1ALT23, counted separately",
+    "new_charge": "32×2048 + 32×3072 = 163840 if all succeed"
+  }
+}
