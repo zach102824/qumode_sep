@@ -1,0 +1,144 @@
+{
+  "ok": true,
+  "prereg_sha256": "39150055e5ee08590469c7dd95a729ae58aa5f5db88d57a306fe28d4124f33f6",
+  "historical_sk_queries": 2916352,
+  "expected_new_energy_queries": 98304,
+  "expected_total_if_complete": 3014656,
+  "Q": 6144,
+  "q": 2048,
+  "L": 3,
+  "T": 762,
+  "seeds": {
+    "band": [
+      10616,
+      10617,
+      10618,
+      10619,
+      10620,
+      10621,
+      10622,
+      10623
+    ],
+    "hold_unused": [
+      10624,
+      10625,
+      10626,
+      10627,
+      10628,
+      10629,
+      10630,
+      10631
+    ],
+    "n": 8,
+    "overlaps": {
+      "le_10432_10439": [],
+      "le_pr115_10552_10559": [],
+      "le_next_10600_10615": [],
+      "local_r31_10536_10551": [],
+      "local_r32_10584_10599": [],
+      "local_r30_10504_10519": [],
+      "ft_10520_10535": [],
+      "gauge_10552_10559": [],
+      "width_10568_10583": [],
+      "ft_vm_10480_10487": [],
+      "ft_anneal_10456_10463": [],
+      "ft_spread8_10376_10383": [],
+      "shellgain_10368_10375": [],
+      "unused_hole_10560_10567": [],
+      "holdout_10144_10151": [],
+      "validation_11000_11031": [],
+      "gr_final_20000_20999": [],
+      "held_unused_10624_10631": []
+    },
+    "ok": true
+  },
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "recipe": {
+    "nov3_start0": [
+      0.25,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0
+    ],
+    "qaoa_start0": [
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "n_params_nov3": 12,
+    "n_params_qaoa": 6,
+    "T": 762,
+    "ok": true
+  },
+  "ledger_quadratic": {
+    "ok": true,
+    "ledger": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 80,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 128
+    }
+  },
+  "probe": {
+    "seed_not_fitted": 10018,
+    "nov3_L3_seconds": 0.011466207997727906,
+    "nov3_L3_energy": 1.1028563203040678,
+    "projected_Q6144_cell_seconds": 70.44838193804026,
+    "rss_kib_start": 116000,
+    "rss_kib_after": 116000,
+    "allowed": true,
+    "no_spsa": true
+  },
+  "not_spread8": true,
+  "not_anneal": true,
+  "not_pair_shell": true,
+  "not_vm": true,
+  "if_fail_stop_no_q4096": true,
+  "no_gr_patch": true,
+  "no_adoption_gate": true,
+  "holdout_l2_fail_stands": true,
+  "compiler_stream_closed": true,
+  "no_spsa_on_panel_hamiltonian_in_this_module": true,
+  "historical_L3_q1024_descriptive": {
+    "v7_10018_25": {
+      "mean_dE": 0.0193,
+      "ci": [
+        -0.045,
+        0.075
+      ]
+    },
+    "spread8_equal4_10376_83": {
+      "mean_dE": -0.0315,
+      "ci": [
+        -0.106,
+        0.043
+      ]
+    },
+    "anneal_v4_10456_63": {
+      "mean_dE": -0.0477,
+      "ci": [
+        -0.121,
+        0.022
+      ]
+    },
+    "not_a_paired_test": true
+  },
+  "label_rule": "L3_2XBUDGET_ESTIMATE_NEGATIVE_CI iff mean Nov3-QAOA dE CI entirely <0 on n=8; else FAIL or UNSTABLE"
+}
