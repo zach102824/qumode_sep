@@ -1,0 +1,85 @@
+{
+  "ok": true,
+  "failure": null,
+  "blocker": null,
+  "version": "N3INIT_v6",
+  "candidate_not_benchmark_adoption": true,
+  "arm": "qaoa_center4",
+  "method": "QAOA",
+  "method_id": 0,
+  "N": 18,
+  "seed": 10019,
+  "L": 3,
+  "q": 512,
+  "Q": 1536,
+  "procedural_cap": 1536,
+  "Bstar": 0.6174921364334417,
+  "Bstar_reused_from_v5": true,
+  "E0": -13.8422278986626,
+  "E_plus": -11.11485845580195,
+  "F_plus": 0.24569620685593968,
+  "E": -13.446861541619914,
+  "E_error_over_N": 0.021964797613482565,
+  "F": 0.667926954510802,
+  "eta": 0.5597621959382388,
+  "escaped": true,
+  "which": "polyak64",
+  "start_id": 2,
+  "n_iter": 186,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -0.9951988503867941,
+      "E": -13.419827561069674,
+      "which": "last",
+      "a_gain": 0.016619245863110643
+    },
+    {
+      "start_id": 1,
+      "e_init": -2.5281178682873837,
+      "E": -13.419762327118972,
+      "which": "last",
+      "a_gain": 0.019408616668404207
+    },
+    {
+      "start_id": 2,
+      "e_init": -11.783310199765166,
+      "E": -13.446861541619914,
+      "which": "polyak64",
+      "a_gain": 0.06558991521404624
+    },
+    {
+      "start_id": 3,
+      "e_init": -1.569987627036725,
+      "E": -13.356322598352943,
+      "which": "last",
+      "a_gain": 0.020286988770686916
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 1488,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1536
+  },
+  "x": [
+    -1.544629408409427,
+    0.00013617484286360855,
+    1.294432801451857,
+    -0.9971949566460502,
+    -0.4309278939273058,
+    -1.3343418374573053
+  ],
+  "seconds": 170.26232198400066,
+  "cpu_seconds": 170.08314791399994,
+  "peak_rss_kib": 124360,
+  "prereg_sha256": "b93d7c64fcd0f54125e86118acbf85d9361e510f7c19346e584008724dd78ecd",
+  "development_not_population": true,
+  "qaoa_center_is_derived": true,
+  "fidelity_posthoc": true,
+  "exact_v4_recipe": true,
+  "not_retuned_from_n18_l1": true
+}
