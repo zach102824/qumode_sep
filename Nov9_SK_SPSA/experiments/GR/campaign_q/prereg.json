@@ -1,0 +1,89 @@
+{
+  "recipe_id": "NOV3_QAOA_QL_v1",
+  "owner": "Zach t3328u 2026-11-09 20:23 Asia/Shanghai. Seed ownership t3334u 20:34 Asia/Shanghai: this cloud keeps dev 10000-10009 only. v1 is immutable after this file is committed.",
+  "supersedes": "R3-A ablation priority. Ablation is checkpointed in experiments/GR/R3A_CHECKPOINT.md and is not expanded. Local R4 depth transfer is not this recipe and is not promoted.",
+  "claim_limit": "Report measured cells only. q=1024 per layer is a reference budget, not a proof that the optimizer converged. A minimal q is relative to that reference. n=1000 standard error is not optimizer accuracy. No hardware affordability claim. No universal win.",
+  "ansatz": {
+    "nov3": "original Nov3rd: one shared gamma, one shared thetaK, one shared thetaM for every layer, three polynomial shell parameters per layer, interleaved packing, no per-layer gamma",
+    "qaoa": "p=L only, 2L independent angles (gamma_l, beta_l)",
+    "circuit_change": false,
+    "optimizer": "SPSA",
+    "forbidden_optimizers": ["BFGS", "natural_gradient", "GS_oracle", "fidelity_oracle"],
+    "selection": "lowest energy among charged candidates",
+    "fidelity": "squared overlap on the energy-selected state, post hoc",
+    "warm_start": false,
+    "cross_depth_transfer_queries": 0
+  },
+  "hamiltonian": {
+    "form": "sum_{i<j} J_ij Z_i Z_j - B Z-field replaced by - B_star sum_i X_i",
+    "J": "i.i.d. normal(0, 1/sqrt(N)), variance 1/N, row-major upper triangle, shared by every method, L, and q",
+    "B_star_meaning": "per-instance refined maximizer of the balanced-cut ground-state entropy. Not an assumed thermodynamic critical field.",
+    "cut": "logical sites 0 .. floor(N/2)-1, LSB = site 0",
+    "entropy": "nats, natural log, Schmidt probabilities from singular values squared, drop <= 1e-300",
+    "primary_scan": {"lo": 0.05, "hi": 3.0, "n": 60, "refine": "bounded minimize_scalar xatol 1e-6 on neighboring grid points"},
+    "edge_policy": "If the scan max is on a boundary, extend the window (low side /4 down to 1e-4, high side *2 up to 48) up to 6 times with overlap. Unresolved boundary or a failed positive-even GS contract is a prep failure for that seed. Do not replace the seed and do not pick a nearby interior point.",
+    "gs_contract": "positive amplitudes (min > -1e-8), even parity, residual <= 1e-7, gap > 0, delta_odd > 0, delta_even > 0. A tiny odd-sector gap is recorded and is not itself a failure. Exact GS data are used only for field prep and post-hoc metrics."
+  },
+  "packing": "interleaved [[a, a+N/3, a+2N/3] for a in 0..N/3). N in this campaign is divisible by 3. Odd-N cut indexing is a conformance check only.",
+  "shell": "s1*p + s2*C(p,2) + s3*[p==3], same polynomial as N3X_matched_v1, not the Walsh chart",
+  "sigma": {"nov3_gamma": 0.1, "nov3_thetaK": 0.25, "nov3_thetaM": 0.25, "nov3_shell": 0.15, "qaoa_angle": 0.1},
+  "starts": {
+    "count": 4,
+    "start0": "deterministic: Nov3 gamma=0.25 and other controls 0; QAOA every angle 0.25",
+    "start1to3": "Nov3 gamma, thetaK, thetaM ~ U(-0.5,0.5), shells ~ U(-0.3,0.3); QAOA each angle ~ U(-0.5,0.5)",
+    "rng": "SeedSequence([seed, N, round(10*B_star), L, method_id, start_id, stream]) with stream 0 SPSA and stream 2 init. q is not part of the seed.",
+    "budget_coupling": "A smaller q follows the same four starts and stops earlier. It is not a fresh restart. Selection uses only the points that run charged."
+  },
+  "method_id": {"QAOA": 0, "Nov3rd": 1},
+  "spsa": {
+    "c": 0.1,
+    "A": 25.0,
+    "ck": "c/(k+1)^0.101",
+    "ak": "a/(k+1+A)^0.602",
+    "a_from_median": "median |g|/sigma over 4 calibration perturbations, initial step 0.5 sigma",
+    "clip": "2 sigma",
+    "distribution": "Rademacher",
+    "monitoring": 0
+  },
+  "budget": {
+    "formula": "Q = q * L",
+    "meaning": "q is the per-layer query rate. The inclusive total is q*L, not a flat 1024.",
+    "q_candidates": [1024, 512, 256, 128, 64, 32, 16],
+    "halving": "every candidate is run down to the accounting floor. Degradation is measured, not used to skip a cell.",
+    "starts_divisor": 4,
+    "per_start": "1 init + 8 calibration + 2*T iteration + 3 selection",
+    "selection_points": ["init", "last", "polyak mean of last min(64,T) iterates", "midpoint iterate"],
+    "runnable_if": "Q divisible by 4, per_start = Q/4 >= 16, and (per_start-12) even so T>=2",
+    "accounting_floor": "smallest candidate q that is still runnable at that L. q=8 and below never fit L<=6.",
+    "diagnostics_outside_Q": ["classical B* prep", "one post-hoc energy recomputation of the selected x", "fidelity", "throughput timings at b=0.5"]
+  },
+  "N": [6, 9, 12, 15, 18],
+  "L": [1, 2, 3, 4, 5, 6],
+  "methods": ["Nov3rd", "QAOA"],
+  "order": "Finish dev 10000-10009 for one N, write FREEZE_n{N}.json, then that N's final seeds, then the next N. N increases 6,9,12,15,18. Do not wait on LE, FT, or local.",
+  "immutable_v1": "After this preregistration is committed, the ansatz, SPSA allocation, and halving grid are v1. Dev outcomes and later ideas do not edit a running panel. A later idea is a new recipe id with its own evaluation.",
+  "seeds": {
+    "dev": {"start": 10000, "stop": 10009, "role": "this cloud only. All L, all runnable q, both methods, before finals of that N."},
+    "not_this_worker": {
+      "le_conditioning": {"start": 10010, "stop": 10017},
+      "ft_init_restart": {"start": 10018, "stop": 10025},
+      "local_spsa_schedules": {"start": 10026, "stop": 10031}
+    },
+    "final": {"start": 20000, "stop": 20999, "n": 1000, "role": "opened only after that N's dev rows are on disk and FREEZE_n{N}.json matches this protocol sha with retuned=false"},
+    "validation_blocked": {"start": 11000, "stop": 11031}
+  },
+  "tolerances_mean_F": [0.01, 0.02, 0.05],
+  "tolerance_rule": "For each stage, N, L, method, and tolerance tau, q_star(tau) is the smallest runnable q such that every runnable q'>=q has |mean paired (F(q')-F(1024))| <= tau. Also report the 95% CI of that paired difference (1.96 * sample sd / sqrt(n), ddof=1). If the CI half-width exceeds tau, say the tolerance is not resolved at this n. q_star does not delete final cells. The final grid stays the preregistered runnable grid.",
+  "ci": {"z": 1.96, "ddof": 1},
+  "replay_gate": {
+    "against": "results/GR/r2_b3 N3X_matched_v1",
+    "cell": {"N": 6, "seed": 10000, "L": 1, "q": 1024, "methods": ["Nov3rd", "QAOA"]},
+    "hard": "abs energy difference <= 1e-8 and abs a_gain difference <= 1e-9",
+    "note": "At L=1 and q=1024, Q=1024 and the 4-start split matches N3X_matched_v1. A miss stops the campaign."
+  },
+  "failures": "Preserve the traceback, retry a deterministic job once, then keep the failure record. Do not drop a seed because its fidelity is low. Do not replace a prep failure.",
+  "workers": 3,
+  "process_start": "fork",
+  "threads_per_process": 1,
+  "retry_limit": 1
+}

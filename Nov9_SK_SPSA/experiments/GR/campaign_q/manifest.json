@@ -1,0 +1,47 @@
+{
+  "recipe_id": "NOV3_QAOA_QL_v1",
+  "protocol": "Nov9_SK_SPSA/experiments/GR/campaign_q/prereg.json",
+  "human_protocol": "Nov9_SK_SPSA/experiments/GR/campaign_q/PROTOCOL.md",
+  "runner": "Nov9_SK_SPSA/experiments/GR/campaign_q/campaign.py",
+  "results": "Nov9_SK_SPSA/results/GR/campaign_q/",
+  "ablation_checkpoint": "Nov9_SK_SPSA/experiments/GR/R3A_CHECKPOINT.md",
+  "branch": "cursor/nov9-gr-spins-cavities-3208",
+  "pr": "https://github.com/zach102824/qumode_sep/pull/77",
+  "seed_ownership": {
+    "this_cloud_dev": "10000-10009",
+    "le": "10010-10017",
+    "ft": "10018-10025",
+    "local": "10026-10031",
+    "validation_blocked": "11000-11031",
+    "final_after_freeze": "20000-20999"
+  },
+  "stages_in_order": [
+    "static conformance and b=0.5 throughput timings",
+    "replay of N3X_matched_v1 at N=6 seed 10000 L=1 q=1024, which is inside the dev grid",
+    "for N in 6,9,12,15,18: dev seeds 10000-10009, then FREEZE_n{N}.json, then final seeds 20000-20999"
+  ],
+  "counts": {
+    "runnable_q_slots_per_method": {"L1": 5, "L2": 6, "L3": 6, "L4": 7, "L5": 7, "L6": 7, "sum": 38},
+    "runs_per_seed_full_grid": 76,
+    "dev_runs_per_N": 760,
+    "dev_runs": 3800,
+    "final_runs_per_N": 76000,
+    "final_runs": 380000,
+    "panel_spsa_runs": 383800,
+    "note": "Counts are planned jobs. Completed n is whatever is on disk with status ok. Do not describe the plan as a finished average."
+  },
+  "artifacts": [
+    "results/GR/campaign_q/protocol_sha.txt",
+    "results/GR/campaign_q/STATUS.json",
+    "results/GR/campaign_q/PROGRESS.csv",
+    "results/GR/campaign_q/SUMMARY.md",
+    "results/GR/campaign_q/scaling.json",
+    "results/GR/campaign_q/conformance.json",
+    "results/GR/campaign_q/events.jsonl",
+    "results/GR/campaign_q/failures.jsonl",
+    "results/GR/campaign_q/runs/nXX/sSEED/L_q_method.json",
+    "results/GR/campaign_q/instances/nXX_sSEED.json",
+    "results/GR/campaign_q/FREEZE_n{N}.json"
+  ],
+  "instance_vectors": "Ground-state vectors live in results/GR/campaign_q/cache/ and are a local cache, not part of the commit."
+}
