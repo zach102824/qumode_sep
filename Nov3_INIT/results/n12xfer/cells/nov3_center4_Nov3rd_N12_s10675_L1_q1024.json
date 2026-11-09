@@ -1,0 +1,87 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n12xfer",
+  "arm": "nov3_center4",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "n_params": 6,
+  "N": 12,
+  "seed": 10675,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "test",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.685729953631894,
+  "E0": -10.666072646662071,
+  "E_plus": -8.228759443582728,
+  "F_plus": 0.330436255357132,
+  "E": -10.278748224121138,
+  "E_error_over_N": 0.032277035211744444,
+  "F": 0.7559789831762562,
+  "eta": 0.6355522251971697,
+  "which": "last",
+  "start_id": 3,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -4.664955648143748,
+      "E": -10.22758910129108,
+      "which": "last",
+      "a_gain": 0.05060038839296049
+    },
+    {
+      "start_id": 1,
+      "e_init": -8.252710561877096,
+      "E": -10.123411236886119,
+      "which": "polyak64",
+      "a_gain": 0.740674245468136
+    },
+    {
+      "start_id": 2,
+      "e_init": -7.249528868842235,
+      "E": -10.221498841273196,
+      "which": "last",
+      "a_gain": 0.051429859870924785
+    },
+    {
+      "start_id": 3,
+      "e_init": -6.583042750610987,
+      "E": -10.278748224121138,
+      "which": "last",
+      "a_gain": 0.12341150970202926
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    -0.27481937508266213,
+    -0.3531096603022482,
+    -0.02449486923365987,
+    -0.8671847828365885,
+    0.09253939275727995,
+    -0.33272206035519775
+  ],
+  "seconds": 0.643476577999536,
+  "cpu_seconds": 0.64041031,
+  "peak_rss_kib": 58892,
+  "prereg_sha256": "3b2b43713c349ff3d9749bc170a7fb771ddde98d942761d2b40a1c70e484cc3d",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_aggregator": "mean",
+  "do_not_switch_primary_to_median": true
+}
