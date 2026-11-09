@@ -39,3 +39,7 @@ The 512 simultaneous probes are unused. They count on the global research ledger
 Do not describe the 425984 as a cap that included C1’s scale training. The negative N9 conclusion stands: on the fit cap, with extra outside-cap training that C0 did not get, C1 still failed the preregistered holdout energy-and-fidelity rule.
 
 One uncharged diagnostic state rebuild per fit is not in the 428160. Ground-state preparation is classical and not in it either.
+
+## B3 addendum (separate, after this audit)
+
+B3 spent 147456 energy queries. All of them are inside its own Q=qL, including 6656 axial calibration queries. Outside-cap queries for B3: 0. These 147456 are not part of the 425984 and do not revise it. Stream total incurred energy queries: 428160 + 147456 = 575616.
