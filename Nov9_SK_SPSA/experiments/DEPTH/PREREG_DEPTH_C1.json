@@ -1,0 +1,58 @@
+{
+  "experiment": "DEPTH C1: charged L1-continuation vs cold L, ordinary IID SPSA",
+  "written_before_fits": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "throughput_axis_closed": true,
+  "conditioning_closed": ["C1", "B3", "B4"],
+  "hypothesis": {
+    "id": "charged_L1_continuation",
+    "one_sentence": "If L>1 fade is mostly a cold start, then spending part of Q=qL on an L1 fit and continuing from that energy-selected point into the extra layers will beat a cold L fit on energy.",
+    "not": "No free L1. No extra gain/scale. No orthogonal frames."
+  },
+  "seeds": {
+    "ids": [10036, 10037, 10038, 10039, 10040, 10041, 10042, 10043],
+    "role": "exclusive_unread_dev",
+    "band": [10036, 10043],
+    "forbidden": ["10010-10035", "10018-10031", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [12, 15],
+    "L": [2, 3],
+    "q": 1024,
+    "Q": {"2": 2048, "3": 3072},
+    "circuits": ["Nov3", "QAOA"],
+    "arms": ["cold", "cont"]
+  },
+  "allocation": {
+    "cold": "Ordinary C0, 4 starts, cap Q=qL, TQA+U(-0.6,0.6). All calibration, perturb, candidates inside Q.",
+    "cont_L1": "Ordinary C0 at L=1, 4 starts, cap 1024, charged to the same arm Q. Energy selects x*_L1.",
+    "cont_rest": "Remaining Q-1024 at depth L. Start 0 is pad(x*_L1). Starts 1-3 perturb only the new-layer coordinates U(-0.6,0.6). Ordinary C0 on that remainder.",
+    "pad_Nov3": "[γ,θK,θM,s_layer1, 0,0,0,...] extra shells zero. Shared γ is still applied on new layers.",
+    "pad_QAOA": "gammas [γ0,0,...], betas [β0,0,...]. Extra layers are identity.",
+    "QAOA": "p=L, same split, same Q."
+  },
+  "optimizer": {
+    "kind": "ordinary IID Rademacher SPSA, C0 simultaneous gain",
+    "starts": 4,
+    "ncal": 4,
+    "A": 25,
+    "forbidden": ["BFGS", "natural gradient", "B3/B4 shrink", "orthogonal Δ"]
+  },
+  "selection": "Lowest counted candidate energy. F post hoc. GS/F never select.",
+  "gate": {
+    "cell": "N15 L3 Nov3, n=8, energy E_cont - E_cold",
+    "adopt_continuation": "bootstrap 95% CI of the mean ΔE lies entirely below 0",
+    "otherwise": "reject continuation. Do not scan another split."
+  },
+  "report": [
+    "continuation vs cold within method: paired Δ(E-E0)/N and ΔF, mean, CI, n(ΔE<0), n(ΔF>0)",
+    "Nov3 vs QAOA using per-seed energy-better of cold/cont, same paired stats"
+  ],
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "this_stream": "DEPTH_C1, counted separately",
+    "new_charge": "128 fits: 64×2048 + 64×3072 = 327680"
+  }
+}
