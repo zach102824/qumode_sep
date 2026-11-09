@@ -130,4 +130,13 @@ python3 -m Nov3_INIT.run_vm --phase run
 python3 -m Nov3_INIT.run_vm --phase summary
 ```
 
+Fock-cutoff (`PREREG_CUTOFF.md`) is leakage validation of frozen v4 center-4, not an optimizer retune. D0 = NF=8 (Hilbert dim 8 per cavity). D0+2 = NF=10 with ideal \(W_L\) pad. N=15, L=1 and L=2, seeds `10520..10527`. Compiled \(W_L\) is not modelled. No GR patch.
+
+```bash
+python3 -m Nov3_INIT.conformance_cutoff
+python3 -m Nov3_INIT.run_cutoff --phase bstar
+python3 -m Nov3_INIT.run_cutoff --phase run
+python3 -m Nov3_INIT.run_cutoff --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.

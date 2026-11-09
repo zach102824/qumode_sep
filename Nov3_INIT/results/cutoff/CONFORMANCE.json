@@ -1,0 +1,109 @@
+{
+  "ok": true,
+  "prereg_sha256": "f678e806b12d17f12578199238677cdfbd82147aac2b833b128cf64dc130c397",
+  "historical_queries_preserved": 2695168,
+  "D0": 8,
+  "D0_plus_2": 10,
+  "D0_plus_4_not_run": true,
+  "ideal_W_L_only": true,
+  "compiled_W_L_not_modelled": true,
+  "not_nov9": true,
+  "seeds": {
+    "band": [
+      10520,
+      10521,
+      10522,
+      10523,
+      10524,
+      10525,
+      10526,
+      10527
+    ],
+    "n": 8,
+    "overlaps": {
+      "local_r30_10504_10519": [],
+      "ft_vm_10480_10487": [],
+      "le_n21_10432_10439": [],
+      "ft_and_prior_le_10463": [],
+      "holdout_10144_10151": [],
+      "validation_11000_11031": [],
+      "gr_final_20000_20999": []
+    },
+    "ok": true
+  },
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "params": {
+    "N": 15,
+    "D0": 8,
+    "D0_plus_2": 10,
+    "counts": {
+      "1": {
+        "QAOA": 2,
+        "Nov3rd": 6,
+        "Q": 1024,
+        "T": 122
+      },
+      "2": {
+        "QAOA": 4,
+        "Nov3rd": 9,
+        "Q": 2048,
+        "T": 250
+      }
+    },
+    "ok": true
+  },
+  "reduction": {
+    "nf8_equals_logical": true,
+    "fidelity_nf8": 0.9999999999999964,
+    "dE_nf8": 1.5543122344752192e-15,
+    "nf10_equals_nf8": true,
+    "dE_nf10": 4.440892098500626e-16,
+    "p_leak_nf8": 3.9968028886505635e-15,
+    "p_leak_nf10": 3.9968028886505635e-15,
+    "p_leak_both_numerical_zero": true,
+    "ideal_W_L_pad_does_not_leak": true,
+    "compiled_W_L_not_modelled": true,
+    "w_pad": {
+      "w8_is_h3": true,
+      "w10_code_is_h3": true,
+      "w10_pad_identity": true,
+      "snap_f_ge_8_zero": true,
+      "snap_matches_ft": true,
+      "ok": true
+    }
+  },
+  "ledger_quadratic": {
+    "nov3": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 80,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 128
+    },
+    "qaoa": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 80,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 128
+    },
+    "ok": true,
+    "method_ids": {
+      "Nov3rd": 1,
+      "QAOA": 0
+    },
+    "rng_omits_nf": true
+  },
+  "label_rule": "CUTOFF_ROBUST_L1 iff L=1 Nov3-QAOA mean dE CI entirely <0 at both D0 and D0+2; else CUTOFF_SENSITIVE",
+  "no_gr_patch": true,
+  "no_candidacy_file": true,
+  "no_spsa_on_hamiltonian_in_this_module": true,
+  "no_refit_10368_10375": true
+}

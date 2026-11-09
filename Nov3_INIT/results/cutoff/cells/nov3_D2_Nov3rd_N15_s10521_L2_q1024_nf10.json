@@ -1,0 +1,100 @@
+{
+  "ok": true,
+  "failure": null,
+  "blocker": null,
+  "version": "N3INIT_cutoff",
+  "arm": "nov3_D2",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "nf": 10,
+  "D0": 8,
+  "n_params": 9,
+  "N": 15,
+  "seed": 10521,
+  "L": 2,
+  "q": 1024,
+  "Q": 2048,
+  "procedural_cap": 2048,
+  "same_query_budget_across_arms": true,
+  "Bstar": 0.54108457214399,
+  "E0": -11.548666135094132,
+  "E_plus": -8.116268582159849,
+  "F_plus": 0.14431732456672167,
+  "E": -10.914972186098467,
+  "E_error_over_N": 0.04224626326637768,
+  "F": 0.6367861408384996,
+  "eta": 0.5755273893121821,
+  "escaped": true,
+  "which": "last",
+  "start_id": 3,
+  "n_iter": 250,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -0.7262492590476457,
+      "E": -10.913457158059472,
+      "which": "last",
+      "a_gain": 0.024408196575376562
+    },
+    {
+      "start_id": 1,
+      "e_init": -2.6714311775697945,
+      "E": -10.83067666984979,
+      "which": "last",
+      "a_gain": 0.04624767538143822
+    },
+    {
+      "start_id": 2,
+      "e_init": -1.6848572572554468,
+      "E": -10.854625813012824,
+      "which": "last",
+      "a_gain": 0.03803660315002615
+    },
+    {
+      "start_id": 3,
+      "e_init": -1.911281003809838,
+      "E": -10.914972186098467,
+      "which": "last",
+      "a_gain": 0.05952174276080151
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 2000,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 2048
+  },
+  "x": [
+    -0.17155697506098339,
+    -0.43052090785734004,
+    0.0005337377587756603,
+    -0.41724225375494556,
+    0.02141959120396529,
+    -0.18370182518938036,
+    -0.6560914038396577,
+    -0.015284157072196028,
+    0.2834732771755522
+  ],
+  "leakage": {
+    "p_leak": 9.880984919163893e-15,
+    "p_code": 0.9999999999999901,
+    "mean_n_per_cavity": 3.499999999999966,
+    "mean_n_total": 17.49999999999983,
+    "p_highest_any_cavity": 9.769962616701378e-15,
+    "norm": 0.99999999999999,
+    "norm_deficit": 9.992007221626409e-15,
+    "nf": 10,
+    "formula": "p_leak=1-P(all cavities in 0..7); mean_n=E[n_c]; p_highest=1-P(all n_c < nf-1); H^ext energy"
+  },
+  "seconds": 32.36486539100224,
+  "cpu_seconds": 32.318249466,
+  "peak_rss_kib": 118012,
+  "prereg_sha256": "f678e806b12d17f12578199238677cdfbd82147aac2b833b128cf64dc130c397",
+  "fidelity_posthoc": true,
+  "ideal_W_L_only": true,
+  "compiled_W_L_not_modelled": true,
+  "rng_omits_nf": true
+}

@@ -1,0 +1,93 @@
+{
+  "ok": true,
+  "failure": null,
+  "blocker": null,
+  "version": "N3INIT_cutoff",
+  "arm": "qaoa_D2",
+  "method": "QAOA",
+  "method_id": 0,
+  "nf": 10,
+  "D0": 8,
+  "n_params": 2,
+  "N": 15,
+  "seed": 10523,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "procedural_cap": 1024,
+  "same_query_budget_across_arms": true,
+  "Bstar": 0.6122475056937262,
+  "E0": -12.083450652717296,
+  "E_plus": -9.183712585405893,
+  "F_plus": 0.20409164624343978,
+  "E": -11.26909176969975,
+  "E_error_over_N": 0.05429059220116971,
+  "F": 0.5428977216885521,
+  "eta": 0.4256847837392356,
+  "escaped": true,
+  "which": "last",
+  "start_id": 2,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -5.874846916987165,
+      "E": -11.269091768945474,
+      "which": "last",
+      "a_gain": 0.04197694593880429
+    },
+    {
+      "start_id": 1,
+      "e_init": -3.149635289941914,
+      "E": -11.26909074506903,
+      "which": "last",
+      "a_gain": 0.020692092548740784
+    },
+    {
+      "start_id": 2,
+      "e_init": -8.966080589558388,
+      "E": -11.26909176969975,
+      "which": "last",
+      "a_gain": 0.07000939291712889
+    },
+    {
+      "start_id": 3,
+      "e_init": -5.1103579020883245,
+      "E": -11.269091656382562,
+      "which": "last",
+      "a_gain": 0.023065000479728738
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024
+  },
+  "x": [
+    0.30080620074552905,
+    -0.4003463782625368
+  ],
+  "leakage": {
+    "p_leak": 0.0,
+    "p_code": 1.0,
+    "mean_n_per_cavity": 1.4999999999999993,
+    "mean_n_total": 7.4999999999999964,
+    "p_highest_any_cavity": 0.0,
+    "norm": 0.9999999999999997,
+    "norm_deficit": 3.3306690738754696e-16,
+    "nf": 10,
+    "formula": "qubit QAOA: p_leak=0 by construction; mean_n is mean Hamming weight per 3-qubit cavity"
+  },
+  "seconds": 2.8450363260017184,
+  "cpu_seconds": 2.841341528000001,
+  "peak_rss_kib": 117796,
+  "prereg_sha256": "f678e806b12d17f12578199238677cdfbd82147aac2b833b128cf64dc130c397",
+  "fidelity_posthoc": true,
+  "ideal_W_L_only": true,
+  "compiled_W_L_not_modelled": true,
+  "rng_omits_nf": true
+}

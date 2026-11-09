@@ -1,0 +1,97 @@
+{
+  "ok": true,
+  "failure": null,
+  "blocker": null,
+  "version": "N3INIT_cutoff",
+  "arm": "nov3_D2",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "nf": 10,
+  "D0": 8,
+  "n_params": 6,
+  "N": 15,
+  "seed": 10520,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "procedural_cap": 1024,
+  "same_query_budget_across_arms": true,
+  "Bstar": 0.6768137160953972,
+  "E0": -12.772232144210388,
+  "E_plus": -10.152205741430958,
+  "F_plus": 0.25669272562501955,
+  "E": -12.288229756977266,
+  "E_error_over_N": 0.03226682581554149,
+  "F": 0.6887780256229861,
+  "eta": 0.5813010512527151,
+  "escaped": true,
+  "which": "last",
+  "start_id": 3,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -6.4422837160651465,
+      "E": -12.262752515604253,
+      "which": "last",
+      "a_gain": 0.0647248911013194
+    },
+    {
+      "start_id": 1,
+      "e_init": -8.067281954170618,
+      "E": -12.263712562107141,
+      "which": "last",
+      "a_gain": 0.11927384171045083
+    },
+    {
+      "start_id": 2,
+      "e_init": -7.4470838893699955,
+      "E": -12.171962265282035,
+      "which": "last",
+      "a_gain": 0.06153274482724851
+    },
+    {
+      "start_id": 3,
+      "e_init": -6.141527275621055,
+      "E": -12.288229756977266,
+      "which": "last",
+      "a_gain": 0.06720512147540011
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024
+  },
+  "x": [
+    0.3015937869565222,
+    -0.37584898186827115,
+    -0.012129254183904032,
+    0.8414707093989203,
+    -0.005838152701864547,
+    0.3902728922134911
+  ],
+  "leakage": {
+    "p_leak": 4.6629367034256575e-15,
+    "p_code": 0.9999999999999953,
+    "mean_n_per_cavity": 3.4999999999999845,
+    "mean_n_total": 17.499999999999922,
+    "p_highest_any_cavity": 4.6629367034256575e-15,
+    "norm": 0.9999999999999962,
+    "norm_deficit": 3.774758283725532e-15,
+    "nf": 10,
+    "formula": "p_leak=1-P(all cavities in 0..7); mean_n=E[n_c]; p_highest=1-P(all n_c < nf-1); H^ext energy"
+  },
+  "seconds": 12.760411568000563,
+  "cpu_seconds": 12.756458013,
+  "peak_rss_kib": 113732,
+  "prereg_sha256": "f678e806b12d17f12578199238677cdfbd82147aac2b833b128cf64dc130c397",
+  "fidelity_posthoc": true,
+  "ideal_W_L_only": true,
+  "compiled_W_L_not_modelled": true,
+  "rng_omits_nf": true
+}

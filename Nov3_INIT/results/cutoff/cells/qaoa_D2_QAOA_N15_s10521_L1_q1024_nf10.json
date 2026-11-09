@@ -1,0 +1,93 @@
+{
+  "ok": true,
+  "failure": null,
+  "blocker": null,
+  "version": "N3INIT_cutoff",
+  "arm": "qaoa_D2",
+  "method": "QAOA",
+  "method_id": 0,
+  "nf": 10,
+  "D0": 8,
+  "n_params": 2,
+  "N": 15,
+  "seed": 10521,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "procedural_cap": 1024,
+  "same_query_budget_across_arms": true,
+  "Bstar": 0.54108457214399,
+  "E0": -11.548666135094132,
+  "E_plus": -8.116268582159849,
+  "F_plus": 0.14431732456672167,
+  "E": -10.456361868660082,
+  "E_error_over_N": 0.07282028442893669,
+  "F": 0.4470900101895575,
+  "eta": 0.3538375782465453,
+  "escaped": true,
+  "which": "last",
+  "start_id": 1,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -4.3600893200490525,
+      "E": -10.456361865689956,
+      "which": "last",
+      "a_gain": 0.04299150521074057
+    },
+    {
+      "start_id": 1,
+      "e_init": -9.180690687715092,
+      "E": -10.456361868660082,
+      "which": "last",
+      "a_gain": 0.12861580088432922
+    },
+    {
+      "start_id": 2,
+      "e_init": -7.226275391521392,
+      "E": -10.456361859647487,
+      "which": "last",
+      "a_gain": 0.02137402362949536
+    },
+    {
+      "start_id": 3,
+      "e_init": -6.473357549011199,
+      "E": -10.456361406757567,
+      "which": "last",
+      "a_gain": 0.013658789127635696
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024
+  },
+  "x": [
+    0.2900921425439917,
+    -0.38787758388631494
+  ],
+  "leakage": {
+    "p_leak": 0.0,
+    "p_code": 1.0,
+    "mean_n_per_cavity": 1.5,
+    "mean_n_total": 7.5,
+    "p_highest_any_cavity": 0.0,
+    "norm": 1.0000000000000002,
+    "norm_deficit": 2.220446049250313e-16,
+    "nf": 10,
+    "formula": "qubit QAOA: p_leak=0 by construction; mean_n is mean Hamming weight per 3-qubit cavity"
+  },
+  "seconds": 2.7644158100010827,
+  "cpu_seconds": 2.762868675,
+  "peak_rss_kib": 117884,
+  "prereg_sha256": "f678e806b12d17f12578199238677cdfbd82147aac2b833b128cf64dc130c397",
+  "fidelity_posthoc": true,
+  "ideal_W_L_only": true,
+  "compiled_W_L_not_modelled": true,
+  "rng_omits_nf": true
+}
