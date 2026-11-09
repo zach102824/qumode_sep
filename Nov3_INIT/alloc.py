@@ -3,7 +3,10 @@ from __future__ import annotations
 
 import numpy as np
 
-METHOD_ID = {"equal4": {"QAOA": 0, "Nov3rd": 1, "Nov3pair": 2}, "halve8to2": {"QAOA": 71, "Nov3rd": 70}}
+METHOD_ID = {
+    "equal4": {"QAOA": 0, "Nov3rd": 1, "Nov3pair": 2, "SHELL2": 3, "SHELL4": 4},
+    "halve8to2": {"QAOA": 71, "Nov3rd": 70},
+}
 C_PERT = 0.1
 A_SPALL = 25.0
 ALPHA_EXP = 0.602
@@ -88,6 +91,16 @@ def make_rng(seed, n, b, L, method_id, start_id, stream):
 
 def _rademacher(rng: np.random.Generator, n: int) -> np.ndarray:
     return rng.integers(0, 2, size=n).astype(np.float64) * 2.0 - 1.0
+
+
+def shell_a_mult(L: int, ratio: float) -> np.ndarray:
+    """Per-coordinate multiplier on a_k. Uc (γ,θK,θM) stay 1; shells get `ratio`.
+
+    c_k is not scaled, so shell a_k/c_k is `ratio` times the Uc ratio.
+    """
+    m = np.ones(3 + 3 * int(L), dtype=np.float64)
+    m[3:] = float(ratio)
+    return m
 
 
 def _grad(ep: float, em: float, c_k: float, sig: np.ndarray, delta: np.ndarray) -> np.ndarray:
@@ -177,8 +190,12 @@ class Ledger:
         }
 
 
-def spsa_block(propagate, x0: np.ndarray, sigmas: np.ndarray, n_iter: int, rng, ledger: Ledger) -> dict:
-    """One frozen-gain block. propagate(x) -> (energy, aux). Aux of non-selected calls is dropped."""
+def spsa_block(propagate, x0: np.ndarray, sigmas: np.ndarray, n_iter: int, rng, ledger: Ledger, a_mult=None) -> dict:
+    """One frozen-gain block. propagate(x) -> (energy, aux). Aux of non-selected calls is dropped.
+
+    Optional a_mult multiplies the scalar a_k per coordinate. Calibration, c_k, σ, and
+    a0 stay the frozen recipe. Clip remains 2σ.
+    """
 
     def call(x, kind: str):
         ledger.add(kind)
@@ -188,6 +205,12 @@ def spsa_block(propagate, x0: np.ndarray, sigmas: np.ndarray, n_iter: int, rng, 
         return float(energy), aux
 
     x = np.array(x0, dtype=np.float64, copy=True)
+    if a_mult is None:
+        a_mult = np.ones(x.size, dtype=np.float64)
+    else:
+        a_mult = np.asarray(a_mult, dtype=np.float64)
+        if a_mult.shape != (x.size,):
+            raise ValueError(f"a_mult shape {a_mult.shape} != {(x.size,)}")
     e_init, aux_init = call(x, "init")
     grads = []
     for _ in range(4):
@@ -209,7 +232,7 @@ def spsa_block(propagate, x0: np.ndarray, sigmas: np.ndarray, n_iter: int, rng, 
         ep, _aux = call(x + step, "iteration")
         em, _aux = call(x - step, "iteration")
         g = _grad(ep, em, ck, sigmas, delta)
-        update = np.clip(ak * g, -2.0 * sigmas, 2.0 * sigmas)
+        update = np.clip(ak * a_mult * g, -2.0 * sigmas, 2.0 * sigmas)
         x = x - update
         history.append(x.copy())
     last = history[-1]
@@ -232,6 +255,7 @@ def spsa_block(propagate, x0: np.ndarray, sigmas: np.ndarray, n_iter: int, rng, 
         "which": choice[0],
         "e_init": float(e_init),
         "a_gain": float(a_gain),
+        "a_mult": [float(v) for v in a_mult],
     }
 
 
@@ -285,7 +309,7 @@ def x0_pair_center4(C: int, L: int, start_id: int, rng) -> np.ndarray:
     return x
 
 
-def run_equal4(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa, x0_fn=None, C=None) -> dict:
+def run_equal4(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa, x0_fn=None, C=None, a_mult=None) -> dict:
     t_iter = iterations_equal4(Q)
     sig = sigmas_of(method, L, C=C)
     ledger = Ledger()
@@ -294,7 +318,7 @@ def run_equal4(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa, x0_
     draw = x0_equal4 if x0_fn is None else x0_fn
     for start_id, (rng_i, rng_s) in enumerate(zip(rngs_init, rngs_spsa)):
         x0 = draw(method, L, start_id, rng_i)
-        block = spsa_block(propagate, x0, sig, t_iter, rng_s, ledger)
+        block = spsa_block(propagate, x0, sig, t_iter, rng_s, ledger, a_mult=a_mult)
         tails.append({"start_id": start_id, "e_init": block["e_init"], "E": block["E"], "which": block["which"], "a_gain": block["a_gain"]})
         if best is None or block["E"] < best["E"] or (block["E"] == best["E"] and start_id < best["start_id"]):
             best = dict(block)
