@@ -22,4 +22,6 @@ python3 run_pilot.py
 python3 summarize.py
 ```
 
-The pilot is dev seeds 10000–10007 at N = 6 and 9 only. Seeds 11000–11031 and 20000–20999 are refused.
+The pilot is dev seeds 10000–10007 at N = 6 and 9 only. Seeds 11000–11031 and 20000–20999 are refused. Those b = 1 and b = 1.5 runs are the reference. Zach’s 19:05 note keeps the next comparison on the per-instance maximum-entropy field only.
+
+`bstar_harness.py` accepts a manifest of B* values and builds Nov3rd, true-displacement Nov9th, and QAOA p = L job records. `python3 bstar_harness.py launch` is refused. No new field sweep is started from here. See `HARNESS.md`.
