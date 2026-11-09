@@ -13,6 +13,10 @@ U0 remains a sensitivity arm. Fidelity stays unconditioned: no leakage renormali
 
 The local stream separately reported one preliminary Nov3rd point, not a paired result: N=18, seed 10000, b=1, L=1, \(F_+\) about 0.21317 to F about 0.61289 at 1024 queries. No QAOA pair was attached to that single instance. FT does not treat it as a reproduced or comparative result.
 
+## Scope recorded 2026-11-09 19:05 Asia/Shanghai
+
+Zach: the next work focuses on the max-entropy case. No new sweeps at the fixed fields \(b=1\) and \(b=1.5\). Those FT results stay as the reference. The forward harness takes a per-instance \(B^\star\), the transverse field that maximizes the ground-state entanglement on one fixed balanced cut, and it checks that the ground state there is positive, even, and nondegenerate. The corrected Nov9 cutoff for that harness is NF=32. No further SPSA until the next idea assignment.
+
 The table below is the consultation's original recommendation. The 18:41 approval adopts the starred D2–D5 choices as the simulation benchmark. Nov3rd itself never needed an off-code rule, because it uses NF = 8 and an ideal \(W\). Hardware feasibility is still not claimed: compiled \(W_L\) and its leakage are unmodelled.
 
 | id | question | options | ★ recommendation and reason |

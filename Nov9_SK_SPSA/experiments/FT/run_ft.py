@@ -61,6 +61,8 @@ COLD_METHODS = (
 TRAIN_METHODS = ("train_nov9_km", "train_nov9_kmr1", "train_qaoa")
 FT_OF = {"train_nov9_km": "ft_nov9_km", "train_nov9_kmr1": "ft_nov9_kmr1", "train_qaoa": "ft_qaoa"}
 CAPS = (128, 256, 1024)
+# Archived reference grid. Zach, 19:05 Asia/Shanghai 2026-11-09: new work uses
+# per-instance max-entropy B* through harness_nf32.py. Do not launch this grid again.
 BS = (1.0, 1.5)
 LS = (1, 2, 3)
 NS = (6, 9)
