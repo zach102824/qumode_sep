@@ -1,5 +1,7 @@
 # N9-GR bounded development results
 
+Accounting correction, which does not replace the tables below: `CORRECTION.md`. The query total in this file is the SPSA cap counter only. Each run also executed 4 initial-state energy evaluations, so a cap-1024 run performed 1028 energy evaluations.
+
 Zach approved D2–D5 at 18:41 Asia/Shanghai on 2026-11-09 as **simulation assumptions**.
 This is not a hardware-feasibility claim. The ideal logical readout uses an unmodelled `W_L`.
 Validation seeds 11000–11031 and final seeds 20000–20999 were not opened. The recipe is not frozen.
