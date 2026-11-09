@@ -1,0 +1,190 @@
+{
+  "ok": true,
+  "prereg_sha256": "844be1cc91681dd57b43e3b4acaf5aa604b59cb05ef53187f17dda93a875e4cb",
+  "alloc_sha256": "b6cb9d9be11ffe5e3c36a433be9ac80400c50e095124be0ba42876b844a37bcd",
+  "le_alloc_sha_prefix_same_v4_recipe": "de595de59",
+  "historical_sk_queries": 3145904,
+  "expected_independent_queries": 32768,
+  "expected_transfer_queries_if_both_clusters": 56,
+  "expected_new_energy_queries_if_both_clusters": 32824,
+  "expected_total_if_both_clusters": 3178728,
+  "Q": 1024,
+  "q": 1024,
+  "L": 1,
+  "N": 18,
+  "T": 122,
+  "seeds": {
+    "band": [
+      10808,
+      10809,
+      10810,
+      10811,
+      10812,
+      10813,
+      10814,
+      10815,
+      10816,
+      10817,
+      10818,
+      10819,
+      10820,
+      10821,
+      10822,
+      10823
+    ],
+    "train": [
+      10808,
+      10809,
+      10810,
+      10811,
+      10812,
+      10813,
+      10814,
+      10815
+    ],
+    "test": [
+      10816,
+      10817,
+      10818,
+      10819,
+      10820,
+      10821,
+      10822,
+      10823
+    ],
+    "hold_unused": [
+      10624,
+      10625,
+      10626,
+      10627,
+      10628,
+      10629,
+      10630,
+      10631
+    ],
+    "n": 16,
+    "overlaps": {
+      "r34_10712_10727": [],
+      "le_10728_10743": [],
+      "held_unused_10624_10631": [],
+      "unused_hole_10560_10567": [],
+      "pr124_10776_10791": [],
+      "le_hour_10792_10807": [],
+      "pr122_10744_10759": [],
+      "le_pr125_10760_10775": [],
+      "pr120_10696_10711": [],
+      "pr118_10664_10679": [],
+      "pr121_10680_10695": [],
+      "pr119_10648_10663": [],
+      "pr116_10600_10615": [],
+      "pr117_10616_10623": [],
+      "le_10432_10439": [],
+      "le_pr115_10552_10559": [],
+      "local_r31_10536_10551": [],
+      "local_r32_10584_10599": [],
+      "local_r30_10504_10519": [],
+      "local_r33_10632_10647": [],
+      "ft_10520_10535": [],
+      "width_10568_10583": [],
+      "ft_vm_10480_10487": [],
+      "ft_anneal_10456_10463": [],
+      "ft_spread8_10376_10383": [],
+      "shellgain_10368_10375": [],
+      "holdout_10144_10151": [],
+      "validation_11000_11031": [],
+      "gr_final_20000_20999": []
+    },
+    "ok": true
+  },
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "recipe": {
+    "nov3_start0": [
+      0.25,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0
+    ],
+    "qaoa_start0": [
+      0.25,
+      0.25
+    ],
+    "n_params_nov3": 6,
+    "n_params_qaoa": 2,
+    "T": 122,
+    "ok": true
+  },
+  "ledger_quadratic": {
+    "ok": true,
+    "ledger": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 976,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 1024
+    },
+    "n_iter": 122
+  },
+  "probe": {
+    "seed_not_fitted": 10018,
+    "nov3_L1_seconds": 0.09594895999907749,
+    "nov3_L1_energy": -4.1896580572233395,
+    "projected_Q1024_cell_seconds": 98.25173503905535,
+    "rss_kib_start": 745696,
+    "rss_kib_after": 745696,
+    "allowed": true,
+    "no_spsa": true
+  },
+  "freeze_guard": {
+    "n_templates": 7,
+    "planned_transfer_queries": 56,
+    "primary_gate": "TWO_TEMPLATE_TRANSFER_NEGATIVE_CI",
+    "nov3_two_template": {
+      "n_nonempty": 2,
+      "templates": [
+        "plus",
+        "minus"
+      ],
+      "reduces_to_single_cluster": false,
+      "both_empty": false,
+      "two_template": true
+    },
+    "qaoa_two_template": {
+      "n_nonempty": 2,
+      "templates": [
+        "plus",
+        "minus"
+      ],
+      "reduces_to_single_cluster": false,
+      "both_empty": false,
+      "two_template": true
+    },
+    "no_test_peek": true,
+    "ok": true
+  },
+  "primary_gate": "TWO_TEMPLATE_TRANSFER_NEGATIVE_CI",
+  "do_not_switch_primary_after_test": true,
+  "not_unsigned_mean_copy": true,
+  "not_sign_aligned_only_copy": true,
+  "not_architecture_change": true,
+  "not_gr_retune": true,
+  "not_l3_budget": true,
+  "no_gr_patch": true,
+  "no_adoption_gate": true,
+  "holdout_l2_fail_stands": true,
+  "compiler_stream_closed": true,
+  "pr111_closed": true,
+  "pr117_l3_2xbudget_fail_stands": true,
+  "pr118_n12_stands": true,
+  "pr120_n9_unsigned_unstable_stands": true,
+  "pr122_n9_two_template_stands": true,
+  "pr124_n12_two_template_stands": true,
+  "no_spsa_on_panel_hamiltonian_in_this_module": true,
+  "label_rule": "TWO_TEMPLATE_TRANSFER_NEGATIVE_CI iff n=8 better-of-two Nov3-QAOA dE CI entirely <0 on test; else UNSTABLE"
+}

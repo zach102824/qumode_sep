@@ -1,0 +1,88 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n18tmpl",
+  "arm": "nov3_center4",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "n_params": 6,
+  "N": 18,
+  "seed": 10812,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.4309719636007796,
+  "E0": -12.886359371315852,
+  "E_plus": -7.757495344814033,
+  "F_plus": 0.02779050678712591,
+  "E": -11.52994173269779,
+  "E_error_over_N": 0.07535653547878123,
+  "F": 0.29241818373399386,
+  "eta": 0.2721920314441173,
+  "which": "last",
+  "start_id": 1,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -3.7444473017904816,
+      "E": -11.50008724291638,
+      "which": "last",
+      "a_gain": 0.06804746276974505
+    },
+    {
+      "start_id": 1,
+      "e_init": -6.774762742945758,
+      "E": -11.52994173269779,
+      "which": "last",
+      "a_gain": 0.17787220008847146
+    },
+    {
+      "start_id": 2,
+      "e_init": -6.726587629625843,
+      "E": -11.517633637756727,
+      "which": "last",
+      "a_gain": 0.2041495734084983
+    },
+    {
+      "start_id": 3,
+      "e_init": -7.656960721316915,
+      "E": -7.8943981197295106,
+      "which": "polyak64",
+      "a_gain": 0.9992605575282115
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    -0.3282548638026677,
+    -0.4376745051296315,
+    -0.028605881786943347,
+    -0.904166448704043,
+    0.05418364057255016,
+    0.06611896305438272
+  ],
+  "seconds": 76.69101580499773,
+  "cpu_seconds": 76.53238951600001,
+  "peak_rss_kib": 744384,
+  "prereg_sha256": "844be1cc91681dd57b43e3b4acaf5aa604b59cb05ef53187f17dda93a875e4cb",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_gate": "TWO_TEMPLATE_TRANSFER_NEGATIVE_CI",
+  "do_not_switch_primary_after_test": true,
+  "not_unsigned_mean_copy": true
+}
