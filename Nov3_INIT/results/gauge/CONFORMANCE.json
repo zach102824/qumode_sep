@@ -1,0 +1,100 @@
+{
+  "ok": true,
+  "prereg_sha256": "05429bdddd039a055ddf3c1fea144742e405e20d867dccabd581661ac8a9ae92",
+  "historical_sk_queries": 2818048,
+  "expected_new_energy_queries": 65536,
+  "expected_total_if_complete": 2883584,
+  "GAUGE_RNG_ID": 4401,
+  "n_gauges": 4,
+  "seeds": {
+    "band": [
+      10552,
+      10553,
+      10554,
+      10555,
+      10556,
+      10557,
+      10558,
+      10559
+    ],
+    "n": 8,
+    "overlaps": {
+      "local_r31_10536_10551": [],
+      "ft_wl_10528_10535": [],
+      "ft_cutoff_10520_10527": [],
+      "local_r30_10504_10519": [],
+      "le_10432_10439": [],
+      "ft_and_prior_le_10463": [],
+      "holdout_10144_10151": [],
+      "validation_11000_11031": [],
+      "gr_final_20000_20999": []
+    },
+    "ok": true
+  },
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "gauge_uniqueness": {
+    "ok": true,
+    "global_sign_collisions": []
+  },
+  "algebra": {
+    "g": [
+      -1,
+      1,
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    "energy_maps": true,
+    "mapped_residual_ok": true,
+    "E0_id": -4.420561636854577,
+    "E0_g": -4.420561636854577,
+    "residual_id": 2.2952430419518182e-15,
+    "residual_g": 2.2952430419518182e-15,
+    "any_state_dE": 5.551115123125783e-17,
+    "plus_energy_id": -2.4000000000000004,
+    "plus_energy_g": -2.4000000000000004,
+    "plus_invariant": true,
+    "qaoa_center_dE": 0.0,
+    "qaoa_center_dF": 0.0,
+    "qaoa_state_mapped": true,
+    "qaoa_random_dE": 0.0,
+    "qaoa_invariant": true,
+    "nov3_center_dE": 0.0,
+    "nov3_generic_dE": 0.002012513521249204,
+    "nov3_generic_not_covariant": true,
+    "nov3_not_assumed_covariant": true,
+    "entropy_id": 0.6739377548881622,
+    "entropy_g": 0.6739377548881625,
+    "entropy_invariant": true,
+    "transverse_X_ungauged": true
+  },
+  "ledger_quadratic": {
+    "ok": true,
+    "ledger": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 80,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 128
+    }
+  },
+  "rng_omits_gauge": {
+    "ok": true,
+    "note": "make_rng has no gauge id; same (seed, method) draws match across gauges"
+  },
+  "statistical_unit": "8 original instances; gauges correlated; not 32 iid",
+  "primary": "mean over instances of gauge-average Nov3-QAOA E; paired bootstrap 3334",
+  "no_adoption_gate": true,
+  "qaoa_covariance_is_sanity_not_assumption": true,
+  "reuse_original_Bstar": true,
+  "no_spsa_on_hamiltonian_in_this_module": true,
+  "no_gr_patch": true,
+  "compiler_stream_closed": true,
+  "gauge_sha256": "0333db351edb17f4957672e6e242d62832dea599fd4c80ae6fdd5536cc5a25e3"
+}

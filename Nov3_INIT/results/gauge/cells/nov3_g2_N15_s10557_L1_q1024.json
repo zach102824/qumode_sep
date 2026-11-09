@@ -1,0 +1,100 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_gauge",
+  "method_tag": "nov3",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "gid": 2,
+  "g": [
+    1,
+    1,
+    1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1
+  ],
+  "n_flips": 7,
+  "n_params": 6,
+  "N": 15,
+  "seed": 10557,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "procedural_cap": 1024,
+  "same_query_budget_across_arms": true,
+  "rng_omits_gauge": true,
+  "Bstar": 0.8507095028034669,
+  "E0": -15.049315995824784,
+  "E_plus": -12.760642542052004,
+  "F_plus": 0.31879416057722837,
+  "E": -14.579334433407478,
+  "E_error_over_N": 0.03133210416115375,
+  "F": 0.7180287602954386,
+  "eta": 0.5860704307181318,
+  "which": "last",
+  "start_id": 1,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -9.15704384149143,
+      "E": -14.556434370788963,
+      "which": "last",
+      "a_gain": 0.04717683274768992
+    },
+    {
+      "start_id": 1,
+      "e_init": -9.48791363833069,
+      "E": -14.579334433407478,
+      "which": "last",
+      "a_gain": 0.13178227560852768
+    },
+    {
+      "start_id": 2,
+      "e_init": -12.816920890586333,
+      "E": -14.391668571648339,
+      "which": "last",
+      "a_gain": 0.4006541312790888
+    },
+    {
+      "start_id": 3,
+      "e_init": -8.745252882126213,
+      "E": -14.516803775491796,
+      "which": "last",
+      "a_gain": 0.07710098871309504
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024
+  },
+  "x": [
+    0.251593388957772,
+    -0.36279935649022815,
+    0.007950709853792998,
+    0.8325177840483124,
+    0.2192387281484428,
+    -0.8035527403221268
+  ],
+  "seconds": 4.481791577996773,
+  "cpu_seconds": 4.478745593000006,
+  "peak_rss_kib": 116116,
+  "prereg_sha256": "05429bdddd039a055ddf3c1fea144742e405e20d867dccabd581661ac8a9ae92",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true
+}
