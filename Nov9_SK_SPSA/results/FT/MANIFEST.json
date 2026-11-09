@@ -1,0 +1,88 @@
+{
+  "experiment": "N9-FT",
+  "claim_level": "approved-simulation-definition",
+  "D2_D5_user_confirmed": false,
+  "not_a_physical_hardware_or_final_claim": true,
+  "freeze_validation_final_shot_mode": false,
+  "extensions": {
+    "snap_f_ge_8": "phase 0",
+    "UcZ_primary": "Uz: a term touching a leaked cavity is off; every other term acts",
+    "UcZ_sensitivity": "U0 whole component unphased if any cavity is leaked",
+    "energy": "per-term Hext: leaked pair contributes |J|, leaked qubit contributes +b",
+    "readout": "ideal logical readout; compiled W_L cost is not modelled"
+  },
+  "optimizer": "SPSA only",
+  "objective": "energy",
+  "fidelity_not_used_for_stopping_or_selection": true,
+  "ground_state_not_used_as_an_oracle_or_init": true,
+  "git_sha": "92e094dde64839d429c751f972871737cd110ac5",
+  "base_consultation": "92e094dde64839d429c751f972871737cd110ac5",
+  "nf_sim": 16,
+  "alpha_sigma_scale": 0.5,
+  "pilot_seeds": [
+    10000,
+    10001,
+    10002,
+    10003,
+    10004,
+    10005,
+    10006,
+    10007
+  ],
+  "train_seeds": [
+    10008,
+    10009,
+    10010,
+    10011,
+    10012,
+    10013,
+    10014,
+    10015
+  ],
+  "caps": [
+    128,
+    256,
+    1024
+  ],
+  "cold_methods": [
+    "nov9_km_uz",
+    "nov9_kmr1_uz",
+    "nov9_km_kprior_uz",
+    "nov9_km_u0",
+    "nov9b_km",
+    "nov3_km",
+    "qaoa"
+  ],
+  "c_base": 1.0,
+  "spall": {
+    "A": 25,
+    "alpha": 0.602,
+    "gamma": 0.101,
+    "target_step_over_sigma": 0.5,
+    "clip_over_sigma": 2.0
+  },
+  "D2_D5_approved_simulation_definitions": true,
+  "approval": {
+    "who": "Zach",
+    "when_local": "2026-11-09 18:41 Asia/Shanghai",
+    "scope": "simulation definitions D2-D5, not hardware feasibility",
+    "snap_f_ge_8": "phase 0",
+    "UcZ": "terms touching a leaked cavity are off; all other terms act",
+    "energy": "per-term |J_ij| on a leaked pair and +b per leaked qubit",
+    "readout": "ideal logical readout"
+  },
+  "hardware_feasibility_claim": false,
+  "fidelity": "unconditioned, no leakage renormalization, no postselection",
+  "alpha_sigma_note": "sigma_alpha base 0.02 was halved once to 0.01 before any pilot fit so a calibration step changes p_leak by at most 0.01 at the echo init. Same scale for every Nov9 method. QAOA has no alpha.",
+  "local_stream_N18_nov3_preliminary_not_reproduced": {
+    "N": 18,
+    "seed": 10000,
+    "b": 1.0,
+    "L": 1,
+    "F_plus": 0.21317,
+    "F": 0.61289,
+    "queries": 1024,
+    "QAOA_pair": false,
+    "scope": "one instance, reported by the local stream"
+  }
+}

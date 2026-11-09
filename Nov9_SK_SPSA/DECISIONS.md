@@ -1,6 +1,19 @@
 # Nov9th: physical-definition decisions for the user, and what is safe to run now
 
-No reviewed contract defines the physical action of SNAP or \(U_{cZ}\) on Fock levels ≥ 8, or how energy is measured when a cavity leaks. Nov3rd never needed it, because it uses NF = 8 and an ideal \(W\). So Nov9th with a true displacement is **not defined** until D2–D5 are chosen. Below, ★ marks the consultation's recommended default. Workers may launch with the ★ choices, labeled "provisional-★". Any headline claim needs the user to confirm.
+## Approval recorded 2026-11-09 18:41 Asia/Shanghai
+
+Zach approved the recommended simulation definitions for D2–D5. This is an approval of the mathematical benchmark, not a hardware-feasibility claim.
+
+- SNAP phase on Fock levels above 7 is 0.
+- A \(U_{cZ}\) term that touches a leaked cavity is off. Every other term still acts (Uz).
+- Leakage energy is per term: \(|J_{ij}|\) when a pair touches a leaked cavity, and \(+b\) for each leaked qubit.
+- Readout in the simulator is ideal and logical.
+
+U0 remains a sensitivity arm. Fidelity stays unconditioned: no leakage renormalization and no postselection. Cutoff convergence is still required. The compiled cost of \(W_L\) is still unmodelled, so no hardware-feasibility claim follows from this approval. Validation seeds 11000..11031 and final seeds 20000..20999 stay unread until a recipe is frozen after development.
+
+The local stream separately reported one preliminary Nov3rd point, not a paired result: N=18, seed 10000, b=1, L=1, \(F_+\) about 0.21317 to F about 0.61289 at 1024 queries. No QAOA pair was attached to that single instance. FT does not treat it as a reproduced or comparative result.
+
+The table below is the consultation's original recommendation. The 18:41 approval adopts the starred D2–D5 choices as the simulation benchmark. Nov3rd itself never needed an off-code rule, because it uses NF = 8 and an ideal \(W\). Hardware feasibility is still not claimed: compiled \(W_L\) and its leakage are unmodelled.
 
 | id | question | options | ★ recommendation and reason |
 |---|---|---|---|
@@ -38,15 +51,15 @@ Estimator per shot:
 - **Z setting:** sum \(J_{ij}z_iz_j\) over pairs with both cavities in the code, plus \(|J_{ij}|\) over pairs touching a leaked cavity.
 - **X setting:** \(-b\,x_i\) for qubits in coded cavities, plus \(+b\) per qubit in a leaked cavity.
 
-## Safe to run now (no user decision needed)
+## Safe to run now
 
-- Nov3rd vs QAOA at N = 12, 15, 18 (local stream, already running). Add columns: \(F_+\), η, \(\Delta_{\rm odd}\), budget curve, shortlist re-ranking.
+- Nov3rd vs QAOA at N = 12, 15, 18 (local stream). Add columns: \(F_+\), η, \(\Delta_{\rm odd}\), budget curve, shortlist re-ranking.
 - S0 for everything: classical ED diagnostics, \(F_+\), \(\Delta_{\rm odd}\), and T1–T14.
-- Nov9th-B (strict-logical, no off-code space) exact-energy SPSA screen. It is fully defined.
-- Nov9th-leaky under the ★ defaults with the U0 sensitivity arm, exact energy, dev seeds only, labeled provisional-★.
+- Nov9th-B (strict-logical, no off-code space) exact-energy SPSA screen, labeled diagnostic, never called a displacement.
+- Nov9th-leaky exact-energy development under the approved D2–D5 simulation definitions, with the U0 sensitivity arm and cutoff check. Dev seeds only.
 
-## Not safe until decided
+## Still not claimed
 
-- Any Nov9th-leaky number presented as "physical" or "hardware-feasible": needs D2–D5.
-- A shot-mode Nov9th claim: needs D5 (the readout model), and its \(W_L\) cost is unmodelled.
-- FREEZE / validation / final for Nov9th: needs D1–D5 confirmed and NF_sim frozen.
+- Hardware feasibility. Compiled \(W_L\) and its leakage are unmodelled.
+- Shot-mode Nov9th as a physical claim.
+- FREEZE, validation, or final. Those stay blind until a recipe is frozen after development and NF_sim is frozen with it.

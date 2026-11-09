@@ -1,0 +1,131 @@
+{
+  "experiment": "N9-FT",
+  "claim_level": "approved-simulation-definition",
+  "D2_D5_approved_simulation_definitions": true,
+  "approval": {
+    "who": "Zach",
+    "when_local": "2026-11-09 18:41 Asia/Shanghai",
+    "scope": "simulation definitions D2-D5, not hardware feasibility",
+    "snap_f_ge_8": "phase 0",
+    "UcZ": "terms touching a leaked cavity are off; all other terms act",
+    "energy": "per-term |J_ij| on a leaked pair and +b per leaked qubit",
+    "readout": "ideal logical readout"
+  },
+  "hardware_feasibility_claim": false,
+  "freeze_validation_final_shot_mode": false,
+  "fidelity": "unconditioned, no leakage renormalization, no postselection",
+  "extensions": {
+    "snap_f_ge_8": "phase 0",
+    "UcZ_primary": "Uz: a term touching a leaked cavity is off; every other term acts",
+    "UcZ_sensitivity": "U0 whole component unphased if any cavity is leaked",
+    "energy": "per-term Hext: leaked pair contributes |J|, leaked qubit contributes +b",
+    "readout": "ideal logical readout; compiled W_L cost is not modelled"
+  },
+  "optimizer": "SPSA only",
+  "objective": "energy",
+  "fidelity_not_used_for_stopping_or_selection": true,
+  "ground_state_not_used_as_an_oracle_or_init": true,
+  "complete": true,
+  "kind": "zeroshot",
+  "method": "ft_nov9_km",
+  "method_id": 40,
+  "N": 6,
+  "seed": 10006,
+  "b": 1.0,
+  "L": 1,
+  "cap": 0,
+  "nf": 16,
+  "alpha_sigma_scale": 0.5,
+  "train_method": "train_nov9_km",
+  "x_star": [
+    0.00014639188602829113,
+    0.041542693140470016,
+    -0.009897133072596992,
+    -0.01546698419710357,
+    -0.024370758301499033,
+    0.008352320688847125,
+    0.034352434540600434
+  ],
+  "queries_counted": 1,
+  "queries_report_only_initial": 0,
+  "ledger": {
+    "zeroshot": 1,
+    "total_counted": 1,
+    "shots": 0,
+    "mode": "exact_energy",
+    "fresh_shot_check": "not_run_exact_mode"
+  },
+  "E": -5.995557379900941,
+  "F": 0.8988760315124629,
+  "F_init": 0.8988760315124629,
+  "E_init": -5.995557379900941,
+  "p_leak": 4.25234704629629e-05,
+  "parity_code_conditional": 0.9996878238409772,
+  "norm": 1.0,
+  "instance": {
+    "J_sha256": "375438a83cf815de25722f1ef79fee4e95651fc23989a8d799aba8f83a1dee19",
+    "E0": -6.469196149276048,
+    "E1": -5.3466899873478315,
+    "E0_odd": -5.3466899873478315,
+    "Delta_odd": 1.1225061619282162,
+    "lam_max": 6.615106314672852,
+    "F_plus": 0.8997084676355693,
+    "residual": 6.514937796048682e-15,
+    "theta_K_prior": 0.30469983063771755,
+    "rms_J": 0.3784565886817332,
+    "scale_K": 1.6409592317577975,
+    "scale_M": 6.6476418200282765,
+    "scale_R1": 2.341954399191562,
+    "lam_min_J": -1.0155058148991158,
+    "feature_rank": {
+      "pearson_upper": {
+        "J_J": 1.0,
+        "J_K": 0.4543328287258184,
+        "J_M": 0.32648565748899105,
+        "J_R1": 0.572752813922635,
+        "K_J": 0.4543328287258184,
+        "K_K": 1.0,
+        "K_M": 0.12800276775255434,
+        "K_R1": -0.24040314531873044,
+        "M_J": 0.326485657488991,
+        "M_K": 0.12800276775255434,
+        "M_M": 1.0,
+        "M_R1": 0.13901625948350893,
+        "R1_J": 0.572752813922635,
+        "R1_K": -0.24040314531873044,
+        "R1_M": 0.1390162594835089,
+        "R1_R1": 1.0
+      },
+      "R1_residual_vs_span_JKM": 0.5913462880937309,
+      "feature_singular_values": [
+        1.2864087489987606,
+        1.1587754394175753,
+        0.9331641429502177,
+        0.36276258601740524
+      ]
+    },
+    "classical_feature_seconds": 0.0013940159999492607,
+    "gs_used_only_for_reporting": true
+  },
+  "failed_starts": 0,
+  "selected_parameters": {
+    "gamma": 0.00014639188602829113,
+    "theta": {
+      "K": 0.041542693140470016,
+      "M": -0.009897133072596992
+    },
+    "alphas": [
+      -0.004639725281583458
+    ],
+    "shells": [
+      [
+        -0.024370758301499033,
+        0.008352320688847125,
+        0.034352434540600434
+      ]
+    ]
+  },
+  "runtime_seconds": 0.002343246000009458,
+  "eta": -0.008300163567963318,
+  "energy_gap_closed": 0.0
+}

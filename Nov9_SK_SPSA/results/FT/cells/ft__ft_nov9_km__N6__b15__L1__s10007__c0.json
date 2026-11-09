@@ -1,0 +1,131 @@
+{
+  "experiment": "N9-FT",
+  "claim_level": "approved-simulation-definition",
+  "D2_D5_approved_simulation_definitions": true,
+  "approval": {
+    "who": "Zach",
+    "when_local": "2026-11-09 18:41 Asia/Shanghai",
+    "scope": "simulation definitions D2-D5, not hardware feasibility",
+    "snap_f_ge_8": "phase 0",
+    "UcZ": "terms touching a leaked cavity are off; all other terms act",
+    "energy": "per-term |J_ij| on a leaked pair and +b per leaked qubit",
+    "readout": "ideal logical readout"
+  },
+  "hardware_feasibility_claim": false,
+  "freeze_validation_final_shot_mode": false,
+  "fidelity": "unconditioned, no leakage renormalization, no postselection",
+  "extensions": {
+    "snap_f_ge_8": "phase 0",
+    "UcZ_primary": "Uz: a term touching a leaked cavity is off; every other term acts",
+    "UcZ_sensitivity": "U0 whole component unphased if any cavity is leaked",
+    "energy": "per-term Hext: leaked pair contributes |J|, leaked qubit contributes +b",
+    "readout": "ideal logical readout; compiled W_L cost is not modelled"
+  },
+  "optimizer": "SPSA only",
+  "objective": "energy",
+  "fidelity_not_used_for_stopping_or_selection": true,
+  "ground_state_not_used_as_an_oracle_or_init": true,
+  "complete": true,
+  "kind": "zeroshot",
+  "method": "ft_nov9_km",
+  "method_id": 40,
+  "N": 6,
+  "seed": 10007,
+  "b": 1.5,
+  "L": 1,
+  "cap": 0,
+  "nf": 16,
+  "alpha_sigma_scale": 0.5,
+  "train_method": "train_nov9_km",
+  "x_star": [
+    -0.0009092835155334718,
+    0.35640945611413466,
+    -0.46211336201129694,
+    -0.00028589341375873426,
+    -0.018848428504231577,
+    0.04483031406709704,
+    -0.09243929421858897
+  ],
+  "queries_counted": 1,
+  "queries_report_only_initial": 0,
+  "ledger": {
+    "zeroshot": 1,
+    "total_counted": 1,
+    "shots": 0,
+    "mode": "exact_energy",
+    "fresh_shot_check": "not_run_exact_mode"
+  },
+  "E": -8.997579650126077,
+  "F": 0.9611978476541867,
+  "F_init": 0.9611978476541867,
+  "E_init": -8.997579650126077,
+  "p_leak": 1.4708968043564141e-08,
+  "parity_code_conditional": 0.99944125475525,
+  "norm": 1.0000000000000002,
+  "instance": {
+    "J_sha256": "622fafe57dafbf07113d46e2c99966e0221f1808b601eb2da9d55f6aca2f8362",
+    "E0": -9.229129807872381,
+    "E1": -7.220654896726456,
+    "E0_odd": -7.220654896726456,
+    "Delta_odd": 2.0084749111459246,
+    "lam_max": 9.228204271614239,
+    "F_plus": 0.9614656218199821,
+    "residual": 9.600701349089951e-15,
+    "theta_K_prior": 0.6117334502700447,
+    "rms_J": 0.30158260938731785,
+    "scale_K": 1.8390362657189632,
+    "scale_M": 6.171263244252876,
+    "scale_R1": 1.8851385560584888,
+    "lam_min_J": -1.0516146853407937,
+    "feature_rank": {
+      "pearson_upper": {
+        "J_J": 1.0,
+        "J_K": -0.013048993212583671,
+        "J_M": -0.077373052107331,
+        "J_R1": 0.7515268857094315,
+        "K_J": -0.013048993212583671,
+        "K_K": 1.0,
+        "K_M": 0.4563645938026918,
+        "K_R1": -0.5343673565249565,
+        "M_J": -0.077373052107331,
+        "M_K": 0.4563645938026918,
+        "M_M": 1.0,
+        "M_R1": -0.2696914170077298,
+        "R1_J": 0.7515268857094315,
+        "R1_K": -0.5343673565249565,
+        "R1_M": -0.2696914170077298,
+        "R1_R1": 1.0
+      },
+      "R1_residual_vs_span_JKM": 0.3901723743325049,
+      "feature_singular_values": [
+        1.387253605425373,
+        1.1616152578968937,
+        0.804335231691113,
+        0.2814644949471269
+      ]
+    },
+    "classical_feature_seconds": 0.0012747179998768843,
+    "gs_used_only_for_reporting": true
+  },
+  "failed_starts": 0,
+  "selected_parameters": {
+    "gamma": -0.0009092835155334718,
+    "theta": {
+      "K": 0.35640945611413466,
+      "M": -0.46211336201129694
+    },
+    "alphas": [
+      -8.576802179086926e-05
+    ],
+    "shells": [
+      [
+        -0.018848428504231577,
+        0.04483031406709704,
+        -0.09243929421858897
+      ]
+    ]
+  },
+  "runtime_seconds": 0.0022059089999402204,
+  "eta": -0.006948968127743933,
+  "energy_gap_closed": 0.0
+}
