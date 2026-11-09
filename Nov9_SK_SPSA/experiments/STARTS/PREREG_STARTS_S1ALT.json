@@ -1,0 +1,74 @@
+{
+  "experiment": "STARTS S1ALT: block-alternating vs joint IID SPSA under frozen S1 at N15 L=2 Q=2048",
+  "written_before_fits": true,
+  "not_a_s1_retune": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "s4_s8_closed": true,
+  "continuation_closed": true,
+  "throughput_axis_closed": true,
+  "conditioning_closed": ["C1", "B3", "B4"],
+  "s1q_closed": true,
+  "s1sh_closed": true,
+  "n18_forbidden": "FT owns",
+  "hypothesis": {
+    "id": "block_alt_helps_l1_l2_onset",
+    "one_sentence": "At N15 L=2 under frozen S1, 50/50 block-alternating SPSA (shared Uc vs SNAP shells; QAOA gamma vs beta) beats joint IID SPSA on Nov3 energy at the same inclusive Q=2048.",
+    "not": "No S1 start/gain retune. No extra Q. No S4/S8. No continuation. Not a GR patch."
+  },
+  "frozen_from_PR83_87": {
+    "no_fit_changes_to_joint": true,
+    "JOINT": "exact S1 joint IID C0 as PR87 L=2: nstarts=1 TQA, split_cap(2048,1) K=1019, ncal=4, A=25, live gain, last+Polyak, energy min, engine m2",
+    "ALT": "same TQA start, same C0 4 full-vector calibration probes (charged), same live gain formula, same last+Polyak readout. K-loop De is full Rademacher then masked: odd k (k%2==0) block A only; even k block B only. joint_prefix_K=0.",
+    "blocks": {
+      "Nov3": "A = shared Uc [gamma, theta_K, theta_M] indices 0,1,2; B = all SNAP shells (s1,s2,s3)_l indices 3..8",
+      "QAOA": "A = all gamma_l indices 0..L-1; B = all beta_l indices L..2L-1",
+      "K_split": "K=1019 => 510 A steps, 509 B steps"
+    },
+    "file_sha256": {
+      "starts.py": "6e4b0cd784782084d2f1320ccb9113ef99d320fd09ce984ab5161f68e0716645",
+      "N3COND/spsa.py": "cca4c884bc3020c9c9559e89cb248d9a4b2c8a8bca36624ba6b380dab1832357",
+      "N3COND/nov3.py": "e74f66b2dfc973afe9acd69e5c398b210a59563f8edc04290c5e88fb16a39808"
+    }
+  },
+  "seeds": {
+    "ids": [10088, 10089, 10090, 10091, 10092, 10093, 10094, 10095],
+    "role": "exclusive_unread_dev",
+    "collision_check": "no instance/run filenames; 10080-87 S1SH; 10072-79 S1Q; 10064-71 S1L6; 10056-63 S1C; 10048-55 S8/S1; 10036-43 DEPTH; 10032-47 LEXACT; 10018-25 FT; 10026-31 local; 10010-17 N3COND; 11000-11031 validation; 20000-20999 final",
+    "forbidden": ["10010-10087", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [15],
+    "L": [2],
+    "q": 1024,
+    "Q": 2048,
+    "circuits": ["Nov3", "QAOA"],
+    "arms": ["JOINT", "ALT"]
+  },
+  "allocation": {
+    "S1": "One TQA start. Full Q=2048 per arm. K=1019.",
+    "inclusive": "All init, calibration, perturbations, candidates, failures inside Q. No free JOINT prefix.",
+    "QAOA": "p=L=2, same split, same Q."
+  },
+  "selection": "Lowest counted candidate energy. F post hoc, never selects.",
+  "gate": {
+    "cell": "N15 L2 Nov3, n=accepted seeds, energy E_ALT - E_JOINT",
+    "pass": "bootstrap 95% CI of the mean ΔE lies entirely below 0",
+    "otherwise": "reject ALT at L=2. Do not retune.",
+    "nov3_vs_qaoa_alt": "Reported separately. Mark ALT as a development energy-win candidate only if Nov3−QAOA mean Δ(E-E0)/N CI lies entirely below 0.",
+    "gr": "Do not patch GR even if the gate passes."
+  },
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "depth_c1": 327680,
+    "starts_s8": 98304,
+    "starts_s1": 98304,
+    "starts_s1c": 196608,
+    "starts_s1l6": 196608,
+    "starts_s1q": 344064,
+    "starts_s1sh": 49152,
+    "this_stream": "STARTS_S1ALT, counted separately",
+    "new_charge": "32 fits × 2048 = 65536 if all succeed"
+  }
+}
