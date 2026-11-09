@@ -138,6 +138,16 @@ def main():
     rows2 = np.array([[1e-15, 1.0], [1e-15, 1.0]])
     lam2, _, g2, gref2 = S.freeze_lambda(rows2)
     check("T9_lambda_clip", abs(lam2[0] - 4.0), 0.0)
+    # simultaneous |component| is constant; axial probes are not
+    def quad(x):
+        return float(x[0] ** 2 + 100.0 * x[1] ** 2)
+
+    row = S.probes_at(quad, np.array([1.0, 1.0]), np.ones(2), np.random.default_rng(0), 1)[0]
+    check("T13_simultaneous_components_equal", abs(row[0] - row[1]), 0.0)
+    gax = S.axial_probe(quad, np.array([1.0, 1.0]), np.ones(2))
+    lam_ax, _, _, _ = S.freeze_lambda(gax.reshape(1, -1))
+    check("T13_axial_lambda_not_flat", 0.0 if abs(lam_ax[0] - lam_ax[1]) > 0.5 else 1.0, 0.0)
+    check("T13_axial_g_ratio", abs(gax[1] / gax[0] - 100.0), 1e-9)
 
     # B* acceptance machinery on N=6, seed 10010 (not an optimization)
     Jb, meta, gsb = BS.build(6, 10010)

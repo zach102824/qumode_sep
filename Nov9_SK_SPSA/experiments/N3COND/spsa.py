@@ -87,7 +87,7 @@ def spsa_run(f, starts, sig, rng_for_start, cap, a_override=None):
 
 
 def probes_at(f, x0, sig, rng, nprobe, c=1.0):
-    """nprobe two-sided SPSA probes. Returns (nprobe, dim) absolute components. 2*nprobe queries."""
+    """Simultaneous Rademacher probes. |component_j| is the same for every j, so this cannot set a diagonal scale."""
     rows = []
     x0 = np.asarray(x0, float)
     sig = np.asarray(sig, float)
@@ -99,6 +99,22 @@ def probes_at(f, x0, sig, rng, nprobe, c=1.0):
             raise FloatingPointError("non-finite scale probe")
         rows.append(np.abs((ep - em) / (2 * c) * De))
     return np.vstack(rows)
+
+
+def axial_probe(f, x0, sig, c=1.0):
+    """One two-sided axial probe per coordinate. g_j estimates |sigma_j dE/dx_j|. 2*dim queries."""
+    x0 = np.asarray(x0, float)
+    sig = np.asarray(sig, float)
+    g = np.empty(x0.size)
+    for j in range(x0.size):
+        step = np.zeros(x0.size)
+        step[j] = sig[j] * c
+        ep = float(f(x0 + step))
+        em = float(f(x0 - step))
+        if not np.isfinite(ep) or not np.isfinite(em):
+            raise FloatingPointError("non-finite axial probe")
+        g[j] = abs((ep - em) / (2 * c))
+    return g
 
 
 LAM_LO, LAM_HI = 0.25, 4.0

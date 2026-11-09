@@ -37,7 +37,7 @@ INST = OUT / "instances"
 RUNS = OUT / "runs"
 DEV = PREREG["seeds"]["dev_scale"]
 HOLD = PREREG["seeds"]["holdout"]
-NPROBE = 4
+NPROBE = 1  # one axial probe per coordinate per cold start; repeats are identical at exact energy
 
 
 def prereg_sha():
@@ -101,7 +101,7 @@ def run_scale(Nqubits, L_list):
                 cid = N.circuit_id(circuit)
                 starts = N.starts_for(circuit, seed, Nqubits, L)
 
-                def probe(x0, si, sim=sim, sig=sig, cid=cid, seed=seed):
+                def probe(x0, sim=sim, sig=sig):
                     nonlocal queries
 
                     def f(x):
@@ -109,13 +109,13 @@ def run_scale(Nqubits, L_list):
                         queries += 1
                         return sim.energy(x)
 
-                    return S.probes_at(f, x0, sig, N.rng_for(seed, Nqubits, L, cid, si, 7), NPROBE)
+                    return S.axial_probe(f, x0, sig)
 
-                for si, x0 in enumerate(starts):
-                    rows.append(probe(x0, si))
+                for x0 in starts:
+                    rows.append(probe(x0))
             block = np.vstack(rows)
             lam, a0, g, gref = S.freeze_lambda(block)
-            expect = len(DEV) * 4 * NPROBE * 2
+            expect = len(DEV) * 4 * sim.nparam() * 2
             if queries != expect:
                 raise RuntimeError(f"scale queries {queries} != {expect}")
             fam = {}
@@ -128,6 +128,7 @@ def run_scale(Nqubits, L_list):
                 "family_median_gabs": fam, "queries": queries,
                 "lambda_min": float(lam.min()), "lambda_max": float(lam.max()),
                 "n_clipped": int(np.sum((lam <= S.LAM_LO + 1e-15) | (lam >= S.LAM_HI - 1e-15))),
+                "probe": "axial",
             }
             print(f"[scale] {key} queries {queries} a0 {a0:.6g} lambda [{lam.min():.3f},{lam.max():.3f}] "
                   f"clipped {cells[key]['n_clipped']}", flush=True)

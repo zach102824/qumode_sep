@@ -38,10 +38,19 @@
     "C0": "Existing scalar SPSA. sigma = sigma0. Each start sets its own gain a from the 8 calibration queries so the median initial step is 0.5 sigma. Those queries count inside Q.",
     "C1": "Diagonal coordinate scale. sigma_j = sigma0_j * lambda_j, gain a = a0, both frozen. The 8 calibration queries still run and count inside Q, and the gain they would have set is recorded and discarded."
   },
+  "corrections": [
+    {
+      "id": "C-probe",
+      "before_any_fit": true,
+      "fact": "A simultaneous Rademacher probe has |Delta_j|=1, so |(E+-E-)/(2c)*Delta_j| is the same number on every coordinate. lambda_j is identically 1 for every Hamiltonian. This is not an empirical outcome.",
+      "evidence_file": "results/N3COND/SCALE_N9_v0_simultaneous.json",
+      "used_for_fits": false
+    }
+  ],
   "scale_block": {
     "where": "dev_scale seeds only, at the 4 cold starts, before any fit",
-    "probes": "4 two-sided probes per start at sigma0, c=1, stream 7. 4*4*8 = 128 energy queries per (N,L,circuit). Not taken out of Q. Reported as scale_block_queries.",
-    "lambda": "g_j = median |component| over probes. lambda_j = clip(median(g)/g_j, 0.25, 4). a0 = 0.5*(26)**0.602 / median(lambda*g).",
+    "probes": "One two-sided axial probe per coordinate at each cold start: E(x+sigma_j e_j) and E(x-sigma_j e_j), c=1. Exact energy, so repeating the same point adds nothing. Queries = 2 * nparam * 4 starts * 4 dev seeds per (N,L,circuit). Not taken out of Q. Reported as scale_block_queries. The v0 simultaneous file is not an input.",
+    "lambda": "g_j = median over dev seeds and cold starts of |(E+-E-)/(2c)|. lambda_j = clip(median(g)/g_j, 0.25, 4). a0 = 0.5*(26)**0.602 / median(lambda*g).",
     "freeze": "One lambda and a0 per (N, L, circuit), pooled over the 4 dev seeds. Holdout does not add probes. QAOA is scaled on its own coordinates the same way."
   },
   "rng": "SeedSequence([seed, N, 0, L, circuit_id, start, stream]). circuit_id QAOA=0, Nov3=40. method_id is circuit_id for C0 and circuit_id+1 for C1, recorded only. stream 0 SPSA Delta, 2 init, 7 scale probes. The b slot is 0 because the field is B*.",
