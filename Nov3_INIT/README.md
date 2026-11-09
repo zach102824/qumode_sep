@@ -154,6 +154,7 @@ Native \(W_{\rm BinH}\) compile (`PREREG_WCOMP.md`) is a **compiler feasibility*
 ```bash
 python3 -m Nov3_INIT.conformance_wcompile
 python3 -m Nov3_INIT.run_wcompile --phase fit
+python3 -m Nov3_INIT.audit_wcompile_prop
 ```
 
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
