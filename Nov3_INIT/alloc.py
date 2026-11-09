@@ -4,7 +4,7 @@ from __future__ import annotations
 import numpy as np
 
 METHOD_ID = {
-    "equal4": {"QAOA": 0, "Nov3rd": 1, "Nov3pair": 2, "SHELL2": 3, "SHELL4": 4},
+    "equal4": {"QAOA": 0, "Nov3rd": 1, "Nov3pair": 2, "SHELL2": 3, "SHELL4": 4, "ANNEAL": 7},
     "spread8": {"QAOA": 6, "Nov3rd": 5},
     "halve8to2": {"QAOA": 71, "Nov3rd": 70},
 }
@@ -12,6 +12,9 @@ C_PERT = 0.1
 A_SPALL = 25.0
 ALPHA_EXP = 0.602
 GAMMA_EXP = 0.101
+# Asymptotically optimal Spall pair. Same A and a0 calibration as V4; faster late decay.
+ANNEAL_ALPHA = 1.0
+ANNEAL_GAMMA = 1.0 / 6.0
 
 
 def iterations_equal4(Q: int) -> int:
@@ -191,11 +194,30 @@ class Ledger:
         }
 
 
-def spsa_block(propagate, x0: np.ndarray, sigmas: np.ndarray, n_iter: int, rng, ledger: Ledger, a_mult=None) -> dict:
-    """One frozen-gain block. propagate(x) -> (energy, aux). Aux of non-selected calls is dropped.
+def spall_gains(n_iter: int, a0: float, alpha: float, gamma: float, A: float, c: float = C_PERT):
+    """a_k = a0 (1+A)^α / (k+1+A)^α, c_k = c / (k+1)^γ. a_{k=0} = a0."""
+    a_gain = float(a0) * (1.0 + float(A)) ** float(alpha)
+    aks = [a_gain / (k + 1.0 + float(A)) ** float(alpha) for k in range(int(n_iter))]
+    cks = [float(c) / (k + 1.0) ** float(gamma) for k in range(int(n_iter))]
+    return a_gain, aks, cks
 
-    Optional a_mult multiplies the scalar a_k per coordinate. Calibration, c_k, σ, and
-    a0 stay the frozen recipe. Clip remains 2σ.
+
+def spsa_block(
+    propagate,
+    x0: np.ndarray,
+    sigmas: np.ndarray,
+    n_iter: int,
+    rng,
+    ledger: Ledger,
+    a_mult=None,
+    alpha=None,
+    gamma=None,
+    A=None,
+) -> dict:
+    """One SPSA block. Default exponents are the frozen v4 0.602/0.101 schedule.
+
+    Optional a_mult multiplies the scalar a_k per coordinate. Calibration uses c=0.1.
+    Clip remains 2σ. Query count is independent of the exponents.
     """
 
     def call(x, kind: str):
@@ -223,11 +245,14 @@ def spsa_block(propagate, x0: np.ndarray, sigmas: np.ndarray, n_iter: int, rng, 
     ratios = [abs(g[j]) / sigmas[j] for g in grads for j in range(x.size) if sigmas[j] > 0.0]
     med = float(np.median(ratios)) if ratios else 0.0
     a0 = 0.0 if med < 1e-15 else 0.5 / med
-    a_gain = a0 * (1.0 + A_SPALL) ** ALPHA_EXP
+    alpha = ALPHA_EXP if alpha is None else float(alpha)
+    gamma = GAMMA_EXP if gamma is None else float(gamma)
+    A = A_SPALL if A is None else float(A)
+    a_gain, aks, cks = spall_gains(n_iter, a0, alpha, gamma, A, C_PERT)
     history = []
     for k in range(n_iter):
-        ck = C_PERT / (k + 1) ** GAMMA_EXP
-        ak = a_gain / (k + 1.0 + A_SPALL) ** ALPHA_EXP
+        ck = cks[k]
+        ak = aks[k]
         delta = _rademacher(rng, x.size)
         step = ck * sigmas * delta
         ep, _aux = call(x + step, "iteration")
@@ -256,6 +281,10 @@ def spsa_block(propagate, x0: np.ndarray, sigmas: np.ndarray, n_iter: int, rng, 
         "which": choice[0],
         "e_init": float(e_init),
         "a_gain": float(a_gain),
+        "a0": float(a0),
+        "alpha": float(alpha),
+        "gamma": float(gamma),
+        "A": float(A),
         "a_mult": [float(v) for v in a_mult],
     }
 
@@ -310,7 +339,20 @@ def x0_pair_center4(C: int, L: int, start_id: int, rng) -> np.ndarray:
     return x
 
 
-def run_equal4(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa, x0_fn=None, C=None, a_mult=None) -> dict:
+def run_equal4(
+    propagate,
+    method: str,
+    L: int,
+    Q: int,
+    rngs_init,
+    rngs_spsa,
+    x0_fn=None,
+    C=None,
+    a_mult=None,
+    alpha=None,
+    gamma=None,
+    A=None,
+) -> dict:
     t_iter = iterations_equal4(Q)
     sig = sigmas_of(method, L, C=C)
     ledger = Ledger()
@@ -319,7 +361,7 @@ def run_equal4(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa, x0_
     draw = x0_equal4 if x0_fn is None else x0_fn
     for start_id, (rng_i, rng_s) in enumerate(zip(rngs_init, rngs_spsa)):
         x0 = draw(method, L, start_id, rng_i)
-        block = spsa_block(propagate, x0, sig, t_iter, rng_s, ledger, a_mult=a_mult)
+        block = spsa_block(propagate, x0, sig, t_iter, rng_s, ledger, a_mult=a_mult, alpha=alpha, gamma=gamma, A=A)
         tails.append({"start_id": start_id, "e_init": block["e_init"], "E": block["E"], "which": block["which"], "a_gain": block["a_gain"]})
         if best is None or block["E"] < best["E"] or (block["E"] == best["E"] and start_id < best["start_id"]):
             best = dict(block)

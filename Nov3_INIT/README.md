@@ -112,4 +112,13 @@ python3 -m Nov3_INIT.run_spread8_l3 --phase run
 python3 -m Nov3_INIT.run_spread8_l3 --phase summary
 ```
 
+Anneal L=3 (`PREREG_ANNEAL.md`) compares v4 Spall `0.602/0.101` to asymptotically optimal `α=1`, `γ=1/6`. N=15 L=3, seeds `10456..10463`, `Q=3072`. No GR patch. No re-fit of `10368..10375`.
+
+```bash
+python3 -m Nov3_INIT.conformance_anneal
+python3 -m Nov3_INIT.run_anneal --phase bstar
+python3 -m Nov3_INIT.run_anneal --phase run
+python3 -m Nov3_INIT.run_anneal --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
