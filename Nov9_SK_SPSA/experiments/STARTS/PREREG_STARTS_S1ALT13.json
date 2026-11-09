@@ -1,0 +1,79 @@
+{
+  "experiment": "STARTS S1ALT13: 1:3 shell-heavy vs PR88 1:1 ALT under frozen S1 at N15 L=2 Q=2048",
+  "written_before_fits": true,
+  "not_a_s1_retune": true,
+  "not_an_alt11_retune": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "s4_s8_closed": true,
+  "continuation_closed": true,
+  "throughput_axis_closed": true,
+  "conditioning_closed": ["C1", "B3", "B4"],
+  "s1q_closed": true,
+  "s1alt23_closed": true,
+  "n18_forbidden": "FT owns",
+  "hypothesis": {
+    "id": "shell_heavy_1_3_beats_1_1_at_l2",
+    "one_sentence": "At N15 L=2 under frozen S1, a 1:3 shared-then-shells block schedule beats exact PR88 1:1 ALT on Nov3 energy at the same inclusive Q=2048.",
+    "not": "No S1 start/gain retune. No extra Q. No more L3 ALT stacking. Not a GR patch."
+  },
+  "frozen": {
+    "no_fit_changes_to_joint_or_alt11": true,
+    "S1JOINT": "exact S1 joint IID C0: nstarts=1 TQA, split_cap(2048,1) K=1019, ncal=4, A=25, live gain, last+Polyak, energy min, engine m2",
+    "S1ALT11": "exact PR88 alt_spsa.py: odd k (k%2==0) block A, even k block B. K=1019 => 510 A, 509 B. joint_prefix_K=0.",
+    "S1ALT13": "same TQA start, same C0 4 full-vector calibration, same live gain, same last+Polyak. Phase starts at A. k%4==0 updates A (shared Uc/γ); k%4 in {1,2,3} updates B (SNAP shells/β). Leftover steps continue that phase, not dumped to shells. K=1019 => 255 A, 764 B, leftover k=1016..1018 = A,B,B.",
+    "blocks": {
+      "Nov3": "A = shared Uc [gamma, theta_K, theta_M] indices 0,1,2; B = all SNAP shells indices 3..8",
+      "QAOA": "A = all gamma_l indices 0..L-1; B = all beta_l indices L..2L-1"
+    },
+    "file_sha256": {
+      "starts.py": "6e4b0cd784782084d2f1320ccb9113ef99d320fd09ce984ab5161f68e0716645",
+      "N3COND/spsa.py": "cca4c884bc3020c9c9559e89cb248d9a4b2c8a8bca36624ba6b380dab1832357",
+      "N3COND/nov3.py": "e74f66b2dfc973afe9acd69e5c398b210a59563f8edc04290c5e88fb16a39808",
+      "alt_spsa.py": "1f843e74c0ad16c17a89b1d07c4a785e53c85d48f4fbacba0b78e45e874d52a4"
+    }
+  },
+  "seeds": {
+    "ids": [10104, 10105, 10106, 10107, 10108, 10109, 10110, 10111],
+    "role": "exclusive_unread_dev",
+    "collision_check": "no instance/run filenames; 10096-10103 S1ALT23; 10088-95 S1ALT; 10080-87 S1SH; 10072-79 S1Q; 10064-71 S1L6; 10056-63 S1C; 10048-55 S8/S1; 10036-43 DEPTH; 10032-47 LEXACT; 10018-25 FT; 10026-31 local; 10010-17 N3COND; 11000-11031 validation; 20000-20999 final",
+    "forbidden": ["10010-10103", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [15],
+    "L": [2],
+    "q": 1024,
+    "Q": 2048,
+    "circuits": ["Nov3", "QAOA"],
+    "arms": ["S1JOINT", "S1ALT11", "S1ALT13"]
+  },
+  "allocation": {
+    "S1": "One TQA start. Full Q=2048 per arm. K=1019.",
+    "inclusive": "All init, calibration, perturbations, candidates, failures inside Q. No free JOINT/ALT prefix.",
+    "QAOA": "p=L=2, same split, same Q."
+  },
+  "selection": "Lowest counted candidate energy. F post hoc, never selects.",
+  "gate": {
+    "cell": "N15 L2 Nov3, n=accepted seeds, energy E_S1ALT13 - E_S1ALT11",
+    "pass": "bootstrap 95% CI of the mean ΔE lies entirely below 0",
+    "otherwise": "reject 1:3 vs 1:1 at L=2. Do not retune.",
+    "also_report": "S1ALT13 vs S1JOINT, S1ALT11 vs S1JOINT",
+    "nov3_vs_qaoa_s1alt13": "Reported separately. Mark a development energy-win candidate only if Nov3−QAOA mean Δ(E-E0)/N under S1ALT13 CI lies entirely below 0.",
+    "gr": "Do not patch GR even if the gate passes."
+  },
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "depth_c1": 327680,
+    "starts_s8": 98304,
+    "starts_s1": 98304,
+    "starts_s1c": 196608,
+    "starts_s1l6": 196608,
+    "starts_s1q": 344064,
+    "starts_s1sh": 49152,
+    "starts_s1alt": 65536,
+    "starts_s1alt23": 163840,
+    "this_stream": "STARTS_S1ALT13, counted separately",
+    "new_charge": "48 fits × 2048 = 98304 if all succeed"
+  }
+}
