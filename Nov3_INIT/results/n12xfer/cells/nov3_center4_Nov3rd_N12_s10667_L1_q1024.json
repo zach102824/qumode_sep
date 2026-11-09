@@ -1,0 +1,87 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n12xfer",
+  "arm": "nov3_center4",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "n_params": 6,
+  "N": 12,
+  "seed": 10667,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.5517817141755643,
+  "E0": -8.956425255318683,
+  "E_plus": -6.621380570106772,
+  "F_plus": 0.2759128043219853,
+  "E": -8.590709215238814,
+  "E_error_over_N": 0.03047633667332243,
+  "F": 0.6940517062293693,
+  "eta": 0.5774703715287364,
+  "which": "last",
+  "start_id": 2,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -3.795028413500872,
+      "E": -8.570476652242533,
+      "which": "last",
+      "a_gain": 0.06628359798832252
+    },
+    {
+      "start_id": 1,
+      "e_init": -6.47313829435205,
+      "E": -6.574432755547465,
+      "which": "polyak64",
+      "a_gain": 1.1635676709314775
+    },
+    {
+      "start_id": 2,
+      "e_init": -6.320962118486793,
+      "E": -8.590709215238814,
+      "which": "last",
+      "a_gain": 0.12197829354983636
+    },
+    {
+      "start_id": 3,
+      "e_init": -5.603295037215784,
+      "E": -8.315244160055258,
+      "which": "polyak64",
+      "a_gain": 0.7454364033077313
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    -0.32461318364580377,
+    -0.34399815332391076,
+    -0.011517137686970996,
+    -0.8540051011540196,
+    0.025550777748764866,
+    0.20603961538263235
+  ],
+  "seconds": 0.6330299940018449,
+  "cpu_seconds": 0.632666954,
+  "peak_rss_kib": 58772,
+  "prereg_sha256": "3b2b43713c349ff3d9749bc170a7fb771ddde98d942761d2b40a1c70e484cc3d",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_aggregator": "mean",
+  "do_not_switch_primary_to_median": true
+}

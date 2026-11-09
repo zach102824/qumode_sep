@@ -1,0 +1,167 @@
+{
+  "ok": true,
+  "prereg_sha256": "3b2b43713c349ff3d9749bc170a7fb771ddde98d942761d2b40a1c70e484cc3d",
+  "alloc_sha256": "b6cb9d9be11ffe5e3c36a433be9ac80400c50e095124be0ba42876b844a37bcd",
+  "historical_sk_queries": 3014656,
+  "expected_independent_queries": 32768,
+  "expected_transfer_queries": 32,
+  "expected_new_energy_queries": 32800,
+  "expected_total_if_complete": 3047456,
+  "Q": 1024,
+  "q": 1024,
+  "L": 1,
+  "N": 12,
+  "T": 122,
+  "seeds": {
+    "band": [
+      10664,
+      10665,
+      10666,
+      10667,
+      10668,
+      10669,
+      10670,
+      10671,
+      10672,
+      10673,
+      10674,
+      10675,
+      10676,
+      10677,
+      10678,
+      10679
+    ],
+    "train": [
+      10664,
+      10665,
+      10666,
+      10667,
+      10668,
+      10669,
+      10670,
+      10671
+    ],
+    "test": [
+      10672,
+      10673,
+      10674,
+      10675,
+      10676,
+      10677,
+      10678,
+      10679
+    ],
+    "hold_unused": [
+      10624,
+      10625,
+      10626,
+      10627,
+      10628,
+      10629,
+      10630,
+      10631
+    ],
+    "n": 16,
+    "overlaps": {
+      "le_10432_10439": [],
+      "le_pr115_10552_10559": [],
+      "pr116_10600_10615": [],
+      "le_next_10648_10663": [],
+      "local_r31_10536_10551": [],
+      "local_r32_10584_10599": [],
+      "local_r30_10504_10519": [],
+      "local_next_10632_10647": [],
+      "ft_10520_10535": [],
+      "gauge_10552_10559": [],
+      "width_10568_10583": [],
+      "ft_vm_10480_10487": [],
+      "ft_anneal_10456_10463": [],
+      "ft_spread8_10376_10383": [],
+      "shellgain_10368_10375": [],
+      "pr117_10616_10623": [],
+      "unused_hole_10560_10567": [],
+      "holdout_10144_10151": [],
+      "validation_11000_11031": [],
+      "gr_final_20000_20999": [],
+      "held_unused_10624_10631": []
+    },
+    "ok": true
+  },
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "recipe": {
+    "nov3_start0": [
+      0.25,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0
+    ],
+    "qaoa_start0": [
+      0.25,
+      0.25
+    ],
+    "n_params_nov3": 6,
+    "n_params_qaoa": 2,
+    "T": 122,
+    "ok": true
+  },
+  "ledger_quadratic": {
+    "ok": true,
+    "ledger": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 976,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 1024
+    },
+    "n_iter": 122
+  },
+  "probe": {
+    "seed_not_fitted": 10018,
+    "nov3_L1_seconds": 0.0008398180034419056,
+    "nov3_L1_energy": -2.791544519313505,
+    "projected_Q1024_cell_seconds": 0.8599736355245113,
+    "rss_kib_start": 59804,
+    "rss_kib_after": 60060,
+    "allowed": true,
+    "no_spsa": true
+  },
+  "freeze_guard": {
+    "n_nov3": 8,
+    "n_qaoa": 8,
+    "primary_aggregator": "mean",
+    "also_frozen": "median",
+    "do_not_switch_primary_to_median": true,
+    "no_test_peek": true,
+    "ok": true
+  },
+  "pr116_n15_train_std_descriptive_not_paired": {
+    "theta_K": 0.0511,
+    "theta_M": 0.0233,
+    "s1": 0.8058,
+    "beta": 0.4015
+  },
+  "primary_aggregator": "mean",
+  "do_not_switch_primary_to_median": true,
+  "not_architecture_change": true,
+  "not_gr_retune": true,
+  "not_spread8": true,
+  "not_anneal": true,
+  "not_pair_shell": true,
+  "not_vm": true,
+  "not_l3_budget": true,
+  "no_gr_patch": true,
+  "no_adoption_gate": true,
+  "holdout_l2_fail_stands": true,
+  "compiler_stream_closed": true,
+  "pr111_closed": true,
+  "pr117_l3_2xbudget_fail_stands": true,
+  "no_spsa_on_panel_hamiltonian_in_this_module": true,
+  "label_rule": "TRANSFER_MEAN_NEGATIVE_CI iff n=8 shared-mean Nov3-QAOA dE CI entirely <0 on test; else UNSTABLE"
+}
