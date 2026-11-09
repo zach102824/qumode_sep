@@ -198,14 +198,23 @@ def spsa_block(propagate, x0: np.ndarray, sigmas: np.ndarray, n_iter: int, rng, 
     }
 
 
-def run_equal4(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa) -> dict:
+def x0_center4(method: str, L: int, start_id: int, rng) -> np.ndarray:
+    """equal4 boxes. Nov3 start 0 uses the coherent shell center s1=-0.5."""
+    x = x0_equal4(method, L, start_id, rng)
+    if method == "Nov3rd" and start_id == 0:
+        x[3::3] = -0.5
+    return x
+
+
+def run_equal4(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa, x0_fn=None) -> dict:
     t_iter = iterations_equal4(Q)
     sig = sigmas_of(method, L)
     ledger = Ledger()
     best = None
     tails = []
+    draw = x0_equal4 if x0_fn is None else x0_fn
     for start_id, (rng_i, rng_s) in enumerate(zip(rngs_init, rngs_spsa)):
-        x0 = x0_equal4(method, L, start_id, rng_i)
+        x0 = draw(method, L, start_id, rng_i)
         block = spsa_block(propagate, x0, sig, t_iter, rng_s, ledger)
         tails.append({"start_id": start_id, "e_init": block["e_init"], "E": block["E"], "which": block["which"], "a_gain": block["a_gain"]})
         if best is None or block["E"] < best["E"] or (block["E"] == best["E"] and start_id < best["start_id"]):

@@ -1,0 +1,40 @@
+{
+  "version": "N3INIT_v1",
+  "prereg_sha256": "bf136841297bb0d7a07a373889cc05fdcfbc9abb70aa56286e04d376f6a27388",
+  "train_seeds": [
+    10018,
+    10019,
+    10020,
+    10021
+  ],
+  "test_seeds_not_used": [
+    10022,
+    10023,
+    10024,
+    10025
+  ],
+  "rule": "adopt halve8to2 at q only if mean Nov3 energy improves and the Nov3-QAOA energy gap does not worsen",
+  "by_q": {
+    "128": {
+      "adopt": "halve8to2",
+      "n": 16,
+      "mean_d_self_E": -0.08934688329158241,
+      "mean_gap_halve": 0.15958128879871064,
+      "mean_gap_equal4": 0.17825613194609297
+    },
+    "512": {
+      "adopt": "halve8to2",
+      "n": 16,
+      "mean_d_self_E": -0.02317502408803107,
+      "mean_gap_halve": -0.1012777372169088,
+      "mean_gap_equal4": -0.09040059331739037
+    },
+    "1024": {
+      "adopt": "equal4",
+      "n": 16,
+      "mean_d_self_E": -0.003767544688968505,
+      "mean_gap_halve": -0.1267586951055265,
+      "mean_gap_equal4": -0.1310003588796642
+    }
+  }
+}

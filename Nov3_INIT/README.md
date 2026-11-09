@@ -15,4 +15,13 @@ python3 -m Nov3_INIT.run_v1 --phase test
 python3 -m Nov3_INIT.run_v1 --phase summary
 ```
 
+v2 (`PREREG_V2.md`) changes only the Nov3 deterministic center and reuses the v1 QAOA ledger.
+
+```bash
+python3 -m Nov3_INIT.run_v2 --phase train
+python3 -m Nov3_INIT.run_v2 --phase freeze
+python3 -m Nov3_INIT.run_v2 --phase test
+python3 -m Nov3_INIT.run_v2 --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
