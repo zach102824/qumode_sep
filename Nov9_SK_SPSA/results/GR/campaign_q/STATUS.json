@@ -4,10 +4,13 @@
   "pid": 5864,
   "started_at": "2026-11-09T12:44:11Z",
   "phase": "final N=6",
-  "n_ok": 39223,
+  "n_ok": 46957,
   "n_failed": 0,
   "workers": 3,
-  "updated_at": "2026-11-09T16:53:19Z",
-  "inflight": [],
-  "eta": "Throughput below is seconds per energy evaluation at b=0.5, not a B* optimization. Panel ETA multiplies that by Q=qL and divides by the worker count. Observed SPSA seconds replace the probe once a size has two finished runs.\nN=6: L1 Nov3rd 0.0001s, L1 QAOA 0.0000s, L6 Nov3rd 0.0005s, L6 QAOA 0.0002s, observed median 0.0002s/query from 39223 runs\nN=9: L1 Nov3rd 0.0002s, L1 QAOA 0.0001s, L6 Nov3rd 0.0010s, L6 QAOA 0.0004s\nN=12: L1 Nov3rd 0.0008s, L1 QAOA 0.0004s, L6 Nov3rd 0.0044s, L6 QAOA 0.0016s\nN=15: L1 Nov3rd 0.0065s, L1 QAOA 0.0025s, L6 Nov3rd 0.0352s, L6 QAOA 0.0107s\nN=18: L1 Nov3rd 0.1008s, L1 QAOA 0.0428s, L6 Nov3rd 0.5069s, L6 QAOA 0.1898s\nN=6 planned queries 85938880, remaining 42029760, about 0.94 h on 3 workers at the L-interpolated b=0.5 probe\nN=9 planned queries 85938880, remaining 85938880, about 4.21 h on 3 workers at the L-interpolated b=0.5 probe\nN=12 planned queries 85938880, remaining 85938880, about 17.41 h on 3 workers at the L-interpolated b=0.5 probe\nN=15 planned queries 85938880, remaining 85938880, about 133.89 h on 3 workers at the L-interpolated b=0.5 probe\nN=18 planned queries 85938880, remaining 85938880, about 2041.37 h on 3 workers at the L-interpolated b=0.5 probe\nRough sum across N, if those probe rates hold: 2197.8 h. Not a finished panel.\nCharged ok queries so far 43909120."
+  "updated_at": "2026-11-09T17:20:27Z",
+  "inflight": [
+    "n6_s20607_L6_q1024_Nov3rd",
+    "n6_s20607_L6_q256_Nov3rd"
+  ],
+  "eta": "Throughput below is seconds per energy evaluation at b=0.5, not a B* optimization. Panel ETA multiplies that by Q=qL and divides by the worker count. Observed SPSA seconds replace the probe once a size has two finished runs.\nN=6: L1 Nov3rd 0.0001s, L1 QAOA 0.0000s, L6 Nov3rd 0.0005s, L6 QAOA 0.0002s, observed median 0.0002s/query from 46957 runs\nN=9: L1 Nov3rd 0.0002s, L1 QAOA 0.0001s, L6 Nov3rd 0.0010s, L6 QAOA 0.0004s\nN=12: L1 Nov3rd 0.0008s, L1 QAOA 0.0004s, L6 Nov3rd 0.0044s, L6 QAOA 0.0016s\nN=15: L1 Nov3rd 0.0065s, L1 QAOA 0.0025s, L6 Nov3rd 0.0352s, L6 QAOA 0.0107s\nN=18: L1 Nov3rd 0.1008s, L1 QAOA 0.0428s, L6 Nov3rd 0.5069s, L6 QAOA 0.1898s\nN=6 planned queries 85938880, remaining 33366592, about 0.75 h on 3 workers at the L-interpolated b=0.5 probe\nN=9 planned queries 85938880, remaining 85938880, about 4.21 h on 3 workers at the L-interpolated b=0.5 probe\nN=12 planned queries 85938880, remaining 85938880, about 17.41 h on 3 workers at the L-interpolated b=0.5 probe\nN=15 planned queries 85938880, remaining 85938880, about 133.89 h on 3 workers at the L-interpolated b=0.5 probe\nN=18 planned queries 85938880, remaining 85938880, about 2041.37 h on 3 workers at the L-interpolated b=0.5 probe\nRough sum across N, if those probe rates hold: 2197.6 h. Not a finished panel.\nCharged ok queries so far 52572288."
 }
