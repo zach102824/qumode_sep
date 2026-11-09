@@ -1,0 +1,43 @@
+{
+  "experiment": "LEXACT M3: K=4 independent-instance workers, BLAS=1, kernel T=1",
+  "written_before_fits": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "m1_m2_stand": true,
+  "conditioning_closed": ["C1", "B3", "B4"],
+  "hypothesis": {
+    "id": "M3_spawn_pool_K4_T1",
+    "one_sentence": "Four spawn workers, each BLAS=1 and NUMBA_NUM_THREADS=1, run independent N18 instances on the existing M2 kernel. No new transform.",
+    "queue": "multiprocessing spawn Pool, static task list, imap_unordered, no shared statevector",
+    "K": 4,
+    "kernel_threads_per_worker": 1,
+    "blas_threads": 1,
+    "why_T1": "M2 T=4 already uses the 4 cores inside one eval. Oversubscribing K=4 times T=4 is not this axis. K is not scanned."
+  },
+  "physics_frozen": {
+    "engine": "M2 cis+in-place FWHT at T=1",
+    "types": "float64 field, complex128 state",
+    "forbidden": ["new FWHT", "K search", "gain rescue", "Nov9", "SYK", "GR recipe", "final", "validation"]
+  },
+  "seeds": {
+    "exclusive_dev": [10032, 10033, 10034, 10035],
+    "fallback_in_band": [10036, 10037, 10038, 10039],
+    "band": [10032, 10047],
+    "if_reject": "next unused seed in band, log it. Do not open 10018-31 or 11000/20000."
+  },
+  "batch": {
+    "N": 18,
+    "L": 1,
+    "circuits": ["Nov3", "QAOA"],
+    "energy_evals_per_instance": 8,
+    "spsa_Q": 128,
+    "spsa_jobs": "each seed x both circuits, inclusive Q, energy-only selection"
+  },
+  "serial_baseline": "same engine T=1, one process, same jobs",
+  "success": "Pool wall < serial wall on the 4-instance Q=128 batch, and every fit matches serial start/candidate with trace |ΔE|≤1e-10 vs serial and vs reference. Then stop. Not a GR adoption.",
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_m1_m2_spsa": 1536,
+    "new_stream": "LEXACT_M3, counted separately"
+  }
+}

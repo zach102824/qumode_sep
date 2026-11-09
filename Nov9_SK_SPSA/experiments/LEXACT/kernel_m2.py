@@ -140,7 +140,10 @@ def warmup():
     global _WARM
     if _WARM:
         return
-    set_threads(THREADS)
+    try:
+        set_threads(THREADS)
+    except ValueError:
+        pass
     psi = np.zeros(16, dtype=np.complex128)
     psi[0] = 1.0
     uz = np.zeros(16)
