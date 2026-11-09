@@ -1,0 +1,70 @@
+{
+ "pid": 25107,
+ "stage": "L3SF",
+ "started": 1794241636.4928358,
+ "bstar_wall_s": 10.27722978591919,
+ "n_tasks": 24,
+ "n_skipped_rejected_Bstar": 0,
+ "prereg_sha256": "aa8b1648ec6e4b29ba34d444ffd87a579c17b5cc186f0637c418e1c8682b5350",
+ "nproc": 4,
+ "N": 15,
+ "L": 3,
+ "Q": 3072,
+ "seeds": [
+  10368,
+  10369,
+  10370,
+  10371,
+  10372,
+  10373,
+  10374,
+  10375
+ ],
+ "band": "exclusive_unread_dev",
+ "ft_alloc_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+ "split": {
+  "Q_total": 3072,
+  "Q_shell_stage": 1536,
+  "Q_uc_stage": 1536,
+  "T_shell": 186,
+  "T_uc": 378,
+  "n_shell_starts": 4,
+  "n_uc_blocks": 2,
+  "shell_stage": "4 equal center-4 starts, shell-only SPSA, Uc frozen at each start's x0 (start 0: gamma=0.25, theta=0). T=Q_shell/8-6=186, per_start=384. Frozen gains c=0.1 A=25 clip 2\u03c3, energy among init/last/Polyak/mid. method_id 82.",
+  "then": "take the single best-so-far x; freeze shells = x[3:]",
+  "uc_stage": "2 equal SPSA blocks from that x, Uc coords only (gamma, theta_K, theta_M), remaining Q=1536, T=Q_uc/4-6=378, per_block=768. Each block recalibrates a0 under Uc sigmas. method_id 83. Energy among init/last/Polyak/mid; pick better of the 2 blocks.",
+  "method_id_shell": 82,
+  "method_id_uc": 83,
+  "ledger_shell": {
+   "init": 4,
+   "calibration": 32,
+   "perturb": 1488,
+   "candidate": 12,
+   "total": 1536
+  },
+  "ledger_uc": {
+   "init": 2,
+   "calibration": 16,
+   "perturb": 1512,
+   "candidate": 6,
+   "total": 1536
+  },
+  "ledger_shell_first_total": {
+   "init": 6,
+   "calibration": 48,
+   "perturb": 3000,
+   "candidate": 18,
+   "total": 3072
+  }
+ },
+ "arms": [
+  "JOINT",
+  "SHELL_FIRST",
+  "QAOA"
+ ],
+ "no_pair_phase": true,
+ "not_l3ts_joint_then_shell": true,
+ "finished": 1794241721.2458954,
+ "fit_wall_s": 84.75284886360168,
+ "wall_s": 84.75305962562561
+}
