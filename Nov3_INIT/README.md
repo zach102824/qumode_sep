@@ -76,4 +76,13 @@ python3 -m Nov3_INIT.run_v9 --phase run
 python3 -m Nov3_INIT.run_v9 --phase summary
 ```
 
+v10 (`PREREG_V10.md`) is an n=16 N=18 L=2 Q=2048 effect-size panel on unread seeds `10232..10247`. Estimation only. No GR patch.
+
+```bash
+python3 -m Nov3_INIT.conformance_v10
+python3 -m Nov3_INIT.run_v10 --phase bstar
+python3 -m Nov3_INIT.run_v10 --phase run
+python3 -m Nov3_INIT.run_v10 --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
