@@ -21,6 +21,10 @@ import core as C  # noqa: E402
 
 PREREG_PATH = HERE / "PREREG_LE_M1.json"
 PREREG = json.loads(PREREG_PATH.read_text())
+ADD_PATH = HERE / "PREREG_LE_M1b.json"
+ADD = json.loads(ADD_PATH.read_text())
+PREREG["arms"].update(ADD["new_arms"])
+PREREG["nf_fit"]["12"] = ADD["nf_fit_rule_outcome"]["12"]
 OUT = HERE.parents[1] / "results" / "LE"
 INST = OUT / "instances"
 RUNS = OUT / "runs"
@@ -82,14 +86,20 @@ def starts_for(arm, sim, seed, N, b, L):
     pat = np.array([(-1.0) ** ell for ell in range(L)]) if sp["pattern"] == "alt" else np.ones(L)
     ns = 2 if sp.get("s3off") else 3
     a0 = PREREG["init"]["alpha0"]
-    x = np.concatenate([[PREREG["init"]["gamma0"]], [0.0, 0.0], np.arctanh(a0 * pat / C.ALPHA_MAX), np.zeros(ns * L)])
+    frame = np.zeros(ns * L)
+    if sp.get("frame"):
+        frame[0], frame[ns * (L - 1)] = np.pi / 2, -np.pi / 2
+    a_init = a0 * pat
+    if sp.get("frame"):
+        a_init[0] = 0.0
+    x = np.concatenate([[PREREG["init"]["gamma0"]], [0.0, 0.0], np.arctanh(a_init / C.ALPHA_MAX), frame])
     out.append(x)
     for s in range(1, 4):
         r = rng(seed, N, b, L, mid, s, 2)
         g = r.uniform(-0.5, 0.5)
         th = r.uniform(-0.5, 0.5, size=2)
         amp = r.uniform(0.02, 0.08, size=L) * (1.0 if r.random() < 0.5 else -1.0)
-        ss = r.uniform(-0.3, 0.3, size=ns * L)
+        ss = r.uniform(-0.3, 0.3, size=ns * L) + frame
         out.append(np.concatenate([[g], th, np.arctanh(amp * pat / C.ALPHA_MAX), ss]))
     return out
 
@@ -107,7 +117,8 @@ def run_one(task):
     sp = arm_spec(arm)
     starts = starts_for(arm, sim, seed, N, b, L)
     rec = {"N": N, "seed": seed, "b": b, "L": L, "arm": arm, "cap": cap, "method_id": sp["method_id"],
-           "label": sp["label"], "prereg_sha256": prereg_sha(), "nf_fit": None if sp["kind"] == "qaoa" else sim.nf,
+           "label": sp["label"], "prereg_sha256": prereg_sha(),
+           "addendum_sha256": hashlib.sha256(ADD_PATH.read_bytes()).hexdigest(), "nf_fit": None if sp["kind"] == "qaoa" else sim.nf,
            "pid": os.getpid()}
     try:
         r = C.spsa_run(sim.energy, starts, sim.sigma(), lambda s: rng(seed, N, b, L, sp["method_id"], s, 0), cap)

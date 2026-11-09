@@ -78,6 +78,8 @@ What the binary map implies for \(D\) (analytic, workers must confirm in T9):
 
 Recommended defaults are marked ★. Each is a user decision (DECISIONS.md D2–D3); workers may launch with the defaults and must label runs with them.
 
+**Approved Nov 9 (Zach, 18:41 Shanghai):** the ★ choices for SNAP off-code (phase 0), \(U_{cZ}\) (Uz), the per-term \(H^{\rm ext}\) and the ideal logical readout (D2–D5) are now the approved simulation benchmark. U0 remains a required sensitivity arm. Fidelity is unconditioned. This is not a hardware-feasibility approval; see the approval record in DECISIONS.md.
+
 - **SNAP on f ≥ 8:** ★ phase 0 (`_snap_theta` pad-0 convention). This adds no control.
 - **\(U_{cZ}\) on leaked components:**
   - ★ **Uz** (zero-extended logical Z): \(\tilde Z_i=\sum_{f<8}z_i(f)|f\rangle\langle f|\) on its cavity, and 0 on levels ≥ 8. A pair term that touches a leaked cavity acts as the identity, and the other terms still act. This is the natural extension of pairwise conditional-phase compilation.

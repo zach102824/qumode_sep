@@ -1,0 +1,13 @@
+{
+  "addendum_to": "PREREG_LE_M1.json sha256 a530215b726046464ac8cf8925da8e4101053b5b1fc4025fb6eb37294706d47a",
+  "written": "after M1 N6/N9 results were seen (dev seeds only); before any fitting of the items below",
+  "reason": "M1 showed every Nov9th arm stays at |+> (eta~0). Diagnostics: at |+> (gamma=alpha=s=0) the Nov9th Hessian has no negative eigenvalue (real-alpha conjugation symmetry kills the gamma-alpha cross term), while a phase-frame point s_{1,1}=+pi/2, s_{L,1}=-pi/2 (same |+> state) has weak negative curvature.",
+  "nf_fit_rule_outcome": {"12": 16, "evidence": "N=9 leaky selected points: max |dE| nf16 vs nf48 = 9.4e-14, |dF| 5.8e-15, |dp_leak| 7.2e-15 (<=1e-8)"},
+  "new_arms": {
+    "LE_frame": {"kind": "nov9", "method_id": 24, "ext": "Uz", "pattern": "alt", "frame": true, "min_L": 2,
+                 "label": "INIT VARIANT (post-M1, exploratory): same family; start0 gamma=0.25, theta=0, alpha_1=0, alpha_l>=2 = 0.06*(-1)^l, s_{1,1}=+pi/2, s_{L,1}=-pi/2, other s=0; random starts add the same frame offset to their s draws"}
+  },
+  "N_stage2": [12],
+  "unchanged": "SPSA constants, caps 128/1024, 4 starts, seeds 10000..10007, fields, extensions, metrics",
+  "not_authorized_not_run": "complex/imaginary alpha arm (D7) - only a Hessian diagnostic was computed"
+}

@@ -1,5 +1,26 @@
 # Nov9th: physical-definition decisions for the user, and what is safe to run now
 
+## APPROVAL RECORD (Zach, Nov 9 18:41 Shanghai, relayed by the parent agent)
+
+The recommended Nov9 simulation benchmark is **approved**. D2–D5 are now approved *simulation definitions*, no longer provisional:
+
+| id | approved definition |
+|---|---|
+| D2 | SNAP phase 0 on Fock levels ≥ 8 |
+| D3 | Uz: \(U_{cZ}\) pair terms touching a leaked cavity are off (zero-extended logical Z); all other terms still act. U0 stays a **sensitivity arm**, not the definition. |
+| D4 | per-term leaked coupling energy: \(\lvert J_{ij}\rvert\) for each pair touching a leaked cavity, \(+b\) per qubit of a leaked cavity |
+| D5 | ideal logical readout (number-resolved with a "≥ 8" bin; ideal \(W_L\) on the code, identity outside) |
+
+Scope of the approval:
+
+- It does **not** establish hardware feasibility. The compiled \(W_L\), its leakage and its cost remain unmodelled, and no hardware claim may be made.
+- Fidelity is always unconditioned: no postselection on the code space.
+- The circuit is unchanged: D in the middle, a shared \(U_{cZ}\) across layers, SPSA only (QAOA included), p = L, paired dev seeds.
+- Validation (11000..11031) and final (20000..20999) seeds stay untouched until the recipe is frozen after development.
+- D1 (binary encoding) is as before. D6–D9 are unchanged by this approval: Nov9th-B stays a diagnostic, and complex α, 4-body strings and α_max are not decided.
+
+The original consultation text below is kept unchanged as the record of the recommendation. Where it says "provisional-★" or "needs D2–D5" for simulation, read it as superseded by this approval for simulation purposes only.
+
 No reviewed contract defines the physical action of SNAP or \(U_{cZ}\) on Fock levels ≥ 8, or how energy is measured when a cavity leaks. Nov3rd never needed it, because it uses NF = 8 and an ideal \(W\). So Nov9th with a true displacement is **not defined** until D2–D5 are chosen. Below, ★ marks the consultation's recommended default. Workers may launch with the ★ choices, labeled "provisional-★". Any headline claim needs the user to confirm.
 
 | id | question | options | ★ recommendation and reason |

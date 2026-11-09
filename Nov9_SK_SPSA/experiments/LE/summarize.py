@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 HERE = Path(__file__).resolve().parent
 OUT = HERE.parents[1] / "results" / "LE"
 PREREG = json.loads((HERE / "PREREG_LE_M1.json").read_text())
+PREREG["arms"].update(json.loads((HERE / "PREREG_LE_M1b.json").read_text())["new_arms"])
 ARMS = list(PREREG["arms"])
 
 
@@ -106,8 +107,8 @@ def main():
 def write_md(S, Ns):
     C = S["cells"]
     L_ = []
-    L_.append("# LE milestone 1 results (provisional dev simulation; 8 dev seeds; descriptive only)\n")
-    L_.append("Off-code physics provisional (D2 pad-0, D3 Uz / U0 arm, D4 per-term H_ext, D5 ideal readout). NOT user-confirmed, NOT hardware, NOT final. Exact-energy SPSA, no shots. 8 samples: no target claim.\n")
+    L_.append("# LE milestone 1 results (approved Nov9 simulation benchmark; 8 dev seeds; descriptive only)\n")
+    L_.append("Off-code physics = approved simulation definitions (Zach, Nov 9 18:41 Shanghai): D2 SNAP phase 0 above level 7, D3 Uz (U0 = sensitivity arm), D4 per-term H_ext, D5 ideal logical readout. These are identical to the definitions frozen in PREREG_LE_M1 (written before the approval as 'provisional'). NOT a hardware-feasibility result, NOT validation/final. Unconditioned F, no postselection. Exact-energy SPSA, no shots. 8 samples: no target claim. B_alt = strict-logical diagnostic, not a true D. LE_frame = post-M1 init variant (PREREG_LE_M1b).\n")
     L_.append(f"Runs {S['n_runs']}, failures {S['failures']}, prereg sha {', '.join(s[:12] for s in S['prereg_sha256_seen'])}.\n")
     for cap in PREREG["caps"]:
         L_.append(f"\n## cap {cap} queries\n")
@@ -137,7 +138,7 @@ def write_md(S, Ns):
 
 def plots(R, C, Ns):
     colors = {"QAOA": "k", "LE_alt": "tab:blue", "LE_same": "tab:cyan", "LE_alt_U0": "tab:purple",
-              "LE_alt_s3off": "tab:orange", "B_alt": "tab:red"}
+              "LE_alt_s3off": "tab:orange", "B_alt": "tab:red", "LE_frame": "tab:green"}
     fig, axes = plt.subplots(len(Ns), 2, figsize=(11, 4 * len(Ns)), squeeze=False)
     for i, N in enumerate(Ns):
         for j, b in enumerate(PREREG["fields"]):
@@ -161,24 +162,24 @@ def plots(R, C, Ns):
         if "cutoff" in r and r["arm"] == "LE_alt" and r["L"] == 3:
             nfs = sorted(int(k) for k in r["cutoff"])
             ax.semilogy(nfs, [max(abs(r["cutoff"][str(n)]["p_leak"] - r["cutoff"]["48"]["p_leak"]), 1e-18) for n in nfs],
-                        color="tab:blue" if r["N"] == 9 else "tab:green", alpha=0.4)
+                        color={6: "tab:green", 9: "tab:blue", 12: "tab:red"}[r["N"]], alpha=0.4)
     ax.set_xlabel("NF_sim")
     ax.set_ylabel("|p_leak(NF) - p_leak(48)|")
-    ax.set_title("cutoff convergence, LE_alt L=3 selected points (blue N9, green N6)")
+    ax.set_title("cutoff convergence, LE_alt L=3 selected points (green N6, blue N9, red N12)")
     fig.tight_layout()
     fig.savefig(OUT / "leak_vs_NF.png", dpi=110)
     plt.close(fig)
     # paired F scatter
     fig, ax = plt.subplots(figsize=(5, 5))
     for r in R:
-        if r["arm"] in ("LE_alt", "B_alt") and r["cap"] == 1024:
+        if r["arm"] in ("LE_alt", "B_alt", "LE_frame") and r["cap"] == 1024:
             q = [x for x in R if x["arm"] == "QAOA" and x["cap"] == 1024 and (x["N"], x["seed"], x["b"], x["L"]) == (r["N"], r["seed"], r["b"], r["L"])]
             if q:
                 ax.scatter(q[0]["diag"]["F"], r["diag"]["F"], s=10, color=colors[r["arm"]], alpha=0.6,
-                           marker="o" if r["N"] == 9 else "^")
+                           marker={6: "^", 9: "o", 12: "s"}[r["N"]])
     ax.plot([0, 1], [0, 1], "k--", lw=0.8)
     ax.set_xlabel("QAOA p=L F")
-    ax.set_ylabel("Nov9th F (blue leaky LE_alt, red strict B)")
+    ax.set_ylabel("Nov9th F (blue LE_alt, red strict B, green LE_frame)")
     ax.set_title("paired per instance, cap 1024")
     fig.tight_layout()
     fig.savefig(OUT / "paired_F_scatter.png", dpi=110)
