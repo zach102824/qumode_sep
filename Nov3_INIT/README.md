@@ -130,7 +130,7 @@ python3 -m Nov3_INIT.run_vm --phase run
 python3 -m Nov3_INIT.run_vm --phase summary
 ```
 
-Fock-cutoff (`PREREG_CUTOFF.md`) is leakage validation of frozen v4 center-4, not an optimizer retune. D0 = NF=8 (Hilbert dim 8 per cavity). D0+2 = NF=10 with ideal \(W_L\) pad. N=15, L=1 and L=2, seeds `10520..10527`. Compiled \(W_L\) is not modelled. No GR patch.
+Fock-cutoff (`PREREG_CUTOFF.md`) is leakage validation of frozen v4 center-4, not an optimizer retune. D0 = NF=8 (Hilbert dim 8 per cavity). D0+2 = NF=10 with ideal \(W_L\) identity pad (algebraic invariance, not a SNAP–D pulse-compile cutoff test). N=15, L=1 and L=2, seeds `10520..10527`. Compiled \(W_L\) is not modelled. No GR patch. See `results/cutoff/ADDENDUM_AUDIT.md`.
 
 ```bash
 python3 -m Nov3_INIT.conformance_cutoff
@@ -139,13 +139,14 @@ python3 -m Nov3_INIT.run_cutoff --phase run
 python3 -m Nov3_INIT.run_cutoff --phase summary
 ```
 
-Non-ideal \(W_L\) (`PREREG_WL.md`) is the missing compiled-embedding probe. One knob \(\varepsilon=0.10\): real Givens on the PROTOCOL §3.1 7–8 edge after ideal \(W_{\rm BinH}\). N=15 L=1 Q=1024, seeds `10528..10535`, arms ideal Nov3 / non-ideal Nov3 / QAOA under the same \(W_\varepsilon\). SNAP–D pulse compile of \(W_L\) remains unmodelled. No GR patch. Not a hardware claim.
+Non-ideal \(W_L\) (`PREREG_WL.md`, `AUDIT_WL.md`) is a **phenomenological** \(G_{7,8}(\varepsilon=0.10)\) sensitivity test, not a compiled-\(W_L\) or hardware-calibrated model. PROTOCOL §3.1 names the 7–8 displacement edge; it does not specify this Givens or \(\varepsilon\). N=15 L=1 Q=1024, seeds `10528..10535`. Secondary B−A is Nov3-only; equal \(p_{\rm leak}\) is not equal energy bias. SNAP–D pulse compile of \(W_L\) remains unmodelled. No GR patch. No further \(\varepsilon\) sweeps.
 
 ```bash
 python3 -m Nov3_INIT.conformance_wl
 python3 -m Nov3_INIT.run_wl --phase bstar
 python3 -m Nov3_INIT.run_wl --phase run
 python3 -m Nov3_INIT.run_wl --phase summary
+python3 -m Nov3_INIT.audit_wl
 ```
 
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.

@@ -1,9 +1,11 @@
-"""Fock Nov3: D0=NF=8 rewrite, NF=10 pad, ideal W_L and one-knob W_ε.
+"""Fock Nov3: D0=NF=8 rewrite, NF=10 pad, ideal W_L and illustrative W_ε.
 
 v4 center-4 sims are the logical rewrite of Nov3rd on Fock 0..7. Ideal pad is
-W_L = H^{⊗3} ⊕ I (PR106). Non-ideal W_ε = G_{7,8}(ε) W_BinH with ε=0.10
-(PROTOCOL §3.1 unique 7–8 edge). SNAP phase 0 on f≥8, Uz pair phases, H^ext.
-A SNAP–D pulse compile of W_L is still unmodelled.
+W_L = H^{⊗3} ⊕ I (PR106, algebraic invariance). Illustrative
+W_ε = G_{7,8}(ε) W_BinH with ε=0.10 is a phenomenological knob, not a
+compiled-W or hardware-calibrated model. PROTOCOL §3.1 names the 7–8
+a†-a edge; it does not specify this Givens. SNAP phase 0 on f≥8, Uz, H^ext
+unconditional. A SNAP–D pulse compile of W_L is still unmodelled.
 """
 from __future__ import annotations
 
@@ -31,9 +33,10 @@ from Nov9_SK_SPSA.experiments.FT.sim import (
 D0 = 8
 D0_PLUS_2 = 10
 CODE = 8
-# Residual 7↔8 mixing after an intended code Hadamard. PROTOCOL §3.1: the
-# only binary-Fock displacement edge that leaves the code is 7–8. Real Givens
-# matches real-α D (orthogonal). ε=0.10 is one controlled knob, not a noise model.
+# Residual 7↔8 mixing after an intended code Hadamard. PROTOCOL §3.1 names
+# 7–8 as the unique a†-a code-leaving edge; it does not specify this Givens
+# or ε. ε=0.10 is an illustrative phenomenological knob, not a calibrated
+# error model and not a SNAP–D compile.
 EPS_WL = 0.10
 
 

@@ -1,6 +1,6 @@
 # N3INIT Fock-cutoff validation N=15 L=1,2
 
-Frozen v4 center-4. D0=NF=8, D0+2=NF=10, ideal W_L pad. Compiled W_L not modelled. Seeds 10520–10527. No GR patch.
+Frozen v4 center-4. D0=NF=8, D0+2=NF=10, ideal W_L identity pad. Identity pad is algebraic invariance of H^{⊗3} ⊕ I, not a SNAP–D pulse-compile cutoff test. Compiled W_L not modelled. Seeds 10520–10527. No GR patch. See ADDENDUM_AUDIT.md.
 
 **CUTOFF_ROBUST_L1.**
 
@@ -36,4 +36,4 @@ Nov3 vs QAOA mean ΔE -0.1653 CI [-0.240, -0.076] wins 7/8. CI<0 True.
 mean E Nov3 -11.1334 QAOA -10.9681. mean F Nov3 0.627 QAOA 0.546.
 Nov3 p_leak 9.659e-15 mean n/cavity 3.5000 p_highest 9.631e-15. start0 Nov3 2/8 QAOA 3/8.
 
-Fit workers 4, BLAS 1. Each completed ledger equals Q=1024·L. Ideal W_L only; no hardware claim.
+Fit workers 4, BLAS 1. Each completed ledger equals Q=1024·L. Ideal W_L only; no hardware claim. Pulse-compile cutoff convergence remains unvalidated.

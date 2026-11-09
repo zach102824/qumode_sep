@@ -374,7 +374,7 @@ def summarize() -> None:
     lines = [
         "# N3INIT non-ideal W_L leakage probe N=15 L=1",
         "",
-        "Frozen v4 center-4. NF=10. W_ε = G_{7,8}(ε=0.10) W_BinH. SNAP phase 0 on f≥8. Seeds 10528–10535. No GR patch. Not a hardware claim.",
+        "Frozen v4 center-4. NF=10. Phenomenological W_ε = G_{7,8}(ε=0.10) W_BinH, not compiled-W. SNAP phase 0 on f≥8. Seeds 10528–10535. No GR patch. Not a hardware claim.",
         "",
         f"**{label}.**",
         "",
@@ -387,7 +387,7 @@ def summarize() -> None:
     else:
         d = primary["dE"]
         lines += [
-            "## Primary: non-ideal Nov3 vs QAOA (same W_ε)",
+            "## Primary: G_7,8(0.10) Nov3 vs QAOA (same illustrative embedding)",
             "",
             f"Nov3−QAOA mean ΔE {d['mean']:+.4f} CI [{d['ci95'][0]:+.3f}, {d['ci95'][1]:+.3f}] wins {primary['left_vs_right_wins']}/{primary['n']}. CI<0 {primary['ci_entirely_lt0']}.",
             f"mean E Nov3 {primary['E_left']['mean']:.4f} QAOA {primary['E_right']['mean']:.4f}. mean F Nov3 {primary['F_left']['mean']:.3f} QAOA {primary['F_right']['mean']:.3f}.",
@@ -401,7 +401,7 @@ def summarize() -> None:
         lines += [
             "## Secondary: non-ideal Nov3 vs ideal Nov3",
             "",
-            f"non-ideal−ideal mean ΔE {d['mean']:+.4f} CI [{d['ci95'][0]:+.3f}, {d['ci95'][1]:+.3f}] (positive means non-ideal hurts Nov3).",
+            f"non-ideal−ideal mean ΔE {d['mean']:+.4f} CI [{d['ci95'][0]:+.3f}, {d['ci95'][1]:+.3f}] (Nov3-only; no ideal QAOA arm; equal p_leak is not equal energy bias).",
             f"mean E non-ideal {secondary['E_left']['mean']:.4f} ideal {secondary['E_right']['mean']:.4f}.",
             f"p_leak non-ideal {secondary['p_leak_left']['mean']:.3e} ideal {secondary['p_leak_right']['mean']:.3e}.",
             "",
@@ -423,7 +423,7 @@ def summarize() -> None:
         for r in fails:
             lines.append(f"- {r['arm']} seed={r['seed']}: {r['failure']}")
         lines.append("")
-    lines.append("Fit workers 4, BLAS 1. Each completed ledger equals Q=1024. SNAP–D compile of W_L remains unmodelled. No hardware physical-edge claim.")
+    lines.append("Fit workers 4, BLAS 1. Each completed ledger equals Q=1024. Phenomenological G_7,8(0.10) only. SNAP–D compile of W_L remains unmodelled. No hardware physical-edge claim.")
     (RES / "RESULTS.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines), flush=True)
 
