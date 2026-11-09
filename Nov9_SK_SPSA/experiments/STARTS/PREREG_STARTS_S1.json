@@ -1,0 +1,80 @@
+{
+  "experiment": "STARTS S1: concentrate Q=3072 on the TQA start vs historical S4",
+  "written_before_fits": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "s8_closed": true,
+  "continuation_closed": true,
+  "throughput_axis_closed": true,
+  "conditioning_closed": ["C1", "B3", "B4"],
+  "hypothesis": {
+    "id": "concentrate_budget_on_tqa",
+    "one_sentence": "S8 lost because extra starts starved the TQA trajectory that usually wins; putting the whole Q=3072 on that one start should beat equal four-start C0.",
+    "not": "No more-starts. No continuation. No free S4. No GR patch."
+  },
+  "seeds": {
+    "ids": [10048, 10049, 10050, 10051, 10052, 10053, 10054, 10055],
+    "role": "read_dev",
+    "already_read_by": "STARTS_S8 S4/S8",
+    "forbidden": ["11000-11031", "20000-20999", "new unread bands"]
+  },
+  "batch": {
+    "N": [15],
+    "L": [3],
+    "q": 1024,
+    "Q": 3072,
+    "circuits": ["Nov3", "QAOA"],
+    "arms": ["S4_reused", "S1", "S2"],
+    "s2": "included; previous N15 L3 32-fit wall was ~100s, not tight"
+  },
+  "s4_reuse": {
+    "source": "PR82 STARTS S8 audited S4 files",
+    "path": "Nov9_SK_SPSA/results/STARTS/runs/N15/s{seed}_L3_{circuit}_S4_q1024.json",
+    "recipe_must_match": {
+      "optimizer": "C0",
+      "engine": "m2",
+      "nstarts": 4,
+      "K_per_start": 379,
+      "per_start": 768,
+      "Q": 3072,
+      "queries": 3072,
+      "query_cat": {"calibration": 32, "perturb": 3032, "candidate": 8, "monitor": 0},
+      "gain_frozen": false,
+      "start0": "TQA, same as S1 start0 and historical C0"
+    },
+    "on_mismatch": "refit S4, charge Q, never free-count"
+  },
+  "allocation": {
+    "S4": "Reused if recipe match. Not charged again.",
+    "S1": "One start = TQA/start-0. Full Q=3072, K=1531. Same C0 gain/readout. Same SPSA RNG stream as S4 start 0.",
+    "S2": "Two equal starts, start0 TQA + start1 U(-0.6,0.6) with the same stream as S4 start 1. K=763 each. Same total Q.",
+    "inclusive": "All init, calibration, perturbations, candidates, failures inside each arm Q. No free prefix."
+  },
+  "optimizer": {
+    "kind": "ordinary IID Rademacher SPSA, C0 simultaneous gain",
+    "ncal": 4,
+    "A": 25,
+    "forbidden": ["BFGS", "natural gradient", "B3/B4 shrink", "S8 retry", "continuation"]
+  },
+  "selection": "Lowest counted candidate energy. F post hoc.",
+  "gate": {
+    "cell": "N15 L3 Nov3, n=8, energy E_S1 - E_S4",
+    "adopt_S1_as_candidate": "bootstrap 95% CI of the mean ΔE lies entirely below 0 AND median ΔE < 0",
+    "otherwise": "reject S1. Do not scan another concentration.",
+    "gr": "Do not patch GR even if the gate passes."
+  },
+  "report": [
+    "S1 vs S4 within method: paired Δ(E-E0)/N and ΔF, mean, median, CI, wins, min/max tails",
+    "S2 vs S4 same stats, not in the gate",
+    "Nov3 vs QAOA under S1 and under S4, same paired stats"
+  ],
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "depth_c1": 327680,
+    "starts_s8": 98304,
+    "s4_not_recharged": 16,
+    "this_stream": "STARTS_S1, counted separately",
+    "new_charge": "32 new fits × 3072 = 98304 if S1 and S2 both run"
+  }
+}
