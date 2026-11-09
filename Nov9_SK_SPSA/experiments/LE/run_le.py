@@ -32,20 +32,22 @@ def prereg_sha():
 
 def instance(N, seed, b):
     INST.mkdir(parents=True, exist_ok=True)
-    stem = INST / f"N{N}_s{seed}_b{b}"
+    stem = f"N{N}_s{seed}_b{int(round(10 * b)):02d}"
+    pj, pz = INST / f"{stem}.json", INST / f"{stem}.npz"
     J = C.make_J(seed, N)
-    if (stem.with_suffix(".json")).exists():
-        meta = json.loads(stem.with_suffix(".json").read_text())
-        gs = np.load(stem.with_suffix(".npz"))["gs"]
-        assert meta["J_sha256"] == C.J_sha(J)
+    if pj.exists():
+        meta = json.loads(pj.read_text())
+        gs = np.load(pz)["gs"]
+        assert meta["J_sha256"] == C.J_sha(J) and meta["b"] == b
         return J, meta, gs
     g = C.exact_gs(J, b)
+    assert g["E0"] <= -b * N + 1e-9, "E0 above |+> energy"
     meta = {"N": N, "seed": seed, "b": b, "J_sha256": C.J_sha(J), "J_upper": C.upper(J).tolist(),
             "E0": g["E0"], "E1": g["E1"], "E0_odd": g["E0_odd"], "Delta_odd": g["E0_odd"] - g["E0"],
             "gs_resid": g["resid"], "F_plus": C.plus_fidelity(g["gs"]),
             "E_plus": float(-b * N)}
-    np.savez_compressed(stem.with_suffix(".npz"), gs=g["gs"])
-    stem.with_suffix(".json").write_text(json.dumps(meta))
+    np.savez_compressed(pz, gs=g["gs"])
+    pj.write_text(json.dumps(meta))
     return J, meta, g["gs"]
 
 
@@ -94,7 +96,7 @@ def starts_for(arm, sim, seed, N, b, L):
 
 def run_one(task):
     N, seed, b, L, arm, cap = task
-    path = RUNS / f"N{N}" / f"s{seed}_b{b}_L{L}_{arm}_cap{cap}.json"
+    path = RUNS / f"N{N}" / f"s{seed}_b{int(round(10 * b)):02d}_L{L}_{arm}_cap{cap}.json"
     if path.exists():
         return str(path), "skip"
     path.parent.mkdir(parents=True, exist_ok=True)
