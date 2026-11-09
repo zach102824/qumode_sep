@@ -27,6 +27,7 @@ RES = ROOT / "results" / "shellgain"
 CELLS = RES / "cells"
 INST = RES / "instances"
 CONF = RES / "CONFORMANCE.json"
+# Shared with LE PR101 SHELL_FIRST. Not exclusive. Results kept; no switch to 10408-10415.
 BAND = list(range(10368, 10376))
 N = 15
 L = 3
@@ -50,7 +51,7 @@ def prereg_sha() -> str:
 def allow(seed: int) -> None:
     seed = int(seed)
     if seed not in BAND:
-        raise RuntimeError(f"seed {seed} is not in the shell-gain band 10368..10375")
+        raise RuntimeError(f"seed {seed} is not in the shell-gain band 10368..10375 (shared-with-LE-PR101)")
     if 10360 <= seed <= 10367:
         raise RuntimeError(f"LE two-stage seed {seed}")
     if 10344 <= seed <= 10359:
@@ -330,6 +331,10 @@ def summarize() -> None:
         "pair_shell_reject_stands": True,
         "not_le_two_stage": True,
         "not_paper_V_M": True,
+        "exclusive_unread": False,
+        "shared_with_le_pr101": True,
+        "replacement_band_10408_10415_not_used": True,
+        "results_kept_no_refit": True,
         "n_files": len(rows),
         "n_fail": len(fails),
         "failures": [{"arm": r["arm"], "seed": r["seed"], "failure": r["failure"]} for r in fails],
@@ -351,7 +356,7 @@ def summarize() -> None:
     lines = [
         "# N3INIT shell-emphasized SPSA N=15 L=3",
         "",
-        "Shared-Uc Nov3 only. Not LE two-stage. Not paper V(M). Seeds 10368–10375. Q=3072 each. No GR patch. Holdout FAIL stands.",
+        "Shared-Uc Nov3 only. Not paper V(M). Seeds 10368–10375, shared-with-LE-PR101 (not exclusive). Q=3072 each. No GR patch. Holdout FAIL stands. Results kept; no re-fit on 10408–10415.",
         "",
         f"**{label}.**",
         "",
