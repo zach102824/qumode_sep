@@ -1,0 +1,94 @@
+{
+  "ok": true,
+  "failure": null,
+  "blocker": null,
+  "version": "N3INIT_wl",
+  "arm": "qaoa_wl",
+  "method": "QAOA",
+  "method_id": 0,
+  "eps": 0.1,
+  "order": "hardware",
+  "nf": 10,
+  "n_params": 2,
+  "N": 15,
+  "seed": 10530,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "procedural_cap": 1024,
+  "same_query_budget_across_arms": true,
+  "Bstar": 0.44241047283814233,
+  "E0": -10.194478044297492,
+  "E_plus": -6.636157092572135,
+  "F_plus": 0.109191465972058,
+  "E": -8.790459722988,
+  "E_error_over_N": 0.09360122142063278,
+  "F": 0.3445769089128176,
+  "eta": 0.2642379747715532,
+  "escaped": true,
+  "which": "last",
+  "start_id": 2,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -2.635458325228189,
+      "E": -8.79045971299588,
+      "which": "last",
+      "a_gain": 0.02382109584036755
+    },
+    {
+      "start_id": 1,
+      "e_init": -7.603297104125454,
+      "E": -8.790459721954846,
+      "which": "last",
+      "a_gain": 0.032515471537257
+    },
+    {
+      "start_id": 2,
+      "e_init": -8.738326083161878,
+      "E": -8.790459722988,
+      "which": "last",
+      "a_gain": 0.11081733608186688
+    },
+    {
+      "start_id": 3,
+      "e_init": -8.143121915212287,
+      "E": -8.790459722553779,
+      "which": "last",
+      "a_gain": 0.050551905130538824
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024
+  },
+  "x": [
+    0.2993857752412758,
+    -0.37376390877812665
+  ],
+  "leakage": {
+    "p_leak": 0.02411958004425574,
+    "p_code": 0.9758804199557443,
+    "mean_n_per_cavity": 3.5058322686293364,
+    "mean_n_total": 17.529161343146683,
+    "p_highest_any_cavity": 7.105427357601002e-15,
+    "norm": 0.9999999999999932,
+    "norm_deficit": 6.772360450213455e-15,
+    "nf": 10,
+    "formula": "p_leak=1-P(all cavities in 0..7); mean_n=E[n_c]; p_highest=1-P(all n_c < nf-1); H^ext energy"
+  },
+  "seconds": 14.460728904999996,
+  "cpu_seconds": 14.454521623000002,
+  "peak_rss_kib": 118048,
+  "prereg_sha256": "49e5f4d38e67d3335d3ba5cb2542db8bbbb7cf182097ced90096c6eb15ed0c5d",
+  "fidelity_posthoc": true,
+  "channel": "real Givens 7-8 after ideal W_BinH; SNAP phase 0 on f>=8",
+  "compiled_snap_d_still_unmodelled": true,
+  "rng_omits_eps": true
+}

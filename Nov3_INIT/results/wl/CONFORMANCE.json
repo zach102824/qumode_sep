@@ -1,0 +1,82 @@
+{
+  "ok": true,
+  "prereg_sha256": "49e5f4d38e67d3335d3ba5cb2542db8bbbb7cf182097ced90096c6eb15ed0c5d",
+  "historical_queries_preserved": 2793472,
+  "eps": 0.1,
+  "nf": 10,
+  "channel": "real Givens 7-8 after ideal W_BinH; SNAP phase 0 on f>=8",
+  "not_d2_periodic_snap": true,
+  "not_invented_pulse_compile": true,
+  "compiled_snap_d_still_unmodelled": true,
+  "seeds": {
+    "band": [
+      10528,
+      10529,
+      10530,
+      10531,
+      10532,
+      10533,
+      10534,
+      10535
+    ],
+    "n": 8,
+    "overlaps": {
+      "local_r30_10504_10519": [],
+      "ft_cutoff_10520_10527": [],
+      "ft_vm_10480_10487": [],
+      "le_10432_10439": [],
+      "ft_and_prior_le_10463": [],
+      "holdout_10144_10151": [],
+      "validation_11000_11031": [],
+      "gr_final_20000_20999": []
+    },
+    "ok": true
+  },
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "channel_check": {
+    "eps": 0.1,
+    "nf": 10,
+    "eps0_equals_binh": true,
+    "givens_real": true,
+    "g77": 0.9950041652780258,
+    "g88": 0.9950041652780258,
+    "g78": -0.09983341664682815,
+    "cos": 0.9950041652780258,
+    "sin": 0.09983341664682815,
+    "ok": true
+  },
+  "reduction": {
+    "eps0_rewrite_equals_logical": true,
+    "eps0_hardware_equals_rewrite": true,
+    "eps0_qaoa_equals_logical": true,
+    "center_nov3_equals_qaoa_leaky": true,
+    "p_leak_leaky_nov3": 0.009216315589270052,
+    "p_leak_leaky_qaoa": 0.009216315589270052,
+    "p_leak_positive": true,
+    "Q": 1024,
+    "T": 122,
+    "n_params": {
+      "Nov3rd": 6,
+      "QAOA": 2
+    }
+  },
+  "ledger_quadratic": {
+    "ok": true,
+    "ledger": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 80,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 128
+    }
+  },
+  "label_rule": "WL_ROBUST_L1 iff L=1 non-ideal Nov3-QAOA mean dE CI entirely <0; else WL_SENSITIVE",
+  "no_gr_patch": true,
+  "no_candidacy_file": true,
+  "no_spsa_on_hamiltonian_in_this_module": true
+}

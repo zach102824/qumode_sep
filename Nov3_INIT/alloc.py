@@ -4,7 +4,7 @@ from __future__ import annotations
 import numpy as np
 
 METHOD_ID = {
-    "equal4": {"QAOA": 0, "Nov3rd": 1, "Nov3pair": 2, "SHELL2": 3, "SHELL4": 4, "ANNEAL": 7, "VM": 8},
+    "equal4": {"QAOA": 0, "Nov3rd": 1, "Nov3pair": 2, "SHELL2": 3, "SHELL4": 4, "ANNEAL": 7, "VM": 8, "WL": 9},
     "spread8": {"QAOA": 6, "Nov3rd": 5},
     "halve8to2": {"QAOA": 71, "Nov3rd": 70},
 }

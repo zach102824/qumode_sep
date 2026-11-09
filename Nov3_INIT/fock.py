@@ -1,8 +1,9 @@
-"""Fock-cutoff Nov3: frozen v4 D0=NF=8, pad D0+2=10, ideal W_L.
+"""Fock Nov3: D0=NF=8 rewrite, NF=10 pad, ideal W_L and one-knob W_ε.
 
-v4 center-4 sims are the logical rewrite of Nov3rd on Fock 0..7 (Hilbert dim 8
-per cavity). Compiled W_L leakage is not modelled (D5). Off-code rules: SNAP
-phase 0 on f≥8, Uz pair phases, H^ext energy.
+v4 center-4 sims are the logical rewrite of Nov3rd on Fock 0..7. Ideal pad is
+W_L = H^{⊗3} ⊕ I (PR106). Non-ideal W_ε = G_{7,8}(ε) W_BinH with ε=0.10
+(PROTOCOL §3.1 unique 7–8 edge). SNAP phase 0 on f≥8, Uz pair phases, H^ext.
+A SNAP–D pulse compile of W_L is still unmodelled.
 """
 from __future__ import annotations
 
@@ -30,6 +31,10 @@ from Nov9_SK_SPSA.experiments.FT.sim import (
 D0 = 8
 D0_PLUS_2 = 10
 CODE = 8
+# Residual 7↔8 mixing after an intended code Hadamard. PROTOCOL §3.1: the
+# only binary-Fock displacement edge that leaves the code is 7–8. Real Givens
+# matches real-α D (orthogonal). ε=0.10 is one controlled knob, not a noise model.
+EPS_WL = 0.10
 
 
 def w_binh(nf: int) -> np.ndarray:
@@ -44,6 +49,26 @@ def w_binh(nf: int) -> np.ndarray:
     w = np.eye(nf, dtype=np.float64)
     w[:CODE, :CODE] = w3
     return w
+
+
+def givens_78(nf: int, eps: float) -> np.ndarray:
+    """Real rotation in span{|7⟩,|8⟩}. Identity if nf<9 or ε=0."""
+    nf = int(nf)
+    g = np.eye(nf, dtype=np.float64)
+    if nf < 9 or float(eps) == 0.0:
+        return g
+    c = float(np.cos(eps))
+    s = float(np.sin(eps))
+    g[7, 7] = c
+    g[8, 8] = c
+    g[7, 8] = -s
+    g[8, 7] = s
+    return g
+
+
+def w_nonideal(nf: int, eps: float) -> np.ndarray:
+    """Ideal W_L then residual 7↔8 Givens. ε=0 recovers w_binh."""
+    return givens_78(nf, eps) @ w_binh(nf)
 
 
 def inst_from_logical(logical) -> SimpleNamespace:
@@ -108,38 +133,94 @@ def leakage_logical(psi: np.ndarray, groups: list[list[int]]) -> dict:
 
 
 class FockNov3:
-    """|+⟩ → [UcZ → W_L S W_L]^L on nf levels per cavity. Ideal W_L pad."""
+    """Fock Nov3 / QAOA with a chosen W_L.
 
-    def __init__(self, logical, nf: int):
+    order='rewrite': |+⟩ → [UcZ → W S W]^L (PR106 / logical identity at ε=0).
+    order='hardware': |0⟩ → [W UcZ W → S]^L → W (Nov3rd native; needed when W²≠I).
+    """
+
+    def __init__(self, logical, nf: int, eps: float = 0.0, order: str = "rewrite"):
+        if order not in ("rewrite", "hardware"):
+            raise ValueError(order)
         self.logical = logical
         self.nf = int(nf)
+        self.eps = float(eps)
+        self.order = order
         self.tables = FockTables(inst_from_logical(logical), self.nf)
-        self.W = w_binh(self.nf)
+        self.W = w_nonideal(self.nf, self.eps)
         self.C = self.tables.C
 
-    def state(self, x: np.ndarray, L: int) -> np.ndarray:
+    def _snap(self, s1: float, s2: float, s3: float, psi: np.ndarray) -> np.ndarray:
+        snap = np.exp(-1j * snap_level_phase(self.nf, float(s1), float(s2), float(s3)))
+        t = psi.reshape((self.nf,) * self.C)
+        for cav in range(self.C):
+            shape = [1] * self.C
+            shape[cav] = self.nf
+            t = t * snap.reshape(shape)
+        return t.reshape(-1)
+
+    def _vacuum(self) -> np.ndarray:
+        psi = np.zeros(self.tables.dim, dtype=np.complex128)
+        psi.reshape((self.nf,) * self.C)[(0,) * self.C] = 1.0
+        return psi
+
+    def state_nov3(self, x: np.ndarray, L: int) -> np.ndarray:
         x = np.asarray(x, dtype=np.float64)
         gamma, th_k, th_m = float(x[0]), float(x[1]), float(x[2])
         shells = x[3:].reshape(int(L), 3)
         g = self.tables.uz["J"] + th_k * self.tables.uz["K"] + th_m * self.tables.uz["M"]
         eph = np.exp(-1j * gamma * g)
-        psi = self.tables.plus()
         nf, c = self.nf, self.C
+        if self.order == "rewrite":
+            psi = self.tables.plus()
+            for ell in range(int(L)):
+                psi = psi * eph
+                psi = _apply_matrix(psi, self.W, nf, c)
+                psi = self._snap(shells[ell, 0], shells[ell, 1], shells[ell, 2], psi)
+                psi = _apply_matrix(psi, self.W, nf, c)
+            return psi
+        psi = self._vacuum()
         for ell in range(int(L)):
+            psi = _apply_matrix(psi, self.W, nf, c)
             psi = psi * eph
             psi = _apply_matrix(psi, self.W, nf, c)
-            snap = np.exp(-1j * snap_level_phase(nf, float(shells[ell, 0]), float(shells[ell, 1]), float(shells[ell, 2])))
-            t = psi.reshape((nf,) * c)
-            for cav in range(c):
-                shape = [1] * c
-                shape[cav] = nf
-                t = t * snap.reshape(shape)
-            psi = t.reshape(-1)
+            psi = self._snap(shells[ell, 0], shells[ell, 1], shells[ell, 2], psi)
+        return _apply_matrix(psi, self.W, nf, c)
+
+    def state_qaoa(self, x: np.ndarray, L: int) -> np.ndarray:
+        """Same W embedding: mixer W SNAP(s1=-2β) W, cost Uz J only."""
+        x = np.asarray(x, dtype=np.float64)
+        if int(x.size) != 2 * int(L):
+            raise ValueError(f"QAOA x len {x.size} != {2 * L}")
+        nf, c = self.nf, self.C
+        if self.order == "rewrite":
+            psi = self.tables.plus()
+            for ell in range(int(L)):
+                psi = psi * np.exp(-1j * float(x[2 * ell]) * self.tables.uz["J"])
+                psi = _apply_matrix(psi, self.W, nf, c)
+                psi = self._snap(-2.0 * float(x[2 * ell + 1]), 0.0, 0.0, psi)
+                psi = _apply_matrix(psi, self.W, nf, c)
+            return psi
+        psi = self._vacuum()
+        for ell in range(int(L)):
             psi = _apply_matrix(psi, self.W, nf, c)
-        return psi
+            psi = psi * np.exp(-1j * float(x[2 * ell]) * self.tables.uz["J"])
+            psi = _apply_matrix(psi, self.W, nf, c)
+            psi = self._snap(-2.0 * float(x[2 * ell + 1]), 0.0, 0.0, psi)
+        return _apply_matrix(psi, self.W, nf, c)
+
+    def state(self, x: np.ndarray, L: int) -> np.ndarray:
+        return self.state_nov3(x, L)
 
     def propagate(self, x: np.ndarray, L: int) -> tuple[float, np.ndarray]:
-        psi = self.state(x, L)
+        psi = self.state_nov3(x, L)
+        met = metrics_from_fock(psi, self.tables)
+        if not met["ok"]:
+            raise RuntimeError(f"non-finite Fock energy or norm {met['norm']}")
+        return float(met["E"]), psi
+
+    def propagate_qaoa(self, x: np.ndarray, L: int) -> tuple[float, np.ndarray]:
+        psi = self.state_qaoa(x, L)
         met = metrics_from_fock(psi, self.tables)
         if not met["ok"]:
             raise RuntimeError(f"non-finite Fock energy or norm {met['norm']}")

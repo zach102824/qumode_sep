@@ -139,4 +139,13 @@ python3 -m Nov3_INIT.run_cutoff --phase run
 python3 -m Nov3_INIT.run_cutoff --phase summary
 ```
 
+Non-ideal \(W_L\) (`PREREG_WL.md`) is the missing compiled-embedding probe. One knob \(\varepsilon=0.10\): real Givens on the PROTOCOL §3.1 7–8 edge after ideal \(W_{\rm BinH}\). N=15 L=1 Q=1024, seeds `10528..10535`, arms ideal Nov3 / non-ideal Nov3 / QAOA under the same \(W_\varepsilon\). SNAP–D pulse compile of \(W_L\) remains unmodelled. No GR patch. Not a hardware claim.
+
+```bash
+python3 -m Nov3_INIT.conformance_wl
+python3 -m Nov3_INIT.run_wl --phase bstar
+python3 -m Nov3_INIT.run_wl --phase run
+python3 -m Nov3_INIT.run_wl --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
