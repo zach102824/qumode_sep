@@ -1,0 +1,96 @@
+{
+  "experiment": "FTREP H: independent LE replay of FT PR79 L=2 holdout 10144–10151",
+  "written_before_fits": true,
+  "intentional_holdout_replay": true,
+  "not_a_collision": true,
+  "not_a_schedule_tweak": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "no_candidacy_revival": true,
+  "no_final": true,
+  "no_validation": true,
+  "ft_source": {
+    "pr": 79,
+    "holdout_commit": "bd9effe3feccfe6a2d3fb92f0f39e3d830e18c0c",
+    "recipe_head_commit": "347ac23369db1251c902638994b4fdc65a019710",
+    "alloc_py_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+    "same_as_ftrep_l2": true
+  },
+  "hypothesis": {
+    "id": "le_replays_ft_holdout_instability",
+    "one_sentence": "FT’s L=2 holdout FAIL on 10144–10151 (H1 N15 Q=2048 CI crosses 0) is recipe-real, not an FT-only fluke: the same frozen v4 center-4 recipe on LE will also fail Gate R on that band.",
+    "not": "Not a new schedule. Not candidacy revival. Not a GR patch. Not validation/final. Intentional replay of the published holdout set."
+  },
+  "frozen_recipe": "Exact FTREP copy of FT v4: four equal SPSA blocks, T=Q/8-6=250, Q=qL=2048, frozen gains c=0.1 A=25 clip 2σ, center-4 starts, energy among init/last/Polyak/mid. alloc.py unmodified.",
+  "seeds": {
+    "ids": [10144, 10145, 10146, 10147, 10148, 10149, 10150, 10151],
+    "role": "ft_holdout_replay",
+    "note": "Exactly FT PR79 v8 holdout. Intentional replay, not a collision. Do not substitute.",
+    "forbidden_other": ["10010-10143", "10152-10199", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N_required": [15],
+    "N_optional": [18],
+    "L": [2],
+    "q": 1024,
+    "Q": 2048,
+    "arms": ["nov3_center4", "qaoa_center4"],
+    "optional_rule": "Run N=18 L=2 Q=2048 on the same seeds if wall allows; Gate R is N15 only."
+  },
+  "ft_published_h1": {
+    "commit": "bd9effe3f",
+    "N": 15,
+    "Q": 2048,
+    "mean_dE": -0.0311,
+    "ci": [-0.083, 0.014],
+    "median": 0.0028,
+    "min": -0.1670,
+    "max": 0.0350,
+    "n_Nov3_lower": 4,
+    "start0_Nov3": 4,
+    "gate_H1": false
+  },
+  "ft_published_h2": {
+    "commit": "bd9effe3f",
+    "N": 18,
+    "Q": 2048,
+    "mean_dE": -0.0650,
+    "ci": [-0.184, 0.045],
+    "median": -0.0361,
+    "min": -0.3679,
+    "max": 0.1391,
+    "n_Nov3_lower": 5,
+    "start0_Nov3": 6,
+    "gate_H2": false
+  },
+  "selection": "FT energy selection. F post hoc, never selects.",
+  "gate": {
+    "R": "N=15 L=2 Q=2048, mean(E_Nov3 - E_QAOA) bootstrap 95% CI entirely below 0",
+    "bootstrap": "4000 resamples, default_rng(3334), seeds resampled. Matches FT v7/v8.",
+    "if_fail": "label HOLDOUT_INSTABILITY CONFIRMED on LE (CI not entirely <0)",
+    "if_pass": "label HOLDOUT_DISCREPANCY and dump per-seed ΔE vs FT published holdout table",
+    "n18": "optional report only; does not change Gate R",
+    "gr": "Do not patch GR either way. No candidacy revival. No final."
+  },
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "depth_c1": 327680,
+    "starts_s8": 98304,
+    "starts_s1": 98304,
+    "starts_s1c": 196608,
+    "starts_s1l6": 196608,
+    "starts_s1q": 344064,
+    "starts_s1sh": 49152,
+    "starts_s1alt": 65536,
+    "starts_s1alt23": 163840,
+    "starts_s1alt13": 98304,
+    "depth_s1w": 245760,
+    "ftrep_n12n15": 65536,
+    "ftrep_n18": 32768,
+    "ftrep_l3": 98304,
+    "this_stream": "FTREP_H, counted separately",
+    "new_charge_n15": "16 fits × 2048 = 32768 if N15 succeeds",
+    "new_charge_if_n18": "32 fits × 2048 = 65536 if N15 and N18 succeed"
+  }
+}
