@@ -1,0 +1,49 @@
+{
+  "experiment": "LEXACT M2: one frozen intra-eval parallel fused FWHT+cis kernel, T=4",
+  "written_before_fits": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "m1_stands": true,
+  "conditioning_closed": ["C1", "B3", "B4"],
+  "hypothesis": {
+    "id": "M2_parallel_fused_fwht_cis_T4",
+    "one_sentence": "Same unitaries as M1. FWHT and X-mixers over disjoint butterflies in 4 threads; diagonal phases applied as cis from real angles, not numpy.exp of a stored complex vector.",
+    "why_this_one": "A numpy ping-pong SIMD FWHT was slower than M1 at N18 (extra buffer traffic). This axis keeps M1's in-place butterflies and parallelizes them at frozen T=4, the host width and the campaign worker count. T is not scanned.",
+    "threads": 4,
+    "blas_threads": 1,
+    "processes_for_latency": 1
+  },
+  "physics_frozen": {
+    "ansatz": "original Nov3 shared gamma/theta, full s1/s2/s3, interleaved packing",
+    "qaoa": "p=L, independent 2L angles, same H",
+    "types": "float64 field, complex128 state",
+    "forbidden": ["truncation", "approx", "changed packing", "postselection", "per-layer gamma", "BFGS", "natural gradient", "Nov9", "SYK", "thread search", "gain rescue"]
+  },
+  "reference": {
+    "physics": "N3COND/nov3.py and LE/core.py QAOA",
+    "throughput_baseline": "LEXACT M1 kernel.py (1 thread)"
+  },
+  "seeds": {
+    "reuse_read_dev": [10010],
+    "exclusive_dev": [10032],
+    "exclusive_band": [10032, 10047],
+    "not": ["10018-10025", "10026-10031", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "conformance_N": [6, 9, 12],
+    "conformance_L": [1, 2, 3, 4, 5, 6],
+    "conformance_points_per_L": 4,
+    "timing_N_L": [["6", "1"], ["6", "6"], ["9", "1"], ["9", "6"], ["12", "1"], ["12", "6"], ["15", "1"], ["15", "3"], ["18", "1"]],
+    "spsa_short": [
+      {"N": 9, "L": 3, "seed": 10010, "Q": 128, "circuits": ["Nov3", "QAOA"]},
+      {"N": 12, "L": 1, "seed": 10010, "Q": 128, "circuits": ["Nov3", "QAOA"]},
+      {"N": 15, "L": 1, "seed": 10032, "Q": 128, "circuits": ["Nov3", "QAOA"]}
+    ]
+  },
+  "success": "Steady energy at N18 L1 Nov3 faster than M1, with state vs reference |Δ|∞ ≤ 1e-12 and SPSA traces |ΔE| ≤ 1e-10, same start/candidate. If not, stop this axis. Not a GR adoption.",
+  "ledger": {
+    "prior_n3cond_preserved": 772224,
+    "lexact_m1_spsa": 768,
+    "new_stream": "LEXACT_M2, counted separately"
+  }
+}

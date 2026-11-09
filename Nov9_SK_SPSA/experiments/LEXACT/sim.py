@@ -17,6 +17,7 @@ sys.path.insert(0, str(HERE.parent / "N3COND"))
 sys.path.insert(0, str(HERE.parent / "LE"))
 import core as C  # noqa: E402
 import kernel as K  # noqa: E402
+import kernel_m2 as K2  # noqa: E402
 import nov3 as N  # noqa: E402
 
 
@@ -125,9 +126,59 @@ class QAOAFast:
         }
 
 
-def make_sim(name, J, b, L, fast=True):
-    if name == "Nov3":
-        return Nov3Fast(J, b, L) if fast else N.Nov3(J, b, L)
-    if name == "QAOA":
-        return QAOAFast(J, b, L) if fast else N.QAOA(J, b, L)
-    raise ValueError(name)
+class Nov3M2(Nov3Fast):
+    def state(self, x):
+        gamma, theta, s = self.unpack(x)
+        uz_ang = gamma * (self.hJ + float(theta[0]) * self.hK + float(theta[1]) * self.hM)
+        snap_ang = np.empty((self.L, self.dim))
+        for ell in range(self.L):
+            snap_ang[ell] = s[ell, 0] * self.c1 + s[ell, 1] * self.c2 + s[ell, 2] * self.c3
+        psi = self.zero.copy()
+        K2.nov3_evolve(psi, uz_ang, snap_ang)
+        return psi
+
+    def energy(self, x):
+        return K2.energy_zz_x(self.state(x), self.hJ, self.b)
+
+    def diagnostics(self, x, gs):
+        psi = self.state(x)
+        F = float(K2.overlap2(np.asarray(gs, dtype=np.float64), psi))
+        par = float(np.real(np.vdot(psi, psi[::-1])))
+        return {
+            "E": float(K2.energy_zz_x(psi, self.hJ, self.b)),
+            "F": F, "p_leak": 0.0, "parity": par,
+            "norm": float(np.sum(psi.real ** 2 + psi.imag ** 2)),
+        }
+
+
+class QAOAM2(QAOAFast):
+    def state(self, x):
+        x = np.asarray(x, float)
+        psi = self.plus.copy()
+        K2.qaoa_evolve(psi, self.hzz, x[: self.L].copy(), x[self.L :].copy())
+        return psi
+
+    def energy(self, x):
+        return K2.energy_zz_x(self.state(x), self.hzz, self.b)
+
+    def diagnostics(self, x, gs):
+        psi = self.state(x)
+        F = float(K2.overlap2(np.asarray(gs, dtype=np.float64), psi))
+        par = float(np.real(np.vdot(psi, psi[::-1])))
+        return {
+            "E": float(K2.energy_zz_x(psi, self.hzz, self.b)),
+            "F": F, "p_leak": 0.0, "parity": par,
+            "norm": float(np.sum(psi.real ** 2 + psi.imag ** 2)),
+        }
+
+
+def make_sim(name, J, b, L, fast=True, engine=None):
+    if engine is None:
+        engine = "m1" if fast else "ref"
+    if engine in (False, "ref"):
+        return N.Nov3(J, b, L) if name == "Nov3" else N.QAOA(J, b, L)
+    if engine in (True, "m1"):
+        return Nov3Fast(J, b, L) if name == "Nov3" else QAOAFast(J, b, L)
+    if engine == "m2":
+        return Nov3M2(J, b, L) if name == "Nov3" else QAOAM2(J, b, L)
+    raise ValueError((name, engine))
