@@ -1,0 +1,77 @@
+{
+  "ok": true,
+  "prereg_sha256": "0876c2deda1174238026b6b46b4f4b55db76067806f18ae0fb67a1e97352a32e",
+  "sk_ledger": 2818048,
+  "compiler_Q": 2048,
+  "T": 250,
+  "nf_fit": 96,
+  "nf_replay": 128,
+  "seed_nf_tag": 16,
+  "identity_L": 1.9999999999999996,
+  "identity_F_avg": 0.1250000000000001,
+  "identity_F_hs": 1.391484384819778e-32,
+  "identity_partition": {
+    "p_code": [
+      1.0,
+      1.0000000000000027,
+      0.9999999999999973,
+      1.0,
+      1.0,
+      0.9999999999999987,
+      1.0000000000000013,
+      1.0
+    ],
+    "p_pad_retained": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "p_lost": [
+      0.0,
+      -2.6645352591003757e-15,
+      2.6645352591003757e-15,
+      0.0,
+      0.0,
+      1.3322676295501878e-15,
+      -1.3322676295501878e-15,
+      0.0
+    ],
+    "p_total": [
+      1.0,
+      1.0000000000000027,
+      0.9999999999999973,
+      1.0,
+      1.0,
+      0.9999999999999987,
+      1.0000000000000013,
+      1.0
+    ],
+    "p_boundary_last4": [
+      4.441675934242984e-33,
+      4.5933429173635674e-32,
+      1.6986702109495425e-31,
+      1.2030611039422905e-31,
+      9.013352139732215e-32,
+      1.1234190106853808e-31,
+      2.48083850961378e-32,
+      2.530671946924829e-31
+    ],
+    "mean_p_code": 1.0,
+    "mean_p_pad_retained": 0.0,
+    "mean_p_lost": 0.0,
+    "mean_p_total": 1.0,
+    "mean_p_boundary": 1.0261240485644286e-31,
+    "partition_sum_mean": 1.0
+  },
+  "preflight_aligned_D18_cubed_ket7_p_lost": 2.1648571824073315e-11,
+  "no_per_gate_P16": true,
+  "selector": "coherent L after one global phase; identity is start-0 init incumbent",
+  "no_spsa_in_this_module": true,
+  "no_sk_hamiltonian": true,
+  "label_rule": "WCOMP_WS_CANDIDATE iff L<=0.02, F_HS>=0.99, mean p_code>=0.99, p_lost<=1e-8, replay overlap>=0.999 and |dL|<=1e-3; p_lost miss -> INCONCLUSIVE; else FAIL_BUDGET"
+}
