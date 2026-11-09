@@ -1,0 +1,68 @@
+{
+  "experiment": "STARTS S1L6: frozen S1 vs S4 at N15 L6, Q=6144, where depth fade is worst",
+  "written_before_fits": true,
+  "not_a_s1_retune": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "s8_closed": true,
+  "continuation_closed": true,
+  "throughput_axis_closed": true,
+  "conditioning_closed": ["C1", "B3", "B4"],
+  "n18_forbidden": "FT owns",
+  "hypothesis": {
+    "id": "s1_at_worst_depth_fade",
+    "one_sentence": "TQA-only S1, with C0 split_cap scaled to Q=qL=6144, beats four-start S4 on energy at N15 L=6, the worst fade cell in scope.",
+    "not": "No S1 gain/start retune. No S8. No continuation. Fair Nov3 vs QAOA is a separate claim."
+  },
+  "frozen_from_PR83_84": {
+    "no_fit_changes": true,
+    "split": "same C0 split_cap(Q, nstarts); K is not 2× the Q=3072 K because calibration and candidates are fixed per start",
+    "S1": {"nstarts": 1, "Q": 6144, "K_per_start": 3067, "per_start": 6144, "start0": "TQA at L=6"},
+    "S4": {"nstarts": 4, "Q": 6144, "K_per_start": 763, "per_start": 1536, "starts": "TQA + 3 U(-0.6,0.6) stream 2"},
+    "optimizer": "ordinary IID Rademacher SPSA C0, ncal=4, A=25, live per-start gain, last+Polyak, energy min",
+    "engine": "m2",
+    "file_sha256": {
+      "starts.py": "6e4b0cd784782084d2f1320ccb9113ef99d320fd09ce984ab5161f68e0716645",
+      "N3COND/spsa.py": "cca4c884bc3020c9c9559e89cb248d9a4b2c8a8bca36624ba6b380dab1832357",
+      "N3COND/nov3.py": "e74f66b2dfc973afe9acd69e5c398b210a59563f8edc04290c5e88fb16a39808"
+    }
+  },
+  "seeds": {
+    "ids": [10064, 10065, 10066, 10067, 10068, 10069, 10070, 10071],
+    "role": "exclusive_unread_dev",
+    "collision_check": "no instance/run filenames; 10056-63 S1C; 10048-55 S8/S1; 10036-43 DEPTH; 10032-47 LEXACT; 10018-25 FT; 10026-31 local; 10010-17 N3COND; 11000-11031 validation; 20000-20999 final",
+    "forbidden": ["10010-10063", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [15],
+    "L": [6],
+    "q": 1024,
+    "Q": 6144,
+    "circuits": ["Nov3", "QAOA"],
+    "arms": ["S1", "S4"]
+  },
+  "allocation": {
+    "S1": "One start = TQA at L=6. Full Q=6144, K=3067.",
+    "S4": "Four equal C0 starts at L=6, K=763, same total Q. Fitted and charged.",
+    "QAOA": "p=L=6, same split, same Q.",
+    "inclusive": "All init, calibration, perturbations, candidates, failures inside Q."
+  },
+  "selection": "Lowest counted candidate energy. F post hoc, never selects.",
+  "gate": {
+    "cell": "N15 L6 Nov3, n=accepted seeds, energy E_S1 - E_S4",
+    "pass": "bootstrap 95% CI of the mean ΔE lies entirely below 0",
+    "otherwise": "reject S1 at L=6. Do not retune.",
+    "nov3_vs_qaoa": "Reported separately. Do not claim Nov3 superiority unless that energy CI lies entirely below 0.",
+    "gr": "Do not patch GR even if the gate passes."
+  },
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "depth_c1": 327680,
+    "starts_s8": 98304,
+    "starts_s1": 98304,
+    "starts_s1c": 196608,
+    "this_stream": "STARTS_S1L6, counted separately",
+    "new_charge": "32 fits × 6144 = 196608 if all succeed"
+  }
+}
