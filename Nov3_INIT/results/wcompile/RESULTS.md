@@ -48,3 +48,5 @@ Pulse artifact: `results/wcompile/pulse.json`.
 - SK energy fits were not launched. PR106 pad invariance and PR107 G_{7,8}(0.10) sensitivity labels unchanged.
 
 Fit workers 1, BLAS 1.
+
+See `ADDENDUM_PROP.md`: the 0.402 mean `col_norm` is retained **probability** (‖ψ‖²) after repeated `P_nf D_{nf+32} P_nf`, not a Euclidean norm, and not evidence that SNAP+D compilation is impossible. Historical numbers in this file are unchanged.
