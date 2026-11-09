@@ -1,0 +1,6239 @@
+{
+  "n_records_with_a_failed_start": 145,
+  "failed_start_counts_by_family": {
+    "qaoa": 0,
+    "nov3": 0,
+    "nov9b": 0,
+    "nov9": 166
+  },
+  "ledger_mismatches": [],
+  "asymmetry": {
+    "nov9_restricted_D_failed_starts": 166,
+    "qaoa_failed_starts": 0,
+    "nov3_failed_starts": 0,
+    "nov9b_unitary_D8_failed_starts": 0,
+    "note": "QAOA and Nov3rd are exactly unitary on the logical space. Nov9th-B exponentiates the projected 8-level generator, which is unitary on that space. Only restricted true-D can lose norm."
+  },
+  "rows": [
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N6__b10__L3__s10002__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10002,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 968,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.9988461606662336,
+          "E_init": -4.0243831742932255,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.740594776058916,
+          "E_init": -2.3163186305609393,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.929536684361649,
+          "E_init": -2.2365082025664096,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 200,
+          "E_scored": -0.6696602205395605,
+          "E_init": -0.6696602205395605,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N6__b10__L3__s10004__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10004,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 4,
+      "selected_start": 1,
+      "selected_was_failed": true,
+      "queries_counted": 498,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 110,
+          "E_scored": -1.3502158307903218,
+          "E_init": -1.3502158307903218,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 122,
+          "E_scored": -5.227267178381362,
+          "E_init": -5.227267178381362,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 178,
+          "E_scored": 0.3439731613718499,
+          "E_init": 0.3439731613718499,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 88,
+          "E_scored": -0.6916620892505323,
+          "E_init": -0.6916620892505323,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N6__b10__L3__s10005__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10005,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 898,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.9735181573381,
+          "E_init": -3.0747407929528774,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.97155211407864,
+          "E_init": -4.441375057670016,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.436867296525397,
+          "E_init": -0.66417950283627,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 130,
+          "E_scored": -0.6261098111488507,
+          "E_init": -0.6261098111488507,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N6__b10__L3__s10006__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10006,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 2,
+      "selected_start": 3,
+      "selected_was_failed": false,
+      "queries_counted": 848,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.988805163882387,
+          "E_init": -1.7217361208047663,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 220,
+          "E_scored": 0.1533244800837859,
+          "E_init": 0.1533244800837859,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 116,
+          "E_scored": -0.12161005643305606,
+          "E_init": -0.12161005643305606,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.996325630318945,
+          "E_init": -4.380213968061701,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N6__b15__L2__s10004__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 2,
+      "seed": 10004,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 1,
+      "selected_was_failed": false,
+      "queries_counted": 876,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 108,
+          "E_scored": -2.7751285691953154,
+          "E_init": -2.7751285691953154,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.998140796754493,
+          "E_init": -4.036214942295981,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.98074396869367,
+          "E_init": -1.490748460976298,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.79879559455251,
+          "E_init": -2.3196195818833187,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N6__b15__L3__s10005__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10005,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 2,
+      "selected_start": 3,
+      "selected_was_failed": false,
+      "queries_counted": 876,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.701357328655169,
+          "E_init": -3.467509866097123,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 144,
+          "E_scored": -1.8045639511850347,
+          "E_init": -1.8045639511850347,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 220,
+          "E_scored": -7.812659370989067,
+          "E_init": -7.812659370989067,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.925479865358374,
+          "E_init": -3.4001538140956074,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N9__b10__L3__s10000__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10000,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 2,
+      "selected_start": 1,
+      "selected_was_failed": false,
+      "queries_counted": 708,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 106,
+          "E_scored": -2.2511952642676705,
+          "E_init": -2.2511952642676705,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.977855601168374,
+          "E_init": -2.752311440918639,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 90,
+          "E_scored": -1.131211710119648,
+          "E_init": -1.131211710119648,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -7.403120275901772,
+          "E_init": -0.09665306264273221,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N9__b10__L3__s10001__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10001,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 882,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.985894586611172,
+          "E_init": -4.126638172127575,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.890426621738007,
+          "E_init": -5.474053881883598,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.977869357850292,
+          "E_init": -8.074075503398946,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 114,
+          "E_scored": -8.745363158460318,
+          "E_init": -8.745363158460318,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N9__b10__L3__s10003__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10003,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 862,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.986305717749289,
+          "E_init": -2.4994736237268773,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.902977709633458,
+          "E_init": -4.317226571825817,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.822679902383342,
+          "E_init": -2.2893836556986025,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 94,
+          "E_scored": -5.909503401720061,
+          "E_init": -5.909503401720061,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N9__b10__L3__s10004__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10004,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 1,
+      "selected_was_failed": false,
+      "queries_counted": 828,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.769055327416025,
+          "E_init": -1.258740896621468,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.946044487549774,
+          "E_init": -6.375222087975838,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -7.7877591312466485,
+          "E_init": -0.3733496592027556,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 60,
+          "E_scored": 0.02512728100296191,
+          "E_init": 0.02512728100296191,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N9__b10__L3__s10004__c256.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10004,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 1,
+      "selected_was_failed": false,
+      "queries_counted": 252,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -6.328996578295834,
+          "E_init": -1.258740896621468,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -8.82686775899694,
+          "E_init": -6.375222087975838,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -7.576673826930254,
+          "E_init": -0.3733496592027556,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 60,
+          "E_scored": 0.02512728100296191,
+          "E_init": 0.02512728100296191,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N9__b15__L2__s10001__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 2,
+      "seed": 10001,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 892,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.495740788099129,
+          "E_init": -9.08517919558171,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.483081376237012,
+          "E_init": -8.857900137922844,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 124,
+          "E_scored": -12.168569215466384,
+          "E_init": -12.168569215466384,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.476270135317892,
+          "E_init": -12.77595667471003,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N9__b15__L3__s10000__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10000,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 3,
+      "selected_was_failed": false,
+      "queries_counted": 836,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 68,
+          "E_scored": -2.031841600130187,
+          "E_init": -2.031841600130187,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.436757926488538,
+          "E_init": -9.516175964353762,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.454696546283078,
+          "E_init": -7.014494668962757,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.455995503832048,
+          "E_init": -9.827733948963303,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N9__b15__L3__s10001__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10001,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 888,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.389449058561683,
+          "E_init": -5.425868399703992,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.06971200736454,
+          "E_init": -3.1332163643558677,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 120,
+          "E_scored": -12.692335159296265,
+          "E_init": -12.692335159296265,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.061353341648335,
+          "E_init": -5.085033846996379,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N9__b15__L3__s10003__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10003,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 2,
+      "selected_start": 1,
+      "selected_was_failed": false,
+      "queries_counted": 678,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 120,
+          "E_scored": -1.9692575882378327,
+          "E_init": -1.9692575882378327,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.430283160488594,
+          "E_init": -8.828194807424362,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.379259978606267,
+          "E_init": -3.776018803828831,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 46,
+          "E_scored": -12.776294418824486,
+          "E_init": -12.776294418824486,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N9__b15__L3__s10003__c256.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10003,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 1,
+      "selected_was_failed": false,
+      "queries_counted": 238,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -12.798986535035331,
+          "E_init": -1.9692575882378327,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -13.444070128258485,
+          "E_init": -8.828194807424362,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -13.262956774074745,
+          "E_init": -3.776018803828831,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 46,
+          "E_scored": -12.776294418824486,
+          "E_init": -12.776294418824486,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_kprior_uz__N9__b15__L3__s10006__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_kprior_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10006,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 2,
+      "selected_was_failed": false,
+      "queries_counted": 914,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.346867199714477,
+          "E_init": -1.9732590278513107,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.251499902081006,
+          "E_init": -5.293735878901403,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.36002920303711,
+          "E_init": -5.467522302186659,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 146,
+          "E_scored": -0.7688826570383714,
+          "E_init": -0.7688826570383714,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_u0__N6__b10__L3__s10007__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_u0",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10007,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 3,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 526,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.993255286292251,
+          "E_init": -3.512103036315289,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 104,
+          "E_scored": -5.123454940479935,
+          "E_init": -5.123454940479935,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 86,
+          "E_scored": -1.0930277472062508,
+          "E_init": -1.0930277472062508,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 80,
+          "E_scored": -4.418311413075251,
+          "E_init": -4.418311413075251,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_u0__N6__b15__L3__s10003__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_u0",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10003,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 862,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.975781479122269,
+          "E_init": -4.150172703395112,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.945714549673637,
+          "E_init": -1.2634494372799348,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 94,
+          "E_scored": -7.131632174569189,
+          "E_init": -7.131632174569189,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.806000327676685,
+          "E_init": -6.454347256188205,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_u0__N6__b15__L3__s10005__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_u0",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10005,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 1,
+      "selected_was_failed": false,
+      "queries_counted": 1008,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 240,
+          "E_scored": -3.995751222476197,
+          "E_init": -3.995751222476197,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.973509893837585,
+          "E_init": 0.012476146681574481,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.775221858215584,
+          "E_init": -0.7799729609566064,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.955271154672669,
+          "E_init": -3.229023042684571,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_u0__N6__b15__L3__s10006__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_u0",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10006,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 886,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.989678516187634,
+          "E_init": -3.656161465042862,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.758511517813535,
+          "E_init": -1.591765495937636,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.964201745229992,
+          "E_init": -6.348263266015749,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 118,
+          "E_scored": 0.2924814611729969,
+          "E_init": 0.2924814611729969,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_u0__N9__b10__L3__s10000__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_u0",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10000,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 3,
+      "selected_was_failed": false,
+      "queries_counted": 878,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.969851089574632,
+          "E_init": -2.6631508323603397,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.893021888275879,
+          "E_init": -6.210563477971147,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 110,
+          "E_scored": -0.06532034558305688,
+          "E_init": -0.06532034558305688,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.990899493718183,
+          "E_init": -4.972078919510844,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_u0__N9__b10__L3__s10004__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_u0",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10004,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 3,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 658,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 138,
+          "E_scored": -2.1412059624697646,
+          "E_init": -2.1412059624697646,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 208,
+          "E_scored": 0.012873205581419134,
+          "E_init": 0.012873205581419134,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 56,
+          "E_scored": 0.12350983927314252,
+          "E_init": 0.12350983927314252,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": 0.010042649881312302,
+          "E_init": 0.34043417214505617,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_u0__N9__b10__L3__s10004__c256.json",
+      "kind": "cold",
+      "method": "nov9_km_u0",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10004,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 248,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -8.842713822590687,
+          "E_init": -2.1412059624697646,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -0.16000615881776425,
+          "E_init": 0.012873205581419134,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 56,
+          "E_scored": 0.12350983927314252,
+          "E_init": 0.12350983927314252,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": 0.12070022426006971,
+          "E_init": 0.34043417214505617,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_u0__N9__b10__L3__s10005__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_u0",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10005,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 946,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.968825369437033,
+          "E_init": -4.840055575133862,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.955179728193189,
+          "E_init": -8.285136489339754,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.935095460039944,
+          "E_init": -5.273046048649955,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 178,
+          "E_scored": -3.021052481697812,
+          "E_init": -3.021052481697812,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_u0__N9__b10__L3__s10006__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_u0",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10006,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 862,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.957198304597224,
+          "E_init": -3.3775852183492634,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.849162490244227,
+          "E_init": -0.10741661177265031,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 94,
+          "E_scored": -6.622450009760067,
+          "E_init": -6.622450009760067,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.913880285097923,
+          "E_init": -1.1031630590234265,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_u0__N9__b15__L3__s10001__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_u0",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10001,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 2,
+      "selected_was_failed": false,
+      "queries_counted": 978,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.384993496813088,
+          "E_init": -5.548752025760171,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.294805818912433,
+          "E_init": -0.8348650250021037,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.45226597255449,
+          "E_init": -11.175121787189008,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 210,
+          "E_scored": -0.648359699202281,
+          "E_init": -0.648359699202281,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_u0__N9__b15__L3__s10004__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_u0",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10004,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 930,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.472069454764336,
+          "E_init": -3.2423040436102704,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 162,
+          "E_scored": -11.949608514499992,
+          "E_init": -11.949608514499992,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -12.22758224923232,
+          "E_init": -1.4001418363989138,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": 0.11598194069458913,
+          "E_init": 0.2663032240233168,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_u0__N9__b15__L3__s10006__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_u0",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10006,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 872,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.426824196692374,
+          "E_init": -5.0877788638417085,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.029127530450555,
+          "E_init": -7.49411950644261,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 104,
+          "E_scored": -0.779622019651409,
+          "E_init": -0.779622019651409,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.27305895925266,
+          "E_init": -6.404543026569056,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N6__b10__L3__s10001__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10001,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 880,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.988727377450647,
+          "E_init": -2.8348873094620903,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -3.029573284742946,
+          "E_init": -0.8954836859208194,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 112,
+          "E_scored": -5.310533926666581,
+          "E_init": -5.310533926666581,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.9821552135150835,
+          "E_init": -2.9543274614348842,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N6__b10__L3__s10003__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10003,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 844,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.996611359640765,
+          "E_init": -2.7505707236946693,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.962432218349641,
+          "E_init": -5.599126587440761,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.9427572635769526,
+          "E_init": -0.0019816016069673925,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 76,
+          "E_scored": 0.061588764653569855,
+          "E_init": 0.061588764653569855,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N6__b10__L3__s10004__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10004,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 806,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.992172397778811,
+          "E_init": -1.402037041889923,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -4.0782039708037505,
+          "E_init": -0.4097613039639992,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 38,
+          "E_scored": -0.1805385778723702,
+          "E_init": -0.1805385778723702,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.90033844071052,
+          "E_init": -0.39431911069178033,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N6__b10__L3__s10004__c256.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10004,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 3,
+      "selected_was_failed": false,
+      "queries_counted": 230,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -5.64747037604978,
+          "E_init": -1.402037041889923,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -4.449621405428708,
+          "E_init": -0.4097613039639992,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 38,
+          "E_scored": -0.1805385778723702,
+          "E_init": -0.1805385778723702,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -5.903142050509327,
+          "E_init": -0.39431911069178033,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N6__b10__L3__s10006__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10006,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 900,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.969624840300215,
+          "E_init": -2.421102337544849,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 132,
+          "E_scored": -0.005562024796998077,
+          "E_init": -0.005562024796998077,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.802886298489704,
+          "E_init": -2.1579210977054366,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.931781762881275,
+          "E_init": -4.621385860220588,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N6__b10__L3__s10007__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10007,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 2,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 826,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -6.000146641809047,
+          "E_init": -3.5072584974364465,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 168,
+          "E_scored": -5.470775326166542,
+          "E_init": -5.470775326166542,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 146,
+          "E_scored": -5.098027988446966,
+          "E_init": -5.098027988446966,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.981731251547422,
+          "E_init": -1.4029087512869474,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N6__b15__L3__s10004__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10004,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 894,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.923359458100899,
+          "E_init": -2.1114549623042227,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.91526375640775,
+          "E_init": -0.6135209365019183,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 126,
+          "E_scored": 0.26029566160444706,
+          "E_init": 0.26029566160444706,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.749710036879788,
+          "E_init": -0.7518450021719353,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b10__L2__s10002__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 2,
+      "seed": 10002,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 818,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.99793811396562,
+          "E_init": -6.494032716639076,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 50,
+          "E_scored": -8.373830437996478,
+          "E_init": -8.373830437996478,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.974632296652052,
+          "E_init": -4.516224293692831,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.879556946335176,
+          "E_init": -3.0918106971029733,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b10__L2__s10002__c256.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 2,
+      "seed": 10002,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 242,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -8.906846545251513,
+          "E_init": -6.494032716639076,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 50,
+          "E_scored": -8.373830437996478,
+          "E_init": -8.373830437996478,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -8.774453066522172,
+          "E_init": -4.516224293692831,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -7.938636651726203,
+          "E_init": -3.0918106971029733,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b10__L3__s10000__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10000,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 922,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.993328088908022,
+          "E_init": -2.6311165162316845,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -7.402071908439805,
+          "E_init": -0.32691782995730256,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 154,
+          "E_scored": 0.28731270630058525,
+          "E_init": 0.28731270630058525,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -2.475805038927624,
+          "E_init": -0.17091921779243602,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b10__L3__s10002__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10002,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 978,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.987863124697748,
+          "E_init": -4.275896694715173,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.757515207901424,
+          "E_init": -7.28715555071281,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 210,
+          "E_scored": -5.464285924414321,
+          "E_init": -5.464285924414321,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.966173836326808,
+          "E_init": -6.534630040830239,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b10__L3__s10003__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10003,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 974,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.96857734628478,
+          "E_init": -3.018025309951791,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -6.542516777683527,
+          "E_init": -0.0921868037170476,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 206,
+          "E_scored": -1.0226455303788025,
+          "E_init": -1.0226455303788025,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.549524277516043,
+          "E_init": -0.49273772833276663,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b10__L3__s10004__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10004,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 806,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.986035554417656,
+          "E_init": -2.1098565805753338,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 38,
+          "E_scored": -0.3490755201690185,
+          "E_init": -0.3490755201690185,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.931501155948432,
+          "E_init": -4.6058469780412645,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.968252878780167,
+          "E_init": -0.3064510244246322,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b10__L3__s10004__c256.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10004,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 230,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -8.915359247218362,
+          "E_init": -2.1098565805753338,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 38,
+          "E_scored": -0.3490755201690185,
+          "E_init": -0.3490755201690185,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -8.827978400112022,
+          "E_init": -4.6058469780412645,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -7.9363891574571594,
+          "E_init": -0.3064510244246322,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b10__L3__s10005__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10005,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 2,
+      "selected_start": 1,
+      "selected_was_failed": false,
+      "queries_counted": 594,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.980363770296403,
+          "E_init": -4.820175999926164,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.99311977892094,
+          "E_init": -4.8337419568510045,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 40,
+          "E_scored": -2.2019128230024596,
+          "E_init": -2.2019128230024596,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 42,
+          "E_scored": -1.1009260490812875,
+          "E_init": -1.1009260490812875,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b10__L3__s10005__c256.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10005,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 2,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 210,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -8.813886205982593,
+          "E_init": -4.820175999926164,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -8.67865854484388,
+          "E_init": -4.8337419568510045,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 40,
+          "E_scored": -2.2019128230024596,
+          "E_init": -2.2019128230024596,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 42,
+          "E_scored": -1.1009260490812875,
+          "E_init": -1.1009260490812875,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b10__L3__s10006__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10006,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 2,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 778,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.983218966287849,
+          "E_init": -3.3508997291859375,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 174,
+          "E_scored": -4.889024181330061,
+          "E_init": -4.889024181330061,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 92,
+          "E_scored": -0.015225884393565786,
+          "E_init": -0.015225884393565786,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.24732452216972,
+          "E_init": -0.06389356771660762,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b15__L3__s10001__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10001,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 3,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 802,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.488123926068656,
+          "E_init": -5.509227610113216,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 196,
+          "E_scored": -0.43699285111769903,
+          "E_init": -0.43699285111769903,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 142,
+          "E_scored": -0.10087759918717579,
+          "E_init": -0.10087759918717579,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 208,
+          "E_scored": 0.026044312719103735,
+          "E_init": 0.026044312719103735,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b15__L3__s10003__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10003,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 976,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.473887114380421,
+          "E_init": -4.560888871668324,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 208,
+          "E_scored": -7.094438264770084,
+          "E_init": -7.094438264770084,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.697794860990992,
+          "E_init": -0.05901465021652777,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.418374832000948,
+          "E_init": -2.690812290890588,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b15__L3__s10004__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10004,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 2,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 732,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.471697249987747,
+          "E_init": -3.1987027497848746,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 64,
+          "E_scored": -0.05479585954903034,
+          "E_init": -0.05479585954903034,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.13187683034996,
+          "E_init": -9.922548634187407,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 156,
+          "E_scored": -10.102384103901585,
+          "E_init": -10.102384103901585,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b15__L3__s10004__c256.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10004,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 256,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -13.360611197749895,
+          "E_init": -3.1987027497848746,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "candidate",
+          "queries": 64,
+          "E_scored": -0.05479585954903034,
+          "E_init": -0.05479585954903034,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -13.266963761551402,
+          "E_init": -9.922548634187407,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -12.437394304233674,
+          "E_init": -10.102384103901585,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b15__L3__s10005__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10005,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 2,
+      "selected_was_failed": false,
+      "queries_counted": 894,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.482345013961986,
+          "E_init": -7.250349674930874,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 126,
+          "E_scored": -1.4380058429751448,
+          "E_init": -1.4380058429751448,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.492044860485201,
+          "E_init": -10.899144430216309,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.34862310364574,
+          "E_init": -11.45898445952419,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b15__L3__s10006__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10006,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 900,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.46047721061331,
+          "E_init": -5.05089116155541,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.417678124114877,
+          "E_init": -5.125447108180397,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.407974001256273,
+          "E_init": -3.8661851707817134,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 132,
+          "E_scored": -10.17702145729626,
+          "E_init": -10.17702145729626,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_km_uz__N9__b15__L3__s10007__c1024.json",
+      "kind": "cold",
+      "method": "nov9_km_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10007,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 882,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.483290266287224,
+          "E_init": -5.891499815155488,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 114,
+          "E_scored": -1.2541644571208637,
+          "E_init": -1.2541644571208637,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.280803078063231,
+          "E_init": -4.6388825758812136,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.481250555209543,
+          "E_init": -7.064611542599791,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N6__b10__L3__s10004__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10004,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 994,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.998343433540129,
+          "E_init": -1.402037041889923,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.606162300376804,
+          "E_init": -3.5669684720844166,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 226,
+          "E_scored": -0.9152831146427683,
+          "E_init": -0.9152831146427683,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.953040286773242,
+          "E_init": -0.9109035037836657,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N6__b10__L3__s10006__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10006,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 810,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.969465403471199,
+          "E_init": -2.421102337544849,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.924174745504666,
+          "E_init": -4.3863909680645214,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 42,
+          "E_scored": 0.22889230371822383,
+          "E_init": 0.22889230371822383,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.930881011003145,
+          "E_init": -1.8134633343453326,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N6__b10__L3__s10006__c256.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10006,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 234,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -5.940609065395758,
+          "E_init": -2.421102337544849,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -5.434515431882025,
+          "E_init": -4.3863909680645214,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 42,
+          "E_scored": 0.22889230371822383,
+          "E_init": 0.22889230371822383,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -5.8066927626256915,
+          "E_init": -1.8134633343453326,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N6__b10__L3__s10007__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10007,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 2,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 682,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.998407442514581,
+          "E_init": -3.5072584974364465,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 102,
+          "E_scored": -4.3382404583429,
+          "E_init": -4.3382404583429,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -5.970492247805997,
+          "E_init": -3.946237702479357,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 68,
+          "E_scored": -5.7645331899531875,
+          "E_init": -5.7645331899531875,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N6__b15__L3__s10002__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10002,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 2,
+      "selected_start": 2,
+      "selected_was_failed": false,
+      "queries_counted": 750,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.914798132112997,
+          "E_init": -6.285707032095241,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 90,
+          "E_scored": -0.5623376863774203,
+          "E_init": -0.5623376863774203,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.981360923589499,
+          "E_init": -7.824800166733006,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 148,
+          "E_scored": -7.65283310105607,
+          "E_init": -7.65283310105607,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b10__L2__s10006__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 2,
+      "seed": 10006,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 892,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.989501250764505,
+          "E_init": -5.923083490755616,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.939714384376764,
+          "E_init": -5.463395833326641,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 124,
+          "E_scored": -8.618900975041585,
+          "E_init": -8.618900975041585,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.926286191520015,
+          "E_init": -1.9772022562021088,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b10__L3__s10001__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10001,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 3,
+      "selected_was_failed": false,
+      "queries_counted": 938,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.991471599369692,
+          "E_init": -3.664511129890428,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.88959538217412,
+          "E_init": -7.528606258621471,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 170,
+          "E_scored": -0.11975977574604889,
+          "E_init": -0.11975977574604889,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.994944227796664,
+          "E_init": -1.3801940885877386,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b10__L3__s10002__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10002,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 834,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.983001659076953,
+          "E_init": -4.275896694715173,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.981918312839154,
+          "E_init": -2.4492747851706205,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.817755629693528,
+          "E_init": -0.7482576774681224,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 66,
+          "E_scored": -0.2242105049767329,
+          "E_init": -0.2242105049767329,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b10__L3__s10004__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10004,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 898,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.915861401671622,
+          "E_init": -2.1098565805753338,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 130,
+          "E_scored": -5.902692911722508,
+          "E_init": -5.902692911722508,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.861400801408234,
+          "E_init": -5.628766387408958,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.866635832960839,
+          "E_init": -2.823101046698207,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b10__L3__s10006__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10006,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 978,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.96279713151972,
+          "E_init": -3.3508997291859375,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.734018001213148,
+          "E_init": -5.794456611084543,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 210,
+          "E_scored": -4.164247698991739,
+          "E_init": -4.164247698991739,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.769122885890784,
+          "E_init": -7.457628714741117,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b10__L3__s10007__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10007,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 1,
+      "selected_was_failed": false,
+      "queries_counted": 1014,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 246,
+          "E_scored": -3.907540515524203,
+          "E_init": -3.907540515524203,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.964510562220122,
+          "E_init": -1.9775485576948655,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.867260785428998,
+          "E_init": -2.2653438530296626,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -8.52282306821106,
+          "E_init": -0.5431620990207493,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b15__L3__s10001__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10001,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 820,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.476247740969136,
+          "E_init": -5.509227610113216,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.348879273143893,
+          "E_init": -7.689853457226143,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 52,
+          "E_scored": -0.07599066656946407,
+          "E_init": -0.07599066656946407,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.407043399213629,
+          "E_init": -2.812834759671215,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b15__L3__s10001__c256.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10001,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 244,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -13.437977421162934,
+          "E_init": -5.509227610113216,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -12.45413786289253,
+          "E_init": -7.689853457226143,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 52,
+          "E_scored": -0.07599066656946407,
+          "E_init": -0.07599066656946407,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -12.230521540312072,
+          "E_init": -2.812834759671215,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b15__L3__s10002__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10002,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 962,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.461711377587685,
+          "E_init": -6.437092000543243,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.055469426980471,
+          "E_init": -6.849966490601314,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 194,
+          "E_scored": -1.4885736578127637,
+          "E_init": -1.4885736578127637,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.353673753749728,
+          "E_init": -0.23478600205180378,
+          "which": "polyak"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b15__L3__s10003__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10003,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 996,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.475848004312134,
+          "E_init": -4.560888871668324,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.2359677728203,
+          "E_init": -0.9366885556999863,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 228,
+          "E_scored": -0.4376952248926091,
+          "E_init": -0.4376952248926091,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.342703011475136,
+          "E_init": -6.542013188000528,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b15__L3__s10004__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10004,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 814,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.465340054165805,
+          "E_init": -3.1987027497848746,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -0.05752370734605072,
+          "E_init": 0.13372293859059986,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.372397084100312,
+          "E_init": 0.024646767145908056,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 46,
+          "E_scored": 0.27583572747673724,
+          "E_init": 0.27583572747673724,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b15__L3__s10004__c256.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10004,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 238,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -13.428305911054963,
+          "E_init": -3.1987027497848746,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -0.14295189140270115,
+          "E_init": 0.13372293859059986,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -12.184473210317448,
+          "E_init": 0.024646767145908056,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 46,
+          "E_scored": 0.27583572747673724,
+          "E_init": 0.27583572747673724,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b15__L3__s10005__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10005,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 2,
+      "selected_was_failed": false,
+      "queries_counted": 828,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.385911726805507,
+          "E_init": -7.250349674930874,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.41285425069448,
+          "E_init": -11.884288204963562,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.475767225022205,
+          "E_init": -4.691773466750477,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 60,
+          "E_scored": -1.4233368072475012,
+          "E_init": -1.4233368072475012,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b15__L3__s10005__c256.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10005,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 252,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -13.49124410050061,
+          "E_init": -7.250349674930874,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -12.90534699932803,
+          "E_init": -11.884288204963562,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -13.31695381040795,
+          "E_init": -4.691773466750477,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 60,
+          "E_scored": -1.4233368072475012,
+          "E_init": -1.4233368072475012,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b15__L3__s10006__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10006,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 800,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.441897331507421,
+          "E_init": -5.05089116155541,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.305806846726332,
+          "E_init": -0.7402892725729148,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.440114305314005,
+          "E_init": -4.633495961135361,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 32,
+          "E_scored": -0.3014431291351321,
+          "E_init": -0.3014431291351321,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b15__L3__s10006__c128.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10006,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 2,
+      "selected_was_failed": false,
+      "queries_counted": 128,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 32,
+          "E_scored": -13.095048361028605,
+          "E_init": -5.05089116155541,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 32,
+          "E_scored": -11.615305984757025,
+          "E_init": -0.7402892725729148,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 32,
+          "E_scored": -13.331025343538254,
+          "E_init": -4.633495961135361,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "candidate",
+          "queries": 32,
+          "E_scored": -0.3014431291351321,
+          "E_init": -0.3014431291351321,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b15__L3__s10006__c256.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10006,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 2,
+      "selected_was_failed": false,
+      "queries_counted": 224,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -13.137802146637245,
+          "E_init": -5.05089116155541,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -12.42606649420768,
+          "E_init": -0.7402892725729148,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -13.273427414255767,
+          "E_init": -4.633495961135361,
+          "which": "polyak"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 32,
+          "E_scored": -0.3014431291351321,
+          "E_init": -0.3014431291351321,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b15__L3__s10007__c1024.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10007,
+      "cap": 1024,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 818,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.49087101274896,
+          "E_init": -5.891499815155488,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -12.845159077564547,
+          "E_init": 0.6916673413803205,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 50,
+          "E_scored": -11.356990795013314,
+          "E_init": -11.356990795013314,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 256,
+          "E_scored": -13.386082475820379,
+          "E_init": -2.3817660044861135,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/cold__nov9_kmr1_uz__N9__b15__L3__s10007__c256.json",
+      "kind": "cold",
+      "method": "nov9_kmr1_uz",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10007,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 3,
+      "selected_was_failed": false,
+      "queries_counted": 242,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -13.105517005705645,
+          "E_init": -5.891499815155488,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -10.61181864804513,
+          "E_init": 0.6916673413803205,
+          "which": "polyak"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 50,
+          "E_scored": -11.356990795013314,
+          "E_init": -11.356990795013314,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 64,
+          "E_scored": -13.166593589726133,
+          "E_init": -2.3817660044861135,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b10__L3__s10002__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10002,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 60,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 60,
+          "E_scored": -5.9987893184250565,
+          "E_init": -5.9987893184250565,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b10__L3__s10002__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10002,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 60,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 60,
+          "E_scored": -5.9987893184250565,
+          "E_init": -5.9987893184250565,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b10__L3__s10003__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10003,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 156,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 156,
+          "E_scored": -5.999391029493259,
+          "E_init": -5.999391029493259,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b10__L3__s10005__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10005,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 214,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 214,
+          "E_scored": -6.0010273525726845,
+          "E_init": -6.0010273525726845,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b10__L3__s10006__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10006,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 106,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 106,
+          "E_scored": -5.99719853927679,
+          "E_init": -5.99719853927679,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b10__L3__s10006__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10006,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 106,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 106,
+          "E_scored": -5.99719853927679,
+          "E_init": -5.99719853927679,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b15__L2__s10002__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 2,
+      "seed": 10002,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 254,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 254,
+          "E_scored": -8.99483567561468,
+          "E_init": -8.99483567561468,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b15__L2__s10007__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 2,
+      "seed": 10007,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 180,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 180,
+          "E_scored": -8.9915397282377,
+          "E_init": -8.9915397282377,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b15__L3__s10001__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10001,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 86,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 86,
+          "E_scored": -8.990037995509809,
+          "E_init": -8.990037995509809,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b15__L3__s10001__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10001,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 86,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 86,
+          "E_scored": -8.990037995509809,
+          "E_init": -8.990037995509809,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b15__L3__s10002__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10002,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 176,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 176,
+          "E_scored": -8.982565633554028,
+          "E_init": -8.982565633554028,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b15__L3__s10003__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10003,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 92,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 92,
+          "E_scored": -8.979357336276408,
+          "E_init": -8.979357336276408,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b15__L3__s10003__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10003,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 92,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 92,
+          "E_scored": -8.979357336276408,
+          "E_init": -8.979357336276408,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b15__L3__s10004__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10004,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 64,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 64,
+          "E_scored": -8.981563803398558,
+          "E_init": -8.981563803398558,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b15__L3__s10004__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10004,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 64,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 64,
+          "E_scored": -8.981563803398558,
+          "E_init": -8.981563803398558,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N6__b15__L3__s10007__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10007,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 162,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 162,
+          "E_scored": -8.98474965765625,
+          "E_init": -8.98474965765625,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N9__b10__L3__s10000__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10000,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 90,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 90,
+          "E_scored": -8.994840143617564,
+          "E_init": -8.994840143617564,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N9__b10__L3__s10000__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10000,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 90,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 90,
+          "E_scored": -8.994840143617564,
+          "E_init": -8.994840143617564,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N9__b10__L3__s10007__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10007,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 150,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 150,
+          "E_scored": -8.997840165316282,
+          "E_init": -8.997840165316282,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N9__b15__L2__s10007__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 2,
+      "seed": 10007,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 114,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 114,
+          "E_scored": -13.490455702751307,
+          "E_init": -13.490455702751307,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N9__b15__L2__s10007__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 2,
+      "seed": 10007,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 114,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 114,
+          "E_scored": -13.490455702751307,
+          "E_init": -13.490455702751307,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N9__b15__L3__s10001__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10001,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 90,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 90,
+          "E_scored": -13.478945878537596,
+          "E_init": -13.478945878537596,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N9__b15__L3__s10001__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10001,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 90,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 90,
+          "E_scored": -13.478945878537596,
+          "E_init": -13.478945878537596,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N9__b15__L3__s10002__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10002,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 234,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 234,
+          "E_scored": -13.475023736405838,
+          "E_init": -13.475023736405838,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N9__b15__L3__s10005__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10005,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 134,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 134,
+          "E_scored": -13.477401945054545,
+          "E_init": -13.477401945054545,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_km__N9__b15__L3__s10007__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_km",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10007,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 134,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 134,
+          "E_scored": -13.47776230276244,
+          "E_init": -13.47776230276244,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b10__L3__s10000__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10000,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 98,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 98,
+          "E_scored": -5.984640120855936,
+          "E_init": -5.984640120855936,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b10__L3__s10000__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10000,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 98,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 98,
+          "E_scored": -5.984640120855936,
+          "E_init": -5.984640120855936,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b10__L3__s10001__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10001,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 198,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 198,
+          "E_scored": -5.982476392715277,
+          "E_init": -5.982476392715277,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b10__L3__s10003__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10003,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 126,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 126,
+          "E_scored": -5.9836985168383645,
+          "E_init": -5.9836985168383645,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b10__L3__s10003__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10003,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 126,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 126,
+          "E_scored": -5.9836985168383645,
+          "E_init": -5.9836985168383645,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b10__L3__s10004__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10004,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 68,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 68,
+          "E_scored": -5.967097253441947,
+          "E_init": -5.967097253441947,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b10__L3__s10004__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10004,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 68,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 68,
+          "E_scored": -5.967097253441947,
+          "E_init": -5.967097253441947,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b10__L3__s10006__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10006,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 182,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 182,
+          "E_scored": -5.971566067139245,
+          "E_init": -5.971566067139245,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b15__L2__s10001__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 2,
+      "seed": 10001,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 80,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 80,
+          "E_scored": -8.994861579300792,
+          "E_init": -8.994861579300792,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b15__L2__s10001__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 2,
+      "seed": 10001,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 80,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 80,
+          "E_scored": -8.994861579300792,
+          "E_init": -8.994861579300792,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b15__L2__s10005__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 2,
+      "seed": 10005,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 210,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 210,
+          "E_scored": -8.982460914726515,
+          "E_init": -8.982460914726515,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b15__L3__s10000__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10000,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 220,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 220,
+          "E_scored": -8.973351425569964,
+          "E_init": -8.973351425569964,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b15__L3__s10001__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10001,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 242,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 242,
+          "E_scored": -8.972150051597685,
+          "E_init": -8.972150051597685,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b15__L3__s10002__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10002,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 44,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 44,
+          "E_scored": -8.97337047287498,
+          "E_init": -8.97337047287498,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b15__L3__s10002__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10002,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 44,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 44,
+          "E_scored": -8.97337047287498,
+          "E_init": -8.97337047287498,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b15__L3__s10004__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10004,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 144,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 144,
+          "E_scored": -8.970451235988252,
+          "E_init": -8.970451235988252,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b15__L3__s10005__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10005,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 102,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 102,
+          "E_scored": -8.977452965679484,
+          "E_init": -8.977452965679484,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b15__L3__s10005__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10005,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 102,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 102,
+          "E_scored": -8.977452965679484,
+          "E_init": -8.977452965679484,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N6__b15__L3__s10006__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 6,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10006,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 232,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 232,
+          "E_scored": -8.969967911354559,
+          "E_init": -8.969967911354559,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b10__L2__s10002__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 2,
+      "seed": 10002,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 116,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 116,
+          "E_scored": -8.996441636843258,
+          "E_init": -8.996441636843258,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b10__L2__s10002__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 2,
+      "seed": 10002,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 116,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 116,
+          "E_scored": -8.996441636843258,
+          "E_init": -8.996441636843258,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b10__L2__s10006__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 2,
+      "seed": 10006,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 178,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 178,
+          "E_scored": -8.997194861948769,
+          "E_init": -8.997194861948769,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b10__L3__s10000__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10000,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 236,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 236,
+          "E_scored": -8.952878348069307,
+          "E_init": -8.952878348069307,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b10__L3__s10001__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10001,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 202,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 202,
+          "E_scored": -8.9635971920679,
+          "E_init": -8.9635971920679,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b10__L3__s10002__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10002,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 70,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 70,
+          "E_scored": -8.97441139484752,
+          "E_init": -8.97441139484752,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b10__L3__s10002__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10002,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 70,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 70,
+          "E_scored": -8.97441139484752,
+          "E_init": -8.97441139484752,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b10__L3__s10003__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10003,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 122,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 122,
+          "E_scored": -8.98752595581818,
+          "E_init": -8.98752595581818,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b10__L3__s10003__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10003,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 122,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 122,
+          "E_scored": -8.98752595581818,
+          "E_init": -8.98752595581818,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b10__L3__s10005__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10005,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 150,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 150,
+          "E_scored": -8.97586252490567,
+          "E_init": -8.97586252490567,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b10__L3__s10007__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10007,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 76,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 76,
+          "E_scored": -8.97063809637903,
+          "E_init": -8.97063809637903,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b10__L3__s10007__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": 10007,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 76,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 76,
+          "E_scored": -8.97063809637903,
+          "E_init": -8.97063809637903,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b15__L2__s10003__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 2,
+      "seed": 10003,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 122,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 122,
+          "E_scored": -13.477609330999492,
+          "E_init": -13.477609330999492,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b15__L2__s10003__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 2,
+      "seed": 10003,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 122,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 122,
+          "E_scored": -13.477609330999492,
+          "E_init": -13.477609330999492,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b15__L2__s10006__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 2,
+      "seed": 10006,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 188,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 188,
+          "E_scored": -13.486999144853993,
+          "E_init": -13.486999144853993,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b15__L3__s10002__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10002,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 108,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 108,
+          "E_scored": -13.459641717610438,
+          "E_init": -13.459641717610438,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b15__L3__s10002__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10002,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 108,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 108,
+          "E_scored": -13.459641717610438,
+          "E_init": -13.459641717610438,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b15__L3__s10006__c128.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10006,
+      "cap": 128,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 94,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 94,
+          "E_scored": -13.459940127832125,
+          "E_init": -13.459940127832125,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b15__L3__s10006__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10006,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 94,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 94,
+          "E_scored": -13.459940127832125,
+          "E_init": -13.459940127832125,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "cells/ft__ft_nov9_kmr1__N9__b15__L3__s10007__c256.json",
+      "kind": "finetune",
+      "method": "ft_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": 10007,
+      "cap": 256,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": true,
+      "queries_counted": 244,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 244,
+          "E_scored": -13.45846483022217,
+          "E_init": -13.45846483022217,
+          "which": "x0_after_failure"
+        }
+      ]
+    },
+    {
+      "path": "train/train__train_nov9_km__b10__L3.json",
+      "kind": "train",
+      "method": "train_nov9_km",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": null,
+      "cap": 4096,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 2,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 2928,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 1024,
+          "E_scored": -8.997917149455752,
+          "E_init": -3.1415591309543958,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 528,
+          "E_scored": 0.04101415676779879,
+          "E_init": 0.04101415676779879,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 352,
+          "E_scored": -7.845049057696424,
+          "E_init": -7.845049057696424,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 1024,
+          "E_scored": -7.155336101795671,
+          "E_init": -0.18418659757495043,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "train/train__train_nov9_kmr1__b10__L3.json",
+      "kind": "train",
+      "method": "train_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.0,
+      "L": 3,
+      "seed": null,
+      "cap": 4096,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 3304,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 1024,
+          "E_scored": -8.97070108361413,
+          "E_init": -3.1415591309543958,
+          "which": "last"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 1024,
+          "E_scored": -8.615236020331611,
+          "E_init": -7.400377680771292,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 232,
+          "E_scored": -0.04660145796591449,
+          "E_init": -0.04660145796591449,
+          "which": "x0_after_failure"
+        },
+        {
+          "start_id": 3,
+          "failed": false,
+          "stage": null,
+          "queries": 1024,
+          "E_scored": -8.806988070331702,
+          "E_init": -3.2056522327905954,
+          "which": "last"
+        }
+      ]
+    },
+    {
+      "path": "train/train__train_nov9_kmr1__b15__L3.json",
+      "kind": "train",
+      "method": "train_nov9_kmr1",
+      "family": "nov9",
+      "N": 9,
+      "b": 1.5,
+      "L": 3,
+      "seed": null,
+      "cap": 4096,
+      "nf": 16,
+      "alpha_sigma_scale": 0.5,
+      "failed_starts": 1,
+      "selected_start": 0,
+      "selected_was_failed": false,
+      "queries_counted": 3752,
+      "starts": [
+        {
+          "start_id": 0,
+          "failed": false,
+          "stage": null,
+          "queries": 1024,
+          "E_scored": -13.458533019932597,
+          "E_init": -4.736927944788792,
+          "which": "polyak"
+        },
+        {
+          "start_id": 1,
+          "failed": false,
+          "stage": null,
+          "queries": 1024,
+          "E_scored": -12.338730796599815,
+          "E_init": -6.534522757011209,
+          "which": "last"
+        },
+        {
+          "start_id": 2,
+          "failed": false,
+          "stage": null,
+          "queries": 1024,
+          "E_scored": -13.397559975275211,
+          "E_init": -11.05659294669002,
+          "which": "last"
+        },
+        {
+          "start_id": 3,
+          "failed": true,
+          "stage": "iteration",
+          "queries": 680,
+          "E_scored": -1.7747770536524459,
+          "E_init": -1.7747770536524459,
+          "which": "x0_after_failure"
+        }
+      ]
+    }
+  ]
+}
