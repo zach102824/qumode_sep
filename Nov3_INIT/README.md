@@ -149,4 +149,11 @@ python3 -m Nov3_INIT.run_wl --phase summary
 python3 -m Nov3_INIT.audit_wl
 ```
 
+Native \(W_{\rm BinH}\) compile (`PREREG_WCOMP.md`) is a **compiler feasibility** task, not an SK seed panel. SNAP + true real-\(\alpha\) displacement, \(K=3\), SPSA \(Q=2048\) compiler evaluations. SK ledger unchanged. Not flat prep, not \(U_X\), not cropped \(D_8\). No GR. Not a hardware claim.
+
+```bash
+python3 -m Nov3_INIT.conformance_wcompile
+python3 -m Nov3_INIT.run_wcompile --phase fit
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
