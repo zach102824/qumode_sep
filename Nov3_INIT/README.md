@@ -157,4 +157,11 @@ python3 -m Nov3_INIT.run_wcompile --phase fit
 python3 -m Nov3_INIT.audit_wcompile_prop
 ```
 
+Corrected-workspace compile (`PREREG_WCOMP_WS.md`) is one bounded simulator correction of that trial: common Fock workspace 96, frozen replay 128, no per-gate \(P_{16}\). Same \(K=3\), real \(\alpha\), SNAP 0..7, \(Q=2048\). Coherent isometry \(L\) selects; identity is the measured incumbent. PR109 remains history (projection-exploitable objective). SK ledger 2818048. No extra \(K\)/\(\alpha\) after a miss. Not a hardware claim.
+
+```bash
+python3 -m Nov3_INIT.conformance_wcompile_ws
+python3 -m Nov3_INIT.run_wcompile_ws --phase fit
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
