@@ -1,0 +1,69 @@
+{
+ "pid": 24614,
+ "stage": "L3TS",
+ "started": 1794241355.8610713,
+ "bstar_wall_s": 9.617160081863403,
+ "n_tasks": 24,
+ "n_skipped_rejected_Bstar": 0,
+ "prereg_sha256": "6f71a0bebca52deba422c6432d8089da235525c2279be133fa64ddbede901f37",
+ "nproc": 4,
+ "N": 15,
+ "L": 3,
+ "Q": 3072,
+ "seeds": [
+  10360,
+  10361,
+  10362,
+  10363,
+  10364,
+  10365,
+  10366,
+  10367
+ ],
+ "band": "exclusive_unread_dev",
+ "ft_alloc_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+ "split": {
+  "Q_total": 3072,
+  "Q_joint_stage": 1536,
+  "Q_shell_stage": 1536,
+  "T_joint": 186,
+  "T_shell": 378,
+  "n_joint_starts": 4,
+  "n_shell_blocks": 2,
+  "joint_stage": "exact v4 center-4: 4 equal SPSA blocks on all Nov3 params, T=Q_joint/8-6=186, per_start=384, center-4 starts, frozen gains c=0.1 A=25 clip 2\u03c3, energy among init/last/Polyak/mid",
+  "then": "take the single best-so-far x; freeze shared Uc = x[0:3] = (gamma, theta_K, theta_M) by setting those sigmas to 0",
+  "shell_stage": "2 equal SPSA blocks from that same x, shell coords only, remaining Q=1536, T=Q_shell/4-6=378, per_block=768. Each block recalibrates a0 from 4 two-sided probes under shell sigmas (same spsa_block recipe). Energy among init/last/Polyak/mid; pick better of the 2 blocks.",
+  "method_id_joint": 1,
+  "method_id_shell": 80,
+  "ledger_joint": {
+   "init": 4,
+   "calibration": 32,
+   "perturb": 1488,
+   "candidate": 12,
+   "total": 1536
+  },
+  "ledger_shell": {
+   "init": 2,
+   "calibration": 16,
+   "perturb": 1512,
+   "candidate": 6,
+   "total": 1536
+  },
+  "ledger_two_stage_total": {
+   "init": 6,
+   "calibration": 48,
+   "perturb": 3000,
+   "candidate": 18,
+   "total": 3072
+  }
+ },
+ "arms": [
+  "JOINT",
+  "TWO_STAGE",
+  "QAOA"
+ ],
+ "no_pair_phase": true,
+ "finished": 1794241442.3322825,
+ "fit_wall_s": 86.47104573249817,
+ "wall_s": 86.47121119499207
+}

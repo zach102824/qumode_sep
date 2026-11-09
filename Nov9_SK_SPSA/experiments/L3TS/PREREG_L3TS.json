@@ -1,0 +1,76 @@
+{
+  "experiment": "L3TS: N=15 L=3 two-stage SPSA (freeze shared Uc mid-run, then shells) vs JOINT vs QAOA p=3",
+  "written_before_fits": true,
+  "not_a_depth_curve": true,
+  "not_a_schedule_tweak_of_joint_gains": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "no_candidacy_revival": true,
+  "no_final": true,
+  "no_validation": true,
+  "no_pair_phase": true,
+  "no_nov9_syk": true,
+  "center4_depth_curve_closed": "N15 PR96 + N18 PR97 saturated; no more L-curve sampling",
+  "ft_source": {
+    "pr": 79,
+    "head_commit": "347ac23369db1251c902638994b4fdc65a019710",
+    "alloc_py_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+    "joint_is_unmodified_v4_center4": true
+  },
+  "hypothesis": {
+    "id": "l3_two_stage_uc_freeze_then_shells",
+    "one_sentence": "At N15 L=3 Q=3072, freezing shared Uc after a half-budget joint center-4 stage and spending the rest on shell-only SPSA recovers a Nov3 energy edge vs matched QAOA p=3 without being worse than full-budget JOINT.",
+    "not": "Not a JOINT gain retune. Not pair-phase. Not a GR patch. Not more depth-curve sampling."
+  },
+  "split_documented_before_fits": {
+    "Q_total": 3072,
+    "Q_joint_stage": 1536,
+    "Q_shell_stage": 1536,
+    "T_joint": 186,
+    "T_shell": 378,
+    "n_joint_starts": 4,
+    "n_shell_blocks": 2,
+    "joint_stage": "exact v4 center-4: 4 equal SPSA blocks on all Nov3 params, T=Q_joint/8-6=186, per_start=384, center-4 starts, frozen gains c=0.1 A=25 clip 2σ, energy among init/last/Polyak/mid",
+    "then": "take the single best-so-far x; freeze shared Uc = x[0:3] = (gamma, theta_K, theta_M) by setting those sigmas to 0",
+    "shell_stage": "2 equal SPSA blocks from that same x, shell coords only, remaining Q=1536, T=Q_shell/4-6=378, per_block=768. Each block recalibrates a0 from 4 two-sided probes under shell sigmas (same spsa_block recipe). Energy among init/last/Polyak/mid; pick better of the 2 blocks.",
+    "method_id_joint": 1,
+    "method_id_shell": 80,
+    "ledger_joint": {"init": 4, "calibration": 32, "perturb": 1488, "candidate": 12, "total": 1536},
+    "ledger_shell": {"init": 2, "calibration": 16, "perturb": 1512, "candidate": 6, "total": 1536},
+    "ledger_two_stage_total": {"init": 6, "calibration": 48, "perturb": 3000, "candidate": 18, "total": 3072}
+  },
+  "arms": {
+    "JOINT": "frozen v4 center-4 equal-4, full Q=3072 on all params, T=378, nstarts=4",
+    "TWO_STAGE": "documented split above, original Nov3 shared-Uc + SNAP shells, no pair-phase",
+    "QAOA": "p=L=3, fair v4 center-4, matched Q=3072, T=378, nstarts=4"
+  },
+  "seeds": {
+    "ids": [10360, 10361, 10362, 10363, 10364, 10365, 10366, 10367],
+    "role": "exclusive_unread_dev",
+    "collision_check": "no instance/run filenames; local R25 10344+ unused; FT pair-phase 10328-35 unused; LE ≤10327 unused here; FT holdout 10144-51 unused as this band; GR 20000+; validation 11000-11031; final 20000-20999",
+    "forbidden": ["10010-10359", "10328-10335", "10344-10359", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [15],
+    "L": [3],
+    "q": 1024,
+    "Q": 3072,
+    "p_QAOA": 3,
+    "circuits": ["Nov3", "QAOA"],
+    "arms": ["JOINT", "TWO_STAGE", "QAOA"]
+  },
+  "selection": "FT energy selection. F post hoc, never selects.",
+  "gate": {
+    "written_before_fits": true,
+    "primary": "TWO_STAGE vs QAOA: mean ΔE = E_TWO_STAGE - E_QAOA, bootstrap 95% CI (4000, rng 3334) entirely <0",
+    "secondary": "TWO_STAGE mean E ≤ JOINT mean E (point means; not worse than joint)",
+    "pass": "both primary and secondary",
+    "otherwise": "FAIL / reject. Do not retune. Do not patch GR.",
+    "gr": "Do not patch GR regardless of gate outcome."
+  },
+  "ledger": {
+    "prior_combined": 3216000,
+    "this_stream": "L3TS, counted separately",
+    "new_charge": "24 fits × 3072 = 73728 if all succeed"
+  }
+}
