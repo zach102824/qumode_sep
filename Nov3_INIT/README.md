@@ -103,4 +103,13 @@ python3 -m Nov3_INIT.run_shellgain --phase run
 python3 -m Nov3_INIT.run_shellgain --phase summary
 ```
 
+Spread8 L=3 (`PREREG_SPREAD8.md`) compares eight short SPSA blocks to four long ones on original shared-Uc Nov3 vs QAOA. N=15 L=3, seeds `10376..10383`, `Q=3072`. No GR patch.
+
+```bash
+python3 -m Nov3_INIT.conformance_spread8
+python3 -m Nov3_INIT.run_spread8_l3 --phase bstar
+python3 -m Nov3_INIT.run_spread8_l3 --phase run
+python3 -m Nov3_INIT.run_spread8_l3 --phase summary
+```
+
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.
