@@ -55,6 +55,12 @@ class Logical:
         J = make_J(self.seed, self.n)
         self.groups = packing(self.n)
         z = z_table(self.n)
+        self.j_upper = upper(J)
+        zz_pairs = []
+        for i in range(self.n):
+            for j in range(i + 1, self.n):
+                zz_pairs.append(z[i] * z[j])
+        self.zz_pairs = np.stack(zz_pairs, axis=0)
         self.hc = pair_diag(J, z)
         rms_j = rms(upper(J))
         k_hat, _sk = hat(pair_K(J), rms_j)
@@ -111,11 +117,31 @@ class Logical:
             psi = apply_rx_all(psi, float(x[2 * ell + 1]), self.n)
         return psi
 
+    def vm(self, x: np.ndarray, L: int) -> np.ndarray:
+        """Paper V(M)=exp(-i/4 ∑_{n<m} M_nm Z_n Z_m) then shared Rx(β) per layer.
+
+        Layout per layer: upper-triangle M (N(N-1)/2) then β. Not Nov3 shells.
+        """
+        n_pairs = self.n * (self.n - 1) // 2
+        width = n_pairs + 1
+        x = np.asarray(x, dtype=np.float64)
+        if int(x.size) != L * width:
+            raise ValueError(f"VM x len {x.size} != {L * width}")
+        psi = self.plus.copy()
+        for ell in range(L):
+            sl = ell * width
+            phase = 0.25 * (x[sl : sl + n_pairs] @ self.zz_pairs)
+            psi *= np.exp(-1j * phase)
+            psi = apply_rx_all(psi, float(x[sl + n_pairs]), self.n)
+        return psi
+
     def propagate(self, method: str, L: int, x: np.ndarray) -> tuple[float, np.ndarray]:
         if method == "Nov3rd":
             psi = self.nov3(x, L)
         elif method == "Nov3pair":
             psi = self.nov3_pair(x, L)
+        elif method == "VM":
+            psi = self.vm(x, L)
         elif method == "QAOA":
             psi = self.qaoa(x, L)
         else:

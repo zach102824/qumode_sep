@@ -85,7 +85,7 @@ python3 -m Nov3_INIT.run_v10 --phase run
 python3 -m Nov3_INIT.run_v10 --phase summary
 ```
 
-Pair-shell (`PREREG_PAIR.md`) unshares the existing 3-shell SNAP per cavity. Paper `V(M)` is not implemented. N=15, L=2 and L=3, seeds `10328..10335`, same `Q=1024·L` on shared Nov3, pair-cavity, and QAOA. No GR patch.
+Pair-shell (`PREREG_PAIR.md`) unshares the existing 3-shell SNAP per cavity. That probe did **not** implement paper `V(M)`. N=15, L=2 and L=3, seeds `10328..10335`, same `Q=1024·L` on shared Nov3, pair-cavity, and QAOA. No GR patch.
 
 ```bash
 python3 -m Nov3_INIT.conformance_pair
@@ -119,6 +119,15 @@ python3 -m Nov3_INIT.conformance_anneal
 python3 -m Nov3_INIT.run_anneal --phase bstar
 python3 -m Nov3_INIT.run_anneal --phase run
 python3 -m Nov3_INIT.run_anneal --phase summary
+```
+
+Paper \(\mathcal{V}(M)\) (`PREREG_VM.md`) is a **separate architecture arm** (arxiv 2204.02923): independent all-to-all ZZ pair-phase plus shared Rx mixer at \(p=L\). Not Nov3 shells and not a Nov3 retune. N=15, L=2 and L=3, seeds `10480..10487`, same `Q=1024·L` on shared-shell Nov3, paper V(M), and QAOA. No GR patch.
+
+```bash
+python3 -m Nov3_INIT.conformance_vm
+python3 -m Nov3_INIT.run_vm --phase bstar
+python3 -m Nov3_INIT.run_vm --phase run
+python3 -m Nov3_INIT.run_vm --phase summary
 ```
 
 This does not retune the frozen 1000-seed benchmark and it does not run Nov9 displacements.

@@ -4,7 +4,7 @@ from __future__ import annotations
 import numpy as np
 
 METHOD_ID = {
-    "equal4": {"QAOA": 0, "Nov3rd": 1, "Nov3pair": 2, "SHELL2": 3, "SHELL4": 4, "ANNEAL": 7},
+    "equal4": {"QAOA": 0, "Nov3rd": 1, "Nov3pair": 2, "SHELL2": 3, "SHELL4": 4, "ANNEAL": 7, "VM": 8},
     "spread8": {"QAOA": 6, "Nov3rd": 5},
     "halve8to2": {"QAOA": 71, "Nov3rd": 70},
 }
@@ -60,10 +60,14 @@ def n_params(method: str, L: int, n: int | None = None) -> int:
         if n is None:
             raise ValueError("Nov3pair param count needs N")
         return 3 + 3 * n_cavities(n) * L
+    if method == "VM":
+        if n is None:
+            raise ValueError("VM param count needs N")
+        return L * (int(n) * (int(n) - 1) // 2 + 1)
     raise ValueError(method)
 
 
-def sigmas_of(method: str, L: int, C: int | None = None) -> np.ndarray:
+def sigmas_of(method: str, L: int, C: int | None = None, n: int | None = None) -> np.ndarray:
     if method == "Nov3rd":
         sig = np.empty(3 + 3 * L, dtype=np.float64)
         sig[0] = 0.10
@@ -82,6 +86,17 @@ def sigmas_of(method: str, L: int, C: int | None = None) -> np.ndarray:
         return sig
     if method == "QAOA":
         return np.full(2 * L, 0.10, dtype=np.float64)
+    if method == "VM":
+        if n is None:
+            raise ValueError("VM sigmas need N")
+        n_pairs = int(n) * (int(n) - 1) // 2
+        width = n_pairs + 1
+        sig = np.empty(L * width, dtype=np.float64)
+        for ell in range(L):
+            sl = ell * width
+            sig[sl : sl + n_pairs] = 0.15
+            sig[sl + n_pairs] = 0.10
+        return sig
     raise ValueError(method)
 
 
@@ -339,6 +354,29 @@ def x0_pair_center4(C: int, L: int, start_id: int, rng) -> np.ndarray:
     return x
 
 
+def x0_vm_center4(n: int, L: int, start_id: int, rng, j_upper: np.ndarray) -> np.ndarray:
+    """Paper V(M) p=L. Start 0 sets M=J and β=0.25 (algebraic QAOA)."""
+    n = int(n)
+    L = int(L)
+    n_pairs = n * (n - 1) // 2
+    j_upper = np.asarray(j_upper, dtype=np.float64)
+    if j_upper.size != n_pairs:
+        raise ValueError(f"j_upper len {j_upper.size} != {n_pairs}")
+    width = n_pairs + 1
+    x = np.zeros(L * width, dtype=np.float64)
+    if start_id == 0:
+        for ell in range(L):
+            sl = ell * width
+            x[sl : sl + n_pairs] = j_upper
+            x[sl + n_pairs] = QAOA_CENTER_BETA
+        return x
+    for ell in range(L):
+        sl = ell * width
+        x[sl : sl + n_pairs] = rng.uniform(-0.5, 0.5, size=n_pairs)
+        x[sl + n_pairs] = float(rng.uniform(-0.5, 0.5))
+    return x
+
+
 def run_equal4(
     propagate,
     method: str,
@@ -348,13 +386,14 @@ def run_equal4(
     rngs_spsa,
     x0_fn=None,
     C=None,
+    n=None,
     a_mult=None,
     alpha=None,
     gamma=None,
     A=None,
 ) -> dict:
     t_iter = iterations_equal4(Q)
-    sig = sigmas_of(method, L, C=C)
+    sig = sigmas_of(method, L, C=C, n=n)
     ledger = Ledger()
     best = None
     tails = []

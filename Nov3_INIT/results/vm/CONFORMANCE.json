@@ -1,0 +1,130 @@
+{
+  "ok": true,
+  "prereg_sha256": "6f8932122faaa4f9159444123cf138dae2fc0b978d954dedd68c4f4960774435",
+  "historical_queries_preserved": 2572288,
+  "paper_V_M_implemented": true,
+  "architecture": "p=L independent all-to-all V(M) then shared Rx; not Nov3 shells",
+  "not_nov3_retune": true,
+  "not_hybrid": true,
+  "seeds": {
+    "band": [
+      10480,
+      10481,
+      10482,
+      10483,
+      10484,
+      10485,
+      10486,
+      10487
+    ],
+    "n": 8,
+    "overlaps": {
+      "local_r28_10464_10479": [],
+      "ft_and_prior_le_10463": [],
+      "le_10432_10439": [],
+      "holdout_10144_10151": [],
+      "validation_11000_11031": [],
+      "gr_final_20000_20999": []
+    },
+    "ok": true
+  },
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "params": {
+    "N": 15,
+    "n_pairs": 105,
+    "counts": {
+      "2": {
+        "QAOA": 4,
+        "Nov3rd": 9,
+        "VM": 212,
+        "Q": 2048,
+        "T": 250
+      },
+      "3": {
+        "QAOA": 6,
+        "Nov3rd": 12,
+        "VM": 318,
+        "Q": 3072,
+        "T": 378
+      }
+    },
+    "ok": true
+  },
+  "centers": {
+    "nov3": [
+      0.25,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0
+    ],
+    "qaoa": [
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "vm_n6_L2_len": 32,
+    "vm_tiles_J": true,
+    "vm_betas": [
+      0.25,
+      0.25
+    ],
+    "qaoa_center": true,
+    "nov3_center": true,
+    "method_ids": {
+      "QAOA": 0,
+      "Nov3rd": 1,
+      "Nov3pair": 2,
+      "SHELL2": 3,
+      "SHELL4": 4,
+      "ANNEAL": 7,
+      "VM": 8
+    },
+    "sigmas_vm_L3": 318,
+    "sigma_M": 0.15,
+    "sigma_beta": 0.1,
+    "ok": true
+  },
+  "reduction": {
+    "vm_center_equals_qaoa": true,
+    "fidelity": 0.999999999999998,
+    "dE": 0.0,
+    "M_times_zz_equals_hc": true,
+    "n_params_vm": 32,
+    "n_pairs": 15,
+    "no_nov3_shells": true
+  },
+  "ledger_quadratic": {
+    "Q": 128,
+    "calls": 128,
+    "ledger": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 80,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 128
+    },
+    "n_params": 32,
+    "ok": true
+  },
+  "label_rule": "VM_L3_EDGE iff L=3 VM-QAOA CI entirely <0 AND VM mean E <= Nov3 AND L=2 VM mean E <= Nov3 AND L=2 VM-QAOA CI is not entirely >0; else REJECT_VM_L3",
+  "no_gr_patch": true,
+  "no_candidacy_file": true,
+  "no_spsa_on_hamiltonian_in_this_module": true,
+  "no_refit_10368_10375": true
+}
