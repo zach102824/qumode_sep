@@ -1,0 +1,294 @@
+{
+  "B": "-0.3444",
+  "E": -7.594739538577242,
+  "E0": -8.6132024589353,
+  "Emax": 23.79999934975571,
+  "F": 0.18323740066828867,
+  "L": 1,
+  "compile": {
+    "applications_per_layer": {
+      "level_resolved_cavity_diagonals": 4,
+      "shared_gamma_global_diagonal": 1,
+      "shared_hamming_shell": 1
+    },
+    "k_body_max": 2,
+    "level_resolved_intra": "N and the intra part of Hc are not constant on Hamming weight. They need an 8-level diagonal on each cavity, not the 4-phase shell. M and K and Hc_inter are two-body and can share one compiled inter profile once the shared thetas are fixed. This is not claimed to cost the same as native Hc.",
+    "n_cavities": 4,
+    "n_cavity_pairs": 6,
+    "n_pair_slots": 66,
+    "packing": "contiguous triples (0,1,2),(3,4,5),...",
+    "shared_scalars": [
+      "gamma",
+      "thetaK",
+      "thetaM",
+      "thetaN"
+    ],
+    "shell": "3 relative Hamming phases per layer, shared across cavities"
+  },
+  "energy_error": 1.0184629203580577,
+  "eta": 0.9685787622472714,
+  "fidelity_used_for_selection": false,
+  "gamma": [
+    -0.31854561735482895
+  ],
+  "gap_accessible_PR_plus": 0.4337981341960315,
+  "gap_full": 0.0016132338724048623,
+  "hc_diag_sha256": "eef806253f93036b128bc3aa2a7c06d35bbe60e7b9bcaf01cf920974b1da6a00",
+  "init_label": "fresh_0",
+  "layers": [
+    {
+      "E": -7.594739538577242,
+      "F": 0.18323740066828867,
+      "energy_error": 1.0184629203580577,
+      "layer": 1
+    }
+  ],
+  "low_state_weights": [
+    {
+      "E": -8.6132024589353,
+      "index": 0,
+      "weight": 0.18323740066828875
+    },
+    {
+      "E": -8.611589225062895,
+      "index": 1,
+      "weight": 4.092601131822876e-33
+    },
+    {
+      "E": -8.179769975592409,
+      "index": 2,
+      "weight": 9.439267795221967e-25
+    },
+    {
+      "E": -8.179404324739268,
+      "index": 3,
+      "weight": 0.32015648674616654
+    },
+    {
+      "E": -8.057565017656191,
+      "index": 4,
+      "weight": 1.7641518290587083e-31
+    },
+    {
+      "E": -8.05406034231088,
+      "index": 5,
+      "weight": 2.9744663914224088e-30
+    },
+    {
+      "E": -7.907793564017227,
+      "index": 6,
+      "weight": 2.9481473550261423e-31
+    },
+    {
+      "E": -7.907074107910703,
+      "index": 7,
+      "weight": 0.003972714539279533
+    }
+  ],
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "method": "same_G_qaoa",
+  "n": 12,
+  "n_eval": 308,
+  "n_starts": 8,
+  "neel_occupation": {
+    "cavities": [
+      {
+        "p_fock": [
+          0.018478213284701964,
+          0.09727184181769771,
+          0.31064767757716194,
+          0.07360226732043826,
+          0.07360226732043826,
+          0.31064767757716194,
+          0.09727184181769771,
+          0.018478213284701964
+        ],
+        "p_neel_2_or_5": 0.6212953551543239
+      },
+      {
+        "p_fock": [
+          0.02741337160846171,
+          0.08658252090568197,
+          0.298870134134958,
+          0.0871339733508982,
+          0.0871339733508982,
+          0.298870134134958,
+          0.08658252090568196,
+          0.027413371608461717
+        ],
+        "p_neel_2_or_5": 0.597740268269916
+      },
+      {
+        "p_fock": [
+          0.02741337160846171,
+          0.08713397335089819,
+          0.298870134134958,
+          0.08658252090568194,
+          0.08658252090568196,
+          0.298870134134958,
+          0.08713397335089819,
+          0.02741337160846171
+        ],
+        "p_neel_2_or_5": 0.597740268269916
+      },
+      {
+        "p_fock": [
+          0.01847821328470196,
+          0.07360226732043823,
+          0.31064767757716194,
+          0.09727184181769774,
+          0.09727184181769774,
+          0.31064767757716194,
+          0.07360226732043823,
+          0.01847821328470196
+        ],
+        "p_neel_2_or_5": 0.6212953551543239
+      }
+    ],
+    "mean_p_neel": 0.6095178117121199
+  },
+  "objective": "energy",
+  "param_count": 5,
+  "role": "same_G_qaoa",
+  "seconds": 0.3460813550000239,
+  "seed_best": -7.594739538577242,
+  "seed_iqr": 4.037286768200398,
+  "seed_median": -7.594739538577235,
+  "seed_q25": -7.594739538577239,
+  "seed_q75": -3.557452770376841,
+  "seed_std": 2.764614014094957,
+  "shell": [
+    [
+      0.38381047115956884,
+      0.0,
+      0.0
+    ]
+  ],
+  "starts": [
+    {
+      "E": -4.1328,
+      "F": 0.028636985504031112,
+      "label": "zero",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "nit": 0,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.5947395385772385,
+      "F": 0.18323740003292774,
+      "label": "small",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 25,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.594739538577242,
+      "F": 0.18323740066828867,
+      "label": "fresh_0",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 25,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -0.6097275935690065,
+      "F": 0.0009570401641447933,
+      "label": "fresh_1",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "nit": 30,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.594739538577235,
+      "F": 0.18323739980847004,
+      "label": "fresh_2",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 44,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.594739538577242,
+      "F": 0.18323739863944372,
+      "label": "fresh_3",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 23,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.594739538577236,
+      "F": 0.18323740002286124,
+      "label": "fresh_4",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 40,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -1.8314110815073663,
+      "F": 0.017048985548595328,
+      "label": "fresh_5",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "nit": 30,
+      "skipped": false,
+      "success": true
+    }
+  ],
+  "state_sha256_f64": "a4ea8512271f131b8077e4f319d0d761ab60d134a72bb93e30654177fd41894d",
+  "state_sha256_round10": "ddb1614a54aebad3b019d06dfd10ec4ed853e31892a004214112fdd44503898c",
+  "theta": {
+    "K": -0.4732712987844635,
+    "M": -0.02456339436704785,
+    "N": 0.32082877907969143
+  },
+  "trace_best_start": [
+    -3.6483544814872433,
+    0.17926113830846752,
+    -1.185308193555807,
+    -4.2425467645770265,
+    -4.406447946723432,
+    -5.522487872746273,
+    4.6163126818230875,
+    -5.6043990978027995,
+    -5.656827758350875,
+    6.4802649340949126,
+    -5.6778805844926605,
+    -6.366167683447207,
+    -6.179203211452825,
+    -6.830192236259368,
+    -7.011056750798768,
+    -7.237859337097519,
+    -7.535373415948095,
+    -7.580983668299384,
+    -7.588401534836829,
+    -7.590829365914643,
+    -7.592419110355069,
+    -7.59265393193482,
+    -7.5932135861059695,
+    -7.59383898448179,
+    -7.594547366882159,
+    -7.594666098740022,
+    -7.594736019868561,
+    -7.594739352321273,
+    -7.594739533780226,
+    -7.594739487729813,
+    -7.594739538214593,
+    -7.5947395385410665,
+    -7.594739538569638,
+    -7.594739538577179,
+    -7.594739538577242
+  ],
+  "variance_H": 1.5316787068542652,
+  "variational_ok": true,
+  "x_exact": [
+    "-0.31854561735482895",
+    "0.38381047115956884",
+    "-0.4732712987844635",
+    "-0.024563394367047849",
+    "0.32082877907969143"
+  ]
+}

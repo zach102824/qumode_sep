@@ -1,0 +1,265 @@
+{
+  "B": -0.1704,
+  "E": -2.7117260774208933,
+  "E0": -3.842972421200884,
+  "Emax": 8.399780190232232,
+  "F": 0.23001131697941968,
+  "H_hash": "a5a93f80aabf9b5343bb62d2410c8411fc295fc5b339fb746d72a233f640b472",
+  "L": 2,
+  "best_F_diagnostic": {
+    "E": -2.7117260774208924,
+    "F": 0.23001131714421902,
+    "label": "beta_shift_0.2",
+    "promoted": false,
+    "same_as_best_E": false
+  },
+  "beta": [
+    -0.28337489898944307,
+    -0.12077295746428679
+  ],
+  "bound_indices": [],
+  "energy_error": 1.1312463437799907,
+  "eta": 0.9075986929015003,
+  "eval_cap": 5000,
+  "fidelity_used_for_selection": false,
+  "gamma": [
+    0.22238738523072304,
+    0.22238738523072304
+  ],
+  "init_label": "beta_shift_0.1",
+  "layers": [
+    {
+      "E": -2.538286148487119,
+      "E_minus_E0": 1.3046862727137651,
+      "F": 0.18480169855822648,
+      "F_normalized": 0.0,
+      "Hc": -1.7104600832208676,
+      "eta": 0.8934319499770533,
+      "layer": 1
+    },
+    {
+      "E": -2.7117260774208933,
+      "E_minus_E0": 1.1312463437799907,
+      "F": 0.23001131697941968,
+      "F_normalized": 0.0,
+      "Hc": -2.0024455143903492,
+      "eta": 0.9075986929015003,
+      "layer": 2
+    }
+  ],
+  "method": "shared_qaoa",
+  "n": 6,
+  "n_eval": 335,
+  "n_screen": 0,
+  "n_starts": 16,
+  "norm": 1.0000000000000002,
+  "objective": "energy",
+  "param_count": 3,
+  "rescue": false,
+  "restart_E_max": -0.1474516111621888,
+  "restart_E_median": -2.7117260774208924,
+  "restart_E_min": -2.7117260774208933,
+  "restart_E_std": 0.800889973604861,
+  "seconds": 0.08602621399995769,
+  "shell": [
+    [
+      -0.28337489898944307,
+      0.0,
+      0.0
+    ],
+    [
+      -0.12077295746428679,
+      0.0,
+      0.0
+    ]
+  ],
+  "starts": [
+    {
+      "E": -2.7117260774208924,
+      "F": 0.23001131714421902,
+      "label": "beta_shift_0.2",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "n_trace": 21,
+      "nit": 16,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -2.711726077420893,
+      "F": 0.23001131696416582,
+      "label": "beta_shift_0.0",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "n_trace": 14,
+      "nit": 10,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -2.7117260774208933,
+      "F": 0.23001131697941968,
+      "label": "beta_shift_0.1",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "n_trace": 15,
+      "nit": 12,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -2.711726077420893,
+      "F": 0.2300113169298262,
+      "label": "beta_shift_-0.2",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "n_trace": 11,
+      "nit": 9,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -1.5117829008554915,
+      "F": 0.045571443307333044,
+      "label": "gamma_shift_0.05",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "n_trace": 10,
+      "nit": 8,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -2.711726077420892,
+      "F": 0.23001131699861785,
+      "label": "gamma_shift_-0.05",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "n_trace": 26,
+      "nit": 19,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -2.711726077420893,
+      "F": 0.2300113169311538,
+      "label": "gamma_shift_0.1",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "n_trace": 31,
+      "nit": 20,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -2.7117260774208916,
+      "F": 0.2300113169744946,
+      "label": "qaoa_mean_gamma",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "n_trace": 15,
+      "nit": 10,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -2.7117260774208933,
+      "F": 0.2300113168674104,
+      "label": "fresh_0",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "n_trace": 35,
+      "nit": 21,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -2.7117260774208916,
+      "F": 0.2300113169742207,
+      "label": "fresh_1",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "n_trace": 27,
+      "nit": 21,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -0.1474516111621888,
+      "F": 0.06192966998085655,
+      "label": "fresh_2",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "n_trace": 24,
+      "nit": 7,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -1.140128509061508,
+      "F": 0.08503155596246266,
+      "label": "fresh_3",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "n_trace": 14,
+      "nit": 11,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -1.138989256461155,
+      "F": 0.024775987767754755,
+      "label": "fresh_4",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "n_trace": 11,
+      "nit": 9,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -2.7117260774208924,
+      "F": 0.2300113169858293,
+      "label": "fresh_5",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "n_trace": 34,
+      "nit": 21,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -2.7117260774208924,
+      "F": 0.23001131697061244,
+      "label": "fresh_6",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "n_trace": 15,
+      "nit": 10,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -1.5312436862886547,
+      "F": 0.021112355841602013,
+      "label": "fresh_7",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "n_trace": 16,
+      "nit": 13,
+      "skipped": false,
+      "success": true
+    }
+  ],
+  "state_sha256_f64": "a491bd45b344c1a5d2e8cd229f95063c5023bcd207fcc61f65b2060dbf82d16c",
+  "state_sha256_round10": "444f2292153f990fcf3856dcad8cef660845865fff969ad57cc19e1ecb45d769",
+  "theta": null,
+  "trace_best_start": [
+    -1.1034203856706155,
+    -0.0511706996766472,
+    1.2448045289658498,
+    -2.473416697997866,
+    -2.6724581692212666,
+    -2.7034544330107524,
+    -2.7085596379396426,
+    -2.7109898362406017,
+    -2.7116760809924223,
+    -2.711694849039378,
+    -2.711725997740348,
+    -2.7117260761704824,
+    -2.711726077420823,
+    -2.7117260774208916,
+    -2.7117260774208933
+  ],
+  "variational_ok": true,
+  "widened_bounds": false,
+  "x_exact": [
+    "0.22238738523072304",
+    "-0.28337489898944307",
+    "-0.12077295746428679"
+  ]
+}

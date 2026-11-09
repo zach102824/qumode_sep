@@ -1,0 +1,26 @@
+{
+  "frozen_before_training": true,
+  "seed_base": 20261110,
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "packing_sha256": "4418b3c33126dd3fd29a6fc74a20314c2e1606764b942301ac4ad01d13de4717",
+  "priority": ["R_M", "N_red", "R_blockK", "R_full"],
+  "arms": {
+    "R_M": {"ledger": "sublattice", "generator": "Hc+thetaM Mhat", "P": "3L+2", "depths": [1, 2, 3, 4, 5, 6], "restarts": 12, "role": "main"},
+    "N_red": {"ledger": "contiguous", "generator": "Hc+thetaK Khat+thetaN Nhat", "P": "3L+3", "depths_reported": [4, 5, 6], "bootstrap_depths": [1, 2, 3], "restarts_reported": 12, "restarts_bootstrap": 4, "role": "reduction_vs_original_N"},
+    "R_blockK": {"ledger": "sublattice", "generator": "Hc+thetaM Mhat+thetaB Bhat", "P": "3L+3", "depths_reported": [2, 4, 6], "bootstrap_depths": [1], "restarts_reported": 8, "restarts_bootstrap": 4, "role": "block_mean_of_raw_FK"},
+    "R_full": {"ledger": "sublattice", "generator": "Hc+thetaK Khat+thetaM Mhat", "P": "3L+3", "depths": [1, 2, 3, 4, 5, 6], "restarts": 8, "role": "fresh_baseline"}
+  },
+  "normalization": "RMS over every i<j slot including zeros. hat = raw * RMS(J) / RMS(raw). Hc coefficient fixed at 1.",
+  "optimizer": {"method": "L-BFGS-B", "maxiter": 1500, "maxfun_per_start": 500, "objective": "energy"},
+  "qaoa": {"depths": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], "restarts": 12, "interp": true, "fourier": true, "budget": "at least the main arm inclusive nfev at the compared depth"},
+  "reduction_thresholds_absolute_energy": {
+    "R_M_vs_R_full_best_within": 0.02,
+    "R_M_vs_R_full_median_within": 0.05,
+    "R_M_kill_if_worse_by_more_than_at_both_L5_and_L6": 0.03,
+    "blockK_vs_R_full_best_within_L4_and_L6": 0.01,
+    "blockK_median_no_worse": true,
+    "N_red_vs_original_N_best_within": 0.01,
+    "note": "Passing a within-threshold supports a parameter reduction only. It is not an advantage and not a seal."
+  },
+  "old_qaoa_reference_not_a_noise_bar": {"L5_p9_error": 0.390, "L6_p11_error": 0.315, "L6_p10_error": 0.349, "L6_p12_error": 0.288, "L6_p12_F": 0.515}
+}

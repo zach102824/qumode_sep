@@ -1,0 +1,143 @@
+{
+  "benchmark": "historical B=0.1",
+  "rule": "energy-only interleaved KM against equal-depth QAOA; energy-legal fidelity column is not the verdict",
+  "claim_overall": "partial",
+  "diagnostic_overall": "partial",
+  "pass_claim": {
+    "6": true,
+    "9": false,
+    "12": false
+  },
+  "pass_diagnostic": {
+    "6": true,
+    "9": false,
+    "12": false
+  },
+  "selection_limited": {
+    "6": false,
+    "9": false,
+    "12": false
+  },
+  "n_differ": {
+    "6": 2,
+    "9": 1,
+    "12": 3
+  },
+  "unrestricted": {
+    "6": {
+      "n_differ": 3,
+      "median_F_gain": 2.5830502192736304e-07,
+      "median_E_gap": 4.85731455057703e-11
+    },
+    "9": {
+      "n_differ": 5,
+      "median_F_gain": 9.2825531847196e-07,
+      "median_E_gap": 9.381579957334907e-10
+    },
+    "12": {
+      "n_differ": 6,
+      "median_F_gain": 1.1022168896618334e-06,
+      "median_E_gap": 4.015134891233174e-10
+    }
+  },
+  "n_complete": {
+    "6": 12,
+    "9": 12,
+    "12": 12
+  },
+  "detail": {
+    "6:claim": {
+      "wins": 11,
+      "losses": 0,
+      "ci": [
+        0.04262320965379601,
+        0.385330917117693
+      ],
+      "n": 12,
+      "joint": 11,
+      "fonly": 0,
+      "ties": 1,
+      "median": 0.2022987201674032,
+      "mean": 0.2709940071683095,
+      "p": 0.00634765625
+    },
+    "6:diag": {
+      "wins": 11,
+      "losses": 0,
+      "ci": [
+        0.04277728786874019,
+        0.38533149224372687
+      ],
+      "n": 12,
+      "joint": 11,
+      "fonly": 0,
+      "ties": 1,
+      "median": 0.20229893824300255,
+      "mean": 0.2726282671380671,
+      "p": 0.00634765625,
+      "n_differ": 2
+    },
+    "9:claim": {
+      "wins": 3,
+      "losses": 4,
+      "ci": [
+        -0.07196957736528103,
+        0.02052273756646028
+      ],
+      "n": 12,
+      "joint": 3,
+      "fonly": 0,
+      "ties": 5,
+      "median": -0.047559493315989854,
+      "mean": -0.0014125062723226896,
+      "p": 0.3876953125
+    },
+    "9:diag": {
+      "wins": 3,
+      "losses": 4,
+      "ci": [
+        -0.07196910381731306,
+        0.020523247622653437
+      ],
+      "n": 12,
+      "joint": 3,
+      "fonly": 0,
+      "ties": 5,
+      "median": -0.047558961402053554,
+      "mean": 0.008599499496983368,
+      "p": 0.3876953125,
+      "n_differ": 1
+    },
+    "12:claim": {
+      "wins": 4,
+      "losses": 0,
+      "ci": [
+        -0.0182087079640876,
+        0.10854732134502901
+      ],
+      "n": 12,
+      "joint": 4,
+      "fonly": 0,
+      "ties": 8,
+      "median": -0.007473196325069792,
+      "mean": 0.045875106314824755,
+      "p": 0.7744140625
+    },
+    "12:diag": {
+      "wins": 4,
+      "losses": 0,
+      "ci": [
+        -0.018208457508386865,
+        0.10854780927577495
+      ],
+      "n": 12,
+      "joint": 4,
+      "fonly": 0,
+      "ties": 8,
+      "median": -0.007472737461553511,
+      "mean": 0.04587591260204724,
+      "p": 0.7744140625,
+      "n_differ": 3
+    }
+  }
+}

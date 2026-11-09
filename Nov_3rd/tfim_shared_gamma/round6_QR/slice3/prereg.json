@@ -1,0 +1,37 @@
+{
+  "frozen_before_slice3_evaluations": true,
+  "parent_slice2_commit": "5096c2a4b6bc79a83212a8398380132128a60d31",
+  "original_qr_protocol_sha256": "0dd5b4d1d79db3555a17875fd2f8e0cda5355deeafb8e8152884b1f5a97f901c",
+  "original_qr_baseline_sha256": "a3bb2576ea6183a9282674f7821362a47857fb590e7906ac17adca09decfe30f",
+  "slice2_prereg_sha256": "ecd50bf6673a970c1a6fe351fa54b72002d260fdd57ff1d8effcacc99c5f4f35",
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "tau": 1e-9,
+  "budget_formula_unchanged": "Bp = max(4*Rp, 53927). Corrected source 52927 does not change issued allowances.",
+  "ledger_from_slice1_jobs_plus_slice2": {
+    "9": {"slice1_n_eval_new": 71598, "slice2_n_eval_new": 0, "allowed": 204674, "remaining": 133076},
+    "10": {"slice1_n_eval_new": 64704, "slice2_n_eval_new": 0, "allowed": 203366, "remaining": 138662}
+  },
+  "remaining_max_new_evaluations": {"9": 133076, "10": 138662},
+  "priority": [9, 10],
+  "out_of_scope": [13],
+  "seed_entropy": 20261113,
+  "seed_sequence": "[20261113, arm, p, k, batch]. arm 1=INTERP, 2=FOURIER, 3=random, 4=perturb 0.02, 5=perturb 0.1.",
+  "continuation_batch_start": {"9": 32, "10": 24},
+  "abandoned_partial_batches_not_reused": {
+    "9": {"batch": 31, "starts_recorded": 4, "note": "random k=1..7 and both perturbation families were not run and are not reused"},
+    "10": {"batch": 23, "starts_recorded": 11, "note": "both perturbation families were not run and are not reused"}
+  },
+  "optimizer": {"method": "L-BFGS-B", "maxiter": 1500, "maxfun_per_start": 500, "objective": "energy"},
+  "cap_rule": "Each training energy_grad takes one count before the call. At zero remaining, no further training call is issued. A start stopped by the cap is partial.",
+  "completed_qaoa_from_slice2": {
+    "11": {"E": -8.298215584895333, "F": 0.4848510087447086, "var_H": 0.45523822449558793, "state_sha256": "971de83287fd505ba1e30721f956b5f76e4f43415a7aeff7fc09b9d4e96b5643"},
+    "12": {"E": -8.3254075497832, "F": 0.5147185522341006, "var_H": 0.42114544034721746, "state_sha256": "dd5959c5c56800b1b0818e31991abad7bd3e919dbc71aa8a0ea24dc8245eb2fe"}
+  },
+  "candidate_pins": {
+    "fresh_L5_json": {"commit": "7e2183b7", "sha256": "b76dd694658ff2c162825e4b5e2f8a6e4d8ded7c2be5cb10d84dc966c0c37846", "n": 48, "note": "per-chain E and F are logged. This is the fresh distribution, not the independent best."},
+    "audit_l5_distribution": {"commit": "0259d151", "sha256": "4a381c31212beebdea0a2f2b89bc055bcaac88583e347dc723df05fb924aaa4e"},
+    "audit_l6_addendum": {"commit": "0259d151", "sha256": "be592a0125c29d3ac017074f47a4a2701e7ae82edaf1a4fef174d6920f803f91"},
+    "D_baseline_v1": {"commit": "71bb0351", "sha256": "382ea444375bcc7c91f61fddaf5d3dfdf33c1c2c5243973c46b5194d299ffe45", "role": "independent best L5/L6 replay"}
+  },
+  "cost_note_not_a_budget_change": "0259d151 reconciles 384 finish forwards inside nfev but outside evals_new 70477, and 53927+70477+384=124788. Raw source is 14023+13076=27099, not 28099. Corrected old arm2 family is 52927. Historical allowance constant 53927 stays."
+}

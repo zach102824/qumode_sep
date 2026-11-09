@@ -1,0 +1,317 @@
+{
+  "B": "-0.3444",
+  "E": -7.899027652280747,
+  "E0": -8.6132024589353,
+  "Emax": 23.79999934975571,
+  "F": 0.24043207188915425,
+  "L": 3,
+  "energy_error": 0.7141748066545528,
+  "eta": 0.9779665455184049,
+  "eval_cap": 4600,
+  "fidelity_used_for_selection": false,
+  "gamma": [
+    0.20240127162552723,
+    0.41375727392369743,
+    0.43567956409958103
+  ],
+  "gap_accessible_PR_plus": 0.4337981341960315,
+  "gap_full": 0.0016132338724048623,
+  "hc_diag_sha256": "eef806253f93036b128bc3aa2a7c06d35bbe60e7b9bcaf01cf920974b1da6a00",
+  "in_process_replay": true,
+  "init_label": "fresh_1",
+  "layers": [
+    {
+      "E": -6.060972174509954,
+      "F": 0.08276672433730814,
+      "energy_error": 2.552230284425346,
+      "layer": 1
+    },
+    {
+      "E": -6.598955267360855,
+      "F": 0.14973119132198887,
+      "energy_error": 2.0142471915744444,
+      "layer": 2
+    },
+    {
+      "E": -7.899027652280747,
+      "F": 0.24043207188915425,
+      "energy_error": 0.7141748066545528,
+      "layer": 3
+    }
+  ],
+  "ledger_hardware": {
+    "applications_per_layer": {
+      "fk_inter_shares_that_inter_diagonal": true,
+      "inter_two_body_diagonal_profiles": 1,
+      "intra_level_resolved_diagonals": 4,
+      "note": "Intra phases depend on the Fock index, not only the Hamming weight, and they differ by cavity because the local distances do. They are not the shared 4-phase shell. Shell SNAP remains the mixer only.",
+      "shared_hamming_shell_snap": 1
+    },
+    "intra_level_resolved_not_shell_snap": {
+      "n_distinct_fock_phases_cavity0": 3,
+      "not_a_hamming_shell": true,
+      "popcount_spreads_cavity0": {
+        "0": 0.0,
+        "1": 1.0669670084631928,
+        "2": 1.0669670084631928,
+        "3": 0.0
+      }
+    },
+    "k_body_max": 2,
+    "n_cavities": 4,
+    "n_cavity_pairs": 6,
+    "n_fk_inter_nonzero": 54,
+    "n_inter_bonds": 54,
+    "n_intra_bonds": 12,
+    "no_free_compile_claim": true,
+    "trained_controls": {
+      "shared_gamma": 1,
+      "shared_thetaIn": 1,
+      "shared_thetaK": 1,
+      "shell_per_layer": 3
+    }
+  },
+  "ledger_params": {
+    "P": 8,
+    "n_eval": 1250,
+    "n_starts": 15,
+    "seed_best": -7.899027652280747,
+    "seed_median": -0.5998951095833756
+  },
+  "manifest_sha256": "14f40daa135640c9eb18d4ff64d2608216f139b51d87e9ede2fcd20939851da9",
+  "method": "same_G_qaoa",
+  "n": 12,
+  "n_eval": 1250,
+  "n_starts": 15,
+  "objective": "energy",
+  "param_count": 8,
+  "rescue": false,
+  "role": "same_G_diagnostic_not_standard_qaoa",
+  "seconds": 3.7931142409997847,
+  "seed_best": -7.899027652280747,
+  "seed_median": -0.5998951095833756,
+  "seed_median_best_half": -7.238076703535619,
+  "seed_spread_median_minus_best": 7.299132542697372,
+  "seed_std": 3.210720178526609,
+  "shell": [
+    [
+      -0.5138315141329464,
+      0.0,
+      0.0
+    ],
+    [
+      -0.3853387514271791,
+      0.0,
+      0.0
+    ],
+    [
+      -0.2006354751808184,
+      0.0,
+      0.0
+    ]
+  ],
+  "starts": [
+    {
+      "E": -7.899027652280744,
+      "F": 0.2404320727682184,
+      "label": "interp_linear",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 50,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -0.21761269260812444,
+      "F": 0.0001820197742490721,
+      "label": "fourier1",
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "nit": 39,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -0.485998229275063,
+      "F": 0.0001262426314552797,
+      "label": "fourier2",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 64,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.7099969252898015,
+      "F": 0.19303026444461793,
+      "label": "fresh_0",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 53,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.899027652280747,
+      "F": 0.24043207188915425,
+      "label": "fresh_1",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 40,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -6.066528828706677,
+      "F": 0.060274560585624914,
+      "label": "fresh_2",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 61,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -0.5819268908240112,
+      "F": 0.00042127085482089485,
+      "label": "fresh_3",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 59,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -0.5998951095833756,
+      "F": 3.499484982342834e-05,
+      "label": "fresh_4",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 71,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -0.6728110370467537,
+      "F": 2.3337966140810804e-05,
+      "label": "fresh_5",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 58,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -0.45431933720395046,
+      "F": 0.00013813286773496573,
+      "label": "fresh_6",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 77,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -0.419846077125007,
+      "F": 0.00033167994431873853,
+      "label": "fresh_7",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 78,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -0.4722623896114031,
+      "F": 0.0002999860799964771,
+      "label": "fresh_8",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 66,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -0.4469323894195072,
+      "F": 0.0009264280084928118,
+      "label": "fresh_9",
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 30,
+      "skipped": false,
+      "success": true
+    },
+    {
+      "E": -7.238076703535619,
+      "F": 0.16360434152329054,
+      "label": "fresh_10",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    },
+    {
+      "E": -2.923194762674469,
+      "F": 0.008498400959268694,
+      "label": "fresh_11",
+      "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "nit": 80,
+      "skipped": false,
+      "success": false
+    }
+  ],
+  "state_sha256_f64": "a1748c61d26a15c5295acc93c9d973206bb16aa9de786ea5ffb2212d08394d41",
+  "state_sha256_round10": "294b2c9576dc5bb9395ccc399c02983cf73e86efd08ed8ec23647fa50567ecd9",
+  "thetaIn": 1.2172338838445067,
+  "thetaK": -0.39129772775449567,
+  "topped_up": false,
+  "trace_best_start": [
+    -1.4777316504044873,
+    -0.27878815699684845,
+    0.28060097553562907,
+    1.0532242993748446,
+    -6.589753380096356,
+    -6.61845768298043,
+    -7.096477943748514,
+    -7.402109409168769,
+    -7.466409901683262,
+    -7.4918251184918105,
+    -7.530663651882934,
+    -7.619381373378294,
+    -7.678131549770236,
+    -7.637302668256046,
+    -7.684685866633907,
+    -7.690286533721513,
+    -7.710443366556542,
+    -7.630361784419151,
+    -7.7365014054279335,
+    -7.683848254492599,
+    -7.75523169803592,
+    -7.802386385409585,
+    -7.813770585981975,
+    -7.854810827715811,
+    -7.87069244853844,
+    -7.883651639482023,
+    -7.88631882916894,
+    -7.887889331085773,
+    -7.888555960419692,
+    -7.889324745629779,
+    -7.890544457049474,
+    -7.892402955973321,
+    -7.895338275576159,
+    -7.896325938272248,
+    -7.897961107264525,
+    -7.898779246598255,
+    -7.898976416369619,
+    -7.899017721616291,
+    -7.899026579637561,
+    -7.899027502060582,
+    -7.899027615895002,
+    -7.899027640018905,
+    -7.8990276296182005,
+    -7.899027649225722,
+    -7.899027652039008,
+    -7.899027652174069,
+    -7.899027652280172,
+    -7.899027652280683,
+    -7.899027652280747
+  ],
+  "variational_ok": true,
+  "x_exact": [
+    "0.20240127162552723",
+    "0.41375727392369743",
+    "0.43567956409958103",
+    "-0.51383151413294637",
+    "-0.3853387514271791",
+    "-0.2006354751808184",
+    "1.2172338838445067",
+    "-0.39129772775449567"
+  ]
+}
