@@ -1,0 +1,79 @@
+{
+  "experiment": "DEPTH S1W: charged S1JOINT L1→L warm-start vs cold S1JOINT and QAOA p=L",
+  "written_before_fits": true,
+  "not_a_new_ansatz": true,
+  "not_a_c1_retune": true,
+  "not_a_s1_retune": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "alt13_closed_fail": true,
+  "s4_s8_closed": true,
+  "budget_only_closed": true,
+  "throughput_axis_closed": true,
+  "conditioning_closed": ["C1", "B3", "B4"],
+  "n18_forbidden_unless_both_gates": "Adopt further N18 only if Gate A and Gate B both pass at N15 L2",
+  "hypothesis": {
+    "id": "s1_l1_transfer_recovers_depth",
+    "one_sentence": "Nov3's L1 energy edge is wasted by cold L≥2 S1JOINT; charging 1024 queries to L1 then embedding into L (Uc+shell0 copied, extra shells 0, full-vector C0 continue) beats cold S1JOINT and equal-layer QAOA at the same Q=1024·L.",
+    "not": "Not DEPTH C1 (that used 4 starts). No extra Q. No ALT. Not a GR patch. No BFGS/natgrad."
+  },
+  "frozen": {
+    "Q_rule": "Q=1024*L inclusive, matching S1SH/S1ALT23/DEPTH C1 fair prior, not a fixed Q=2048",
+    "COLD": "exact S1JOINT: nstarts=1 TQA at that L, joint IID C0, split_cap(Q,1), ncal=4, A=25, live gain, last+Polyak, engine m2. This is the fair recipe that already lost energy to QAOA at L≥2.",
+    "QAOA": "exact S1JOINT p=L, same Q, same starts/gain/readout. Cold control, not a QAOA warm-start.",
+    "WARM": {
+      "L1": "S1JOINT at L=1, cap Q1=1024 (one layer-equivalent), K=507, TQA L=1 start, charged",
+      "embed": "x_L = [γ,θK,θM,(s1,s2,s3)_0 from L1*] concatenated with extra shells exact 0. Shared Uc is NOT frozen: continue is full-vector C0 (lightly refined).",
+      "continue": "one start = pad(x_L1*). cap Q-1024. L=2 rem 1024 K=507; L=3 rem 2048 K=1019. Live gain, last+Polyak. Distinct RNG mid=240.",
+      "leftover_shells": "exact 0, not small noise",
+      "no_free_prefix": "L1 candidates and continue calibration are inside Q. Padded point is not a free L-candidate."
+    },
+    "file_sha256": {
+      "starts.py": "6e4b0cd784782084d2f1320ccb9113ef99d320fd09ce984ab5161f68e0716645",
+      "N3COND/spsa.py": "cca4c884bc3020c9c9559e89cb248d9a4b2c8a8bca36624ba6b380dab1832357",
+      "N3COND/nov3.py": "e74f66b2dfc973afe9acd69e5c398b210a59563f8edc04290c5e88fb16a39808"
+    }
+  },
+  "seeds": {
+    "ids": [10128, 10129, 10130, 10131, 10132, 10133, 10134, 10135],
+    "role": "exclusive_unread_dev",
+    "collision_check": "no instance/run filenames; skip local R15 10120-10127; prior LE ≤10111; DEPTH C1 10036-43; STARTS ≤10111; FT 10018-25; N3COND 10010-17; validation 11000-11031; final 20000-20999",
+    "forbidden": ["10010-10127", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [12, 15],
+    "L": [2, 3],
+    "q": 1024,
+    "Q": {"2": 2048, "3": 3072},
+    "arms": ["COLD", "WARM", "QAOA"]
+  },
+  "allocation": {
+    "inclusive": "All L1 + continue queries inside Q. Failures inside Q. No free L1.",
+    "QAOA": "p=L, full Q, S1JOINT cold."
+  },
+  "selection": "Lowest counted candidate energy at the evaluation depth. F post hoc, never selects.",
+  "gate": {
+    "adopt_cell": "N15 L2",
+    "A": "WARM mean energy < COLD: bootstrap 95% CI of mean(E_WARM - E_COLD) entirely below 0",
+    "B": "WARM mean energy < QAOA: bootstrap 95% CI of mean(E_WARM - E_QAOA) entirely below 0",
+    "adopt_n18": "only if BOTH A and B pass at N15 L2",
+    "otherwise": "STOP. Do not retune split. Do not patch GR. Do not run N18.",
+    "report": "All N×L cells. Fidelity post hoc."
+  },
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "depth_c1": 327680,
+    "starts_s8": 98304,
+    "starts_s1": 98304,
+    "starts_s1c": 196608,
+    "starts_s1l6": 196608,
+    "starts_s1q": 344064,
+    "starts_s1sh": 49152,
+    "starts_s1alt": 65536,
+    "starts_s1alt23": 163840,
+    "starts_s1alt13": 98304,
+    "this_stream": "DEPTH_S1W, counted separately",
+    "new_charge": "96 fits: 48×2048 + 48×3072 = 245760 if all succeed"
+  }
+}
