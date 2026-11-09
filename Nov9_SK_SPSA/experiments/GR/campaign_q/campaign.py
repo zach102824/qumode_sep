@@ -77,6 +77,8 @@ def _fmt(value) -> str:
         return ""
     if isinstance(value, bool):
         return "1" if value else "0"
+    if isinstance(value, str):
+        return value
     if isinstance(value, int):
         return str(value)
     return f"{float(value):.6f}"
@@ -484,47 +486,46 @@ def eta_text(prereg: dict, agg: Aggregator, scale_doc: dict, workers: int) -> st
         if observed is not None:
             bits.append(f"observed median {observed:.4f}s/query from {len(samples)} runs")
         lines.append(f"N={n}: " + ", ".join(bits))
-    remaining = {int(n): 0 for n in prereg["N"]}
+    stored = {int(n): 0 for n in prereg["N"]}
     done_q = 0
     for key, seeds in agg.ok.items():
-        done_q += sum(row["queries"] for row in seeds.values())
-    for stage, nseed in (("dev", 10), ("final", 1000)):
-        for n in prereg["N"]:
-            for L in prereg["L"]:
-                for q in runnable_qs(L, prereg["budget"]["q_candidates"]):
-                    remaining[int(n)] += allocation(q, L)["Q"] * 2 * nseed
-    remaining_after = {n: max(0, q - 0) for n, q in remaining.items()}
-    # Subtract queries already stored, approximately, by walking ok rows only once globally.
-    # Recompute remaining from the plan minus stored ok queries per N.
-    stored = {int(n): 0 for n in prereg["N"]}
-    for key, seeds in agg.ok.items():
-        stored[int(key[1])] = stored.get(int(key[1]), 0) + sum(row["queries"] for row in seeds.values())
+        charged = sum(row["queries"] for row in seeds.values())
+        stored[int(key[1])] = stored.get(int(key[1]), 0) + charged
+        done_q += charged
+
+    def sec_eval(n: int, L: int, method: str):
+        s1 = table.get((n, 1, method))
+        s6 = table.get((n, 6, method))
+        if s1 is None or s6 is None:
+            return None
+        return s1 + (L - 1) / 5.0 * (s6 - s1)
+
     total_sec = 0.0
     for n in prereg["N"]:
-        left = max(0, remaining[int(n)] - stored.get(int(n), 0))
-        samples = []
-        for key, seeds in agg.ok.items():
-            if key[1] == int(n):
-                samples.extend(row["seconds"] / row["queries"] for row in seeds.values() if row["queries"])
-        if len(samples) >= 2:
-            rate = float(np.median(samples))
-        else:
-            rates = []
-            for method in prereg["methods"]:
-                s1 = table.get((int(n), 1, method))
-                s6 = table.get((int(n), 6, method))
-                if s1 is not None and s6 is not None:
-                    rates.append(0.5 * (s1 + s6))
-                elif s1 is not None:
-                    rates.append(s1)
-            rate = float(np.mean(rates)) if rates else None
-        if rate is None:
-            lines.append(f"N={n} remaining queries {left}, rate unknown")
+        planned = 0
+        weighted = 0.0
+        known = True
+        for nseed in (10, 1000):
+            for L in prereg["L"]:
+                for q in runnable_qs(L, prereg["budget"]["q_candidates"]):
+                    queries = allocation(q, L)["Q"] * 2 * nseed
+                    planned += queries
+                    for method in prereg["methods"]:
+                        rate = sec_eval(int(n), int(L), method)
+                        if rate is None:
+                            known = False
+                        else:
+                            weighted += allocation(q, L)["Q"] * nseed * rate
+        left_queries = max(0, planned - stored.get(int(n), 0))
+        if not known or planned <= 0:
+            lines.append(f"N={n} remaining queries {left_queries}, rate unknown")
             continue
-        secs = left * rate / max(1, workers)
+        secs = (weighted / max(1, workers)) * (left_queries / planned)
         total_sec += secs
-        lines.append(f"N={n} remaining queries {left}, about {secs/3600:.2f} h on {workers} workers")
-    lines.append(f"Rough sum across N, if the rates hold: {total_sec/3600:.1f} h. This is not a claim that the panel is finished.")
+        lines.append(
+            f"N={n} planned queries {planned}, remaining {left_queries}, about {secs/3600:.2f} h on {workers} workers at the L-interpolated b=0.5 probe"
+        )
+    lines.append(f"Rough sum across N, if those probe rates hold: {total_sec/3600:.1f} h. Not a finished panel.")
     lines.append(f"Charged ok queries so far {done_q}.")
     return "\n".join(lines)
 
@@ -740,7 +741,10 @@ def main() -> None:
                 except Exception as exc:
                     status["eta"] = f"eta unavailable: {exc}"
                 write_status(status)
-                write_progress(agg, prereg, status)
+                try:
+                    write_progress(agg, prereg, status)
+                except Exception:
+                    traceback.print_exc()
                 last_write = now
         status["phase"] = "complete" if planner.finished else status.get("phase")
         status["n_ok"] = sum(len(seeds) for seeds in agg.ok.values())
