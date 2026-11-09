@@ -1,0 +1,52 @@
+{
+  "experiment": "N3COND B3: in-cap shrink-only gain normalization, read-dev seeds, after the C1 failure",
+  "written_before_fits": true,
+  "does_not_overwrite": ["C0", "C1", "SCALE_N9", "SCALE_N12", "SCALE_N9_v0_simultaneous", "RESULTS.md", "summary_B1.json"],
+  "seeds": {
+    "ids": [10010, 10011, 10012, 10013, 10014, 10015, 10016, 10017],
+    "role": "read_dev",
+    "not": "These seeds already trained and scored C0/C1. They are not a fresh holdout. No result in this file may be called unbiased or out-of-sample."
+  },
+  "forbidden_seeds": ["10018-10025 FT", "11000-11031 validation", "20000-20999 final", "any silent new band"],
+  "not_this_batch": ["adopt C1", "N15", "N18", "orthogonal perturbations (local R7)", "radius continuation", "tail-averaging replacement", "layer gamma", "BFGS", "natural gradient", "Nov9", "SYK"],
+  "hypothesis": {
+    "id": "B3_shrink_floor_0.5",
+    "one_sentence": "Per start, inside Q, shrink coordinates steeper than the median by at most 2x, never inflate the flat ones, and set the scalar gain from the shrunk magnitudes.",
+    "why_this_one": "C1 inflated s3 (near-zero shell slope) up to 4x and shrank steep coordinates down to 0.25, then froze the gain outside Q. Energy got worse. This hypothesis removes the inflation and the outside-cap freeze. It only shrinks, and the shrink stops at 1/2. The floor is not scanned.",
+    "selection_cost": "The choice uses the already-reported C0/C1 ledger (428160 energy queries). That cost is exploratory selection, not part of B3's Q, and B3 does not pretend to be the first look."
+  },
+  "arms": {
+    "M0": "Matched scalar control. Same axial calibration queries as M2, charged inside Q. lambda_j = 1. The scalar gain uses the median axial |g|. This is not historical C0, which used 8 simultaneous probes.",
+    "M2": "Shrink. lambda_j = clip(median(g)/g_j, 0.5, 1). sigma_j = sigma0_j * lambda_j. The scalar gain uses median(lambda*g) and the same Spall target 0.5. Gain is recomputed at every start. Nothing is frozen from another seed."
+  },
+  "allocation": {
+    "Q": "q*L, and every energy query the optimizer uses is inside it. outside_cap_queries = 0.",
+    "starts": 4,
+    "per_start": "2*nparam axial calibration queries (one two-sided probe per coordinate) + 2K perturbations + 2 candidates",
+    "K": "(Q/4 - 2*nparam - 2)/2",
+    "K_table_N9": {
+      "L1_q128_Nov3": 9, "L1_q128_QAOA": 13,
+      "L1_q1024_Nov3": 121, "L1_q1024_QAOA": 125,
+      "L3_q128_Nov3": 35, "L3_q128_QAOA": 41,
+      "L3_q1024_Nov3": 371, "L3_q1024_QAOA": 377
+    },
+    "why_K_differs_by_circuit": "One axial probe per coordinate. Nov3 has more coordinates, so it spends more of the same Q on calibration. The M2-vs-M0 contrast is within a circuit, where K matches. Nov3-vs-QAOA is reported with that K difference visible.",
+    "schedule": {"A": 25, "alpha_exp": 0.602, "gamma_exp": 0.101, "target_step_sigma": 0.5, "clip_sigma": 2.0, "c": 1.0},
+    "perturbation": "independent Rademacher, not orthogonal",
+    "sigma0": {"Nov3_gamma": 0.10, "Nov3_theta": 0.25, "Nov3_s": 0.15, "QAOA_angle": 0.10},
+    "init": "same TQA embedding and U(-0.6,0.6) starts as B1, keyed by circuit id so M0 and M2 share starts and the perturb stream",
+    "monitoring": 0,
+    "diag_recompute": "one uncharged state rebuild after energy selection, for F, parity, and norm only"
+  },
+  "batch": {"N": [9], "L": [1, 3], "q": [128, 1024], "circuits": ["Nov3", "QAOA"], "arms": ["M0", "M2"]},
+  "ansatz": "Original Nov3 unchanged: shared gamma, thetaK, thetaM, full s1/s2/s3. QAOA p=L. B* instances already accepted. No new classical search.",
+  "selection": "Lowest counted candidate energy. Fidelity is not a target, a stop, or a gate.",
+  "gate": {
+    "cell": "N9 L3 q=1024 Nov3, all 8 read-dev seeds",
+    "statistic": "paired Delta E = E(M2) - E(M0). Negative means M2 is lower.",
+    "pass": "median Delta E < 0 and the bootstrap 95% CI of the mean lies entirely below 0",
+    "fail": "anything else, including a fidelity gain with an energy CI that includes 0",
+    "on_pass": "Still read-dev. Do not call it a holdout win. Do not adopt. Do not start N15.",
+    "on_fail": "Negative. Do not scan another floor in this batch."
+  }
+}

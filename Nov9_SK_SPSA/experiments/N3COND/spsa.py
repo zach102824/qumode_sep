@@ -136,3 +136,101 @@ def freeze_lambda(gabs_rows):
     med_eq = float(np.median(g_eq))
     a0 = TARGET * (A_SPALL + 1.0) ** 0.602 / max(med_eq, 1e-12)
     return lam, a0, g, g_ref
+
+
+# ---------------------------------------------------------------- B3
+# In-cap shrink. Historical spsa_start / spsa_run are unchanged.
+
+SHRINK_FLOOR = 0.5
+
+
+def shrink_lambda(g, floor=SHRINK_FLOOR):
+    """Shrink steep coordinates only. lambda is in [floor, 1]. Never inflates.
+
+    g_j estimates |sigma0_j dE/dx_j|. A coordinate steeper than the median is
+    scaled down, and the shrink stops at `floor`. Flat coordinates stay at 1.
+    """
+    g = np.maximum(np.asarray(g, float), 1e-12)
+    g_ref = float(np.median(g))
+    lam = np.clip(g_ref / g, floor, 1.0)
+    return lam, g_ref
+
+
+def split_cap_axial(cap, nparam, nstarts=4):
+    """One two-sided axial probe per coordinate per start, plus 2 candidates, rest perturbations."""
+    if cap % nstarts != 0:
+        raise ValueError(f"cap {cap} not divisible by {nstarts} starts")
+    per = cap // nstarts
+    ncal_q = 2 * int(nparam)
+    K = (per - ncal_q - 2) // 2
+    if ncal_q + 2 * K + 2 != per or K < 1:
+        raise ValueError(f"cap {cap} nparam {nparam} does not give a positive integer K (per={per}, K={K})")
+    return per, K, ncal_q
+
+
+def spsa_start_axial(B, x0, sig0, rng, K, shrink, floor=SHRINK_FLOOR, A=25.0, c=1.0, target=0.5, clip=2.0, avg_tail=64):
+    """Axial calibration is charged inside the caller's cap. No outside-cap scale."""
+    x0 = np.asarray(x0, float)
+    sig0 = np.asarray(sig0, float)
+    d = x0.size
+    gabs = np.empty(d)
+    for j in range(d):
+        step = np.zeros(d)
+        step[j] = sig0[j] * c
+        ep = B(x0 + step, "calibration")
+        em = B(x0 - step, "calibration")
+        gabs[j] = abs((ep - em) / (2 * c))
+    if shrink:
+        lam, g_ref = shrink_lambda(gabs, floor)
+    else:
+        gabs_safe = np.maximum(gabs, 1e-12)
+        g_ref = float(np.median(gabs_safe))
+        lam = np.ones(d)
+    sig = sig0 * lam
+    g_eq = lam * np.maximum(gabs, 1e-12)
+    med = float(np.median(g_eq))
+    a = target * (A + 1.0) ** 0.602 / max(med, 1e-12)
+    y = np.zeros(d)
+    hist = []
+    for k in range(K):
+        ak = a / (k + 1.0 + A) ** 0.602
+        ck = c / (k + 1.0) ** 0.101
+        De = rng.choice([-1.0, 1.0], size=d)
+        ep = B(x0 + sig * (y + ck * De), "perturb")
+        em = B(x0 + sig * (y - ck * De), "perturb")
+        g = (ep - em) / (2 * ck) * De
+        y = y - np.clip(ak * g, -clip, clip)
+        hist.append(y.copy())
+    tail = hist[-min(avg_tail, len(hist)):] if hist else [y.copy()]
+    cands = [("last", y.copy()), ("polyak", np.mean(tail, axis=0))]
+    out = []
+    for name, yy in cands:
+        out.append((B(x0 + sig * yy, "candidate"), name, x0 + sig * yy))
+    meta = {
+        "a_used": float(a), "median_absg": med, "g_ref": float(g_ref), "gain_frozen": False,
+        "shrink": bool(shrink), "lambda": lam.tolist(),
+        "lambda_min": float(lam.min()), "lambda_max": float(lam.max()),
+        "n_at_floor": int(np.sum(lam <= floor + 1e-15)),
+        "n_unchanged": int(np.sum(lam >= 1.0 - 1e-15)),
+    }
+    return out, meta
+
+
+def spsa_run_axial(f, starts, sig0, rng_for_start, cap, shrink):
+    nparam = int(np.asarray(starts[0]).size)
+    per, K, ncal_q = split_cap_axial(cap, nparam, len(starts))
+    B = Budget(f, cap)
+    allc, meta = [], []
+    for si, x0 in enumerate(starts):
+        cands, m = spsa_start_axial(B, x0, sig0, rng_for_start(si), K, shrink)
+        for e, name, xx in cands:
+            allc.append((e, si, name, xx))
+        meta.append(m)
+    e, si, name, xx = min(allc, key=lambda t: t[0])
+    if B.n != cap:
+        raise RuntimeError(f"inclusive run used {B.n} queries, cap {cap}")
+    return {
+        "E_sel": e, "start": si, "cand": name, "x": xx, "queries": B.n, "query_cat": dict(B.cat),
+        "K_per_start": K, "per_start": per, "calibration_queries_per_start": ncal_q,
+        "outside_cap_queries": 0, "start_meta": meta, "all_cand_E": [t[0] for t in allc],
+    }

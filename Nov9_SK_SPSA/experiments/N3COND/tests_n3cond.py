@@ -178,6 +178,38 @@ def main():
                 bad += 1
     check("T12_caps_divide", float(bad), 0.0)
 
+    lam_s, _ = S.shrink_lambda(np.array([1.0, 1.0, 100.0]))
+    check("T14_shrink_floor", abs(lam_s[2] - 0.5), 0.0)
+    check("T14_shrink_no_inflate", abs(lam_s[0] - 1.0), 0.0)
+    lam_f, _ = S.shrink_lambda(np.array([10.0, 10.0]))
+    check("T14_shrink_equal_is_one", float(np.max(np.abs(lam_f - 1.0))), 0.0)
+    check("T14_shrink_never_above_one", 0.0 if np.all(lam_s <= 1.0) and np.all(lam_s >= 0.5) else 1.0, 0.0)
+
+    def quad3(x):
+        return float(x[0] ** 2 + 4.0 * x[1] ** 2 + 9.0 * x[2] ** 2)
+
+    starts = [np.array([0.2, -0.1, 0.3]), np.zeros(3), np.ones(3) * 0.05, np.full(3, -0.05)]
+    sig = np.ones(3)
+    for shrink, name in ((False, "M0"), (True, "M2")):
+        rec = S.spsa_run_axial(quad3, starts, sig, lambda s: np.random.default_rng(10 + s), 128, shrink)
+        check(f"T15_inclusive_128_{name}", abs(rec["queries"] - 128), 0.0)
+        check(f"T15_outside_zero_{name}", abs(rec["outside_cap_queries"]), 0.0)
+        check(f"T15_cal_inside_{name}", abs(rec["query_cat"]["calibration"] - 24), 0.0)
+        check(f"T15_K_{name}", abs(rec["K_per_start"] - 12), 0.0)
+    # K table in the B3 prereg matches the splitter
+    b3 = json.loads((HERE / "PREREG_N3COND_B3.json").read_text())
+    assert b3["seeds"]["role"] == "read_dev"
+    badk = 0
+    expect = {
+        (1, 128, 6): 9, (1, 128, 2): 13, (1, 1024, 6): 121, (1, 1024, 2): 125,
+        (3, 128, 12): 35, (3, 128, 6): 41, (3, 1024, 12): 371, (3, 1024, 6): 377,
+    }
+    for (L, q, nparam), Kexp in expect.items():
+        _, K, _ = S.split_cap_axial(q * L, nparam)
+        if K != Kexp:
+            badk += 1
+    check("T16_K_table", float(badk), 0.0)
+
     allpass = all(r["pass"] for r in R)
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "TESTS.json").write_text(json.dumps({"all_pass": allpass, "n": len(R), "tests": R}, indent=1))
