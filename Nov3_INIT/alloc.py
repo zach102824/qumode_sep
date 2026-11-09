@@ -19,6 +19,15 @@ def iterations_equal4(Q: int) -> int:
     return int(t)
 
 
+def iterations_spread8(Q: int) -> int:
+    if Q % 16 != 0:
+        raise ValueError(f"Q={Q} is not divisible by 16")
+    t = Q // 16 - 6
+    if t <= 0:
+        raise ValueError(f"Q={Q} does not fit eight SPSA blocks")
+    return int(t)
+
+
 def iterations_halve(Q: int) -> int:
     if (Q - 32) % 4 != 0:
         raise ValueError(f"Q={Q} does not fit 8 screens and two SPSA blocks")
@@ -198,6 +207,13 @@ def spsa_block(propagate, x0: np.ndarray, sigmas: np.ndarray, n_iter: int, rng, 
     }
 
 
+def x0_spread8(method: str, L: int, start_id: int, rng) -> np.ndarray:
+    """Eight draws. Start 0 is the coherent center; the other seven use the equal4 box."""
+    if start_id == 0:
+        return x0_center4(method, L, 0, None)
+    return x0_equal4(method, L, start_id, rng)
+
+
 def x0_center4(method: str, L: int, start_id: int, rng) -> np.ndarray:
     """equal4 boxes. Nov3 start 0 uses the coherent shell center s1=-0.5."""
     x = x0_equal4(method, L, start_id, rng)
@@ -222,6 +238,31 @@ def run_equal4(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa, x0_
             best["start_id"] = start_id
     if ledger.total() != Q or ledger.monitoring != 0 or ledger.screen != 0:
         raise RuntimeError(f"equal4 ledger {ledger.as_dict()} != Q {Q}")
+    best["queries"] = ledger.as_dict()
+    best["n_iter"] = t_iter
+    best["tails"] = tails
+    best["screen_energies"] = None
+    best["kept_start_ids"] = [row["start_id"] for row in tails]
+    return best
+
+
+def run_spread8(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa) -> dict:
+    t_iter = iterations_spread8(Q)
+    sig = sigmas_of(method, L)
+    ledger = Ledger()
+    best = None
+    tails = []
+    if len(rngs_init) != 8 or len(rngs_spsa) != 8:
+        raise RuntimeError("spread8 expects eight starts")
+    for start_id, (rng_i, rng_s) in enumerate(zip(rngs_init, rngs_spsa)):
+        x0 = x0_spread8(method, L, start_id, rng_i)
+        block = spsa_block(propagate, x0, sig, t_iter, rng_s, ledger)
+        tails.append({"start_id": start_id, "e_init": block["e_init"], "E": block["E"], "which": block["which"], "a_gain": block["a_gain"]})
+        if best is None or block["E"] < best["E"] or (block["E"] == best["E"] and start_id < best["start_id"]):
+            best = dict(block)
+            best["start_id"] = start_id
+    if ledger.total() != Q or ledger.monitoring != 0 or ledger.screen != 0:
+        raise RuntimeError(f"spread8 ledger {ledger.as_dict()} != Q {Q}")
     best["queries"] = ledger.as_dict()
     best["n_iter"] = t_iter
     best["tails"] = tails
