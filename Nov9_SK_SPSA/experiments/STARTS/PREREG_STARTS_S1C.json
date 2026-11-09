@@ -1,0 +1,68 @@
+{
+  "experiment": "STARTS S1C: frozen fresh-dev confirmation of PR83 S1 vs S4 at N12 and N15",
+  "written_before_fits": true,
+  "not_a_tuning_lever": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "s8_closed": true,
+  "continuation_closed": true,
+  "throughput_axis_closed": true,
+  "conditioning_closed": ["C1", "B3", "B4"],
+  "n18_forbidden": "FT owns",
+  "hypothesis": {
+    "id": "s1_confirms_on_fresh_dev",
+    "one_sentence": "The PR83 TQA-concentration win vs four-start C0 generalizes to eight fresh development instances at N12 and at N15, with recipes frozen.",
+    "not": "No K/gain/start retune. No S2. No S8. No continuation. Fair S1 Nov3 vs QAOA energy remains a separate claim from S1 vs S4."
+  },
+  "frozen_from_PR83": {
+    "no_fit_changes": true,
+    "S1": {"nstarts": 1, "K_per_start": 1531, "per_start": 3072, "start0": "TQA"},
+    "S4": {"nstarts": 4, "K_per_start": 379, "per_start": 768, "starts": "TQA + 3 U(-0.6,0.6) stream 2"},
+    "optimizer": "ordinary IID Rademacher SPSA C0, ncal=4, A=25, live per-start gain, last+Polyak, energy min",
+    "engine": "m2",
+    "Q": 3072,
+    "file_sha256": {
+      "starts.py": "6e4b0cd784782084d2f1320ccb9113ef99d320fd09ce984ab5161f68e0716645",
+      "N3COND/spsa.py": "cca4c884bc3020c9c9559e89cb248d9a4b2c8a8bca36624ba6b380dab1832357",
+      "N3COND/nov3.py": "e74f66b2dfc973afe9acd69e5c398b210a59563f8edc04290c5e88fb16a39808"
+    }
+  },
+  "seeds": {
+    "ids": [10056, 10057, 10058, 10059, 10060, 10061, 10062, 10063],
+    "role": "fresh_dev",
+    "n_per_size": 8,
+    "collision_check": "no instance/run filenames; 10048-55 are PR82/83 read-dev; 10036-43 DEPTH; 10032-47 LEXACT; 10018-25 FT; 10026-31 local; 10010-17 N3COND; 11000-11031 validation; 20000-20999 final",
+    "forbidden": ["10010-10055", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [12, 15],
+    "L": [3],
+    "q": 1024,
+    "Q": 3072,
+    "circuits": ["Nov3", "QAOA"],
+    "arms": ["S1", "S4"]
+  },
+  "allocation": {
+    "S1": "One start = TQA. Full Q=3072, K=1531. Same C0 RNG stream as S4 start 0.",
+    "S4": "Four equal C0 starts, K=379. Fitted on these seeds, charged. Not reused from 10048-55.",
+    "QAOA": "p=L=3, same split, same Q.",
+    "inclusive": "All init, calibration, perturbations, candidates, failures inside Q."
+  },
+  "selection": "Lowest counted candidate energy. F diagnostic only, never selects.",
+  "gate": {
+    "metric": "bootstrap 95% CI of mean(E_S1 - E_S4) for Nov3, n=accepted seeds",
+    "pass": "CI entirely below 0 at N12 AND at N15",
+    "fail_if": "either size has CI that includes or exceeds 0, or that size has no accepted fits",
+    "report_regardless": ["fit/B* failures", "paired means/CIs/tails S1-S4 energy and F", "fair Nov3 vs QAOA energy and F under S1 and under S4"],
+    "gr": "Do not patch GR even if the gate passes. Confirmation is not adoption."
+  },
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "depth_c1": 327680,
+    "starts_s8": 98304,
+    "starts_s1": 98304,
+    "this_stream": "STARTS_S1C, counted separately",
+    "new_charge": "64 fits × 3072 = 196608 if all succeed"
+  }
+}
