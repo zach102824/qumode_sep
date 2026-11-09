@@ -121,7 +121,9 @@ def md(S):
         lines.append("")
     lines.append(f"Runs {S['n_runs']}, failures {S['failures']}, charged comparison queries {S['queries_charged_in_Q']}, summed worker wall {S['wall_s']:.1f}s.")
     lines.append("")
-    lines.append("| cell | band | med F C0 | med F C1 | med E C0 | med E C1 | dF C1−C0 med/mean [CI] wins | dE C1−C0 med/mean [CI] |")
+    lines.append("The trailing count is how many paired differences are positive. For fidelity, positive means C1 is higher. For energy, positive means C1 is worse.")
+    lines.append("")
+    lines.append("| cell | band | med F C0 | med F C1 | med E C0 | med E C1 | dF C1−C0 med/mean [CI] n(dF>0) | dE C1−C0 med/mean [CI] n(dE>0) |")
     lines.append("|---|---|---|---|---|---|---|---|")
     keys = sorted(S["contrasts"])
     for k in keys:
@@ -143,7 +145,7 @@ def md(S):
     lines.append("")
     lines.append("QAOA conditioner and Nov3−QAOA, same layout (dF is the first member minus the second).")
     lines.append("")
-    lines.append("| contrast | dF med/mean [CI] wins | dE med/mean [CI] |")
+    lines.append("| contrast | dF med/mean [CI] n(dF>0) | dE med/mean [CI] n(dE>0) |")
     lines.append("|---|---|---|")
     for k in keys:
         ct = S["contrasts"][k]
