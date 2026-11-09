@@ -31,7 +31,7 @@ sys.path.insert(0, str(HERE.parent / "spin_glass_b01_fid"))
 import packing_fiedler  # noqa: E402
 
 PREREG = json.loads((HERE / "PREREG.json").read_text())
-PREREG_SHA = "5aeff7cd082ba7bc63570ee49867f1a6beb2b79e308f349451972761e3f22aed"
+PREREG_SHA = "698a8bdbb67be63988fb76fa32c3060a7e47556da2cd2fd6c814f86f3b75313b"
 
 
 def check_hash():

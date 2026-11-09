@@ -71,7 +71,8 @@
   },
   "workers": 4,
   "job_order": "k ascending, within k N=12 then 9 then 6, repeats inner",
-  "optimize_wall_seconds": 7200,
+  "optimize_wall_seconds": 21600,
+  "wall_note": "Raised from 7200 to 21600 before any kept fit. A first attempt at 7200 was stopped with no fidelity computed: on this machine an N=9 job took about 570 s, against about 43 s in the ferromagnetic round, so 7200 s would have cut the frozen k=190..201 window. The packing, starts, selection, and win rule did not change.",
   "replay_families": ["KM", "KM_mm", "qaoa"],
   "replay_tol": {"E_rel": 1e-08, "F_sub": 1e-06, "E0": 1e-09, "norm": 1e-10}
 }
