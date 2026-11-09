@@ -19,6 +19,14 @@ Scope of the approval:
 - Validation (11000..11031) and final (20000..20999) seeds stay untouched until the recipe is frozen after development.
 - D1 (binary encoding) is as before. D6–D9 are unchanged by this approval: Nov9th-B stays a diagnostic, and complex α, 4-body strings and α_max are not decided.
 
+### D7 restricted: imaginary-axis displacement approved for testing (Zach, Nov 9 19:10 Shanghai)
+
+The user's answer: "Yes, test D(iα) alongside the real displacement at the entropy-peak fields."
+
+- **Approved form.** \(|+\rangle\to[U_{cZ}\to D(i\alpha_l)\to S_l]^L\) with \(D(i\alpha)=e^{i\alpha(a^\dagger+a)}\), a true displacement on a fixed imaginary axis. \(\alpha_l\) is real, one per layer, shared across cavities. There is no axis-angle parameter and no freely complex amplitude. \(U_{cZ}\) stays shared, and the bare 3-phase SNAP is unchanged.
+- **Controls.** The real-axis \(D(\alpha)\) runs alongside as a control.
+- **Scope.** B* fields only; this is not general D7. Experiment: `experiments/IMAX`, prereg `PREREG_IMAX_M1.json`.
+
 The original consultation text below is kept unchanged as the record of the recommendation. Where it says "provisional-★" or "needs D2–D5" for simulation, read it as superseded by this approval for simulation purposes only.
 
 No reviewed contract defines the physical action of SNAP or \(U_{cZ}\) on Fock levels ≥ 8, or how energy is measured when a cavity leaks. Nov3rd never needed it, because it uses NF = 8 and an ideal \(W\). So Nov9th with a true displacement is **not defined** until D2–D5 are chosen. Below, ★ marks the consultation's recommended default. Workers may launch with the ★ choices, labeled "provisional-★". Any headline claim needs the user to confirm.

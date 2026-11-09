@@ -1,6 +1,6 @@
 """Nov9th leak-echo experiment core: instances, ED, Nov9th Fock simulator, QAOA, SPSA.
 
-Provisional mathematical model (user has NOT confirmed the physical off-code definitions):
+Off-code definitions (written as provisional; approved by the user Nov 9 as simulation definitions, not hardware):
   D2 SNAP phase 0 on Fock f >= 8; D3 Uz (pair terms touching a leaked cavity act as identity),
   U0 sensitivity (whole product component unphased if any cavity leaked);
   D4 per-term penalised H_ext; D5 ideal number-resolved readout, ideal W_L on the code.
@@ -157,10 +157,16 @@ def plus_fidelity(gs):
 
 # ---------------------------------------------------------------- displacement
 
-def ladder_gen(nf):
-    """Hermitian X = i(a^dag - a) on nf levels."""
+def ladder_gen(nf, axis="real"):
+    """Hermitian G on nf levels with D = exp(-i alpha G).
+    axis="real": G = i(a^dag - a)  -> D(alpha)   = exp(alpha (a^dag - a)).
+    axis="imag": G = -(a^dag + a)  -> D(i alpha) = exp(i alpha (a^dag + a))  (user-approved Nov 9, IMAX)."""
     a = np.diag(np.sqrt(np.arange(1, nf, dtype=np.float64)), 1)
-    return 1j * (a.T - a)
+    if axis == "real":
+        return 1j * (a.T - a)
+    if axis == "imag":
+        return -(a.T + a).astype(np.complex128)
+    raise ValueError(axis)
 
 
 class Disp:
@@ -168,16 +174,18 @@ class Disp:
     restricted to nf. strict=True gives the strict-logical D8 = exp of the cropped 8x8 generator
     (NOT a displacement; diagnostic only)."""
 
-    def __init__(self, nf, strict=False):
+    def __init__(self, nf, strict=False, axis="real"):
         self.nf = nf
         self.strict = strict
+        self.axis = axis
         big = NU if strict else nf + NF_PAD
-        lam, V = np.linalg.eigh(ladder_gen(big))
+        lam, V = np.linalg.eigh(ladder_gen(big, axis))
         self.lam, self.V = lam, V
 
     def __call__(self, alpha):
         U = (self.V * np.exp(-1j * alpha * self.lam)) @ self.V.conj().T
-        U = U.real  # real alpha -> real orthogonal
+        if self.axis == "real":
+            U = U.real  # real alpha -> real orthogonal
         return np.ascontiguousarray(U[: self.nf, : self.nf])
 
 
@@ -198,7 +206,7 @@ def shell_phase(s, nf):
 class Nov9:
     """|+>^N -> [UcZ -> D(alpha_l)^{xC} -> S_l^{xC}]^L on the Fock tensor (nf,)*C."""
 
-    def __init__(self, J, b, L, nf=24, ext="Uz", strict=False, features=("K", "M"), s3off=False):
+    def __init__(self, J, b, L, nf=24, ext="Uz", strict=False, features=("K", "M"), s3off=False, axis="real"):
         N = J.shape[0]
         assert N % 3 == 0
         self.N, self.C, self.m, self.L, self.b = N, N // 3, N // 3, L, float(b)
@@ -211,7 +219,8 @@ class Nov9:
         self.features = tuple(features)
         F = {"K": hat(feature_K(J), J), "M": hat(feature_M(J, self.pack), J)}
         self.Fhat = [F[k] for k in self.features]
-        self.disp = Disp(self.nf, strict=strict)
+        self.axis = axis
+        self.disp = Disp(self.nf, strict=strict, axis=axis)
         nf, C = self.nf, self.C
         f = np.arange(nf)
         self.cm = (f < NU).astype(float)
