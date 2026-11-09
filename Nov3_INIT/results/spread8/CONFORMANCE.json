@@ -1,0 +1,113 @@
+{
+  "ok": true,
+  "prereg_sha256": "dc824c549876ab76ec5e21cbd5ae09f2f92422b3482f8243c9901ea100699783",
+  "historical_queries_preserved": 2400256,
+  "not_l2_center4_resample": true,
+  "not_le_n18_depth": true,
+  "not_paper_V_M": true,
+  "shared_uc_only": true,
+  "seeds": {
+    "band": [
+      10376,
+      10377,
+      10378,
+      10379,
+      10380,
+      10381,
+      10382,
+      10383
+    ],
+    "held_unread": [
+      10384,
+      10385,
+      10386,
+      10387,
+      10388,
+      10389,
+      10390,
+      10391
+    ],
+    "overlaps": {
+      "le_10360_10375": [],
+      "local_r25_10344_10359": [],
+      "local_next_ge_10392": [],
+      "ft_and_prior_le_10335": [],
+      "holdout_10144_10151": [],
+      "validation_11000_11031": [],
+      "gr_final_20000_20999": [],
+      "window_held_10384_10391": []
+    },
+    "ok": true
+  },
+  "collisions_in_nov3_init_results": {
+    "n": 0,
+    "paths": []
+  },
+  "recipe": {
+    "T_equal4": 378,
+    "T_spread8": 186,
+    "nov3_center": [
+      0.25,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0,
+      -0.5,
+      0.0,
+      0.0
+    ],
+    "qaoa_center": [
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "qaoa_center_matches_v4": true,
+    "nov3_center_matches_v4": true,
+    "method_ids": {
+      "equal4": {
+        "QAOA": 0,
+        "Nov3rd": 1,
+        "Nov3pair": 2,
+        "SHELL2": 3,
+        "SHELL4": 4
+      },
+      "spread8": {
+        "QAOA": 6,
+        "Nov3rd": 5
+      }
+    },
+    "ok": true
+  },
+  "ledger_quadratic": {
+    "equal4": {
+      "screen": 0,
+      "init": 4,
+      "calibration": 32,
+      "iteration": 80,
+      "candidate": 12,
+      "monitoring": 0,
+      "total": 128
+    },
+    "spread8": {
+      "screen": 0,
+      "init": 8,
+      "calibration": 64,
+      "iteration": 32,
+      "candidate": 24,
+      "monitoring": 0,
+      "total": 128
+    },
+    "ok": true
+  },
+  "label_rule": "SPREAD8_L3_EDGE iff nov3_spread8 vs qaoa_spread8 mean dE CI entirely <0 AND nov3_spread8 mean E <= nov3_equal4; else REJECT_SPREAD8_L3",
+  "no_gr_patch": true,
+  "no_candidacy_file": true,
+  "no_spsa_on_hamiltonian_in_this_module": true
+}

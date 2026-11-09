@@ -5,6 +5,7 @@ import numpy as np
 
 METHOD_ID = {
     "equal4": {"QAOA": 0, "Nov3rd": 1, "Nov3pair": 2, "SHELL2": 3, "SHELL4": 4},
+    "spread8": {"QAOA": 6, "Nov3rd": 5},
     "halve8to2": {"QAOA": 71, "Nov3rd": 70},
 }
 C_PERT = 0.1
@@ -333,7 +334,7 @@ def run_equal4(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa, x0_
     return best
 
 
-def run_spread8(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa) -> dict:
+def run_spread8(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa, x0_fn=None) -> dict:
     t_iter = iterations_spread8(Q)
     sig = sigmas_of(method, L)
     ledger = Ledger()
@@ -341,8 +342,9 @@ def run_spread8(propagate, method: str, L: int, Q: int, rngs_init, rngs_spsa) ->
     tails = []
     if len(rngs_init) != 8 or len(rngs_spsa) != 8:
         raise RuntimeError("spread8 expects eight starts")
+    draw = x0_spread8 if x0_fn is None else x0_fn
     for start_id, (rng_i, rng_s) in enumerate(zip(rngs_init, rngs_spsa)):
-        x0 = x0_spread8(method, L, start_id, rng_i)
+        x0 = draw(method, L, start_id, rng_i)
         block = spsa_block(propagate, x0, sig, t_iter, rng_s, ledger)
         tails.append({"start_id": start_id, "e_init": block["e_init"], "E": block["E"], "which": block["which"], "a_gain": block["a_gain"]})
         if best is None or block["E"] < best["E"] or (block["E"] == best["E"] and start_id < best["start_id"]):
