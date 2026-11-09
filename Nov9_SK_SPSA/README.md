@@ -19,3 +19,5 @@ Isolated area for the quantum SK Nov9th / Nov3rd / QAOA comparison, using SPSA o
 - `protocol_draft.json`: machine-readable draft (not frozen).
 
 Numbers from the local 8-core stream are quoted as reported. Nothing here touches existing data, jobs, AF, or PR 72. The final panel 20000..20999 is unused.
+- `experiments/IMAX/`, `results/IMAX/`: R2-B1 IMAX milestone 1 (user-approved fixed imaginary-axis D(iα) at B*). Interpretation: `results/IMAX/INTERPRETATION_IMAX_M1.md`.
+- `REVIEW_R2_AND_NEXT_R3.md`: review of the round-2 outcomes (IMAX, BASIN, N3X) and the next three B*-only ideas.
