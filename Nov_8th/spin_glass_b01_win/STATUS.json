@@ -4,7 +4,7 @@
   "deadline_shanghai": "2026-11-15T19:00:00+08:00",
   "user_stop": false,
   "branch": "cursor/round1-a-shared-gamma-fk-fa7b",
-  "phase": "b01_win_protocol",
+  "phase": "b01_win_running",
   "benchmark": "historical B=0.1, not B_cri",
   "hamiltonian": "published full spin glass, unchanged",
   "rule": "frozen interleaved shared-gamma KM versus equal-depth QAOA on k=202..225. Block A is 202..213 and block B is 214..225, fixed before any fit. A size clears only if the pool of 24 passes and both blocks have median dF > 0 and wins >= losses. Neither block is a selectable result.",
@@ -14,6 +14,7 @@
   "out_of_scope": "a new packing, a new initialization, per-layer gamma, a per-N rule, and any fit at a field other than 0.1",
   "historical_B": 0.1,
   "B_cri": null,
+  "protocol_commit": "95ec3265",
   "prereg_sha256": "1946d1a2463f4d5af9e39973ea2d3dc51414010004e2cdc0baa549cd936d1ced",
   "k_confirm": [202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225],
   "block_A": [202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213],
@@ -21,7 +22,7 @@
   "k_held_out_unused": [100, 101],
   "next_k": 226,
   "verdict": null,
-  "fitting_started": false,
-  "next_action": "Fit has not started. Do not edit PREREG.json. After this protocol commit, mark the round running and then fit k=202..225. k=100 and k=101 stay unused. Do not touch AF jobs. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
-  "updated_utc": "2026-11-09T02:10:00Z"
+  "fitting_started": true,
+  "next_action": "The fit of k=202..225 is running. Do not edit PREREG.json. Do not start a second packing or a second initialization on these k. k=100 and k=101 stay unused. Do not touch AF jobs. Stop immediately on user stop or at 2026-11-15 19:00 Asia/Shanghai.",
+  "updated_utc": "2026-11-09T02:20:00Z"
 }
