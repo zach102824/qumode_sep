@@ -1,0 +1,122 @@
+{
+  "experiment": "N18XFER: N=18 L=1 parameter concentration and transfer, same protocol as PR116, frozen v4 center-4 Nov3 vs QAOA p=1",
+  "written_before_fits": true,
+  "repeats_pr116_protocol": true,
+  "not_an_architecture_change": true,
+  "not_a_gr_retune": true,
+  "not_a_l3_variant": true,
+  "not_a_start_count_variant": true,
+  "not_a_two_stage_freeze_order": true,
+  "not_a_shell_unshare": true,
+  "not_layer_tied_snap": true,
+  "not_pair_phase": true,
+  "not_a_center4_l2_copy": true,
+  "not_a_depth_curve": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "no_candidacy_revival": true,
+  "no_final": true,
+  "no_validation": true,
+  "no_nov9_syk": true,
+  "no_l2_or_deeper": true,
+  "literature_context": "typical-instance / parameter-concentration scaling of PR116; SK-QAOA literature (arXiv:2204.02923 context). Not paper V(M). Not an architecture change.",
+  "closed_l3_levers": "PR99/101/102/115 start-count / freeze-order / shell-unshare / two-stage / layer-tied-SNAP exhausted; this stream is N=18 L=1 transfer only",
+  "ft_source": {
+    "pr": 79,
+    "head_commit": "347ac23369db1251c902638994b4fdc65a019710",
+    "alloc_py_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+    "recipe": "unmodified v4 center-4 run_equal4"
+  },
+  "hypothesis": {
+    "id": "n18_l1_parameter_concentration_transfer",
+    "one_sentence": "At N=18 L=1, a coordinate-wise mean of 8 trained Nov3 parameter vectors transfers to 8 unread test instances with shared-mean Nov3−QAOA mean ΔE CI entirely <0, matching the PR116 primary gate.",
+    "not": "Not L2/L3. Not a GR patch. Not an adoption. Not switching primary aggregator to median from PR116's test-median result."
+  },
+  "split_documented_before_fits": {
+    "train": [10648, 10649, 10650, 10651, 10652, 10653, 10654, 10655],
+    "test": [10656, 10657, 10658, 10659, 10660, 10661, 10662, 10663],
+    "rule": "Stage A fits train only. Freeze mean and median from train vectors before any test SPSA or transfer energy. Both aggregators frozen; primary label uses mean; median is not selected on this test or on PR116's test.",
+    "do_not_peek_test_before_freeze": true
+  },
+  "stage_A": {
+    "seeds": [10648, 10649, 10650, 10651, 10652, 10653, 10654, 10655],
+    "arms": ["nov3_center4", "qaoa_center4"],
+    "Q": 1024,
+    "T": 122,
+    "nstarts": 4,
+    "ledger_per_fit": {"init": 4, "calibration": 32, "perturb": 976, "candidate": 12, "total": 1024}
+  },
+  "freeze_from_train": {
+    "nov3_layout": ["gamma", "theta_K", "theta_M", "s1", "s2", "s3"],
+    "qaoa_layout": ["gamma", "beta"],
+    "aggregators": ["mean", "median"],
+    "primary_aggregator": "mean",
+    "diagnostics": ["var", "std", "min", "max", "range"],
+    "layout": "LE x (Nov3 identical to FT; QAOA p=1 stacked=interleaved)",
+    "aggregator_not_chosen_on_test": true,
+    "not_switched_to_median_from_pr116_test": true
+  },
+  "stage_B": {
+    "test_independent": {
+      "seeds": [10656, 10657, 10658, 10659, 10660, 10661, 10662, 10663],
+      "arms": ["nov3_center4", "qaoa_center4"],
+      "Q": 1024,
+      "role": "per-instance ceiling (matching opportunity)"
+    },
+    "transfer_eval": {
+      "vectors": ["nov3_mean", "nov3_median", "qaoa_mean", "qaoa_median"],
+      "seeds": [10656, 10657, 10658, 10659, 10660, 10661, 10662, 10663],
+      "queries_each": 1,
+      "charge": "every energy call; no query-free prefix"
+    }
+  },
+  "seeds": {
+    "ids": [10648, 10649, 10650, 10651, 10652, 10653, 10654, 10655, 10656, 10657, 10658, 10659, 10660, 10661, 10662, 10663],
+    "role": "exclusive_unread_dev",
+    "collision_check": "not R31 10536-51; not R32 10584-99; not R30 10504-19; not local-next 10632-47; not FT 10520-35 / 10552-59 (PR112) / 10568-83 (PR113) / 10616-23 (PR117) / unused-hold 10624-31 / next 10664-79; not LE 10432-39; not L3TIE 10552-59 (PR115); not PR116 10600-15; not unused hole 10560-67; not holdout 10144-51; not validation 11000-11031; not GR/final 20000-20999",
+    "do_not_reuse_10552_59": true,
+    "leave_hole_10560_67_unused": true,
+    "forbidden": ["10536-10551", "10584-10599", "10504-10519", "10632-10647", "10520-10535", "10552-10559", "10560-10567", "10568-10583", "10616-10631", "10664-10679", "10432-10439", "10600-10615", "10144-10151", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [18],
+    "L": [1],
+    "q": 1024,
+    "Q": 1024,
+    "T": 122,
+    "p_QAOA": 1,
+    "arms": ["nov3_center4", "qaoa_center4"]
+  },
+  "selection": "FT energy selection on independent fits. F post hoc, never selects. Transfer evals use the frozen vector as-is (no SPSA on test for those cells).",
+  "contrasts": {
+    "1_train": "independently optimized Nov3 − QAOA on train 10648-55",
+    "2_test_transfer_fair": "shared-mean Nov3 − shared-mean QAOA on test, and separately shared-median − shared-median",
+    "3_test_ceiling": "independently optimized Nov3 − QAOA on test 10656-63",
+    "4_transfer_gap": "test shared-mean Nov3 vs independently optimized Nov3 on test (descriptive; not a gate that Nov3 must beat itself)"
+  },
+  "pr116_n15_train_std_reference": {
+    "note": "descriptive comparison only; different seeds; not a paired test; not used to choose aggregator",
+    "nov3": {"gamma": 0.2520, "theta_K": 0.0511, "theta_M": 0.0233, "s1": 0.8058, "s2": 0.1043, "s3": 0.2341},
+    "qaoa": {"gamma": 0.2613, "beta": 0.4015}
+  },
+  "report": {
+    "written_before_fits": true,
+    "primary_label": "TRANSFER_MEAN_NEGATIVE_CI iff test shared-mean Nov3−QAOA bootstrap 95% CI (4000, rng 3334) of mean ΔE is entirely <0 on n=8; else UNSTABLE",
+    "not_adoption": true,
+    "does_not_revive_l2_l3": true,
+    "concentration": "Report train mean/std/range of packed coordinates with the n=8 caveat, plus descriptive std vs PR116 N=15",
+    "gr": "Do not patch GR. No final. No L2+. No L3. No adoption."
+  },
+  "parallelism": {
+    "max_workers": 4,
+    "blas_threads": 1,
+    "do_not_skip_n18": true
+  },
+  "ledger": {
+    "prior_combined": 3560096,
+    "this_stream": "N18XFER, counted separately",
+    "independent_charge": "16 seeds × 2 methods × 1024 = 32768",
+    "transfer_charge": "8 test × 2 methods × 2 aggregators × 1 = 32",
+    "new_charge": "32800 if all succeed"
+  }
+}
