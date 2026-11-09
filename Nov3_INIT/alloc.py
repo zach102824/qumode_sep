@@ -214,6 +214,24 @@ def x0_spread8(method: str, L: int, start_id: int, rng) -> np.ndarray:
     return x0_equal4(method, L, start_id, rng)
 
 
+# Nov3 center s1=-0.5, s2=s3=theta=0. H exp(-i s1 n_Z) H = exp(-i s1 n_X)
+# with n_X=(I-X)/2, so beta = -s1/2 = +0.25. gamma is shared and unscaled.
+QAOA_CENTER_GAMMA = 0.25
+QAOA_CENTER_BETA = 0.25
+
+
+def x0_qaoa_center4(L: int, start_id: int, rng) -> np.ndarray:
+    """QAOA counterpart of the Nov3 center. Starts 1-3 stay in the equal4 box."""
+    x = x0_equal4("QAOA", L, start_id, rng)
+    if start_id == 0:
+        derived = np.empty(2 * L, dtype=np.float64)
+        derived[0::2] = QAOA_CENTER_GAMMA
+        derived[1::2] = QAOA_CENTER_BETA
+        if not np.array_equal(x, derived):
+            raise RuntimeError("derived QAOA center is not the historical equal4 start 0")
+    return x
+
+
 def x0_center4(method: str, L: int, start_id: int, rng) -> np.ndarray:
     """equal4 boxes. Nov3 start 0 uses the coherent shell center s1=-0.5."""
     x = x0_equal4(method, L, start_id, rng)
