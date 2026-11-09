@@ -1,0 +1,59 @@
+{
+  "experiment": "STARTS S8: equal-total-budget 8 starts vs C0's 4 starts at N15 L3",
+  "written_before_fits": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "continuation_closed": true,
+  "throughput_axis_closed": true,
+  "conditioning_closed": ["C1", "B3", "B4"],
+  "hypothesis": {
+    "id": "equal_budget_start_diversity",
+    "one_sentence": "If L=3 fade is a start-diversity failure, then splitting the same Q=3072 across 8 equal C0 starts will beat 4 equal C0 starts on energy.",
+    "not": "No continuation. No free L1. No extra gain/scale. No orthogonal frames."
+  },
+  "seeds": {
+    "ids": [10048, 10049, 10050, 10051, 10052, 10053, 10054, 10055],
+    "role": "exclusive_unread_dev",
+    "band": [10048, 10055],
+    "collision_check": "no instance/run filenames; LEXACT reserved 10032-10047 exclusive of 10048; DEPTH used 10036-43; FT 10018-25; local 10026-31; N3COND 10010-17; validation 11000-11031; final 20000-20999",
+    "forbidden": ["10010-10047", "10018-10031", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [15],
+    "L": [3],
+    "q": 1024,
+    "Q": 3072,
+    "circuits": ["Nov3", "QAOA"],
+    "arms": ["S4", "S8"]
+  },
+  "allocation": {
+    "S4": "Ordinary C0: 4 equal starts, cap 3072. Start 0 TQA, starts 1-3 U(-0.6,0.6). K=379 per start. Identical recipe to historical C0.",
+    "S8": "Same C0 SPSA, same sigma0, same per-start calibration/gain, 8 equal starts, cap 3072. Start 0 TQA, starts 1-7 U(-0.6,0.6) with the same RNG streams as S4 for indices 0-3. K=187 per start.",
+    "QAOA": "p=L=3, same split, same Q.",
+    "inclusive": "All init, calibration, perturbations, candidates, failures inside Q. No free prefix."
+  },
+  "optimizer": {
+    "kind": "ordinary IID Rademacher SPSA, C0 simultaneous gain",
+    "ncal": 4,
+    "A": 25,
+    "forbidden": ["BFGS", "natural gradient", "B3/B4 shrink", "orthogonal Δ", "continuation"]
+  },
+  "selection": "Lowest counted candidate energy across all starts of that arm. F post hoc. GS/F never select.",
+  "gate": {
+    "cell": "N15 L3 Nov3, n=8, energy E_S8 - E_S4",
+    "adopt_S8_as_candidate": "bootstrap 95% CI of the mean ΔE lies entirely below 0 AND median ΔE < 0",
+    "otherwise": "reject S8. Do not scan another start count.",
+    "gr": "Do not patch GR even if the gate passes."
+  },
+  "report": [
+    "S8 vs S4 within method: paired Δ(E-E0)/N and ΔF, mean, median, CI, wins, min/max tails",
+    "Nov3 vs QAOA under S4 and under S8, same paired stats"
+  ],
+  "ledger": {
+    "prior_n3cond": 772224,
+    "lexact_spsa": 2560,
+    "depth_c1": 327680,
+    "this_stream": "STARTS_S8, counted separately",
+    "new_charge": "32 fits × 3072 = 98304"
+  }
+}
