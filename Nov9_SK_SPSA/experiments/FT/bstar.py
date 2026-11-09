@@ -78,6 +78,66 @@ def entropy_at(J: np.ndarray, b: float) -> dict:
     return checks
 
 
+def maximize_entropy_le(J: np.ndarray, n_grid: int = 60, b_lo: float = 0.05, b_hi: float = 3.0) -> dict:
+    """Match the LE diagnostic: natural-log entropy, 60-point grid, bounded scalar refinement.
+
+    log2 and ln have the same argmax. S_A is stored in nats. bits = nats / ln(2).
+    """
+    from scipy.optimize import minimize_scalar
+
+    def s_nats(b: float) -> float:
+        rec = entropy_at(J, float(b))
+        return float(rec["entropy_bits"] * np.log(2.0)), rec
+
+    grid = np.linspace(b_lo, b_hi, int(n_grid))
+    scored = []
+    for b in grid:
+        s, rec = s_nats(float(b))
+        scored.append((float(b), s, rec))
+    k = int(np.argmax([s for _, s, _ in scored]))
+    if k == 0 or k == len(grid) - 1:
+        raise RuntimeError("entropy peak is on a grid edge")
+    refined = minimize_scalar(
+        lambda b: -s_nats(float(b))[0],
+        bounds=(float(grid[k - 1]), float(grid[k + 1])),
+        method="bounded",
+        options={"xatol": 1e-6},
+    )
+    s_star, rec = s_nats(float(refined.x))
+    # Even-sector gap: first excited state with the same (even) parity as the GS.
+    evals, evecs = np.linalg.eigh(dense_H(pair_diag(J, z_table(J.shape[0])), float(refined.x)))
+    delta_even = None
+    e1_parity = spin_parity(evecs[:, 1])
+    for i in range(1, evals.size):
+        if spin_parity(evecs[:, i]) > 0.5:
+            delta_even = float(evals[i] - evals[0])
+            break
+    if not rec["eligible"]:
+        raise RuntimeError("refined B* is not a positive even nondegenerate ground state")
+    _, gs = spectrum(J, float(refined.x))
+    f_plus = float(np.sum(gs) / np.sqrt(gs.size)) ** 2
+    return {
+        "Bstar": float(refined.x),
+        "S_A_nats": s_star,
+        "S_A_bits": float(rec["entropy_bits"]),
+        "entropy_unit_primary": "nats",
+        "gap_E1_E0": float(rec["gap"]),
+        "E1_parity": e1_parity,
+        "delta_even": delta_even,
+        "positive": rec["positive"],
+        "even": rec["even"],
+        "nondegenerate": rec["nondegenerate"],
+        "gs_min": rec["gs_min"],
+        "E0": rec["E0"],
+        "E_plus": float(-refined.x * J.shape[0]),
+        "F_plus": f_plus,
+        "n_grid": int(n_grid),
+        "bracket": [float(grid[k - 1]), float(grid[k + 1])],
+        "grid_argmax_b": float(grid[k]),
+        "checks": rec,
+    }
+
+
 def maximize_entropy(J: np.ndarray, b_lo: float = 0.05, b_hi: float = 4.0, n_grid: int = 40) -> dict:
     """Grid plus two parabolic refinements. Returns the eligible maximizer and the plateau."""
     if b_lo <= 0.0 or b_hi <= b_lo:

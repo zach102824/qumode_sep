@@ -40,6 +40,11 @@ METHOD_ID = {
     "ft_nov9_km": 40,
     "ft_nov9_kmr1": 41,
     "ft_qaoa": 42,
+    "basin_cold_uz": 50,
+    "basin_wide_uz": 51,
+    "basin_cold_u0": 52,
+    "basin_wide_u0": 53,
+    "basin_qaoa": 54,
 }
 
 
