@@ -211,13 +211,14 @@ def run_N(ns, seeds, ctx, status):
                     skipped.append((nq, seed, arm))
                     continue
                 tasks.append((nq, seed, arm))
+    bstar_s = time.time() - t_bstar
     print(f"[ftrep-h] N={ns} tasks {len(tasks)} skipped {len(skipped)} "
-          f"B* wall {time.time()-t_bstar:.1f}s", flush=True)
+          f"B* wall {bstar_s:.1f}s", flush=True)
     t0 = time.time()
     with ctx.Pool(4) as pool:
         for i, (p, st) in enumerate(pool.imap_unordered(run_one, tasks, chunksize=1)):
             print(f"[{i+1}/{len(tasks)}] {time.time()-t0:7.1f}s {st} {Path(p).name}", flush=True)
-    return inst_rows, time.time() - t_bstar, time.time() - t0, len(tasks), len(skipped)
+    return inst_rows, bstar_s, time.time() - t0, len(tasks), len(skipped)
 
 
 def main():
