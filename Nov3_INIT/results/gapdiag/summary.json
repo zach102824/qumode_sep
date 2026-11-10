@@ -1,0 +1,3195 @@
+{
+  "prereg_sha256": "df355d13bbcf00291e7921d508cc8ab00a51b02476123f7dbbec7b644e87e18e",
+  "hamiltonian": "H = sum_{i<j} J_ij Z_i Z_j - g sum_i X_i; J_ij ~ N(0, 1/N) i.e. J=1; g dimensionless g/J",
+  "drive": "transverse ramp; dH/dg = -sum_i X_i commutes with P = prod X_i",
+  "panel": {
+    "6": [
+      10904,
+      10905,
+      10906,
+      10907,
+      10908,
+      10909,
+      10910,
+      10911
+    ],
+    "12": [
+      10912,
+      10913,
+      10914,
+      10915,
+      10916,
+      10917,
+      10918,
+      10919
+    ]
+  },
+  "taus": [
+    1e-10,
+    1e-08,
+    1e-06,
+    0.0001
+  ],
+  "tau_primary": 1e-08,
+  "k_ladder": [
+    8,
+    16,
+    32,
+    64
+  ],
+  "cluster_tol": 1e-09,
+  "bstar_preprocessing_wall_seconds": 5.589941525999166,
+  "spectral_wall_seconds": 19.1965883199955,
+  "quantum_energy_queries": 0,
+  "historical_sk_queries_unchanged": 3252512,
+  "no_spsa": true,
+  "no_ansatz": true,
+  "no_min_gap_claim": true,
+  "entropy_peak_not_assumed_critical": true,
+  "env": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  },
+  "peak_rss_kib": 148296,
+  "summary": {
+    "N6_Bstar": {
+      "n": 8,
+      "g": {
+        "n": 8,
+        "mean": 0.30684923846105433,
+        "min": 0.1579446780324269,
+        "max": 0.42910889259701224,
+        "median": 0.3101607417923162
+      },
+      "full_gap": {
+        "n": 8,
+        "mean": 0.025435889741258433,
+        "min": 0.004000938589088232,
+        "max": 0.040617396961795116,
+        "median": 0.029498463869823688
+      },
+      "Delta_plus": {
+        "n": 8,
+        "mean": 0.6465801633540083,
+        "min": 0.08490277769965582,
+        "max": 1.176586239454784,
+        "median": 0.5886824260764318
+      },
+      "Delta_minus": {
+        "n": 8,
+        "mean": 0.599030159776945,
+        "min": 0.07678792785073041,
+        "max": 1.128567362475783,
+        "median": 0.5205809004909372
+      },
+      "cross_split": {
+        "n": 8,
+        "mean": 0.025435889741258433,
+        "min": 0.004000938589088232,
+        "max": 0.040617396961795116,
+        "median": 0.029498463869823688
+      },
+      "coupled_gap": {
+        "n": 8,
+        "mean": 0.6465801633540083,
+        "min": 0.08490277769965582,
+        "max": 1.176586239454784,
+        "median": 0.5886824260764318
+      },
+      "c_first_same_excited": {
+        "n": 8,
+        "mean": 0.963711842364833,
+        "min": 0.3557883748778334,
+        "max": 1.5657883827756294,
+        "median": 1.0277125826695137
+      },
+      "adiabatic_ratio": {
+        "n": 8,
+        "mean": 8.30182611507222,
+        "min": 1.1310597212839604,
+        "max": 49.81528010034182,
+        "median": 2.3937887744386397
+      },
+      "n_E1_odd": 8,
+      "n_ground_plus": 8,
+      "n_coupled_found": 8,
+      "n_coupled_is_first_same_excited": 8,
+      "n_tau_sensitive": 0,
+      "max_opposite_coupling": 4.0382031052388356e-11,
+      "max_residual": 6.199533779410856e-15,
+      "max_commutator_fro": 0.0,
+      "max_audit": 8.43769498715119e-15,
+      "min_ground_parity_expect": 0.9999999999999989,
+      "k_used": [
+        32
+      ]
+    },
+    "N6_g1.5J": {
+      "n": 8,
+      "g": {
+        "n": 8,
+        "mean": 1.5,
+        "min": 1.5,
+        "max": 1.5,
+        "median": 1.5
+      },
+      "full_gap": {
+        "n": 8,
+        "mean": 1.799238445169856,
+        "min": 1.613583272171681,
+        "max": 2.0978261696470186,
+        "median": 1.7644658066328152
+      },
+      "Delta_plus": {
+        "n": 8,
+        "mean": 4.296108430333767,
+        "min": 3.9896041645321887,
+        "max": 4.7572284722271165,
+        "median": 4.2256782065684
+      },
+      "Delta_minus": {
+        "n": 8,
+        "mean": 0.7088611916953671,
+        "min": 0.50219216045768,
+        "max": 1.1843477355251464,
+        "median": 0.6534686014154825
+      },
+      "cross_split": {
+        "n": 8,
+        "mean": 1.799238445169856,
+        "min": 1.613583272171681,
+        "max": 2.0978261696470186,
+        "median": 1.7644658066328152
+      },
+      "coupled_gap": {
+        "n": 8,
+        "mean": 4.296108430333767,
+        "min": 3.9896041645321887,
+        "max": 4.7572284722271165,
+        "median": 4.2256782065684
+      },
+      "c_first_same_excited": {
+        "n": 8,
+        "mean": 0.35471214575578736,
+        "min": 0.040342718764415086,
+        "max": 0.7129963187656793,
+        "median": 0.37159258531917055
+      },
+      "adiabatic_ratio": {
+        "n": 8,
+        "mean": 0.018713309934380393,
+        "min": 0.00236156595845637,
+        "max": 0.037505439246203594,
+        "median": 0.01717245676238853
+      },
+      "n_E1_odd": 8,
+      "n_ground_plus": 8,
+      "n_coupled_found": 8,
+      "n_coupled_is_first_same_excited": 8,
+      "n_tau_sensitive": 0,
+      "max_opposite_coupling": 2.944866572818228e-14,
+      "max_residual": 1.5024972690866836e-14,
+      "max_commutator_fro": 0.0,
+      "max_audit": 1.3322676295501878e-14,
+      "min_ground_parity_expect": 0.9999999999999997,
+      "k_used": [
+        32
+      ]
+    },
+    "N12_Bstar": {
+      "n": 8,
+      "g": {
+        "n": 8,
+        "mean": 0.5340681515623911,
+        "min": 0.223268056852291,
+        "max": 0.746510432491512,
+        "median": 0.57945547586376
+      },
+      "full_gap": {
+        "n": 8,
+        "mean": 0.05627236751386577,
+        "min": 3.5720729885113656e-05,
+        "max": 0.1023769627142137,
+        "median": 0.06818233653551697
+      },
+      "Delta_plus": {
+        "n": 8,
+        "mean": 0.5484539663467098,
+        "min": 0.10348012514104621,
+        "max": 1.0400394178811787,
+        "median": 0.5565229034045727
+      },
+      "Delta_minus": {
+        "n": 8,
+        "mean": 0.4092523383738331,
+        "min": 0.08676186829760724,
+        "max": 0.857304848784068,
+        "median": 0.389352354650744
+      },
+      "cross_split": {
+        "n": 8,
+        "mean": 0.05627236751386577,
+        "min": 3.5720729885113656e-05,
+        "max": 0.1023769627142137,
+        "median": 0.06818233653551697
+      },
+      "coupled_gap": {
+        "n": 8,
+        "mean": 0.5484539663467098,
+        "min": 0.10348012514104621,
+        "max": 1.0400394178811787,
+        "median": 0.5565229034045727
+      },
+      "c_first_same_excited": {
+        "n": 8,
+        "mean": 0.7508723155591798,
+        "min": 0.3361183941670206,
+        "max": 1.8530515134765781,
+        "median": 0.4510446919964176
+      },
+      "adiabatic_ratio": {
+        "n": 8,
+        "mean": 7.963231730236712,
+        "min": 0.4742105288950657,
+        "max": 31.389065732374476,
+        "median": 2.7434081292893566
+      },
+      "n_E1_odd": 8,
+      "n_ground_plus": 8,
+      "n_coupled_found": 8,
+      "n_coupled_is_first_same_excited": 8,
+      "n_tau_sensitive": 0,
+      "max_opposite_coupling": 1.3322676295501878e-15,
+      "max_residual": 7.54356708346853e-12,
+      "max_commutator_fro": 0.0,
+      "max_audit": 1.438849039914203e-13,
+      "min_ground_parity_expect": 0.9999999999999963,
+      "k_used": [
+        8
+      ]
+    },
+    "N12_g1.5J": {
+      "n": 8,
+      "g": {
+        "n": 8,
+        "mean": 1.5,
+        "min": 1.5,
+        "max": 1.5,
+        "median": 1.5
+      },
+      "full_gap": {
+        "n": 8,
+        "mean": 1.4724171896840326,
+        "min": 1.2967832328751108,
+        "max": 1.63866442838507,
+        "median": 1.4834129529988864
+      },
+      "Delta_plus": {
+        "n": 8,
+        "mean": 3.478248462048098,
+        "min": 3.201367330086935,
+        "max": 3.690837820506534,
+        "median": 3.5242005071360305
+      },
+      "Delta_minus": {
+        "n": 8,
+        "mean": 0.4535976607473944,
+        "min": 0.11942074004896597,
+        "max": 0.7090806503137159,
+        "median": 0.4830227442663553
+      },
+      "cross_split": {
+        "n": 8,
+        "mean": 1.4724171896840326,
+        "min": 1.2967832328751108,
+        "max": 1.63866442838507,
+        "median": 1.4834129529988864
+      },
+      "coupled_gap": {
+        "n": 8,
+        "mean": 3.478248462048098,
+        "min": 3.201367330086935,
+        "max": 3.690837820506534,
+        "median": 3.5242005071360305
+      },
+      "c_first_same_excited": {
+        "n": 8,
+        "mean": 0.46263958313426334,
+        "min": 0.012498028920662207,
+        "max": 0.8506783751570333,
+        "median": 0.5468021556732947
+      },
+      "adiabatic_ratio": {
+        "n": 8,
+        "mean": 0.03954520378482594,
+        "min": 0.0009174694264413307,
+        "max": 0.07471849904499914,
+        "median": 0.04318579773196721
+      },
+      "n_E1_odd": 8,
+      "n_ground_plus": 8,
+      "n_coupled_found": 8,
+      "n_coupled_is_first_same_excited": 8,
+      "n_tau_sensitive": 0,
+      "max_opposite_coupling": 1.5543122344752192e-15,
+      "max_residual": 1.527765098428098e-11,
+      "max_commutator_fro": 0.0,
+      "max_audit": 2.877698079828406e-13,
+      "min_ground_parity_expect": 0.9999999999999976,
+      "k_used": [
+        8
+      ]
+    }
+  },
+  "instances": [
+    {
+      "N": 6,
+      "seed": 10904,
+      "field": "Bstar",
+      "g": 0.309069493598356,
+      "g_over_J": 0.309069493598356,
+      "E0": -3.558487197886395,
+      "E1": -3.545248665842985,
+      "full_gap": 0.013238532043409634,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999989,
+      "ground_sector": "+",
+      "ground_min_amp": 0.004902205365387693,
+      "E0_plus": -3.558487197886395,
+      "E1_plus": -2.6585478242448493,
+      "E0_minus": -3.545248665842985,
+      "E1_minus": -2.656918098526593,
+      "Delta_plus": 0.8999393736415455,
+      "Delta_minus": 0.8883305673163919,
+      "cross_split": 0.013238532043409634,
+      "c_first_same_excited": 1.522981255106563,
+      "max_opposite_coupling": 5.415667914121514e-13,
+      "V0_norm": 3.355570111927859,
+      "residual_max": 6.173530455490975e-15,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 4.884981308350689e-15,
+        "block_dense_vs_full_minus": 5.329070518200751e-15
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -3.558487197886395,
+          "parity": "+"
+        },
+        {
+          "E": -3.545248665842985,
+          "parity": "-"
+        },
+        {
+          "E": -2.6585478242448493,
+          "parity": "+"
+        },
+        {
+          "E": -2.656918098526593,
+          "parity": "-"
+        },
+        {
+          "E": -2.4116956073924523,
+          "parity": "-"
+        },
+        {
+          "E": -2.336891217834426,
+          "parity": "+"
+        },
+        {
+          "E": -2.233038548153818,
+          "parity": "+"
+        },
+        {
+          "E": -2.225719041628503,
+          "parity": "-"
+        }
+      ],
+      "seconds": 0.002527601995097939,
+      "coupled_gap_tau1e-10": 0.8999393736415455,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 1.522981255106563,
+      "coupled_gap_tau1e-08": 0.8999393736415455,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 1.522981255106563,
+      "coupled_gap_tau1e-06": 0.8999393736415455,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 1.522981255106563,
+      "coupled_gap_tau1e-04": 0.8999393736415455,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 1.522981255106563,
+      "coupled_gap": 0.8999393736415455,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 1.8804771109353984,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10904,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -9.398420516260135,
+      "E1": -7.540064164768042,
+      "full_gap": 1.8583563514920929,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000004,
+      "ground_sector": "+",
+      "ground_min_amp": 0.06744082458092586,
+      "E0_plus": -9.398420516260135,
+      "E1_plus": -5.142111658123797,
+      "E0_minus": -7.540064164768042,
+      "E1_minus": -7.037872004310362,
+      "Delta_plus": 4.256308858136338,
+      "Delta_minus": 0.50219216045768,
+      "cross_split": 1.8583563514920929,
+      "c_first_same_excited": 0.42948225821145425,
+      "max_opposite_coupling": 1.2156942119645464e-14,
+      "V0_norm": 5.83077922287302,
+      "residual_max": 1.2039650797857922e-14,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 5.329070518200751e-15,
+        "block_dense_vs_full_minus": 1.3322676295501878e-14
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -9.398420516260135,
+          "parity": "+"
+        },
+        {
+          "E": -7.540064164768042,
+          "parity": "-"
+        },
+        {
+          "E": -7.037872004310362,
+          "parity": "-"
+        },
+        {
+          "E": -6.375245947410533,
+          "parity": "-"
+        },
+        {
+          "E": -6.258323399645521,
+          "parity": "-"
+        },
+        {
+          "E": -5.436429126479075,
+          "parity": "-"
+        },
+        {
+          "E": -5.142111658123797,
+          "parity": "+"
+        },
+        {
+          "E": -5.013924562358939,
+          "parity": "-"
+        }
+      ],
+      "seconds": 0.001520732999779284,
+      "coupled_gap_tau1e-10": 4.256308858136338,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.42948225821145425,
+      "coupled_gap_tau1e-08": 4.256308858136338,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.42948225821145425,
+      "coupled_gap_tau1e-06": 4.256308858136338,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.42948225821145425,
+      "coupled_gap_tau1e-04": 4.256308858136338,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.42948225821145425,
+      "coupled_gap": 4.256308858136338,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.023707128740499406,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10905,
+      "field": "Bstar",
+      "g": 0.42910889259701224,
+      "g_over_J": 0.42910889259701224,
+      "E0": -3.985136379955087,
+      "E1": -3.9532175297814436,
+      "full_gap": 0.0319188501736436,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999993,
+      "ground_sector": "+",
+      "ground_min_amp": 0.014152026585098927,
+      "E0_plus": -3.985136379955087,
+      "E1_plus": -2.8085501405003033,
+      "E0_minus": -3.9532175297814436,
+      "E1_minus": -2.8246501673056605,
+      "Delta_plus": 1.176586239454784,
+      "Delta_minus": 1.128567362475783,
+      "cross_split": 0.0319188501736436,
+      "c_first_same_excited": 1.5657883827756294,
+      "max_opposite_coupling": 4.2743586448068527e-14,
+      "V0_norm": 3.6682871075494536,
+      "residual_max": 5.2420989861652335e-15,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 2.6645352591003757e-15,
+        "block_dense_vs_full_minus": 4.884981308350689e-15
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -3.985136379955087,
+          "parity": "+"
+        },
+        {
+          "E": -3.9532175297814436,
+          "parity": "-"
+        },
+        {
+          "E": -2.8246501673056605,
+          "parity": "-"
+        },
+        {
+          "E": -2.8085501405003033,
+          "parity": "+"
+        },
+        {
+          "E": -2.28081720744595,
+          "parity": "+"
+        },
+        {
+          "E": -2.233957825910106,
+          "parity": "-"
+        },
+        {
+          "E": -2.079944064036868,
+          "parity": "-"
+        },
+        {
+          "E": -1.9069984197395378,
+          "parity": "+"
+        }
+      ],
+      "seconds": 0.0015892209994490258,
+      "coupled_gap_tau1e-10": 1.176586239454784,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 1.5657883827756294,
+      "coupled_gap_tau1e-08": 1.176586239454784,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 1.5657883827756294,
+      "coupled_gap_tau1e-06": 1.176586239454784,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 1.5657883827756294,
+      "coupled_gap_tau1e-04": 1.176586239454784,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 1.5657883827756294,
+      "coupled_gap": 1.176586239454784,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 1.1310597212839604,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10905,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -9.287571697960333,
+      "E1": -7.550552752409686,
+      "full_gap": 1.7370189455506466,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999999,
+      "ground_sector": "+",
+      "ground_min_amp": 0.0857265665505124,
+      "E0_plus": -9.287571697960333,
+      "E1_plus": -5.09252414295987,
+      "E0_minus": -7.550552752409686,
+      "E1_minus": -6.686887076410209,
+      "Delta_plus": 4.195047555000463,
+      "Delta_minus": 0.863665675999477,
+      "cross_split": 1.7370189455506466,
+      "c_first_same_excited": 0.660036621737696,
+      "max_opposite_coupling": 3.4416913763379853e-15,
+      "V0_norm": 5.847422143573838,
+      "residual_max": 1.4997465305882225e-14,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 7.549516567451064e-15,
+        "block_dense_vs_full_minus": 1.0658141036401503e-14
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -9.287571697960333,
+          "parity": "+"
+        },
+        {
+          "E": -7.550552752409686,
+          "parity": "-"
+        },
+        {
+          "E": -6.686887076410209,
+          "parity": "-"
+        },
+        {
+          "E": -6.072359808626512,
+          "parity": "-"
+        },
+        {
+          "E": -5.74076812500692,
+          "parity": "-"
+        },
+        {
+          "E": -5.663762391858783,
+          "parity": "-"
+        },
+        {
+          "E": -5.336213507849317,
+          "parity": "-"
+        },
+        {
+          "E": -5.09252414295987,
+          "parity": "+"
+        }
+      ],
+      "seconds": 0.001523407998320181,
+      "coupled_gap_tau1e-10": 4.195047555000463,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.660036621737696,
+      "coupled_gap_tau1e-08": 4.195047555000463,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.660036621737696,
+      "coupled_gap_tau1e-06": 4.195047555000463,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.660036621737696,
+      "coupled_gap_tau1e-04": 4.195047555000463,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.660036621737696,
+      "coupled_gap": 4.195047555000463,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.037505439246203594,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10906,
+      "field": "Bstar",
+      "g": 0.3445227118348908,
+      "g_over_J": 0.3445227118348908,
+      "E0": -3.499857786672414,
+      "E1": -3.483701491546309,
+      "full_gap": 0.016156295126104947,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999997,
+      "ground_sector": "+",
+      "ground_min_amp": 0.009403599127182711,
+      "E0_plus": -3.499857786672414,
+      "E1_plus": -2.376331415825077,
+      "E0_minus": -3.483701491546309,
+      "E1_minus": -2.3731944725163827,
+      "Delta_plus": 1.1235263708473369,
+      "Delta_minus": 1.1105070190299262,
+      "cross_split": 0.016156295126104947,
+      "c_first_same_excited": 1.4608203313611965,
+      "max_opposite_coupling": 1.358357870628879e-13,
+      "V0_norm": 3.4876968012128886,
+      "residual_max": 4.1580594388191585e-15,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 3.9968028886505635e-15,
+        "block_dense_vs_full_minus": 3.9968028886505635e-15
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -3.499857786672414,
+          "parity": "+"
+        },
+        {
+          "E": -3.483701491546309,
+          "parity": "-"
+        },
+        {
+          "E": -2.376331415825077,
+          "parity": "+"
+        },
+        {
+          "E": -2.3731944725163827,
+          "parity": "-"
+        },
+        {
+          "E": -2.276775085906886,
+          "parity": "-"
+        },
+        {
+          "E": -2.247709408522707,
+          "parity": "+"
+        },
+        {
+          "E": -1.996074752285578,
+          "parity": "-"
+        },
+        {
+          "E": -1.9761867964334237,
+          "parity": "+"
+        }
+      ],
+      "seconds": 0.0014734480064362288,
+      "coupled_gap_tau1e-10": 1.1235263708473369,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 1.4608203313611965,
+      "coupled_gap_tau1e-08": 1.1235263708473369,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 1.4608203313611965,
+      "coupled_gap_tau1e-06": 1.1235263708473369,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 1.4608203313611965,
+      "coupled_gap_tau1e-04": 1.1235263708473369,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 1.4608203313611965,
+      "coupled_gap": 1.1235263708473369,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 1.157258192157743,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10906,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -9.236477270385276,
+      "E1": -7.444564602670292,
+      "full_gap": 1.7919126677149837,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0,
+      "ground_sector": "+",
+      "ground_min_amp": 0.08278940537100708,
+      "E0_plus": -9.236477270385276,
+      "E1_plus": -4.8069270524724175,
+      "E0_minus": -7.444564602670292,
+      "E1_minus": -6.260216867145146,
+      "Delta_plus": 4.429550217912858,
+      "Delta_minus": 1.1843477355251464,
+      "cross_split": 1.7919126677149837,
+      "c_first_same_excited": 0.7129963187656793,
+      "max_opposite_coupling": 1.3860440573054689e-15,
+      "V0_norm": 5.874283231884108,
+      "residual_max": 1.2108554765528968e-14,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 7.105427357601002e-15,
+        "block_dense_vs_full_minus": 1.3322676295501878e-14
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -9.236477270385276,
+          "parity": "+"
+        },
+        {
+          "E": -7.444564602670292,
+          "parity": "-"
+        },
+        {
+          "E": -6.260216867145146,
+          "parity": "-"
+        },
+        {
+          "E": -6.234143794974776,
+          "parity": "-"
+        },
+        {
+          "E": -6.001266367086961,
+          "parity": "-"
+        },
+        {
+          "E": -5.646923614860962,
+          "parity": "-"
+        },
+        {
+          "E": -5.278235363853047,
+          "parity": "-"
+        },
+        {
+          "E": -4.8069270524724175,
+          "parity": "+"
+        }
+      ],
+      "seconds": 0.0014919370005372912,
+      "coupled_gap_tau1e-10": 4.429550217912858,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.7129963187656793,
+      "coupled_gap_tau1e-08": 4.429550217912858,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.7129963187656793,
+      "coupled_gap_tau1e-06": 4.429550217912858,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.7129963187656793,
+      "coupled_gap_tau1e-04": 4.429550217912858,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.7129963187656793,
+      "coupled_gap": 4.429550217912858,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.03633858634687611,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10907,
+      "field": "Bstar",
+      "g": 0.33599488064739585,
+      "g_over_J": 0.33599488064739585,
+      "E0": -4.045107431517826,
+      "E1": -4.004490034556031,
+      "full_gap": 0.040617396961795116,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000007,
+      "ground_sector": "+",
+      "ground_min_amp": 0.006181987517753951,
+      "E0_plus": -4.045107431517826,
+      "E1_plus": -3.628721981558157,
+      "E0_minus": -4.004490034556031,
+      "E1_minus": -3.6885928261148755,
+      "Delta_plus": 0.41638544995966864,
+      "Delta_minus": 0.3158972084411551,
+      "cross_split": 0.040617396961795116,
+      "c_first_same_excited": 0.3897986964116855,
+      "max_opposite_coupling": 1.4982459717316488e-13,
+      "V0_norm": 3.879831215720563,
+      "residual_max": 5.630891627450927e-15,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 5.329070518200751e-15,
+        "block_dense_vs_full_minus": 6.661338147750939e-15
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -4.045107431517826,
+          "parity": "+"
+        },
+        {
+          "E": -4.004490034556031,
+          "parity": "-"
+        },
+        {
+          "E": -3.6885928261148755,
+          "parity": "-"
+        },
+        {
+          "E": -3.628721981558157,
+          "parity": "+"
+        },
+        {
+          "E": -3.118365754419076,
+          "parity": "+"
+        },
+        {
+          "E": -3.0559697969644093,
+          "parity": "-"
+        },
+        {
+          "E": -3.021184631377178,
+          "parity": "-"
+        },
+        {
+          "E": -2.9206213107552754,
+          "parity": "+"
+        }
+      ],
+      "seconds": 0.001455639001505915,
+      "coupled_gap_tau1e-10": 0.41638544995966864,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.3897986964116855,
+      "coupled_gap_tau1e-08": 0.41638544995966864,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.3897986964116855,
+      "coupled_gap_tau1e-06": 0.41638544995966864,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.3897986964116855,
+      "coupled_gap_tau1e-04": 0.41638544995966864,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.3897986964116855,
+      "coupled_gap": 0.41638544995966864,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 2.2482742781907636,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10907,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -9.667512727669338,
+      "E1": -7.977185717685853,
+      "full_gap": 1.690327009983485,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000004,
+      "ground_sector": "+",
+      "ground_min_amp": 0.06058828074910692,
+      "E0_plus": -9.667512727669338,
+      "E1_plus": -5.591152474114989,
+      "E0_minus": -7.977185717685853,
+      "E1_minus": -7.473267646863751,
+      "Delta_plus": 4.076360253554349,
+      "Delta_minus": 0.5039180708221025,
+      "cross_split": 1.690327009983485,
+      "c_first_same_excited": 0.1366745115504474,
+      "max_opposite_coupling": 5.828670879282072e-15,
+      "V0_norm": 5.733393717310463,
+      "residual_max": 1.5024972690866836e-14,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 1.2434497875801753e-14,
+        "block_dense_vs_full_minus": 1.2434497875801753e-14
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -9.667512727669338,
+          "parity": "+"
+        },
+        {
+          "E": -7.977185717685853,
+          "parity": "-"
+        },
+        {
+          "E": -7.473267646863751,
+          "parity": "-"
+        },
+        {
+          "E": -7.003951346062486,
+          "parity": "-"
+        },
+        {
+          "E": -6.158939364956607,
+          "parity": "-"
+        },
+        {
+          "E": -5.591152474114989,
+          "parity": "+"
+        },
+        {
+          "E": -5.356936292762204,
+          "parity": "+"
+        },
+        {
+          "E": -5.189126622079401,
+          "parity": "-"
+        }
+      ],
+      "seconds": 0.0014586320030502975,
+      "coupled_gap_tau1e-10": 4.076360253554349,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.1366745115504474,
+      "coupled_gap_tau1e-08": 4.076360253554349,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.1366745115504474,
+      "coupled_gap_tau1e-06": 4.076360253554349,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.1366745115504474,
+      "coupled_gap_tau1e-04": 4.076360253554349,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.1366745115504474,
+      "coupled_gap": 4.076360253554349,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.00822512323797888,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10908,
+      "field": "Bstar",
+      "g": 0.27344166430397593,
+      "g_over_J": 0.27344166430397593,
+      "E0": -3.8137607957818234,
+      "E1": -3.7866827182158196,
+      "full_gap": 0.027078077566003778,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0,
+      "ground_sector": "+",
+      "ground_min_amp": 0.004908547507788685,
+      "E0_plus": -3.8137607957818234,
+      "E1_plus": -3.5198245527056113,
+      "E0_minus": -3.7866827182158196,
+      "E1_minus": -3.5556933260961205,
+      "Delta_plus": 0.293936243076212,
+      "Delta_minus": 0.23098939211969904,
+      "cross_split": 0.027078077566003778,
+      "c_first_same_excited": 0.3557883748778334,
+      "max_opposite_coupling": 1.8885448760386225e-12,
+      "V0_norm": 3.800391271307841,
+      "residual_max": 6.199533779410856e-15,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 5.329070518200751e-15,
+        "block_dense_vs_full_minus": 4.440892098500626e-15
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -3.8137607957818234,
+          "parity": "+"
+        },
+        {
+          "E": -3.7866827182158196,
+          "parity": "-"
+        },
+        {
+          "E": -3.5556933260961205,
+          "parity": "-"
+        },
+        {
+          "E": -3.5198245527056113,
+          "parity": "+"
+        },
+        {
+          "E": -3.212441609480159,
+          "parity": "-"
+        },
+        {
+          "E": -3.2050164298138295,
+          "parity": "+"
+        },
+        {
+          "E": -2.721984655247733,
+          "parity": "+"
+        },
+        {
+          "E": -2.673971608490579,
+          "parity": "-"
+        }
+      ],
+      "seconds": 0.0015439389972016215,
+      "coupled_gap_tau1e-10": 0.293936243076212,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.3557883748778334,
+      "coupled_gap_tau1e-08": 0.293936243076212,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.3557883748778334,
+      "coupled_gap_tau1e-06": 0.293936243076212,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.3557883748778334,
+      "coupled_gap_tau1e-04": 0.293936243076212,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.3557883748778334,
+      "coupled_gap": 0.293936243076212,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 4.117991783811769,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10908,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -9.707673088496206,
+      "E1": -8.094089816324525,
+      "full_gap": 1.613583272171681,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000002,
+      "ground_sector": "+",
+      "ground_min_amp": 0.05703142455016087,
+      "E0_plus": -9.707673088496206,
+      "E1_plus": -5.718068923964017,
+      "E0_minus": -8.094089816324525,
+      "E1_minus": -7.524732961663066,
+      "Delta_plus": 3.9896041645321887,
+      "Delta_minus": 0.5693568546614589,
+      "cross_split": 1.613583272171681,
+      "c_first_same_excited": 0.11497956637826601,
+      "max_opposite_coupling": 2.944866572818228e-14,
+      "V0_norm": 5.722342011583927,
+      "residual_max": 1.2982995258244381e-14,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 7.993605777301127e-15,
+        "block_dense_vs_full_minus": 7.993605777301127e-15
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -9.707673088496206,
+          "parity": "+"
+        },
+        {
+          "E": -8.094089816324525,
+          "parity": "-"
+        },
+        {
+          "E": -7.524732961663066,
+          "parity": "-"
+        },
+        {
+          "E": -6.753077759786321,
+          "parity": "-"
+        },
+        {
+          "E": -6.245217093367748,
+          "parity": "-"
+        },
+        {
+          "E": -5.83828700916393,
+          "parity": "-"
+        },
+        {
+          "E": -5.718068923964017,
+          "parity": "+"
+        },
+        {
+          "E": -5.182411455761514,
+          "parity": "+"
+        }
+      ],
+      "seconds": 0.0014488050001091324,
+      "coupled_gap_tau1e-10": 3.9896041645321887,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.11497956637826601,
+      "coupled_gap_tau1e-08": 3.9896041645321887,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.11497956637826601,
+      "coupled_gap_tau1e-06": 3.9896041645321887,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.11497956637826601,
+      "coupled_gap_tau1e-04": 3.9896041645321887,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.11497956637826601,
+      "coupled_gap": 3.9896041645321887,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.007223722420251724,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10909,
+      "field": "Bstar",
+      "g": 0.31125198998627635,
+      "g_over_J": 0.31125198998627635,
+      "E0": -3.2057573842632756,
+      "E1": -3.171283657600611,
+      "full_gap": 0.03447372666266446,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.999999999999999,
+      "ground_sector": "+",
+      "ground_min_amp": 0.009698149134904577,
+      "E0_plus": -3.2057573842632756,
+      "E1_plus": -2.6734069660850195,
+      "E0_minus": -3.171283657600611,
+      "E1_minus": -2.694888438086766,
+      "Delta_plus": 0.5323504181782561,
+      "Delta_minus": 0.476395219513845,
+      "cross_split": 0.03447372666266446,
+      "c_first_same_excited": 0.9989642402344125,
+      "max_opposite_coupling": 2.711719737646945e-14,
+      "V0_norm": 3.948184420763768,
+      "residual_max": 5.352287374797862e-15,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 3.9968028886505635e-15,
+        "block_dense_vs_full_minus": 8.43769498715119e-15
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -3.2057573842632756,
+          "parity": "+"
+        },
+        {
+          "E": -3.171283657600611,
+          "parity": "-"
+        },
+        {
+          "E": -2.694888438086766,
+          "parity": "-"
+        },
+        {
+          "E": -2.6734069660850195,
+          "parity": "+"
+        },
+        {
+          "E": -2.4792650438730433,
+          "parity": "-"
+        },
+        {
+          "E": -2.400739514792851,
+          "parity": "+"
+        },
+        {
+          "E": -2.039572377111286,
+          "parity": "+"
+        },
+        {
+          "E": -1.9724178645188646,
+          "parity": "-"
+        }
+      ],
+      "seconds": 0.001487587003794033,
+      "coupled_gap_tau1e-10": 0.5323504181782561,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.9989642402344125,
+      "coupled_gap_tau1e-08": 0.5323504181782561,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.9989642402344125,
+      "coupled_gap_tau1e-06": 0.5323504181782561,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.9989642402344125,
+      "coupled_gap_tau1e-04": 0.5323504181782561,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.9989642402344125,
+      "coupled_gap": 0.5323504181782561,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 3.5249644631697836,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10909,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -9.32500853353462,
+      "E1": -7.419737429790973,
+      "full_gap": 1.9052711037436465,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000009,
+      "ground_sector": "+",
+      "ground_min_amp": 0.07778024425899868,
+      "E0_plus": -9.32500853353462,
+      "E1_plus": -4.7934036927312125,
+      "E0_minus": -7.419737429790973,
+      "E1_minus": -6.713146298225407,
+      "Delta_plus": 4.531604840803407,
+      "Delta_minus": 0.706591131565566,
+      "cross_split": 1.9052711037436465,
+      "c_first_same_excited": 0.33395361551669334,
+      "max_opposite_coupling": 1.5543122344752192e-15,
+      "V0_norm": 5.857332848933752,
+      "residual_max": 1.2063174752526323e-14,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 4.440892098500626e-15,
+        "block_dense_vs_full_minus": 5.329070518200751e-15
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -9.32500853353462,
+          "parity": "+"
+        },
+        {
+          "E": -7.419737429790973,
+          "parity": "-"
+        },
+        {
+          "E": -6.713146298225407,
+          "parity": "-"
+        },
+        {
+          "E": -6.668891441429648,
+          "parity": "-"
+        },
+        {
+          "E": -5.934069448331122,
+          "parity": "-"
+        },
+        {
+          "E": -5.4249362180965095,
+          "parity": "-"
+        },
+        {
+          "E": -5.171990584783018,
+          "parity": "-"
+        },
+        {
+          "E": -4.7934036927312125,
+          "parity": "+"
+        }
+      ],
+      "seconds": 0.0014565750025212765,
+      "coupled_gap_tau1e-10": 4.531604840803407,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.33395361551669334,
+      "coupled_gap_tau1e-08": 4.531604840803407,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.33395361551669334,
+      "coupled_gap_tau1e-06": 4.531604840803407,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.33395361551669334,
+      "coupled_gap_tau1e-04": 4.531604840803407,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.33395361551669334,
+      "coupled_gap": 4.531604840803407,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.01626230438438963,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10910,
+      "field": "Bstar",
+      "g": 0.2934595966881004,
+      "g_over_J": 0.2934595966881004,
+      "E0": -2.7996978881804497,
+      "E1": -2.763694587373092,
+      "full_gap": 0.0360033008073577,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000009,
+      "ground_sector": "+",
+      "ground_min_amp": 0.00808281218649632,
+      "E0_plus": -2.7996978881804497,
+      "E1_plus": -2.154683454205842,
+      "E0_minus": -2.763694587373092,
+      "E1_minus": -2.1989280059050627,
+      "Delta_plus": 0.6450144339746076,
+      "Delta_minus": 0.5647665814680294,
+      "cross_split": 0.0360033008073577,
+      "c_first_same_excited": 1.0564609251046149,
+      "max_opposite_coupling": 2.5202062658991053e-14,
+      "V0_norm": 4.008099565544269,
+      "residual_max": 5.647746949381854e-15,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 2.220446049250313e-15,
+        "block_dense_vs_full_minus": 5.329070518200751e-15
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -2.7996978881804497,
+          "parity": "+"
+        },
+        {
+          "E": -2.763694587373092,
+          "parity": "-"
+        },
+        {
+          "E": -2.1989280059050627,
+          "parity": "-"
+        },
+        {
+          "E": -2.154683454205842,
+          "parity": "+"
+        },
+        {
+          "E": -1.8986996536177174,
+          "parity": "+"
+        },
+        {
+          "E": -1.866005226736222,
+          "parity": "-"
+        },
+        {
+          "E": -1.7960528390557688,
+          "parity": "-"
+        },
+        {
+          "E": -1.7060994103470342,
+          "parity": "+"
+        }
+      ],
+      "seconds": 0.0014651849996880628,
+      "coupled_gap_tau1e-10": 0.6450144339746076,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 1.0564609251046149,
+      "coupled_gap_tau1e-08": 0.6450144339746076,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 1.0564609251046149,
+      "coupled_gap_tau1e-06": 0.6450144339746076,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 1.0564609251046149,
+      "coupled_gap_tau1e-04": 0.6450144339746076,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 1.0564609251046149,
+      "coupled_gap": 0.6450144339746076,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 2.5393032706865157,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10910,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -9.23858343432937,
+      "E1": -7.1407572646823505,
+      "full_gap": 2.0978261696470186,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000013,
+      "ground_sector": "+",
+      "ground_min_amp": 0.06894126367934401,
+      "E0_plus": -9.23858343432937,
+      "E1_plus": -4.481354962102253,
+      "E0_minus": -7.1407572646823505,
+      "E1_minus": -6.5404111934169515,
+      "Delta_plus": 4.7572284722271165,
+      "Delta_minus": 0.600346071265399,
+      "cross_split": 2.0978261696470186,
+      "c_first_same_excited": 0.40923155512164777,
+      "max_opposite_coupling": 3.4416913763379853e-15,
+      "V0_norm": 5.905400214006793,
+      "residual_max": 1.2663357804684301e-14,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 7.549516567451064e-15,
+        "block_dense_vs_full_minus": 7.105427357601002e-15
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -9.23858343432937,
+          "parity": "+"
+        },
+        {
+          "E": -7.1407572646823505,
+          "parity": "-"
+        },
+        {
+          "E": -6.5404111934169515,
+          "parity": "-"
+        },
+        {
+          "E": -6.30179793621288,
+          "parity": "-"
+        },
+        {
+          "E": -6.211041901721227,
+          "parity": "-"
+        },
+        {
+          "E": -5.911457165658855,
+          "parity": "-"
+        },
+        {
+          "E": -4.911965993444728,
+          "parity": "-"
+        },
+        {
+          "E": -4.481354962102253,
+          "parity": "+"
+        }
+      ],
+      "seconds": 0.0014833430032012984,
+      "coupled_gap_tau1e-10": 4.7572284722271165,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.40923155512164777,
+      "coupled_gap_tau1e-08": 4.7572284722271165,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.40923155512164777,
+      "coupled_gap_tau1e-06": 4.7572284722271165,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.40923155512164777,
+      "coupled_gap_tau1e-04": 4.7572284722271165,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.40923155512164777,
+      "coupled_gap": 4.7572284722271165,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.018082609140387434,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10911,
+      "field": "Bstar",
+      "g": 0.1579446780324269,
+      "g_over_J": 0.1579446780324269,
+      "E0": -3.2457993972236823,
+      "E1": -3.241798458634594,
+      "full_gap": 0.004000938589088232,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000004,
+      "ground_sector": "+",
+      "ground_min_amp": 0.001395200394655165,
+      "E0_plus": -3.2457993972236823,
+      "E1_plus": -3.1608966195240265,
+      "E0_minus": -3.241798458634594,
+      "E1_minus": -3.1650105307838636,
+      "Delta_plus": 0.08490277769965582,
+      "Delta_minus": 0.07678792785073041,
+      "cross_split": 0.004000938589088232,
+      "c_first_same_excited": 0.3590925330467293,
+      "max_opposite_coupling": 4.0382031052388356e-11,
+      "V0_norm": 3.299169409103844,
+      "residual_max": 5.29201917833613e-15,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 3.552713678800501e-15,
+        "block_dense_vs_full_minus": 4.440892098500626e-15
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -3.2457993972236823,
+          "parity": "+"
+        },
+        {
+          "E": -3.241798458634594,
+          "parity": "-"
+        },
+        {
+          "E": -3.1650105307838636,
+          "parity": "-"
+        },
+        {
+          "E": -3.1608966195240265,
+          "parity": "+"
+        },
+        {
+          "E": -2.8582372976366304,
+          "parity": "-"
+        },
+        {
+          "E": -2.8576124009118775,
+          "parity": "+"
+        },
+        {
+          "E": -2.42110945007563,
+          "parity": "-"
+        },
+        {
+          "E": -2.4209668178922272,
+          "parity": "+"
+        }
+      ],
+      "seconds": 0.0016164800035767257,
+      "coupled_gap_tau1e-10": 0.08490277769965582,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.3590925330467293,
+      "coupled_gap_tau1e-08": 0.08490277769965582,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.3590925330467293,
+      "coupled_gap_tau1e-06": 0.08490277769965582,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.3590925330467293,
+      "coupled_gap_tau1e-04": 0.08490277769965582,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.3590925330467293,
+      "coupled_gap": 0.08490277769965582,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 49.81528010034182,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 6,
+      "seed": 10911,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -9.51137344420624,
+      "E1": -7.811761403150947,
+      "full_gap": 1.6996120410552935,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999997,
+      "ground_sector": "+",
+      "ground_min_amp": 0.0641627546596088,
+      "E0_plus": -9.51137344420624,
+      "E1_plus": -5.378210363702825,
+      "E0_minus": -7.811761403150947,
+      "E1_minus": -7.07128956988484,
+      "Delta_plus": 4.133163080503415,
+      "Delta_minus": 0.7404718332661071,
+      "cross_split": 1.6996120410552935,
+      "c_first_same_excited": 0.040342718764415086,
+      "max_opposite_coupling": 4.9682480351975755e-15,
+      "V0_norm": 5.784591750670031,
+      "residual_max": 1.2625385626553643e-14,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        32
+      ],
+      "k_used": 32,
+      "method": "dense_full_eigh",
+      "audit": {
+        "block_dense_vs_full_plus": 3.552713678800501e-15,
+        "block_dense_vs_full_minus": 9.769962616701378e-15
+      },
+      "parity_eigvec_err": null,
+      "low_levels": [
+        {
+          "E": -9.51137344420624,
+          "parity": "+"
+        },
+        {
+          "E": -7.811761403150947,
+          "parity": "-"
+        },
+        {
+          "E": -7.07128956988484,
+          "parity": "-"
+        },
+        {
+          "E": -6.72782393800571,
+          "parity": "-"
+        },
+        {
+          "E": -6.168282903624001,
+          "parity": "-"
+        },
+        {
+          "E": -5.452036721871258,
+          "parity": "-"
+        },
+        {
+          "E": -5.378210363702825,
+          "parity": "+"
+        },
+        {
+          "E": -4.9689334706853785,
+          "parity": "+"
+        }
+      ],
+      "seconds": 0.0015187239987426437,
+      "coupled_gap_tau1e-10": 4.133163080503415,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.040342718764415086,
+      "coupled_gap_tau1e-08": 4.133163080503415,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.040342718764415086,
+      "coupled_gap_tau1e-06": 4.133163080503415,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.040342718764415086,
+      "coupled_gap_tau1e-04": 4.133163080503415,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.040342718764415086,
+      "coupled_gap": 4.133163080503415,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.00236156595845637,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10912,
+      "field": "Bstar",
+      "g": 0.5585818376341509,
+      "g_over_J": 0.5585818376341509,
+      "E0": -9.515803161138209,
+      "E1": -9.413426198423995,
+      "full_gap": 0.1023769627142137,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999989,
+      "ground_sector": "+",
+      "ground_min_amp": 0.00036074391943966396,
+      "E0_plus": -9.515803161138209,
+      "E1_plus": -9.082611533311486,
+      "E0_minus": -9.413426198423995,
+      "E1_minus": -9.191819255257641,
+      "Delta_plus": 0.43319162782672294,
+      "Delta_minus": 0.22160694316635343,
+      "cross_split": 0.1023769627142137,
+      "c_first_same_excited": 1.0196380830129508,
+      "max_opposite_coupling": 4.440892098500626e-16,
+      "V0_norm": 8.437188020151538,
+      "residual_max": 7.54356708346853e-12,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 1.1546319456101628e-13,
+        "block_dense_vs_eigsh_minus": 1.3855583347321954e-13,
+        "full_eigsh12_vs_dense_block_union": 1.438849039914203e-13,
+        "low8_kept_vs_dense_block_union": 1.0302869668521453e-13
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -9.515803161138209,
+          "parity": "+"
+        },
+        {
+          "E": -9.413426198423995,
+          "parity": "-"
+        },
+        {
+          "E": -9.191819255257641,
+          "parity": "-"
+        },
+        {
+          "E": -9.082611533311486,
+          "parity": "+"
+        },
+        {
+          "E": -8.99040080701263,
+          "parity": "-"
+        },
+        {
+          "E": -8.833080210436052,
+          "parity": "+"
+        },
+        {
+          "E": -8.761688249886946,
+          "parity": "+"
+        },
+        {
+          "E": -8.614334537496886,
+          "parity": "-"
+        }
+      ],
+      "seconds": 1.2060900170035893,
+      "coupled_gap_tau1e-10": 0.43319162782672294,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 1.0196380830129508,
+      "coupled_gap_tau1e-08": 0.43319162782672294,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 1.0196380830129508,
+      "coupled_gap_tau1e-06": 0.43319162782672294,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 1.0196380830129508,
+      "coupled_gap_tau1e-04": 0.43319162782672294,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 1.0196380830129508,
+      "coupled_gap": 0.43319162782672294,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 5.433578411475724,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10912,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -19.162508779161065,
+      "E1": -17.523844350775995,
+      "full_gap": 1.63866442838507,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999993,
+      "ground_sector": "+",
+      "ground_min_amp": 0.003957499695722835,
+      "E0_plus": -19.162508779161065,
+      "E1_plus": -15.643343478821434,
+      "E0_minus": -17.523844350775995,
+      "E1_minus": -17.40442361072703,
+      "Delta_plus": 3.5191653003396315,
+      "Delta_minus": 0.11942074004896597,
+      "cross_split": 1.63866442838507,
+      "c_first_same_excited": 0.023418832776501697,
+      "max_opposite_coupling": 8.881784197001252e-16,
+      "V0_norm": 11.392467801623042,
+      "residual_max": 1.527765098428098e-11,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 1.723066134218243e-13,
+        "block_dense_vs_eigsh_minus": 1.0302869668521453e-13,
+        "full_eigsh12_vs_dense_block_union": 1.1723955140041653e-13,
+        "low8_kept_vs_dense_block_union": 1.0302869668521453e-13
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -19.162508779161065,
+          "parity": "+"
+        },
+        {
+          "E": -17.523844350775995,
+          "parity": "-"
+        },
+        {
+          "E": -17.40442361072703,
+          "parity": "-"
+        },
+        {
+          "E": -17.156618015691603,
+          "parity": "-"
+        },
+        {
+          "E": -16.60415687346527,
+          "parity": "-"
+        },
+        {
+          "E": -16.562145179139307,
+          "parity": "-"
+        },
+        {
+          "E": -16.030892145169,
+          "parity": "-"
+        },
+        {
+          "E": -15.812409174004381,
+          "parity": "-"
+        }
+      ],
+      "seconds": 1.1938306349984487,
+      "coupled_gap_tau1e-10": 3.5191653003396315,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.023418832776501697,
+      "coupled_gap_tau1e-08": 3.5191653003396315,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.023418832776501697,
+      "coupled_gap_tau1e-06": 3.5191653003396315,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.023418832776501697,
+      "coupled_gap_tau1e-04": 3.5191653003396315,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.023418832776501697,
+      "coupled_gap": 3.5191653003396315,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.0018909755432743461,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10913,
+      "field": "Bstar",
+      "g": 0.223268056852291,
+      "g_over_J": 0.223268056852291,
+      "E0": -7.539812384541731,
+      "E1": -7.539776663811846,
+      "full_gap": 3.5720729885113656e-05,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000009,
+      "ground_sector": "+",
+      "ground_min_amp": 4.1032762574808885e-06,
+      "E0_plus": -7.539812384541731,
+      "E1_plus": -7.370289047519393,
+      "E0_minus": -7.539776663811846,
+      "E1_minus": -7.370356425672551,
+      "Delta_plus": 0.1695233370223379,
+      "Delta_minus": 0.16942023813929552,
+      "cross_split": 3.5720729885113656e-05,
+      "c_first_same_excited": 0.5331567890452171,
+      "max_opposite_coupling": 4.440892098500626e-16,
+      "V0_norm": 5.447889889583491,
+      "residual_max": 5.427280545789909e-12,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 7.283063041541027e-14,
+        "block_dense_vs_eigsh_minus": 6.572520305780927e-14,
+        "full_eigsh12_vs_dense_block_union": 5.595524044110789e-14,
+        "low8_kept_vs_dense_block_union": 6.572520305780927e-14
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -7.539812384541731,
+          "parity": "+"
+        },
+        {
+          "E": -7.539776663811846,
+          "parity": "-"
+        },
+        {
+          "E": -7.370356425672551,
+          "parity": "-"
+        },
+        {
+          "E": -7.370289047519393,
+          "parity": "+"
+        },
+        {
+          "E": -7.0403325024223316,
+          "parity": "-"
+        },
+        {
+          "E": -7.040312546548884,
+          "parity": "+"
+        },
+        {
+          "E": -6.946483030970559,
+          "parity": "+"
+        },
+        {
+          "E": -6.94631383837396,
+          "parity": "-"
+        }
+      ],
+      "seconds": 1.190657117003866,
+      "coupled_gap_tau1e-10": 0.1695233370223379,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.5331567890452171,
+      "coupled_gap_tau1e-08": 0.1695233370223379,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.5331567890452171,
+      "coupled_gap_tau1e-06": 0.1695233370223379,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.5331567890452171,
+      "coupled_gap_tau1e-04": 0.1695233370223379,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.5331567890452171,
+      "coupled_gap": 0.1695233370223379,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 18.55222309780679,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10913,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -18.885355437201063,
+      "E1": -17.588572204325953,
+      "full_gap": 1.2967832328751108,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.999999999999998,
+      "ground_sector": "+",
+      "ground_min_amp": 0.005148984988702678,
+      "E0_plus": -18.885355437201063,
+      "E1_plus": -15.511172484914773,
+      "E0_minus": -17.588572204325953,
+      "E1_minus": -16.879491554012237,
+      "Delta_plus": 3.37418295228629,
+      "Delta_minus": 0.7090806503137159,
+      "cross_split": 1.2967832328751108,
+      "c_first_same_excited": 0.8506783751570333,
+      "max_opposite_coupling": 1.3322676295501878e-15,
+      "V0_norm": 11.434108327242948,
+      "residual_max": 6.850967816641529e-12,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 1.1368683772161603e-13,
+        "block_dense_vs_eigsh_minus": 1.0658141036401503e-13,
+        "full_eigsh12_vs_dense_block_union": 9.237055564881302e-14,
+        "low8_kept_vs_dense_block_union": 1.0658141036401503e-13
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -18.885355437201063,
+          "parity": "+"
+        },
+        {
+          "E": -17.588572204325953,
+          "parity": "-"
+        },
+        {
+          "E": -16.879491554012237,
+          "parity": "-"
+        },
+        {
+          "E": -16.477239852395076,
+          "parity": "-"
+        },
+        {
+          "E": -16.15252288146305,
+          "parity": "-"
+        },
+        {
+          "E": -15.853916972284061,
+          "parity": "-"
+        },
+        {
+          "E": -15.705924768477601,
+          "parity": "-"
+        },
+        {
+          "E": -15.570553071316033,
+          "parity": "-"
+        }
+      ],
+      "seconds": 1.183837983997364,
+      "coupled_gap_tau1e-10": 3.37418295228629,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.8506783751570333,
+      "coupled_gap_tau1e-08": 3.37418295228629,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.8506783751570333,
+      "coupled_gap_tau1e-06": 3.37418295228629,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.8506783751570333,
+      "coupled_gap_tau1e-04": 3.37418295228629,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.8506783751570333,
+      "coupled_gap": 3.37418295228629,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.07471849904499914,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10914,
+      "field": "Bstar",
+      "g": 0.6356802927824362,
+      "g_over_J": 0.6356802927824362,
+      "E0": -9.713378734804204,
+      "E1": -9.643516993239007,
+      "full_gap": 0.06986174156519631,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999984,
+      "ground_sector": "+",
+      "ground_min_amp": 0.0007507145450375303,
+      "E0_plus": -9.713378734804204,
+      "E1_plus": -8.846815832023362,
+      "E0_minus": -9.643516993239007,
+      "E1_minus": -9.02507791160882,
+      "Delta_plus": 0.8665629027808421,
+      "Delta_minus": 0.6184390816301875,
+      "cross_split": 0.06986174156519631,
+      "c_first_same_excited": 0.3560995120909851,
+      "max_opposite_coupling": 8.881784197001252e-16,
+      "V0_norm": 8.670614982783672,
+      "residual_max": 5.623433515976478e-12,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 1.0125233984581428e-13,
+        "block_dense_vs_eigsh_minus": 1.2434497875801753e-13,
+        "full_eigsh12_vs_dense_block_union": 1.0480505352461478e-13,
+        "low8_kept_vs_dense_block_union": 1.2434497875801753e-13
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -9.713378734804204,
+          "parity": "+"
+        },
+        {
+          "E": -9.643516993239007,
+          "parity": "-"
+        },
+        {
+          "E": -9.02507791160882,
+          "parity": "-"
+        },
+        {
+          "E": -8.846815832023362,
+          "parity": "+"
+        },
+        {
+          "E": -8.671556213444218,
+          "parity": "+"
+        },
+        {
+          "E": -8.56585261806902,
+          "parity": "-"
+        },
+        {
+          "E": -8.383577813757762,
+          "parity": "+"
+        },
+        {
+          "E": -8.370553915860663,
+          "parity": "-"
+        }
+      ],
+      "seconds": 1.1897190529998625,
+      "coupled_gap_tau1e-10": 0.8665629027808421,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.3560995120909851,
+      "coupled_gap_tau1e-08": 0.8665629027808421,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.3560995120909851,
+      "coupled_gap_tau1e-06": 0.8665629027808421,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.3560995120909851,
+      "coupled_gap_tau1e-04": 0.8665629027808421,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.3560995120909851,
+      "coupled_gap": 0.8665629027808421,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.4742105288950657,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10914,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -18.738168552793894,
+      "E1": -17.25651852461001,
+      "full_gap": 1.4816500281838856,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000004,
+      "ground_sector": "+",
+      "ground_min_amp": 0.005276057964974145,
+      "E0_plus": -18.738168552793894,
+      "E1_plus": -15.171401445766103,
+      "E0_minus": -17.25651852461001,
+      "E1_minus": -16.804931513929418,
+      "Delta_plus": 3.5667671070277915,
+      "Delta_minus": 0.4515870106805906,
+      "cross_split": 1.4816500281838856,
+      "c_first_same_excited": 0.6949396134291073,
+      "max_opposite_coupling": 6.661338147750939e-16,
+      "V0_norm": 11.536677023501136,
+      "residual_max": 1.201415350921694e-11,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 1.652011860642233e-13,
+        "block_dense_vs_eigsh_minus": 1.3322676295501878e-13,
+        "full_eigsh12_vs_dense_block_union": 8.881784197001252e-14,
+        "low8_kept_vs_dense_block_union": 8.881784197001252e-14
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -18.738168552793894,
+          "parity": "+"
+        },
+        {
+          "E": -17.25651852461001,
+          "parity": "-"
+        },
+        {
+          "E": -16.804931513929418,
+          "parity": "-"
+        },
+        {
+          "E": -16.28501915803293,
+          "parity": "-"
+        },
+        {
+          "E": -15.972707769342023,
+          "parity": "-"
+        },
+        {
+          "E": -15.859900735217474,
+          "parity": "-"
+        },
+        {
+          "E": -15.506050248642808,
+          "parity": "-"
+        },
+        {
+          "E": -15.289104525715933,
+          "parity": "-"
+        }
+      ],
+      "seconds": 1.2025613949954277,
+      "coupled_gap_tau1e-10": 3.5667671070277915,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.6949396134291073,
+      "coupled_gap_tau1e-08": 3.5667671070277915,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.6949396134291073,
+      "coupled_gap_tau1e-06": 3.5667671070277915,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.6949396134291073,
+      "coupled_gap_tau1e-04": 3.5667671070277915,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.6949396134291073,
+      "coupled_gap": 3.5667671070277915,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.05462576883685165,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10915,
+      "field": "Bstar",
+      "g": 0.6171327931534295,
+      "g_over_J": 0.6171327931534295,
+      "E0": -9.82236537232799,
+      "E1": -9.765511531814747,
+      "full_gap": 0.05685384051324327,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000009,
+      "ground_sector": "+",
+      "ground_min_amp": 0.0003100228477279924,
+      "E0_plus": -9.82236537232799,
+      "E1_plus": -9.081991259857391,
+      "E0_minus": -9.765511531814747,
+      "E1_minus": -9.2063068660727,
+      "Delta_plus": 0.7403741124705991,
+      "Delta_minus": 0.5592046657420475,
+      "cross_split": 0.05685384051324327,
+      "c_first_same_excited": 0.36004902284446944,
+      "max_opposite_coupling": 8.881784197001252e-16,
+      "V0_norm": 8.44270811985112,
+      "residual_max": 4.992942013370031e-12,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 8.526512829121202e-14,
+        "block_dense_vs_eigsh_minus": 8.43769498715119e-14,
+        "full_eigsh12_vs_dense_block_union": 8.348877145181177e-14,
+        "low8_kept_vs_dense_block_union": 7.993605777301127e-14
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -9.82236537232799,
+          "parity": "+"
+        },
+        {
+          "E": -9.765511531814747,
+          "parity": "-"
+        },
+        {
+          "E": -9.2063068660727,
+          "parity": "-"
+        },
+        {
+          "E": -9.081991259857391,
+          "parity": "+"
+        },
+        {
+          "E": -8.780859873144424,
+          "parity": "+"
+        },
+        {
+          "E": -8.747054888525005,
+          "parity": "-"
+        },
+        {
+          "E": -8.544650379272365,
+          "parity": "+"
+        },
+        {
+          "E": -8.537343507180621,
+          "parity": "-"
+        }
+      ],
+      "seconds": 1.2246382189987344,
+      "coupled_gap_tau1e-10": 0.7403741124705991,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.36004902284446944,
+      "coupled_gap_tau1e-08": 0.7403741124705991,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.36004902284446944,
+      "coupled_gap_tau1e-06": 0.7403741124705991,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.36004902284446944,
+      "coupled_gap_tau1e-04": 0.7403741124705991,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.36004902284446944,
+      "coupled_gap": 0.7403741124705991,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.6568393861229971,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10915,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -18.885084058232042,
+      "E1": -17.460385654138566,
+      "full_gap": 1.4246984040934763,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999991,
+      "ground_sector": "+",
+      "ground_min_amp": 0.0035263695864708178,
+      "E0_plus": -18.885084058232042,
+      "E1_plus": -15.355848344299613,
+      "E0_minus": -17.460385654138566,
+      "E1_minus": -16.993108762936718,
+      "Delta_plus": 3.5292357139324295,
+      "Delta_minus": 0.46727689120184834,
+      "cross_split": 1.4246984040934763,
+      "c_first_same_excited": 0.5815098302073229,
+      "max_opposite_coupling": 8.881784197001252e-16,
+      "V0_norm": 11.469358018556868,
+      "residual_max": 8.119228666957972e-12,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 1.9895196601282805e-13,
+        "block_dense_vs_eigsh_minus": 1.5276668818842154e-13,
+        "full_eigsh12_vs_dense_block_union": 1.4566126083082054e-13,
+        "low8_kept_vs_dense_block_union": 1.5276668818842154e-13
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -18.885084058232042,
+          "parity": "+"
+        },
+        {
+          "E": -17.460385654138566,
+          "parity": "-"
+        },
+        {
+          "E": -16.993108762936718,
+          "parity": "-"
+        },
+        {
+          "E": -16.43372378339426,
+          "parity": "-"
+        },
+        {
+          "E": -16.202515757456503,
+          "parity": "-"
+        },
+        {
+          "E": -16.01549842395707,
+          "parity": "-"
+        },
+        {
+          "E": -15.694174794778949,
+          "parity": "-"
+        },
+        {
+          "E": -15.547334910398533,
+          "parity": "-"
+        }
+      ],
+      "seconds": 1.2192083379995893,
+      "coupled_gap_tau1e-10": 3.5292357139324295,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.5815098302073229,
+      "coupled_gap_tau1e-08": 3.5292357139324295,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.5815098302073229,
+      "coupled_gap_tau1e-06": 3.5292357139324295,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.5815098302073229,
+      "coupled_gap_tau1e-04": 3.5292357139324295,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.5815098302073229,
+      "coupled_gap": 3.5292357139324295,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.046686974399654156,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10916,
+      "field": "Bstar",
+      "g": 0.33599057368028595,
+      "g_over_J": 0.33599057368028595,
+      "E0": -7.445719915345444,
+      "E1": -7.43634924163701,
+      "full_gap": 0.009370673708434474,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999991,
+      "ground_sector": "+",
+      "ground_min_amp": 5.777181190550598e-05,
+      "E0_plus": -7.445719915345444,
+      "E1_plus": -7.342239790204398,
+      "E0_minus": -7.43634924163701,
+      "E1_minus": -7.349587373339403,
+      "Delta_plus": 0.10348012514104621,
+      "Delta_minus": 0.08676186829760724,
+      "cross_split": 0.009370673708434474,
+      "c_first_same_excited": 0.3361183941670206,
+      "max_opposite_coupling": 1.3322676295501878e-15,
+      "V0_norm": 6.716172351529703,
+      "residual_max": 6.071575400007093e-12,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 4.884981308350689e-14,
+        "block_dense_vs_eigsh_minus": 8.970602038971265e-14,
+        "full_eigsh12_vs_dense_block_union": 1.0036416142611415e-13,
+        "low8_kept_vs_dense_block_union": 4.884981308350689e-14
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -7.445719915345444,
+          "parity": "+"
+        },
+        {
+          "E": -7.43634924163701,
+          "parity": "-"
+        },
+        {
+          "E": -7.349587373339403,
+          "parity": "-"
+        },
+        {
+          "E": -7.342239790204398,
+          "parity": "+"
+        },
+        {
+          "E": -7.182538063110734,
+          "parity": "-"
+        },
+        {
+          "E": -7.177085327792714,
+          "parity": "+"
+        },
+        {
+          "E": -6.923075809158,
+          "parity": "-"
+        },
+        {
+          "E": -6.9075437220186675,
+          "parity": "+"
+        }
+      ],
+      "seconds": 1.2577214129996719,
+      "coupled_gap_tau1e-10": 0.10348012514104621,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.3361183941670206,
+      "coupled_gap_tau1e-08": 0.10348012514104621,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.3361183941670206,
+      "coupled_gap_tau1e-06": 0.10348012514104621,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.3361183941670206,
+      "coupled_gap_tau1e-04": 0.10348012514104621,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.3361183941670206,
+      "coupled_gap": 0.10348012514104621,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 31.389065732374476,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10916,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -18.93139340264689,
+      "E1": -17.366656961276295,
+      "full_gap": 1.564736441370595,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000002,
+      "ground_sector": "+",
+      "ground_min_amp": 0.004303565397131953,
+      "E0_plus": -18.93139340264689,
+      "E1_plus": -15.240555582140356,
+      "E0_minus": -17.366656961276295,
+      "E1_minus": -16.867888363945433,
+      "Delta_plus": 3.690837820506534,
+      "Delta_minus": 0.4987685973308622,
+      "cross_split": 1.564736441370595,
+      "c_first_same_excited": 0.012498028920662207,
+      "max_opposite_coupling": 4.440892098500626e-16,
+      "V0_norm": 11.492927119051387,
+      "residual_max": 8.055161440588964e-12,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 2.824407374646398e-13,
+        "block_dense_vs_eigsh_minus": 1.1368683772161603e-13,
+        "full_eigsh12_vs_dense_block_union": 1.4210854715202004e-13,
+        "low8_kept_vs_dense_block_union": 1.1368683772161603e-13
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -18.93139340264689,
+          "parity": "+"
+        },
+        {
+          "E": -17.366656961276295,
+          "parity": "-"
+        },
+        {
+          "E": -16.867888363945433,
+          "parity": "-"
+        },
+        {
+          "E": -16.71034163774954,
+          "parity": "-"
+        },
+        {
+          "E": -16.644871882226973,
+          "parity": "-"
+        },
+        {
+          "E": -16.047931293061705,
+          "parity": "-"
+        },
+        {
+          "E": -15.889411073134925,
+          "parity": "-"
+        },
+        {
+          "E": -15.458868064192563,
+          "parity": "-"
+        }
+      ],
+      "seconds": 1.191101388001698,
+      "coupled_gap_tau1e-10": 3.690837820506534,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.012498028920662207,
+      "coupled_gap_tau1e-08": 3.690837820506534,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.012498028920662207,
+      "coupled_gap_tau1e-06": 3.690837820506534,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.012498028920662207,
+      "coupled_gap_tau1e-04": 3.690837820506534,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.012498028920662207,
+      "coupled_gap": 3.690837820506534,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.0009174694264413307,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10917,
+      "field": "Bstar",
+      "g": 0.5550521118116535,
+      "g_over_J": 0.5550521118116535,
+      "E0": -9.422205592644428,
+      "E1": -9.35570266113859,
+      "full_gap": 0.06650293150583764,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999963,
+      "ground_sector": "+",
+      "ground_min_amp": 0.0003728320271242477,
+      "E0_plus": -9.422205592644428,
+      "E1_plus": -9.067599563975898,
+      "E0_minus": -9.35570266113859,
+      "E1_minus": -9.151519366042619,
+      "Delta_plus": 0.3546060286685293,
+      "Delta_minus": 0.20418329509597122,
+      "cross_split": 0.06650293150583764,
+      "c_first_same_excited": 0.3689325949476181,
+      "max_opposite_coupling": 8.881784197001252e-16,
+      "V0_norm": 8.195432126714334,
+      "residual_max": 5.231605341858026e-12,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 7.993605777301127e-14,
+        "block_dense_vs_eigsh_minus": 1.1546319456101628e-13,
+        "full_eigsh12_vs_dense_block_union": 1.1368683772161603e-13,
+        "low8_kept_vs_dense_block_union": 7.638334409421077e-14
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -9.422205592644428,
+          "parity": "+"
+        },
+        {
+          "E": -9.35570266113859,
+          "parity": "-"
+        },
+        {
+          "E": -9.151519366042619,
+          "parity": "-"
+        },
+        {
+          "E": -9.067599563975898,
+          "parity": "+"
+        },
+        {
+          "E": -8.5882725531074,
+          "parity": "-"
+        },
+        {
+          "E": -8.509286809860134,
+          "parity": "+"
+        },
+        {
+          "E": -8.435626012638425,
+          "parity": "+"
+        },
+        {
+          "E": -8.337861924077004,
+          "parity": "-"
+        }
+      ],
+      "seconds": 1.1837189809957636,
+      "coupled_gap_tau1e-10": 0.3546060286685293,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.3689325949476181,
+      "coupled_gap_tau1e-08": 0.3546060286685293,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.3689325949476181,
+      "coupled_gap_tau1e-06": 0.3546060286685293,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.3689325949476181,
+      "coupled_gap_tau1e-04": 0.3546060286685293,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.3689325949476181,
+      "coupled_gap": 0.3546060286685293,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 2.93396410995702,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10917,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -19.01903451760806,
+      "E1": -17.533858639794172,
+      "full_gap": 1.4851758778138873,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999976,
+      "ground_sector": "+",
+      "ground_min_amp": 0.004787204991485919,
+      "E0_plus": -19.01903451760806,
+      "E1_plus": -15.666831336292848,
+      "E0_minus": -17.533858639794172,
+      "E1_minus": -17.24178451531026,
+      "Delta_plus": 3.352203181315211,
+      "Delta_minus": 0.2920741244839107,
+      "cross_split": 1.4851758778138873,
+      "c_first_same_excited": 0.26449537836157044,
+      "max_opposite_coupling": 4.440892098500626e-16,
+      "V0_norm": 11.426286592530857,
+      "residual_max": 1.4054539671730139e-11,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 2.0961010704922955e-13,
+        "block_dense_vs_eigsh_minus": 1.1191048088221578e-13,
+        "full_eigsh12_vs_dense_block_union": 1.8474111129762605e-13,
+        "low8_kept_vs_dense_block_union": 1.2612133559741778e-13
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -19.01903451760806,
+          "parity": "+"
+        },
+        {
+          "E": -17.533858639794172,
+          "parity": "-"
+        },
+        {
+          "E": -17.24178451531026,
+          "parity": "-"
+        },
+        {
+          "E": -16.75143728982746,
+          "parity": "-"
+        },
+        {
+          "E": -16.362792626315617,
+          "parity": "-"
+        },
+        {
+          "E": -16.06688234890578,
+          "parity": "-"
+        },
+        {
+          "E": -16.01403646088831,
+          "parity": "-"
+        },
+        {
+          "E": -15.666831336292848,
+          "parity": "+"
+        }
+      ],
+      "seconds": 1.184400239995739,
+      "coupled_gap_tau1e-10": 3.352203181315211,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.26449537836157044,
+      "coupled_gap_tau1e-08": 3.352203181315211,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.26449537836157044,
+      "coupled_gap_tau1e-06": 3.352203181315211,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.26449537836157044,
+      "coupled_gap_tau1e-04": 3.352203181315211,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.26449537836157044,
+      "coupled_gap": 3.352203181315211,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.023537342124676994,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10918,
+      "field": "Bstar",
+      "g": 0.6003291140933691,
+      "g_over_J": 0.6003291140933691,
+      "E0": -9.503780686338779,
+      "E1": -9.43336328544003,
+      "full_gap": 0.07041740089874793,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000007,
+      "ground_sector": "+",
+      "ground_min_amp": 0.0006346071933646925,
+      "E0_plus": -9.503780686338779,
+      "E1_plus": -8.823926507356356,
+      "E0_minus": -9.43336328544003,
+      "E1_minus": -8.876265519304896,
+      "Delta_plus": 0.6798541789824224,
+      "Delta_minus": 0.5570977661351346,
+      "cross_split": 0.07041740089874793,
+      "c_first_same_excited": 1.1799326148885991,
+      "max_opposite_coupling": 8.881784197001252e-16,
+      "V0_norm": 8.61578024328137,
+      "residual_max": 3.496615520311113e-12,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 9.947598300641403e-14,
+        "block_dense_vs_eigsh_minus": 7.460698725481052e-14,
+        "full_eigsh12_vs_dense_block_union": 8.526512829121202e-14,
+        "low8_kept_vs_dense_block_union": 9.947598300641403e-14
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -9.503780686338779,
+          "parity": "+"
+        },
+        {
+          "E": -9.43336328544003,
+          "parity": "-"
+        },
+        {
+          "E": -8.876265519304896,
+          "parity": "-"
+        },
+        {
+          "E": -8.823926507356356,
+          "parity": "+"
+        },
+        {
+          "E": -8.625198396633506,
+          "parity": "-"
+        },
+        {
+          "E": -8.452391577614039,
+          "parity": "+"
+        },
+        {
+          "E": -8.330536088502193,
+          "parity": "+"
+        },
+        {
+          "E": -8.319899919754802,
+          "parity": "-"
+        }
+      ],
+      "seconds": 1.1866892779944465,
+      "coupled_gap_tau1e-10": 0.6798541789824224,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 1.1799326148885991,
+      "coupled_gap_tau1e-08": 0.6798541789824224,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 1.1799326148885991,
+      "coupled_gap_tau1e-06": 0.6798541789824224,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 1.1799326148885991,
+      "coupled_gap_tau1e-04": 0.6798541789824224,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 1.1799326148885991,
+      "coupled_gap": 0.6798541789824224,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 2.5528521486216933,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10918,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -18.890754308754083,
+      "E1": -17.354570988377997,
+      "full_gap": 1.536183320376086,
+      "E1_parity": "-",
+      "ground_parity_expect": 1.0000000000000009,
+      "ground_sector": "+",
+      "ground_min_amp": 0.00525346019230538,
+      "E0_plus": -18.890754308754083,
+      "E1_plus": -15.298526017864123,
+      "E0_minus": -17.354570988377997,
+      "E1_minus": -16.811198849231676,
+      "Delta_plus": 3.5922282908899597,
+      "Delta_minus": 0.5433721391463209,
+      "cross_split": 1.536183320376086,
+      "c_first_same_excited": 0.5120944811392664,
+      "max_opposite_coupling": 1.5543122344752192e-15,
+      "V0_norm": 11.496963642557652,
+      "residual_max": 1.902990861368502e-12,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 2.007283228522283e-13,
+        "block_dense_vs_eigsh_minus": 2.2737367544323206e-13,
+        "full_eigsh12_vs_dense_block_union": 2.877698079828406e-13,
+        "low8_kept_vs_dense_block_union": 2.2737367544323206e-13
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -18.890754308754083,
+          "parity": "+"
+        },
+        {
+          "E": -17.354570988377997,
+          "parity": "-"
+        },
+        {
+          "E": -16.811198849231676,
+          "parity": "-"
+        },
+        {
+          "E": -16.727567147355654,
+          "parity": "-"
+        },
+        {
+          "E": -16.4167960754471,
+          "parity": "-"
+        },
+        {
+          "E": -16.089450170253723,
+          "parity": "-"
+        },
+        {
+          "E": -15.938587476484631,
+          "parity": "-"
+        },
+        {
+          "E": -15.402287160720187,
+          "parity": "-"
+        }
+      ],
+      "seconds": 1.1852411200015922,
+      "coupled_gap_tau1e-10": 3.5922282908899597,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.5120944811392664,
+      "coupled_gap_tau1e-08": 3.5922282908899597,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.5120944811392664,
+      "coupled_gap_tau1e-06": 3.5922282908899597,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.5120944811392664,
+      "coupled_gap_tau1e-04": 3.5922282908899597,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.5120944811392664,
+      "coupled_gap": 3.5922282908899597,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.03968462106428025,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10919,
+      "field": "Bstar",
+      "g": 0.746510432491512,
+      "g_over_J": 0.746510432491512,
+      "E0": -11.259254739811666,
+      "E1": -11.184495071336299,
+      "full_gap": 0.07475966847536775,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999982,
+      "ground_sector": "+",
+      "ground_min_amp": 0.0006913784878311959,
+      "E0_plus": -11.259254739811666,
+      "E1_plus": -10.219215321930488,
+      "E0_minus": -11.184495071336299,
+      "E1_minus": -10.32719022255223,
+      "Delta_plus": 1.0400394178811787,
+      "Delta_minus": 0.857304848784068,
+      "cross_split": 0.07475966847536775,
+      "c_first_same_excited": 1.8530515134765781,
+      "max_opposite_coupling": 8.881784197001252e-16,
+      "V0_norm": 8.460956160156176,
+      "residual_max": 6.025432340978144e-12,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 7.638334409421077e-14,
+        "block_dense_vs_eigsh_minus": 8.348877145181177e-14,
+        "full_eigsh12_vs_dense_block_union": 1.0125233984581428e-13,
+        "low8_kept_vs_dense_block_union": 8.348877145181177e-14
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -11.259254739811666,
+          "parity": "+"
+        },
+        {
+          "E": -11.184495071336299,
+          "parity": "-"
+        },
+        {
+          "E": -10.32719022255223,
+          "parity": "-"
+        },
+        {
+          "E": -10.219215321930488,
+          "parity": "+"
+        },
+        {
+          "E": -9.908496105324962,
+          "parity": "+"
+        },
+        {
+          "E": -9.833153807860429,
+          "parity": "-"
+        },
+        {
+          "E": -9.60910887240637,
+          "parity": "-"
+        },
+        {
+          "E": -9.451098830191057,
+          "parity": "+"
+        }
+      ],
+      "seconds": 1.1975741810019827,
+      "coupled_gap_tau1e-10": 1.0400394178811787,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 1.8530515134765781,
+      "coupled_gap_tau1e-08": 1.0400394178811787,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 1.8530515134765781,
+      "coupled_gap_tau1e-06": 1.0400394178811787,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 1.8530515134765781,
+      "coupled_gap_tau1e-04": 1.0400394178811787,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 1.8530515134765781,
+      "coupled_gap": 1.0400394178811787,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 1.713120426639928,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    },
+    {
+      "N": 12,
+      "seed": 10919,
+      "field": "g1.5J",
+      "g": 1.5,
+      "g_over_J": 1.5,
+      "E0": -18.96588560269674,
+      "E1": -17.61443981832259,
+      "full_gap": 1.3514457843741496,
+      "E1_parity": "-",
+      "ground_parity_expect": 0.9999999999999997,
+      "ground_sector": "+",
+      "ground_min_amp": 0.003982265798450737,
+      "E0_plus": -18.96588560269674,
+      "E1_plus": -15.764518272609806,
+      "E0_minus": -17.61443981832259,
+      "E1_minus": -17.06723868554965,
+      "Delta_plus": 3.201367330086935,
+      "Delta_minus": 0.5472011327729405,
+      "cross_split": 1.3514457843741496,
+      "c_first_same_excited": 0.7614821250826427,
+      "max_opposite_coupling": 8.881784197001252e-16,
+      "V0_norm": 11.40925571275893,
+      "residual_max": 8.727009479510485e-12,
+      "commutator_fro": 0.0,
+      "k_ladder": [
+        8
+      ],
+      "k_used": 8,
+      "method": "parity_block_eigsh",
+      "audit": {
+        "block_dense_vs_eigsh_plus": 1.3500311979441904e-13,
+        "block_dense_vs_eigsh_minus": 2.3092638912203256e-13,
+        "full_eigsh12_vs_dense_block_union": 1.6697754290362354e-13,
+        "low8_kept_vs_dense_block_union": 2.3092638912203256e-13
+      },
+      "parity_eigvec_err": 0.0,
+      "low_levels": [
+        {
+          "E": -18.96588560269674,
+          "parity": "+"
+        },
+        {
+          "E": -17.61443981832259,
+          "parity": "-"
+        },
+        {
+          "E": -17.06723868554965,
+          "parity": "-"
+        },
+        {
+          "E": -16.72814260856486,
+          "parity": "-"
+        },
+        {
+          "E": -16.074320006194867,
+          "parity": "-"
+        },
+        {
+          "E": -16.000164696671785,
+          "parity": "-"
+        },
+        {
+          "E": -15.844255976192521,
+          "parity": "-"
+        },
+        {
+          "E": -15.764518272609806,
+          "parity": "+"
+        }
+      ],
+      "seconds": 1.1673697689984692,
+      "coupled_gap_tau1e-10": 3.201367330086935,
+      "coupled_level_tau1e-10": 1,
+      "coupled_c_tau1e-10": 0.7614821250826427,
+      "coupled_gap_tau1e-08": 3.201367330086935,
+      "coupled_level_tau1e-08": 1,
+      "coupled_c_tau1e-08": 0.7614821250826427,
+      "coupled_gap_tau1e-06": 3.201367330086935,
+      "coupled_level_tau1e-06": 1,
+      "coupled_c_tau1e-06": 0.7614821250826427,
+      "coupled_gap_tau1e-04": 3.201367330086935,
+      "coupled_level_tau1e-04": 1,
+      "coupled_c_tau1e-04": 0.7614821250826427,
+      "coupled_gap": 3.201367330086935,
+      "coupled_is_first_same_excited": true,
+      "adiabatic_ratio_c_over_gap2": 0.07429997983842968,
+      "n_same_zero_coupled_below_coupled": 0,
+      "Bstar_interior": true
+    }
+  ]
+}
