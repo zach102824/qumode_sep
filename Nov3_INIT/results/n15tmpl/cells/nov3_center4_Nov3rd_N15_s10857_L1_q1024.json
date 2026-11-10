@@ -1,0 +1,88 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n15tmpl",
+  "arm": "nov3_center4",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "n_params": 6,
+  "N": 15,
+  "seed": 10857,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.8764487384219648,
+  "E0": -15.679655948228614,
+  "E_plus": -13.146731076329472,
+  "F_plus": 0.29799704173153135,
+  "E": -15.1951233375537,
+  "E_error_over_N": 0.032302174044994324,
+  "F": 0.7118739834501493,
+  "eta": 0.5895658085821599,
+  "which": "last",
+  "start_id": 0,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -8.939249863109861,
+      "E": -15.1951233375537,
+      "which": "last",
+      "a_gain": 0.04795869839725543
+    },
+    {
+      "start_id": 1,
+      "e_init": -12.35769535807678,
+      "E": -15.191084144763598,
+      "which": "last",
+      "a_gain": 0.07726074191381412
+    },
+    {
+      "start_id": 2,
+      "e_init": -11.347850258726478,
+      "E": -14.999497857022565,
+      "which": "last",
+      "a_gain": 0.0358503628504532
+    },
+    {
+      "start_id": 3,
+      "e_init": -9.607377292960315,
+      "E": -14.88096727848421,
+      "which": "last",
+      "a_gain": 0.053484991474240996
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    -0.2530237320268501,
+    -0.3324888249512735,
+    0.008975217175956278,
+    -0.851066208970255,
+    -0.021849875866962257,
+    -0.029626565384662736
+  ],
+  "seconds": 4.5622554309993575,
+  "cpu_seconds": 4.556864528,
+  "peak_rss_kib": 114188,
+  "prereg_sha256": "fe7188c0876a0abb965f6b539f6cb1df43d5817e4b638685da74aad9ac146a64",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_gate": "TWO_TEMPLATE_TRANSFER_NEGATIVE_CI",
+  "do_not_switch_primary_after_test": true,
+  "not_unsigned_mean_copy": true
+}
