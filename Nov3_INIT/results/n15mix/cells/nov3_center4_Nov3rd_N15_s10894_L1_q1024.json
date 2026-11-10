@@ -1,0 +1,89 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n15mix",
+  "arm": "nov3_center4",
+  "method": "Nov3rd",
+  "method_id": 1,
+  "n_params": 6,
+  "N": 15,
+  "seed": 10894,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.162935318336706,
+  "E0": -8.662428773823585,
+  "E_plus": -2.44402977505059,
+  "F_plus": 0.00574189324149957,
+  "E": -6.419675559269104,
+  "E_error_over_N": 0.14951688097029875,
+  "F": 0.1834088611466078,
+  "eta": 0.1786930040574087,
+  "which": "last",
+  "start_id": 3,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": 0.0367530797053246,
+      "E": -6.4145718127609275,
+      "which": "last",
+      "a_gain": 0.11039127457417534
+    },
+    {
+      "start_id": 1,
+      "e_init": -0.9751578431433232,
+      "E": -6.405265647141931,
+      "which": "last",
+      "a_gain": 0.07427084856072998
+    },
+    {
+      "start_id": 2,
+      "e_init": -3.015495294625102,
+      "E": -6.228115373301652,
+      "which": "polyak64",
+      "a_gain": 0.3789262806123162
+    },
+    {
+      "start_id": 3,
+      "e_init": -0.7693980231934339,
+      "E": -6.419675559269104,
+      "which": "last",
+      "a_gain": 0.19993102592891066
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    0.423982216984239,
+    -0.5185916111998876,
+    -0.028098794997342563,
+    0.9450895836386167,
+    -0.05671299399270631,
+    0.07673686150000106
+  ],
+  "seconds": 4.78148153499933,
+  "cpu_seconds": 4.7809624,
+  "peak_rss_kib": 115584,
+  "prereg_sha256": "a049c1ab2309c350404322d8c461f8081c507c1cb22218608e715c215d926379",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_gate": "MIXER_FREEZE_NEGATIVE_CI",
+  "do_not_switch_frozen_coords_after_test": true,
+  "not_unsigned_mean_copy": true,
+  "not_two_template_copy": true
+}

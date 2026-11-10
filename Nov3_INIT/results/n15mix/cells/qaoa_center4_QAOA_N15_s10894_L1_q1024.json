@@ -1,0 +1,85 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n15mix",
+  "arm": "qaoa_center4",
+  "method": "QAOA",
+  "method_id": 0,
+  "n_params": 2,
+  "N": 15,
+  "seed": 10894,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.162935318336706,
+  "E0": -8.662428773823585,
+  "E_plus": -2.44402977505059,
+  "F_plus": 0.00574189324149957,
+  "E": -5.808657106893666,
+  "E_error_over_N": 0.19025144446199463,
+  "F": 0.09065975437364836,
+  "eta": 0.08540826627906474,
+  "which": "last",
+  "start_id": 1,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": 0.036753079705324154,
+      "E": -5.808597782428606,
+      "which": "last",
+      "a_gain": 0.02438819725636413
+    },
+    {
+      "start_id": 1,
+      "e_init": 2.028755310899566,
+      "E": -5.808657106893666,
+      "which": "last",
+      "a_gain": 0.07063599514263803
+    },
+    {
+      "start_id": 2,
+      "e_init": 0.931042165265541,
+      "E": -5.8086571056914105,
+      "which": "last",
+      "a_gain": 0.04148648427373775
+    },
+    {
+      "start_id": 3,
+      "e_init": -2.418906437241614,
+      "E": -5.808657103543663,
+      "which": "last",
+      "a_gain": 0.032650909328180565
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    -0.46982971962042686,
+    -1.1713077833230185
+  ],
+  "seconds": 2.91558500300016,
+  "cpu_seconds": 2.9147622799999997,
+  "peak_rss_kib": 115572,
+  "prereg_sha256": "a049c1ab2309c350404322d8c461f8081c507c1cb22218608e715c215d926379",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_gate": "MIXER_FREEZE_NEGATIVE_CI",
+  "do_not_switch_frozen_coords_after_test": true,
+  "not_unsigned_mean_copy": true,
+  "not_two_template_copy": true
+}
