@@ -1,0 +1,143 @@
+{
+  "experiment": "N9TWO: N=9 L=1 two-template bimodal cluster-mean transfer, frozen v4 center-4 Nov3 vs QAOA p=1",
+  "written_before_fits": true,
+  "not_an_architecture_change": true,
+  "not_a_gr_retune": true,
+  "not_a_l3_variant": true,
+  "not_a_start_count_variant": true,
+  "not_a_two_stage_freeze_order": true,
+  "not_a_shell_unshare": true,
+  "not_layer_tied_snap": true,
+  "not_pair_phase": true,
+  "not_a_center4_l2_copy": true,
+  "not_a_depth_curve": true,
+  "not_an_unsigned_mean_copy_at_other_N": true,
+  "not_a_posthoc_of_pr119_test": true,
+  "does_not_reopen_pr119": true,
+  "not_a_gr_adoption": true,
+  "does_not_patch_gr_queue": true,
+  "no_candidacy_revival": true,
+  "no_final": true,
+  "no_validation": true,
+  "no_nov9_syk": true,
+  "no_l2_or_deeper": true,
+  "closed_axes": "Stop more two-template copies at new untested sizes (N6/N21 not opened; after this N9 confirmatory do not open another two-template size in this stream without a new parent steer). Stop more unsigned-mean copies at other N. Stop more L3 start-count/freeze-order/shell-unshare/two-stage/tied-SNAP and V(M)/L3-budget levers. Stop more center-4 L2/depth copies. This stream is an independent-stream confirmatory two-template transfer at N=9 L=1 of FT PR122, not a new untested size.",
+  "ft_source": {
+    "pr": 79,
+    "head_commit": "347ac23369db1251c902638994b4fdc65a019710",
+    "alloc_py_sha256": "de595de592f33a1d5419dd52f3cbd366d0f3b328ffec9dfe4c13231a55c2a1a1",
+    "recipe": "unmodified v4 center-4 run_equal4"
+  },
+  "hypothesis": {
+    "id": "n9_l1_two_template_cluster_mean_transfer_confirm_ft_pr122",
+    "one_sentence": "At N=9 L=1, energy-min of two train cluster-mean Nov3 templates (partition by sign(s1)) minus energy-min of two train cluster-mean QAOA templates (partition by sign(beta)) has mean ΔE CI entirely <0 on 8 unread test instances.",
+    "not": "Independent-stream confirmation of FT PR122. Does not copy FT PR122 N=9 numbers or reuse 10744-59. Not L2/L3. Not a GR patch. Not an adoption. Not a new gate from PR116/PR119/PR121/PR123/PR125/PR126 or FT PR124/PR127 test sets. Does not replace per-instance SPSA. Transfer-gap CI including 0 vs entirely >0 is descriptive only and does not switch the primary. Unsigned mean and s1-only sign-align are secondary replication descriptives only. After this N9 confirmatory, do not open another two-template size without a new parent steer."
+  },
+  "split_documented_before_fits": {
+    "train": [10840, 10841, 10842, 10843, 10844, 10845, 10846, 10847],
+    "test": [10848, 10849, 10850, 10851, 10852, 10853, 10854, 10855],
+    "rule": "Stage A fits train only. Freeze both Nov3 cluster means (sign(s1)), both QAOA cluster means (sign(beta)), unsigned means, and s1-sign-aligned Nov3 mean from train before any test SPSA or transfer energy. Empty clusters are recorded and do not invent a template. Two-template energy = min of that method's frozen nonempty cluster-template energies (energy-only; not F; not test-time SPSA). Primary vs secondary not chosen on test.",
+    "do_not_peek_test_before_freeze": true,
+    "do_not_reuse_pr122_pr123_pr124_pr125_pr126_pr127_or_r35_seeds": true
+  },
+  "stage_A": {
+    "seeds": [10840, 10841, 10842, 10843, 10844, 10845, 10846, 10847],
+    "arms": ["nov3_center4", "qaoa_center4"],
+    "Q": 1024,
+    "T": 122,
+    "nstarts": 4,
+    "ledger_per_fit": {"init": 4, "calibration": 32, "perturb": 976, "candidate": 12, "total": 1024}
+  },
+  "freeze_from_train": {
+    "nov3_layout": ["gamma", "theta_K", "theta_M", "s1", "s2", "s3"],
+    "qaoa_layout": ["gamma", "beta"],
+    "nov3_clusters": {"partition": "sign(s1)", "pos": "s1>0", "neg": "s1<0", "empty": "record and do not invent a template"},
+    "qaoa_clusters": {"partition": "sign(beta)", "pos": "beta>0", "neg": "beta<0", "empty": "record and do not invent a template"},
+    "sign_aligned_secondary": {
+      "map": "flip_s1_only_if_s1_lt_0",
+      "covariant_discrete_gauge_in_saved_recipe": false,
+      "theta_K_theta_M_unchanged": true,
+      "s1_index": 3
+    },
+    "unsigned_mean_secondary": true,
+    "primary_rule": "better_of_two_cluster_means",
+    "aggregator_not_chosen_on_test": true,
+    "not_switched_after_seeing_test": true
+  },
+  "stage_B": {
+    "test_independent": {
+      "seeds": [10848, 10849, 10850, 10851, 10852, 10853, 10854, 10855],
+      "arms": ["nov3_center4", "qaoa_center4"],
+      "Q": 1024,
+      "role": "per-instance ceiling (matching opportunity)"
+    },
+    "transfer_eval": {
+      "vectors": ["nov3_cluster_pos", "nov3_cluster_neg", "qaoa_cluster_pos", "qaoa_cluster_neg", "nov3_unsigned_mean", "nov3_sign_aligned_mean", "qaoa_unsigned_mean"],
+      "empty_cluster_rule": "skip that template; do not invent; two-template reduces to the nonempty cluster mean",
+      "seeds": [10848, 10849, 10850, 10851, 10852, 10853, 10854, 10855],
+      "queries_each": 1,
+      "two_template_energy": "min of that method's charged nonempty cluster-template energies; no extra query",
+      "charge": "every energy call; no query-free prefix"
+    }
+  },
+  "seeds": {
+    "ids": [10840, 10841, 10842, 10843, 10844, 10845, 10846, 10847, 10848, 10849, 10850, 10851, 10852, 10853, 10854, 10855],
+    "role": "exclusive_unread_dev",
+    "collision_check": "not PR126 10792-10807; not PR125 10760-75; not PR123 10728-43; not FT PR122 10744-59; not FT PR124 10776-91; not FT PR127 10808-23; not local R34 10712-27; not local R35 10824-39; not FT this hour 10856-71; not unused-hold 10624-31; not unused hole 10560-67; not PR121 10680-95; not PR119 10648-63; not PR116 10600-15; not FT 10664-79 / 10696-10711; not R33 10632-47; not PR117 10616-23; not R31 10536-51; not R32 10584-99; not R30 10504-19; not FT 10520-35 / 10552-59 (PR112) / 10568-83 (PR113); not LE 10432-39; not L3TIE 10552-59; not holdout 10144-51; not validation 11000-11031; not GR/final 20000-20999. Independent-stream confirmation of FT PR122; do not copy FT PR122 numbers or reuse 10744-59.",
+    "do_not_reuse_10792_10807": true,
+    "do_not_reuse_10776_91": true,
+    "do_not_reuse_10760_75": true,
+    "do_not_reuse_10728_43": true,
+    "do_not_reuse_10744_59": true,
+    "do_not_reuse_10808_23": true,
+    "do_not_reuse_10824_39": true,
+    "do_not_reuse_10856_71": true,
+    "do_not_reuse_10680_95": true,
+    "do_not_reuse_10648_63": true,
+    "do_not_reuse_10600_15": true,
+    "do_not_reuse_10552_59": true,
+    "leave_hole_10560_67_unused": true,
+    "leave_hold_10624_31_unused": true,
+    "forbidden": ["10792-10807", "10760-10775", "10728-10743", "10744-10759", "10776-10791", "10808-10823", "10824-10839", "10856-10871", "10712-10727", "10624-10631", "10560-10567", "10680-10695", "10648-10663", "10600-10615", "10664-10679", "10696-10711", "10632-10647", "10616-10623", "10536-10551", "10584-10599", "10504-10519", "10520-10535", "10552-10559", "10568-10583", "10432-10439", "10144-10151", "11000-11031", "20000-20999"]
+  },
+  "batch": {
+    "N": [9],
+    "L": [1],
+    "q": 1024,
+    "Q": 1024,
+    "T": 122,
+    "p_QAOA": 1,
+    "arms": ["nov3_center4", "qaoa_center4"]
+  },
+  "selection": "FT energy selection on independent fits. F post hoc, never selects. Two-template choice is energy-min among frozen train templates (not GS-fidelity postselection; not test-time SPSA).",
+  "contrasts": {
+    "primary": "test better-of-two Nov3 minus better-of-two QAOA",
+    "1_train": "independently optimized Nov3 − QAOA on train 10840-47",
+    "2_test_ceiling": "independently optimized Nov3 − QAOA on test 10848-55",
+    "3_two_template_nov3_vs_independent_qaoa": "two-template Nov3 vs independently-fitted test QAOA",
+    "4_transfer_gap": "two-template Nov3 vs independently-fitted test Nov3; descriptive whether CI includes 0 or is entirely >0; does not switch primary",
+    "5_single_cluster": "each nonempty Nov3 cluster mean vs unsigned-mean QAOA and vs independent QAOA (no min-selection)",
+    "6_unsigned_and_aligned_replication": "unsigned-mean and sign-aligned-mean Nov3 vs unsigned-mean QAOA; descriptives only; do not reopen PR119"
+  },
+  "report": {
+    "written_before_fits": true,
+    "primary_label": "TWO_TEMPLATE_TRANSFER_NEGATIVE_CI iff test better-of-two Nov3 minus better-of-two QAOA bootstrap 95% CI (4000, rng 3334) of mean ΔE is entirely <0 on n=8; else UNSTABLE",
+    "transfer_gap_descriptive": "report whether transfer-gap CI includes 0 (as in FT PR122) or is entirely >0 (as in both N12 results); do not switch primary after seeing test",
+    "not_adoption": true,
+    "does_not_revive_l2_l3": true,
+    "does_not_replace_per_instance_spsa": true,
+    "gr": "Do not patch GR. No final. No L2+. No L3. No adoption."
+  },
+  "parallelism": {
+    "max_workers": 4,
+    "blas_threads": 1,
+    "do_not_skip_n9": true
+  },
+  "ledger": {
+    "prior_combined": 3724168,
+    "this_stream": "N9TWO, counted separately",
+    "independent_charge": "16 seeds × 2 methods × 1024 = 32768",
+    "transfer_charge": "8 test × 7 vectors × 1 = 56 if all clusters nonempty",
+    "new_charge": "32824 if all four clusters nonempty and all evals succeed"
+  }
+}
