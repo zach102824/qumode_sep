@@ -1,0 +1,152 @@
+{
+  "status": "ok",
+  "failure": "",
+  "simulation_assumptions": {
+    "who": "Zach",
+    "when": "2026-11-09 18:41 Asia/Shanghai",
+    "D2": "SNAP phase 0 on Fock levels above 7",
+    "D3": "UcZ terms that touch a leaked cavity are off; other terms still act (Uz). U0 stays a sensitivity arm.",
+    "D4": "energy adds |Jij| for each leaked coupling and +b for each leaked qubit",
+    "D5": "ideal logical readout in simulation. The compiled W_L and its leakage are not modelled.",
+    "not_approved": [
+      "hardware feasibility",
+      "physical shot claim",
+      "recipe freeze",
+      "validation",
+      "final"
+    ]
+  },
+  "hardware_claim": false,
+  "shot_claim": false,
+  "freeze": false,
+  "validation_touched": false,
+  "final_touched": false,
+  "fidelity_role": "evaluation_only_unconditioned_no_postselection",
+  "seed": 10000,
+  "N": 6,
+  "b": 1.5,
+  "L": 1,
+  "cap": 1024,
+  "arm": "Nov3rd",
+  "method_id": 1,
+  "family": "nov3",
+  "encoding": "binary",
+  "ucz": "code",
+  "gate": "idealW",
+  "nf": 8,
+  "groups": [
+    [
+      0,
+      2,
+      4
+    ],
+    [
+      1,
+      3,
+      5
+    ]
+  ],
+  "classical_ops": {
+    "triple_evals": 0,
+    "pair_reads": 0,
+    "gs_reads": 0,
+    "rule": "interleaved"
+  },
+  "n_controls": 6,
+  "queries": {
+    "total": 1024,
+    "calibration": 32,
+    "iteration": 984,
+    "candidate": 8,
+    "failure_score": 0,
+    "monitoring": 0,
+    "continuation": 0
+  },
+  "n_iter_per_start": 123,
+  "selected_start": 1,
+  "selected_candidate": "last",
+  "a_values": [
+    0.3718434978077309,
+    0.542238179444123,
+    1.0070017283378585,
+    0.2570254864732583
+  ],
+  "selected": {
+    "E": -9.21967236435048,
+    "F": 0.9994495189450368,
+    "F_plus": 0.9611848993193212,
+    "eta": 0.9858178635296633,
+    "eta_E": 0.9847496392059533,
+    "E_resid": 0.0003688535807030003,
+    "E0": -9.223074328341578,
+    "E1": -7.23398000302717,
+    "gap": 1.989094325314408,
+    "delta_odd": 1.989094325314408,
+    "p_leak": 0.0,
+    "parity": 1.0000000000000016,
+    "norm": 1.0000000000000016,
+    "E_diag": -0.44056399254184,
+    "E_X": -8.77910837180864,
+    "F_postselected_not_physical": 0.9994495189450368
+  },
+  "init_start_E_oracle": {
+    "E": -8.531817939920412,
+    "F": 0.8837104884394383,
+    "F_plus": 0.9611848993193212,
+    "eta": -1.9959863434915062,
+    "eta_E": -2.0987715778872285,
+    "E_resid": 0.0749485869692067,
+    "E0": -9.223074328341578,
+    "E1": -7.23398000302717,
+    "gap": 1.989094325314408,
+    "delta_odd": 1.989094325314408,
+    "p_leak": 0.0,
+    "parity": 1.0000000000000018,
+    "norm": 1.0000000000000018,
+    "E_diag": -1.3877787807814457e-17,
+    "E_X": -8.531817939920412,
+    "F_postselected_not_physical": 0.8837104884394383,
+    "start_id": 0,
+    "oracle": true,
+    "counted_query": false
+  },
+  "init_best_energy_oracle": {
+    "E": -9.013895516416257,
+    "F": 0.9635043262473992,
+    "F_plus": 0.9611848993193212,
+    "eta": 0.05975578801558084,
+    "eta_E": 0.06229097054583454,
+    "E_resid": 0.022679944287398387,
+    "E0": -9.223074328341578,
+    "E1": -7.23398000302717,
+    "gap": 1.989094325314408,
+    "delta_odd": 1.989094325314408,
+    "p_leak": 0.0,
+    "parity": 1.000000000000002,
+    "norm": 1.000000000000002,
+    "E_diag": -0.015867450802131484,
+    "E_X": -8.998028065614125,
+    "F_postselected_not_physical": 0.9635043262473992,
+    "start_id": 2,
+    "oracle": true,
+    "counted_query": false
+  },
+  "x": [
+    -0.1554122959240705,
+    -0.2350115153326469,
+    0.07088788335890174,
+    -0.8353036263121589,
+    0.08074683362508726,
+    -0.36835666557152275
+  ],
+  "j_upper_sha": "ec1b5a68c1aea5a1cc152cfd182f46a74ada02d3fa862564ec52ca4c64974dd6",
+  "gs_sha": "92eb8143669116d010a31d9d2785bb615ef05e50c105195c2461a7888d635d6b",
+  "prereg_sha256": "fd884c3e2a87b935bcf4228653543339389835ef29a73cf1f38e5b118b122f97",
+  "c_spsa": 0.1,
+  "seconds": 0.13949270899979638,
+  "measurement": {
+    "shots": 0,
+    "settings_if_shots": 2,
+    "W_L": "ideal BinH on 0..7, identity outside, compile and leakage NOT modelled"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "prereg_sha256": "fd884c3e2a87b935bcf4228653543339389835ef29a73cf1f38e5b118b122f97",
+  "tol": 1e-08,
+  "ladder": [
+    16,
+    20,
+    24,
+    32,
+    48
+  ],
+  "worst": {
+    "16": {
+      "E": 2.611948097808181e-07,
+      "F": 6.5228392270855196e-09,
+      "p_leak": 1.2755146716614263e-08,
+      "outside": 0.00048365919874682195
+    },
+    "20": {
+      "E": 2.3092638912203256e-13,
+      "F": 5.592748486549226e-15,
+      "p_leak": 1.0103029524088925e-14,
+      "outside": 9.243707577155647e-08
+    },
+    "24": {
+      "E": 3.552713678800501e-15,
+      "F": 0.0,
+      "p_leak": 0.0,
+      "outside": 3.347544463849772e-12
+    },
+    "32": {
+      "E": 3.552713678800501e-15,
+      "F": 3.3306690738754696e-16,
+      "p_leak": 2.220446049250313e-16,
+      "outside": 1.3322676295501878e-15
+    }
+  },
+  "nf_sim": 24,
+  "c_spsa": 0.1,
+  "alpha_probe_worst_dp": 0.0008799019825532772,
+  "alpha_probe_n": 96,
+  "seconds": 22.474719826000182,
+  "timings": [
+    {
+      "N": 12,
+      "nf": 16,
+      "L": 2,
+      "build_s": 0.039028701999995974,
+      "eval_s": 0.00428949266673347,
+      "projected_1024_s": 4.392440490735074,
+      "ground_state": true,
+      "note": "timing only; not an optimized result and not a fidelity claim"
+    },
+    {
+      "N": 12,
+      "nf": 24,
+      "L": 2,
+      "build_s": 0.2838811739998164,
+      "eval_s": 0.02415563066665527,
+      "projected_1024_s": 24.735365802654997,
+      "ground_state": true,
+      "note": "timing only; not an optimized result and not a fidelity claim"
+    },
+    {
+      "N": 15,
+      "nf": 16,
+      "L": 2,
+      "build_s": 1.303987867999922,
+      "eval_s": 0.09274913900003412,
+      "projected_1024_s": 94.97511833603494,
+      "ground_state": false,
+      "note": "timing only; not an optimized result and not a fidelity claim"
+    }
+  ],
+  "n_comparisons": 768,
+  "simulation_assumptions": "D2-D5 approved 2026-11-09 18:41 Asia/Shanghai",
+  "hardware_claim": false,
+  "freeze": false
+}
