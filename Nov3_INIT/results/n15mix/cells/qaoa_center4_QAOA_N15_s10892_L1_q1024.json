@@ -1,0 +1,85 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n15mix",
+  "arm": "qaoa_center4",
+  "method": "QAOA",
+  "method_id": 0,
+  "n_params": 2,
+  "N": 15,
+  "seed": 10892,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.8905247083571125,
+  "E0": -15.834297111952356,
+  "E_plus": -13.357870625356687,
+  "F_plus": 0.2863452940609204,
+  "E": -15.07321437273703,
+  "E_error_over_N": 0.050738849281021695,
+  "F": 0.5631642598179295,
+  "eta": 0.38788921792752734,
+  "which": "last",
+  "start_id": 2,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -9.215417681560353,
+      "E": -15.072867630507115,
+      "which": "last",
+      "a_gain": 0.013559144862698599
+    },
+    {
+      "start_id": 1,
+      "e_init": -13.452617332833828,
+      "E": -15.073214361897112,
+      "which": "last",
+      "a_gain": 0.021529772021303545
+    },
+    {
+      "start_id": 2,
+      "e_init": -14.373211212672533,
+      "E": -15.07321437273703,
+      "which": "last",
+      "a_gain": 0.06848478014261539
+    },
+    {
+      "start_id": 3,
+      "e_init": -5.477346414979457,
+      "E": -15.066856878366881,
+      "which": "last",
+      "a_gain": 0.014950943527551972
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    -0.23089123666925246,
+    0.3948084952540468
+  ],
+  "seconds": 2.7222147540014703,
+  "cpu_seconds": 2.721839074999999,
+  "peak_rss_kib": 115584,
+  "prereg_sha256": "a049c1ab2309c350404322d8c461f8081c507c1cb22218608e715c215d926379",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_gate": "MIXER_FREEZE_NEGATIVE_CI",
+  "do_not_switch_frozen_coords_after_test": true,
+  "not_unsigned_mean_copy": true,
+  "not_two_template_copy": true
+}

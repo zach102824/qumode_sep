@@ -1,0 +1,85 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n15mix",
+  "arm": "qaoa_center4",
+  "method": "QAOA",
+  "method_id": 0,
+  "n_params": 2,
+  "N": 15,
+  "seed": 10888,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.6296749741266563,
+  "E0": -12.03545815450547,
+  "E_plus": -9.445124611899844,
+  "F_plus": 0.2635809333812114,
+  "E": -11.405691549585141,
+  "E_error_over_N": 0.041984440328021934,
+  "F": 0.5986797906570716,
+  "eta": 0.4550382689226675,
+  "which": "last",
+  "start_id": 1,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -6.017920710569003,
+      "E": -11.405691548260464,
+      "which": "last",
+      "a_gain": 0.04074544602168094
+    },
+    {
+      "start_id": 1,
+      "e_init": -11.096034882784188,
+      "E": -11.405691549585141,
+      "which": "last",
+      "a_gain": 0.09253818672611043
+    },
+    {
+      "start_id": 2,
+      "e_init": -7.502200817228065,
+      "E": -11.405686608994342,
+      "which": "last",
+      "a_gain": 0.020514886060292052
+    },
+    {
+      "start_id": 3,
+      "e_init": -7.583610125872221,
+      "E": -11.400444442821934,
+      "which": "last",
+      "a_gain": 0.3532807789990879
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    -0.28500520362515563,
+    0.39133409594720764
+  ],
+  "seconds": 2.8498538019994157,
+  "cpu_seconds": 2.8456984440000004,
+  "peak_rss_kib": 113756,
+  "prereg_sha256": "a049c1ab2309c350404322d8c461f8081c507c1cb22218608e715c215d926379",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_gate": "MIXER_FREEZE_NEGATIVE_CI",
+  "do_not_switch_frozen_coords_after_test": true,
+  "not_unsigned_mean_copy": true,
+  "not_two_template_copy": true
+}

@@ -1,0 +1,85 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n15mix",
+  "arm": "qaoa_center4",
+  "method": "QAOA",
+  "method_id": 0,
+  "n_params": 2,
+  "N": 15,
+  "seed": 10895,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.6782394046670549,
+  "E0": -13.213316878467218,
+  "E_plus": -10.173591070005823,
+  "F_plus": 0.20504116981675632,
+  "E": -12.191307939369338,
+  "E_error_over_N": 0.06813392927319199,
+  "F": 0.5418243418907908,
+  "eta": 0.4236485705761687,
+  "which": "last",
+  "start_id": 3,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -6.570583681486282,
+      "E": -12.191307774025306,
+      "which": "last",
+      "a_gain": 0.02222140339927642
+    },
+    {
+      "start_id": 1,
+      "e_init": -5.515319731297356,
+      "E": -12.19130782957332,
+      "which": "last",
+      "a_gain": 0.026788176391583655
+    },
+    {
+      "start_id": 2,
+      "e_init": -10.093579419702813,
+      "E": -12.191307939366636,
+      "which": "last",
+      "a_gain": 0.039153562645272505
+    },
+    {
+      "start_id": 3,
+      "e_init": -11.324507249418108,
+      "E": -12.191307939369338,
+      "which": "last",
+      "a_gain": 0.03928678551389839
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    -0.27867132611843476,
+    0.39753804798226283
+  ],
+  "seconds": 2.78804517199751,
+  "cpu_seconds": 2.785616105000001,
+  "peak_rss_kib": 115640,
+  "prereg_sha256": "a049c1ab2309c350404322d8c461f8081c507c1cb22218608e715c215d926379",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_gate": "MIXER_FREEZE_NEGATIVE_CI",
+  "do_not_switch_frozen_coords_after_test": true,
+  "not_unsigned_mean_copy": true,
+  "not_two_template_copy": true
+}

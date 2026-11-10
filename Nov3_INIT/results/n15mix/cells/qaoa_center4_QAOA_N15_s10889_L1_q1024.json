@@ -1,0 +1,85 @@
+{
+  "ok": true,
+  "failure": null,
+  "version": "N3INIT_n15mix",
+  "arm": "qaoa_center4",
+  "method": "QAOA",
+  "method_id": 0,
+  "n_params": 2,
+  "N": 15,
+  "seed": 10889,
+  "L": 1,
+  "q": 1024,
+  "Q": 1024,
+  "T": 122,
+  "split": "train",
+  "role": "independent_fit",
+  "procedural_cap": 1024,
+  "same_Q_both_methods": true,
+  "Bstar": 0.8015636263418888,
+  "E0": -14.908045914545689,
+  "E_plus": -12.023454395128333,
+  "F_plus": 0.23171598020471892,
+  "E": -13.940620110069874,
+  "E_error_over_N": 0.06449505363172096,
+  "F": 0.538985489701662,
+  "eta": 0.39994260140776966,
+  "which": "last",
+  "start_id": 3,
+  "n_iter": 122,
+  "tails": [
+    {
+      "start_id": 0,
+      "e_init": -7.99907515164147,
+      "E": -13.940620086240319,
+      "which": "last",
+      "a_gain": 0.01942451025221012
+    },
+    {
+      "start_id": 1,
+      "e_init": -12.444267753918396,
+      "E": -13.940620108498155,
+      "which": "last",
+      "a_gain": 0.027420675562728
+    },
+    {
+      "start_id": 2,
+      "e_init": -8.153433836616669,
+      "E": -13.940400489007343,
+      "which": "last",
+      "a_gain": 0.01453885478742675
+    },
+    {
+      "start_id": 3,
+      "e_init": -11.91434702112752,
+      "E": -13.940620110069874,
+      "which": "last",
+      "a_gain": 0.06553766648676415
+    }
+  ],
+  "queries": {
+    "screen": 0,
+    "init": 4,
+    "calibration": 32,
+    "iteration": 976,
+    "candidate": 12,
+    "monitoring": 0,
+    "total": 1024,
+    "transfer": 0
+  },
+  "x": [
+    0.2503467249215919,
+    -0.398528298549201
+  ],
+  "seconds": 2.844994734001375,
+  "cpu_seconds": 2.8363254020000004,
+  "peak_rss_kib": 113832,
+  "prereg_sha256": "a049c1ab2309c350404322d8c461f8081c507c1cb22218608e715c215d926379",
+  "fidelity_posthoc": true,
+  "no_gr_patch": true,
+  "not_architecture_change": true,
+  "primary_gate": "MIXER_FREEZE_NEGATIVE_CI",
+  "do_not_switch_frozen_coords_after_test": true,
+  "not_unsigned_mean_copy": true,
+  "not_two_template_copy": true
+}
